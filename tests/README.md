@@ -7,3 +7,15 @@ Agent-independent scripts. Plain Node 20+, no dependencies, read-only against th
 - Ring 3 (shared templates): run `page-check.mjs` on two untouched campus pages after any site-wide action and confirm `header-stylesheet-linked` and `footer-template-present` pass.
 
 Planned: spec schema validation in CI, a renderer that fails when prose and spec disagree, and observer-check mapping tests.
+
+## resolve-campus-roles.mjs
+
+Resolves Director of Admissions, Dean of Parents, and Senior Admissions Specialist coverage per campus, live from the Admissions Hub org chart, with `registry/campus-roles-overrides.json` applied and emails attached from HubSpot owners.
+
+```bash
+node tests/resolve-campus-roles.mjs                                  # print the roster
+node tests/resolve-campus-roles.mjs --campus atlanta --role dean-of-parents
+HUBSPOT_SERVICE_KEY=... node tests/resolve-campus-roles.mjs --write  # refresh registry/campus-roles-snapshot.json
+```
+
+Without a HubSpot token the emails come from the last snapshot. The hub page is parsed from its embedded script tables; if the page layout changes the script stops with an error rather than guessing.

@@ -1,0 +1,22 @@
+{
+  "$comment": "Rows that are ahead of the Admissions Hub org chart, confirmed directly by the HubSpot owner. Mirrors projects/alpha-event-task-management/src/lib/apex-directory-roster.ts in the marketing workspace. Format: [school, role, name, asOf, note]. emailAliases: verified addresses HubSpot owners does not answer (nickname or other surname); never derive an address from a name.",
+  "rows": [
+    ["Alpha Southlake", "dean-of-parents", "Andy Gibson", "2026-09-02", "Hailey McSpadden"],
+    ["Alpha Southlake", "director-of-admissions", "Jason DeMaria", "2026-09-02", "Hailey McSpadden"],
+    ["Alpha Highland Park", "dean-of-parents", "Andy Gibson", "2026-09-02", "Hailey McSpadden"],
+    ["Alpha Oklahoma City", "dean-of-parents", "Rocky Moore", "2026-09-08", "Hailey McSpadden supplied the surname"]
+  ],
+  "emailAliases": {
+    "Denyse Holloway": "denyse.carter@alpha.school",
+    "Mo Swain": "morgan.swain@alpha.school",
+    "Cliff Smith": "clifford.smith@alpha.school",
+    "Jeff Barton": "jeffrey.barton@alpha.school",
+    "Dawn Adams": "dawn.crichton-adams@alpha.school",
+    "Jess Bauer": "jessica.bauer@alpha.school",
+    "Mike Marino": "michael.marino@alpha.school",
+    "Heather McMahan": "heather.mcmahan@2hourlearning.com",
+    "Laura Mazer": "laura.mazer@2hourlearning.com",
+    "Alejandro Betancourt": "alejandro.betancourtramos@alpha.school",
+    "Rocky Moore": "rocky.moore@alpha.school"
+  }
+}

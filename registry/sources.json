@@ -1,5 +1,5 @@
 {
-  "$comment": "Where each fact the website shows comes from. Precedence between sources is OPEN QUESTION 1.",
+  "$comment": "Where each fact the website shows comes from. Precedence: HubSpot (decision 2026-09-15), then the Operations sheet, then the requester. Campus roles come from the Admissions Hub.",
   "growthMapApi": {
     "url": "https://u7f4afjn6j.execute-api.us-east-1.amazonaws.com/production/map-locations",
     "publicMap": "https://map.app.alpha.school/map?type=program",
@@ -67,7 +67,7 @@
     "sitemap": "https://alpha.school/sitemap_index.xml"
   },
   "staffRoster": {
-    "status": "not configured for the observer as of 2026-09-15; source owner to be named"
+    "status": "no roster source for guides and Head Guides as of 2026-09-15; the website staff cards are the only list. DoA and DoP come from campusRoles."
   },
   "approvedMedia": {
     "file": "registry/campus-open-media.json (from marketingsupport registry/alpha-campus-open-media.json)",
@@ -80,5 +80,32 @@
   "hubspotEvents": {
     "api": "https://api.hubapi.com/marketing/marketing-events (portal 40051392)",
     "rule": "Public Event = Yes must appear on /upcoming-events/ and the campus strip after a 2 hour grace"
+  },
+  "campusRoles": {
+    "sourceOfTruth": "Admissions Hub org chart, https://alpha-admissions-hub.vercel.app/admissions-hub.html (tables currentDoARows, approvedAssignmentRows, expansionRows, marketingRows, admissionsRows embedded in the page script)",
+    "mirrors": [
+      "APEX directory Campus DoA Roster (projects/alpha-event-task-management/src/lib/apex-directory-roster.ts in the marketing workspace) with rows Hailey confirmed ahead of the chart",
+      "registry/campus-roles-snapshot.json (generated cache, dated)"
+    ],
+    "overrides": "registry/campus-roles-overrides.json",
+    "resolver": "tests/resolve-campus-roles.mjs",
+    "roles": [
+      "director-of-admissions",
+      "dean-of-parents",
+      "senior-admissions-specialist (coverage only)"
+    ],
+    "refresh": "live on every ticket that needs an approver; --write snapshot weekly or when Hailey posts a roster change",
+    "access": "public page; no token"
+  },
+  "hubspotOwners": {
+    "api": "https://api.hubapi.com/crm/v3/owners (paged, limit 500)",
+    "gives": "name, work email, owner id, team membership (Marketing, DoPs, Admissions, Admin, Operations, Community Partnerships)",
+    "access": "marketing workspace HUBSPOT_SERVICE_KEY; readable 2026-09-15 (263 owners)",
+    "note": "Emails are only ever taken from here, from APEX permission files, or from a person directly. Never derived from a name: nicknames and other surnames make derived addresses wrong."
+  },
+  "apexRouting": {
+    "file": "projects/alpha-event-task-management/src/lib/request-type-routing.ts and photoApprovalPermissions.ts, emailStatusPermissions.ts, hubspotPushPermissions.ts",
+    "gives": "auto-assignees by request type (website: Yash, Matt; calendars: Zara Raheem; video_editing: Haven Mass, Nick Stich; marketing_collateral: Chris Davidson), coverage owners (photography: Gaby Guajardo; videography: Chris Mass, Alfred Gomez), HubSpot push and event-editor rights (Hailey McSpadden, Brittany Goodman, Garbhit Sharma, Dmitry Bakaev, Farhan Raja)",
+    "access": "source checkout in the marketing workspace; the APEX API does not expose it yet"
   }
 }

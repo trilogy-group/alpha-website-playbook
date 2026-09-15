@@ -1,33 +1,41 @@
 {
-  "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json and registry/campus-leadership.json because people change and roles do not. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), website staff cards, APEX requester history, observer routing rules, marketingsupport registry.",
-  "version": "0.1",
+  "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
+  "version": "0.2",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
       "roles": [
-        "head-of-schools",
+        "campus-coordinator",
         "dean-of-parents",
         "director-of-admissions",
         "head-guide",
+        "head-of-schools",
         "lead-guide",
-        "campus-coordinator"
+        "senior-admissions-specialist"
       ],
       "note": "Submit most website tickets. Not in charge of website choices. They hold the bios, photos, titles, names, and campus facts the website shows."
     },
     "marketing": {
       "scope": "all Alpha campuses",
       "roles": [
-        "website-operations",
-        "website-agent-operator",
-        "packet-owner",
+        "brand-authority",
+        "calendars",
         "events",
+        "marketing-collateral",
+        "packet-owner",
+        "photography",
         "pr-comms",
-        "brand-authority"
+        "video-editing",
+        "videography",
+        "website-agent-operator",
+        "website-operations"
       ]
     },
     "hubspot": {
       "scope": "all",
       "roles": [
+        "campus-roles-confirmer",
+        "hubspot-admin",
         "hubspot-owner"
       ],
       "note": "HubSpot is the source of truth for campus state and facts (decision 2026-09-15)."
@@ -72,7 +80,12 @@
         "campus-facing copy changes when no campus lead is named"
       ],
       "supplies": [],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/campus-leadership.json (website staff cards) and registry/people.json",
+        "staleAfterDays": 30
+      }
     },
     "dean-of-parents": {
       "department": "campus-leadership",
@@ -93,7 +106,14 @@
         "staff-remove",
         "staff-photo",
         "copy"
-      ]
+      ],
+      "resolution": {
+        "mode": "live",
+        "source": "admissions-hub",
+        "resolver": "tests/resolve-campus-roles.mjs --campus <slug> --role dean-of-parents",
+        "cache": "registry/campus-roles-snapshot.json",
+        "staleAfterDays": 7
+      }
     },
     "director-of-admissions": {
       "department": "campus-leadership",
@@ -116,7 +136,14 @@
         "staff-update",
         "staff-remove",
         "staff-photo"
-      ]
+      ],
+      "resolution": {
+        "mode": "live",
+        "source": "admissions-hub",
+        "resolver": "tests/resolve-campus-roles.mjs --campus <slug> --role director-of-admissions",
+        "cache": "registry/campus-roles-snapshot.json",
+        "staleAfterDays": 7
+      }
     },
     "head-guide": {
       "department": "campus-leadership",
@@ -125,7 +152,12 @@
       "supplies": [
         "guide bios and photos"
       ],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/campus-leadership.json (website staff cards)",
+        "staleAfterDays": 30
+      }
     },
     "lead-guide": {
       "department": "campus-leadership",
@@ -134,7 +166,12 @@
       "supplies": [
         "guide bios and photos"
       ],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/campus-leadership.json (website staff cards)",
+        "staleAfterDays": 30
+      }
     },
     "campus-coordinator": {
       "department": "campus-leadership",
@@ -143,7 +180,12 @@
       "supplies": [
         "event logistics, staff details on request"
       ],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "website-operations": {
       "department": "marketing",
@@ -164,7 +206,12 @@
         "observer-media-identity",
         "observer-launch-copy (media part)",
         "observer-brand-leak"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "website-agent-operator": {
       "department": "marketing",
@@ -178,7 +225,12 @@
       "supplies": [],
       "assignableTicketClasses": [
         "every website-scope class as executor"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "hubspot-owner": {
       "department": "hubspot",
@@ -198,7 +250,12 @@
         "observer-fact-sync (source side)",
         "observer-event",
         "event-sync"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "packet-owner": {
       "department": "marketing",
@@ -211,7 +268,12 @@
       ],
       "assignableTicketClasses": [
         "observer-packet"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "events": {
       "department": "marketing",
@@ -225,7 +287,12 @@
       "assignableTicketClasses": [
         "observer-event",
         "event-sync"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "pr-comms": {
       "department": "marketing",
@@ -236,7 +303,12 @@
         "press copy"
       ],
       "supplies": [],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "brand-authority": {
       "department": "marketing",
@@ -247,7 +319,12 @@
         "any copy that is not an exemplar or a recorded choice"
       ],
       "supplies": [],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "expansion-new-programs": {
       "department": "expansion",
@@ -261,7 +338,12 @@
       "assignableTicketClasses": [
         "observer-map-community",
         "other-workflow (New Program)"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "expansion-founding": {
       "department": "expansion",
@@ -270,7 +352,12 @@
       "supplies": [
         "launch copy and dates for announced campuses"
       ],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "elementor-owner": {
       "department": "web-platform",
@@ -285,7 +372,12 @@
         "observer-layout",
         "layout",
         "missing CTA widgets"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "wordpress-admin": {
       "department": "web-platform",
@@ -296,7 +388,12 @@
       "supplies": [
         "application passwords for agents"
       ],
-      "assignableTicketClasses": []
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "operations-sheet-owner": {
       "department": "operations",
@@ -309,7 +406,12 @@
       ],
       "assignableTicketClasses": [
         "observer-map-community (Operations rows)"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "growth-map-owner": {
       "department": "operations",
@@ -320,7 +422,12 @@
       "supplies": [],
       "assignableTicketClasses": [
         "observer-map-community (map rows)"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     },
     "observer-owner": {
       "department": "qc",
@@ -331,7 +438,161 @@
       "supplies": [],
       "assignableTicketClasses": [
         "observer-health"
-      ]
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "senior-admissions-specialist": {
+      "department": "campus-leadership",
+      "owns": [
+        "prospect-facing email for the campuses explicitly assigned to them"
+      ],
+      "approves": [],
+      "supplies": [
+        "admissions facts for pre-open campuses when no Director of Admissions exists"
+      ],
+      "assignableTicketClasses": [
+        "program-info (pre-open campuses)",
+        "observer-link-cta (pre-open campuses)"
+      ],
+      "resolution": {
+        "mode": "live",
+        "source": "admissions-hub",
+        "resolver": "tests/resolve-campus-roles.mjs --campus <slug> --role senior-admissions-specialist-coverage",
+        "cache": "registry/campus-roles-snapshot.json",
+        "staleAfterDays": 7
+      },
+      "note": "The Admissions Hub expansion table lists coverage markets, not assignments. Use it to find a contact, never to claim ownership."
+    },
+    "photography": {
+      "department": "marketing",
+      "owns": [
+        "photo coverage of events; approve or decline photo requests"
+      ],
+      "approves": [
+        "photo assets used on the site when the requester is not the campus"
+      ],
+      "supplies": [
+        "event and campus photography"
+      ],
+      "assignableTicketClasses": [
+        "media (photo sourcing)",
+        "other-workflow (Photography)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "videography": {
+      "department": "marketing",
+      "owns": [
+        "video coverage of events"
+      ],
+      "approves": [],
+      "supplies": [
+        "campus video for hero and intro slots"
+      ],
+      "assignableTicketClasses": [
+        "media (video sourcing)",
+        "other-workflow (Videography)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "video-editing": {
+      "department": "marketing",
+      "owns": [
+        "cutting event footage"
+      ],
+      "approves": [],
+      "supplies": [
+        "edited video files"
+      ],
+      "assignableTicketClasses": [
+        "other-workflow (video_editing)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "marketing-collateral": {
+      "department": "marketing",
+      "owns": [
+        "printed and designed collateral"
+      ],
+      "approves": [],
+      "supplies": [],
+      "assignableTicketClasses": [
+        "other-workflow (marketing_collateral)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "calendars": {
+      "department": "marketing",
+      "owns": [
+        "school calendars published on the site"
+      ],
+      "approves": [
+        "calendar link and PDF changes"
+      ],
+      "supplies": [
+        "calendar files"
+      ],
+      "assignableTicketClasses": [
+        "link-cta (calendar links)",
+        "other-workflow (calendars)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "hubspot-admin": {
+      "department": "hubspot",
+      "owns": [
+        "HubSpot portal administration, integrations, API scopes"
+      ],
+      "approves": [
+        "new private-app scopes for agents"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "campus-roles-confirmer": {
+      "department": "hubspot",
+      "owns": [
+        "the DoA/DoP roster corrections that run ahead of the Admissions Hub chart"
+      ],
+      "approves": [
+        "registry/campus-roles-overrides.json rows"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     }
   },
   "ticketRouting": {
@@ -425,9 +686,161 @@
   "gaps": [
     "elementor-owner not named",
     "operations-sheet-owner and growth-map-owner not named",
-    "hubspot-owner email not recorded",
     "12 campus pages show no Dean of Parents and 17 show no Director of Admissions; either the role is vacant or the card is missing",
-    "HubSpot owners and program contact properties could not be read: the marketing token lacks the scopes; Hailey can grant crm.objects.owners.read and the Programs object scopes",
-    "Slack directory visible to the bot covers 28 members; users:read at workspace level would give titles for everyone"
-  ]
+    "Slack directory visible to the bot covers 28 members; users:read at workspace level would give titles for everyone",
+    "HubSpot Programs object properties still unreadable with the marketing token (needs crm.objects.custom.read and crm.schemas.custom.read); campus state and facts are read through the public growth map API until Hailey or a HubSpot admin grants the scopes",
+    "The Admissions Hub org chart has no owner named on the page; Hailey confirms roster corrections today. Confirm who edits the chart and how often",
+    "HubSpot owner records are missing or personal for several roster names (Gaby Sullivan present; Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund absent; Haven Mass under a personal address); the resolver reports email null for them",
+    "Elementor owner, Operations sheet owner, and growth map owner are still not named"
+  ],
+  "registryByTicketClass": {
+    "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",
+    "staff-add": {
+      "needs": {
+        "campus page and section model": "registry/campus-pages.json, spec/campus-page-model.json",
+        "approver: Dean of Parents for the campus": "live (tests/resolve-campus-roles.mjs); fallback Head of Schools from registry/campus-leadership.json; fallback Dean of Parents - Expansion from registry/people.json",
+        "approved titles list": "spec/campus-page-requirements.json (team section)",
+        "headshot mapping": "the ticket (requester confirmation), never inferred"
+      },
+      "missingInfoGoesTo": "dean-of-parents (live) -> head-of-schools -> website-operations"
+    },
+    "staff-update": {
+      "needs": {
+        "current card": "MCP find_elementor_component",
+        "approver": "dean-of-parents (live)"
+      },
+      "missingInfoGoesTo": "requester, then dean-of-parents"
+    },
+    "staff-remove": {
+      "needs": {
+        "effective date": "the ticket",
+        "approver": "dean-of-parents (live)"
+      },
+      "missingInfoGoesTo": "dean-of-parents"
+    },
+    "staff-photo": {
+      "needs": {
+        "name-to-photo mapping": "the ticket (explicit)",
+        "approver": "dean-of-parents (live)"
+      },
+      "missingInfoGoesTo": "requester"
+    },
+    "program-info": {
+      "needs": {
+        "the fact in HubSpot Programs": "source (HubSpot; growth map API as the public mirror)",
+        "who can change HubSpot": "hubspot-owner from registry/people.json",
+        "who speaks for the campus": "director-of-admissions (live); senior-admissions-specialist (live) for pre-open campuses"
+      },
+      "missingInfoGoesTo": "hubspot-owner when HubSpot is blank; director-of-admissions when the requester disagrees with HubSpot"
+    },
+    "observer-fact-sync": {
+      "needs": {
+        "HubSpot value": "source",
+        "Operations sheet value": "source",
+        "owner of the HubSpot record": "hubspot-owner (registry)"
+      },
+      "missingInfoGoesTo": "hubspot-owner"
+    },
+    "copy": {
+      "needs": {
+        "brand rules": "marketingsupport docs/rules/alpha-brand-copy-rules.md; alpha-branding-skill",
+        "brand authority for new wording": "brand-authority (registry: MacKenzie Price)",
+        "campus sign-off": "dean-of-parents (live)"
+      },
+      "missingInfoGoesTo": "requester; brand-authority for held items"
+    },
+    "observer-launch-copy": {
+      "needs": {
+        "campus state": "source (HubSpot via growth map API)",
+        "approved card asset": "registry/campus-open-media.json",
+        "card producer": "website-operations (registry: Yash Chitneni)"
+      },
+      "missingInfoGoesTo": "website-operations"
+    },
+    "media": {
+      "needs": {
+        "approved asset": "registry/campus-open-media.json or the ticket",
+        "photo or video source": "photography / videography (registry)"
+      },
+      "missingInfoGoesTo": "website-operations; photography or videography for sourcing"
+    },
+    "observer-media-identity": {
+      "needs": {
+        "approved asset": "registry/campus-open-media.json"
+      },
+      "missingInfoGoesTo": "website-operations"
+    },
+    "observer-brand-leak": {
+      "needs": {
+        "exception list": "spec/site-rules.json site.identity",
+        "replacement copy": "dean-of-parents (live)"
+      },
+      "missingInfoGoesTo": "dean-of-parents"
+    },
+    "link-cta": {
+      "needs": {
+        "destination": "the ticket or HubSpot admission_link (source)",
+        "calendar owner for calendar links": "calendars (registry: Zara Raheem)",
+        "packet owner for packet links": "packet-owner (registry)"
+      },
+      "missingInfoGoesTo": "director-of-admissions (live) for apply links; calendars; packet-owner"
+    },
+    "observer-link-cta": {
+      "needs": {
+        "destination": "source (HubSpot admission_link) or packet-owner"
+      },
+      "missingInfoGoesTo": "director-of-admissions (live); packet-owner"
+    },
+    "observer-packet": {
+      "needs": {
+        "packet file and owner": "packet-owner (registry)"
+      },
+      "missingInfoGoesTo": "packet-owner"
+    },
+    "observer-event": {
+      "needs": {
+        "HubSpot marketing event": "source",
+        "event owner": "events (registry: Hailey McSpadden, Brittany Goodman)"
+      },
+      "missingInfoGoesTo": "events"
+    },
+    "event-sync": {
+      "needs": {
+        "HubSpot marketing event": "source"
+      },
+      "missingInfoGoesTo": "hubspot-owner"
+    },
+    "observer-layout": {
+      "needs": {
+        "template owner": "elementor-owner (registry; not yet named)"
+      },
+      "missingInfoGoesTo": "elementor-owner, else website-operations"
+    },
+    "layout": {
+      "needs": {
+        "template owner": "elementor-owner (registry; not yet named)"
+      },
+      "missingInfoGoesTo": "elementor-owner, else website-operations"
+    },
+    "observer-map-community": {
+      "needs": {
+        "program row": "source (HubSpot Programs, growth map API)",
+        "Operations sheet row": "source",
+        "expansion owner for pre-announcement campuses": "expansion-new-programs (registry: Ashley Rahr)"
+      },
+      "missingInfoGoesTo": "expansion-new-programs; operations-sheet-owner (not yet named)"
+    },
+    "observer-health": {
+      "needs": {
+        "observer owner": "observer-owner (registry: Matt Barge)"
+      },
+      "missingInfoGoesTo": "observer-owner"
+    },
+    "other-workflow": {
+      "needs": {
+        "owning workflow": "spec/ticket-classes.json otherWorkflows; APEX request-type auto-assignees (registry roles photography, videography, video-editing, marketing-collateral, calendars)"
+      },
+      "missingInfoGoesTo": "the owning workflow"
+    }
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "$comment": "People and the roles they hold, with the source and date of each claim. People change; roles do not. Seeded 2026-09-15 from website staff cards (Team sections), APEX requester history (476 human website tickets to 2026-09-08), and named decisions. Emails matched from APEX requester addresses; null = not yet confirmed. Keep current from the same sources; see playbook/responsibilities.md.",
+  "$comment": "People and the roles they hold, with the source and date of each claim. People change; roles do not. Seeded 2026-09-15 from website staff cards (Team sections), APEX requester history (476 human website tickets to 2026-09-08), and named decisions. Emails matched from APEX requester addresses; null = not yet confirmed. Emails for department roles confirmed 2026-09-15 from HubSpot owners (GET /crm/v3/owners) and APEX permission files; campus roles (DoA, DoP, SAS) resolve live through tests/resolve-campus-roles.mjs, snapshot in registry/campus-roles-snapshot.json. Keep current from the same sources; see playbook/responsibilities.md.",
   "generatedAt": "2026-09-15",
   "people": {
     "aerinpaulo": {
@@ -507,11 +507,20 @@
           "campus": "scottsdale (25)",
           "source": "APEX requester history",
           "asOf": "2026-09-08"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents (Slack title)",
+          "campus": "scottsdale",
+          "source": "Slack title; APEX requester history (25 Scottsdale tickets)",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
-        "APEX requester history"
-      ]
+        "APEX requester history",
+        "HubSpot owner 82086465"
+      ],
+      "hubspotOwnerId": "82086465"
     },
     "dawncrichtonadams": {
       "name": "Dawn Crichton-Adams",
@@ -603,11 +612,21 @@
           "campus": "all",
           "source": "marketingsupport registry and observer routing",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "hubspot-admin",
+          "title": "HubSpot Admin and Operations team; HubSpot push rights in APEX",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
-        "observer routing rules"
-      ]
+        "observer routing rules",
+        "HubSpot owner 55961534 (Admin, Operations teams)",
+        "APEX HUBSPOT_PUSH_EMAILS"
+      ],
+      "hubspotOwnerId": "55961534"
     },
     "drewcasebier": {
       "name": "Drew Casebier",
@@ -754,11 +773,23 @@
           "campus": "atlanta (24)",
           "source": "APEX requester history",
           "asOf": "2026-09-08"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents (Slack title: ADoP - Atlanta); Dean of Parents on the Admissions Hub roster",
+          "campus": "atlanta",
+          "source": "Admissions Hub currentDoARows; Slack title",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
-        "APEX requester history"
-      ]
+        "APEX requester history",
+        "Admissions Hub",
+        "HubSpot owner 91474330",
+        "Slack U0AN945QLEA"
+      ],
+      "slackId": "U0AN945QLEA",
+      "hubspotOwnerId": "91474330"
     },
     "geoffreygary": {
       "name": "Geoffrey Gary",
@@ -778,7 +809,7 @@
     },
     "haileymcspadden": {
       "name": "Hailey McSpadden",
-      "email": null,
+      "email": "hailey.mcspadden@alpha.school",
       "roles": [
         {
           "role": "hubspot-owner",
@@ -786,12 +817,34 @@
           "campus": "all",
           "source": "Matt Barge, 2026-09-15",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "events",
+          "title": "Edits event assignees and email status in APEX; HubSpot push",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "campus-roles-confirmer",
+          "title": "Confirms DoA/DoP roster rows ahead of the Admissions Hub chart",
+          "campus": "all",
+          "source": "apex-directory-roster.ts (2026-09-02, 2026-09-08)",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
         "Matt Barge",
-        "Slack U08FWUH9UTB"
-      ]
+        "Slack U08FWUH9UTB",
+        "Admissions Hub marketing table",
+        "HubSpot owner 77130697",
+        "APEX permissions (hubspotPushPermissions.ts, emailStatusPermissions.ts)"
+      ],
+      "altEmails": [
+        "hailey.mcspadden@2hourlearning.com"
+      ],
+      "slackId": "U08FWUH9UTB",
+      "hubspotOwnerId": "77130697"
     },
     "hayleywhittier": {
       "name": "Hayley Whittier",
@@ -1026,7 +1079,7 @@
     },
     "jeremywilliams": {
       "name": "Jeremy Williams",
-      "email": "jeremy.williams@alpha.school",
+      "email": "jeremy.williams@2hourlearning.com",
       "roles": [
         {
           "role": "ticket-requester",
@@ -1034,11 +1087,24 @@
           "campus": "raleigh (2)",
           "source": "APEX requester history",
           "asOf": "2026-09-08"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents - Expansion (Application to Enrolled); fallback DoP for campuses with none",
+          "campus": "expansion",
+          "source": "Admissions Hub expansion table",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
-        "APEX requester history"
-      ]
+        "APEX requester history",
+        "Admissions Hub",
+        "HubSpot owner 77260283 (DoPs team)"
+      ],
+      "altEmails": [
+        "jeremy.williams@alpha.school"
+      ],
+      "hubspotOwnerId": "77260283"
     },
     "jessbauer": {
       "name": "Jess Bauer",
@@ -1337,7 +1403,7 @@
     },
     "mackenzieprice": {
       "name": "MacKenzie Price",
-      "email": null,
+      "email": "mackenzie@alpha.school",
       "roles": [
         {
           "role": "brand-authority",
@@ -1348,8 +1414,10 @@
         }
       ],
       "sources": [
-        "docs/rules/alpha-brand-copy-rules.md"
-      ]
+        "docs/rules/alpha-brand-copy-rules.md",
+        "HubSpot owner 95028751 (Marketing team; name blank on the record)"
+      ],
+      "hubspotOwnerId": "95028751"
     },
     "malharmali": {
       "name": "Malhar Mali",
@@ -1380,8 +1448,11 @@
         }
       ],
       "sources": [
-        "Matt Barge"
-      ]
+        "Matt Barge",
+        "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
+        "HubSpot owner 93557124"
+      ],
+      "hubspotOwnerId": "93557124"
     },
     "mattshenker": {
       "name": "Matt Shenker",
@@ -2329,7 +2400,7 @@
     },
     "tashaarnold": {
       "name": "Tasha Arnold",
-      "email": "tasha.arnold@alpha.school",
+      "email": "tasha.arnold@2hourlearning.com",
       "roles": [
         {
           "role": "head-of-schools",
@@ -2341,8 +2412,11 @@
       ],
       "sources": [
         "website staff card",
-        "APEX requester history"
-      ]
+        "APEX requester history",
+        "Admissions Hub",
+        "HubSpot owner 78973471 (Admissions team)"
+      ],
+      "hubspotOwnerId": "78973471"
     },
     "taylor": {
       "name": "Taylor",
@@ -2474,7 +2548,7 @@
     },
     "yashchitneni": {
       "name": "Yash Chitneni",
-      "email": "yash.chitneni@alpha.school",
+      "email": "yash.chitneni@superbuilders.school",
       "roles": [
         {
           "role": "website-operations",
@@ -2487,8 +2561,16 @@
       "sources": [
         "Matt Barge",
         "WordPress user 30",
-        "Slack U0ARFE1TYQK"
-      ]
+        "Slack U0ARFE1TYQK",
+        "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
+        "HubSpot owner 89935638"
+      ],
+      "altEmails": [
+        "yash.chitneni@alpha.school"
+      ],
+      "slackId": "U0ARFE1TYQK",
+      "hubspotOwnerId": "89935638",
+      "note": "superbuilders.school is the address APEX and HubSpot use; alpha.school was the earlier guess."
     },
     "zararaheem": {
       "name": "Zara Raheem",
@@ -2500,11 +2582,24 @@
           "campus": "new-york-city (60)",
           "source": "APEX requester history",
           "asOf": "2026-09-08"
+        },
+        {
+          "role": "calendars",
+          "title": "Auto-assignee for calendar tickets",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
-        "APEX requester history"
-      ]
+        "APEX requester history",
+        "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
+        "HubSpot owner 78922456 (Admissions team)"
+      ],
+      "altEmails": [
+        "zara.raheem@2hourlearning.com"
+      ],
+      "hubspotOwnerId": "78922456"
     },
     "zoelovay": {
       "name": "Zoe Lovay",
@@ -2520,6 +2615,263 @@
       ],
       "sources": [
         "website staff card"
+      ]
+    },
+    "havenmass": {
+      "name": "Haven Mass",
+      "email": "haven.mass@alpha.school",
+      "roles": [
+        {
+          "role": "video-editing",
+          "title": "Cuts event footage (video editing owner, with Nick Stich)",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "brand-authority-liaison",
+          "title": "Relayed MacKenzie's brand choices and the brand fixes workbook to the web team",
+          "campus": "all",
+          "source": "Slack, 2026-09-15",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX VIDEO_EDITING_OWNERS",
+        "HubSpot owner 86877387 (Marketing team; owner email is a personal gmail)",
+        "Slack U0A4MS0SXHB"
+      ],
+      "slackId": "U0A4MS0SXHB",
+      "hubspotOwnerId": "86877387",
+      "note": "HubSpot owner record uses a personal address; use the alpha.school address from APEX."
+    },
+    "chrismass": {
+      "name": "Chris Mass",
+      "email": "chris.mass@alpha.school",
+      "roles": [
+        {
+          "role": "videography",
+          "title": "Videography coverage owner; approves or declines video coverage requests",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX PHOTO_VIDEO_OWNERS (photoApprovalPermissions.ts)",
+        "Slack U09KM196S2J"
+      ],
+      "slackId": "U09KM196S2J"
+    },
+    "gabyguajardo": {
+      "name": "Gaby Guajardo",
+      "email": "gaby.guajardo@alpha.school",
+      "roles": [
+        {
+          "role": "photography",
+          "title": "Photography coverage owner; approves or declines photo coverage requests",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX PHOTO_VIDEO_OWNERS",
+        "HubSpot owner 461678346 (Marketing team)",
+        "Slack U022GBFQADR"
+      ],
+      "slackId": "U022GBFQADR",
+      "hubspotOwnerId": "461678346"
+    },
+    "brittanygoodman": {
+      "name": "Brittany Goodman",
+      "email": "brittany.goodman@alpha.school",
+      "roles": [
+        {
+          "role": "events",
+          "title": "Head of Experiences & Engagement; edits event assignees in APEX",
+          "campus": "all",
+          "source": "Slack title; APEX EVENT_ASSIGNEE_EDITOR_EMAILS",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "HubSpot owner 84409234 (Marketing team)",
+        "APEX emailStatusPermissions.ts"
+      ],
+      "hubspotOwnerId": "84409234"
+    },
+    "garbhitsharma": {
+      "name": "Garbhit Sharma",
+      "email": "garbhit.sharma@alpha.school",
+      "roles": [
+        {
+          "role": "hubspot-admin",
+          "title": "HubSpot push rights in APEX (with Hailey, Dmitry Bakaev, Farhan Raja)",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX HUBSPOT_PUSH_EMAILS",
+        "HubSpot owner 84659737"
+      ],
+      "hubspotOwnerId": "84659737"
+    },
+    "farhanraja": {
+      "name": "Farhan Raja",
+      "email": "farhan.raja@trilogy.com",
+      "roles": [
+        {
+          "role": "hubspot-admin",
+          "title": "HubSpot Admin team; HubSpot push rights in APEX",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "HubSpot owner 78384424 (Admin team)",
+        "APEX HUBSPOT_PUSH_EMAILS"
+      ],
+      "hubspotOwnerId": "78384424"
+    },
+    "nickstich": {
+      "name": "Nick Stich",
+      "email": "nick.stich@alpha.school",
+      "roles": [
+        {
+          "role": "video-editing",
+          "title": "Cuts event footage (with Haven Mass)",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX VIDEO_EDITING_OWNERS"
+      ]
+    },
+    "alfredgomez": {
+      "name": "Alfred Gomez",
+      "email": "alfred.gomez@alpha.school",
+      "roles": [
+        {
+          "role": "videography",
+          "title": "Videography coverage owner (with Chris Mass)",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX PHOTO_VIDEO_OWNERS"
+      ]
+    },
+    "chrisdavidson": {
+      "name": "Chris Davidson",
+      "email": null,
+      "roles": [
+        {
+          "role": "marketing-collateral",
+          "title": "Auto-assignee for marketing collateral tickets",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "APEX REQUEST_TYPE_AUTO_ASSIGNEES (name match only)"
+      ]
+    },
+    "rachelgoodlad": {
+      "name": "Rachel Goodlad",
+      "email": "rachel.goodlad@alpha.school",
+      "roles": [
+        {
+          "role": "expansion-founding",
+          "title": "Head of Expansion (Awareness to Application)",
+          "campus": "all",
+          "source": "Admissions Hub admissions table",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Admissions Hub",
+        "HubSpot owner 461678347 (Marketing, Community Partnerships teams)"
+      ],
+      "altEmails": [
+        "rachel@alpha.school"
+      ],
+      "hubspotOwnerId": "461678347"
+    },
+    "carolynhopper": {
+      "name": "Carolyn Hopper",
+      "email": "carolyn.hopper@alpha.school",
+      "roles": [
+        {
+          "role": "senior-admissions-specialist",
+          "title": "Sr. Admissions Specialist - Expansion; Community Partnerships",
+          "campus": "expansion",
+          "source": "Admissions Hub expansion table",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Admissions Hub",
+        "HubSpot owner 85286428"
+      ],
+      "hubspotOwnerId": "85286428"
+    },
+    "morganhatt": {
+      "name": "Morgan Hatt",
+      "email": "morgan.hatt@alpha.school",
+      "roles": [
+        {
+          "role": "senior-admissions-specialist",
+          "title": "Sr. Admissions Specialist - Expansion; Community Partnerships Contact",
+          "campus": "expansion",
+          "source": "Admissions Hub expansion table",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Admissions Hub",
+        "HubSpot owner 86636153"
+      ],
+      "hubspotOwnerId": "86636153"
+    },
+    "andrewhoughton": {
+      "name": "Andrew Houghton",
+      "email": null,
+      "roles": [
+        {
+          "role": "senior-admissions-specialist",
+          "title": "Sr. Admissions Specialist - Expansion (Orange County, Santa Barbara, Santa Monica, South Bay LA)",
+          "campus": "expansion",
+          "source": "Admissions Hub expansion table",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Admissions Hub"
+      ]
+    },
+    "allistovall": {
+      "name": "Alli Stovall",
+      "email": null,
+      "roles": [
+        {
+          "role": "senior-admissions-specialist",
+          "title": "Sr. Admissions Specialist - Expansion (Boston, Jamaica Plain, Kirkland, Nashville)",
+          "campus": "expansion",
+          "source": "Admissions Hub expansion table",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Admissions Hub"
       ]
     }
   }
