@@ -1,0 +1,1442 @@
+[
+  {
+    "url": "https://alpha.school/atlanta/",
+    "slug": "atlanta",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1493"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Atlanta K-8 Private School in Roswell, Georgia "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Atlanta K-8 Private School in Roswell, Georgia "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "fail",
+        "detail": "registry: missing (stale card attachment 8630 (atlanta.png, \"Coming Fall 2026 To Roswell\"))"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "5 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/boca-raton/",
+    "slug": "boca-raton",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1384"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Boca Raton K-8 Private School in Boca Raton, FL "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Boca Raton K-8 Private School in Boca Raton, FL "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/boston/",
+    "slug": "boston",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1447"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Boston K-8 Private School in Boston, MA "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Boston K-8 Private School in Boston, MA "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "3 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/denver/",
+    "slug": "denver",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1284"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Denver K-8 Private School in Lone Tree, CO "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Denver K-8 Private School in Lone Tree, CO "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/dorado/",
+    "slug": "dorado",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1206"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Dorado K-8 Private School in Vega Alta, Puerto Rico "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Dorado K-8 Private School in Vega Alta, Puerto Rico "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "approved video"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "6 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/greenwich/",
+    "slug": "greenwich",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1441"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Greenwich Port Chester K-8 Private School in Port Chester, NY "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Greenwich Port Chester K-8 Private School in Port Chester, NY "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/highland-park/",
+    "slug": "highland-park",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "640"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Highland Park K-8 Private School in Dallas, TX "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Highland Park K-8 Private School in Dallas, TX "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "3 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/la-jolla/",
+    "slug": "la-jolla",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1286"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha La Jolla K-8 Private School in La Jolla, CA "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha La Jolla K-8 Private School in La Jolla, CA "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "fail",
+        "detail": "registry: missing (stale card attachment 9226 (Subtitle-8.png, \"Coming Fall 2026 To San Diego\"))"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/malibu/",
+    "slug": "malibu",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1037"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Malibu K-8 Private School in Malibu, CA "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Malibu K-8 Private School in Malibu, CA "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/oklahoma-city/",
+    "slug": "oklahoma-city",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "636"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Oklahoma City K-10 Private School in Oklahoma City, Oklahoma "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Oklahoma City K-10 Private School in Oklahoma City, Oklahoma "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "fail",
+        "detail": "https://drive.google.com/file/d/1fyoTEqgiiCtctC80f-eHRdEDlPQnTevL/view?usp=sharing -> 401; https://drive.google.com/file/d/1ichtMHhEZTgo6PLAAsyPvCBxsOtKD1PC/view?usp=sharing -> 401"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/park-city/",
+    "slug": "park-city",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1478"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Park City K-8 Private School in Park City, UT "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Park City K-8 Private School in Park City, UT "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/raleigh/",
+    "slug": "raleigh",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1417"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Raleigh K-12 Private School in Raleigh, North Carolina "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Raleigh K-12 Private School in Raleigh, North Carolina "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "approved video"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "4 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/santa-monica/",
+    "slug": "santa-monica",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "830"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Santa Monica K-9 Private School in Santa Monica, California "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Santa Monica K-9 Private School in Santa Monica, California "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "fail",
+        "detail": "registry: missing (stale card attachment 8465 (Santa-Monica.png, \"Coming Fall 2026 To Santa Monica\"))"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "pass",
+        "detail": "5 CTA links checked"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/south-bay-la/",
+    "slug": "south-bay-la",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "913"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha South Bay LA K-8 Private School in Playa Vista, CA "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha South Bay LA K-8 Private School in Playa Vista, CA "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "fail",
+        "detail": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view?usp=drive_link -> 401"
+      }
+    ]
+  },
+  {
+    "url": "https://alpha.school/tulsa/",
+    "slug": "tulsa",
+    "state": "Open",
+    "cache": {
+      "cfCacheStatus": "HIT",
+      "age": "1420"
+    },
+    "checks": [
+      {
+        "id": "page-reachable",
+        "result": "pass",
+        "detail": "HTTP 200"
+      },
+      {
+        "id": "header-template-present",
+        "result": "pass",
+        "detail": "header template 76"
+      },
+      {
+        "id": "header-stylesheet-linked",
+        "result": "pass",
+        "detail": "post-76.css linked"
+      },
+      {
+        "id": "footer-template-present",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "h1-present",
+        "result": "pass",
+        "detail": "Alpha Tulsa K-8 Private School in Tulsa, OK "
+      },
+      {
+        "id": "h1-names-campus",
+        "result": "pass",
+        "detail": "Alpha Tulsa K-8 Private School in Tulsa, OK "
+      },
+      {
+        "id": "cta-stay-in-the-know",
+        "result": "pass",
+        "detail": "STAY IN-THE-KNOW"
+      },
+      {
+        "id": "cta-attend-an-info-session",
+        "result": "pass",
+        "detail": "Attend an Info Session"
+      },
+      {
+        "id": "cta-apply-now",
+        "result": "pass",
+        "detail": "Apply now"
+      },
+      {
+        "id": "intro-section-present",
+        "result": "pass",
+        "detail": "intro paragraph \"Join us for an info session\""
+      },
+      {
+        "id": "canonical-tag",
+        "result": "pass",
+        "detail": "rel=canonical matches the URL"
+      },
+      {
+        "id": "open-no-launch-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-status-sentence",
+        "result": "pass",
+        "detail": "expects \"Alpha <Campus> is open and enrolling.\""
+      },
+      {
+        "id": "no-sister-brand-words",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "no-other-campus-in-image-names",
+        "result": "pass",
+        "detail": ""
+      },
+      {
+        "id": "open-intro-media-approved",
+        "result": "pass",
+        "detail": "Open and Enrolling card"
+      },
+      {
+        "id": "cta-links-resolve",
+        "result": "fail",
+        "detail": "https://drive.google.com/file/d/1kgz9tOAPPLaFifspQmjRzmuOmEBQEkHg/view?usp=sharing -> 401"
+      }
+    ]
+  }
+]
