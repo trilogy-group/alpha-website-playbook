@@ -2075,7 +2075,7 @@
     },
     "shireenamins": {
       "name": "Shireen Amins",
-      "email": "shireen.amins@gmail.com",
+      "email": null,
       "roles": [
         {
           "role": "ticket-requester",
@@ -2087,7 +2087,8 @@
       ],
       "sources": [
         "APEX requester history"
-      ]
+      ],
+      "emailNote": "personal gmail redacted from playbook; contact via APEX requester identity (Santa Monica)"
     },
     "stephaniedean": {
       "name": "Stephanie Dean",
