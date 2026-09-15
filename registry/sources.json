@@ -1,0 +1,84 @@
+{
+  "$comment": "Where each fact the website shows comes from. Precedence between sources is OPEN QUESTION 1.",
+  "growthMapApi": {
+    "url": "https://u7f4afjn6j.execute-api.us-east-1.amazonaws.com/production/map-locations",
+    "publicMap": "https://map.app.alpha.school/map?type=program",
+    "fields": [
+      "id (HubSpot program id)",
+      "name",
+      "programType (Open|Announced|Pre-Announcement)",
+      "launchDate",
+      "address",
+      "city",
+      "state",
+      "url",
+      "communityUrl",
+      "latitude",
+      "longitude",
+      "gradeRange",
+      "startGrade",
+      "endGrade",
+      "photoUrl"
+    ],
+    "access": "public, read-only"
+  },
+  "hubspotPrograms": {
+    "object": "HubSpot custom object Programs (p_programs), portal 40051392",
+    "propertyCandidates": {
+      "grades": [
+        "grades_served",
+        "grade_levels",
+        "grades",
+        "school_grades"
+      ],
+      "phone": [
+        "phone",
+        "phone_number",
+        "school_phone",
+        "admissions_phone"
+      ],
+      "tuition": [
+        "tuition",
+        "annual_tuition",
+        "tuition_amount",
+        "annual_cost"
+      ],
+      "admissionLink": [
+        "admission_link",
+        "application_url",
+        "application_link"
+      ],
+      "lifecycle": [
+        "type"
+      ]
+    },
+    "note": "Property names as listed in the observer config; confirm against the live schema (the marketing workspace token could not read /crm/v3/schemas on 2026-09-15)."
+  },
+  "operationsSheet": {
+    "name": "Alpha & Specialty Schools National Growth Map",
+    "spreadsheetId": "1t0fhwHz5Y2FvDvj2chRJGDrdcIco1ZADmkhAtRZTduM",
+    "columns": "A:D (name, status, address, ...)",
+    "owner": "Operations",
+    "access": "Google Sheets API via the observer service account"
+  },
+  "wordpress": {
+    "restApi": "https://alpha.school/wp-json/wp/v2",
+    "mcp": "trilogy-group/AlphawordpressMCP (resolve_page, get_page, find_text_occurrences, get_post_fields)",
+    "sitemap": "https://alpha.school/sitemap_index.xml"
+  },
+  "staffRoster": {
+    "status": "not configured for the observer as of 2026-09-15; source owner to be named"
+  },
+  "approvedMedia": {
+    "file": "registry/campus-open-media.json (from marketingsupport registry/alpha-campus-open-media.json)",
+    "owner": "Yash Chitneni produces Open and Enrolling cards from one template"
+  },
+  "brandRules": {
+    "file": "marketingsupport docs/rules/alpha-brand-copy-rules.md and scripts/lib/alpha-brand-rules.mjs; skill repo trilogy-group/alpha-branding-skill",
+    "precedence": "MacKenzie's recorded choices over all other guidance"
+  },
+  "hubspotEvents": {
+    "api": "https://api.hubapi.com/marketing/marketing-events (portal 40051392)",
+    "rule": "Public Event = Yes must appear on /upcoming-events/ and the campus strip after a 2 hour grace"
+  }
+}

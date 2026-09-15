@@ -1,0 +1,916 @@
+{
+  "$comment": "Campus lifecycle states as the sources define them today (M2 draft). Precedence when sources disagree is OPEN QUESTION 1 for Yash.",
+  "generatedAt": "2026-09-15T19:30:26.872237+00:00",
+  "states": {
+    "Open": {
+      "source": "HubSpot Programs property `type` as published by the growth map API (programType)",
+      "meaning": "Public campus page is a live destination; open-campus requirements apply.",
+      "count": 38
+    },
+    "Announced": {
+      "source": "same",
+      "meaning": "Public page may exist; launch language allowed only when the source status and date support it; announced-campus requirements apply.",
+      "count": 8
+    },
+    "Pre-Announcement": {
+      "source": "same",
+      "meaning": "No public campus page; map pin must route to a campus-specific Community destination.",
+      "count": 31
+    }
+  },
+  "operationsSheetStatuses": {
+    "source": "Alpha & Specialty Schools National Growth Map (Google Sheet 1t0fhwHz5Y2FvDvj2chRJGDrdcIco1ZADmkhAtRZTduM, columns A:D)",
+    "values": [
+      "Enrolling",
+      "Open",
+      "Pre-Announcement"
+    ],
+    "compatibilityWithMapProgramType": {
+      "Enrolling": [
+        "Open",
+        "Announced"
+      ],
+      "Open": [
+        "Open"
+      ],
+      "Pre-Announcement": [
+        "Pre-Announcement"
+      ]
+    },
+    "note": "Taken from the observer config (superbuilders/aeo alpha-site-system config/site.json campusOperations.statusCompatibility)."
+  },
+  "otherFields": {
+    "launchDate": "free text on the map program (observed values: null, \"Fall 2026\")",
+    "gradeRange": "string such as K-8, PreK-8, K-12"
+  },
+  "candidateStatesNotYetInSources": [
+    "Enrolled (open, waitlist only)",
+    "Paused",
+    "Closed",
+    "Launching with a named month and year"
+  ],
+  "campuses": {
+    "atlanta": {
+      "url": "https://alpha.school/atlanta/",
+      "wordpressObjectId": 8545,
+      "mapPrograms": [
+        {
+          "id": "program-42698676589",
+          "name": "Alpha Atlanta",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Roswell",
+          "state": "Georgia",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20School%20Atlanta"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Atlanta is open and enrolling."
+    },
+    "austin": {
+      "url": "https://alpha.school/austin/",
+      "wordpressObjectId": 6365,
+      "mapPrograms": [
+        {
+          "id": "program-26459919512",
+          "name": "Alpha Austin",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "PreK-8",
+          "city": "Austin",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Austin is open and enrolling."
+    },
+    "bethesda": {
+      "url": "https://alpha.school/bethesda/",
+      "wordpressObjectId": 5743,
+      "mapPrograms": [
+        {
+          "id": "program-29970883469",
+          "name": "Alpha Bethesda",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Bethesda",
+          "state": "Maryland",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Bethesda"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "opens January 2027"
+    },
+    "boca-raton": {
+      "url": "https://alpha.school/boca-raton/",
+      "wordpressObjectId": 9217,
+      "mapPrograms": [
+        {
+          "id": "program-51219627099",
+          "name": "Alpha Boca Raton",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Boca Raton",
+          "state": "FL",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boca%20Raton"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Boca Raton is open and enrolling."
+    },
+    "boston": {
+      "url": "https://alpha.school/boston/",
+      "wordpressObjectId": 9271,
+      "mapPrograms": [
+        {
+          "id": "program-42820568924",
+          "name": "Alpha Boston",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Boston",
+          "state": "MA",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Boston is open and enrolling."
+    },
+    "boston-suburbs": {
+      "url": "https://alpha.school/boston-suburbs/",
+      "wordpressObjectId": 9209,
+      "mapPrograms": [
+        {
+          "id": "program-51223157555",
+          "name": "Alpha Lexington",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Boston",
+          "state": "MA",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Join us for an info session , and see firsthand why Alpha is ranked among the be"
+    },
+    "brownsville": {
+      "url": "https://alpha.school/brownsville/",
+      "wordpressObjectId": 6543,
+      "mapPrograms": [
+        {
+          "id": "program-26445615151",
+          "name": "Alpha Brownsville",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-12",
+          "city": "Brownsville",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Brownsville"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Brownsville is now the academic network\u2019s fastest-growing campus."
+    },
+    "carrollton": {
+      "url": "https://alpha.school/carrollton/",
+      "wordpressObjectId": 9272,
+      "mapPrograms": [
+        {
+          "id": "program-50893567086",
+          "name": "Alpha Carrollton",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Carrollton",
+          "state": "TX",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Carrollton"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Alpha Carrollton is launching in Fall 2026."
+    },
+    "chantilly": {
+      "url": "https://alpha.school/chantilly/",
+      "wordpressObjectId": 6548,
+      "mapPrograms": [
+        {
+          "id": "program-29737764378",
+          "name": "Alpha Chantilly",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Chantilly",
+          "state": "Virginia",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Chantilly"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Chantilly is open and enrolling for the 2026\u201327 &nbsp;school year with rolling admission."
+    },
+    "charlotte": {
+      "url": "https://alpha.school/charlotte/",
+      "wordpressObjectId": 6552,
+      "mapPrograms": [
+        {
+          "id": "program-29737764384",
+          "name": "Alpha Charlotte",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "K-8",
+          "city": "Charlotte",
+          "state": "North Carolina",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Charlotte"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha Charlotte is open K-8 for Fall 2026."
+    },
+    "chicago": {
+      "url": "https://alpha.school/chicago/",
+      "wordpressObjectId": 8451,
+      "mapPrograms": [
+        {
+          "id": "program-30008355188",
+          "name": "Alpha Chicago",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "PreK-8",
+          "city": "Chicago",
+          "state": "Illinois",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Chicago"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha Chicago is launching in Fall 2026."
+    },
+    "denver": {
+      "url": "https://alpha.school/denver/",
+      "wordpressObjectId": 9283,
+      "mapPrograms": [
+        {
+          "id": "program-51219565354",
+          "name": "Alpha Denver",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Lone Tree",
+          "state": "CO",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Denver"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Denver is open and enrolling."
+    },
+    "dorado": {
+      "url": "https://alpha.school/dorado/",
+      "wordpressObjectId": 8777,
+      "mapPrograms": [
+        {
+          "id": "program-29330581557",
+          "name": "Alpha Dorado",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "K-8",
+          "city": "Vega Alta",
+          "state": "Puerto Rico",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Dorado"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha Dorado is open and enrolling."
+    },
+    "east-bay": {
+      "url": "https://alpha.school/east-bay/",
+      "wordpressObjectId": 8544,
+      "mapPrograms": [
+        {
+          "id": "program-42698614786",
+          "name": "Alpha East Bay",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Piedmont",
+          "state": "California",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20School%20East%20Bay"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha East Bay is open and enrolling."
+    },
+    "fort-worth": {
+      "url": "https://alpha.school/fort-worth/",
+      "wordpressObjectId": 6550,
+      "mapPrograms": [
+        {
+          "id": "program-26463204885",
+          "name": "Alpha Fort Worth",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Fort Worth",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Fort%20Worth"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Fort Worth is open and enrolling."
+    },
+    "franklin": {
+      "url": "https://alpha.school/franklin/",
+      "wordpressObjectId": 9626,
+      "mapPrograms": [
+        {
+          "id": "program-57601909511",
+          "name": "Alpha Franklin",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Franklin",
+          "state": "Tennessee",
+          "communityUrl": null
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Alpha Franklin is coming soon."
+    },
+    "greenwich": {
+      "url": "https://alpha.school/greenwich/",
+      "wordpressObjectId": 9213,
+      "mapPrograms": [
+        {
+          "id": "program-60804396611",
+          "name": "Alpha Greenwich Armonk",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Armonk",
+          "state": "NY",
+          "communityUrl": null
+        },
+        {
+          "id": "program-49011192959",
+          "name": "Alpha Greenwich Port Chester",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Port Chester",
+          "state": "NY",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Greenwich"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "more than one map program points at this page: Alpha Greenwich Armonk, Alpha Greenwich Port Chester"
+      ],
+      "introStatement": "Alpha Greenwich Port Chester is open and enrolling."
+    },
+    "highland-park": {
+      "url": "https://alpha.school/highland-park/",
+      "wordpressObjectId": 9219,
+      "mapPrograms": [
+        {
+          "id": "program-51136264989",
+          "name": "Alpha Highland Park",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Dallas",
+          "state": "TX",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Highland%20Park"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Highland Park is open and enrolling."
+    },
+    "houston": {
+      "url": "https://alpha.school/houston/",
+      "wordpressObjectId": 9625,
+      "mapPrograms": [
+        {
+          "id": "program-26459919662",
+          "name": "Alpha Houston Heights",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Houston",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Houston"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Alpha Houston is coming soon."
+    },
+    "jamaica-plain": {
+      "url": "https://alpha.school/jamaica-plain/",
+      "wordpressObjectId": 9282,
+      "mapPrograms": [
+        {
+          "id": "program-57622127456",
+          "name": "Alpha Jamaica Plain",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Jamaica Plain",
+          "state": "MA",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Alpha Jamaica Plain is launching in Fall 2026."
+    },
+    "kirkland": {
+      "url": "https://alpha.school/kirkland/",
+      "wordpressObjectId": 9216,
+      "mapPrograms": [
+        {
+          "id": "program-42820443702",
+          "name": "Alpha Kirkland",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Kirkland",
+          "state": "Washington",
+          "communityUrl": "https://www.community.alpha.school/"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Join us for an info session , and see firsthand why Alpha is ranked among the be"
+    },
+    "la-jolla": {
+      "url": "https://alpha.school/la-jolla/",
+      "wordpressObjectId": 9212,
+      "mapPrograms": [
+        {
+          "id": "program-51235904641",
+          "name": "Alpha La Jolla",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "La Jolla",
+          "state": "CA",
+          "communityUrl": "https://community.alpha.school/"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha La Jolla is open and enrolling."
+    },
+    "lake-travis": {
+      "url": "https://alpha.school/lake-travis/",
+      "wordpressObjectId": 9310,
+      "mapPrograms": [
+        {
+          "id": "program-50888725544",
+          "name": "Alpha Lake Travis",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Austin",
+          "state": "TX",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Lake%20Travis"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Alpha Lake Travis is launching in Fall 2026."
+    },
+    "malibu": {
+      "url": "https://alpha.school/malibu/",
+      "wordpressObjectId": 9211,
+      "mapPrograms": [
+        {
+          "id": "program-51219627180",
+          "name": "Alpha Malibu",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Malibu",
+          "state": "CA",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Malibu"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Malibu is open and enrolling."
+    },
+    "miami": {
+      "url": "https://alpha.school/miami/",
+      "wordpressObjectId": 5866,
+      "mapPrograms": [
+        {
+          "id": "program-26445615176",
+          "name": "Alpha Miami",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-12",
+          "city": "Miami",
+          "state": "Florida",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Miami"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Miami is open and enrolling."
+    },
+    "miami-beach": {
+      "url": "https://alpha.school/miami-beach/",
+      "wordpressObjectId": 9214,
+      "mapPrograms": [
+        {
+          "id": "program-50407159388",
+          "name": "Alpha Miami Beach",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "PreK-8",
+          "city": "Miami",
+          "state": "FL",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Miami%20Beach"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Miami Beach is launching in Fall 2026."
+    },
+    "nashville": {
+      "url": "https://alpha.school/nashville/",
+      "wordpressObjectId": 9218,
+      "mapPrograms": [
+        {
+          "id": "program-50960324964",
+          "name": "Alpha Nashville",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Nashville",
+          "state": "TN",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Nashville"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Nashville is now open and welcoming students."
+    },
+    "new-york-city": {
+      "url": "https://alpha.school/new-york-city/",
+      "wordpressObjectId": 6542,
+      "mapPrograms": [
+        {
+          "id": "program-26463204876",
+          "name": "Alpha New York",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-12",
+          "city": "New York",
+          "state": "New York",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20NYC"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan\u2019"
+    },
+    "oklahoma-city": {
+      "url": "https://alpha.school/oklahoma-city/",
+      "wordpressObjectId": 9215,
+      "mapPrograms": [
+        {
+          "id": "program-41831482741",
+          "name": "Alpha Oklahoma City",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-10",
+          "city": "Oklahoma City",
+          "state": "Oklahoma",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Oklahoma%20City"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Oklahoma City is now open."
+    },
+    "orange-county": {
+      "url": "https://alpha.school/orange-county/",
+      "wordpressObjectId": 6551,
+      "mapPrograms": [
+        {
+          "id": "program-29735717537",
+          "name": "Alpha Orange County",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Lake Forest",
+          "state": "California",
+          "communityUrl": null
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Orange County is open and enrolling."
+    },
+    "palm-beach": {
+      "url": "https://alpha.school/palm-beach/",
+      "wordpressObjectId": 6545,
+      "mapPrograms": [
+        {
+          "id": "program-26463204902",
+          "name": "Alpha Palm Beach",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Palm Beach Gardens",
+          "state": "Florida",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20West%20Palm%20Beach"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Palm Beach is open and enrolling."
+    },
+    "palo-alto": {
+      "url": "https://alpha.school/palo-alto/",
+      "wordpressObjectId": 8449,
+      "mapPrograms": [
+        {
+          "id": "program-40674858575",
+          "name": "Alpha Palo Alto",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "K-8",
+          "city": "Palo Alto",
+          "state": "California",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Palo%20Alto"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha Palo Alto is open and enrolling."
+    },
+    "park-city": {
+      "url": "https://alpha.school/park-city/",
+      "wordpressObjectId": 9206,
+      "mapPrograms": [
+        {
+          "id": "program-50160852349",
+          "name": "Alpha Park City",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Park City",
+          "state": "UT",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Park%20City"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Park City is open and enrolling."
+    },
+    "plano": {
+      "url": "https://alpha.school/plano/",
+      "wordpressObjectId": 6546,
+      "mapPrograms": [
+        {
+          "id": "program-29737764355",
+          "name": "Alpha Plano",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Plano",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Plano"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Plano is open and enrolling."
+    },
+    "raleigh": {
+      "url": "https://alpha.school/raleigh/",
+      "wordpressObjectId": 6547,
+      "mapPrograms": [
+        {
+          "id": "program-29735717555",
+          "name": "Alpha Raleigh",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "K-12",
+          "city": "Raleigh",
+          "state": "North Carolina",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Raleigh"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha Raleigh is open and enrolling."
+    },
+    "san-francisco": {
+      "url": "https://alpha.school/san-francisco/",
+      "wordpressObjectId": 6544,
+      "mapPrograms": [
+        {
+          "id": "program-30202737671",
+          "name": "Alpha San Francisco",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-12",
+          "city": "San Francisco",
+          "state": "California",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20San%20Francisco"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha San Francisco is open and enrolling."
+    },
+    "san-juan": {
+      "url": "https://alpha.school/san-juan/",
+      "wordpressObjectId": 9627,
+      "mapPrograms": [
+        {
+          "id": "program-52385985656",
+          "name": "Alpha San Juan",
+          "programType": "Announced",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "San Juan",
+          "state": "PR",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20San%20Juan%20PR"
+        }
+      ],
+      "lifecycle": "Announced",
+      "conflicts": [],
+      "introStatement": "Alpha San Juan is coming soon."
+    },
+    "santa-barbara": {
+      "url": "https://alpha.school/santa-barbara/",
+      "wordpressObjectId": 6541,
+      "mapPrograms": [
+        {
+          "id": "program-26459919653",
+          "name": "Alpha Santa Barbara",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-12",
+          "city": "Santa Barbara",
+          "state": "California",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Santa%20Barbara"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Santa Barbara is open and enrolling."
+    },
+    "santa-monica": {
+      "url": "https://alpha.school/santa-monica/",
+      "wordpressObjectId": 8450,
+      "mapPrograms": [
+        {
+          "id": "program-42699541904",
+          "name": "Alpha Santa Monica",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "K-9",
+          "city": "Santa Monica",
+          "state": "California",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20School%20Santa%20Monica"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha Santa Monica is open and enrolling."
+    },
+    "scottsdale": {
+      "url": "https://alpha.school/scottsdale/",
+      "wordpressObjectId": 6549,
+      "mapPrograms": [
+        {
+          "id": "program-26463204914",
+          "name": "Alpha Scottsdale",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Scottsdale",
+          "state": "Arizona",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Scottsdale"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Scottsdale is open and enrolling."
+    },
+    "south-bay-la": {
+      "url": "https://alpha.school/south-bay-la/",
+      "wordpressObjectId": 9208,
+      "mapPrograms": [
+        {
+          "id": "program-49011192957",
+          "name": "Alpha South Bay LA",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Playa Vista",
+          "state": "CA",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20South%20Bay%20LA"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha South Bay LA is open and enrolling."
+    },
+    "southlake": {
+      "url": "https://alpha.school/southlake/",
+      "wordpressObjectId": 8621,
+      "mapPrograms": [
+        {
+          "id": "program-48796922685",
+          "name": "Alpha Southlake",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Keller",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Southlake"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Southlake is open and enrolling."
+    },
+    "the-woodlands": {
+      "url": "https://alpha.school/the-woodlands/",
+      "wordpressObjectId": 8782,
+      "mapPrograms": [
+        {
+          "id": "program-38325891178",
+          "name": "Alpha The Woodlands",
+          "programType": "Open",
+          "launchDate": "Fall 2026",
+          "gradeRange": "K-8",
+          "city": "The Woodlands",
+          "state": "Texas",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20The%20Woodlands"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [
+        "programType Open but launchDate Fall 2026"
+      ],
+      "introStatement": "Alpha The Woodlands is open and enrolling."
+    },
+    "tulsa": {
+      "url": "https://alpha.school/tulsa/",
+      "wordpressObjectId": 9210,
+      "mapPrograms": [
+        {
+          "id": "program-51235904680",
+          "name": "Alpha Tulsa",
+          "programType": "Open",
+          "launchDate": null,
+          "gradeRange": "K-8",
+          "city": "Tulsa",
+          "state": "OK",
+          "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Tulsa"
+        }
+      ],
+      "lifecycle": "Open",
+      "conflicts": [],
+      "introStatement": "Alpha Tulsa is open and enrolling."
+    }
+  }
+}

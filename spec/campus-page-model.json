@@ -1,0 +1,375 @@
+{
+  "$comment": "Campus page section model derived from the live Elementor structure of 44 campus pages on 2026-09-15 (M1). Names are the Elementor container titles used by the site builders.",
+  "generatedAt": "2026-09-15T19:30:26.872237+00:00",
+  "pagesInspected": 44,
+  "canonicalOrder": [
+    "Home Hero",
+    "Top section",
+    "Center section",
+    "FoundingFamilies",
+    "Events",
+    "Contact and resources",
+    "Team",
+    "videogallery",
+    "Gallery",
+    "Lower section",
+    "cognia_candidate",
+    "cognia_yes"
+  ],
+  "sections": {
+    "Home Hero": {
+      "presentOnPages": 44,
+      "typicalWidgets": {
+        "heading": 44,
+        "button": 44
+      },
+      "purpose": "Campus name (H1), grade range and city subtitle, hero background, CTA row: STAY IN-THE-KNOW, Attend an Info Session, Book a Call, Apply now"
+    },
+    "Top section": {
+      "presentOnPages": 29,
+      "typicalWidgets": {
+        "spacer": 29
+      },
+      "purpose": "Optional strip above the intro (present on 29 pages); contents vary"
+    },
+    "Center section": {
+      "presentOnPages": 42,
+      "typicalWidgets": {
+        "heading": 42,
+        "text-editor": 42,
+        "spacer": 42,
+        "video": 42,
+        "image": 42,
+        "button": 7
+      },
+      "purpose": "Intro: heading \"Welcome to the Future of Education in <City>\", body copy, intro status sentence, \"Join us for an info session\" paragraph, and the intro card slot (approved image card or campus video)"
+    },
+    "FoundingFamilies": {
+      "presentOnPages": 44,
+      "typicalWidgets": {
+        "heading": 44,
+        "text-editor": 44,
+        "video": 44,
+        "shortcode": 44,
+        "button": 44
+      },
+      "purpose": "Parent proof videos (three video widgets) under the heading \"See How Alpha Transforms Kids\""
+    },
+    "Events": {
+      "presentOnPages": 44,
+      "typicalWidgets": {
+        "heading": 44,
+        "text-editor": 44,
+        "shortcode": 44,
+        "button": 44
+      },
+      "purpose": "Campus event strip fed by HubSpot events for this campus"
+    },
+    "Contact and resources": {
+      "presentOnPages": 42,
+      "typicalWidgets": {
+        "spacer": 42,
+        "icon-box": 42,
+        "divider": 42,
+        "button": 42,
+        "google_maps": 42,
+        "call-to-action": 19,
+        "text-editor": 3
+      },
+      "purpose": "Contact block (address, phone, email), resources (info packet, calendar, booking), map"
+    },
+    "Team": {
+      "presentOnPages": 47,
+      "typicalWidgets": {
+        "heading": 47,
+        "image": 45,
+        "text-editor": 45,
+        "divider": 45,
+        "blockquote": 45,
+        "nested-carousel": 18,
+        "video": 1,
+        "template": 1
+      },
+      "purpose": "Staff cards: image, \"Name | Title\" heading, bio, optional quote"
+    },
+    "videogallery": {
+      "presentOnPages": 44,
+      "typicalWidgets": {
+        "heading": 44,
+        "airtable_video_gallery": 44,
+        "button": 44,
+        "text-editor": 43
+      },
+      "purpose": "Airtable video gallery"
+    },
+    "Gallery": {
+      "presentOnPages": 42,
+      "typicalWidgets": {
+        "spacer": 42,
+        "call-to-action": 42,
+        "gallery": 42
+      },
+      "purpose": "Photo gallery"
+    },
+    "Lower section": {
+      "presentOnPages": 42,
+      "typicalWidgets": {
+        "heading": 42,
+        "nested-accordion": 42,
+        "text-editor": 42,
+        "posts": 41
+      },
+      "purpose": "Closing CTA block"
+    },
+    "cognia_candidate": {
+      "presentOnPages": 44,
+      "typicalWidgets": {
+        "text-editor": 44,
+        "divider": 44
+      },
+      "purpose": "Accreditation candidate badge (shown when applicable)"
+    },
+    "cognia_yes": {
+      "presentOnPages": 44,
+      "typicalWidgets": {
+        "text-editor": 44,
+        "image": 44,
+        "divider": 44
+      },
+      "purpose": "Accreditation badge (shown when accredited)"
+    },
+    "?": {
+      "presentOnPages": 16,
+      "typicalWidgets": {
+        "spacer": 8,
+        "heading": 7,
+        "text-editor": 7,
+        "image": 3,
+        "html": 3,
+        "video": 2,
+        "call-to-action": 2,
+        "gallery": 2
+      },
+      "purpose": "unclassified"
+    },
+    "resources": {
+      "presentOnPages": 2,
+      "typicalWidgets": {
+        "call-to-action": 2,
+        "spacer": 2,
+        "icon-box": 2,
+        "divider": 2,
+        "button": 2,
+        "google_maps": 2
+      },
+      "purpose": "unclassified"
+    },
+    "Visible Blogs and News": {
+      "presentOnPages": 1,
+      "typicalWidgets": {
+        "heading": 1,
+        "posts": 1,
+        "text-editor": 1
+      },
+      "purpose": "unclassified"
+    },
+    "In the News": {
+      "presentOnPages": 1,
+      "typicalWidgets": {
+        "heading": 1,
+        "text-editor": 1
+      },
+      "purpose": "unclassified"
+    }
+  },
+  "variants": {
+    "Home Hero | Top section | Center section | FoundingFamilies | Events | Contact and resources | Team | videogallery | Gallery | Lower section | cognia_candidate | cognia_yes": [
+      "atlanta",
+      "bethesda",
+      "boca-raton",
+      "boston",
+      "boston-suburbs",
+      "carrollton",
+      "denver",
+      "east-bay",
+      "franklin",
+      "highland-park",
+      "houston",
+      "jamaica-plain",
+      "la-jolla",
+      "malibu",
+      "miami-beach",
+      "nashville",
+      "oklahoma-city",
+      "park-city",
+      "san-juan",
+      "south-bay-la",
+      "tulsa"
+    ],
+    "Home Hero | Center section | FoundingFamilies | Events | Contact and resources | Gallery | Team | videogallery | Lower section | cognia_candidate | cognia_yes": [
+      "fort-worth",
+      "new-york-city",
+      "plano",
+      "san-francisco",
+      "santa-barbara"
+    ],
+    "Home Hero | Center section | FoundingFamilies | Events | Contact and resources | Team | videogallery | Gallery | Lower section | cognia_candidate | cognia_yes": [
+      "dorado",
+      "santa-monica",
+      "southlake",
+      "the-woodlands"
+    ],
+    "Home Hero | Top section | Center section | FoundingFamilies | Events | ? | Contact and resources | Gallery | Team | videogallery | Lower section | cognia_candidate | cognia_yes": [
+      "brownsville",
+      "chantilly"
+    ],
+    "Home Hero | Top section | Center section | FoundingFamilies | Events | Contact and resources | Gallery | Team | videogallery | Lower section | cognia_candidate | cognia_yes": [
+      "charlotte",
+      "raleigh"
+    ],
+    "Home Hero | ? | FoundingFamilies | Events | resources | ? | Team | ? | Team | videogallery | ? | cognia_candidate | cognia_yes": [
+      "austin"
+    ],
+    "Home Hero | Center section | FoundingFamilies | Events | Contact and resources | Team | videogallery | Gallery | Visible Blogs and News | Lower section | cognia_candidate | cognia_yes": [
+      "chicago"
+    ],
+    "Home Hero | Top section | Center section | FoundingFamilies | Events | Contact and resources | Team | videogallery | Gallery | In the News | Lower section | cognia_candidate | cognia_yes": [
+      "greenwich"
+    ],
+    "Home Hero | Top section | Center section | FoundingFamilies | Events | Contact and resources | Team | videogallery | Gallery | Lower section | cognia_candidate | cognia_yes | ? | ? | ?": [
+      "kirkland"
+    ],
+    "Home Hero | Top section | Center section | FoundingFamilies | Events | Contact and resources | videogallery | Gallery | Team | Lower section | cognia_candidate | cognia_yes": [
+      "lake-travis"
+    ],
+    "Home Hero | ? | ? | FoundingFamilies | Events | resources | ? | Team | ? | Team | videogallery | ? | cognia_candidate | cognia_yes": [
+      "miami"
+    ],
+    "Home Hero | Center section | ? | FoundingFamilies | Events | Contact and resources | Team | Gallery | videogallery | Lower section | cognia_candidate | cognia_yes": [
+      "orange-county"
+    ],
+    "Home Hero | Top section | Center section | ? | FoundingFamilies | Events | Contact and resources | Gallery | Team | videogallery | Lower section | cognia_candidate | cognia_yes": [
+      "palm-beach"
+    ],
+    "Home Hero | Center section | FoundingFamilies | Events | Contact and resources | Team | videogallery | Gallery | Team | Lower section | cognia_candidate | cognia_yes": [
+      "palo-alto"
+    ],
+    "Home Hero | Center section | FoundingFamilies | Events | Contact and resources | Team | Gallery | videogallery | Lower section | cognia_candidate | cognia_yes": [
+      "scottsdale"
+    ]
+  },
+  "introCardSlot": {
+    "path": "Center section > second element (image) beside the video widget",
+    "observed": {
+      "openAndEnrollingCard": [
+        "boca-raton",
+        "boston",
+        "denver",
+        "greenwich",
+        "highland-park",
+        "kirkland",
+        "malibu",
+        "miami-beach",
+        "nashville",
+        "oklahoma-city",
+        "palo-alto",
+        "park-city",
+        "south-bay-la",
+        "tulsa"
+      ],
+      "videoOnly": [
+        "brownsville",
+        "chantilly",
+        "charlotte",
+        "chicago",
+        "dorado",
+        "fort-worth",
+        "lake-travis",
+        "new-york-city",
+        "orange-county",
+        "palm-beach",
+        "plano",
+        "raleigh",
+        "san-francisco",
+        "santa-barbara",
+        "scottsdale"
+      ]
+    }
+  },
+  "heroCtaLabels": [
+    [
+      "STAY IN-THE-KNOW",
+      44
+    ],
+    [
+      "Attend an Info Session",
+      44
+    ],
+    [
+      "Apply now",
+      44
+    ],
+    [
+      "Book a Call",
+      20
+    ],
+    [
+      "Book A Call",
+      19
+    ],
+    [
+      "Join The Community",
+      3
+    ],
+    [
+      "Contact Admissions",
+      1
+    ]
+  ],
+  "staffCardCounts": {
+    "atlanta": 1,
+    "austin": 11,
+    "bethesda": 5,
+    "boca-raton": 3,
+    "boston": 4,
+    "boston-suburbs": 4,
+    "brownsville": 9,
+    "carrollton": 3,
+    "chantilly": 6,
+    "charlotte": 9,
+    "chicago": 2,
+    "denver": 8,
+    "dorado": 1,
+    "east-bay": 11,
+    "fort-worth": 6,
+    "franklin": 3,
+    "greenwich": 2,
+    "highland-park": 6,
+    "houston": 3,
+    "jamaica-plain": 4,
+    "kirkland": 3,
+    "la-jolla": 6,
+    "lake-travis": 1,
+    "malibu": 4,
+    "miami": 21,
+    "miami-beach": 7,
+    "nashville": 1,
+    "new-york-city": 21,
+    "oklahoma-city": 2,
+    "orange-county": 10,
+    "palm-beach": 5,
+    "palo-alto": 14,
+    "park-city": 1,
+    "plano": 4,
+    "raleigh": 8,
+    "san-francisco": 6,
+    "san-juan": 3,
+    "santa-barbara": 6,
+    "santa-monica": 10,
+    "scottsdale": 6,
+    "south-bay-la": 8,
+    "southlake": 5,
+    "the-woodlands": 6,
+    "tulsa": 2
+  }
+}

@@ -1,3 +1,6 @@
-# spec
+# Spec (machine-readable requirements)
 
-Placeholder. See docs/PRD.md section 5.3 and 5.4.
+- `campus-lifecycle.json`: campus states as the sources define them, per-campus classification, and source conflicts.
+- `campus-page-model.json`: section model derived from the live pages.
+- `inventory/`: raw per-page inventories captured through the Alpha WordPress MCP (dated).
+- `campus-page-requirements.json`: per-state, per-section requirements (M3, not written yet).

@@ -1,0 +1,109 @@
+{
+  "$comment": "Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-Enrolling.png\" made by Yash Chitneni from one template (uploaded 2026-09-07). null = no approved asset yet; ask the owner, never substitute. Verified by screenshot 2026-09-15.",
+  "owner": "Yash Chitneni (WordPress user 30) produces Open and Enrolling cards; Matt/Yash approve campus videos",
+  "campuses": {
+    "boca-raton": {
+      "openMedia": "card",
+      "attachmentId": 9822,
+      "status": "placed"
+    },
+    "boston": {
+      "openMedia": "card",
+      "attachmentId": 9826,
+      "status": "placed"
+    },
+    "denver": {
+      "openMedia": "card",
+      "attachmentId": 9813,
+      "status": "placed"
+    },
+    "greenwich": {
+      "openMedia": "card",
+      "attachmentId": 9821,
+      "status": "placed"
+    },
+    "highland-park": {
+      "openMedia": "card",
+      "attachmentId": 9816,
+      "status": "placed"
+    },
+    "kirkland": {
+      "openMedia": "card",
+      "attachmentId": 9818,
+      "status": "placed"
+    },
+    "malibu": {
+      "openMedia": "card",
+      "attachmentId": 9820,
+      "status": "placed"
+    },
+    "miami-beach": {
+      "openMedia": "card",
+      "attachmentId": 9817,
+      "status": "placed"
+    },
+    "nashville": {
+      "openMedia": "card",
+      "attachmentId": 9815,
+      "status": "placed"
+    },
+    "oklahoma-city": {
+      "openMedia": "card",
+      "attachmentId": 9825,
+      "status": "placed"
+    },
+    "palo-alto": {
+      "openMedia": "card",
+      "attachmentId": 9814,
+      "status": "placed"
+    },
+    "park-city": {
+      "openMedia": "card",
+      "attachmentId": 9823,
+      "status": "placed"
+    },
+    "south-bay-la": {
+      "openMedia": "card",
+      "attachmentId": 9824,
+      "status": "placed"
+    },
+    "tulsa": {
+      "openMedia": "card",
+      "attachmentId": 9819,
+      "status": "placed"
+    },
+    "raleigh": {
+      "openMedia": "video",
+      "attachmentId": null,
+      "status": "placed",
+      "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot)"
+    },
+    "dorado": {
+      "openMedia": "video",
+      "attachmentId": null,
+      "status": "placed",
+      "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot)"
+    },
+    "atlanta": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "stale card attachment 8630 (atlanta.png, \"Coming Fall 2026 To Roswell\")",
+      "apexStatus": "MISSING_INFO 2026-09-15"
+    },
+    "la-jolla": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "stale card attachment 9226 (Subtitle-8.png, \"Coming Fall 2026 To San Diego\")",
+      "apexStatus": "MISSING_INFO 2026-09-15"
+    },
+    "santa-monica": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "stale card attachment 8465 (Santa-Monica.png, \"Coming Fall 2026 To Santa Monica\")",
+      "apexStatus": "MISSING_INFO 2026-09-15"
+    }
+  }
+}

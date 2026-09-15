@@ -57,5 +57,6 @@ tests/                 validators that check spec files and run checks against l
 
 ## Current status
 
-- September 15, 2026: repository created, overview and PRD written. No requirements captured yet.
-- Next: site inventory through the Alpha WordPress MCP to derive the section model from the live pages, and reconciliation of campus lifecycle values across HubSpot, Operations, and the map API. See the PRD milestones.
+- September 15, 2026: repository created, overview and PRD written.
+- September 15, 2026 (M1, M2 drafts): 44 campus pages inventoried through the Alpha WordPress MCP (`spec/inventory/`), page model derived (`playbook/campus-page/page-model.md`, `spec/campus-page-model.json`), lifecycle states captured from the map API and the observer's Operations mapping (`spec/campus-lifecycle.json`), source pointers and the observer check catalog recorded (`registry/`). Conflicts and decisions for Yash and Matt are in `docs/findings-2026-09-15.md`.
+- Next: M3, the requirements matrix for the Open state, once the findings questions are answered.
