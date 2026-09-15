@@ -1,0 +1,2526 @@
+{
+  "$comment": "People and the roles they hold, with the source and date of each claim. People change; roles do not. Seeded 2026-09-15 from website staff cards (Team sections), APEX requester history (476 human website tickets to 2026-09-08), and named decisions. Emails matched from APEX requester addresses; null = not yet confirmed. Keep current from the same sources; see playbook/responsibilities.md.",
+  "generatedAt": "2026-09-15",
+  "people": {
+    "aerinpaulo": {
+      "name": "Aerin Paulo",
+      "email": "aerin.paulo@2hourlearning.com",
+      "roles": [
+        {
+          "role": "events",
+          "title": "Submits event and Future of Education tickets",
+          "campus": "all",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "alejandrobetancourtramos": {
+      "name": "Alejandro Betancourtramos",
+      "email": "alejandro.betancourtramos@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "dorado (16)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "dralliebradian": {
+      "name": "Allie Bradian",
+      "email": "allie.bradian@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "boca-raton",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "allisondeleo": {
+      "name": "Allison de Leo",
+      "email": null,
+      "roles": [
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "miami-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "alyssaduncan": {
+      "name": "Alyssa Duncan",
+      "email": "alyssa.duncan@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "scottsdale (8)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "ambikadani": {
+      "name": "Ambika Dani",
+      "email": "ambika.dani@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "santa-monica (11), south-bay-la (5), greenwich (3), boston (6), the-woodlands (10)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "andeeyokohori": {
+      "name": "Andee Yokohori",
+      "email": "andee.yokohori@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "oklahoma-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "andygibson": {
+      "name": "Andy Gibson",
+      "email": "andy.gibson@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "highland-park",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents of Alpha School in Plano",
+          "campus": "plano",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "southlake",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "angelaallen": {
+      "name": "Angela Allen",
+      "email": "angela.allen@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "scottsdale",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "ashleyrahr": {
+      "name": "Ashley Rahr",
+      "email": "ashley.rahr@alpha.school",
+      "roles": [
+        {
+          "role": "expansion-new-programs",
+          "title": "Submits New Program tickets for pre-announcement campuses (36 campuses in APEX history)",
+          "campus": "expansion",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "ashleystorms": {
+      "name": "Ashley Storms",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "kirkland",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "drbaileyubellacker": {
+      "name": "Bailey Ubellacker",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "palo-alto",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "bengordonsniffen": {
+      "name": "Ben Gordon-Sniffen",
+      "email": null,
+      "roles": [
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "boston",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "boston-suburbs",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "jamaica-plain",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "bethbewley": {
+      "name": "Beth Bewley",
+      "email": "beth.bewley@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "tulsa (3), orange-county (19), santa-barbara (12)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "biancadelariva": {
+      "name": "Bianca De La Riva",
+      "email": "bianca.delariva@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "miami",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "drbrianhowell": {
+      "name": "Brian Howell",
+      "email": "brian.howell@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents",
+          "campus": "chicago",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "bryangordon": {
+      "name": "Bryan Gordon",
+      "email": null,
+      "roles": [
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "denver",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "cjweisinger": {
+      "name": "CJ Weisinger",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "highland-park",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "carawilkinson": {
+      "name": "Cara Wilkinson",
+      "email": "cara.wilkinson@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "austin (10)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "carringtonhaas": {
+      "name": "Carrington Haas",
+      "email": "carrington.haas@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "austin (12)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "carsonlehmann": {
+      "name": "Carson Lehmann",
+      "email": "carson.lehmann@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "san-francisco",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "santa-barbara",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "chelseawinters": {
+      "name": "Chelsea Winters",
+      "email": "chelsea.winters@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "bethesda",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "carrollton",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "franklin",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "houston",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "san-juan",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "chloecooper": {
+      "name": "Chloe Cooper",
+      "email": "chloe.cooper@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "dorado (5)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "christigordon": {
+      "name": "Christi Gordon",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "scottsdale",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "christineheaney": {
+      "name": "Christine Heaney",
+      "email": "christine.heaney@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "plano",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "cliffordsmith": {
+      "name": "Clifford Smith",
+      "email": "clifford.smith@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "charlotte (32)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "courtneyfenner": {
+      "name": "Courtney Fenner",
+      "email": "courtney.fenner@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "chantilly",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "crystledorsey": {
+      "name": "Crystle Dorsey",
+      "email": "crystle.dorsey@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "scottsdale (25)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "dawncrichtonadams": {
+      "name": "Dawn Crichton-Adams",
+      "email": "dawn.crichton-adams@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "scottsdale (11)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "denysecarter": {
+      "name": "Denyse Carter",
+      "email": "denyse.carter@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "la-jolla (43)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "denyseholloway": {
+      "name": "Denyse Holloway",
+      "email": null,
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "la-jolla",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "derekbergmann": {
+      "name": "Derek Bergmann",
+      "email": "derek.bergmann@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide, Santa Monica",
+          "campus": "santa-monica",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "derekrinks": {
+      "name": "Derek Rinks",
+      "email": "derek.rinks@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents",
+          "campus": "denver",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "dmitrybakaev": {
+      "name": "Dmitry Bakaev",
+      "email": "dmitry.bakaev@trilogy.com",
+      "roles": [
+        {
+          "role": "packet-owner",
+          "title": "Info packets and Google listings handoff; email support context",
+          "campus": "all",
+          "source": "marketingsupport registry and observer routing",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "observer routing rules"
+      ]
+    },
+    "drewcasebier": {
+      "name": "Drew Casebier",
+      "email": "drew.casebier@alpha.school",
+      "roles": [
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "emmaludwick": {
+      "name": "Emma Ludwick",
+      "email": "emma.ludwick@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents",
+          "campus": "palo-alto",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "englandreddy": {
+      "name": "England Reddy",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide - L1",
+          "campus": "san-francisco",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "ericsalgado": {
+      "name": "Eric Salgado",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "east-bay",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "evanore": {
+      "name": "Evan Ore",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "LEAD GUIDE \u00b7 MIDDLE SCHOOL",
+          "campus": "miami",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "freegary": {
+      "name": "Free Gary",
+      "email": null,
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "east-bay",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "palo-alto",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "gabriellepiazza": {
+      "name": "Gabrielle Piazza",
+      "email": "gabrielle.piazza@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "brownsville (3)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "gabygolombek": {
+      "name": "Gaby Golombek",
+      "email": "gabriel.golombek@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "la-jolla",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "gabysullivan": {
+      "name": "Gaby Sullivan",
+      "email": "gaby.sullivan@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "atlanta (24)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "geoffreygary": {
+      "name": "Geoffrey Gary",
+      "email": "geoffrey.gary@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "east-bay (9)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "haileymcspadden": {
+      "name": "Hailey McSpadden",
+      "email": null,
+      "roles": [
+        {
+          "role": "hubspot-owner",
+          "title": "In charge of HubSpot: programs, events, emails",
+          "campus": "all",
+          "source": "Matt Barge, 2026-09-15",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Matt Barge",
+        "Slack U08FWUH9UTB"
+      ]
+    },
+    "hayleywhittier": {
+      "name": "Hayley Whittier",
+      "email": "hayley.whittier@2hourlearning.com",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "greenwich (5)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "heathermcmahan": {
+      "name": "Heather McMahan",
+      "email": "heather.mcmahan@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents of Alpha School in Brownsville",
+          "campus": "brownsville",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "DEAN OF PARENTS",
+          "campus": "miami",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "drheathermcmahan": {
+      "name": "Heather McMahan",
+      "email": "heather.mcmahan@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "lake-travis",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "hello": {
+      "name": "Hello",
+      "email": "hello@margauxaxelrod.com",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "san-francisco (7)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "hollyhunnicutt": {
+      "name": "Holly Hunnicutt",
+      "email": "holly.hunnicutt@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "nashville (4)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "jackcarlson": {
+      "name": "Jack Carlson",
+      "email": "jack.carlson@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "denver",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jackiechan": {
+      "name": "Jackie Chan",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "orange-county",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jamiehunter": {
+      "name": "Jamie Hunter",
+      "email": "jamie.hunter@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "fort-worth",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jaridfagin": {
+      "name": "Jarid Fagin",
+      "email": "jarid.fagin@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "palm-beach (4)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "jasminecochran": {
+      "name": "Jasmine Cochran",
+      "email": "jasmine.cochran@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "fort-worth",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jasondemaria": {
+      "name": "Jason DeMaria",
+      "email": "jason.demaria@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "southlake",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jeffbarton": {
+      "name": "Jeff Barton",
+      "email": "jeffrey.barton@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "south-bay-la",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jennaklemm": {
+      "name": "Jenna Klemm",
+      "email": "jenna.klemm@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Wonderlab and Learning Lab Lead Guide",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jennifergreenham": {
+      "name": "Jennifer Greenham",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "raleigh",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jeremywilliams": {
+      "name": "Jeremy Williams",
+      "email": "jeremy.williams@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "raleigh (2)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "jessbauer": {
+      "name": "Jess Bauer",
+      "email": "jessica.bauer@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents of Alpha School in Chantilly",
+          "campus": "chantilly",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "johnstuart": {
+      "name": "John Stuart",
+      "email": "john.stuart@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "south-bay-la",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "jonathanaragon": {
+      "name": "Jonathan Aragon",
+      "email": "jonathan.aragon@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "kirkland (4)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "juliannebraime": {
+      "name": "Julianne Braime",
+      "email": "julianne.braime@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "new-york-city (19)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "kathyrobinson": {
+      "name": "Kathy Robinson",
+      "email": "kathleen.robinson@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents, Boston",
+          "campus": "boston",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "katieboye": {
+      "name": "Katie Boye",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "denver",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "kelliemowll": {
+      "name": "Kellie Mowll",
+      "email": "kellie.mowll@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "malibu",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents, Santa Monica",
+          "campus": "santa-monica",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "kirstenberg": {
+      "name": "Kirsten Berg",
+      "email": "kirsten.berg@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents of Alpha School in Palm Beach",
+          "campus": "palm-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "drkoririordan": {
+      "name": "Kori Riordan",
+      "email": null,
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents",
+          "campus": "east-bay",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "lesliecano": {
+      "name": "Leslie Cano",
+      "email": "leslie.cano@alpha.mail",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "miami-beach (7)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "leslielunacano": {
+      "name": "Leslie Luna Cano",
+      "email": "leslie.cano@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "miami-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "linayee": {
+      "name": "Lina Yee",
+      "email": "lina.yee@alpha.school",
+      "roles": [
+        {
+          "role": "admissions",
+          "title": "Admissions Associate",
+          "campus": "east-bay",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "lindsaydudley": {
+      "name": "Lindsay Dudley",
+      "email": "lindsay.dudley@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "chicago (5)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "linzigobble": {
+      "name": "Linzi Gobble",
+      "email": "linzi.gobble@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "boca-raton (5)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "linzijohnson": {
+      "name": "Linzi Johnson",
+      "email": "linzi.johnson@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "miami (15)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "lizzieheine": {
+      "name": "Lizzie Heine",
+      "email": "lizzie.heine@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "plano (8), highland-park (7), southlake (6), carrollton (5), lake-travis (3)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "loreleinewman": {
+      "name": "Lorelei Newman",
+      "email": "lorelei.newman@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "orange-county",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "lorrainelyman": {
+      "name": "Lorraine Lyman",
+      "email": "lorraine.lyman@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "la-jolla (2)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "mackenzieprice": {
+      "name": "MacKenzie Price",
+      "email": null,
+      "roles": [
+        {
+          "role": "brand-authority",
+          "title": "Final say on copy and brand; recorded choices govern all copy",
+          "campus": "all",
+          "source": "brand rules",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "docs/rules/alpha-brand-copy-rules.md"
+      ]
+    },
+    "malharmali": {
+      "name": "Malhar Mali",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "malibu",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "mattbarge": {
+      "name": "Matt Barge",
+      "email": "matthew.barge@superbuilders.school",
+      "roles": [
+        {
+          "role": "website-agent-operator",
+          "title": "Runs and supervises the website agents, APEX website queue, observer",
+          "campus": "all",
+          "source": "Matt Barge",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Matt Barge"
+      ]
+    },
+    "mattshenker": {
+      "name": "Matt Shenker",
+      "email": null,
+      "roles": [
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "scottsdale",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "south-bay-la",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "meganbartl": {
+      "name": "Megan Bartl",
+      "email": "megan.bartl@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "charlotte",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "michaelmarino": {
+      "name": "Michael Marino",
+      "email": "michael.marino@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents of Alpha School in Santa Barbara",
+          "campus": "santa-barbara",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "monicalavella": {
+      "name": "Monica Lavella",
+      "email": "monica.lavella@alpha.school",
+      "roles": [
+        {
+          "role": "pr-comms",
+          "title": "PR and Comms, In the Media tickets",
+          "campus": "all",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "morganhembree": {
+      "name": "Morgan Hembree",
+      "email": "morgan.hembree@alpha.school",
+      "roles": [
+        {
+          "role": "admissions",
+          "title": "Admissions Associate",
+          "campus": "miami",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "morganpetek": {
+      "name": "Morgan Petek",
+      "email": "morgan.petek@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "miami-beach (7), boca-raton (8)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "morganpeteknyman": {
+      "name": "Morgan Petek Nyman",
+      "email": null,
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "boca-raton",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "miami-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "morganswain": {
+      "name": "Morgan Swain",
+      "email": "morgan.swain@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "brownsville",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "nancytorvund": {
+      "name": "Nancy Torvund",
+      "email": "nancy.torvund@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "nicolenoel": {
+      "name": "Nicole Noel",
+      "email": "nicole.noel@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "bethesda",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "chantilly",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "paigelfults": {
+      "name": "Paige L. Fults",
+      "email": "paige.fults@alpha.school",
+      "roles": [
+        {
+          "role": "head-of-schools",
+          "title": "Head of Alpha School in  Brownsville",
+          "campus": "brownsville",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "pamjacksonphd": {
+      "name": "Pam Jackson, PhD",
+      "email": "pam.jackson@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "bethesda",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "qiuhongtang": {
+      "name": "Qiuhong Tang",
+      "email": "qiuhong.tang@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions, Kirkland",
+          "campus": "kirkland",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "rachel": {
+      "name": "Rachel",
+      "email": "rachel@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "palm-beach (4), bethesda (2), oklahoma-city (5), denver (4), franklin (2), houston (3), san-juan (2)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "rachelrachelalphaschool": {
+      "name": "Rachel (rachel@alpha.school)",
+      "email": "rachel@alpha.school",
+      "roles": [
+        {
+          "role": "expansion-founding",
+          "title": "Submits across many campuses and Alpha School (58 tickets); expansion or founding team",
+          "campus": "many",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "rebecca": {
+      "name": "Rebecca",
+      "email": "rebecca@eventcollectiveinc.com",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "carrollton (3)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "rebeccahaack": {
+      "name": "Rebecca Haack",
+      "email": "rebecca.haack@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "the-woodlands",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "rockymoore": {
+      "name": "Rocky Moore",
+      "email": "rocky.moore@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "oklahoma-city (21)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "rubyholman": {
+      "name": "Ruby Holman",
+      "email": "ruby.holman@alpha.school",
+      "roles": [
+        {
+          "role": "admissions",
+          "title": "Admissions Associate",
+          "campus": "san-francisco",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "ryanpelkey": {
+      "name": "Ryan Pelkey",
+      "email": "ryan.pelkey@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "east-bay (29)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "samdepalo": {
+      "name": "Sam DePalo",
+      "email": "samantha.depalo@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "fort-worth",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "southlake",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-guide",
+          "title": "Head Guide",
+          "campus": "the-woodlands",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "sammcdonald": {
+      "name": "Sam McDonald",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Middle School Lead Guide",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "samanthakravitz": {
+      "name": "Samantha Kravitz",
+      "email": "samantha.kravitz@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions, Boston",
+          "campus": "boston",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions, Boston",
+          "campus": "boston-suburbs",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions, Boston",
+          "campus": "jamaica-plain",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "saraharmendariz": {
+      "name": "Sarah Armendariz",
+      "email": "sarah.armendariz@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "tulsa (5)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "saraharmendarizmed": {
+      "name": "Sarah Armendariz, M.Ed.",
+      "email": null,
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "tulsa",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "sarahbergin": {
+      "name": "Sarah Bergin",
+      "email": "sarah.bergin@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "greenwich",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "sarahgirard": {
+      "name": "Sarah Girard",
+      "email": "sarah.girard@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions, Highland Park",
+          "campus": "highland-park",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "sarahmoore": {
+      "name": "Sarah Moore",
+      "email": "sarah.moore@alpha.school",
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions, Santa Monica",
+          "campus": "santa-monica",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "scottcody": {
+      "name": "Scott Cody",
+      "email": "scott.cody@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents of Alpha School in Orange County\u200b",
+          "campus": "orange-county",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "seanmckennams": {
+      "name": "Sean McKenna, MS",
+      "email": "sean.mckenna@alpha.school",
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "palm-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "seansatterlee": {
+      "name": "Sean Satterlee",
+      "email": "sean.satterlee@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents, Lexington",
+          "campus": "boston-suburbs",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "dean-of-parents",
+          "title": "Associate Dean of Parents, Jamaica Plain",
+          "campus": "jamaica-plain",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "shannonkebisek": {
+      "name": "Shannon Kebisek",
+      "email": "shannon.kebisek@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "palo-alto (8), east-bay (9), san-francisco (11)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "shireenamins": {
+      "name": "Shireen Amins",
+      "email": "shireen.amins@gmail.com",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "santa-monica (5)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "stephaniedean": {
+      "name": "Stephanie Dean",
+      "email": "stephanie.dean@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Assoc. Dean of Parents",
+          "campus": "raleigh",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "tarajohnson": {
+      "name": "Tara Johnson",
+      "email": "tara.johnson@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "raleigh (20), charlotte (9)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "taramarlow": {
+      "name": "Tara Marlow",
+      "email": "tara.marlow@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "tulsa (14)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "taraannejohnson": {
+      "name": "Tara-Anne Johnson",
+      "email": null,
+      "roles": [
+        {
+          "role": "director-of-admissions",
+          "title": "Director of Admissions",
+          "campus": "raleigh",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "drtashaarnold": {
+      "name": "Tasha Arnold",
+      "email": "tasha.arnold@2hourlearning.com",
+      "roles": [
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "atlanta",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "bethesda",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "boca-raton",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "boston",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "boston-suburbs",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "carrollton",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "chantilly",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "charlotte",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "chicago",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "denver",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "dorado",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "east-bay",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "fort-worth",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "franklin",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "greenwich",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "highland-park",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "houston",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "jamaica-plain",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "kirkland",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "la-jolla",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "malibu",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "miami",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "miami-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "nashville",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "oklahoma-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "orange-county",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "palm-beach",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "palo-alto",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "park-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "plano",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "raleigh",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "san-francisco",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "san-juan",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "santa-barbara",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "santa-monica",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of School",
+          "campus": "scottsdale",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "south-bay-la",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "southlake",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "the-woodlands",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools",
+          "campus": "tulsa",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "tashaarnold": {
+      "name": "Tasha Arnold",
+      "email": "tasha.arnold@alpha.school",
+      "roles": [
+        {
+          "role": "head-of-schools",
+          "title": "Head of Schools on 43 campus pages",
+          "campus": "all",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card",
+        "APEX requester history"
+      ]
+    },
+    "taylor": {
+      "name": "Taylor",
+      "email": "taylor@margauxaxelrod.com",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "palo-alto (7)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "taylorcantrelljd": {
+      "name": "Taylor Cantrell, JD",
+      "email": "taylor.cantrell@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "the-woodlands",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "taylorstokes": {
+      "name": "Taylor Stokes",
+      "email": "taylor.stokes@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "chicago (8), kirkland (8), dorado (3)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "terrencemcmullen": {
+      "name": "Terrence McMullen",
+      "email": "terrence.mcmullen@alpha.school",
+      "roles": [
+        {
+          "role": "dean-of-parents",
+          "title": "Dean of Parents",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "timothyberrymdiv": {
+      "name": "Timothy Berry, M.Div.",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "charlotte",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "varenyahariharan": {
+      "name": "Varenya Hariharan",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Level One Lead Guide",
+          "campus": "new-york-city",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "whitneybunn": {
+      "name": "Whitney Bunn",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "plano",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "whitneysnow": {
+      "name": "Whitney Snow",
+      "email": null,
+      "roles": [
+        {
+          "role": "lead-guide",
+          "title": "Lead Guide",
+          "campus": "santa-barbara",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    },
+    "yashchitneni": {
+      "name": "Yash Chitneni",
+      "email": "yash.chitneni@alpha.school",
+      "roles": [
+        {
+          "role": "website-operations",
+          "title": "Marketing ops; website changes; Open and Enrolling cards; Google listings",
+          "campus": "all",
+          "source": "Matt Barge",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Matt Barge",
+        "WordPress user 30",
+        "Slack U0ARFE1TYQK"
+      ]
+    },
+    "zararaheem": {
+      "name": "Zara Raheem",
+      "email": "zara.raheem@alpha.school",
+      "roles": [
+        {
+          "role": "ticket-requester",
+          "title": null,
+          "campus": "new-york-city (60)",
+          "source": "APEX requester history",
+          "asOf": "2026-09-08"
+        }
+      ],
+      "sources": [
+        "APEX requester history"
+      ]
+    },
+    "zoelovay": {
+      "name": "Zoe Lovay",
+      "email": "zoe.lovay@alpha.school",
+      "roles": [
+        {
+          "role": "admissions",
+          "title": "Admissions Associate",
+          "campus": "miami",
+          "source": "website staff card",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "website staff card"
+      ]
+    }
+  }
+}

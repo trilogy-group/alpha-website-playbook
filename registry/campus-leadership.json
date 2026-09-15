@@ -1,0 +1,517 @@
+{
+  "$comment": "Per-campus leadership as shown on the campus page Team section, 2026-09-15. Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide.",
+  "campuses": {
+    "atlanta": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ]
+    },
+    "austin": {},
+    "bethesda": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Chelsea Winters",
+        "Pam Jackson, PhD"
+      ],
+      "director-of-admissions": [
+        "Nicole Noel"
+      ]
+    },
+    "boca-raton": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "director-of-admissions": [
+        "Morgan Petek Nyman"
+      ],
+      "lead-guide": [
+        "Allie Bradian"
+      ]
+    },
+    "boston": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "head-guide": [
+        "Ben Gordon-Sniffen"
+      ],
+      "dean-of-parents": [
+        "Kathy Robinson"
+      ],
+      "director-of-admissions": [
+        "Samantha Kravitz"
+      ]
+    },
+    "boston-suburbs": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "head-guide": [
+        "Ben Gordon-Sniffen"
+      ],
+      "dean-of-parents": [
+        "Sean Satterlee"
+      ],
+      "director-of-admissions": [
+        "Samantha Kravitz"
+      ]
+    },
+    "brownsville": {
+      "head-of-schools": [
+        "Paige L. Fults"
+      ],
+      "dean-of-parents": [
+        "Heather McMahan"
+      ],
+      "lead-guide": [
+        "Morgan Swain"
+      ]
+    },
+    "carrollton": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Chelsea Winters"
+      ]
+    },
+    "chantilly": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Jess Bauer"
+      ],
+      "lead-guide": [
+        "Courtney Fenner"
+      ],
+      "director-of-admissions": [
+        "Nicole Noel"
+      ]
+    },
+    "charlotte": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "lead-guide": [
+        "Timothy Berry, M.Div."
+      ],
+      "director-of-admissions": [
+        "Megan Bartl"
+      ]
+    },
+    "chicago": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Brian Howell"
+      ]
+    },
+    "denver": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Derek Rinks"
+      ],
+      "head-guide": [
+        "Bryan Gordon"
+      ],
+      "lead-guide": [
+        "Katie Boye"
+      ],
+      "director-of-admissions": [
+        "Jack Carlson"
+      ]
+    },
+    "dorado": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ]
+    },
+    "east-bay": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Kori Riordan"
+      ],
+      "director-of-admissions": [
+        "Free Gary"
+      ],
+      "lead-guide": [
+        "Eric Salgado"
+      ],
+      "admissions": [
+        "Lina Yee"
+      ]
+    },
+    "fort-worth": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "lead-guide": [
+        "Sam DePalo"
+      ],
+      "dean-of-parents": [
+        "Jasmine Cochran"
+      ],
+      "director-of-admissions": [
+        "Jamie Hunter"
+      ]
+    },
+    "franklin": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Chelsea Winters"
+      ]
+    },
+    "greenwich": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Sarah Bergin"
+      ]
+    },
+    "highland-park": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "director-of-admissions": [
+        "Sarah Girard"
+      ],
+      "dean-of-parents": [
+        "Andy Gibson"
+      ],
+      "lead-guide": [
+        "CJ Weisinger"
+      ]
+    },
+    "houston": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Chelsea Winters"
+      ]
+    },
+    "jamaica-plain": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "head-guide": [
+        "Ben Gordon-Sniffen"
+      ],
+      "dean-of-parents": [
+        "Sean Satterlee"
+      ],
+      "director-of-admissions": [
+        "Samantha Kravitz"
+      ]
+    },
+    "kirkland": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "director-of-admissions": [
+        "Qiuhong Tang"
+      ],
+      "lead-guide": [
+        "Ashley Storms"
+      ]
+    },
+    "la-jolla": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Denyse Holloway"
+      ],
+      "lead-guide": [
+        "Gaby Golombek"
+      ]
+    },
+    "lake-travis": {
+      "dean-of-parents": [
+        "Heather McMahan"
+      ]
+    },
+    "malibu": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Kellie Mowll"
+      ],
+      "lead-guide": [
+        "Malhar Mali"
+      ]
+    },
+    "miami": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Heather McMahan"
+      ],
+      "lead-guide": [
+        "Evan Ore"
+      ],
+      "admissions": [
+        "Morgan Hembree",
+        "Zoe Lovay"
+      ],
+      "director-of-admissions": [
+        "Bianca De La Riva"
+      ]
+    },
+    "miami-beach": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "head-guide": [
+        "Allison de Leo"
+      ],
+      "dean-of-parents": [
+        "Leslie Luna Cano"
+      ],
+      "director-of-admissions": [
+        "Morgan Petek Nyman"
+      ]
+    },
+    "nashville": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ]
+    },
+    "new-york-city": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Terrence McMullen"
+      ],
+      "director-of-admissions": [
+        "Nancy Torvund"
+      ],
+      "head-guide": [
+        "Drew Casebier"
+      ],
+      "lead-guide": [
+        "Jenna Klemm",
+        "Varenya Hariharan",
+        "Sam McDonald"
+      ]
+    },
+    "oklahoma-city": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "director-of-admissions": [
+        "Andee Yokohori"
+      ]
+    },
+    "orange-county": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Scott Cody"
+      ],
+      "lead-guide": [
+        "Jackie Chan"
+      ],
+      "director-of-admissions": [
+        "Lorelei Newman"
+      ]
+    },
+    "palm-beach": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Kirsten Berg"
+      ],
+      "lead-guide": [
+        "Sean McKenna, MS"
+      ]
+    },
+    "palo-alto": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "lead-guide": [
+        "Bailey Ubellacker"
+      ],
+      "dean-of-parents": [
+        "Emma Ludwick"
+      ],
+      "director-of-admissions": [
+        "Free Gary"
+      ]
+    },
+    "park-city": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ]
+    },
+    "plano": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Andy Gibson"
+      ],
+      "lead-guide": [
+        "Whitney Bunn"
+      ],
+      "director-of-admissions": [
+        "Christine Heaney"
+      ]
+    },
+    "raleigh": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Stephanie Dean"
+      ],
+      "director-of-admissions": [
+        "Tara-Anne Johnson"
+      ],
+      "lead-guide": [
+        "Jennifer Greenham"
+      ]
+    },
+    "san-francisco": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "lead-guide": [
+        "Carson Lehmann",
+        "England Reddy"
+      ],
+      "admissions": [
+        "Ruby Holman"
+      ]
+    },
+    "san-juan": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Chelsea Winters"
+      ]
+    },
+    "santa-barbara": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Michael Marino"
+      ],
+      "lead-guide": [
+        "Whitney Snow"
+      ],
+      "head-guide": [
+        "Carson Lehmann"
+      ]
+    },
+    "santa-monica": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Kellie Mowll"
+      ],
+      "lead-guide": [
+        "Derek Bergmann"
+      ],
+      "director-of-admissions": [
+        "Sarah Moore"
+      ]
+    },
+    "scottsdale": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "head-guide": [
+        "Matt Shenker"
+      ],
+      "lead-guide": [
+        "Christi Gordon"
+      ],
+      "director-of-admissions": [
+        "Angela Allen"
+      ]
+    },
+    "south-bay-la": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "director-of-admissions": [
+        "John Stuart"
+      ],
+      "dean-of-parents": [
+        "Jeff Barton"
+      ],
+      "head-guide": [
+        "Matt Shenker"
+      ]
+    },
+    "southlake": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "head-guide": [
+        "Sam DePalo"
+      ],
+      "dean-of-parents": [
+        "Andy Gibson"
+      ],
+      "director-of-admissions": [
+        "Jason DeMaria"
+      ]
+    },
+    "the-woodlands": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "dean-of-parents": [
+        "Taylor Cantrell, JD"
+      ],
+      "director-of-admissions": [
+        "Rebecca Haack"
+      ],
+      "head-guide": [
+        "Sam DePalo"
+      ]
+    },
+    "tulsa": {
+      "head-of-schools": [
+        "Tasha Arnold"
+      ],
+      "director-of-admissions": [
+        "Sarah Armendariz, M.Ed."
+      ]
+    }
+  },
+  "placeholderCards": [
+    {
+      "campus": "austin",
+      "name": "[John Doe]",
+      "title": "Head of Alpha Private School in [CITY]"
+    },
+    {
+      "campus": "palo-alto",
+      "name": "_John_Doe_",
+      "title": "Head of Alpha School in _City_"
+    }
+  ]
+}

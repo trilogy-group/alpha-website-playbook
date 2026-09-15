@@ -1,0 +1,1138 @@
+{
+  "generatedAt": "2026-09-15T20:47:13.582Z",
+  "source": "Alpha WordPress MCP get_page Team section headings (Name | Title)",
+  "campuses": {
+    "atlanta": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      }
+    ],
+    "austin": [
+      {
+        "name": "Wonder Lab",
+        "title": "PreK Grade"
+      },
+      {
+        "name": "Learning Lab",
+        "title": "K - 1st Grade"
+      },
+      {
+        "name": "Level 1",
+        "title": "2nd - 3rd Grade"
+      },
+      {
+        "name": "Level 2",
+        "title": "4th - 5th Grade"
+      },
+      {
+        "name": "Middle School",
+        "title": "6th - 8th Grade"
+      },
+      {
+        "name": "[John Doe]",
+        "title": "Head of Alpha Private School in [CITY]"
+      },
+      {
+        "name": "Jane Doe",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "Jane Doe",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "Jane Doe",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "Jane Doe",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "Jane Doe",
+        "title": "Guide/ Guide for Grades.."
+      }
+    ],
+    "bethesda": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Chelsea Winters",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Morgan Hatt",
+        "title": "Community Partnerships"
+      },
+      {
+        "name": "Nicole Noel",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Pam Jackson, PhD",
+        "title": "Dean of Parents"
+      }
+    ],
+    "boca-raton": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Morgan Petek Nyman",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Dr. Allie Bradian",
+        "title": "Lead Guide"
+      }
+    ],
+    "boston": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Ben Gordon-Sniffen",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Kathy Robinson",
+        "title": "Associate Dean of Parents, Boston"
+      },
+      {
+        "name": "Samantha Kravitz",
+        "title": "Director of Admissions, Boston"
+      }
+    ],
+    "boston-suburbs": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Ben Gordon-Sniffen",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Sean Satterlee",
+        "title": "Associate Dean of Parents, Lexington"
+      },
+      {
+        "name": "Samantha Kravitz",
+        "title": "Director of Admissions, Boston"
+      }
+    ],
+    "brownsville": [
+      {
+        "name": "Paige L. Fults",
+        "title": "Head of Alpha School in  Brownsville"
+      },
+      {
+        "name": "Heather McMahan",
+        "title": "Dean of Parents of Alpha School in Brownsville"
+      },
+      {
+        "name": "Morgan Swain",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Patty Kelley",
+        "title": "Guide"
+      },
+      {
+        "name": "Samantha Hilton",
+        "title": "Guide"
+      },
+      {
+        "name": "Desirè Park",
+        "title": "Guide"
+      },
+      {
+        "name": "Ty Brooks M.Ed",
+        "title": "Guide"
+      },
+      {
+        "name": "Gabby Piazza",
+        "title": "Guide"
+      },
+      {
+        "name": "Zijin Zhang",
+        "title": "Guide"
+      }
+    ],
+    "carrollton": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Chelsea Winters",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Morgan Hatt",
+        "title": "Community Partnerships"
+      }
+    ],
+    "chantilly": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Jess Bauer",
+        "title": "Dean of Parents of Alpha School in Chantilly"
+      },
+      {
+        "name": "Courtney Fenner",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Victoria Schoch",
+        "title": "Guide"
+      },
+      {
+        "name": "Katie Pond",
+        "title": "Guide"
+      },
+      {
+        "name": "Nicole Noel",
+        "title": "Director of Admissions"
+      }
+    ],
+    "charlotte": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Timothy Berry, M.Div.",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Megan Bartl",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Jackson Newton",
+        "title": "Guide"
+      },
+      {
+        "name": "Joanna Sanner, M.A.",
+        "title": "Guide"
+      },
+      {
+        "name": "Lauren Sprouse",
+        "title": "Reading Specialist"
+      },
+      {
+        "name": "Adam Shipley",
+        "title": "Guide"
+      },
+      {
+        "name": "Ron Tyson",
+        "title": "Guide"
+      },
+      {
+        "name": "Jenna York",
+        "title": "Campus Coordinator"
+      }
+    ],
+    "chicago": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Dr. Brian Howell",
+        "title": "Associate Dean of Parents"
+      }
+    ],
+    "denver": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Derek Rinks",
+        "title": "Associate Dean of Parents"
+      },
+      {
+        "name": "Amy Fortier",
+        "title": "Reading Specialist · Learning Lab, Level 1"
+      },
+      {
+        "name": "Bryan Gordon",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Sarai Williams",
+        "title": "Guide · Learning Lab, Level 1"
+      },
+      {
+        "name": "Katie Boye",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Maddie Fitzgerald",
+        "title": "Guide · Middle School"
+      },
+      {
+        "name": "Jack Carlson",
+        "title": "Director of Admissions"
+      }
+    ],
+    "dorado": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      }
+    ],
+    "east-bay": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Dr. Kori Riordan",
+        "title": "Associate Dean of Parents"
+      },
+      {
+        "name": "Sarah Rettig",
+        "title": "Guide"
+      },
+      {
+        "name": "Amara Cohen",
+        "title": "Guide"
+      },
+      {
+        "name": "Eva Zhu",
+        "title": "Guide"
+      },
+      {
+        "name": "Free Gary",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Beth Cox",
+        "title": "Reading Specialist"
+      },
+      {
+        "name": "Vincent De Jesus",
+        "title": "Guide"
+      },
+      {
+        "name": "Eric Salgado",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Rachel Diao",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Lina Yee",
+        "title": "Admissions Associate"
+      }
+    ],
+    "fort-worth": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Sam DePalo",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Jasmine Cochran",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Kimberley Dillard",
+        "title": "Reading Specialist"
+      },
+      {
+        "name": "Bryce Derry",
+        "title": "Guide"
+      },
+      {
+        "name": "Jamie Hunter",
+        "title": "Director of Admissions"
+      }
+    ],
+    "franklin": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Chelsea Winters",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Morgan Hatt",
+        "title": "Community Partnerships"
+      }
+    ],
+    "greenwich": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Sarah Bergin",
+        "title": "Dean of Parents"
+      }
+    ],
+    "highland-park": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Sarah Girard",
+        "title": "Director of Admissions, Highland Park"
+      },
+      {
+        "name": "Jayden Jackson",
+        "title": "Guide"
+      },
+      {
+        "name": "Ness Hawthorn",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Andy Gibson",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "CJ Weisinger",
+        "title": "Lead Guide"
+      }
+    ],
+    "houston": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Chelsea Winters",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Morgan Hatt",
+        "title": "Community Partnerships"
+      }
+    ],
+    "jamaica-plain": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Ben Gordon-Sniffen",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Sean Satterlee",
+        "title": "Associate Dean of Parents, Jamaica Plain"
+      },
+      {
+        "name": "Samantha Kravitz",
+        "title": "Director of Admissions, Boston"
+      }
+    ],
+    "kirkland": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Qiuhong Tang",
+        "title": "Director of Admissions, Kirkland"
+      },
+      {
+        "name": "Ashley Storms",
+        "title": "Lead Guide"
+      }
+    ],
+    "la-jolla": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Denyse Holloway",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Gaby Golombek",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Maria Zello",
+        "title": "Guide"
+      },
+      {
+        "name": "Victoria Hrisanthopoulos",
+        "title": "Guide"
+      },
+      {
+        "name": "Kai Isaia",
+        "title": "Campus Coordinator"
+      }
+    ],
+    "lake-travis": [
+      {
+        "name": "Dr. Heather McMahan",
+        "title": "Dean of Parents"
+      }
+    ],
+    "malibu": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Kellie Mowll",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Malhar Mali",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Tara Jordan",
+        "title": "LL Guide"
+      }
+    ],
+    "miami": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Caitlin Calzadilla",
+        "title": "Guide"
+      },
+      {
+        "name": "Logan Higuera",
+        "title": "GUIDE · HIGH SCHOOL"
+      },
+      {
+        "name": "Santi Orozco",
+        "title": "Guide"
+      },
+      {
+        "name": "Sunny Lulla",
+        "title": "Guide"
+      },
+      {
+        "name": "Shannon Prior",
+        "title": "Guide"
+      },
+      {
+        "name": "Chris Hayes",
+        "title": "Guide"
+      },
+      {
+        "name": "Michael Dillow",
+        "title": "GUIDE · HIGH SCHOOL"
+      },
+      {
+        "name": "Heather McMahan",
+        "title": "DEAN OF PARENTS"
+      },
+      {
+        "name": "Cristy Cunningham",
+        "title": "GUIDE · LEVEL 2"
+      },
+      {
+        "name": "Tina Macias-Poppo",
+        "title": "GUIDE · LEVEL 2"
+      },
+      {
+        "name": "Natasha Mellini",
+        "title": "GUIDE · MIDDLE SCHOOL"
+      },
+      {
+        "name": "Justin Peterson",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Brittany Ore",
+        "title": "READING SPECIALIST · LEVEL 1"
+      },
+      {
+        "name": "April Owens",
+        "title": "READING SPECIALIST · LEVEL 1"
+      },
+      {
+        "name": "Evan Ore",
+        "title": "LEAD GUIDE · MIDDLE SCHOOL"
+      },
+      {
+        "name": "Shaw Pham-Dinh",
+        "title": "GUIDE · MIDDLE SCHOOL"
+      },
+      {
+        "name": "Ariadna Guerrero",
+        "title": "GUIDE · MIDDLE SCHOOL"
+      },
+      {
+        "name": "Morgan Hembree",
+        "title": "Admissions Associate"
+      },
+      {
+        "name": "Bianca De La Riva",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Zoe Lovay",
+        "title": "Admissions Associate"
+      }
+    ],
+    "miami-beach": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Allison de Leo",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Kirsten King",
+        "title": "Reading Specialist · Learning Lab, Level 1"
+      },
+      {
+        "name": "Jasmine Mellado",
+        "title": "Guide (K-1)"
+      },
+      {
+        "name": "Dani Orozco",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Leslie Luna Cano",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Morgan Petek Nyman",
+        "title": "Director of Admissions"
+      }
+    ],
+    "nashville": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      }
+    ],
+    "new-york-city": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Terrence McMullen",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Nancy Torvund",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Drew Casebier",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Emily Lopez",
+        "title": "Director of Global Programming"
+      },
+      {
+        "name": "Jenna Klemm",
+        "title": "Wonderlab and Learning Lab Lead Guide"
+      },
+      {
+        "name": "Hannah Burkhauser",
+        "title": "Learning Lab Guide"
+      },
+      {
+        "name": "Varenya Hariharan",
+        "title": "Level One Lead Guide"
+      },
+      {
+        "name": "Jesse Moskowitz",
+        "title": "Level One Guide"
+      },
+      {
+        "name": "Celine Bernhardt-Lanier",
+        "title": "Level One Guide"
+      },
+      {
+        "name": "Asa Siegel",
+        "title": "Level One Guide"
+      },
+      {
+        "name": "Bethany Harper",
+        "title": "Reading Specialist"
+      },
+      {
+        "name": "Tatiana Barbic",
+        "title": "Level Two Guide"
+      },
+      {
+        "name": "Austin Sacks",
+        "title": "Level Two Guide"
+      },
+      {
+        "name": "Chauncey Nartey",
+        "title": "Level Two Guide"
+      },
+      {
+        "name": "Sam McDonald",
+        "title": "Middle School Lead Guide"
+      },
+      {
+        "name": "William Gabreath",
+        "title": "Middle School Guide"
+      },
+      {
+        "name": "Parthvi Harde",
+        "title": "Middle School Guide"
+      },
+      {
+        "name": "Jebin Justin",
+        "title": "High School Guide"
+      },
+      {
+        "name": "Julianne Braime",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Zara Raheem",
+        "title": "Chief of Staff/Campus Coordinator"
+      }
+    ],
+    "oklahoma-city": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Andee Yokohori",
+        "title": "Director of Admissions"
+      }
+    ],
+    "orange-county": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Scott Cody",
+        "title": "Dean of Parents of Alpha School in Orange County​"
+      },
+      {
+        "name": "Lorine Barnabe",
+        "title": "Guide"
+      },
+      {
+        "name": "Prathima Venkatesan",
+        "title": "Guide"
+      },
+      {
+        "name": "Jackie Chan",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Dr. Sonja Burmann",
+        "title": "Guide"
+      },
+      {
+        "name": "Lauryn Stasiak",
+        "title": "Guide"
+      },
+      {
+        "name": "Lorelei Newman",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Michaela Bosco",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Madeline Trimble",
+        "title": "Elite Guide"
+      }
+    ],
+    "palm-beach": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Kirsten Berg",
+        "title": "Dean of Parents of Alpha School in Palm Beach"
+      },
+      {
+        "name": "Erin Colucci",
+        "title": "Guide"
+      },
+      {
+        "name": "Scott Dangerfield",
+        "title": "Reading Specialist"
+      },
+      {
+        "name": "Sean McKenna, MS",
+        "title": "Lead Guide"
+      }
+    ],
+    "palo-alto": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Lia Kim",
+        "title": "Guide"
+      },
+      {
+        "name": "Savannah Diederich",
+        "title": "Guide"
+      },
+      {
+        "name": "Heeju Park",
+        "title": "Guide"
+      },
+      {
+        "name": "Dr. Bailey Ubellacker",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Emma Ludwick",
+        "title": "Associate Dean of Parents"
+      },
+      {
+        "name": "Max Michelini",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Free Gary",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "_John_Doe_",
+        "title": "Head of Alpha School in _City_"
+      },
+      {
+        "name": "_Jane_Doe_",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "_Jane_Doe_",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "_Jane_Doe_",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "_Jane_Doe_",
+        "title": "Guide/ Guide for Grades.."
+      },
+      {
+        "name": "_Jane_Doe_",
+        "title": "Guide/ Guide for Grades.."
+      }
+    ],
+    "park-city": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      }
+    ],
+    "plano": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Andy Gibson",
+        "title": "Dean of Parents of Alpha School in Plano"
+      },
+      {
+        "name": "Whitney Bunn",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Christine Heaney",
+        "title": "Director of Admissions"
+      }
+    ],
+    "raleigh": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Stephanie Dean",
+        "title": "Assoc. Dean of Parents"
+      },
+      {
+        "name": "Tara-Anne Johnson",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Bailie Grant",
+        "title": "Campus Coordinator"
+      },
+      {
+        "name": "Tamara Friend",
+        "title": "Guide"
+      },
+      {
+        "name": "Jennifer Greenham",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Erica Kinney",
+        "title": "Reading Specialist"
+      },
+      {
+        "name": "Phil Blake",
+        "title": "Middle School Guide"
+      }
+    ],
+    "san-francisco": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Carson Lehmann",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Derek Kim",
+        "title": "Guide"
+      },
+      {
+        "name": "Ree Yeakley",
+        "title": "Guide"
+      },
+      {
+        "name": "England Reddy",
+        "title": "Lead Guide - L1"
+      },
+      {
+        "name": "Ruby Holman",
+        "title": "Admissions Associate"
+      }
+    ],
+    "san-juan": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Chelsea Winters",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Morgan Hatt",
+        "title": "Community Partnerships"
+      }
+    ],
+    "santa-barbara": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Michael Marino",
+        "title": "Dean of Parents of Alpha School in Santa Barbara"
+      },
+      {
+        "name": "Whitney Snow",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Kele Mkpado",
+        "title": "Guide"
+      },
+      {
+        "name": "Carson Lehmann",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Catherine \"Coach Cat\" Streicher",
+        "title": "Guide"
+      }
+    ],
+    "santa-monica": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Kellie Mowll",
+        "title": "Dean of Parents, Santa Monica"
+      },
+      {
+        "name": "Derek Bergmann",
+        "title": "Lead Guide, Santa Monica"
+      },
+      {
+        "name": "Fau Liggans-Hubbard",
+        "title": "Guide, Santa Monica"
+      },
+      {
+        "name": "Taylor Swift",
+        "title": "Guide, Santa Monica"
+      },
+      {
+        "name": "Will Robbins",
+        "title": "Guide, Santa Monica"
+      },
+      {
+        "name": "Pavel Lieb",
+        "title": "Guide, Santa Monica"
+      },
+      {
+        "name": "Sarah Moore",
+        "title": "Director of Admissions, Santa Monica"
+      },
+      {
+        "name": "Yari Felix",
+        "title": "Guide"
+      },
+      {
+        "name": "Aiden Lopci",
+        "title": "Guide"
+      }
+    ],
+    "scottsdale": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of School"
+      },
+      {
+        "name": "Zach DeJovine",
+        "title": "Guide"
+      },
+      {
+        "name": "Matt Shenker",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Patricio Rosas",
+        "title": "Guide"
+      },
+      {
+        "name": "Christi Gordon",
+        "title": "Lead Guide"
+      },
+      {
+        "name": "Angela Allen",
+        "title": "Director of Admissions"
+      }
+    ],
+    "south-bay-la": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "John Stuart",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Jeff Barton",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Matt Shenker",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Zoe Zimmerman",
+        "title": "Guide"
+      },
+      {
+        "name": "Dan Reding",
+        "title": "Guide"
+      },
+      {
+        "name": "Drake Turcotte",
+        "title": "Guide"
+      },
+      {
+        "name": "Walker Haynes",
+        "title": "Guide"
+      }
+    ],
+    "southlake": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Sam DePalo",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Andy Gibson",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Jessica Staggs",
+        "title": "Guide"
+      },
+      {
+        "name": "Jason DeMaria",
+        "title": "Director of Admissions"
+      }
+    ],
+    "the-woodlands": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Taylor Cantrell, JD",
+        "title": "Dean of Parents"
+      },
+      {
+        "name": "Rebecca Haack",
+        "title": "Director of Admissions"
+      },
+      {
+        "name": "Nicah Lowry",
+        "title": "Guide"
+      },
+      {
+        "name": "Sam DePalo",
+        "title": "Head Guide"
+      },
+      {
+        "name": "Bailey Richey",
+        "title": "Guide"
+      }
+    ],
+    "tulsa": [
+      {
+        "name": "Dr. Tasha Arnold",
+        "title": "Head of Schools"
+      },
+      {
+        "name": "Sarah Armendariz, M.Ed.",
+        "title": "Director of Admissions"
+      }
+    ]
+  }
+}

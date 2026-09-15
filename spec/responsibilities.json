@@ -1,0 +1,433 @@
+{
+  "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json and registry/campus-leadership.json because people change and roles do not. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), website staff cards, APEX requester history, observer routing rules, marketingsupport registry.",
+  "version": "0.1",
+  "departments": {
+    "campus-leadership": {
+      "scope": "one campus each",
+      "roles": [
+        "head-of-schools",
+        "dean-of-parents",
+        "director-of-admissions",
+        "head-guide",
+        "lead-guide",
+        "campus-coordinator"
+      ],
+      "note": "Submit most website tickets. Not in charge of website choices. They hold the bios, photos, titles, names, and campus facts the website shows."
+    },
+    "marketing": {
+      "scope": "all Alpha campuses",
+      "roles": [
+        "website-operations",
+        "website-agent-operator",
+        "packet-owner",
+        "events",
+        "pr-comms",
+        "brand-authority"
+      ]
+    },
+    "hubspot": {
+      "scope": "all",
+      "roles": [
+        "hubspot-owner"
+      ],
+      "note": "HubSpot is the source of truth for campus state and facts (decision 2026-09-15)."
+    },
+    "expansion": {
+      "scope": "pre-announcement and announced campuses",
+      "roles": [
+        "expansion-new-programs",
+        "expansion-founding"
+      ]
+    },
+    "web-platform": {
+      "scope": "all",
+      "roles": [
+        "elementor-owner",
+        "wordpress-admin"
+      ],
+      "note": "Owner not yet named; see gaps."
+    },
+    "operations": {
+      "scope": "all",
+      "roles": [
+        "operations-sheet-owner",
+        "growth-map-owner"
+      ],
+      "note": "Owner not yet named; see gaps."
+    },
+    "qc": {
+      "scope": "all",
+      "roles": [
+        "observer-owner"
+      ]
+    }
+  },
+  "roles": {
+    "head-of-schools": {
+      "department": "campus-leadership",
+      "owns": [
+        "campus identity on the page (name, city, grade range as stated)"
+      ],
+      "approves": [
+        "campus-facing copy changes when no campus lead is named"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": []
+    },
+    "dean-of-parents": {
+      "department": "campus-leadership",
+      "owns": [
+        "campus staff roster accuracy: who is on the page, titles, bios, photos"
+      ],
+      "approves": [
+        "staff card add/update/remove for the campus",
+        "campus copy submitted by campus staff"
+      ],
+      "supplies": [
+        "bios, photos, titles, names, effective dates",
+        "campus event details"
+      ],
+      "assignableTicketClasses": [
+        "staff-add",
+        "staff-update",
+        "staff-remove",
+        "staff-photo",
+        "copy"
+      ]
+    },
+    "director-of-admissions": {
+      "department": "campus-leadership",
+      "owns": [
+        "admissions facts as shown: grade range, tuition, apply link, info session and booking links"
+      ],
+      "approves": [
+        "program-info changes for the campus",
+        "link-cta destinations for apply, booking, info packet"
+      ],
+      "supplies": [
+        "admission link, packet, calendar, booking URLs",
+        "staff card details when the Dean of Parents is absent"
+      ],
+      "assignableTicketClasses": [
+        "program-info",
+        "link-cta",
+        "observer-link-cta",
+        "staff-add",
+        "staff-update",
+        "staff-remove",
+        "staff-photo"
+      ]
+    },
+    "head-guide": {
+      "department": "campus-leadership",
+      "owns": [],
+      "approves": [],
+      "supplies": [
+        "guide bios and photos"
+      ],
+      "assignableTicketClasses": []
+    },
+    "lead-guide": {
+      "department": "campus-leadership",
+      "owns": [],
+      "approves": [],
+      "supplies": [
+        "guide bios and photos"
+      ],
+      "assignableTicketClasses": []
+    },
+    "campus-coordinator": {
+      "department": "campus-leadership",
+      "owns": [],
+      "approves": [],
+      "supplies": [
+        "event logistics, staff details on request"
+      ],
+      "assignableTicketClasses": []
+    },
+    "website-operations": {
+      "department": "marketing",
+      "owns": [
+        "approved open-campus media (Open and Enrolling cards)",
+        "Google listings",
+        "website change execution alongside the agent"
+      ],
+      "approves": [
+        "media replacements",
+        "core page copy (with Matt)"
+      ],
+      "supplies": [
+        "cards from the September 7 template"
+      ],
+      "assignableTicketClasses": [
+        "media",
+        "observer-media-identity",
+        "observer-launch-copy (media part)",
+        "observer-brand-leak"
+      ]
+    },
+    "website-agent-operator": {
+      "department": "marketing",
+      "owns": [
+        "the APEX website queue execution through the Alpha WordPress MCP",
+        "the observer and this playbook"
+      ],
+      "approves": [
+        "prepared diffs on core pages"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": [
+        "every website-scope class as executor"
+      ]
+    },
+    "hubspot-owner": {
+      "department": "hubspot",
+      "owns": [
+        "HubSpot Programs records (state, grades, tuition, phone, address, email, admission link)",
+        "HubSpot marketing events",
+        "email sends"
+      ],
+      "approves": [
+        "fact-sync rulings: what HubSpot should say"
+      ],
+      "supplies": [
+        "corrected program records",
+        "event publication"
+      ],
+      "assignableTicketClasses": [
+        "observer-fact-sync (source side)",
+        "observer-event",
+        "event-sync"
+      ]
+    },
+    "packet-owner": {
+      "department": "marketing",
+      "owns": [
+        "info packet documents and their public links"
+      ],
+      "approves": [],
+      "supplies": [
+        "public packet links per campus and school year"
+      ],
+      "assignableTicketClasses": [
+        "observer-packet"
+      ]
+    },
+    "events": {
+      "department": "marketing",
+      "owns": [
+        "event creation and publication in HubSpot and Goldcast"
+      ],
+      "approves": [],
+      "supplies": [
+        "event facts"
+      ],
+      "assignableTicketClasses": [
+        "observer-event",
+        "event-sync"
+      ]
+    },
+    "pr-comms": {
+      "department": "marketing",
+      "owns": [
+        "In the Media, press pages"
+      ],
+      "approves": [
+        "press copy"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": []
+    },
+    "brand-authority": {
+      "department": "marketing",
+      "owns": [
+        "brand copy rules; the four held items"
+      ],
+      "approves": [
+        "any copy that is not an exemplar or a recorded choice"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": []
+    },
+    "expansion-new-programs": {
+      "department": "expansion",
+      "owns": [
+        "pre-announcement program records and community destinations"
+      ],
+      "approves": [],
+      "supplies": [
+        "new program details, launch dates"
+      ],
+      "assignableTicketClasses": [
+        "observer-map-community",
+        "other-workflow (New Program)"
+      ]
+    },
+    "expansion-founding": {
+      "department": "expansion",
+      "owns": [],
+      "approves": [],
+      "supplies": [
+        "launch copy and dates for announced campuses"
+      ],
+      "assignableTicketClasses": []
+    },
+    "elementor-owner": {
+      "department": "web-platform",
+      "owns": [
+        "header and footer templates, layout, CSS, structural page changes"
+      ],
+      "approves": [
+        "any structural change"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": [
+        "observer-layout",
+        "layout",
+        "missing CTA widgets"
+      ]
+    },
+    "wordpress-admin": {
+      "department": "web-platform",
+      "owns": [
+        "WordPress users, plugins, the Alpha MCP plugin settings"
+      ],
+      "approves": [],
+      "supplies": [
+        "application passwords for agents"
+      ],
+      "assignableTicketClasses": []
+    },
+    "operations-sheet-owner": {
+      "department": "operations",
+      "owns": [
+        "the National Growth Map sheet (addresses, statuses)"
+      ],
+      "approves": [],
+      "supplies": [
+        "address and status corrections"
+      ],
+      "assignableTicketClasses": [
+        "observer-map-community (Operations rows)"
+      ]
+    },
+    "growth-map-owner": {
+      "department": "operations",
+      "owns": [
+        "the map API and its pins"
+      ],
+      "approves": [],
+      "supplies": [],
+      "assignableTicketClasses": [
+        "observer-map-community (map rows)"
+      ]
+    },
+    "observer-owner": {
+      "department": "qc",
+      "owns": [
+        "the production observer, its checks, its ticket filing"
+      ],
+      "approves": [],
+      "supplies": [],
+      "assignableTicketClasses": [
+        "observer-health"
+      ]
+    }
+  },
+  "ticketRouting": {
+    "$comment": "class -> who supplies missing inputs, who approves, who executes. Campus roles resolve to a person through registry/campus-leadership.json for the ticket's campus.",
+    "staff-add": {
+      "supplies": "dean-of-parents or director-of-admissions (the requester)",
+      "approves": "dean-of-parents",
+      "executes": "website-agent-operator"
+    },
+    "staff-update": {
+      "supplies": "requester",
+      "approves": "dean-of-parents",
+      "executes": "website-agent-operator"
+    },
+    "staff-remove": {
+      "supplies": "requester",
+      "approves": "dean-of-parents",
+      "executes": "website-agent-operator"
+    },
+    "staff-photo": {
+      "supplies": "requester",
+      "approves": "dean-of-parents",
+      "executes": "website-agent-operator"
+    },
+    "program-info": {
+      "supplies": "director-of-admissions",
+      "approves": "hubspot-owner (record) then director-of-admissions",
+      "executes": "website-agent-operator"
+    },
+    "copy": {
+      "supplies": "requester",
+      "approves": "dean-of-parents; brand-authority if wording is new",
+      "executes": "website-agent-operator"
+    },
+    "observer-launch-copy": {
+      "supplies": "website-operations (card)",
+      "approves": "none (fixed wording)",
+      "executes": "website-agent-operator"
+    },
+    "observer-fact-sync": {
+      "supplies": "hubspot-owner",
+      "approves": "hubspot-owner",
+      "executes": "website-agent-operator"
+    },
+    "observer-media-identity": {
+      "supplies": "website-operations",
+      "approves": "website-operations",
+      "executes": "website-agent-operator"
+    },
+    "observer-brand-leak": {
+      "supplies": "dean-of-parents (replacement copy)",
+      "approves": "website-operations",
+      "executes": "website-agent-operator"
+    },
+    "observer-link-cta": {
+      "supplies": "director-of-admissions or packet-owner or hubspot-owner (admission_link)",
+      "approves": "director-of-admissions",
+      "executes": "website-agent-operator"
+    },
+    "observer-packet": {
+      "supplies": "packet-owner",
+      "approves": "packet-owner",
+      "executes": "website-agent-operator (link) / packet-owner (document)"
+    },
+    "observer-event": {
+      "supplies": "hubspot-owner / events",
+      "approves": "events",
+      "executes": "hubspot-owner"
+    },
+    "observer-layout": {
+      "supplies": "",
+      "approves": "elementor-owner",
+      "executes": "elementor-owner"
+    },
+    "observer-map-community": {
+      "supplies": "operations-sheet-owner / expansion-new-programs",
+      "approves": "operations",
+      "executes": "growth-map-owner"
+    },
+    "observer-health": {
+      "supplies": "",
+      "approves": "",
+      "executes": "observer-owner"
+    },
+    "other-workflow": {
+      "supplies": "",
+      "approves": "",
+      "executes": "the owning workflow (packets, new program, videography, PR, brand)"
+    }
+  },
+  "gaps": [
+    "elementor-owner not named",
+    "operations-sheet-owner and growth-map-owner not named",
+    "hubspot-owner email not recorded",
+    "12 campus pages show no Dean of Parents and 17 show no Director of Admissions; either the role is vacant or the card is missing",
+    "HubSpot owners and program contact properties could not be read: the marketing token lacks the scopes; Hailey can grant crm.objects.owners.read and the Programs object scopes",
+    "Slack directory visible to the bot covers 28 members; users:read at workspace level would give titles for everyone"
+  ]
+}

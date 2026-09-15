@@ -32,6 +32,8 @@ Run the validator. If any required input is missing:
 
 If the ticket is out of scope for a website edit, write a triage note naming the owner and leave the status unchanged.
 
+**Who to name.** `spec/responsibilities.json` maps every class to the role that supplies missing inputs, the role that approves, and the role that executes. `registry/campus-leadership.json` turns a campus role into the person for that campus; `registry/people.json` does the same for department roles. Missing Info notes and triage notes name the person, not the department.
+
 **Do as much good as the ticket allows.** When a ticket has several parts and only some inputs are missing, execute the parts that are complete, test them, and send the ticket back for the rest. Never leave a fixable defect on the page because a different part of the same ticket is blocked. Example: a launch-copy ticket whose approved card is missing still gets its sentence fixed; the ticket then goes to Missing Info for the card, with the resolution block listing the sentence as done. The ticket is never marked Completed while any part is open.
 
 ## 2. Claim
