@@ -1,0 +1,127 @@
+{
+  "$comment": "Per-state, per-section requirements (M3). Started with the rows exercised by the group A launch-copy tickets; the rest of the Open state and the other states follow. Each row: requirement, source, owner when missing, check, exemplar.",
+  "version": "0.1",
+  "states": {
+    "Open": {
+      "campus.hero.identity": {
+        "required": true,
+        "content": "H1 \"Alpha <Campus>\"; subtitle \"<grade range> Private School in <City>, <State>\" with the HubSpot grade range and the HubSpot city/state.",
+        "source": "HubSpot Programs (name, grade range, city, state); decision 2026-09-15 that HubSpot is the source of truth",
+        "ownerWhenMissing": "program record owner (Yash Chitneni)",
+        "checks": [
+          "page-check h1-present",
+          "page-check h1-names-campus",
+          "observer campus-heading-identity",
+          "observer campus-page-grade-source-sync"
+        ],
+        "exemplars": [
+          "https://alpha.school/plano/",
+          "https://alpha.school/scottsdale/"
+        ]
+      },
+      "campus.hero.ctas": {
+        "required": true,
+        "content": "CTA row: STAY IN-THE-KNOW, Attend an Info Session, Book a Call, Apply now. Each resolves to a reachable, campus-specific destination.",
+        "source": "demonstrated-correct pages (44 of 44 carry the first three; 39 carry Book a Call)",
+        "ownerWhenMissing": "campus admissions owner for destinations; Elementor owner for a missing button",
+        "checks": [
+          "page-check cta-*",
+          "page-check cta-links-resolve",
+          "observer campus-book-call-*",
+          "observer campus-application-*"
+        ],
+        "exemplars": [
+          "https://alpha.school/plano/"
+        ]
+      },
+      "campus.intro.status-sentence": {
+        "required": true,
+        "content": "\"Alpha <Campus> is open and enrolling.\" as the first sentence of the intro text widget, followed by the \"Join us for an info session\" paragraph. No launch-era wording anywhere on the page: Coming Soon, Coming Fall, Launching, Opening <season>.",
+        "source": "HubSpot state Open (decision 2026-09-15); wording from exemplars Plano and Scottsdale; requirement catalog rule on stale launch copy",
+        "ownerWhenMissing": "none needed: wording is fixed",
+        "checks": [
+          "page-check open-status-sentence",
+          "page-check open-no-launch-words",
+          "observer campus-page-stale-launch-media"
+        ],
+        "exemplars": [
+          "https://alpha.school/plano/",
+          "https://alpha.school/scottsdale/"
+        ],
+        "recipe": "protocols/recipes/launch-copy.md"
+      },
+      "campus.intro.media": {
+        "required": true,
+        "content": "Intro card slot shows this campus's approved open-state media: the \"<Campus> Open and Enrolling\" card from the September 7 template set, or an approved campus video. Never a launch-era graphic, another campus's image, or unrelated footage.",
+        "source": "registry/campus-open-media.json; requirement catalog rule on launch media and approved video",
+        "ownerWhenMissing": "Yash Chitneni (cards); Matt or Yash (video approval)",
+        "checks": [
+          "page-check open-intro-media-approved",
+          "observer campus-page-stale-launch-media",
+          "observer campus-page-youtube-video",
+          "observer campus-image-identity-conflict"
+        ],
+        "exemplars": [
+          "https://alpha.school/boca-raton/",
+          "https://alpha.school/raleigh/"
+        ],
+        "recipe": "protocols/recipes/media-copy-links.md"
+      },
+      "campus.intro.heading": {
+        "required": true,
+        "content": "\"Welcome to the Future of Education in <City>\"",
+        "source": "demonstrated-correct pages",
+        "ownerWhenMissing": "none needed",
+        "checks": [
+          "manual screenshot"
+        ],
+        "exemplars": [
+          "https://alpha.school/plano/"
+        ],
+        "note": "The word \"education\" is on MacKenzie's hold list; do not rewrite this heading until she decides."
+      },
+      "site.header.rendered": {
+        "required": true,
+        "content": "Theme-builder header with stylesheet, logo, navigation, Contact Us; footer present.",
+        "source": "Atlanta incident 2026-09-15",
+        "ownerWhenMissing": "Elementor owner",
+        "checks": [
+          "page-check header-stylesheet-linked",
+          "page-check footer-template-present"
+        ],
+        "exemplars": [
+          "any campus page"
+        ]
+      },
+      "campus.resources.packet": {
+        "required": "when an approved current packet exists",
+        "content": "Info packet CTA links to a public, logged-out-reachable document for this campus and school year.",
+        "source": "requirement catalog; group A replay found 401s on Oklahoma City, South Bay LA, Tulsa",
+        "ownerWhenMissing": "packet owner (Yash Chitneni, Dmitry Bakaev)",
+        "checks": [
+          "page-check cta-links-resolve",
+          "observer campus-info-packet-link-reachable",
+          "observer campus-info-packet-destination-campus"
+        ],
+        "exemplars": [
+          "https://alpha.school/plano/"
+        ]
+      }
+    },
+    "Announced": {
+      "campus.intro.status-sentence": {
+        "required": true,
+        "content": "A launch statement naming the month or season and the year, for example \"Alpha Bethesda opens January 2027.\" \"Coming soon\" alone is a defect.",
+        "source": "APEX ticket cmsuma22l000804juh8fq4nrs (Alpha Bethesda, rachel@alpha.school, August 2026); requirement catalog",
+        "ownerWhenMissing": "program record owner for the date",
+        "checks": [
+          "page-check announced-names-launch-date",
+          "marketingsupport website:campus-facts-qc launch_copy_without_date"
+        ],
+        "exemplars": [
+          "https://alpha.school/bethesda/"
+        ]
+      }
+    }
+  }
+}
