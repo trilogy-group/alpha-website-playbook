@@ -711,8 +711,8 @@
       "executes": "website-agent-operator"
     },
     "observer-packet": {
-      "supplies": "packet-owner",
-      "approves": "packet-owner",
+      "supplies": "packet-owner if registered, else marketing-collateral (file) with brand-authority sign-off and website-operations (hosting)",
+      "approves": "packet-owner if registered, else brand-authority",
       "executes": "website-agent-operator (link) / packet-owner (document)"
     },
     "observer-event": {
@@ -751,7 +751,8 @@
     "HubSpot owner records are missing or personal for several roster names (Gaby Sullivan present; Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund absent; Haven Mass under a personal address); the resolver reports email null for them",
     "Elementor owner, Operations sheet owner, and growth map owner are still not named",
     "packet-owner person unclear; Dmitry Bakaev was incorrectly the sole holder and was removed. Packet work is campus facts + marketing-collateral (Chris Davidson Canva) + brand-authority (MacKenzie) signoff + website-operations hosting public links",
-    "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops"
+    "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops. Sources for Cristi Constantin, Patrick Skinner, and the Dmitry packet-owner removal are a group DM and an ops brief that are not in any repo; confirm with Matt",
+    "Which WordPress fields n8n overwrites from HubSpot Programs is not listed anywhere. Until the n8n-sync-owner supplies the field list, treat grade range, tuition, address, phone, and email on campus pages as possibly synced: correct HubSpot first and confirm the sync ran before any hand edit."
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",
@@ -845,19 +846,19 @@
         "calendar owner for calendar links": "calendars (registry: Zara Raheem)",
         "packet owner for packet links": "packet-owner (registry)"
       },
-      "missingInfoGoesTo": "director-of-admissions (live) for apply links; calendars; packet-owner"
+      "missingInfoGoesTo": "director-of-admissions (live) for apply links; calendars; packet-owner if registered, else marketing-collateral and website-operations"
     },
     "observer-link-cta": {
       "needs": {
         "destination": "source (HubSpot admission_link) or packet-owner"
       },
-      "missingInfoGoesTo": "director-of-admissions (live); packet-owner"
+      "missingInfoGoesTo": "director-of-admissions (live); packet-owner if registered, else marketing-collateral and website-operations"
     },
     "observer-packet": {
       "needs": {
-        "packet file and owner": "packet-owner (registry)"
+        "packet file and owner": "packet-owner (registry; no holder as of 2026-09-15) else marketing-collateral, brand-authority, website-operations"
       },
-      "missingInfoGoesTo": "packet-owner"
+      "missingInfoGoesTo": "packet-owner if registered, else marketing-collateral for the file, brand-authority for sign-off, website-operations for the hosted link"
     },
     "observer-event": {
       "needs": {

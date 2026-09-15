@@ -10,6 +10,10 @@ Classes `observer-fact-sync` and `program-info`. Facts appear in several places 
 
 HubSpot is the source of truth (decision, Matt Barge, 2026-09-15). When the Operations sheet or the map disagrees with HubSpot, use the HubSpot value on the website and file a ticket for the other source to be corrected. When HubSpot has no value, use the Operations sheet and say so on the ticket. When a requester's value disagrees with HubSpot, the requester updates HubSpot first; the website follows HubSpot.
 
+## n8n sync comes first
+
+Some campus-page fields are written by an n8n workflow from HubSpot Programs (owner: `n8n-sync-owner` in `registry/people.json`; routing class `hubspot_campus_facts` in `registry/missing-info-routing.md`). A hand edit to a synced field is overwritten on the next run. The synced field list is not yet recorded (see the gap in `spec/responsibilities.json`), so for grade range, tuition, address, phone, and email: correct HubSpot first, ask the n8n-sync-owner to run or confirm the sync, and only patch WordPress for surfaces the sync does not write (SEO title and description, schema text, intro copy) or when the sync owner confirms the field is not synced. New locations need `wordpress_post_id` set in HubSpot before the sync can target the page.
+
 ## Steps
 
 1. `resolve_page`, then `find_text_occurrences` with the observed value to list every place it appears on the page (hero subtitle, contact block, intro, schema text, SEO title and description). `get_post_fields` covers the SEO fields.

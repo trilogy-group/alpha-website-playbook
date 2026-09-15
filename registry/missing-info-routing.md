@@ -32,6 +32,23 @@
 9. **admissions_team_leadership** : expansion-founding. Amelia Baldwin historical only.
 10. **requester_waiting_escalation** : website-escalation. Not a facts gap.
 
+## Ticket class to routing class
+
+The validator classifies tickets with `spec/ticket-classes.json` (17 classes). This table says which routing class above applies; machine form `ticketClassMap` in the JSON.
+
+| Ticket class | Routing class |
+| --- | --- |
+| staff-add, staff-update, staff-remove, staff-photo | `staff_photo_title_bio` |
+| observer-launch-copy, observer-media-identity | `launch_copy_coming_soon` |
+| program-info, observer-fact-sync, observer-map-community | `hubspot_campus_facts` |
+| observer-event | `events_public_sync` |
+| observer-packet | `info_packet` |
+| observer-link-cta | `apply_link_admission` |
+| copy, observer-brand-leak | `brand_copy_voice_ux` |
+| observer-layout, observer-health, other-workflow | none; `spec/responsibilities.json` `registryByTicketClass` alone |
+
+`n8n_overwrite_or_sync_exception`, `admissions_team_leadership`, and `requester_waiting_escalation` have no ticket class. They are reached from what the ticket says, not from classification.
+
 ## Channels
 
 | Channel | ID | Use |

@@ -173,5 +173,26 @@
     "Resolve people from registry/people.json (department) or the live campus resolver (campus roles).",
     "Comment APEX with who was asked and what is still needed.",
     "Never invent emails or Slack IDs."
-  ]
+  ],
+  "ticketClassMap": {
+    "$comment": "spec/ticket-classes.json class -> routing class above. Routing classes with no ticket class (n8n_overwrite_or_sync_exception, admissions_team_leadership, requester_waiting_escalation) are reached from the note on the ticket, not from classification.",
+    "staff-add": "staff_photo_title_bio",
+    "staff-update": "staff_photo_title_bio",
+    "staff-remove": "staff_photo_title_bio",
+    "staff-photo": "staff_photo_title_bio",
+    "observer-launch-copy": "launch_copy_coming_soon",
+    "program-info": "hubspot_campus_facts",
+    "observer-fact-sync": "hubspot_campus_facts",
+    "observer-map-community": "hubspot_campus_facts",
+    "observer-event": "events_public_sync",
+    "observer-packet": "info_packet",
+    "observer-link-cta": "apply_link_admission",
+    "copy": "brand_copy_voice_ux",
+    "observer-brand-leak": "brand_copy_voice_ux",
+    "observer-media-identity": "launch_copy_coming_soon",
+    "observer-layout": null,
+    "observer-health": null,
+    "other-workflow": null,
+    "$unmapped": "observer-layout, observer-health, other-workflow route by spec/responsibilities.json registryByTicketClass alone"
+  }
 }
