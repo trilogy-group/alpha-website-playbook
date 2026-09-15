@@ -1,5 +1,5 @@
 # Protocols
 
-- `apex-website-ticket-protocol.md`: how any agent or person validates, claims, reconciles, executes, tests (three rings), documents, communicates, and closes an APEX website ticket.
-- `recipes/`: one execution recipe per ticket class. Written so far: `launch-copy.md`.
-- Validator: `tests/validate-ticket.mjs --file <apex tasks json> [--summary]` classifies tickets and produces the Missing Info text for incomplete ones.
+- `apex-website-ticket-protocol.md` (v0.2): validate, claim, reconcile, execute, test in three rings, roll back, document, and file new tickets for anything else found. Includes the partial-completion rule (do every fixable part, never close with a part open).
+- `recipes/`: `launch-copy.md`, `staff-card.md`, `campus-facts.md`, `media-copy-links.md`.
+- Helpers: `tests/validate-ticket.mjs` (intake), `tests/page-check.mjs` (ring 2), `tests/file-apex-ticket.mjs` (step 8, dry-run by default).

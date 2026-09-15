@@ -1,0 +1,448 @@
+{
+  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet).",
+  "version": "0.1",
+  "requirements": {
+    "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
+    "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
+    "site.layout.images": "Visible images render; staff photos do not clip faces.",
+    "site.layout.console": "Under 20 console errors on critical routes.",
+    "site.brand.copy": "MacKenzie's recorded copy rules; four held items untouched.",
+    "site.identity.sister-brand": "No sister-brand names in page-owned content except the Brownsville/Nova exception.",
+    "site.identity.other-campus": "No other campus referenced in image names, alt text, links, packets, calendars, schema.",
+    "site.seasonal.window": "Seasonal CTAs only inside the approved window; launch statements name month/season and year.",
+    "site.search.indexable": "robots reachable, sitemap populated, critical routes indexable with canonical, no duplicate titles/canonicals, valid JSON-LD, Googlebot parity.",
+    "site.search.ai-files": "AI discovery files reachable and non-empty.",
+    "site.search.schema": "Campus School schema with URL, address, coordinates within 1 mile of source.",
+    "site.claims.evidence": "Statistics and named-entity claims exist in the claim registry with evidence.",
+    "site.events.sync": "Public HubSpot events appear on /upcoming-events/ and the campus strip within 2 hours; registration links resolve; facts match; sister-brand events excluded.",
+    "site.map.integrity": "Maps render; each program once with correct label, status, coordinates, destination; pre-announcement pins route to Community; no scroll trap.",
+    "site.loop.health": "Source providers and snapshots healthy (not a website change).",
+    "campus.hero.identity": "H1 and subtitle name this campus; page title, schema, nav, sitemap agree.",
+    "campus.intro.status-sentence": "Intro status sentence matches the lifecycle state (Open: \"is open and enrolling.\"; Announced: named month/season and year).",
+    "campus.intro.media": "Intro card slot shows approved open-state media (card or video) for Open campuses; no launch-era media on Open campuses.",
+    "campus.facts.grades": "Grade range on hero, intro, Locations card, schema, meta matches HubSpot/Operations.",
+    "campus.facts.contact": "Phone, address, email, coordinates match the source.",
+    "campus.facts.tuition": "Tuition on page and Locations card match the source.",
+    "campus.resources.packet": "Info packet CTA present when an approved current packet exists; destination public, correct campus and year.",
+    "campus.resources.calendar": "Calendar CTA reachable and campus-specific when required.",
+    "campus.resources.booking": "Book a Call / Book a Tour reachable and campus-specific.",
+    "campus.resources.apply": "Apply CTA present for Open/Announced with HubSpot admission_link, reachable and campus-specific.",
+    "campus.team.roster": "Staff cards match the roster: names, titles, bios, headshots; faces not clipped.",
+    "campus.events.strip": "Only this campus's events (plus approved national events) render; canceled/private accept no registration.",
+    "campus.page.reachable": "Canonical URL loads 200, in sitemap, canonical tag matches, no redirect to another campus."
+  },
+  "checks": {
+    "community-destination": {
+      "requirement": "site.map.integrity",
+      "status": "advisory",
+      "note": "route-specific exception list"
+    },
+    "current-family-destination": {
+      "requirement": "site.map.integrity",
+      "status": "advisory"
+    },
+    "primary-cta-count": {
+      "requirement": "campus.hero.identity",
+      "status": "advisory",
+      "note": "excluded from dispatch in the observer config"
+    },
+    "approved-baseline": {
+      "requirement": "site.layout.viewport",
+      "status": "advisory",
+      "note": "visual baseline, excluded from dispatch"
+    },
+    "font-family": {
+      "requirement": "site.brand.copy",
+      "status": "advisory",
+      "note": "brand typography telemetry"
+    },
+    "visual-baseline": {
+      "requirement": "site.layout.viewport",
+      "status": "advisory",
+      "note": "excluded from dispatch"
+    },
+    "visual-regression": {
+      "requirement": "site.layout.viewport",
+      "status": "advisory"
+    },
+    "campus-book-call-destination-campus": {
+      "requirement": "campus.resources.booking",
+      "status": "enforced"
+    },
+    "campus-book-call-link-reachable": {
+      "requirement": "campus.resources.booking",
+      "status": "enforced"
+    },
+    "campus-book-call-present": {
+      "requirement": "campus.resources.booking",
+      "status": "enforced"
+    },
+    "campus-calendar-destination-campus": {
+      "requirement": "campus.resources.calendar",
+      "status": "enforced"
+    },
+    "campus-calendar-link-reachable": {
+      "requirement": "campus.resources.calendar",
+      "status": "enforced"
+    },
+    "campus-calendar-present": {
+      "requirement": "campus.resources.calendar",
+      "status": "enforced"
+    },
+    "campus-directory-map": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-expired-seasonal-cta": {
+      "requirement": "site.seasonal.window",
+      "status": "enforced"
+    },
+    "campus-heading-identity": {
+      "requirement": "campus.hero.identity",
+      "status": "enforced"
+    },
+    "campus-image-identity-conflict": {
+      "requirement": "site.identity.other-campus",
+      "status": "enforced"
+    },
+    "campus-info-packet-destination-campus": {
+      "requirement": "campus.resources.packet",
+      "status": "enforced"
+    },
+    "campus-info-packet-link-reachable": {
+      "requirement": "campus.resources.packet",
+      "status": "enforced"
+    },
+    "campus-info-packet-present": {
+      "requirement": "campus.resources.packet",
+      "status": "enforced"
+    },
+    "campus-map-community-destination": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-map-inspection-complete": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-map-inspection-incomplete": {
+      "requirement": "site.map.integrity",
+      "status": "advisory",
+      "note": "inspection telemetry"
+    },
+    "campus-map-inspection-timeout": {
+      "requirement": "site.map.integrity",
+      "status": "advisory",
+      "note": "inspection telemetry"
+    },
+    "campus-map-pin-count": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-map-pin-destination": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-map-pin-identity": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-map-rendered": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "campus-navigation-missing": {
+      "requirement": "site.header.rendered",
+      "status": "enforced"
+    },
+    "campus-page-grade-source-sync": {
+      "requirement": "campus.facts.grades",
+      "status": "enforced"
+    },
+    "campus-page-phone-source-sync": {
+      "requirement": "campus.facts.contact",
+      "status": "enforced"
+    },
+    "campus-page-stale-launch-media": {
+      "requirement": "campus.intro.media",
+      "status": "enforced"
+    },
+    "campus-page-tuition-source-sync": {
+      "requirement": "campus.facts.tuition",
+      "status": "enforced"
+    },
+    "campus-page-youtube-video": {
+      "requirement": "campus.intro.media",
+      "status": "enforced"
+    },
+    "campus-schema-address": {
+      "requirement": "site.search.schema",
+      "status": "enforced"
+    },
+    "campus-schema-coordinates": {
+      "requirement": "site.search.schema",
+      "status": "enforced"
+    },
+    "campus-schema-name": {
+      "requirement": "site.search.schema",
+      "status": "enforced"
+    },
+    "campus-schema-required-facts": {
+      "requirement": "site.search.schema",
+      "status": "enforced"
+    },
+    "campus-schema-url": {
+      "requirement": "site.search.schema",
+      "status": "enforced"
+    },
+    "campus-school-schema": {
+      "requirement": "site.search.schema",
+      "status": "enforced"
+    },
+    "campus-sister-brand-leak": {
+      "requirement": "site.identity.sister-brand",
+      "status": "enforced"
+    },
+    "campus-sitemap-missing": {
+      "requirement": "campus.page.reachable",
+      "status": "enforced"
+    },
+    "community-campus-parameter": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "duplicate-program-id": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "duplicate-program-url": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "hubspot-map-sync": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "map-campus-missing-from-operations": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "operations-campus-duplicate": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "operations-campus-missing-facts": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "operations-campus-missing-from-map": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "operations-map-address-conflict": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "operations-map-duplicate": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "operations-map-lifecycle-conflict": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "preannouncement-community-host": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "preannouncement-community-url": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "program-lifecycle-valid": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "program-map-facts": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "program-page-reachable": {
+      "requirement": "campus.page.reachable",
+      "status": "enforced"
+    },
+    "program-page-sync": {
+      "requirement": "campus.page.reachable",
+      "status": "enforced"
+    },
+    "program-route-redirect": {
+      "requirement": "campus.page.reachable",
+      "status": "enforced"
+    },
+    "public-program-host": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "public-program-url": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "wordpress-campus-missing-from-map": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "claim-evidence": {
+      "requirement": "site.claims.evidence",
+      "status": "advisory",
+      "note": "excluded from dispatch in the observer config"
+    },
+    "claim-registry": {
+      "requirement": "site.claims.evidence",
+      "status": "advisory",
+      "note": "excluded from dispatch in the observer config"
+    },
+    "named-entity-evidence": {
+      "requirement": "site.claims.evidence",
+      "status": "advisory",
+      "note": "excluded from dispatch in the observer config"
+    },
+    "event-page-reachable": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "event-registration-reachable": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "event-registration-url": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "event-required-facts": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "event-source-readable": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "event-time-valid": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "event-weekday-sync": {
+      "requirement": "site.events.sync",
+      "status": "enforced"
+    },
+    "browser-errors": {
+      "requirement": "site.layout.console",
+      "status": "enforced"
+    },
+    "campus-image-crop-risk": {
+      "requirement": "site.layout.images",
+      "status": "enforced"
+    },
+    "campus-layout-clipped-text": {
+      "requirement": "site.layout.viewport",
+      "status": "enforced"
+    },
+    "campus-layout-header-overlap": {
+      "requirement": "site.layout.viewport",
+      "status": "enforced"
+    },
+    "campus-layout-horizontal-overflow": {
+      "requirement": "site.layout.viewport",
+      "status": "enforced"
+    },
+    "campus-layout-offscreen-content": {
+      "requirement": "site.layout.viewport",
+      "status": "enforced"
+    },
+    "embedded-map-scroll-trap": {
+      "requirement": "site.layout.viewport",
+      "status": "enforced"
+    },
+    "images-render": {
+      "requirement": "site.layout.images",
+      "status": "enforced"
+    },
+    "required-embed-inspection-timeout": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "required-embed-partial-render": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "required-embed-rendered": {
+      "requirement": "site.map.integrity",
+      "status": "enforced"
+    },
+    "route-browser-inspection": {
+      "requirement": "site.header.rendered",
+      "status": "enforced"
+    },
+    "route-reachable": {
+      "requirement": "site.header.rendered",
+      "status": "enforced"
+    },
+    "campus-operations-snapshot-fresh": {
+      "requirement": "site.loop.health",
+      "status": "not-a-website-change"
+    },
+    "provider-health": {
+      "requirement": "site.loop.health",
+      "status": "not-a-website-change"
+    },
+    "canonical-present": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "critical-route-indexable": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "duplicate-canonical": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "duplicate-title": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "googlebot-parity": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "json-ld-valid": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "llm-file-reachable": {
+      "requirement": "site.search.ai-files",
+      "status": "enforced"
+    },
+    "robots-reachable": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    },
+    "sitemap-populated": {
+      "requirement": "site.search.indexable",
+      "status": "enforced"
+    }
+  },
+  "requirementsWithoutObserverCoverage": [
+    "campus.intro.status-sentence",
+    "campus.resources.apply",
+    "campus.team.roster",
+    "campus.events.strip"
+  ],
+  "coverageOutsideObserver": {
+    "site.brand.copy": "marketingsupport npm run website:brand-qc (scripts/lib/alpha-brand-rules.mjs); observer font-family is advisory only",
+    "campus.intro.status-sentence": "playbook tests/page-check.mjs open-status-sentence / announced-names-launch-date",
+    "campus.facts.tuition": "observer campus-page-tuition-source-sync plus marketingsupport website:campus-facts-qc (Locations card vs page)",
+    "campus.resources.apply": "observer routing rule campus-application-* checks (not emitted as finding() literals in checks.mjs; confirm names) plus page-check cta-links-resolve",
+    "campus.team.roster": "no roster source configured; requester is the source until one exists",
+    "campus.events.strip": "observer campus-event-filter and public-event-sync (routing rules) plus HubSpot events source"
+  }
+}

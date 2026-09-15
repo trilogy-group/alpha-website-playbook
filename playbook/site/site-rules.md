@@ -1,0 +1,51 @@
+# Site-wide rules
+
+Rules that apply to every alpha.school page regardless of campus or state. Machine form: `spec/site-rules.json`. Each rule has an id, a source, and the check that enforces it (observer check names are in `registry/observer-checks.json`).
+
+## Header and footer (`site.header.*`, `site.footer.*`)
+
+- Every page renders the theme-builder header with its stylesheet linked, the logo, the navigation, and the Contact Us button; and the theme-builder footer. Source: demonstrated-correct pages; the September 15 Atlanta incident. Check: `page-check header-stylesheet-linked`, observer `route-browser-inspection`.
+- Navigation and footer are shared templates: never edited under a campus ticket. Any change to them is its own ticket, and ring 3 runs afterward on two untouched pages.
+
+## Layout and rendering (`site.layout.*`)
+
+- Desktop viewport 1440 by 1000 and mobile 390 by 844 both render without horizontal overflow beyond 160 px (24 px is a warning), without the header overlapping headings by more than 48 px or 25 percent, without clipped text, and with primary CTAs inside the viewport. Source: observer thresholds. Checks: `campus-layout-horizontal-overflow`, `campus-layout-header-overlap`, `campus-layout-clipped-text`, `campus-layout-offscreen-content`.
+- Visible images render; at most 20 broken images site-wide before the run fails. Staff and guide photos do not clip faces. Checks: `images-render`, `campus-image-crop-risk`.
+- Console errors on critical routes stay under 20. Check: `browser-errors`.
+
+## Brand copy (`site.brand.*`)
+
+- MacKenzie's recorded choices govern all copy and take precedence over every other guide. The full rule table, holds, and detector live in the marketing workspace (`docs/rules/alpha-brand-copy-rules.md`, `npm run website:brand-qc`) and in `trilogy-group/alpha-branding-skill`. Headline items: no em dashes; no exclamation marks in headings or buttons; twice as much, never twice as fast; 2x lowercase; 2 Hour Learning; WonderLab and LearningLab one word; Alphas is the currency; AlphaTest one word; love school, never love learning; classes rank in the top 1 percent, never students; no manufactured urgency; no "pedagogy" or "whole child".
+- Four items are held for MacKenzie's decision and must not be edited: the homepage commitment sentence, the "Learn 2x in 2hrs" nav label, the word "education", and the Oxford comma list.
+
+## Identity and cross-brand (`site.identity.*`)
+
+- No Alpha page carries sister-brand names (Nova, NextGen Academy, Waypoint Academy, Texas Sports Academy) in page-owned content, except the named Brownsville and Nova exception. Navigation listing the specialty schools is allowed. Check: `campus-sister-brand-leak`; `page-check no-sister-brand-words`.
+- No page references another campus in image file names, alt text, links, packets, calendars, or schema. Checks: `campus-image-identity-conflict`, `page-check no-other-campus-in-image-names`.
+
+## Seasonal and dated content (`site.seasonal.*`)
+
+- Seasonal CTAs and popups appear only inside their approved window. Summer 2026 registration, programs, and camps copy expired on August 15, 2026. Check: `campus-expired-seasonal-cta`.
+- A launch statement anywhere on the site names a month or season and a year; "coming soon" alone is a defect. Source: APEX ticket for Alpha Bethesda, August 2026.
+
+## Search, schema, and AI discovery (`site.search.*`)
+
+- robots.txt reachable; sitemap index populated; critical routes (home, the program, locations, admission, upcoming events) indexable and with a canonical tag; no duplicate titles or duplicate canonicals across pages; JSON-LD valid on critical routes; Googlebot and browser see the same status. Checks: `robots-reachable`, `sitemap-populated`, `critical-route-indexable`, `canonical-present`, `duplicate-title`, `duplicate-canonical`, `json-ld-valid`, `googlebot-parity`.
+- AI discovery files (llms.txt and its companions) reachable and non-empty. Check: `llm-file-reachable`. LLM source-material decisions follow the marketing workspace rule `docs/rules/llm-content-readiness.md`.
+- Every campus page has School schema with the campus URL, address, and coordinates within one mile of the source. Checks: `campus-school-schema`, `campus-schema-url`.
+
+## Claims (`site.claims.*`)
+
+- Statistics and named-entity claims on the site must exist in the claim registry with evidence. Checks: `claim-registry`, `claim-evidence`, `named-entity-evidence` (advisory today).
+
+## Events (`site.events.*`)
+
+- A HubSpot marketing event marked public appears on `/upcoming-events/` and on its campus strip within two hours; registration links resolve; weekday and time match the source; canceled or private events accept no public registration; sister-brand events are excluded from Alpha pages. Checks: `public-event-sync`, `campus-event-filter`, `event-registration-url`, `event-registration-reachable`, `event-time-valid`, `event-weekday-sync`, `event-required-facts`, `event-page-reachable`, `event-source-readable`.
+
+## Maps and locations (`site.map.*`)
+
+- The homepage and Locations maps render, every program appears once with the right label, status, coordinates, and destination, Pre-Announcement pins route to a campus-specific Community URL on the approved host, and the map does not trap page scrolling. Checks: `campus-map-*`, `embedded-map-scroll-trap`, `preannouncement-community-url`, `preannouncement-community-host`, `community-campus-parameter`, `public-program-url`, `public-program-host`, `duplicate-program-url`, `duplicate-program-id`, `program-lifecycle-valid`, `hubspot-map-sync`, `operations-map-*`, `map-campus-missing-from-operations`, `wordpress-campus-missing-from-map`, `campus-sitemap-missing`.
+
+## Accessibility (`site.a11y.*`)
+
+- Not yet specified. Candidate rules: alt text on content images, heading order, focus states, contrast on hero overlays. Needs a source before it can be enforced.

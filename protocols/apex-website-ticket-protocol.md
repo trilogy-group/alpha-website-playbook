@@ -1,8 +1,8 @@
 # APEX Website Ticket Protocol
 
-Version 0.1, September 15, 2026. Applies to every APEX ticket whose request type is Website or Website QC, regardless of which agent or person executes it. Machine form of the intake rules: `spec/ticket-classes.json`. Validator: `tests/validate-ticket.mjs`.
+Version 0.2, September 15, 2026. Applies to every APEX ticket whose request type is Website or Website QC, regardless of which agent or person executes it. Machine form of the intake rules: `spec/ticket-classes.json`. Validator: `tests/validate-ticket.mjs`.
 
-The protocol has seven steps. A ticket is complete only when all seven are done and written down.
+The protocol has eight steps. A ticket is complete only when all eight are done and written down.
 
 ## 1. Classify and validate the ticket
 
@@ -28,9 +28,11 @@ Run the validator. If any required input is missing:
 
 - set the ticket to Missing Info,
 - write the Missing Info note using the template in step 7, naming every missing item and the owner who can supply it,
-- stop. Do not start partial work.
+- do not guess at the missing parts. Parts of the ticket whose inputs are complete are still executed (see the rule below).
 
 If the ticket is out of scope for a website edit, write a triage note naming the owner and leave the status unchanged.
+
+**Do as much good as the ticket allows.** When a ticket has several parts and only some inputs are missing, execute the parts that are complete, test them, and send the ticket back for the rest. Never leave a fixable defect on the page because a different part of the same ticket is blocked. Example: a launch-copy ticket whose approved card is missing still gets its sentence fixed; the ticket then goes to Missing Info for the card, with the resolution block listing the sentence as done. The ticket is never marked Completed while any part is open.
 
 ## 2. Claim
 
@@ -65,7 +67,7 @@ All three rings run on the canonical public URL after cache clearing. Screenshot
 
 **Ring 3, shared templates.** After any site-wide action (cache clear, CSS regeneration, header or footer edit, plugin change), re-verify ring 2's header and footer checks on two untouched pages. This is what catches a cached render that lost its stylesheet.
 
-Any ring 2 or ring 3 failure caused by the change is a mandatory rollback (step 6). A ring 2 failure not caused by the change is a new finding: record it on the ticket and file or link its own ticket; do not fold it into this one.
+Any ring 2 or ring 3 failure caused by the change is a mandatory rollback (step 6). A ring 2 failure not caused by the change is a new finding: file its own ticket (step 8) and reference it on the current ticket; do not fold it into this one and do not fix it under this ticket.
 
 ## 6. Rollback
 
@@ -99,9 +101,42 @@ The agent will execute and verify as soon as the items above are on the ticket.
 
 Slack: post only to close the loop with the original requester, or when a ring failure affects visitors. Use the requester's channel or `#support-websites`. No em dashes, owner first, one sentence on what happened, one on what is needed.
 
+## 8. New issues found while working
+
+Anything wrong on the page that is outside the current ticket's scope gets its own APEX ticket, filed before the current ticket closes. This keeps every ticket to one verifiable change and keeps the queue honest about what the site needs.
+
+File it through the APEX API, the same way the observer does, so it lands in the same queue with the same fields:
+
+```
+POST https://apex.2hourlearning.com/api/v1/tasks
+Authorization: Bearer <APEX_API_TOKEN>
+Idempotency-Key: agent-found:<parent ticket id>:<page slug>:<check id>
+```
+
+Payload (all fields required unless marked optional):
+
+| Field | Value |
+| --- | --- |
+| title | `<Campus or page>: <one-line defect>` in the observer's style, for example `Alpha Tulsa: info packet link returns 401` |
+| description | Lines: summary; `Page: <url>`; blank; `Expected: <value>`; `Observed: <value>`; `Evidence: <how it was seen>`; `Found while working: <parent ticket id>`; `Playbook: <requirement id>`; `Recommended path: <recipe or owner>`; `Done when: <ring 1 condition>` |
+| url | the page URL |
+| requestType | `Website QC` for defects, `Website` for requested changes |
+| workflow | `website-maintenance` |
+| program | `["Alpha <Campus>"]` or `["Alpha School"]` |
+| requesterEmail | the actor's email |
+| status | `NOT_STARTED` |
+| priority | `NORMAL`, or `HIGH` when visitors see a broken page or a wrong fact |
+| customFields | `source: agent-found`, `foundWhileWorking: <parent id>`, `checkId: <playbook requirement id>`, `severity`, `owners`, `idempotencyKey` |
+
+The helper `tests/file-apex-ticket.mjs` builds and validates this payload and runs dry by default; pass `--create` to file it. After filing, add one line to the parent ticket: `Filed <new id> for <defect> found during this work.`
+
+Do not file a new ticket for something the observer already has open on the same page and check; link the existing one instead (search the queue by page URL first).
+
 ## What this protocol changes from before
 
 - The whole page is tested, not only the ticketed element, and two untouched pages are checked after any site-wide action.
 - Visual inspection by screenshot is required. Text checks alone never close a ticket.
 - Tickets are validated before work starts, and incomplete tickets go back with a specific ask instead of partial work.
 - The page is reconciled against the full ticket scope before editing, so prior partial work is finished rather than missed.
+- Tickets with a blocked part still get their fixable parts done, and stay open for the rest.
+- New defects found during a ticket become their own tickets, filed the same way the observer files them.
