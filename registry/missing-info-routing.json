@@ -1,0 +1,177 @@
+{
+  "$comment": "Missing-info class routing by ROLE. People hold roles in registry/people.json; never put people in these rules. Twin: registry/missing-info-routing.md",
+  "version": "0.1.0",
+  "asOf": "2026-09-15",
+  "architecture": {
+    "peopleNeverInRules": true,
+    "campusRoles": "LIVE via Admissions Hub resolver (tests/resolve-campus-roles.mjs)",
+    "departmentRoles": "REGISTERED in registry/people.json with source + asOf",
+    "responsibilities": "spec/responsibilities.json"
+  },
+  "channels": {
+    "support_websites": {
+      "name": "#support-websites",
+      "id": "C09GRQ8L533",
+      "use": "Public intake and overflow; staff, packets, copy, visual QA"
+    },
+    "admin_websites": {
+      "name": "#admin-websites",
+      "id": "C099GQ9F15X",
+      "use": "Private; events sync and urgent reliability"
+    },
+    "apex_daily_rundown": {
+      "name": "#apex-daily-rundown",
+      "id": "C0B6GSNCJG2",
+      "use": "APEX rundown context (email and events)"
+    },
+    "hubspot_n8n_gdm": {
+      "name": "HubSpot/n8n GDM with website-operations",
+      "id": null,
+      "use": "Sync exceptions, wordpress_post_id, overwrite handling with n8n-sync-owner and website-operations"
+    }
+  },
+  "classes": {
+    "staff_photo_title_bio": {
+      "when": "Meet our Team add/update blocked on headshot, bio, quote, title, page URL, or keep/remove",
+      "supplies": [
+        "requester",
+        "dean-of-parents"
+      ],
+      "resolutionNote": "Requester first; dean-of-parents is LIVE via Admissions Hub. Not events or n8n-sync-owner.",
+      "channel": "support_websites",
+      "doNot": [
+        "events",
+        "n8n-sync-owner inventing bios"
+      ],
+      "confidence": "high"
+    },
+    "launch_copy_coming_soon": {
+      "when": "Coming Soon or Fall launch overlays on open campuses; Missing Info on status or replacement hero media",
+      "supplies": [
+        "website-operations",
+        "requester"
+      ],
+      "resolutionNote": "Campus requester confirms; website-operations executes once confirmed.",
+      "channel": "support_websites",
+      "doNot": [
+        "events inventing open/closed"
+      ],
+      "confidence": "medium"
+    },
+    "hubspot_campus_facts": {
+      "when": "Grades, address, phone, tuition, admissions email, or Book a Call disagree with HubSpot, or WP hand-edits would be overwritten",
+      "supplies": [
+        "director-of-admissions",
+        "hubspot-owner",
+        "n8n-sync-owner"
+      ],
+      "resolutionNote": "Director of Admissions (live) confirms fact; hubspot-owner edits HubSpot Program; n8n-sync-owner runs sync. Do not hand-edit synced WordPress facts.",
+      "channel": "hubspot_n8n_gdm",
+      "alsoChannel": "admin_websites",
+      "doNot": [
+        "hand-edit synced WordPress fields"
+      ],
+      "confidence": "high"
+    },
+    "events_public_sync": {
+      "when": "Public=Yes missing or wrong on site, or canceled event still live",
+      "supplies": [
+        "events",
+        "hubspot-admin"
+      ],
+      "resolutionNote": "events (content / Public flag) then events sync partners (hubspot-admin / events holders who own HubSpot to site reliability). Channel #admin-websites. Do not file Website APEX.",
+      "channel": "admin_websites",
+      "doNot": [
+        "Website APEX"
+      ],
+      "confidence": "high"
+    },
+    "info_packet": {
+      "when": "Packet CTA 404, Flipsnack, calendar page, or unapproved campus packet",
+      "supplies": [
+        "requester",
+        "marketing-collateral",
+        "brand-authority",
+        "expansion-founding",
+        "website-operations"
+      ],
+      "resolutionNote": "Campus supplies facts; marketing-collateral designs Canva; brand-authority signs off; expansion-founding language QA; website-operations hosts public packet links when approved. packet-owner person is an open gap (see responsibilities gaps).",
+      "channel": "support_websites",
+      "doNot": [
+        "publish unapproved Flipsnack"
+      ],
+      "gap": "packet-owner person unclear; Dmitry was incorrectly sole holder",
+      "confidence": "high"
+    },
+    "apply_link_admission": {
+      "when": "APPLY TODAY or application campus map wrong, or admission_link empty",
+      "supplies": [
+        "hubspot-owner",
+        "website-agent-operator"
+      ],
+      "resolutionNote": "hubspot-owner confirms admission_link and admissions email; website-agent-operator maps WP CTA once SoT URL exists.",
+      "channel": "support_websites",
+      "doNot": [
+        "invent submission_campus"
+      ],
+      "confidence": "medium"
+    },
+    "brand_copy_voice_ux": {
+      "when": "Brand, voice, or UX wording undecided",
+      "supplies": [
+        "brand-authority",
+        "brand-authority-liaison"
+      ],
+      "resolutionNote": "brand-authority is SoT; brand-authority-liaison relays UX feedback. website-agent-operator / website-operations implement.",
+      "channel": "support_websites",
+      "doNot": [
+        "director-of-admissions for national brand voice"
+      ],
+      "confidence": "high"
+    },
+    "n8n_overwrite_or_sync_exception": {
+      "when": "Sync overwrites WP; new campus needs wordpress_post_id; custom Serving/IF nodes; Locations List automation",
+      "supplies": [
+        "n8n-sync-owner",
+        "website-operations"
+      ],
+      "resolutionNote": "n8n-sync-owner primary; website-operations partners in HubSpot/n8n GDM. New locations: HubSpot wordpress_post_id = -1 then run sync.",
+      "channel": "hubspot_n8n_gdm",
+      "doNot": [
+        "just edit WordPress for synced fields"
+      ],
+      "confidence": "high"
+    },
+    "admissions_team_leadership": {
+      "when": "Who owns admissions website or Alpha High expansion asks after historical Amelia Baldwin requester",
+      "supplies": [
+        "expansion-founding"
+      ],
+      "resolutionNote": "expansion-founding. Amelia Baldwin is historical only; do not assign.",
+      "channel": "support_websites",
+      "doNot": [
+        "assign Amelia Baldwin"
+      ],
+      "confidence": "medium"
+    },
+    "requester_waiting_escalation": {
+      "when": "Wait, SLA, or backlog risk; not missing campus facts",
+      "supplies": [
+        "website-escalation"
+      ],
+      "resolutionNote": "website-escalation. Do not invent answers to clear Missing Info.",
+      "channel": "support_websites",
+      "doNot": [
+        "clear Missing Info by inventing answers"
+      ],
+      "confidence": "medium"
+    }
+  },
+  "operatorChecklist": [
+    "Classify Missing Info using the classes above.",
+    "Prefer requester for one-off assets; HubSpot Program for campus facts; events then sync partners for Public=Yes; n8n-sync-owner for overwrite exceptions.",
+    "Resolve people from registry/people.json (department) or the live campus resolver (campus roles).",
+    "Comment APEX with who was asked and what is still needed.",
+    "Never invent emails or Slack IDs."
+  ]
+}

@@ -602,31 +602,62 @@
         "website staff card"
       ]
     },
+    "cristiconstantin": {
+      "name": "Cristi Constantin",
+      "email": "cristi.constantin@trilogy.com",
+      "slackId": "U08MSRYPGH2",
+      "roles": [
+        {
+          "role": "n8n-sync-owner",
+          "title": "HubSpot Program to n8n to WordPress sync; wordpress_post_id; Locations List automation; overwrite exceptions",
+          "campus": "all",
+          "source": "Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation; Greenwich sync overwrite 2026-09-15",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Slack U08MSRYPGH2",
+        "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
+        "#admin-websites Locations List fully n8n-automated"
+      ]
+    },
     "dmitrybakaev": {
       "name": "Dmitry Bakaev",
       "email": "dmitry.bakaev@trilogy.com",
       "roles": [
-        {
-          "role": "packet-owner",
-          "title": "Info packets and Google listings handoff; email support context",
-          "campus": "all",
-          "source": "marketingsupport registry and observer routing",
-          "asOf": "2026-09-15"
-        },
         {
           "role": "hubspot-admin",
           "title": "HubSpot Admin and Operations team; HubSpot push rights in APEX",
           "campus": "all",
           "source": "APEX request-type routing (projects/alpha-event-task-management)",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "n8n-sync-owner",
+          "title": "HubSpot Program governance and n8n sync partner with Cristi Constantin; sync exceptions and wordpress_post_id",
+          "campus": "all",
+          "source": "Cristi GDM with Matt/Yash/Dmitry; HubSpot Program governance practice 2026-09-15",
+          "asOf": "2026-09-15"
+        },
+        {
+          "role": "events",
+          "title": "Events HubSpot to site sync reliability (with Garbhit Sharma); not Website APEX",
+          "campus": "all",
+          "source": "Matt #admin-websites Aug 2026 guidance; Hailey content then Garbhit/Dmitry sync",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
         "observer routing rules",
         "HubSpot owner 55961534 (Admin, Operations teams)",
-        "APEX HUBSPOT_PUSH_EMAILS"
+        "APEX HUBSPOT_PUSH_EMAILS",
+        "Slack U08E0UGUA5D",
+        "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
+        "Matt #admin-websites Aug 2026 events sync guidance"
       ],
-      "hubspotOwnerId": "55961534"
+      "hubspotOwnerId": "55961534",
+      "slackId": "U08E0UGUA5D",
+      "note": "Not the info-packet Canva owner; that is marketing collateral / brand / website ops."
     },
     "drewcasebier": {
       "name": "Drew Casebier",
@@ -1415,9 +1446,14 @@
       ],
       "sources": [
         "docs/rules/alpha-brand-copy-rules.md",
-        "HubSpot owner 95028751 (Marketing team; name blank on the record)"
+        "HubSpot owner 95028751 (Marketing team; name blank on the record)",
+        "Slack U05BAN925EG"
       ],
-      "hubspotOwnerId": "95028751"
+      "hubspotOwnerId": "95028751",
+      "slackId": "U05BAN925EG",
+      "altEmails": [
+        "mackenzie.price@alpha.school"
+      ]
     },
     "malharmali": {
       "name": "Malhar Mali",
@@ -1450,9 +1486,29 @@
       "sources": [
         "Matt Barge",
         "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
-        "HubSpot owner 93557124"
+        "HubSpot owner 93557124",
+        "Slack U0B4W7Z23EX"
       ],
-      "hubspotOwnerId": "93557124"
+      "hubspotOwnerId": "93557124",
+      "slackId": "U0B4W7Z23EX"
+    },
+    "patrickskinner": {
+      "name": "Patrick Skinner",
+      "email": "patrick.skinner@superbuilders.school",
+      "slackId": "U09G44QU7AA",
+      "roles": [
+        {
+          "role": "website-escalation",
+          "title": "Escalation when requesters wait on website operators; backlog / SLA risk, not inventing missing facts",
+          "campus": "all",
+          "source": "Ops brief; Sep 2026 backlog audit vs waiting complaints",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Slack U09G44QU7AA",
+        "Ops brief / GTM loop waiting complaints"
+      ]
     },
     "mattshenker": {
       "name": "Matt Shenker",
@@ -2715,9 +2771,11 @@
       ],
       "sources": [
         "APEX HUBSPOT_PUSH_EMAILS",
-        "HubSpot owner 84659737"
+        "HubSpot owner 84659737",
+        "Slack U09QVARBPJ4"
       ],
-      "hubspotOwnerId": "84659737"
+      "hubspotOwnerId": "84659737",
+      "slackId": "U09QVARBPJ4"
     },
     "farhanraja": {
       "name": "Farhan Raja",
@@ -2799,12 +2857,14 @@
       ],
       "sources": [
         "Admissions Hub",
-        "HubSpot owner 461678347 (Marketing, Community Partnerships teams)"
+        "HubSpot owner 461678347 (Marketing, Community Partnerships teams)",
+        "Slack U057W8JLWBC"
       ],
       "altEmails": [
         "rachel@alpha.school"
       ],
-      "hubspotOwnerId": "461678347"
+      "hubspotOwnerId": "461678347",
+      "slackId": "U057W8JLWBC"
     },
     "carolynhopper": {
       "name": "Carolyn Hopper",

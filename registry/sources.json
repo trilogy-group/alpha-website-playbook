@@ -107,5 +107,26 @@
     "file": "projects/alpha-event-task-management/src/lib/request-type-routing.ts and photoApprovalPermissions.ts, emailStatusPermissions.ts, hubspotPushPermissions.ts",
     "gives": "auto-assignees by request type (website: Yash, Matt; calendars: Zara Raheem; video_editing: Haven Mass, Nick Stich; marketing_collateral: Chris Davidson), coverage owners (photography: Gaby Guajardo; videography: Chris Mass, Alfred Gomez), HubSpot push and event-editor rights (Hailey McSpadden, Brittany Goodman, Garbhit Sharma, Dmitry Bakaev, Farhan Raja)",
     "access": "source checkout in the marketing workspace; the APEX API does not expose it yet"
+  },
+  "n8nHubspotSync": {
+    "name": "HubSpot Program to n8n to WordPress sync",
+    "owners": "n8n-sync-owner role (registry/people.json)",
+    "channels": [
+      "HubSpot/n8n GDM with website-operations",
+      "#admin-websites (Locations List automation)"
+    ],
+    "evidence": [
+      "Cristi GDM with Matt/Yash/Dmitry on HubSpot/n8n/WP",
+      "#admin-websites Locations List fully n8n-automated",
+      "Greenwich sync overwrite 2026-09-15"
+    ],
+    "asOf": "2026-09-15",
+    "note": "Synced campus facts must be corrected in HubSpot, not by hand-editing WordPress fields that n8n overwrites."
+  },
+  "missingInfoRouting": {
+    "file": "registry/missing-info-routing.json",
+    "human": "registry/missing-info-routing.md",
+    "asOf": "2026-09-15",
+    "note": "Role-based Missing Info routing promoted from Marketing Ops draft; people resolved via people.json or live campus resolver."
   }
 }
