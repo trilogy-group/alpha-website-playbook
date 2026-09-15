@@ -11,6 +11,8 @@ Status: scaffolding. See `docs/project-overview.md` for the why and `docs/PRD.md
 3. `spec/`: the machine-readable form of the same requirements. Checks, validators, and the observer read these files. If prose and spec disagree, the spec is wrong or the prose is wrong; fix one, never work from the disagreement.
 4. `protocols/`: how to take, execute, test, document, and close an APEX website ticket.
 5. `registry/`: approved assets, exemplar pages, owners, and source-of-truth pointers.
+6. `docs/related-systems.md`: what already exists outside this repo (and what is out of scope).
+7. `docs/decisions-2026-09-15-findings.md`: proposed answers to the Sep 15 findings questions (awaiting Yash + Matt). See also the audit trail in `docs/decisions.md`.
 
 ## Rules that never change
 
@@ -26,3 +28,4 @@ Status: scaffolding. See `docs/project-overview.md` for the why and `docs/PRD.md
 - `trilogy-group/alpha-event-task-management`: APEX, the ticket system of record.
 - `trilogy-group/alpha-branding-skill`: brand production and QA skill; the brand rules in this playbook defer to MacKenzie's recorded choices and reference that skill.
 - `marketingsupport` (Matt's workspace): the operating workflows that consume this playbook.
+- Full map, including city-OS (out of scope): `docs/related-systems.md`.
