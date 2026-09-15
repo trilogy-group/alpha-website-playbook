@@ -17,7 +17,7 @@
 | `brand_copy_voice_ux` | brand-authority (+ brand-authority-liaison) | existing brand GDM / APEX for UX impl | campus DoA for national brand voice |
 | `n8n_overwrite_or_sync_exception` | n8n-sync-owner (+ website-operations partners) | HubSpot/n8n GDM with website-operations | "just edit WP" |
 | `admissions_team_leadership` | expansion-founding | `#support-websites` | historical Amelia Baldwin |
-| `requester_waiting_escalation` | website-escalation | escalate wait/backlog | clearing Missing Info by inventing answers |
+| `requester_waiting_escalation` | website-agent-operator, website-operations (no escalation role exists) | answer on the ticket | clearing Missing Info by inventing answers |
 
 ## Class notes
 
@@ -30,7 +30,7 @@
 7. **brand_copy_voice_ux** : brand-authority SoT; brand-authority-liaison for UX feedback.
 8. **n8n_overwrite_or_sync_exception** : n8n-sync-owner. New locations: HubSpot `wordpress_post_id = -1` then run sync.
 9. **admissions_team_leadership** : expansion-founding. Amelia Baldwin historical only.
-10. **requester_waiting_escalation** : website-escalation. Not a facts gap.
+10. **requester_waiting_escalation** : the website operators themselves; there is no escalation role (Matt Barge, 2026-09-15). Not a facts gap.
 
 ## Ticket class to routing class
 
@@ -80,7 +80,6 @@ Point-in-time holders. Prefer live lookup over this appendix.
 | brand-authority-liaison | Haven Mass |
 | marketing-collateral | Chris Davidson |
 | expansion-founding | Rachel Goodlad |
-| website-escalation | Patrick Skinner |
 | hubspot-owner | Hailey McSpadden |
 
 Open gap: **packet-owner** has no registered person after Dmitry was removed from that role. Packet path uses campus + marketing-collateral + brand-authority + expansion-founding + website-operations hosting.

@@ -157,9 +157,10 @@
     "requester_waiting_escalation": {
       "when": "Wait, SLA, or backlog risk; not missing campus facts",
       "supplies": [
-        "website-escalation"
+        "website-agent-operator",
+        "website-operations"
       ],
-      "resolutionNote": "website-escalation. Do not invent answers to clear Missing Info.",
+      "resolutionNote": "No escalation role exists (Matt Barge, 2026-09-15). Backlog and waiting complaints go to the website operators themselves; they answer on the ticket.",
       "channel": "support_websites",
       "doNot": [
         "clear Missing Info by inventing answers"

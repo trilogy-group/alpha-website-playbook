@@ -11,7 +11,7 @@ Two kinds of role, resolved two ways:
 | Kind | Roles | How an agent resolves the person | Why |
 | --- | --- | --- | --- |
 | Live (campus) | Director of Admissions, Dean of Parents, Senior Admissions Specialist coverage | `node tests/resolve-campus-roles.mjs --campus <slug> --role dean-of-parents` reads the Admissions Hub org chart at run time, applies `registry/campus-roles-overrides.json`, and attaches the email from HubSpot owners. `--write` refreshes `registry/campus-roles-snapshot.json`, a dated cache used only when the hub or HubSpot is unreachable. | These change every few weeks. A copied list is wrong within a month. |
-| Registered (department) | HubSpot owner, HubSpot admin, n8n sync owner, website operations, website agent operator, website escalation, events, photography, videography, video editing, calendars, packet owner (person gap), brand authority, expansion, Elementor owner, observer owner | `registry/people.json`, entries with a source and an as-of date | These change a few times a year and are set by declaration, not by a system. |
+| Registered (department) | HubSpot owner, HubSpot admin, n8n sync owner, website operations, website agent operator, events, photography, videography, video editing, calendars, packet owner (person gap), brand authority, expansion, Elementor owner, observer owner | `registry/people.json`, entries with a source and an as-of date | These change a few times a year and are set by declaration, not by a system. |
 
 The Admissions Hub, not HubSpot, is the source of truth for who is Director of Admissions or Dean of Parents at a campus. HubSpot does not model those roles on the Programs object; it holds the people (owners with work emails, and a DoPs team of five). APEX mirrors the hub in its directory and carries the rows Hailey confirmed ahead of the chart; the playbook mirrors the same rows in the overrides file. When the hub and the overrides disagree, the override wins until the hub catches up, and the row is dated.
 
@@ -72,7 +72,6 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Garbhit Sharma, Farhan Raja | HubSpot push rights and portal admin | see `registry/people.json` | APEX permissions, HubSpot Admin team |
 | Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions) | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation |
 | Dmitry Bakaev | HubSpot admin; n8n sync owner partner; events HubSpot to site sync reliability (with Garbhit). Not info-packet Canva owner | dmitry.bakaev@trilogy.com | APEX HubSpot push; Cristi GDM; Matt #admin-websites Aug 2026 |
-| Patrick Skinner | website escalation when requesters wait on operators | patrick.skinner@superbuilders.school | Ops brief; backlog / waiting complaints |
 
 Emails come only from HubSpot owner records, APEX permission files, or the person. Never derive one from a name: the roster carries nicknames and other surnames, and two Deans are on a different domain.
 

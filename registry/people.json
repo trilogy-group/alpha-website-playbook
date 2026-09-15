@@ -1496,19 +1496,12 @@
       "name": "Patrick Skinner",
       "email": "patrick.skinner@superbuilders.school",
       "slackId": "U09G44QU7AA",
-      "roles": [
-        {
-          "role": "website-escalation",
-          "title": "Escalation when requesters wait on website operators; backlog / SLA risk, not inventing missing facts",
-          "campus": "all",
-          "source": "Ops brief; Sep 2026 backlog audit vs waiting complaints",
-          "asOf": "2026-09-15"
-        }
-      ],
+      "roles": [],
       "sources": [
         "Slack U09G44QU7AA",
         "Ops brief / GTM loop waiting complaints"
-      ]
+      ],
+      "note": "Matt Barge, 2026-09-15: not an escalation role. Kept as a known person (Slack id verified) with no role until one is confirmed."
     },
     "mattshenker": {
       "name": "Matt Shenker",

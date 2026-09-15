@@ -29,7 +29,6 @@
         "video-editing",
         "videography",
         "website-agent-operator",
-        "website-escalation",
         "website-operations"
       ]
     },
@@ -616,22 +615,6 @@
         "program-info (sync side)",
         "observer-fact-sync (when n8n overwrites or wordpress_post_id missing)"
       ],
-      "resolution": {
-        "mode": "registry",
-        "source": "registry/people.json",
-        "staleAfterDays": 90
-      }
-    },
-    "website-escalation": {
-      "department": "marketing",
-      "owns": [
-        "escalation when requesters wait on website operators"
-      ],
-      "approves": [],
-      "supplies": [
-        "backlog and SLA escalation path that does not invent missing campus facts"
-      ],
-      "assignableTicketClasses": [],
       "resolution": {
         "mode": "registry",
         "source": "registry/people.json",
