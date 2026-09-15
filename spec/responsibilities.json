@@ -1,6 +1,6 @@
 {
   "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
-  "version": "0.2",
+  "version": "0.2.1",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
@@ -19,6 +19,7 @@
       "scope": "all Alpha campuses",
       "roles": [
         "brand-authority",
+        "brand-authority-liaison",
         "calendars",
         "events",
         "marketing-collateral",
@@ -28,6 +29,7 @@
         "video-editing",
         "videography",
         "website-agent-operator",
+        "website-escalation",
         "website-operations"
       ]
     },
@@ -36,7 +38,8 @@
       "roles": [
         "campus-roles-confirmer",
         "hubspot-admin",
-        "hubspot-owner"
+        "hubspot-owner",
+        "n8n-sync-owner"
       ],
       "note": "HubSpot is the source of truth for campus state and facts (decision 2026-09-15)."
     },
@@ -593,6 +596,61 @@
         "source": "registry/people.json",
         "staleAfterDays": 90
       }
+    },
+    "n8n-sync-owner": {
+      "department": "hubspot",
+      "owns": [
+        "n8n workflows that push HubSpot Program fields to WordPress",
+        "wordpress_post_id mapping",
+        "Locations List automation",
+        "sync overwrite exceptions (Serving/IF campus exceptions)"
+      ],
+      "approves": [
+        "n8n exception nodes and post-id wiring"
+      ],
+      "supplies": [
+        "sync runs after HubSpot Program corrections",
+        "exception handling when WordPress hand-edits would be overwritten"
+      ],
+      "assignableTicketClasses": [
+        "program-info (sync side)",
+        "observer-fact-sync (when n8n overwrites or wordpress_post_id missing)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "website-escalation": {
+      "department": "marketing",
+      "owns": [
+        "escalation when requesters wait on website operators"
+      ],
+      "approves": [],
+      "supplies": [
+        "backlog and SLA escalation path that does not invent missing campus facts"
+      ],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "brand-authority-liaison": {
+      "department": "marketing",
+      "owns": [],
+      "approves": [],
+      "supplies": [
+        "relay of brand-authority decisions and UX feedback to website operators"
+      ],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
     }
   },
   "ticketRouting": {
@@ -618,7 +676,7 @@
       "executes": "website-agent-operator"
     },
     "program-info": {
-      "supplies": "director-of-admissions",
+      "supplies": "director-of-admissions; n8n-sync-owner when sync or wordpress_post_id needed",
       "approves": "hubspot-owner (record) then director-of-admissions",
       "executes": "website-agent-operator"
     },
@@ -633,7 +691,7 @@
       "executes": "website-agent-operator"
     },
     "observer-fact-sync": {
-      "supplies": "hubspot-owner",
+      "supplies": "hubspot-owner; n8n-sync-owner when n8n overwrite or wordpress_post_id missing",
       "approves": "hubspot-owner",
       "executes": "website-agent-operator"
     },
@@ -691,7 +749,9 @@
     "HubSpot Programs object properties still unreadable with the marketing token (needs crm.objects.custom.read and crm.schemas.custom.read); campus state and facts are read through the public growth map API until Hailey or a HubSpot admin grants the scopes",
     "The Admissions Hub org chart has no owner named on the page; Hailey confirms roster corrections today. Confirm who edits the chart and how often",
     "HubSpot owner records are missing or personal for several roster names (Gaby Sullivan present; Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund absent; Haven Mass under a personal address); the resolver reports email null for them",
-    "Elementor owner, Operations sheet owner, and growth map owner are still not named"
+    "Elementor owner, Operations sheet owner, and growth map owner are still not named",
+    "packet-owner person unclear; Dmitry Bakaev was incorrectly the sole holder and was removed. Packet work is campus facts + marketing-collateral (Chris Davidson Canva) + brand-authority (MacKenzie) signoff + website-operations hosting public links",
+    "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops"
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",
@@ -729,17 +789,19 @@
       "needs": {
         "the fact in HubSpot Programs": "source (HubSpot; growth map API as the public mirror)",
         "who can change HubSpot": "hubspot-owner from registry/people.json",
-        "who speaks for the campus": "director-of-admissions (live); senior-admissions-specialist (live) for pre-open campuses"
+        "who speaks for the campus": "director-of-admissions (live); senior-admissions-specialist (live) for pre-open campuses",
+        "n8n sync owners when wordpress_post_id or exception needed": "n8n-sync-owner from registry/people.json"
       },
-      "missingInfoGoesTo": "hubspot-owner when HubSpot is blank; director-of-admissions when the requester disagrees with HubSpot"
+      "missingInfoGoesTo": "hubspot-owner when HubSpot is blank; director-of-admissions when the requester disagrees with HubSpot; when HubSpot is correct but site still wrong or sync would overwrite: n8n-sync-owner"
     },
     "observer-fact-sync": {
       "needs": {
         "HubSpot value": "source",
         "Operations sheet value": "source",
-        "owner of the HubSpot record": "hubspot-owner (registry)"
+        "owner of the HubSpot record": "hubspot-owner (registry)",
+        "n8n sync / wordpress_post_id when overwrite risk": "n8n-sync-owner from registry/people.json"
       },
-      "missingInfoGoesTo": "hubspot-owner"
+      "missingInfoGoesTo": "hubspot-owner; when HubSpot is correct but site still wrong or sync would overwrite: n8n-sync-owner"
     },
     "copy": {
       "needs": {

@@ -2,6 +2,8 @@
 
 Departments own areas. Roles within departments own, approve, or supply specific things. People hold roles for a while and then change, so people never appear in the rules. Machine form: `spec/responsibilities.json` (departments, roles, ticket routing, and what registry each ticket class needs), `registry/people.json` (department-role holders with a source and date), `registry/campus-roles-snapshot.json` (campus-role holders, generated), `registry/campus-leadership.json` (what the campus page Team sections show).
 
+Missing Info class routing (role-based, no people in rules): `registry/missing-info-routing.md` and `registry/missing-info-routing.json`.
+
 ## Live roles and registered roles
 
 Two kinds of role, resolved two ways:
@@ -9,7 +11,7 @@ Two kinds of role, resolved two ways:
 | Kind | Roles | How an agent resolves the person | Why |
 | --- | --- | --- | --- |
 | Live (campus) | Director of Admissions, Dean of Parents, Senior Admissions Specialist coverage | `node tests/resolve-campus-roles.mjs --campus <slug> --role dean-of-parents` reads the Admissions Hub org chart at run time, applies `registry/campus-roles-overrides.json`, and attaches the email from HubSpot owners. `--write` refreshes `registry/campus-roles-snapshot.json`, a dated cache used only when the hub or HubSpot is unreachable. | These change every few weeks. A copied list is wrong within a month. |
-| Registered (department) | HubSpot owner, website operations, website agent operator, events, photography, videography, video editing, calendars, packet owner, brand authority, expansion, Elementor owner, observer owner | `registry/people.json`, entries with a source and an as-of date | These change a few times a year and are set by declaration, not by a system. |
+| Registered (department) | HubSpot owner, HubSpot admin, n8n sync owner, website operations, website agent operator, website escalation, events, photography, videography, video editing, calendars, packet owner (person gap), brand authority, expansion, Elementor owner, observer owner | `registry/people.json`, entries with a source and an as-of date | These change a few times a year and are set by declaration, not by a system. |
 
 The Admissions Hub, not HubSpot, is the source of truth for who is Director of Admissions or Dean of Parents at a campus. HubSpot does not model those roles on the Programs object; it holds the people (owners with work emails, and a DoPs team of five). APEX mirrors the hub in its directory and carries the rows Hailey confirmed ahead of the chart; the playbook mirrors the same rows in the overrides file. When the hub and the overrides disagree, the override wins until the hub catches up, and the row is dated.
 
@@ -21,7 +23,7 @@ A snapshot older than seven days is stale: the validator should re-resolve befor
 | --- | --- | --- |
 | Campus leadership (one per campus) | Who is on the campus page, their bios, photos, titles; the campus's admissions facts and links | Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide, Campus Coordinator |
 | Marketing | Website changes, approved media, packets, events, PR, brand | website operations (Yash), website agent operator (Matt), packet owner, events, PR and comms, brand authority (MacKenzie) |
-| HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email | HubSpot owner (Hailey McSpadden) |
+| HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email; HubSpot to WordPress n8n sync | HubSpot owner (Hailey McSpadden); HubSpot admin; n8n sync owner (Cristi Constantin primary, Dmitry Bakaev partner) |
 | Expansion | Pre-announcement and announced campuses, launch dates, community destinations | new programs (Ashley Rahr), founding (rachel@alpha.school) |
 | Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin | Elementor owner (not yet named), WordPress admin |
 | Operations | The National Growth Map sheet and the map API | not yet named |
@@ -41,10 +43,10 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Ticket class | Must have on hand | Comes from | Missing Info goes to |
 | --- | --- | --- | --- |
 | staff-add, staff-update, staff-remove, staff-photo | The campus page and its Team section model; the approver; the approved title list; an explicit name-to-photo mapping | `registry/campus-pages.json`, `spec/campus-page-model.json`; Dean of Parents, live; `spec/campus-page-requirements.json`; the ticket | Dean of Parents, then Head of Schools, then website operations |
-| program-info, observer-fact-sync | The fact as HubSpot has it; who can change HubSpot; who speaks for the campus | growth map API (HubSpot's public mirror); HubSpot owner from `registry/people.json` (Hailey); Director of Admissions, live | HubSpot owner when HubSpot is blank; Director of Admissions when the requester disagrees with HubSpot |
+| program-info, observer-fact-sync | The fact as HubSpot has it; who can change HubSpot; who speaks for the campus; n8n sync when the site is still wrong | growth map API (HubSpot's public mirror); HubSpot owner from `registry/people.json` (Hailey); Director of Admissions, live; n8n sync owner from `registry/people.json` | HubSpot owner when HubSpot is blank; Director of Admissions when the requester disagrees with HubSpot; n8n sync owner when HubSpot is correct but site still wrong or sync would overwrite |
 | copy, observer-brand-leak | Brand rules; the brand authority for new wording; campus sign-off | marketing workspace brand rules and the branding skill; MacKenzie Price from `registry/people.json`; Dean of Parents, live | requester; brand authority for held items |
 | observer-launch-copy, media, observer-media-identity | Campus state; the approved card asset; the card producer | growth map API; `registry/campus-open-media.json`; website operations (Yash) | website operations; photography or videography when new footage is needed |
-| link-cta, observer-link-cta, observer-packet | The destination; the calendar owner for calendar links; the packet owner | the ticket or HubSpot admission_link; calendars (Zara Raheem); packet owner | Director of Admissions, live; calendars; packet owner |
+| link-cta, observer-link-cta, observer-packet | The destination; the calendar owner for calendar links; packet path roles | the ticket or HubSpot admission_link; calendars (Zara Raheem); marketing-collateral + brand-authority + website-operations (packet-owner person is an open gap) | Director of Admissions, live; calendars; marketing-collateral / brand-authority / website-operations |
 | observer-event, event-sync | The HubSpot marketing event; the event owner | HubSpot; events (Hailey McSpadden, Brittany Goodman) | events |
 | observer-layout, layout | The template owner | Elementor owner, not yet named | Elementor owner, else website operations |
 | observer-map-community | The program row; the Operations sheet row; the expansion owner | HubSpot Programs via the map API; the sheet; expansion new programs (Ashley Rahr) | expansion; Operations sheet owner, not yet named |
@@ -67,7 +69,10 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Ashley Rahr | Expansion new programs; Senior Admissions Specialist (Tampa, Orlando, Scottsdale) | ashley.rahr@alpha.school | Admissions Hub, APEX requester history |
 | Rachel Goodlad | Head of Expansion | rachel.goodlad@alpha.school | Admissions Hub, HubSpot owner record |
 | Jeremy Williams | Dean of Parents for Expansion (fallback DoP) | jeremy.williams@2hourlearning.com | Admissions Hub, HubSpot DoPs team |
-| Garbhit Sharma, Dmitry Bakaev, Farhan Raja | HubSpot push rights and portal admin | see `registry/people.json` | APEX permissions, HubSpot Admin team |
+| Garbhit Sharma, Farhan Raja | HubSpot push rights and portal admin | see `registry/people.json` | APEX permissions, HubSpot Admin team |
+| Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions) | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation |
+| Dmitry Bakaev | HubSpot admin; n8n sync owner partner; events HubSpot to site sync reliability (with Garbhit). Not info-packet Canva owner | dmitry.bakaev@trilogy.com | APEX HubSpot push; Cristi GDM; Matt #admin-websites Aug 2026 |
+| Patrick Skinner | website escalation when requesters wait on operators | patrick.skinner@superbuilders.school | Ops brief; backlog / waiting complaints |
 
 Emails come only from HubSpot owner records, APEX permission files, or the person. Never derive one from a name: the roster carries nicknames and other surnames, and two Deans are on a different domain.
 
@@ -90,6 +95,7 @@ Refresh the roster and requester extractions monthly, or whenever a staff ticket
 
 ## Open gaps
 
+- packet-owner person unclear. Dmitry Bakaev was incorrectly the sole holder and was removed. Packet work is campus facts + Chris Davidson (marketing-collateral / Canva) + MacKenzie (brand-authority) signoff + Rachel (expansion-founding) language QA + Matt/Yash (website-operations) hosting public links. See `registry/missing-info-routing.md` class `info_packet`.
 - Elementor owner and Operations owners are not named.
 - Nobody is named as the editor of the Admissions Hub org chart; Hailey confirms corrections today.
 - HubSpot has no owner record for several roster names (Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund), so the resolver returns no email for them.
