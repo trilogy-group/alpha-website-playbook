@@ -47,3 +47,7 @@ The `header-stylesheet-linked` check passes on all 15 pages now. Earlier in the 
 - Screenshots. The protocol requires them and the checker does not take them; an agent still has to look.
 - Announced-state rules, staff cards, events, and facts were not exercised; only Open-state launch-copy pages were replayed.
 - Lifecycle correctness. The checker trusts `spec/campus-lifecycle.json`, which is the map API's word, and seven Open campuses still carry a Fall 2026 launch date (see `docs/findings-2026-09-15.md`).
+
+## Addendum: what the replay could not see
+
+The replay ran before the content pipelines were mapped. With `spec/synced-targets.json` in place, the dry-run of the group A plan against the live Atlanta page is blocked: the sentence sits in `content_body_4`, which the n8n workflow rewrites daily. A protocol that had this guard would have sent every group A ticket to the HubSpot path instead of editing WordPress. Verify the 14 pages after the next n8n run before treating group A as closed.

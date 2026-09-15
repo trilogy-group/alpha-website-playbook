@@ -8,6 +8,10 @@ Agent-independent scripts. Plain Node 20+, no dependencies, read-only against th
 
 Planned: spec schema validation in CI, a renderer that fails when prose and spec disagree, and observer-check mapping tests.
 
+## page-check.mjs: synced elements
+
+On Open and Announced pages the checker now verifies that every CSS ID in `spec/synced-targets.json` `expectedOnCampusPages` is present (`n8n-synced-elements-present`) and flags any `-disabled` override so the ticket and restore condition can be confirmed (`n8n-override-recorded`). The same file drives the Alpha MCP batch runner's `--synced-targets` guard, which refuses edits to those elements.
+
 ## resolve-campus-roles.mjs
 
 Resolves Director of Admissions, Dean of Parents, and Senior Admissions Specialist coverage per campus, live from the Admissions Hub org chart, with `registry/campus-roles-overrides.json` applied and emails attached from HubSpot owners.

@@ -82,7 +82,12 @@
         "2026-09-15 Greenwich sync overwrite (cited in Responsibility 0.2.1)"
       ],
       "evidenceOfRun": "n8n execution log (operators only); HubSpot Post ID change from -1; public page fields match HubSpot",
-      "agentRule": "Correct HubSpot first. Ask the n8n-sync-owner to run or confirm the sync. Never hand-edit a listed target as a durable fix."
+      "agentRule": "Correct HubSpot first. Ask the n8n-sync-owner to run or confirm the sync. Never hand-edit a listed target as a durable fix.",
+      "confirmed2026-09-15": {
+        "method": "find_text_occurrences through the Alpha MCP on the live Atlanta and Plano documents, plus CSS IDs read from the rendered pages",
+        "result": "The intro status sentence (\"Alpha <Campus> is open and enrolling.\" and the \"Join us for an info session\" paragraph) is the text-editor widget with CSS ID content_body_4. The hero subtitle \"<grades> Private School in <City>\" is the widget with CSS ID title. Both are n8n-synced. The 14 group A sentence edits of 2026-09-15 therefore last until the next daily run unless the HubSpot website copy (website_campus_intro and the substituted copy blocks) already carries the open wording.",
+        "liveIds": "Plano, Raleigh, Atlanta carry title, address (Raleigh: address-disabled), phone, email, tuition, content_title, content_body_1 to 4, attend_cta_button, cognia_yes, cognia_yes_text, cognia_candidate, cognia_candidate_text, gallery_title, faq_title, team_title, team_top_title, hubspot_events, resource_4"
+      }
     },
     "n8n-locations-list": {
       "name": "Locations page List tab",
@@ -258,12 +263,10 @@
     "info packet links (Flipsnack or Heyzine)",
     "calendar links",
     "navigation menus",
-    "SEO Template page used as the n8n boilerplate for new campus pages",
-    "launch copy sentence (the wording n8n writes into content_body is Program-derived; the group A launch-copy edits touched fields that must be checked against this map before the next n8n run)"
+    "SEO Template page used as the n8n boilerplate for new campus pages"
   ],
   "openQuestions": [
     "Which exact CSS IDs on the current campus template are still in the n8n flow after the 2025-12 events-section change. The export inspection of 2026-09-09 is the newest map; confirm with the n8n-sync-owner.",
-    "Whether the group A launch-copy sentence lives in an n8n-controlled content_body field. If so the n8n run will overwrite it and the fix belongs in the HubSpot website copy or the n8n transformation.",
     "Whether the events source moves from HubSpot Marketing Events to APEX (Hailey, 2026-08-28).",
     "Whether n8n writes through custom/v1 or through its own WordPress credentials; the APEX hosted worker is a confirmed caller of custom/v1/update-elementor-page."
   ],

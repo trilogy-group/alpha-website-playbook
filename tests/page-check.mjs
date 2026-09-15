@@ -10,6 +10,7 @@
  *   identity   no sister-brand words; no other campus named in image file names or alt text
  *   links      every hero/resource CTA resolves (HEAD/GET 2xx, no cross-host surprises)
  *   media      intro card slot is an approved card, a video, or flagged
+ *   sync       the CSS IDs the n8n workflow writes are still present (a layout change that drops one breaks the daily sync)
  * Screenshots are still required by the protocol; this script covers the text and structure part.
  * Exit code 1 when any check fails.
  */
@@ -20,6 +21,7 @@ const here = path.dirname(new URL(import.meta.url).pathname)
 const lifecycle = JSON.parse(fs.readFileSync(path.join(here, '../spec/campus-lifecycle.json'), 'utf8'))
 const media = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-open-media.json'), 'utf8'))
 const campusPages = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-pages.json'), 'utf8')).campuses
+const syncedTargets = JSON.parse(fs.readFileSync(path.join(here, '../spec/synced-targets.json'), 'utf8'))
 
 const SISTER_BRANDS = [/\bNova\b/, /\bNextGen(?:\s+Academy)?\b/, /\bWaypoint(?:\s+Academy)?\b/, /\b(?:Texas\s+Sports\s+Academy|TSA)\b/]
 const LAUNCH_WORDS = [/\bComing\s+Soon\b/i, /\bComing\s+(?:Fall|Spring|Winter|Summer)\b/i, /\bis\s+launching\b/i, /\bLaunching\s+(?:in\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bOpening\s+(?:Fall|Spring|Winter|Summer)\b/i]
@@ -103,6 +105,16 @@ async function checkPage(url, stateOverride) {
   const hasCard = /Open-and-Enrolling\.png/.test(mainHtml)
   const hasVideo = /elementor-widget-video|youtube\.com\/embed|youtu\.be/.test(mainHtml)
   if (state === 'Open') add('open-intro-media-approved', hasCard || (entry?.openMedia === 'video' && hasVideo), hasCard ? 'Open and Enrolling card' : (entry?.openMedia === 'video' ? 'approved video' : (entry ? `registry: ${entry.status}${entry.current ? ' (' + entry.current + ')' : ''}` : 'no registry entry')))
+
+  // synced targets: every CSS ID the n8n workflow expects must still exist on an Open or Announced campus page
+  if (state === 'Open' || state === 'Announced') {
+    const ids = new Set([...mainHtml.matchAll(/\sid="([A-Za-z0-9_-]+)"/g)].map((m) => m[1]))
+    const suffix = syncedTargets.overrideSuffix
+    const overridden = syncedTargets.expectedOnCampusPages.filter((id) => ids.has(id + suffix))
+    const missing = syncedTargets.expectedOnCampusPages.filter((id) => !ids.has(id) && !ids.has(id + suffix))
+    add('n8n-synced-elements-present', missing.length === 0, missing.length ? `missing CSS IDs: ${missing.join(', ')}` : `${syncedTargets.expectedOnCampusPages.length} expected IDs present${overridden.length ? '; overridden: ' + overridden.map((id) => id + suffix).join(', ') : ''}`)
+    if (overridden.length) add('n8n-override-recorded', false, `override in place (${overridden.map((id) => id + suffix).join(', ')}); confirm the APEX ticket and restore condition are recorded`)
+  }
 
   // links (hero CTAs and resource links on the same host or known hosts)
   const linkTargets = [...new Set([...mainHtml.matchAll(/<a[^>]+href="(https?:\/\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)].filter((m) => /apply|info session|book a call|book a tour|info packet|calendar|stay in-the-know/i.test(visibleText(m[2]))).map((m) => m[1]))].slice(0, 12)

@@ -14,6 +14,19 @@ HubSpot is the source of truth (decision, Matt Barge, 2026-09-15). When the Oper
 
 Phone, address, grade range in the hero and titles, tuition, email, the four content body blocks, the attend CTA, the Cognia badge, the gallery, FAQ and team titles, the events shortcode, and the Apply link on a campus page are written daily by the n8n campus-page workflow from HubSpot Programs (field map in `playbook/site/content-pipelines.md`, machine form `spec/content-pipelines.json`). A hand edit to any of them is overwritten on the next run. For those fields: correct HubSpot, ask the n8n-sync-owner to run or confirm the sync, and verify the public page afterward. Patch WordPress only for surfaces the workflow does not write (schema text outside the mapped fields, intro copy outside the content body blocks) or under the recorded CSS ID override procedure. New locations need `wordpress_post_id` set to -1 in HubSpot before the workflow will create the page.
 
+## The sanctioned path: APEX program change
+
+The tool for changing a campus fact is the APEX campus Program editor, not HubSpot's UI and not WordPress. A program change in APEX is reviewed and approved by a person, written to HubSpot Programs with a baseline conflict check and read-back, and then published by the daily n8n run. Fields it can change: type, visibility, year open, address, city, state, academic calendar, tuition, application fee, start and end grade, email, phone, website, admission link, call scheduling link, and the website intro copy. The `hubspot-program-admin` (Farhan Raja) and `hubspot-owner` (Hailey McSpadden) approve; the requester or Director of Admissions supplies the value.
+
+For a fact ticket the agent therefore:
+
+1. Confirms the requested value against the requester and, when it changes an admissions promise, the Director of Admissions (live resolver).
+2. Files or advances the APEX program change with the field, old value, new value, and source, and links it from the website ticket.
+3. Waits for the n8n run (daily, or asks the `n8n-sync-owner` for an on-demand run), then runs the page check and the Locations card comparison.
+4. Patches WordPress only for surfaces the workflow does not write, and only after the sync has landed, so the two never disagree.
+
+The website ticket is not complete when HubSpot is saved or when n8n reports success. It is complete when the public page and the Locations card show the value.
+
 ## Steps
 
 1. `resolve_page`, then `find_text_occurrences` with the observed value to list every place it appears on the page (hero subtitle, contact block, intro, schema text, SEO title and description). `get_post_fields` covers the SEO fields.
