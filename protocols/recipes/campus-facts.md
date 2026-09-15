@@ -12,7 +12,7 @@ HubSpot is the source of truth (decision, Matt Barge, 2026-09-15). When the Oper
 
 ## n8n sync comes first
 
-Some campus-page fields are written by an n8n workflow from HubSpot Programs (owner: `n8n-sync-owner` in `registry/people.json`; routing class `hubspot_campus_facts` in `registry/missing-info-routing.md`). A hand edit to a synced field is overwritten on the next run. The synced field list is not yet recorded (see the gap in `spec/responsibilities.json`), so for grade range, tuition, address, phone, and email: correct HubSpot first, ask the n8n-sync-owner to run or confirm the sync, and only patch WordPress for surfaces the sync does not write (SEO title and description, schema text, intro copy) or when the sync owner confirms the field is not synced. New locations need `wordpress_post_id` set in HubSpot before the sync can target the page.
+Phone, address, grade range in the hero and titles, tuition, email, the four content body blocks, the attend CTA, the Cognia badge, the gallery, FAQ and team titles, the events shortcode, and the Apply link on a campus page are written daily by the n8n campus-page workflow from HubSpot Programs (field map in `playbook/site/content-pipelines.md`, machine form `spec/content-pipelines.json`). A hand edit to any of them is overwritten on the next run. For those fields: correct HubSpot, ask the n8n-sync-owner to run or confirm the sync, and verify the public page afterward. Patch WordPress only for surfaces the workflow does not write (schema text outside the mapped fields, intro copy outside the content body blocks) or under the recorded CSS ID override procedure. New locations need `wordpress_post_id` set to -1 in HubSpot before the workflow will create the page.
 
 ## Steps
 

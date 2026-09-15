@@ -618,8 +618,10 @@
       "sources": [
         "Slack U08MSRYPGH2",
         "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
-        "#admin-websites Locations List fully n8n-automated"
-      ]
+        "#admin-websites Locations List fully n8n-automated",
+        "#admin-websites 2025-09 to 2026-08 (Locations List automation 2025-11-27, daily flow 2025-12, Book a call 2026-03, GBP events 2026-08-28); APEX topology doc"
+      ],
+      "title": "Technical Product Owner @ Trilogy"
     },
     "dmitrybakaev": {
       "name": "Dmitry Bakaev",
@@ -2760,12 +2762,20 @@
           "campus": "all",
           "source": "APEX request-type routing (projects/alpha-event-task-management)",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "events-plugin-owner",
+          "title": "Maintains the Alpha HubSpot Events plugin stack and does WordPress/Elementor finishing; observer routes event checks to him",
+          "campus": "all",
+          "source": "#admin-websites 2025-11 to 2026-05 (plugin updates, event type answer 2026-05-01); APEX topology doc 2026-07-13; observer routing",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
         "APEX HUBSPOT_PUSH_EMAILS",
         "HubSpot owner 84659737",
-        "Slack U09QVARBPJ4"
+        "Slack U09QVARBPJ4",
+        "#admin-websites 2025-11 to 2026-05 (plugin updates, event type answer 2026-05-01); APEX topology doc 2026-07-13; observer routing"
       ],
       "hubspotOwnerId": "84659737",
       "slackId": "U09QVARBPJ4"
@@ -2780,13 +2790,22 @@
           "campus": "all",
           "source": "APEX request-type routing (projects/alpha-event-task-management)",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "hubspot-program-admin",
+          "title": "HubSpot Program creation and attributes; Finalsite routing and HubSpot form configuration; SIS overwrite issues (with Vladimir Pikalov)",
+          "campus": "all",
+          "source": "APEX topology doc 2026-07-13; #admin-websites (scheduled sync answer 2026-03-23)",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [
         "HubSpot owner 78384424 (Admin team)",
-        "APEX HUBSPOT_PUSH_EMAILS"
+        "APEX HUBSPOT_PUSH_EMAILS",
+        "APEX topology doc 2026-07-13; #admin-websites (scheduled sync answer 2026-03-23)"
       ],
-      "hubspotOwnerId": "78384424"
+      "hubspotOwnerId": "78384424",
+      "slackId": "U08L4DC8P0Q"
     },
     "nickstich": {
       "name": "Nick Stich",
@@ -2926,6 +2945,59 @@
       "sources": [
         "Admissions Hub"
       ]
+    },
+    "ceciliadegrandis": {
+      "name": "Cecilia De Grandis",
+      "email": null,
+      "roles": [
+        {
+          "role": "former-web-developer",
+          "title": "Built and updated the custom HubSpot events sync plugin and the Locations page with map in 2025; video gallery plugin; no activity seen after 2026-01",
+          "campus": "all",
+          "source": "#admin-websites 2025-08 to 2025-12",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "#admin-websites 2025-08 to 2025-12"
+      ],
+      "slackId": "U099BUK8P7X",
+      "note": "Historical. Confirm whether still active before assigning."
+    },
+    "fernandopinadossantos": {
+      "name": "Fernando Pina dos Santos",
+      "email": "fernando.dossantos@trilogy.com",
+      "roles": [
+        {
+          "role": "github-admin",
+          "title": "Creates GitHub repos and grants access for the custom WordPress plugin repos; HubSpot Admin team",
+          "campus": "all",
+          "source": "#admin-websites 2025-11 and 2025-12 repo requests; HubSpot owner 79371645",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "#admin-websites 2025-11 and 2025-12 repo requests; HubSpot owner 79371645"
+      ],
+      "slackId": "U08N934970A",
+      "hubspotOwnerId": "79371645"
+    },
+    "vladimirpikalov": {
+      "name": "Vladimir Pikalov",
+      "email": "vladimir.pikalov@trilogy.com",
+      "roles": [
+        {
+          "role": "hubspot-admin",
+          "title": "Dashboard engineer; SIS and enrollment overwrite issues with Farhan; HubSpot Admin team",
+          "campus": "all",
+          "source": "Admissions Hub support table; APEX topology doc; HubSpot owner 78212101",
+          "asOf": "2026-09-15"
+        }
+      ],
+      "sources": [
+        "Admissions Hub support table; APEX topology doc; HubSpot owner 78212101"
+      ],
+      "hubspotOwnerId": "78212101"
     }
   }
 }

@@ -16,6 +16,20 @@
     "site.claims.evidence": "Statistics and named-entity claims exist in the claim registry with evidence.",
     "site.events.sync": "Public HubSpot events appear on /upcoming-events/ and the campus strip within 2 hours; registration links resolve; facts match; sister-brand events excluded.",
     "site.map.integrity": "Maps render; each program once with correct label, status, coordinates, destination; pre-announcement pins route to Community; no scroll trap.",
-    "site.loop.health": "Source providers and snapshots healthy (not a website change)."
+    "site.loop.health": "Source providers and snapshots healthy (not a website change).",
+    "site.sync.no-hand-edit-of-synced-targets": {
+      "id": "site.sync.no-hand-edit-of-synced-targets",
+      "statement": "An Elementor element whose CSS ID is in the n8n field map, or whose value originates in a HubSpot Program property, is never hand-edited as a durable fix; the value is corrected in HubSpot and the sync runs. hubspot_event posts are never created or edited by hand.",
+      "source": "APEX publishing contracts 2026-07-13; #admin-websites incidents 2025-12-10, 2026-02-11, 2026-05-21",
+      "check": "page-check n8n-target-guard (to build); MCP unrelated-path guard",
+      "spec": "spec/content-pipelines.json"
+    },
+    "site.sync.layout-keeps-css-ids": {
+      "id": "site.sync.layout-keeps-css-ids",
+      "statement": "A layout change on a campus page keeps every CSS ID the n8n workflow expects, and the SEO Template page is updated with any approved layout change, because new campus drafts are cloned from it.",
+      "source": "#admin-websites 2025-12-10",
+      "check": "manual until the CSS ID inventory is confirmed",
+      "spec": "spec/content-pipelines.json"
+    }
   }
 }

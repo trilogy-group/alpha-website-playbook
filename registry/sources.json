@@ -79,7 +79,8 @@
   },
   "hubspotEvents": {
     "api": "https://api.hubapi.com/marketing/marketing-events (portal 40051392)",
-    "rule": "Public Event = Yes must appear on /upcoming-events/ and the campus strip after a 2 hour grace"
+    "rule": "Public Event = Yes must appear on /upcoming-events/ and the campus strip after a 2 hour grace",
+    "sitePipeline": "spec/content-pipelines.json pipelines.hubspot-events-plugin"
   },
   "campusRoles": {
     "sourceOfTruth": "Admissions Hub org chart, https://alpha-admissions-hub.vercel.app/admissions-hub.html (tables currentDoARows, approvedAssignmentRows, expansionRows, marketingRows, admissionsRows embedded in the page script)",
@@ -128,5 +129,22 @@
     "human": "registry/missing-info-routing.md",
     "asOf": "2026-09-15",
     "note": "Role-based Missing Info routing promoted from Marketing Ops draft; people resolved via people.json or live campus resolver."
+  },
+  "contentPipelines": {
+    "file": "spec/content-pipelines.json",
+    "human": "playbook/site/content-pipelines.md",
+    "asOf": "2026-09-15",
+    "note": "Every automated writer to alpha.school: n8n campus pages and Locations List, the HubSpot events plugin stack, the growth map API, HubSpot-hosted surfaces, registration platforms, Google Business Profile push, video and editorial imports, and the other authenticated Elementor write routes."
+  },
+  "n8n": {
+    "instance": "https://trilogyinc.app.n8n.cloud",
+    "workflows": {
+      "campus pages": "ORgdHC71YJ5RawBy (alpha.school website: Update school pages)",
+      "locations list": "id not recorded",
+      "google business profile events": "giviJTDi7Q3uM4HM (RioSEO)",
+      "staff source reader": "c8Iz4SLpMlswe0RQ (webhook apex-staff-source, header x-apex-staff-key)"
+    },
+    "access": "operators only (Cristi Constantin); no agent access",
+    "fieldMap": "spec/content-pipelines.json pipelines.n8n-campus-pages.targets"
   }
 }

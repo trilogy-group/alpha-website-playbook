@@ -1,0 +1,275 @@
+{
+  "$comment": "Every automated writer that puts content on alpha.school without a person editing WordPress. An agent must consult this before touching any target listed here: a hand edit to a synced target is overwritten on the next run. Sources: #admin-websites and #support-websites history 2025-08 to 2026-09, APEX repo docs (wayfinder-alpha-location-page-publishing-contract.md, wayfinder-alpha-event-publishing-contract.md, wayfinder-current-website-maintenance-topology.md, n8n-staff-source.md, hosted-agent-campus-context.md), public WordPress REST index, growth map API, observer config. Human form: playbook/site/content-pipelines.md.",
+  "version": "0.1",
+  "asOf": "2026-09-15",
+  "pipelines": {
+    "n8n-campus-pages": {
+      "name": "alpha.school website: Update school pages",
+      "direction": "HubSpot Programs -> n8n -> WordPress campus pages (Elementor)",
+      "platform": "n8n cloud, trilogyinc.app.n8n.cloud, workflow ORgdHC71YJ5RawBy (folder Alpha School > SEO > Alpha School Website)",
+      "schedule": "daily (operators say midnight Central); manual run on request",
+      "ownerRole": "n8n-sync-owner",
+      "sourceOfTruth": "HubSpot Programs record; HubDB for program-interest mappings",
+      "creates": "a draft campus page when Program status is Announced, WordPress Post ID is -1, and the campus is in the workflow's own program-interest allowlist; writes the new post id back to HubSpot",
+      "targets": {
+        "$comment": "HubSpot property -> Elementor target, keyed by CSS ID. From the APEX repo n8n-staff-source.md export inspection (2026-09-09). Anything with one of these CSS IDs, or whose value comes from a Program property, is n8n-controlled.",
+        "contact_number": [
+          "phone.description_text",
+          "phone visibility",
+          "JSON-LD telephone"
+        ],
+        "school_address": [
+          "address.description_text",
+          "map address and visibility"
+        ],
+        "grade levels": [
+          "address.title_text",
+          "page title",
+          "SEO title"
+        ],
+        "school name, city, state": [
+          "title.title",
+          "SEO, OpenGraph, X titles and descriptions"
+        ],
+        "website copy with display_region, city, name substitutions": [
+          "content_title",
+          "content_body_1",
+          "content_body_2",
+          "content_body_3",
+          "content_body_4",
+          "attend_cta_button"
+        ],
+        "tuition_usd_yearly": [
+          "tuition.description_text"
+        ],
+        "email": [
+          "email.description_text",
+          "JSON-LD email"
+        ],
+        "cognia_accredited": [
+          "cognia_yes visibility and text",
+          "cognia candidate visibility and text"
+        ],
+        "school name": [
+          "gallery_title",
+          "faq_title",
+          "team_title",
+          "team_top_title"
+        ],
+        "form_program_interest_label": [
+          "hubspot_events.shortcode ([hubspot_events school=\"<label>\" show_filters=\"false\" limit=\"3\"])"
+        ],
+        "admission_link": [
+          "resource_4.link.url (Apply button)"
+        ],
+        "book a call (source property not confirmed)": [
+          "Book a call button show/hide and URL, driven from Program data since 2026-03"
+        ]
+      },
+      "notInScope": [
+        "team member cards, bios, headshots",
+        "info packet and calendar links",
+        "intro card image or video",
+        "navigation menus",
+        "blog section",
+        "hero neighborhood wording (distinct from postal city)"
+      ],
+      "overrideMechanism": "Removing or suffixing a CSS ID (for example address-disabled) stops the workflow from finding the element. Emergency only; record the task, element, temporary value, owner, and restore condition. Pages can also be excluded from the flow by post id (New York was excluded 2025-12).",
+      "knownIncidents": [
+        "2025-12-10 daily run failed after the events section layout change removed CSS ID events_subtitle; events_top_title and events_subtitle were then dropped from the flow",
+        "2026-02-11 Raleigh temporary address protected by renaming the CSS ID",
+        "2026-05-21 the flow pushed a wrong description to every location page; fixed next day",
+        "2026-09-15 Greenwich sync overwrite (cited in Responsibility 0.2.1)"
+      ],
+      "evidenceOfRun": "n8n execution log (operators only); HubSpot Post ID change from -1; public page fields match HubSpot",
+      "agentRule": "Correct HubSpot first. Ask the n8n-sync-owner to run or confirm the sync. Never hand-edit a listed target as a durable fix."
+    },
+    "n8n-locations-list": {
+      "name": "Locations page List tab",
+      "direction": "HubSpot Programs -> n8n -> alpha.school/locations/#list cards",
+      "platform": "n8n cloud, separate workflow from the campus-page one (id not recorded)",
+      "schedule": "nightly at midnight Central; on demand",
+      "ownerRole": "n8n-sync-owner",
+      "since": "2025-11-27",
+      "targets": [
+        "school name and grade levels",
+        "address",
+        "tuition",
+        "View Campus link",
+        "Apply Now link",
+        "card image (mapped inside n8n, not in HubSpot)",
+        "display order"
+      ],
+      "overrides": "n8n holds fallback text for campuses with no address and name overrides (Palm Beach shown as West Palm Beach; Alpha Anywhere Center shown as Alpha New York City). Dmitry asked on 2025-11-27 that overrides move into HubSpot data with fixed fallback text.",
+      "agentRule": "Never edit Locations List cards in Elementor. Data fix goes to HubSpot; display fix goes to the n8n-sync-owner."
+    },
+    "hubspot-events-plugin": {
+      "name": "Alpha HubSpot Events plugin stack",
+      "direction": "HubSpot Marketing Events -> WordPress plugin sync -> hubspot_event posts -> /upcoming-events/ and campus event strips",
+      "platform": "three custom WordPress plugins (shortcode/UI layer, HubSpot sync layer, Alpha business-logic layer); REST namespace ahse/v1 with /status and /manual-sync (authenticated); plugin folder seen in a 2025-10 error as wp-content/plugins/Alpha Hubspot Events",
+      "schedule": "automatic sync about every 30 minutes (observed 2026-07), plus manual sync from the WordPress admin",
+      "ownerRole": "events-plugin-owner",
+      "sourceOfTruth": "HubSpot Marketing Event: public flag (simpleevents_public_event), form program interest, event type, display title, start and end with timezone, registration link (events.alpha.school or Goldcast)",
+      "gates": [
+        "HubSpot private-app connection in the plugin",
+        "program interest enabled in plugin settings",
+        "internal form program interest value matches the plugin and WordPress term slug (display-name renames do not propagate)",
+        "public flag true",
+        "required metadata present",
+        "sync range and limit include the event"
+      ],
+      "storage": "custom post type hubspot_event with taxonomies event_type and program_interest; 29 published and 321 draft records on 2026-08-06; event detail pages at alpha.school/events/<slug>/",
+      "rendering": "Elementor shortcode widget [hubspot_events school=\"<label>\" ...] per campus (container data-has-school=true when scoped); the aggregate /upcoming-events/ is an unscoped query. Global events are events with many program_interest terms, not an event type.",
+      "knownIncidents": [
+        "2025-10-03 PHP parse error in class-api.php",
+        "2025-10-05 most plugins found deactivated",
+        "2025-11-03 plugin crashing the site, disabled then restored",
+        "2026-06 to 2026-09 repeated reports of Public = Yes events not appearing (Southlake, Scottsdale, national activation, San Francisco, Plano) and canceled events staying live",
+        "2026-07-13 Park City and La Jolla event strips unscoped (data-has-school=false)"
+      ],
+      "agentRule": "Never create or edit hubspot_event posts by hand and never flip the HubSpot public flag as a website fix. Diagnose in this order: plugin debug log (absent = mapping branch, present = eligibility or timing branch), then WordPress storage and taxonomies, then the campus shortcode scope. Event owner fixes HubSpot; events-plugin-owner fixes settings or sync; website operator fixes only the shortcode.",
+      "plannedChange": "Hailey proposed on 2026-08-28 to feed the site from APEX events instead of HubSpot Marketing Events, leaving HubSpot only program interest and event type. Not decided."
+    },
+    "apex-to-hubspot-events": {
+      "name": "APEX event tracker to HubSpot Marketing Events",
+      "direction": "APEX -> HubSpot Marketing Event (GET/PATCH marketing/v3/marketing-events/{id}); HubSpot -> APEX read for matching",
+      "platform": "APEX app (alpha-event-task-management): src/lib/hubspot-marketing-event-push.ts and hubspot-marketing-event-mapping.ts",
+      "trigger": "manual Push to HubSpot dialog (single or bulk) by an allowlisted user (Hailey McSpadden, Dmitry Bakaev, Farhan Raja, Garbhit Sharma); afterwards automatic re-push whenever url, location, description, date, time, type, program, or status changes on an event already linked by customFields.hubspotMarketingEventId",
+      "fieldsWritten": [
+        "simpleevents_registration_link (from Event.url, itself produced by the Push to Goldcast step)",
+        "simpleevents_event_location",
+        "display_event_date",
+        "display_event_time",
+        "event_type (mapped enum)",
+        "form_program_interest (first APEX program mapped to the HubSpot enum; this is the campus association the website plugin filters on)",
+        "prevent_indexing=true",
+        "event_display_title (seeded once, never overwritten)",
+        "on cancel only: simpleevents_public_event=false and community_app_audience cleared"
+      ],
+      "publicFlag": "APEX never sets an event public. simpleevents_public_event is turned on by hand in HubSpot (Hailey). APEX only turns it off on cancellation. The APEX request field eventVisibility/isPublic is not sent to HubSpot.",
+      "registration": "Push to Goldcast (Hailey only) duplicates a Goldcast template event and stores the registration URL on the event; events.alpha.school register links come from the same field",
+      "ownerRole": "hubspot-owner",
+      "agentRule": "Events originate in APEX. New event content, date changes, or cancellations go to the event owner in APEX; the website follows HubSpot after the plugin sync. A website ticket never edits event data."
+    },
+    "growth-map-api": {
+      "name": "Growth map API and map app",
+      "direction": "HubSpot Programs -> AWS API Gateway (u7f4afjn6j.execute-api.us-east-1.amazonaws.com/production/map-locations, CloudFront) -> map.app.alpha.school (S3 and CloudFront, Mapbox) -> iframe on / and /locations/",
+      "ownerRole": "growth-map-owner",
+      "fields": [
+        "id (program-<hubspot id>)",
+        "name",
+        "programType Open|Announced|Pre-Announcement",
+        "programName",
+        "launchDate",
+        "address",
+        "city",
+        "state",
+        "url",
+        "communityUrl",
+        "latitude",
+        "longitude",
+        "gradeRange",
+        "startGrade",
+        "endGrade",
+        "photoUrl (HubSpot file)"
+      ],
+      "agentRule": "Read-only mirror of HubSpot for agents without Programs scopes. A wrong pin or label is a HubSpot data fix, or a map app fix if HubSpot is right."
+    },
+    "hubspot-cms-and-forms": {
+      "name": "HubSpot hosted surfaces and embeds",
+      "direction": "HubSpot -> go.alpha.school event landing pages (HubSpot CMS, /alpha-school-event/<id>), HubSpot forms and popups embedded on alpha.school (leadin plugin and hubspot-content-embed), meetings links (meetings.hubspot.com) used as Book a Tour and Book a Call destinations, tracking (js.hs-scripts.com portal 40051392) and consent banner",
+      "ownerRole": "hubspot-owner",
+      "agentRule": "Form copy, event landing page copy, and meeting links are edited in HubSpot, not WordPress. Event link previews use the HubSpot display title; internal names leak when the display title is blank."
+    },
+    "registration-platforms": {
+      "name": "Event registration destinations",
+      "direction": "APEX Push to Goldcast (Hailey) creates the registration event -> registration URL stored on the APEX event -> pushed to HubSpot as simpleevents_registration_link -> events.alpha.school/register/<uuid> (Express app on Cloudflare) or alphaschool.registration.goldcast.io",
+      "ownerRole": "events",
+      "agentRule": "A registration page date that disagrees with the site is a source problem in the registration platform or HubSpot, not a WordPress copy edit."
+    },
+    "google-business-profiles": {
+      "name": "Google Business Profile events push",
+      "direction": "HubSpot Marketing Events -> n8n (RioSEO workflow giviJTDi7Q3uM4HM) -> Google Business Profiles per school",
+      "ownerRole": "n8n-sync-owner",
+      "since": "2026-08-28",
+      "agentRule": "Not a website surface, but the same HubSpot event data. A public-flag change reaches Google too."
+    },
+    "video-library": {
+      "name": "Alpha Answers video resources",
+      "direction": "Airtable -> alpha-video-resources/v1/import -> alpha_video_resource posts and the video gallery",
+      "ownerRole": "website-operations",
+      "agentRule": "Video catalog changes go to Airtable and re-import; 87 published resources on 2026-08-06."
+    },
+    "editorial-feeds": {
+      "name": "Future of Education feeds",
+      "direction": "Substack and ART19 podcast -> scheduled import (Substack import and scheduled actions in WordPress admin)",
+      "ownerRole": "pr-comms",
+      "agentRule": "Imported posts are not hand-edited."
+    },
+    "other-writers": {
+      "name": "Other authenticated write paths into Elementor",
+      "list": [
+        "alpha-mcp/v1 (Alpha WordPress MCP 0.3.0): the playbook path; field-scoped, snapshot and receipt",
+        "custom/v1/update-elementor-page and clone-elementor-page: broad POST routes with no schema. The APEX hosted worker calls update-elementor-page with {post_id, elementor_data, json_ld} for campus intro, phone, and program edits (workers/hosted-agent/src/campus-intro.ts, campus-phone.ts, campus-program.ts). Whether n8n also uses it is unconfirmed",
+        "apex-elementor/v1/pages/{id} GET and POST {revision, source}: guarded Elementor save used by the APEX hosted worker; apex-elementor/v1/event-filter GET and POST sets the events plugin program-interest filter option ahse_program_interest_filter, with Playwright verification at 1440 and 390 px",
+        "wp/v2/media POST: APEX hosted worker staff headshot uploads and alt text",
+        "elementor/v1/cache DELETE and wpe/cache-plugin/v1/clear_all_caches POST: APEX cache purge with its own ALPHA_CACHE credentials",
+        "mcp/emcp-tools-server and apex-emcp-compat/v1: Elementor MCP tools server (export-page, batch-update) used by the older APEX hosted worker path, with a heading-compatibility shim",
+        "wp-abilities/v1 and mcp/mcp-adapter-default-server: WordPress core abilities API and MCP adapter",
+        "WordPress admin users: 15 users, 11 administrators (2026-08-06)",
+        "APEX hosted agent runs on a GitHub Actions schedule every 5 minutes (2-57/5) when HOSTED_AGENT_ENABLED and HOSTED_AGENT_PRODUCTION_ENABLED are set; live edits need HOSTED_AGENT_LIVE_EDITS=true plus per-capability flags and pilot task lists"
+      ],
+      "agentRule": "Two agents can hold work on the same page: the APEX hosted agent (5-minute schedule, exclusive web:alpha.school lease inside APEX) and this playbook agent through the Alpha MCP. Compare the semantic hash before applying, purge and verify afterward, and record the APEX ticket on every MCP apply so the two audit trails meet."
+    },
+    "apex-to-hubspot-programs": {
+      "name": "APEX campus Program editor to HubSpot Programs",
+      "direction": "APEX -> HubSpot Programs custom object 2-43470849 (PATCH crm/v3/objects/2-43470849/{programId}); HubSpot -> APEX every 30 minutes (cron campus-hubspot-sync into CampusMapping and CampusPacketProfile.hubspotSnapshot)",
+      "platform": "APEX app: src/lib/hubspot-program-write.ts, campus-program-sync.ts, website-handoff-source.ts; hosted agent routes api/agent/tasks/{id}/campus-program and campus-intro",
+      "trigger": "human review and approval of a program change in APEX; hosted agent behind HOSTED_AGENT_CAMPUS_PROGRAM_ENABLED and HOSTED_AGENT_CAMPUS_INTRO_ENABLED with a live claim and the web:alpha.school lease",
+      "fieldsWritten": [
+        "type",
+        "visibility",
+        "year_open",
+        "school_address",
+        "streetlevel_address",
+        "city",
+        "state",
+        "academic_calendar",
+        "tuition",
+        "application_fee",
+        "start_grade_level",
+        "end_grade_level",
+        "email",
+        "contact_number",
+        "website",
+        "admission_link",
+        "call_scheduling_link",
+        "website_campus_intro (publisher-owned intro copy)",
+        "school_latitude and school_longitude (agent only)"
+      ],
+      "gate": "HUBSPOT_PROGRAM_WRITE_TOKEN, no fallback; optimistic concurrency against the last snapshot; read-back verification; wordpress_post_id mismatch is a hard conflict",
+      "ownerRole": "hubspot-program-admin",
+      "agentRule": "This is the sanctioned way to change a campus fact: APEX program change -> HubSpot -> n8n -> page. The playbook agent does not write HubSpot itself; it files or advances the APEX program change and verifies the page after the n8n run. The 30-minute HubSpot-to-APEX import is also a readable mirror of Programs for agents that lack HubSpot scopes."
+    }
+  },
+  "notAutomated": [
+    "team member cards, bios, headshots (source: school onboarding workbook People Bio tab, read by n8n reader c8Iz4SLpMlswe0RQ for the APEX hosted agent)",
+    "intro card image or video",
+    "info packet links (Flipsnack or Heyzine)",
+    "calendar links",
+    "navigation menus",
+    "SEO Template page used as the n8n boilerplate for new campus pages",
+    "launch copy sentence (the wording n8n writes into content_body is Program-derived; the group A launch-copy edits touched fields that must be checked against this map before the next n8n run)"
+  ],
+  "openQuestions": [
+    "Which exact CSS IDs on the current campus template are still in the n8n flow after the 2025-12 events-section change. The export inspection of 2026-09-09 is the newest map; confirm with the n8n-sync-owner.",
+    "Whether the group A launch-copy sentence lives in an n8n-controlled content_body field. If so the n8n run will overwrite it and the fix belongs in the HubSpot website copy or the n8n transformation.",
+    "Whether the events source moves from HubSpot Marketing Events to APEX (Hailey, 2026-08-28).",
+    "Whether n8n writes through custom/v1 or through its own WordPress credentials; the APEX hosted worker is a confirmed caller of custom/v1/update-elementor-page."
+  ],
+  "inboundToApex": {
+    "alpha-experiences": "alpha-experiences.manus.space posts event requests to APEX (bearer ALPHA_EXPERIENCES_WEBHOOK_SECRET) and they become intake tasks and events",
+    "public forms": "APEX public event-request form creates the intake task and event with eventVisibility public or private (internal only; not sent to HubSpot)",
+    "headcount": "APEX pushes events to alpha-headcount.vercel.app with the visibility value"
+  }
+}

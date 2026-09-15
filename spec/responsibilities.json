@@ -38,6 +38,7 @@
         "campus-roles-confirmer",
         "hubspot-admin",
         "hubspot-owner",
+        "hubspot-program-admin",
         "n8n-sync-owner"
       ],
       "note": "HubSpot is the source of truth for campus state and facts (decision 2026-09-15)."
@@ -53,9 +54,12 @@
       "scope": "all",
       "roles": [
         "elementor-owner",
+        "events-plugin-owner",
+        "former-web-developer",
+        "github-admin",
         "wordpress-admin"
       ],
-      "note": "Owner not yet named; see gaps."
+      "note": "Elementor owner not yet named for template and layout work; events plugin owner is Garbhit Sharma."
     },
     "operations": {
       "scope": "all",
@@ -599,10 +603,10 @@
     "n8n-sync-owner": {
       "department": "hubspot",
       "owns": [
-        "n8n workflows that push HubSpot Program fields to WordPress",
+        "n8n workflows that push HubSpot Program fields to WordPress (campus pages ORgdHC71YJ5RawBy; Locations List; Google Business Profile events giviJTDi7Q3uM4HM; staff-source reader c8Iz4SLpMlswe0RQ)",
         "wordpress_post_id mapping",
-        "Locations List automation",
-        "sync overwrite exceptions (Serving/IF campus exceptions)"
+        "the CSS ID field map in spec/content-pipelines.json",
+        "sync overwrite exceptions"
       ],
       "approves": [
         "n8n exception nodes and post-id wiring"
@@ -628,6 +632,84 @@
       "supplies": [
         "relay of brand-authority decisions and UX feedback to website operators"
       ],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "events-plugin-owner": {
+      "department": "web-platform",
+      "owns": [
+        "the Alpha HubSpot Events plugin stack: settings, program-interest filter, private-app connection, debug log, manual sync",
+        "WordPress and Elementor finishing after n8n creates a campus draft"
+      ],
+      "approves": [
+        "plugin updates and event shortcode changes"
+      ],
+      "supplies": [
+        "debug-log branch and sync run evidence for event tickets"
+      ],
+      "assignableTicketClasses": [
+        "observer-event (plugin side)",
+        "event-sync",
+        "observer-layout (events section)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "hubspot-program-admin": {
+      "department": "hubspot",
+      "owns": [
+        "HubSpot Program record creation and properties",
+        "Finalsite routing and HubSpot redirect-form configuration",
+        "SIS and enrollment overwrite issues"
+      ],
+      "approves": [
+        "new Program records; submission_campus routing"
+      ],
+      "supplies": [
+        "Program property values when a campus fact is blank"
+      ],
+      "assignableTicketClasses": [
+        "program-info (record side)",
+        "observer-map-community (Program rows)",
+        "link-cta (apply routes)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "former-web-developer": {
+      "department": "web-platform",
+      "owns": [],
+      "approves": [],
+      "supplies": [
+        "history of the 2025 plugin and page work"
+      ],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      },
+      "note": "Historical role for people no longer active; never route a ticket here."
+    },
+    "github-admin": {
+      "department": "web-platform",
+      "owns": [
+        "GitHub organization access for the custom plugin repos"
+      ],
+      "approves": [
+        "repo creation and access"
+      ],
+      "supplies": [],
       "assignableTicketClasses": [],
       "resolution": {
         "mode": "registry",
@@ -661,7 +743,7 @@
     "program-info": {
       "supplies": "director-of-admissions; n8n-sync-owner when sync or wordpress_post_id needed",
       "approves": "hubspot-owner (record) then director-of-admissions",
-      "executes": "website-agent-operator"
+      "executes": "hubspot-owner or hubspot-program-admin corrects HubSpot; n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
     },
     "copy": {
       "supplies": "requester",
@@ -676,7 +758,7 @@
     "observer-fact-sync": {
       "supplies": "hubspot-owner; n8n-sync-owner when n8n overwrite or wordpress_post_id missing",
       "approves": "hubspot-owner",
-      "executes": "website-agent-operator"
+      "executes": "hubspot-owner or hubspot-program-admin corrects HubSpot; n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
     },
     "observer-media-identity": {
       "supplies": "website-operations",
@@ -699,9 +781,9 @@
       "executes": "website-agent-operator (link) / packet-owner (document)"
     },
     "observer-event": {
-      "supplies": "hubspot-owner / events",
+      "supplies": "hubspot-owner (event record and public flag); events-plugin-owner (settings, debug log, sync)",
       "approves": "events",
-      "executes": "hubspot-owner"
+      "executes": "hubspot-owner for the record; events-plugin-owner for the plugin; website-agent-operator only for the campus shortcode"
     },
     "observer-layout": {
       "supplies": "",
@@ -722,6 +804,11 @@
       "supplies": "",
       "approves": "",
       "executes": "the owning workflow (packets, new program, videography, PR, brand)"
+    },
+    "event-sync": {
+      "supplies": "hubspot-owner (event record and public flag); events-plugin-owner (settings, debug log, sync)",
+      "approves": "events",
+      "executes": "hubspot-owner for the record; events-plugin-owner for the plugin; website-agent-operator only for the campus shortcode"
     }
   },
   "gaps": [
@@ -735,7 +822,9 @@
     "Elementor owner, Operations sheet owner, and growth map owner are still not named",
     "packet-owner person unclear; Dmitry Bakaev was incorrectly the sole holder and was removed. Packet work is campus facts + marketing-collateral (Chris Davidson Canva) + brand-authority (MacKenzie) signoff + website-operations hosting public links",
     "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops. Sources for Cristi Constantin, Patrick Skinner, and the Dmitry packet-owner removal are a group DM and an ops brief that are not in any repo; confirm with Matt",
-    "Which WordPress fields n8n overwrites from HubSpot Programs is not listed anywhere. Until the n8n-sync-owner supplies the field list, treat grade range, tuition, address, phone, and email on campus pages as possibly synced: correct HubSpot first and confirm the sync ran before any hand edit."
+    "The n8n field map recorded in spec/content-pipelines.json comes from an export inspected 2026-09-09; confirm with the n8n-sync-owner that the current campus template still carries those CSS IDs, and whether the group A launch-copy sentence sits in an n8n-controlled content body block",
+    "growth-map-owner (map API on AWS and map.app.alpha.school) still not named; Fernando Pina dos Santos administers the GitHub repos and is on the HubSpot Admin team, a candidate to ask",
+    "Owner of the custom/v1 update-elementor-page and clone-elementor-page routes not confirmed"
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",
@@ -774,7 +863,8 @@
         "the fact in HubSpot Programs": "source (HubSpot; growth map API as the public mirror)",
         "who can change HubSpot": "hubspot-owner from registry/people.json",
         "who speaks for the campus": "director-of-admissions (live); senior-admissions-specialist (live) for pre-open campuses",
-        "n8n sync owners when wordpress_post_id or exception needed": "n8n-sync-owner from registry/people.json"
+        "n8n sync owners when wordpress_post_id or exception needed": "n8n-sync-owner from registry/people.json",
+        "n8n field map": "spec/content-pipelines.json pipelines.n8n-campus-pages.targets"
       },
       "missingInfoGoesTo": "hubspot-owner when HubSpot is blank; director-of-admissions when the requester disagrees with HubSpot; when HubSpot is correct but site still wrong or sync would overwrite: n8n-sync-owner"
     },
@@ -783,7 +873,8 @@
         "HubSpot value": "source",
         "Operations sheet value": "source",
         "owner of the HubSpot record": "hubspot-owner (registry)",
-        "n8n sync / wordpress_post_id when overwrite risk": "n8n-sync-owner from registry/people.json"
+        "n8n sync / wordpress_post_id when overwrite risk": "n8n-sync-owner from registry/people.json",
+        "n8n field map": "spec/content-pipelines.json pipelines.n8n-campus-pages.targets"
       },
       "missingInfoGoesTo": "hubspot-owner; when HubSpot is correct but site still wrong or sync would overwrite: n8n-sync-owner"
     },
@@ -846,13 +937,17 @@
     "observer-event": {
       "needs": {
         "HubSpot marketing event": "source",
-        "event owner": "events (registry: Hailey McSpadden, Brittany Goodman)"
+        "event owner": "events (registry: Hailey McSpadden, Brittany Goodman)",
+        "event pipeline and diagnosis order": "spec/content-pipelines.json pipelines.hubspot-events-plugin",
+        "plugin owner": "events-plugin-owner (registry: Garbhit Sharma)"
       },
       "missingInfoGoesTo": "events"
     },
     "event-sync": {
       "needs": {
-        "HubSpot marketing event": "source"
+        "HubSpot marketing event": "source",
+        "event pipeline and diagnosis order": "spec/content-pipelines.json pipelines.hubspot-events-plugin",
+        "plugin owner": "events-plugin-owner (registry: Garbhit Sharma)"
       },
       "missingInfoGoesTo": "hubspot-owner"
     },

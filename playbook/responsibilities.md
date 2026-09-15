@@ -25,7 +25,7 @@ A snapshot older than seven days is stale: the validator should re-resolve befor
 | Marketing | Website changes, approved media, packets, events, PR, brand | website operations (Yash), website agent operator (Matt), packet owner, events, PR and comms, brand authority (MacKenzie) |
 | HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email; HubSpot to WordPress n8n sync | HubSpot owner (Hailey McSpadden); HubSpot admin; n8n sync owner (Cristi Constantin primary, Dmitry Bakaev partner) |
 | Expansion | Pre-announcement and announced campuses, launch dates, community destinations | new programs (Ashley Rahr), founding (rachel@alpha.school) |
-| Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin | Elementor owner (not yet named), WordPress admin |
+| Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin, the events plugin stack | Elementor owner (not yet named), events plugin owner (Garbhit), WordPress admin, GitHub admin (Fernando) |
 | Operations | The National Growth Map sheet and the map API | not yet named |
 | QC | The production observer and its tickets | observer owner (Matt) |
 
@@ -69,7 +69,8 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Ashley Rahr | Expansion new programs; Senior Admissions Specialist (Tampa, Orlando, Scottsdale) | ashley.rahr@alpha.school | Admissions Hub, APEX requester history |
 | Rachel Goodlad | Head of Expansion | rachel.goodlad@alpha.school | Admissions Hub, HubSpot owner record |
 | Jeremy Williams | Dean of Parents for Expansion (fallback DoP) | jeremy.williams@2hourlearning.com | Admissions Hub, HubSpot DoPs team |
-| Garbhit Sharma, Farhan Raja | HubSpot push rights and portal admin | see `registry/people.json` | APEX permissions, HubSpot Admin team |
+| Garbhit Sharma | Events plugin owner; WordPress and Elementor finishing; HubSpot push rights | garbhit.sharma@alpha.school | #admin-websites, APEX topology doc, observer routing |
+| Farhan Raja | HubSpot program admin: Program records, Finalsite and form routing; HubSpot push rights | farhan.raja@trilogy.com | APEX topology doc, #admin-websites |
 | Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions) | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation |
 | Dmitry Bakaev | HubSpot admin; n8n sync owner partner; events HubSpot to site sync reliability (with Garbhit). Not info-packet Canva owner | dmitry.bakaev@trilogy.com | APEX HubSpot push; Cristi GDM; Matt #admin-websites Aug 2026 |
 

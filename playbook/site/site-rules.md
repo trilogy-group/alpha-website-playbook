@@ -46,6 +46,11 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 
 - The homepage and Locations maps render, every program appears once with the right label, status, coordinates, and destination, Pre-Announcement pins route to a campus-specific Community URL on the approved host, and the map does not trap page scrolling. Checks: `campus-map-*`, `embedded-map-scroll-trap`, `preannouncement-community-url`, `preannouncement-community-host`, `community-campus-parameter`, `public-program-url`, `public-program-host`, `duplicate-program-url`, `duplicate-program-id`, `program-lifecycle-valid`, `hubspot-map-sync`, `operations-map-*`, `map-campus-missing-from-operations`, `wordpress-campus-missing-from-map`, `campus-sitemap-missing`.
 
+## Synced content (`site.sync.*`)
+
+- An Elementor element whose CSS ID is in the n8n field map, or whose value comes from a HubSpot Program property, is never hand-edited as a durable fix. Correct HubSpot, run the sync, verify the page. `hubspot_event` posts are never created or edited by hand. Source: the APEX publishing contracts and the December 2025, February 2026, and May 2026 overwrite incidents. Full map: `playbook/site/content-pipelines.md`.
+- A layout change on a campus page keeps every CSS ID the n8n workflow expects, and the SEO Template page gets the same change, because new campus drafts are cloned from it.
+
 ## Accessibility (`site.a11y.*`)
 
 - Not yet specified. Candidate rules: alt text on content images, heading order, focus states, contrast on hero overlays. Needs a source before it can be enforced.
