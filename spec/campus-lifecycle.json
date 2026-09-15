@@ -1,5 +1,5 @@
 {
-  "$comment": "Campus lifecycle states as the sources define them today (M2 draft). Precedence when sources disagree is OPEN QUESTION 1 for Yash.",
+  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`.",
   "generatedAt": "2026-09-15T19:30:26.872237+00:00",
   "states": {
     "Open": {
@@ -238,7 +238,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha Charlotte is open K-8 for Fall 2026."
     },
@@ -259,7 +259,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha Chicago is launching in Fall 2026."
     },
@@ -299,7 +299,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha Dorado is open and enrolling."
     },
@@ -674,7 +674,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha Palo Alto is open and enrolling."
     },
@@ -733,7 +733,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha Raleigh is open and enrolling."
     },
@@ -811,7 +811,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha Santa Monica is open and enrolling."
     },
@@ -889,7 +889,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [
-        "programType Open but launchDate Fall 2026"
+        "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
       "introStatement": "Alpha The Woodlands is open and enrolling."
     },
@@ -912,5 +912,13 @@
       "conflicts": [],
       "introStatement": "Alpha Tulsa is open and enrolling."
     }
+  },
+  "precedence": {
+    "decidedBy": "Matt Barge, 2026-09-15",
+    "order": [
+      "HubSpot Programs (property `type`, published through the growth map API programType)",
+      "Operations sheet (only when HubSpot has no value)"
+    ],
+    "rule": "If HubSpot says Open, the website says open: intro sentence, intro media, hero, map label. A launchDate left on an Open program is stale data to clear in HubSpot, not a reason to show launch copy."
   }
 }

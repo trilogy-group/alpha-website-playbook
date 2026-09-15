@@ -8,7 +8,7 @@ Classes `observer-fact-sync` and `program-info`. Facts appear in several places 
 2. The Operations sheet, when HubSpot has no value.
 3. The requester, for form tickets, when they own the campus.
 
-When the sources disagree with each other, stop. Record both values on the ticket and set Missing Info naming the source owner. Until Yash and Matt answer open question 1 (which source wins), no agent picks.
+HubSpot is the source of truth (decision, Matt Barge, 2026-09-15). When the Operations sheet or the map disagrees with HubSpot, use the HubSpot value on the website and file a ticket for the other source to be corrected. When HubSpot has no value, use the Operations sheet and say so on the ticket. When a requester's value disagrees with HubSpot, the requester updates HubSpot first; the website follows HubSpot.
 
 ## Steps
 
