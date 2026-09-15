@@ -1,0 +1,323 @@
+{
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description.",
+  "version": "0.2",
+  "classes": {
+    "other-workflow": {
+      "match": {
+        "titlePattern": "^(Videography|New Program|Info Packets|Press Email|Brand shift|NextGen |Application Addition)"
+      },
+      "required": [],
+      "recipe": null,
+      "scope": "other-workflow",
+      "note": "Not a website page edit; route to the workflow that owns it (packets, new program launch, videography, PR, brand)."
+    },
+    "staff-photo": {
+      "match": {
+        "titlePattern": "team member.*\\[(?:change|just update|update) photo\\]"
+      },
+      "required": [
+        "pageUrl",
+        "staffName",
+        "staffHeadshot",
+        "requester"
+      ],
+      "recipe": "staff-card",
+      "scope": "website"
+    },
+    "staff-add": {
+      "match": {
+        "websiteRequestType": [
+          "add-team-member"
+        ],
+        "titlePattern": "Add (?:a )?team member"
+      },
+      "required": [
+        "pageUrl",
+        "staffName",
+        "staffTitle",
+        "staffBio",
+        "staffHeadshot",
+        "requester"
+      ],
+      "recipe": "staff-card",
+      "scope": "website"
+    },
+    "staff-update": {
+      "match": {
+        "websiteRequestType": [
+          "update-team-member"
+        ],
+        "titlePattern": "Update a team member"
+      },
+      "required": [
+        "pageUrl",
+        "staffName",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "staff-card",
+      "scope": "website"
+    },
+    "staff-remove": {
+      "match": {
+        "websiteRequestType": [
+          "remove-team-member"
+        ],
+        "titlePattern": "Remove a team member"
+      },
+      "required": [
+        "pageUrl",
+        "staffName",
+        "requester"
+      ],
+      "recipe": "staff-card",
+      "scope": "website"
+    },
+    "program-info": {
+      "match": {
+        "websiteRequestType": [
+          "update-program-info"
+        ],
+        "titlePattern": "Update program info"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "campus-facts",
+      "scope": "website"
+    },
+    "observer-launch-copy": {
+      "match": {
+        "titlePattern": "still shows launch copy"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "expected",
+        "observerId",
+        "approvedMedia"
+      ],
+      "recipe": "launch-copy",
+      "scope": "website"
+    },
+    "observer-fact-sync": {
+      "match": {
+        "titlePattern": "HubSpot says|Operations says|source address|source name|source coordinates|HubSpot email"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "expected",
+        "observerId",
+        "sourceValue"
+      ],
+      "recipe": "campus-facts",
+      "scope": "website"
+    },
+    "observer-brand-leak": {
+      "match": {
+        "titlePattern": "expected Alpha-only campus copy"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId"
+      ],
+      "recipe": "copy",
+      "scope": "website"
+    },
+    "observer-media-identity": {
+      "match": {
+        "titlePattern": "image metadata references"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId",
+        "approvedMedia"
+      ],
+      "recipe": "media",
+      "scope": "website"
+    },
+    "observer-link-cta": {
+      "match": {
+        "titlePattern": "missing an info-packet CTA|missing an APPLY TODAY|admission_link|calendar|Book a Call"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId",
+        "destinationUrl"
+      ],
+      "recipe": "link-cta",
+      "scope": "website"
+    },
+    "observer-packet": {
+      "match": {
+        "titlePattern": "info packet is not publicly accessible|packet link returns"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "packet-owner"
+    },
+    "observer-event": {
+      "match": {
+        "titlePattern": "public in HubSpot, but missing|event feed shows other-campus|registration link returns|Apply stays on the HubSpot form"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "event-owner"
+    },
+    "observer-layout": {
+      "match": {
+        "titlePattern": "header overlaps|overflows horizontally|outside the mobile viewport|image failed to render|fails on mobile"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "elementor-owner"
+    },
+    "observer-map-community": {
+      "match": {
+        "titlePattern": "National Growth Map|community\\.alpha\\.school|Operations says .* Map says"
+      },
+      "required": [
+        "observed",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "operations-owner"
+    },
+    "observer-health": {
+      "match": {
+        "titlePattern": "source collection|snapshot no older|Search and QC cannot read|expected rendered HTTP 2xx|expected HTTP 2xx"
+      },
+      "required": [
+        "observed",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "observer-owner"
+    },
+    "copy": {
+      "match": {
+        "websiteRequestType": [
+          "other"
+        ],
+        "titlePattern": "Website \\(Other\\)|Website \u2014 Alpha"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "copy",
+      "scope": "website"
+    }
+  },
+  "fields": {
+    "pageUrl": {
+      "from": [
+        "url",
+        "description:Page: (https?://[^\\s]+)",
+        "customFields.requestDetail:(https?://alpha\\.school/[^\\s]+)",
+        "program:campus-pages",
+        "title:campus-pages"
+      ],
+      "missingText": "the exact page URL"
+    },
+    "staffName": {
+      "from": [
+        "originalSubmission.webTmName",
+        "title:\u2014 ([A-Z][^\u2014]+?) \u2014"
+      ],
+      "missingText": "the team member's full name"
+    },
+    "staffTitle": {
+      "from": [
+        "originalSubmission.webTmTitle"
+      ],
+      "missingText": "the public title"
+    },
+    "staffBio": {
+      "from": [
+        "originalSubmission.webTmBio"
+      ],
+      "missingText": "the bio text"
+    },
+    "staffHeadshot": {
+      "from": [
+        "originalSubmission.webTmHeadshotAssetId",
+        "originalSubmission.webTmHeadshotUrl",
+        "description:HEADSHOT (?:URL|ASSET)\\s*([^\\s<]+)"
+      ],
+      "missingText": "the headshot (APEX asset or URL)"
+    },
+    "changeDetail": {
+      "from": [
+        "customFields.requestDetail",
+        "originalSubmission.requestDetail",
+        "description:DETAIL\\s*(.+)"
+      ],
+      "missingText": "the exact change requested (current value and new value)"
+    },
+    "requester": {
+      "from": [
+        "requesterEmail"
+      ],
+      "missingText": "a requester email"
+    },
+    "observed": {
+      "from": [
+        "description:Observed: (.+)"
+      ],
+      "missingText": "the observed value"
+    },
+    "expected": {
+      "from": [
+        "description:Expected: (.+)"
+      ],
+      "missingText": "the expected value"
+    },
+    "observerId": {
+      "from": [
+        "description:Observer ID: (SITE-[A-Z0-9]+)"
+      ],
+      "missingText": "the observer id"
+    },
+    "sourceValue": {
+      "from": [
+        "title:(?:HubSpot|Operations|source \\w+) (?:says|is|are) (.+?)(?:, and| and website)",
+        "title:HubSpot email is ([^,]+),",
+        "title:(?:HubSpot|Operations|source \\w+) (?:says|is|are) ([^,]+?)(?:,| and)"
+      ],
+      "missingText": "the source-of-truth value and a ruling that the source is current"
+    },
+    "approvedMedia": {
+      "from": [
+        "registry:campus-open-media"
+      ],
+      "missingText": "an approved open-campus card or video for this campus (registry/campus-open-media.json), owner Yash Chitneni"
+    },
+    "destinationUrl": {
+      "from": [
+        "description:Expected: .*?(https?://[^\\s]+)",
+        "customFields.requestDetail:(https?://[^\\s]+)"
+      ],
+      "missingText": "the destination URL the CTA should point to, confirmed reachable"
+    }
+  }
+}

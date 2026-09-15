@@ -1,0 +1,505 @@
+{
+  "$comment": "Campus page lookup: slug -> canonical URL, WordPress object id, map program ids, and the names APEX tickets use in the program field or title. Derived 2026-09-15 from the site inventory and the growth map API.",
+  "campuses": {
+    "atlanta": {
+      "url": "https://alpha.school/atlanta/",
+      "objectId": 8545,
+      "title": "SEO &#8211; Alpha Atlanta",
+      "names": [
+        "Alpha Atlanta",
+        "Alpha School Atlanta"
+      ],
+      "mapProgramIds": [
+        "program-42698676589"
+      ]
+    },
+    "austin": {
+      "url": "https://alpha.school/austin/",
+      "objectId": 6365,
+      "title": "SEO &#8211; Alpha Austin",
+      "names": [
+        "Alpha Austin"
+      ],
+      "mapProgramIds": [
+        "program-26459919512"
+      ]
+    },
+    "bethesda": {
+      "url": "https://alpha.school/bethesda/",
+      "objectId": 5743,
+      "title": "SEO &#8211; Alpha Bethesda",
+      "names": [
+        "Alpha Bethesda"
+      ],
+      "mapProgramIds": [
+        "program-29970883469"
+      ]
+    },
+    "boca-raton": {
+      "url": "https://alpha.school/boca-raton/",
+      "objectId": 9217,
+      "title": "SEO &#8211; Alpha Boca Raton",
+      "names": [
+        "Alpha Boca Raton"
+      ],
+      "mapProgramIds": [
+        "program-51219627099"
+      ]
+    },
+    "boston": {
+      "url": "https://alpha.school/boston/",
+      "objectId": 9271,
+      "title": "SEO &#8211; Alpha Boston",
+      "names": [
+        "Alpha Boston"
+      ],
+      "mapProgramIds": [
+        "program-42820568924"
+      ]
+    },
+    "boston-suburbs": {
+      "url": "https://alpha.school/boston-suburbs/",
+      "objectId": 9209,
+      "title": "SEO &#8211; Alpha Lexington",
+      "names": [
+        "Alpha Lexington",
+        "Alpha Boston Suburbs"
+      ],
+      "mapProgramIds": [
+        "program-51223157555"
+      ]
+    },
+    "brownsville": {
+      "url": "https://alpha.school/brownsville/",
+      "objectId": 6543,
+      "title": "SEO &#8211; Alpha Brownsville",
+      "names": [
+        "Alpha Brownsville"
+      ],
+      "mapProgramIds": [
+        "program-26445615151"
+      ]
+    },
+    "carrollton": {
+      "url": "https://alpha.school/carrollton/",
+      "objectId": 9272,
+      "title": "SEO &#8211; Alpha Carrollton",
+      "names": [
+        "Alpha Carrollton"
+      ],
+      "mapProgramIds": [
+        "program-50893567086"
+      ]
+    },
+    "chantilly": {
+      "url": "https://alpha.school/chantilly/",
+      "objectId": 6548,
+      "title": "SEO &#8211; Alpha Chantilly",
+      "names": [
+        "Alpha Chantilly",
+        "Chantilly"
+      ],
+      "mapProgramIds": [
+        "program-29737764378"
+      ]
+    },
+    "charlotte": {
+      "url": "https://alpha.school/charlotte/",
+      "objectId": 6552,
+      "title": "SEO &#8211; Alpha Charlotte",
+      "names": [
+        "Alpha Charlotte"
+      ],
+      "mapProgramIds": [
+        "program-29737764384"
+      ]
+    },
+    "chicago": {
+      "url": "https://alpha.school/chicago/",
+      "objectId": 8451,
+      "title": "SEO &#8211; Alpha Chicago",
+      "names": [
+        "Alpha Chicago"
+      ],
+      "mapProgramIds": [
+        "program-30008355188"
+      ]
+    },
+    "denver": {
+      "url": "https://alpha.school/denver/",
+      "objectId": 9283,
+      "title": "SEO &#8211; Alpha Denver",
+      "names": [
+        "Alpha Denver"
+      ],
+      "mapProgramIds": [
+        "program-51219565354"
+      ]
+    },
+    "dorado": {
+      "url": "https://alpha.school/dorado/",
+      "objectId": 8777,
+      "title": "SEO &#8211; Alpha Dorado",
+      "names": [
+        "Alpha Dorado"
+      ],
+      "mapProgramIds": [
+        "program-29330581557"
+      ]
+    },
+    "east-bay": {
+      "url": "https://alpha.school/east-bay/",
+      "objectId": 8544,
+      "title": "SEO &#8211; Alpha East Bay",
+      "names": [
+        "Alpha East Bay",
+        "Alpha School East Bay"
+      ],
+      "mapProgramIds": [
+        "program-42698614786"
+      ]
+    },
+    "fort-worth": {
+      "url": "https://alpha.school/fort-worth/",
+      "objectId": 6550,
+      "title": "SEO &#8211; Alpha Fort Worth",
+      "names": [
+        "Alpha Fort Worth"
+      ],
+      "mapProgramIds": [
+        "program-26463204885"
+      ]
+    },
+    "franklin": {
+      "url": "https://alpha.school/franklin/",
+      "objectId": 9626,
+      "title": "SEO &#8211; Alpha Franklin",
+      "names": [
+        "Alpha Franklin"
+      ],
+      "mapProgramIds": [
+        "program-57601909511"
+      ]
+    },
+    "greenwich": {
+      "url": "https://alpha.school/greenwich/",
+      "objectId": 9213,
+      "title": "SEO &#8211; Alpha Greenwich Port Chester",
+      "names": [
+        "Alpha Greenwich Armonk",
+        "Alpha Greenwich Port Chester",
+        "Alpha Greenwich"
+      ],
+      "mapProgramIds": [
+        "program-60804396611",
+        "program-49011192959"
+      ]
+    },
+    "highland-park": {
+      "url": "https://alpha.school/highland-park/",
+      "objectId": 9219,
+      "title": "SEO &#8211; Alpha Highland Park",
+      "names": [
+        "Alpha Highland Park"
+      ],
+      "mapProgramIds": [
+        "program-51136264989"
+      ]
+    },
+    "houston": {
+      "url": "https://alpha.school/houston/",
+      "objectId": 9625,
+      "title": "SEO &#8211; Alpha Houston Heights",
+      "names": [
+        "Alpha Houston Heights",
+        "Alpha Houston"
+      ],
+      "mapProgramIds": [
+        "program-26459919662"
+      ]
+    },
+    "jamaica-plain": {
+      "url": "https://alpha.school/jamaica-plain/",
+      "objectId": 9282,
+      "title": "SEO &#8211; Alpha Jamaica Plain",
+      "names": [
+        "Alpha Jamaica Plain"
+      ],
+      "mapProgramIds": [
+        "program-57622127456"
+      ]
+    },
+    "kirkland": {
+      "url": "https://alpha.school/kirkland/",
+      "objectId": 9216,
+      "title": "SEO &#8211; Alpha Kirkland",
+      "names": [
+        "Alpha Kirkland"
+      ],
+      "mapProgramIds": [
+        "program-42820443702"
+      ]
+    },
+    "la-jolla": {
+      "url": "https://alpha.school/la-jolla/",
+      "objectId": 9212,
+      "title": "SEO &#8211; Alpha La Jolla",
+      "names": [
+        "Alpha La Jolla",
+        "Alpha San Diego"
+      ],
+      "mapProgramIds": [
+        "program-51235904641"
+      ]
+    },
+    "lake-travis": {
+      "url": "https://alpha.school/lake-travis/",
+      "objectId": 9310,
+      "title": "SEO &#8211; Alpha Lake Travis",
+      "names": [
+        "Alpha Lake Travis"
+      ],
+      "mapProgramIds": [
+        "program-50888725544"
+      ]
+    },
+    "malibu": {
+      "url": "https://alpha.school/malibu/",
+      "objectId": 9211,
+      "title": "SEO &#8211; Alpha Malibu",
+      "names": [
+        "Alpha Malibu"
+      ],
+      "mapProgramIds": [
+        "program-51219627180"
+      ]
+    },
+    "miami": {
+      "url": "https://alpha.school/miami/",
+      "objectId": 5866,
+      "title": "SEO &#8211; Alpha Miami",
+      "names": [
+        "Alpha Miami"
+      ],
+      "mapProgramIds": [
+        "program-26445615176"
+      ]
+    },
+    "miami-beach": {
+      "url": "https://alpha.school/miami-beach/",
+      "objectId": 9214,
+      "title": "SEO &#8211; Alpha Miami Beach",
+      "names": [
+        "Alpha Miami Beach"
+      ],
+      "mapProgramIds": [
+        "program-50407159388"
+      ]
+    },
+    "nashville": {
+      "url": "https://alpha.school/nashville/",
+      "objectId": 9218,
+      "title": "SEO &#8211; Alpha Nashville",
+      "names": [
+        "Alpha Nashville"
+      ],
+      "mapProgramIds": [
+        "program-50960324964"
+      ]
+    },
+    "new-york-city": {
+      "url": "https://alpha.school/new-york-city/",
+      "objectId": 6542,
+      "title": "SEO &#8211; Alpha New York",
+      "names": [
+        "Alpha New York",
+        "Alpha NYC",
+        "Alpha New York City"
+      ],
+      "mapProgramIds": [
+        "program-26463204876"
+      ]
+    },
+    "oklahoma-city": {
+      "url": "https://alpha.school/oklahoma-city/",
+      "objectId": 9215,
+      "title": "SEO &#8211; Alpha Oklahoma City",
+      "names": [
+        "Alpha Oklahoma City",
+        "Alpha OKC"
+      ],
+      "mapProgramIds": [
+        "program-41831482741"
+      ]
+    },
+    "orange-county": {
+      "url": "https://alpha.school/orange-county/",
+      "objectId": 6551,
+      "title": "SEO &#8211; Alpha Orange County",
+      "names": [
+        "Alpha Orange County"
+      ],
+      "mapProgramIds": [
+        "program-29735717537"
+      ]
+    },
+    "palm-beach": {
+      "url": "https://alpha.school/palm-beach/",
+      "objectId": 6545,
+      "title": "SEO &#8211; Alpha Palm Beach",
+      "names": [
+        "Alpha Palm Beach",
+        "Alpha West Palm Beach"
+      ],
+      "mapProgramIds": [
+        "program-26463204902"
+      ]
+    },
+    "palo-alto": {
+      "url": "https://alpha.school/palo-alto/",
+      "objectId": 8449,
+      "title": "SEO &#8211; Alpha Palo Alto",
+      "names": [
+        "Alpha Palo Alto"
+      ],
+      "mapProgramIds": [
+        "program-40674858575"
+      ]
+    },
+    "park-city": {
+      "url": "https://alpha.school/park-city/",
+      "objectId": 9206,
+      "title": "SEO &#8211; Alpha Park City",
+      "names": [
+        "Alpha Park City"
+      ],
+      "mapProgramIds": [
+        "program-50160852349"
+      ]
+    },
+    "plano": {
+      "url": "https://alpha.school/plano/",
+      "objectId": 6546,
+      "title": "SEO &#8211; Alpha Plano",
+      "names": [
+        "Alpha Plano"
+      ],
+      "mapProgramIds": [
+        "program-29737764355"
+      ]
+    },
+    "raleigh": {
+      "url": "https://alpha.school/raleigh/",
+      "objectId": 6547,
+      "title": "SEO &#8211; Alpha Raleigh",
+      "names": [
+        "Alpha Raleigh"
+      ],
+      "mapProgramIds": [
+        "program-29735717555"
+      ]
+    },
+    "san-francisco": {
+      "url": "https://alpha.school/san-francisco/",
+      "objectId": 6544,
+      "title": "SEO &#8211; Alpha San Francisco",
+      "names": [
+        "Alpha San Francisco"
+      ],
+      "mapProgramIds": [
+        "program-30202737671"
+      ]
+    },
+    "san-juan": {
+      "url": "https://alpha.school/san-juan/",
+      "objectId": 9627,
+      "title": "SEO &#8211; Alpha San Juan",
+      "names": [
+        "Alpha San Juan"
+      ],
+      "mapProgramIds": [
+        "program-52385985656"
+      ]
+    },
+    "santa-barbara": {
+      "url": "https://alpha.school/santa-barbara/",
+      "objectId": 6541,
+      "title": "SEO &#8211; Alpha Santa Barbara",
+      "names": [
+        "Alpha Santa Barbara"
+      ],
+      "mapProgramIds": [
+        "program-26459919653"
+      ]
+    },
+    "santa-monica": {
+      "url": "https://alpha.school/santa-monica/",
+      "objectId": 8450,
+      "title": "SEO &#8211; Alpha Santa Monica",
+      "names": [
+        "Alpha Santa Monica"
+      ],
+      "mapProgramIds": [
+        "program-42699541904"
+      ]
+    },
+    "scottsdale": {
+      "url": "https://alpha.school/scottsdale/",
+      "objectId": 6549,
+      "title": "SEO &#8211; Alpha Scottsdale",
+      "names": [
+        "Alpha Scottsdale"
+      ],
+      "mapProgramIds": [
+        "program-26463204914"
+      ]
+    },
+    "south-bay-la": {
+      "url": "https://alpha.school/south-bay-la/",
+      "objectId": 9208,
+      "title": "SEO &#8211; Alpha South Bay LA",
+      "names": [
+        "Alpha South Bay LA",
+        "Alpha South Bay",
+        "Alpha South Bay La"
+      ],
+      "mapProgramIds": [
+        "program-49011192957"
+      ]
+    },
+    "southlake": {
+      "url": "https://alpha.school/southlake/",
+      "objectId": 8621,
+      "title": "SEO &#8211; Alpha Southlake",
+      "names": [
+        "Alpha Southlake"
+      ],
+      "mapProgramIds": [
+        "program-48796922685"
+      ]
+    },
+    "the-woodlands": {
+      "url": "https://alpha.school/the-woodlands/",
+      "objectId": 8782,
+      "title": "SEO &#8211; Alpha The Woodlands",
+      "names": [
+        "Alpha The Woodlands",
+        "Alpha Woodlands"
+      ],
+      "mapProgramIds": [
+        "program-38325891178"
+      ]
+    },
+    "tulsa": {
+      "url": "https://alpha.school/tulsa/",
+      "objectId": 9210,
+      "title": "SEO &#8211; Alpha Tulsa",
+      "names": [
+        "Alpha Tulsa"
+      ],
+      "mapProgramIds": [
+        "program-51235904680"
+      ]
+    }
+  }
+}

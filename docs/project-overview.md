@@ -59,4 +59,5 @@ tests/                 validators that check spec files and run checks against l
 
 - September 15, 2026: repository created, overview and PRD written.
 - September 15, 2026 (M1, M2 drafts): 44 campus pages inventoried through the Alpha WordPress MCP (`spec/inventory/`), page model derived (`playbook/campus-page/page-model.md`, `spec/campus-page-model.json`), lifecycle states captured from the map API and the observer's Operations mapping (`spec/campus-lifecycle.json`), source pointers and the observer check catalog recorded (`registry/`). Conflicts and decisions for Yash and Matt are in `docs/findings-2026-09-15.md`.
-- Next: M3, the requirements matrix for the Open state, once the findings questions are answered.
+- September 15, 2026 (M4 draft): APEX website ticket protocol written (`protocols/apex-website-ticket-protocol.md`), ticket classes spec and validator (`spec/ticket-classes.json`, `tests/validate-ticket.mjs`), first recipe. The validator reproduces the September 15 outcome: it rejects the Atlanta, La Jolla, and Santa Monica launch-copy tickets for missing approved media and accepts the other thirteen.
+- Next: M3, the requirements matrix for the Open state, once the findings questions are answered; more recipes per class.
