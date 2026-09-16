@@ -45,6 +45,8 @@ export function classify(ticket) {
   for (const [name, cls] of Object.entries(spec.classes)) {
     if (cls.match.websiteRequestType && cls.match.websiteRequestType.includes(wrt)) return name
     if (cls.match.titlePattern && new RegExp(cls.match.titlePattern, 'i').test(title)) return name
+    const detail = ticket.customFields?.requestDetail || ticket.originalSubmission?.requestDetail || ''
+    if (cls.match.detailPattern && new RegExp(cls.match.detailPattern, 'i').test(detail)) return name
   }
   return 'unclassified'
 }

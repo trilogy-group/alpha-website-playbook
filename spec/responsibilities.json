@@ -854,6 +854,11 @@
       "supplies": "the loop or agent",
       "approves": "none",
       "executes": "n8n-sync-owner (run or repair the workflow)"
+    },
+    "packet": {
+      "supplies": "requester (facts), hubspot-program-admin (grades, tuition, address from the Program record)",
+      "approves": "packet-owner; brand-authority for new wording",
+      "executes": "packet-owner in Canva and Flipsnack; website-agent-operator swaps the campus page link after publication"
     }
   },
   "gaps": [
@@ -866,12 +871,12 @@
     "The Admissions Hub org chart has no owner named on the page; Hailey confirms roster corrections today. Confirm who edits the chart and how often",
     "HubSpot owner records are missing or personal for several roster names (Gaby Sullivan present; Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund absent; Haven Mass under a personal address); the resolver reports email null for them",
     "Elementor owner, Operations sheet owner, and growth map owner are still not named",
-    "packet-owner person unclear; Dmitry Bakaev was incorrectly the sole holder and was removed. Packet work is campus facts + marketing-collateral (Chris Davidson Canva) + brand-authority (MacKenzie) signoff + website-operations hosting public links",
     "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops. Sources for Cristi Constantin, Patrick Skinner, and the Dmitry packet-owner removal are a group DM and an ops brief that are not in any repo; confirm with Matt",
     "The n8n field map recorded in spec/content-pipelines.json comes from an export inspected 2026-09-09; confirm with the n8n-sync-owner that the current campus template still carries those CSS IDs, and whether the group A launch-copy sentence sits in an n8n-controlled content body block",
     "growth-map-owner (map API on AWS and map.app.alpha.school) still not named; Fernando Pina dos Santos administers the GitHub repos and is on the HubSpot Admin team, a candidate to ask",
     "Owner of the custom/v1 update-elementor-page and clone-elementor-page routes not confirmed",
-    "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner"
+    "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner",
+    "packet-owner: Matt Barge took info packets on 2026-08-27 pending Canva team setup and the current 2026-27 template from Yash; Chris Davidson holds the collateral tickets. Confirm the split (packet document vs flyers) and record it."
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",

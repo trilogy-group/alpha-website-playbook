@@ -14,6 +14,30 @@
       "routingLabel": null,
       "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
+    "packet": {
+      "match": {
+        "detailPattern": "info ?packet|flipsnack|info guide",
+        "websiteRequestType": [
+          "packet"
+        ]
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": null,
+      "scope": "packet-owner",
+      "note": "A request about the info packet document (wrong facts, wrong year, missing campus) is packet work in Canva and Flipsnack, not a page edit. The website part is only the link swap once an approved packet exists (link-cta).",
+      "observerChecks": [],
+      "routingLabel": "info_packet",
+      "doneWhen": "an approved packet with the requested facts is published, the campus page button points at it and returns 200 logged out, and the requester confirms",
+      "assignTo": "packet-owner",
+      "cc": [
+        "website-operations",
+        "marketing-collateral"
+      ]
+    },
     "staff-photo": {
       "match": {
         "titlePattern": "team member.*\\[(?:change|just update|update) photo\\]"
