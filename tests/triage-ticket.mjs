@@ -48,7 +48,7 @@ export async function triageOne(t, args = {}) {
 
   const ticketClass = args.class || dx.ticketClass || classify(t)
   const cls = classes[ticketClass] || {}
-  const ownerRole = args['owner-role'] || dx.ownerRole || (responsibilities.ticketRouting[ticketClass]?.executes || '').split(/[ ;(]/)[0]
+  const ownerRole = args['owner-role'] || dx.ownerRole || (responsibilities.ticketRouting[ticketClass]?.executes || '').split(/[ ;(,]/)[0]
   const owner = Object.values(people).find((p) => p.roles.some((r) => r.role === ownerRole) && p.apexUserId) || (dx.owner ? Object.values(people).find((p) => p.email === dx.owner.email) : null)
   const history = Array.isArray(cf.history) ? cf.history.slice() : historyFromBody(t.description || '')
   history.push(`${new Date().toISOString().slice(0, 10)} website agent: triaged to ${ticketClass} (${dx.defectClass}); owner ${ownerRole}${owner ? ` (${owner.name})` : ''}${args.status ? `; status ${args.status}` : ''}${args.note ? `; ${args.note}` : ''}`)

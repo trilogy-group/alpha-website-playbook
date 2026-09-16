@@ -1548,6 +1548,13 @@
           "campus": "all",
           "source": "Slack #support-websites thread 2026-08-27 10:48 (Matt: \"I will take the info packets\"); marketingsupport tasks/info-packet-support-2026-08-27",
           "asOf": "2026-08-27"
+        },
+        {
+          "role": "observer-owner",
+          "title": "Owns the production observer (superbuilders/aeo) and its tickets",
+          "campus": "all",
+          "source": "spec/responsibilities.json departments.qc; Matt Barge 2026-09-15",
+          "asOf": "2026-09-15"
         }
       ],
       "sources": [

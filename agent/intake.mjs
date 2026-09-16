@@ -68,15 +68,22 @@ async function decide(t) {
   // 3. automation-written or observer elements: pathway diagnosis and owner from the field map
   if (element && (t.url || '').startsWith('https://alpha.school/')) {
     const r = await triageOne(t, { element })
-    if (!r.skipped) return { ...decision, outcome: 'diagnosed', defectClass: r.defectClass, class: r.class, ownerRole: r.ownerRole, owner: r.owner, patch: r.patch, body: r.body }
+    if (!r.skipped) {
+      // no defect on the page relative to its source: not for the source owner; the observer rerun clears it, operator reviews
+      if (r.defectClass === 'none') return finish(t, { ...decision, outcome: 'no-defect', class: r.class, ownerRole: 'website-agent-operator', newStatus: t.status === 'COMPLETED' ? undefined : 'FOR_REVIEW', note: `page already matches its source (${r.element}); closes when the observer rerun clears the check` })
+      if (r.defectClass === 'unknown') return finish(t, { ...decision, outcome: 'needs-rule', class: r.class, ownerRole: 'website-agent-operator', note: `no requirement rule for ${r.element} in this state yet; add it to spec/campus-page-requirements.json` })
+      return { ...decision, outcome: 'diagnosed', defectClass: r.defectClass, class: r.class, ownerRole: r.ownerRole, owner: r.owner, patch: r.patch, body: r.body }
+    }
   }
   // 4. source-side and other-workflow classes: owner from routing
-  const ownerRole = spec.assignTo || (responsibilities.ticketRouting[cls]?.executes || '').split(/[ ;(]/)[0] || (scope === 'website' ? 'website-agent-operator' : null)
+  const ownerRole = spec.assignTo || (responsibilities.ticketRouting[cls]?.executes || '').split(/[ ;(,]/)[0] || (scope === 'website' ? 'website-agent-operator' : null)
   return finish(t, { ...decision, outcome: scope === 'website' ? 'ready-for-execution' : 'routed', ownerRole })
 }
 
+const ROLE_FALLBACK = { 'elementor-owner': 'website-operations', 'wordpress-admin': 'website-operations', 'growth-map-owner': 'expansion-new-programs', 'operations-sheet-owner': 'expansion-new-programs', 'community-app-owner': 'expansion-new-programs', 'marketing-collateral': 'website-operations', 'sister-site-owner': 'website-operations' }
+function personFor(role) { let r = role; for (let i = 0; i < 3 && r; i++) { const p = Object.values(people).find((p) => p.roles.some((x) => x.role === r) && p.apexUserId); if (p) return { person: p, role: r }; r = ROLE_FALLBACK[r] } return { person: null, role } }
 function finish(t, d) {
-  const owner = d.ownerRole ? Object.values(people).find((p) => p.roles.some((r) => r.role === d.ownerRole) && p.apexUserId) : null
+  const resolved = personFor(d.ownerRole); const owner = resolved.person; if (owner && resolved.role !== d.ownerRole) d.ownerRoleResolved = resolved.role
   const cf = t.customFields || {}
   const hash = crypto.createHash('sha256').update(JSON.stringify([VERSION, d.class, d.outcome, d.ownerRole, d.missing, d.newStatus])).digest('hex').slice(0, 16)
   if (cf.intakeHash === hash && !args.force) return { ...d, owner: owner?.name || null, skipped: 'unchanged since last intake' }
