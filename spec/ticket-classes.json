@@ -1,6 +1,6 @@
 {
   "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label).",
-  "version": "0.4",
+  "version": "0.5",
   "classes": {
     "other-workflow": {
       "match": {
@@ -37,6 +37,84 @@
         "website-operations",
         "marketing-collateral"
       ]
+    },
+    "event-request": {
+      "match": {
+        "detailPattern": "make (?:this |the )?event public|add (?:this |the |these |our |us and )?(?:events?|info sessions?|virtual info)|events? (?:page|need to be added|to the .{0,30}website)|drop ?down menu on this page|info sessions? (?:as|show|time|listed)|open house events?",
+        "websiteRequestType": [
+          "events"
+        ]
+      },
+      "required": [
+        "requester"
+      ],
+      "recipe": null,
+      "scope": "event-owner",
+      "note": "Events reach the site from HubSpot Marketing Events through the plugin sync; APEX is where events are created. Route to the HubSpot owner (public flag, program interest) or the events plugin owner (filter, sync); never add an event in WordPress.",
+      "observerChecks": [],
+      "routingLabel": "events_public_sync",
+      "doneWhen": "the event appears (or disappears) on /upcoming-events/ and the campus strip after the next 30-minute sync",
+      "assignTo": "hubspot-owner"
+    },
+    "map-community-request": {
+      "match": {
+        "detailPattern": "locations? map|pin for|join (?:the )?community|community button|community\\.alpha\\.school"
+      },
+      "required": [
+        "requester"
+      ],
+      "recipe": null,
+      "scope": "multi-system-routing",
+      "note": "Map pins, Join the Community buttons, and community destinations come from HubSpot Programs through the growth map API and the map app; not a page edit. Route to the growth-map owner or expansion new programs.",
+      "observerChecks": [],
+      "routingLabel": "hubspot_campus_facts",
+      "doneWhen": "the pin or button renders on map.app.alpha.school and the observer map checks pass",
+      "assignTo": "expansion-new-programs"
+    },
+    "platform-request": {
+      "match": {
+        "detailPattern": "\\bdns\\b|\\bcname\\b|domain|subdomain|portal|meta tag|site-?wide|thumbnail|video grid|every page"
+      },
+      "required": [
+        "requester"
+      ],
+      "recipe": null,
+      "scope": "web-platform",
+      "note": "Site-wide or infrastructure work: DNS, domains, meta tags, templates, gallery widgets. Route to the Elementor owner or WordPress admin; never a campus content edit.",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the change is verified on two pages and the observer site checks pass",
+      "assignTo": "website-operations"
+    },
+    "launch-copy-request": {
+      "match": {
+        "detailPattern": "launching fall|launching in fall|says? (?:coming soon|now open|launching)|still says|now open in the description"
+      },
+      "required": [
+        "pageUrl",
+        "requester"
+      ],
+      "recipe": "launch-copy",
+      "scope": "website",
+      "note": "Same pathway as observer-launch-copy: the sentence is n8n-written from website_campus_intro; the card is WordPress-direct. Run step 1b; the sentence part becomes hubspot-data.",
+      "observerChecks": [],
+      "routingLabel": "launch_copy_coming_soon",
+      "doneWhen": "the page shows the open sentence after the next 00:15 CT n8n run and the approved card"
+    },
+    "staff-bulk": {
+      "match": {
+        "detailPattern": "team section|guides\\x27? profiles|update (?:all )?(?:staff|our staff|our team|the team)|team bio|bios and pictures|add (?:these|the following) (?:people|team members)|new guides|staff updated"
+      },
+      "required": [
+        "pageUrl",
+        "requester"
+      ],
+      "recipe": "staff-card",
+      "scope": "website",
+      "note": "A roster update for several people at once, usually with a deck or sheet. Executed as one staff-card recipe per person; each person needs name, title, bio, and headshot. Missing Info lists the people whose inputs are absent.",
+      "observerChecks": [],
+      "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "every named card renders with the requested name, title, bio, and photo; ring 2 passes; requester confirms"
     },
     "link-cta": {
       "match": {

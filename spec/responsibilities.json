@@ -864,6 +864,31 @@
       "supplies": "the ticket or HubSpot (admission_link, call_scheduling_link); packet-owner or calendars for documents",
       "approves": "director-of-admissions (live) for apply and booking destinations",
       "executes": "website-agent-operator for the button; hubspot-program-admin for application routes and form campus configuration"
+    },
+    "event-request": {
+      "supplies": "requester (event id or registration link)",
+      "approves": "events",
+      "executes": "hubspot-owner sets public flag and program interest; events-plugin-owner for filter and sync; website-agent-operator verifies the strip"
+    },
+    "map-community-request": {
+      "supplies": "requester",
+      "approves": "expansion-new-programs",
+      "executes": "growth-map-owner (map app) or hubspot-program-admin (community_url on the Program)"
+    },
+    "staff-bulk": {
+      "supplies": "requester (deck or sheet with name, title, bio, headshot per person); dean-of-parents approves",
+      "approves": "dean-of-parents",
+      "executes": "website-agent-operator, one staff-card recipe per person"
+    },
+    "launch-copy-request": {
+      "supplies": "website-operations (card)",
+      "approves": "none (fixed wording)",
+      "executes": "website-agent-operator"
+    },
+    "platform-request": {
+      "supplies": "requester",
+      "approves": "website-operations",
+      "executes": "elementor-owner or wordpress-admin; website-operations until named"
     }
   },
   "gaps": [

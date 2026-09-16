@@ -198,6 +198,13 @@
     "hubspot-data": "hubspot_campus_facts",
     "sheet-data": "brand_copy_voice_ux",
     "sync-mapping": "n8n_overwrite_or_sync_exception",
-    "sync-delivery": "n8n_overwrite_or_sync_exception"
+    "sync-delivery": "n8n_overwrite_or_sync_exception",
+    "event-request": "events_public_sync",
+    "map-community-request": "hubspot_campus_facts",
+    "staff-bulk": "staff_photo_title_bio",
+    "launch-copy-request": "launch_copy_coming_soon",
+    "platform-request": "brand_copy_voice_ux",
+    "packet": "info_packet",
+    "link-cta": "apply_link_admission"
   }
 }
