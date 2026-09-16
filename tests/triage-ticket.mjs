@@ -25,26 +25,26 @@ function campusUrlFromText(text) { let best = null; for (const [slug, page] of O
 const base = (process.env.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1').replace(/\/+$/, '')
 const token = process.env.APEX_API_TOKEN
 
-const args = parse(process.argv.slice(2))
+const isMain = process.argv[1] && process.argv[1].endsWith('triage-ticket.mjs')
+const args = isMain ? parse(process.argv.slice(2)) : {}
 const ids = [].concat(args.id || [])
 let tickets = []
 if (args.file) { const raw = JSON.parse(fs.readFileSync(args.file, 'utf8')); tickets = Array.isArray(raw) ? raw : raw.tasks || raw.data || [] }
 for (const id of ids) tickets.push(await apex(`/tasks/${id}`))
-if (!tickets.length) { console.error('Usage: triage-ticket.mjs --id <id> | --file tickets.json [--element key] [--status S] [--related id] [--note text] [--apply]'); process.exit(2) }
+if (isMain && !tickets.length) { console.error('Usage: triage-ticket.mjs --id <id> | --file tickets.json [--element key] [--status S] [--related id] [--note text] [--apply]'); process.exit(2) }
 
-const results = []
-for (const t of tickets) {
+export async function triageOne(t, args = {}) {
   const cf = t.customFields || {}
   let url = t.url || (t.description || '').match(/Page: (https?:\/\/[^\s]+)/)?.[1]
   if (!url || !/^https:\/\/alpha\.school\//.test(url)) url = campusUrlFromText(t.title) || url
   const element = args.element || checkMap[cf.check] || (/launch copy|launching|coming soon/i.test(t.title || '') ? 'intro.status-sentence' : null)
-  if (!url || !/^https:\/\/alpha\.school\//.test(url) || !element) { results.push({ id: t.id, skipped: `no alpha.school url or element (url=${url}, check=${cf.check})` }); continue }
+  if (!url || !/^https:\/\/alpha\.school\//.test(url) || !element) { return { id: t.id, skipped: `no alpha.school url or element (url=${url}, check=${cf.check})` } }
   const dxFile = path.join(process.env.TMPDIR || '/tmp', `dx-${t.id}.json`)
   let dx
   const expectedFromTitle = (t.title || '').match(/HubSpot (?:email|phone|tuition) is ([^,]+),/)?.[1]
   const extra = expectedFromTitle ? ['--expected', expectedFromTitle.trim()] : []
   try { execFileSync('node', [path.join(here, 'diagnose-field.mjs'), '--url', url, '--element', element, '--json', dxFile, ...extra], { stdio: 'ignore' }); dx = JSON.parse(fs.readFileSync(dxFile, 'utf8')) }
-  catch (e) { results.push({ id: t.id, skipped: `diagnosis failed: ${e.message}` }); continue }
+  catch (e) { return { id: t.id, skipped: `diagnosis failed: ${e.message}` } }
 
   const ticketClass = args.class || dx.ticketClass || classify(t)
   const cls = classes[ticketClass] || {}
@@ -66,9 +66,14 @@ for (const t of tickets) {
   const patch = { description: body, customFields: { ...cf, checkId: ticketClass, defectClass: dx.defectClass, ownerRole, contractVersion: '1.0', history, element }, ...(owner ? { assignees: { set: [{ id: owner.apexUserId }] } } : {}), ...(args.status ? { status: args.status } : {}) }
   let applied = null
   if (args.apply) { try { const r = await apex(`/tasks/${t.id}`, 'PATCH', patch); applied = { status: r.status, assignees: (r.assignees || []).map((a) => a.name) } } catch (e) { applied = { error: e.message } } }
-  results.push({ id: t.id, url, element, defectClass: dx.defectClass, class: ticketClass, ownerRole, owner: owner?.name || null, status: args.status || t.status, applied, body: args.apply ? undefined : body })
+  return { id: t.id, url, element, defectClass: dx.defectClass, class: ticketClass, ownerRole, owner: owner?.name || null, status: args.status || t.status, applied, body: args.apply ? undefined : body, contract, patch }
 }
-console.log(JSON.stringify(results, null, 2))
+
+if (isMain) {
+  const results = []
+  for (const t of tickets) results.push(await triageOne(t, args))
+  console.log(JSON.stringify(results, null, 2))
+}
 
 function classify(t) { const title = t.title || ''; for (const [name, c] of Object.entries(classes)) if (c.match?.titlePattern && new RegExp(c.match.titlePattern, 'i').test(title)) return name; return 'observer-fact-sync' }
 function historyFromBody(desc) {

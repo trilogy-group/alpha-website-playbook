@@ -47,3 +47,15 @@ HUBSPOT_SERVICE_KEY=... node tests/resolve-campus-roles.mjs --write  # refresh r
 ```
 
 Without a HubSpot token the emails come from the last snapshot. The hub page is parsed from its embedded script tables; if the page layout changes the script stops with an error rather than guessing.
+
+## agent/intake.mjs (the intake agent)
+
+Runs on top of the APEX API. For every website-family ticket created or changed since `--since`, it validates against the contract, classifies, diagnoses the pathway when the element is known, sets class, defect class, and the single owner, renders the body, and with `--apply` writes it back. Missing inputs become Missing Info with the list addressed to the requester. It never edits a page. Scheduled by `.github/workflows/intake-agent.yml` every ten minutes, dry-run unless the repository variable `INTAKE_APPLY` is `true`; each run uploads its report as an artifact.
+
+```bash
+node agent/intake.mjs --file tickets.json --replay --report replay.json     # score a saved set, no writes
+node agent/intake.mjs --since 2026-09-16T00:00:00Z --report out.json         # dry-run against APEX
+node agent/intake.mjs --since 2026-09-16T00:00:00Z --apply                   # live
+```
+
+Rollout: dry-run replay over the open queue, then one live batch of new tickets reviewed by Matt and Yash, then the schedule with `INTAKE_APPLY=true`.

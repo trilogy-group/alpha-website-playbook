@@ -10,3 +10,7 @@ Rules:
 - If prose and spec disagree, stop and report the disagreement; do not pick one.
 - A ticket is done only when the ticketed change, the whole page, and any shared template are verified with evidence, per `protocols/`.
 - Changes to this repo go through a pull request approved by a code owner.
+
+## Intake agent
+
+`agent/intake.mjs` is the scheduled ticket intake (see `tests/README.md`). Any agent taking an APEX website ticket by hand follows the same steps it encodes: protocol step 0 (contract), step 1 (class and inputs), step 1b (pathway and owner). Never edit a page from intake.

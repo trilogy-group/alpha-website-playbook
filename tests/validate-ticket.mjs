@@ -22,11 +22,12 @@ function campusUrlFromText(text) {
   for (const [slug, page] of Object.entries(campusPages)) for (const name of page.names) if (t.includes(name) && (!best || name.length > best.name.length)) best = { name, url: page.url }
   return best ? best.url : null
 }
+const isMain = process.argv[1] && process.argv[1].endsWith('validate-ticket.mjs')
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, arr) => a.startsWith('--') ? [a.slice(2), arr[i + 1]?.startsWith('--') || arr[i + 1] === undefined ? true : arr[i + 1]] : []).filter((x) => x.length))
-if (!args.file) { console.error('Usage: validate-ticket.mjs --file tickets.json [--summary]'); process.exit(2) }
-const raw = JSON.parse(fs.readFileSync(args.file, 'utf8'))
+if (isMain && !args.file) { console.error('Usage: validate-ticket.mjs --file tickets.json [--summary]'); process.exit(2) }
+const raw = isMain ? JSON.parse(fs.readFileSync(args.file, 'utf8')) : []
 const tickets = Array.isArray(raw) ? raw : raw.tasks || raw.data || []
-if (args.contract) {
+if (isMain && args.contract) {
   const rows = tickets.map((t) => ({ id: t.id, title: (t.title || '').slice(0, 90), ...contractCheck(t) }))
   const invalid = rows.filter((r) => !r.valid)
   console.log(`${rows.length} tickets; ${rows.length - invalid.length} satisfy the contract; ${invalid.length} return to creator`)
@@ -121,6 +122,7 @@ export function validate(ticket) {
   return { id: ticket.id, title: ticket.title, status: ticket.status, class: cls, scope: def.scope, recipe: def.recipe, ready, missing, found, note }
 }
 
+if (isMain) {
 const results = tickets.map(validate)
 if (args.summary) {
   const by = {}
@@ -131,4 +133,5 @@ if (args.summary) {
   console.log('most common missing inputs:', JSON.stringify(missingCounts))
 } else {
   process.stdout.write(`${JSON.stringify(results, null, 2)}\n`)
+}
 }

@@ -768,7 +768,7 @@
     "program-info": {
       "supplies": "director-of-admissions; n8n-sync-owner when sync or wordpress_post_id needed",
       "approves": "hubspot-owner (record) then director-of-admissions",
-      "executes": "hubspot-owner or hubspot-program-admin corrects HubSpot; n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
+      "executes": "hubspot-program-admin corrects HubSpot (hubspot-owner for event and email fields); n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
     },
     "copy": {
       "supplies": "requester",
@@ -783,7 +783,7 @@
     "observer-fact-sync": {
       "supplies": "hubspot-owner; n8n-sync-owner when n8n overwrite or wordpress_post_id missing",
       "approves": "hubspot-owner",
-      "executes": "hubspot-owner or hubspot-program-admin corrects HubSpot; n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
+      "executes": "hubspot-program-admin corrects HubSpot (hubspot-owner for event and email fields); n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
     },
     "observer-media-identity": {
       "supplies": "website-operations",
