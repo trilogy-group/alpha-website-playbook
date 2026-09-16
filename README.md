@@ -13,6 +13,8 @@ Status: scaffolding. See `docs/project-overview.md` for the why and `docs/PRD.md
 5. `registry/`: approved assets, exemplar pages, owners, and source-of-truth pointers.
 6. `docs/related-systems.md`: what already exists outside this repo (and what is out of scope).
 7. `docs/decisions-2026-09-15-findings.md`: proposed answers to the Sep 15 findings questions (awaiting Yash + Matt). See also the audit trail in `docs/decisions.md`.
+8. `playbook/site/community-routing.md`: the Community URL contract, source boundary, identity crosswalk, and ticket routing.
+9. `docs/findings-2026-09-16-community-routing.md`: the dated evidence behind the first verified Community mappings and coverage gaps.
 
 ## Rules that never change
 

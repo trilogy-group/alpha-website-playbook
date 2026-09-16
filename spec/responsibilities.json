@@ -1,6 +1,6 @@
 {
   "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
-  "version": "0.2.1",
+  "version": "0.3",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
@@ -55,6 +55,7 @@
       "roles": [
         "elementor-owner",
         "events-plugin-owner",
+        "community-app-owner",
         "former-web-developer",
         "github-admin",
         "wordpress-admin"
@@ -435,6 +436,27 @@
         "staleAfterDays": 90
       }
     },
+    "community-app-owner": {
+      "department": "web-platform",
+      "owns": [
+        "Community program records, slugs, visibility, and Community-specific routing behavior"
+      ],
+      "approves": [
+        "Community app record and router changes"
+      ],
+      "supplies": [
+        "verified Community identity when no exact HubSpot program id crosswalk exists"
+      ],
+      "assignableTicketClasses": [
+        "observer-map-community (Community app side)"
+      ],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      },
+      "note": "No holder is confirmed as of 2026-09-16. Fail closed and record Missing Info instead of routing to a guessed person."
+    },
     "observer-owner": {
       "department": "qc",
       "owns": [
@@ -794,9 +816,9 @@
       "executes": "elementor-owner"
     },
     "observer-map-community": {
-      "supplies": "operations-sheet-owner / expansion-new-programs",
-      "approves": "operations",
-      "executes": "growth-map-owner"
+      "supplies": "operations-sheet-owner / expansion-new-programs / community-app-owner, selected by the failing surface",
+      "approves": "operations for map rows; community-app-owner for Community records and routing",
+      "executes": "growth-map-owner for map destinations; community-app-owner for Community records or routing; website-agent-operator only for a separately classified WordPress CTA"
     },
     "observer-health": {
       "supplies": "",
@@ -837,6 +859,7 @@
   "gaps": [
     "elementor-owner not named",
     "operations-sheet-owner and growth-map-owner not named",
+    "community-app-owner not named; Community record, slug, visibility, and router changes must stop until the role is assigned",
     "12 campus pages show no Dean of Parents and 17 show no Director of Admissions; either the role is vacant or the card is missing",
     "Slack directory visible to the bot covers 28 members; users:read at workspace level would give titles for everyone",
     "HubSpot Programs object properties still unreadable with the marketing token (needs crm.objects.custom.read and crm.schemas.custom.read); campus state and facts are read through the public growth map API until Hailey or a HubSpot admin grants the scopes",
@@ -990,9 +1013,11 @@
       "needs": {
         "program row": "source (HubSpot Programs, growth map API)",
         "Operations sheet row": "source",
-        "expansion owner for pre-announcement campuses": "expansion-new-programs (registry: Ashley Rahr)"
+        "expansion owner for pre-announcement campuses": "expansion-new-programs (registry: Ashley Rahr)",
+        "verified Community identity": "registry/campus-identities.json; exact HubSpot program id join only",
+        "failing surface": "the ticket: WordPress CTA, growth map destination, or Community record/router"
       },
-      "missingInfoGoesTo": "expansion-new-programs; operations-sheet-owner (not yet named)"
+      "missingInfoGoesTo": "expansion-new-programs for campus facts; operations-sheet-owner or growth-map-owner for map data; community-app-owner for Community records or routing (not yet named)"
     },
     "observer-health": {
       "needs": {

@@ -1,6 +1,6 @@
 {
   "$comment": "Site-wide rule ids and one-line statements; prose in playbook/site/site-rules.md.",
-  "version": "0.1",
+  "version": "0.2",
   "rules": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
@@ -16,6 +16,13 @@
     "site.claims.evidence": "Statistics and named-entity claims exist in the claim registry with evidence.",
     "site.events.sync": "Public HubSpot events appear on /upcoming-events/ and the campus strip within 2 hours; registration links resolve; facts match; sister-brand events excluded.",
     "site.map.integrity": "Maps render; each program once with correct label, status, coordinates, destination; pre-announcement pins route to Community; no scroll trap.",
+    "site.community.routing": {
+      "id": "site.community.routing",
+      "statement": "Community destinations use campus=<verified Community slug>, joined by exact HubSpot program id to a visible Community record; unknown or ambiguous mappings fail closed.",
+      "source": "Deployed Community app program registry and router inspected 2026-09-16",
+      "check": "tests/validate-community-routing.mjs; production observer parameter coverage is advisory until updated",
+      "spec": "spec/community-routing.json"
+    },
     "site.loop.health": "Source providers and snapshots healthy (not a website change).",
     "site.sync.no-hand-edit-of-synced-targets": {
       "id": "site.sync.no-hand-edit-of-synced-targets",

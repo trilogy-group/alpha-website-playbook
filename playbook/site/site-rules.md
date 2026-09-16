@@ -46,6 +46,11 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 
 - The homepage and Locations maps render, every program appears once with the right label, status, coordinates, and destination, Pre-Announcement pins route to a campus-specific Community URL on the approved host, and the map does not trap page scrolling. Checks: `campus-map-*`, `embedded-map-scroll-trap`, `preannouncement-community-url`, `preannouncement-community-host`, `community-campus-parameter`, `public-program-url`, `public-program-host`, `duplicate-program-url`, `duplicate-program-id`, `program-lifecycle-valid`, `hubspot-map-sync`, `operations-map-*`, `map-campus-missing-from-operations`, `wordpress-campus-missing-from-map`, `campus-sitemap-missing`.
 
+## Community routing (`site.community.*`)
+
+- A Community destination uses the current `https://www.community.alpha.school/?campus=<community-slug>` contract. The slug comes from an exact HubSpot program ID join to a visible Community program record, never from a campus-name guess. `invite` and `ref` may be preserved as referral parameters. `preferred_campus` is legacy and must not be generated for new links. Source and full procedure: `playbook/site/community-routing.md`. Checks: `tests/validate-community-routing.mjs`; observer coverage for the current parameter is advisory until the observer is updated.
+- HubSpot owns campus facts and business lifecycle. Community owns only its IDs, slugs, visibility, and Community-specific behavior. Community counts and operational relationships are not public website facts without explicit approval.
+
 ## Synced content (`site.sync.*`)
 
 - An Elementor element whose CSS ID is in the n8n field map, or whose value comes from a HubSpot Program property, is never hand-edited as a durable fix. Correct HubSpot, run the sync, verify the page. `hubspot_event` posts are never created or edited by hand. Source: the APEX publishing contracts and the December 2025, February 2026, and May 2026 overwrite incidents. Full map: `playbook/site/content-pipelines.md`.

@@ -1,0 +1,70 @@
+{
+  "$comment": "Machine-readable Community routing rules for the Alpha public website. No rule authorizes a Community, HubSpot, map, or WordPress mutation.",
+  "version": "0.1",
+  "asOf": "2026-09-16",
+  "scope": {
+    "brands": ["Alpha School"],
+    "websiteHost": "alpha.school",
+    "communityHost": "www.community.alpha.school",
+    "excludedBrands": ["Nova", "NextGen Academy", "Waypoint Academy"]
+  },
+  "authority": {
+    "hubspotPrograms": {
+      "owns": ["campus facts", "business lifecycle", "HubSpot program id"],
+      "readableMirror": "growthMapApi"
+    },
+    "communityProgramRegistry": {
+      "owns": ["Community program id", "Community slug", "Community visibility", "Community routing behavior"]
+    },
+    "wordpress": {
+      "owns": ["published campus page object", "page CTA placement"]
+    },
+    "apex": {
+      "owns": ["ticket state", "approval", "lease", "audit evidence"]
+    }
+  },
+  "publicFactRestrictions": {
+    "notApprovedWithoutExplicitDecision": [
+      "founding counts",
+      "enrollment counts",
+      "member counts",
+      "deposit counts",
+      "staff contact relationships",
+      "other Community operational data"
+    ]
+  },
+  "urlContract": {
+    "canonicalTemplate": "https://www.community.alpha.school/?campus={communitySlug}",
+    "requiredCampusParameter": "campus",
+    "recognizedReferralParameters": ["invite", "ref"],
+    "legacyParametersNotForNewLinks": ["preferred_campus"],
+    "slugSource": "registry/campus-identities.json"
+  },
+  "identityJoin": {
+    "key": "hubspotProgramId",
+    "required": ["mapProgramId", "communityProgramId", "hubspotProgramId", "communitySlug", "visibleInCommunityApp"],
+    "rules": [
+      "Join the map record and Community program record only by exact HubSpot program id.",
+      "Never infer a Community slug from a campus name.",
+      "Require visibleInCommunityApp to be true before publishing a Community destination.",
+      "Stop on a missing, duplicate, ambiguous, invisible, or malformed mapping."
+    ],
+    "onFailure": "fail-closed"
+  },
+  "lifecycleMapping": {
+    "Pre-Announcement": "pre-announcement",
+    "Announced": "announcement",
+    "Open": "opened"
+  },
+  "ticketRouting": {
+    "wordpressCampusCta": "link-cta",
+    "growthMapDestination": "observer-map-community",
+    "communityProgramOrRouter": "community-app-owner",
+    "campusFactOrLifecycle": "program-info or observer-fact-sync"
+  },
+  "verification": {
+    "offline": "node tests/validate-community-routing.mjs",
+    "optionalReadOnlyLiveMap": "node tests/validate-community-routing.mjs --live-map",
+    "mutatesExternalSystems": false
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$comment": "Partial, verified crosswalk between the HubSpot-backed growth map and the Community program registry. Missing campuses are unresolved, not inferred.",
+  "version": "0.1",
+  "asOf": "2026-09-16",
+  "complete": false,
+  "joinKey": "hubspotProgramId",
+  "sources": {
+    "map": "public growth map API",
+    "community": "deployed Community app program registry",
+    "method": "exact HubSpot program id join"
+  },
+  "campuses": {
+    "jacksonville": {
+      "displayName": "Jacksonville",
+      "hubspotProgramId": "61873568410",
+      "mapProgramId": "program-61873568410",
+      "communityProgramId": "prog-61873568410",
+      "communitySlug": "alpha-jacksonville",
+      "communityLifecycle": "pre-announcement",
+      "visibleInCommunityApp": true,
+      "canonicalCommunityUrl": "https://www.community.alpha.school/?campus=alpha-jacksonville",
+      "mapUrlPresent": false,
+      "mapCommunityUrlPresent": false,
+      "verifiedAt": "2026-09-16"
+    },
+    "short-hills": {
+      "displayName": "Short Hills",
+      "hubspotProgramId": "61884164703",
+      "mapProgramId": "program-61884164703",
+      "communityProgramId": "prog-61884164703",
+      "communitySlug": "alpha-short-hills",
+      "communityLifecycle": "pre-announcement",
+      "visibleInCommunityApp": true,
+      "canonicalCommunityUrl": "https://www.community.alpha.school/?campus=alpha-short-hills",
+      "mapUrlPresent": false,
+      "mapCommunityUrlPresent": false,
+      "verifiedAt": "2026-09-16"
+    }
+  }
+}
