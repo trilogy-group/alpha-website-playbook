@@ -38,7 +38,9 @@ for (const t of tickets) {
   if (!url || !/^https:\/\/alpha\.school\//.test(url) || !element) { results.push({ id: t.id, skipped: `no alpha.school url or element (url=${url}, check=${cf.check})` }); continue }
   const dxFile = path.join(process.env.TMPDIR || '/tmp', `dx-${t.id}.json`)
   let dx
-  try { execFileSync('node', [path.join(here, 'diagnose-field.mjs'), '--url', url, '--element', element, '--json', dxFile], { stdio: 'ignore' }); dx = JSON.parse(fs.readFileSync(dxFile, 'utf8')) }
+  const expectedFromTitle = (t.title || '').match(/HubSpot (?:email|phone|tuition) is ([^,]+),/)?.[1]
+  const extra = expectedFromTitle ? ['--expected', expectedFromTitle.trim()] : []
+  try { execFileSync('node', [path.join(here, 'diagnose-field.mjs'), '--url', url, '--element', element, '--json', dxFile, ...extra], { stdio: 'ignore' }); dx = JSON.parse(fs.readFileSync(dxFile, 'utf8')) }
   catch (e) { results.push({ id: t.id, skipped: `diagnosis failed: ${e.message}` }); continue }
 
   const ticketClass = args.class || dx.ticketClass || classify(t)

@@ -471,6 +471,9 @@
     "campus-sister-brand-leak": "intro.body-1",
     "campus-heading-identity": "hero.title",
     "public-event-sync": "events.strip",
-    "campus-event-filter": "events.strip"
+    "campus-event-filter": "events.strip",
+    "campus-schema-coordinates": "schema.school",
+    "campus-schema-name": "schema.school",
+    "operations-map-address-conflict": "contact.address"
   }
 }

@@ -96,7 +96,7 @@ async function checkPage(url, stateOverride) {
   const personTokens = new Set([...mainText.matchAll(/([A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3})\s*\|\s*[A-Z]/g)].flatMap((m) => m[1].toLowerCase().split(/\s+/)))
   const otherCampus = new Set()
   for (const [otherSlug, page] of Object.entries(campusPages)) {
-    if (otherSlug === slug) continue
+    if (otherSlug === slug || slug.startsWith(otherSlug + '-') || otherSlug.startsWith(slug + '-')) continue // miami vs miami-beach
     const token = otherSlug.replace(/-/g, '[-_ ]?')
     for (const ref of imageRefs) {
       const file = ref.split('/').pop()

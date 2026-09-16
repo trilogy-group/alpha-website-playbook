@@ -37,7 +37,12 @@ const readAt = new Date().toISOString()
 const html = await (await fetch(args.url, { headers: { 'User-Agent': 'alpha-website-playbook-diagnose/0.1' } })).text()
 const pageModified = await wpModified(slug)
 const cssId = String(element.cssId || '').split(/,\s*/)[0]
-const pageValue = cssId ? textOfElement(html, cssId) : null
+let pageValue = cssId ? textOfElement(html, cssId) : null
+if (elementKey === 'schema.school') {
+  const sch = schoolSchema(html)
+  pageValue = sch ? `${sch.name}|${sch.address?.streetAddress ? sch.address.streetAddress + ', ' : ''}${sch.address?.addressLocality || ''}${sch.address?.addressRegion ? ', ' + sch.address.addressRegion : ''}|${Number(sch.geo?.latitude).toFixed(4)},${Number(sch.geo?.longitude).toFixed(4)}` : null
+}
+if (elementKey === 'contact.email') { const m = html.match(/id="email"[\s\S]{0,800}?mailto:([^"\s]+)/); pageValue = m ? m[1] : pageValue }
 
 // 2. source values: growth map mirror, then HubSpot direct when scopes allow
 const map = await growthMap(campus.mapId || campus.programId || null, slug)
@@ -54,7 +59,7 @@ let defectClass = 'none'
 let reason = ''
 const sourceValue = hubspot.value ?? null
 const sourceKnown = sourceValue !== null
-const pageMatchesExpected = expected.pattern ? new RegExp(expected.pattern, 'i').test(pageValue || '') : (expected.value ? norm(pageValue).includes(norm(expected.value)) : null)
+const pageMatchesExpected = expected.compare === 'schema' ? schemaMatches(pageValue, expected.value) : expected.pattern ? new RegExp(expected.pattern, 'i').test(pageValue || '') : (expected.value ? norm(pageValue).includes(norm(expected.value)) : null)
 if (writer === 'wordpress-direct' || writer === 'template') {
   defectClass = pageMatchesExpected === false ? 'presentation' : 'none'
   reason = pageMatchesExpected === false ? 'WordPress-owned element differs from the requirement' : 'page meets the requirement'
@@ -65,6 +70,7 @@ if (writer === 'wordpress-direct' || writer === 'template') {
   else { defectClass = 'data'; reason = `page contradicts the requirement for state ${state}; HubSpot not read directly (${hubspot.note}); confirm the source before filing` }
   if (element.onMismatch?.ifDerivationWrong && elementKey === 'intro.status-sentence') reason += '. Mapping note: the sentence is hand-typed in website_campus_intro and not derived from type; a sync-mapping ticket is the durable prevention.'
 } else if (pageMatchesExpected === true) { defectClass = 'none'; reason = 'page meets the requirement' }
+else if (expected.missingSource) { defectClass = 'data'; reason = expected.rule }
 else { defectClass = 'unknown'; reason = 'no requirement rule for this element and state yet' }
 
 const classToTicket = { data: element.onMismatch?.ifSourceWrong?.split(' ')[0] || 'hubspot-data', mapping: 'sync-mapping', delivery: element.onMismatch?.ifPageOnly?.split(' ')[0] || 'sync-delivery', presentation: (element.onMismatch?.default || 'copy').split(' ')[0] }
@@ -111,6 +117,9 @@ function expectedFor(key, state, map, hubspot) {
   }
   if (key === 'hero.title' && map?.gradeRange) { const g = map.gradeRange.replace(/\s+/g, ''); const alt = g.replace(/^PreK/i, 'Pre-K'); return { value: `${map.gradeRange} Private School in ${map.city}, ${map.state}`, pattern: `(${g}|${alt}|Serving ${g.replace('-', ' - ')}(st|nd|rd|th) Grade)`, rule: 'hero grade range equals HubSpot startGrade-endGrade (growth map gradeRange); city and state wording may differ (abbreviations, New York special case)' } }
   if (key === 'contact.tuition' && hubspot.raw?.tuition_usd_yearly) return { value: `$${Number(hubspot.raw.tuition_usd_yearly).toLocaleString('en-US')}`, rule: 'tuition_usd_yearly formatted' }
+  if (key === 'contact.address' && map) { const street = /\d/.test(map.address || '') ? map.address : null; return street ? { value: street, rule: 'address widget shows HubSpot school_address (growth map address); hidden when HubSpot has no address' } : { value: null, missingSource: true, rule: `HubSpot school_address is city-only ("${map.address}"); the widget shows the grade line and city; a street address must be added in HubSpot, not on the page` } }
+  if (key === 'schema.school' && map) return { value: `${map.name}|${map.address}|${Number(map.latitude).toFixed(4)},${Number(map.longitude).toFixed(4)}`, pattern: null, rule: 'School JSON-LD name, address, and geo equal the HubSpot Program (growth map name, address, coordinates to 4 decimals)', compare: 'schema' }
+  if (key === 'contact.email' && args.expected) return { value: args.expected, rule: 'HubSpot Program email (supplied on the ticket; not mirrored publicly)' }
   const req = requirements.states?.[state]?.[`campus.${key.replace('.', '.')}`]
   return { value: req?.content || null, rule: req ? `requirements ${state} campus.${key}` : `no rule for ${key} in state ${state}` }
 }
@@ -161,6 +170,20 @@ function textOfElement(html, id) {
   const m = html.match(new RegExp(`id="${id}"[\\s\\S]*?<div class="elementor-widget-container">([\\s\\S]*?)</div>\\s*</div>`))
   const inner = m ? m[1] : (html.match(new RegExp(`id="${id}"[^>]*>([\\s\\S]{0,1200}?)</`)) || [])[1] || ''
   return inner.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#8217;|&rsquo;/g, '’').replace(/\s+/g, ' ').trim()
+}
+function schoolSchema(html) {
+  for (const m of html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
+    let d; try { d = JSON.parse(m[1]) } catch { continue }
+    const stack = [d]
+    while (stack.length) { const o = stack.pop(); if (Array.isArray(o)) stack.push(...o); else if (o && typeof o === 'object') { if (String(o['@type']).includes('School') && o.name && (o.geo || o.address?.streetAddress || o.parentOrganization)) return o; stack.push(...Object.values(o)) } }
+  }
+  return null
+}
+function schemaMatches(page, expected) {
+  if (!page || !expected) return false
+  const [pn, pa, pg] = page.split('|'); const [en, ea, eg] = expected.split('|')
+  const streetOk = !/\d/.test(ea) || norm(pa).includes(norm(ea.split(',')[0]))
+  return norm(pn) === norm(en) && streetOk && pg === eg
 }
 function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim() }
 function parse(argv) { const o = {}; for (let i = 0; i < argv.length; i++) { if (!argv[i].startsWith('--')) continue; const k = argv[i].slice(2); const n = argv[i + 1]; o[k] = n === undefined || n.startsWith('--') ? true : (i++, n) } return o }
