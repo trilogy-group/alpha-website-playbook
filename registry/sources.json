@@ -23,36 +23,22 @@
     "access": "public, read-only"
   },
   "hubspotPrograms": {
-    "object": "HubSpot custom object Programs (p_programs), portal 40051392",
-    "propertyCandidates": {
-      "grades": [
-        "grades_served",
-        "grade_levels",
-        "grades",
-        "school_grades"
-      ],
-      "phone": [
-        "phone",
-        "phone_number",
-        "school_phone",
-        "admissions_phone"
-      ],
-      "tuition": [
-        "tuition",
-        "annual_tuition",
-        "tuition_amount",
-        "annual_cost"
-      ],
-      "admissionLink": [
-        "admission_link",
-        "application_url",
-        "application_link"
-      ],
-      "lifecycle": [
-        "type"
-      ]
+    "object": "HubSpot custom object Programs (p_programs, objectTypeId 2-43470849), portal 40051392",
+    "propertiesUsedByTheSite": "spec/campus-page-field-map.json hubspotProgramProperties",
+    "stateField": "type (Open | Announced | Pre-Announcement)",
+    "copyField": "website_campus_intro (the intro block on the page; hand-typed today)",
+    "scopesNeeded": [
+      "crm.objects.custom.read",
+      "crm.schemas.custom.read"
+    ],
+    "readPaths": {
+      "direct": "GET https://api.hubapi.com/crm/v3/objects/2-43470849/{id}?properties=type,website_campus_intro,... with a token that has the scopes (ask Hailey McSpadden or a HubSpot admin: Dmitry Bakaev, Farhan Raja, Fernando Pina dos Santos)",
+      "publicMirror": "growth map API for type, name, address, city, state, url, communityUrl, coordinates, gradeRange, launchDate, photoUrl",
+      "apexMirror": "APEX imports Programs every 30 minutes (cron campus-hubspot-sync into CampusMapping and CampusPacketProfile.hubspotSnapshot); not exposed on the v1 API yet",
+      "n8n": "sub-workflow 6HvmvgkzPkFikc40 reads Programs and marketing events for the campus-page workflow"
     },
-    "note": "Property names as listed in the observer config; confirm against the live schema (the marketing workspace token could not read /crm/v3/schemas on 2026-09-15)."
+    "writePath": "APEX campus Program editor (human approval; HUBSPOT_PROGRAM_WRITE_TOKEN); never direct",
+    "note": "Agents read HubSpot live when they can; the field map tells them which property to read. A cached value is never the basis for a ticket without the read timestamp."
   },
   "operationsSheet": {
     "name": "Alpha & Specialty Schools National Growth Map",
@@ -146,5 +132,17 @@
     },
     "access": "operators only (Cristi Constantin); no agent access",
     "fieldMap": "spec/content-pipelines.json pipelines.n8n-campus-pages.targets"
+  },
+  "onboardingSheet": {
+    "name": "School onboarding - single file for all schools",
+    "spreadsheetId": "1gnqy32nKoReaoWKaipxg4UnQlqP916N4xsAsM_HzGoU",
+    "tabs": {
+      "Website Copy Fixed": "CSS ID -> Value, applied to every campus page (content_title, content_body_1 to 3, attend_cta_button)",
+      "Website Copy Dynamic": "one row per HubSpot Program ID with the same CSS ID columns",
+      "People Bio": "A Email, B Name, C Photo, D Bio, E Personal Statement / Quote (read by the n8n staff-source reader for the APEX agent)",
+      "Schools info": "campuses in columns, HubSpot Program IDs in row 3, staff-role references by email"
+    },
+    "access": "n8n Google Sheets credential (Cristi); no agent access yet",
+    "owner": "not named"
   }
 }

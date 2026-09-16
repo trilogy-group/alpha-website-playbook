@@ -23,6 +23,10 @@ Every ticket belongs to one class. The class decides the required inputs, the ex
 | layout | Header overlap, overflow, clipped text, offscreen CTA | out of scope for the content MCP; route to the Elementor owner |
 | map-community | Growth map rows, community URLs | out of scope for the website; route to Operations or the map owner |
 | health | Observer or source health findings | not a website change; route to the observer owner |
+| hubspot-data | A HubSpot Program or event field contradicts the requirement for the campus state (found by the loop or by step 1b) | page URL, element and CSS ID, source field, current source value with read time, expected value and the rule it comes from, owner |
+| sheet-data | An onboarding-sheet Website Copy value is wrong | page URL, tab, key, current and expected value |
+| sync-mapping | The source is right but the n8n derivation onto the page is wrong or missing | element, CSS ID, current derivation, proposed derivation, reason |
+| sync-delivery | Source and mapping are right and the page is still stale after the 00:15 CT run | page URL, CSS ID, source value, page value, last run evidence |
 
 Run the validator. If any required input is missing:
 
@@ -31,6 +35,17 @@ Run the validator. If any required input is missing:
 - do not guess at the missing parts. Parts of the ticket whose inputs are complete are still executed (see the rule below).
 
 If the ticket is out of scope for a website edit, write a triage note naming the owner and leave the status unchanged.
+
+### 1b. Pathway diagnosis: never edit before knowing who writes the element
+
+Before any campus-page edit, and for every observer finding, look the element up in `spec/campus-page-field-map.json` (human form `playbook/campus-page/field-map.md`). The row says who writes it (n8n from HubSpot, n8n from the onboarding sheet, the events plugin, WordPress direct, or a shared template), which source field, and how the value is derived. Then:
+
+1. Read the source live. HubSpot Programs is the source for campus state (`type`) and facts; the growth map API mirrors state, name, address, grade range, and links when the token lacks Programs scopes. Record the value and the read time on the ticket. A cached value never justifies a ticket on its own.
+2. Compute the expected value from the requirement for the campus state.
+3. Classify. Source wrong: `hubspot-data`, `sheet-data`, or `event-data`, owner the source's owner role. Source right and page stale after the run: `sync-delivery` or `event-sync`, owner n8n-sync-owner or events-plugin-owner. Source right, page equals source, requirement still violated: `sync-mapping`, owner n8n-sync-owner, decision by Matt, Yash, and the HubSpot owner. WordPress-direct element: the website class from step 1.
+4. `node tests/diagnose-field.mjs --url <page> --element <key>` performs 1 to 3 and prints the ticket. File it with `tests/file-apex-ticket.mjs`, assigned to the owner role's person from `registry/people.json`, not to the website operators.
+
+The website ticket that triggered the diagnosis is not closed by a WordPress edit when the element is automation-written. It stays open, linked to the source ticket, until the page shows the expected value after the next run.
 
 **Who to name.** `spec/responsibilities.json` maps every class to the role that supplies missing inputs, the role that approves, and the role that executes. Campus roles (Director of Admissions, Dean of Parents) resolve live: `node tests/resolve-campus-roles.mjs --campus <slug> --role <role>` reads the Admissions Hub and attaches the HubSpot email; `registry/campus-roles-snapshot.json` is the fallback when the hub is down and is stale after seven days. `registry/people.json` names the person for department roles. `spec/responsibilities.json` `registryByTicketClass` lists what each class needs on hand and where Missing Info goes when the campus role is vacant. Missing Info notes and triage notes name the person, not the department.
 
@@ -102,6 +117,37 @@ The agent will execute and verify as soon as the items above are on the ticket.
 ```
 
 Slack: post only to close the loop with the original requester, or when a ring failure affects visitors. Use the requester's channel or `#support-websites`. No em dashes, owner first, one sentence on what happened, one on what is needed.
+
+### Ticket templates for source-side classes
+
+hubspot-data:
+
+```
+HubSpot data: <Campus> <element> contradicts state <type>
+Page: <url>
+Element: <field-map key> (CSS ID <id>; writer n8n from HubSpot)
+Campus state: <type> (source and read time)
+Page shows (modified <time>): "<page value>"
+Source: HubSpot Programs <field> = "<value>" (read <time>)   or: not read directly, <reason>
+Expected: "<value>" (<requirement rule>)
+Derivation today: <from the field map>
+Defect class: data. <reason>
+Fix path: change <field> for <Campus> through the APEX campus Program editor (approver <role>); n8n publishes at 00:15 CT; the website agent verifies after the run.
+Done when: the public page shows the expected value after the next run (tests/page-check.mjs).
+Playbook: spec/campus-page-field-map.json <key>; protocol step 1b.
+```
+
+sync-mapping:
+
+```
+Website mapping: derive <element> from <state field>
+Element: <key> (CSS ID <id>)
+Current derivation: <from the field map>
+Proposed derivation: <rule>, so the source can no longer contradict the state
+Reason: <the incident, with pages and dates>
+Owner: n8n-sync-owner; decision: Matt Barge, Yash Chitneni, HubSpot owner; recorded in docs/decisions.md
+Done when: two campuses render correctly after a run with the new rule, and the field map and synced-targets spec are updated.
+```
 
 ## 8. New issues found while working
 

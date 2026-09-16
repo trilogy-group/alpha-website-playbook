@@ -12,6 +12,17 @@ Planned: spec schema validation in CI, a renderer that fails when prose and spec
 
 On Open and Announced pages the checker now verifies that every CSS ID in `spec/synced-targets.json` `expectedOnCampusPages` is present (`n8n-synced-elements-present`) and flags any `-disabled` override so the ticket and restore condition can be confirmed (`n8n-override-recorded`). The same file drives the Alpha MCP batch runner's `--synced-targets` guard, which refuses edits to those elements.
 
+## diagnose-field.mjs
+
+Pathway diagnosis (protocol step 1b). Given a campus URL and an element from `spec/campus-page-field-map.json`, it reads the rendered page, the growth map API (HubSpot mirror), HubSpot Programs directly when the token has the scopes, and the requirement for the campus state; then prints the defect class (data, mapping, delivery, presentation, none), the owner role and person, and a ready ticket.
+
+```bash
+node tests/diagnose-field.mjs --url https://alpha.school/atlanta/ --element intro.status-sentence --json dx.json
+node tests/file-apex-ticket.mjs --from-diagnosis dx.json --parent <ticket or loop> [--assign farhan.raja@trilogy.com] [--create]
+```
+
+`file-apex-ticket.mjs --assign <email>` connects the APEX user from `registry/people.json` (`apexUserId`).
+
 ## resolve-campus-roles.mjs
 
 Resolves Director of Admissions, Dean of Parents, and Senior Admissions Specialist coverage per campus, live from the Admissions Hub org chart, with `registry/campus-roles-overrides.json` applied and emails attached from HubSpot owners.

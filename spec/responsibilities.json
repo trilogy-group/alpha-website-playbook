@@ -617,7 +617,9 @@
       ],
       "assignableTicketClasses": [
         "program-info (sync side)",
-        "observer-fact-sync (when n8n overwrites or wordpress_post_id missing)"
+        "observer-fact-sync (when n8n overwrites or wordpress_post_id missing)",
+        "sync-mapping",
+        "sync-delivery"
       ],
       "resolution": {
         "mode": "registry",
@@ -678,7 +680,8 @@
       "assignableTicketClasses": [
         "program-info (record side)",
         "observer-map-community (Program rows)",
-        "link-cta (apply routes)"
+        "link-cta (apply routes)",
+        "hubspot-data"
       ],
       "resolution": {
         "mode": "registry",
@@ -809,6 +812,26 @@
       "supplies": "hubspot-owner (event record and public flag); events-plugin-owner (settings, debug log, sync)",
       "approves": "events",
       "executes": "hubspot-owner for the record; events-plugin-owner for the plugin; website-agent-operator only for the campus shortcode"
+    },
+    "hubspot-data": {
+      "supplies": "the loop or agent (element, field, current value, expected value, derivation) from spec/campus-page-field-map.json",
+      "approves": "hubspot-program-admin (Program fields) or hubspot-owner (event fields)",
+      "executes": "hubspot-program-admin through the APEX campus Program editor; n8n publishes at 00:15 CT; website-agent-operator verifies the page"
+    },
+    "sheet-data": {
+      "supplies": "the loop or agent",
+      "approves": "website-operations until a sheet owner is named",
+      "executes": "sheet owner; n8n publishes"
+    },
+    "sync-mapping": {
+      "supplies": "the loop or agent (current and proposed derivation)",
+      "approves": "Matt Barge and Yash Chitneni with the hubspot-owner (decision recorded in docs/decisions.md)",
+      "executes": "n8n-sync-owner"
+    },
+    "sync-delivery": {
+      "supplies": "the loop or agent",
+      "approves": "none",
+      "executes": "n8n-sync-owner (run or repair the workflow)"
     }
   },
   "gaps": [
@@ -982,6 +1005,37 @@
         "owning workflow": "spec/ticket-classes.json otherWorkflows; APEX request-type auto-assignees (registry roles photography, videography, video-editing, marketing-collateral, calendars)"
       },
       "missingInfoGoesTo": "the owning workflow"
+    },
+    "hubspot-data": {
+      "needs": {
+        "element to field mapping": "spec/campus-page-field-map.json",
+        "current source value": "HubSpot Programs (needs crm.objects.custom.read) or the growth map API for mirrored fields",
+        "expected value": "spec/campus-page-requirements.json by lifecycle state",
+        "owner": "hubspot-program-admin (registry: Farhan Raja); hubspot-owner (Hailey McSpadden)"
+      },
+      "missingInfoGoesTo": "hubspot-program-admin"
+    },
+    "sheet-data": {
+      "needs": {
+        "sheet tab and key": "spec/campus-page-field-map.json (n8n-sheet elements)",
+        "owner": "not named; website-operations"
+      },
+      "missingInfoGoesTo": "website-operations"
+    },
+    "sync-mapping": {
+      "needs": {
+        "current derivation": "spec/campus-page-field-map.json and the n8n export",
+        "proposed derivation": "the ticket",
+        "owner": "n8n-sync-owner (registry: Cristi Constantin)"
+      },
+      "missingInfoGoesTo": "n8n-sync-owner"
+    },
+    "sync-delivery": {
+      "needs": {
+        "last run evidence": "page modified timestamp and HubSpot value",
+        "owner": "n8n-sync-owner"
+      },
+      "missingInfoGoesTo": "n8n-sync-owner"
     }
   }
 }

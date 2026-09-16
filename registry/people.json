@@ -619,9 +619,11 @@
         "Slack U08MSRYPGH2",
         "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
         "#admin-websites Locations List fully n8n-automated",
-        "#admin-websites 2025-09 to 2026-08 (Locations List automation 2025-11-27, daily flow 2025-12, Book a call 2026-03, GBP events 2026-08-28); APEX topology doc"
+        "#admin-websites 2025-09 to 2026-08 (Locations List automation 2025-11-27, daily flow 2025-12, Book a call 2026-03, GBP events 2026-08-28); APEX topology doc",
+        "APEX users API (2026-09-16)"
       ],
-      "title": "Technical Product Owner @ Trilogy"
+      "title": "Technical Product Owner @ Trilogy",
+      "apexUserId": "cmp3p9y58000004kyn3aqt3ys"
     },
     "dmitrybakaev": {
       "name": "Dmitry Bakaev",
@@ -655,11 +657,13 @@
         "APEX HUBSPOT_PUSH_EMAILS",
         "Slack U08E0UGUA5D",
         "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
-        "Matt #admin-websites Aug 2026 events sync guidance"
+        "Matt #admin-websites Aug 2026 events sync guidance",
+        "APEX users API (2026-09-16)"
       ],
       "hubspotOwnerId": "55961534",
       "slackId": "U08E0UGUA5D",
-      "note": "Not the info-packet Canva owner; that is marketing collateral / brand / website ops."
+      "note": "Not the info-packet Canva owner; that is marketing collateral / brand / website ops.",
+      "apexUserId": "cmot2zeec000104laqrktzrkq"
     },
     "drewcasebier": {
       "name": "Drew Casebier",
@@ -871,13 +875,15 @@
         "Slack U08FWUH9UTB",
         "Admissions Hub marketing table",
         "HubSpot owner 77130697",
-        "APEX permissions (hubspotPushPermissions.ts, emailStatusPermissions.ts)"
+        "APEX permissions (hubspotPushPermissions.ts, emailStatusPermissions.ts)",
+        "APEX users API (2026-09-16)"
       ],
       "altEmails": [
         "hailey.mcspadden@2hourlearning.com"
       ],
       "slackId": "U08FWUH9UTB",
-      "hubspotOwnerId": "77130697"
+      "hubspotOwnerId": "77130697",
+      "apexUserId": "cmpb8nidb000104joomjo235s"
     },
     "hayleywhittier": {
       "name": "Hayley Whittier",
@@ -1489,10 +1495,12 @@
         "Matt Barge",
         "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
         "HubSpot owner 93557124",
-        "Slack U0B4W7Z23EX"
+        "Slack U0B4W7Z23EX",
+        "APEX users API (2026-09-16)"
       ],
       "hubspotOwnerId": "93557124",
-      "slackId": "U0B4W7Z23EX"
+      "slackId": "U0B4W7Z23EX",
+      "apexUserId": "cmq61oe6i000004lduh172vf3"
     },
     "patrickskinner": {
       "name": "Patrick Skinner",
@@ -2615,14 +2623,16 @@
         "WordPress user 30",
         "Slack U0ARFE1TYQK",
         "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
-        "HubSpot owner 89935638"
+        "HubSpot owner 89935638",
+        "APEX users API (2026-09-16)"
       ],
       "altEmails": [
         "yash.chitneni@alpha.school"
       ],
       "slackId": "U0ARFE1TYQK",
       "hubspotOwnerId": "89935638",
-      "note": "superbuilders.school is the address APEX and HubSpot use; alpha.school was the earlier guess."
+      "note": "superbuilders.school is the address APEX and HubSpot use; alpha.school was the earlier guess.",
+      "apexUserId": "cmq5pjifs000004ldan0da45a"
     },
     "zararaheem": {
       "name": "Zara Raheem",
@@ -2776,10 +2786,12 @@
         "APEX HUBSPOT_PUSH_EMAILS",
         "HubSpot owner 84659737",
         "Slack U09QVARBPJ4",
-        "#admin-websites 2025-11 to 2026-05 (plugin updates, event type answer 2026-05-01); APEX topology doc 2026-07-13; observer routing"
+        "#admin-websites 2025-11 to 2026-05 (plugin updates, event type answer 2026-05-01); APEX topology doc 2026-07-13; observer routing",
+        "APEX users API (2026-09-16)"
       ],
       "hubspotOwnerId": "84659737",
-      "slackId": "U09QVARBPJ4"
+      "slackId": "U09QVARBPJ4",
+      "apexUserId": "cmo38blfn002kt8gbrg9ngdc9"
     },
     "farhanraja": {
       "name": "Farhan Raja",
@@ -2803,10 +2815,12 @@
       "sources": [
         "HubSpot owner 78384424 (Admin team)",
         "APEX HUBSPOT_PUSH_EMAILS",
-        "APEX topology doc 2026-07-13; #admin-websites (scheduled sync answer 2026-03-23)"
+        "APEX topology doc 2026-07-13; #admin-websites (scheduled sync answer 2026-03-23)",
+        "APEX users API (2026-09-16)"
       ],
       "hubspotOwnerId": "78384424",
-      "slackId": "U08L4DC8P0Q"
+      "slackId": "U08L4DC8P0Q",
+      "apexUserId": "cmp28frxm000004jnz7qo1kxv"
     },
     "nickstich": {
       "name": "Nick Stich",

@@ -11,6 +11,16 @@
  * Env for --create: APEX_API_TOKEN (and optionally APEX_API_BASE, default https://apex.2hourlearning.com/api/v1).
  */
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, arr) => a.startsWith('--') ? [a.slice(2), arr[i + 1] === undefined || arr[i + 1].startsWith('--') ? true : arr[i + 1]] : []).filter((x) => x.length))
+import fs from 'node:fs'
+import path from 'node:path'
+const here = path.dirname(new URL(import.meta.url).pathname)
+const people = JSON.parse(fs.readFileSync(path.join(here, '../registry/people.json'), 'utf8')).people
+// --from-diagnosis <json from tests/diagnose-field.mjs>: fill the fields from the diagnosis; --assign <email[,email]> connects APEX users
+if (args['from-diagnosis']) {
+  const dx = JSON.parse(fs.readFileSync(args['from-diagnosis'], 'utf8'))
+  if (!dx.ticket) { console.error('diagnosis has no ticket (defect class ' + dx.defectClass + ')'); process.exit(2) }
+  Object.assign(args, { url: dx.url, title: dx.ticket.title, expected: dx.expected.value || dx.expected.rule, observed: dx.page.value, evidence: `tests/diagnose-field.mjs ${dx.element} ${new Date().toISOString().slice(0, 10)}; page modified ${dx.page.modified}`, requirement: `field-map ${dx.element}`, path: dx.ticket.description.split('Fix path: ')[1]?.split('\n')[0] || dx.ticketClass, done: 'the public page shows the expected value after the next n8n run', description: dx.ticket.description, checkId: dx.ticketClass, parent: args.parent || 'loop', campus: args.campus || dx.ticket.title.match(/: (Alpha [A-Za-z .]+?) /)?.[1] }, args.assign ? {} : { assign: dx.ticket.assignTo || '' })
+}
 const required = ['parent', 'url', 'title', 'expected', 'observed', 'evidence', 'requirement', 'path', 'done']
 const missing = required.filter((k) => !args[k])
 if (missing.length) { console.error(`Missing: ${missing.join(', ')}`); process.exit(2) }
@@ -28,7 +38,14 @@ const payload = {
   requesterEmail: args.requester || process.env.APEX_QC_REQUESTER_EMAIL || 'matthew.barge@superbuilders.school',
   status: 'NOT_STARTED',
   priority: args.priority || 'NORMAL',
-  customFields: { source: 'agent-found', foundWhileWorking: args.parent, checkId: requirement, severity: args.priority === 'HIGH' ? 'high' : 'medium', owners: args.owners || '', idempotencyKey },
+  customFields: { source: 'agent-found', foundWhileWorking: args.parent, checkId: args.checkId || requirement, severity: args.priority === 'HIGH' ? 'high' : 'medium', owners: args.owners || '', idempotencyKey },
+}
+if (args.description) payload.description = args.description + `\n\nFound while working: ${args.parent}\nIdempotency: ${idempotencyKey}`
+const assignEmails = String(args.assign || '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)
+if (assignEmails.length) {
+  const ids = assignEmails.map((e) => Object.values(people).find((p) => [p.email, ...(p.altEmails || [])].map((x) => String(x || '').toLowerCase()).includes(e))?.apexUserId).filter(Boolean)
+  if (ids.length !== assignEmails.length) { console.error(`no apexUserId in registry/people.json for: ${assignEmails.filter((e) => !Object.values(people).find((p) => String(p.email || '').toLowerCase() === e && p.apexUserId)).join(', ')}`); process.exit(2) }
+  payload.assignees = { connect: ids.map((id) => ({ id })) }
 }
 if (!args.create) { console.log(JSON.stringify({ dryRun: true, idempotencyKey, payload }, null, 2)); process.exit(0) }
 const base = (process.env.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1').replace(/\/+$/, '')

@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description.",
-  "version": "0.2",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 adds the non-website classes that the field map (spec/campus-page-field-map.json) routes to: hubspot-data, sheet-data, sync-mapping, sync-delivery.",
+  "version": "0.3",
   "classes": {
     "other-workflow": {
       "match": {
@@ -226,6 +226,89 @@
       ],
       "recipe": "copy",
       "scope": "website"
+    },
+    "hubspot-data": {
+      "match": {
+        "titlePattern": "^(HubSpot data|HubSpot Program):",
+        "customFields.checkId": "hubspot-data"
+      },
+      "required": [
+        "pageUrl",
+        "sourceField",
+        "sourceValue",
+        "expectedValue",
+        "derivation",
+        "owner"
+      ],
+      "recipe": "hubspot-data",
+      "scope": "hubspot",
+      "note": "A HubSpot Program (or Marketing Event) field holds a value that contradicts the requirement for the campus state. Fix is in HubSpot through the APEX campus Program editor; the website follows after the 00:15 CT n8n run. Never a WordPress edit.",
+      "assignTo": "hubspot-program-admin",
+      "cc": [
+        "hubspot-owner",
+        "website-agent-operator"
+      ],
+      "verify": "page after the next n8n run"
+    },
+    "sheet-data": {
+      "match": {
+        "titlePattern": "^Onboarding sheet:",
+        "customFields.checkId": "sheet-data"
+      },
+      "required": [
+        "pageUrl",
+        "sheetTab",
+        "sheetKey",
+        "sourceValue",
+        "expectedValue",
+        "owner"
+      ],
+      "recipe": "hubspot-data",
+      "scope": "sheet",
+      "note": "The onboarding sheet Website Copy tab holds wrong copy. Fix is in the sheet; owner to be named (open gap).",
+      "assignTo": "website-operations",
+      "verify": "page after the next n8n run"
+    },
+    "sync-mapping": {
+      "match": {
+        "titlePattern": "^(Website mapping|n8n mapping):",
+        "customFields.checkId": "sync-mapping"
+      },
+      "required": [
+        "element",
+        "cssId",
+        "currentDerivation",
+        "proposedDerivation",
+        "reason",
+        "owner"
+      ],
+      "recipe": "sync-mapping",
+      "scope": "n8n",
+      "note": "The source value is right but the way n8n derives the page element is wrong or missing. Fix is a change to the n8n workflow (or the field map). Owner is the n8n-sync-owner; the decision is recorded in docs/decisions.md.",
+      "assignTo": "n8n-sync-owner",
+      "cc": [
+        "hubspot-owner",
+        "website-agent-operator"
+      ],
+      "verify": "page after the next n8n run on two campuses"
+    },
+    "sync-delivery": {
+      "match": {
+        "titlePattern": "^n8n run:",
+        "customFields.checkId": "sync-delivery"
+      },
+      "required": [
+        "pageUrl",
+        "cssId",
+        "sourceValue",
+        "pageValue",
+        "lastRunEvidence"
+      ],
+      "recipe": "sync-mapping",
+      "scope": "n8n",
+      "note": "Source and mapping are right but the page still shows the old value after the scheduled run: the run failed or skipped the page. Owner: n8n-sync-owner.",
+      "assignTo": "n8n-sync-owner",
+      "verify": "page after an on-demand run"
     }
   },
   "fields": {

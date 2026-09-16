@@ -435,7 +435,10 @@
     "campus.intro.status-sentence",
     "campus.resources.apply",
     "campus.team.roster",
-    "campus.events.strip"
+    "campus.events.strip",
+    "campus.intro.status-sentence vs HubSpot Programs type and website_campus_intro (pathway: hubspot-data or sync-mapping); see docs/observer-requirements.md",
+    "site.sync.n8n-synced-elements-present",
+    "pathway classification of every campus finding (data | mapping | delivery | presentation) from spec/campus-page-field-map.json"
   ],
   "coverageOutsideObserver": {
     "site.brand.copy": "marketingsupport npm run website:brand-qc (scripts/lib/alpha-brand-rules.mjs); observer font-family is advisory only",
