@@ -1,0 +1,53 @@
+{
+  "$comment": "Read-only snapshot of Community routing coverage. It records observed state and does not authorize source-system changes.",
+  "generatedAt": "2026-09-16",
+  "sources": [
+    "public growth map API",
+    "deployed Community app program registry",
+    "registry/campus-pages.json"
+  ],
+  "growthMap": {
+    "programCount": 77,
+    "lifecycleCounts": {
+      "Open": 38,
+      "Announced": 8,
+      "Pre-Announcement": 31
+    },
+    "preAnnouncementMissingBothUrlAndCommunityUrl": {
+      "count": 12,
+      "campuses": [
+        "Bryn Mawr",
+        "Columbus",
+        "Indianapolis",
+        "Jacksonville",
+        "London",
+        "Milwaukee",
+        "Minneapolis",
+        "Philadelphia",
+        "Richmond",
+        "Sarasota",
+        "Short Hills",
+        "The Hamptons"
+      ]
+    }
+  },
+  "pageOrientedRegistryCoverage": {
+    "wordpressCampusPages": 44,
+    "mapProgramsRepresented": 45,
+    "knownExclusions": {
+      "allPreAnnouncementPrograms": 31,
+      "additional": ["Alpha High"]
+    },
+    "note": "registry/campus-pages.json is a page registry, not a complete campus identity registry."
+  },
+  "verifiedCommunityCrosswalks": {
+    "count": 2,
+    "registry": "registry/campus-identities.json",
+    "campuses": ["Jacksonville", "Short Hills"]
+  },
+  "observerCoverage": {
+    "currentCanonicalParameter": "campus",
+    "status": "incomplete",
+    "note": "The observer implementation reviewed on 2026-09-16 does not fully enforce the current campus=<slug> contract."
+  }
+}

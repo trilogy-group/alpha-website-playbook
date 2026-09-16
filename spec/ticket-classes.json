@@ -1,5 +1,5 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 adds the non-website classes that the field map (spec/campus-page-field-map.json) routes to: hubspot-data, sheet-data, sync-mapping, sync-delivery.",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. Version 0.3 adds the non-website classes routed by the field map and refines Community tickets by failing surface.",
   "version": "0.3",
   "classes": {
     "other-workflow": {
@@ -192,14 +192,15 @@
     },
     "observer-map-community": {
       "match": {
-        "titlePattern": "National Growth Map|community\\.alpha\\.school|Operations says .* Map says"
+        "titlePattern": "National Growth Map|community\\.alpha\\.school|Operations says .* Map says|Community (?:slug|program|visibility|routing)"
       },
       "required": [
         "observed",
         "observerId"
       ],
       "recipe": null,
-      "scope": "operations-owner"
+      "scope": "multi-system-routing",
+      "note": "Classify the failing surface before execution. WordPress CTA placement uses link-cta; a map destination routes to growth-map-owner; a Community record, slug, visibility, or router routes to community-app-owner. Do not change another surface under this ticket."
     },
     "observer-health": {
       "match": {

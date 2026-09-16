@@ -11,7 +11,7 @@ Two kinds of role, resolved two ways:
 | Kind | Roles | How an agent resolves the person | Why |
 | --- | --- | --- | --- |
 | Live (campus) | Director of Admissions, Dean of Parents, Senior Admissions Specialist coverage | `node tests/resolve-campus-roles.mjs --campus <slug> --role dean-of-parents` reads the Admissions Hub org chart at run time, applies `registry/campus-roles-overrides.json`, and attaches the email from HubSpot owners. `--write` refreshes `registry/campus-roles-snapshot.json`, a dated cache used only when the hub or HubSpot is unreachable. | These change every few weeks. A copied list is wrong within a month. |
-| Registered (department) | HubSpot owner, HubSpot admin, n8n sync owner, website operations, website agent operator, events, photography, videography, video editing, calendars, packet owner (person gap), brand authority, expansion, Elementor owner, observer owner | `registry/people.json`, entries with a source and an as-of date | These change a few times a year and are set by declaration, not by a system. |
+| Registered (department) | HubSpot owner, HubSpot admin, n8n sync owner, website operations, website agent operator, events, photography, videography, video editing, calendars, packet owner (person gap), brand authority, expansion, Elementor owner, Community app owner (person gap), observer owner | `registry/people.json`, entries with a source and an as-of date | These change a few times a year and are set by declaration, not by a system. |
 
 The Admissions Hub, not HubSpot, is the source of truth for who is Director of Admissions or Dean of Parents at a campus. HubSpot does not model those roles on the Programs object; it holds the people (owners with work emails, and a DoPs team of five). APEX mirrors the hub in its directory and carries the rows Hailey confirmed ahead of the chart; the playbook mirrors the same rows in the overrides file. When the hub and the overrides disagree, the override wins until the hub catches up, and the row is dated.
 
@@ -25,7 +25,7 @@ A snapshot older than seven days is stale: the validator should re-resolve befor
 | Marketing | Website changes, approved media, packets, events, PR, brand | website operations (Yash), website agent operator (Matt), packet owner, events, PR and comms, brand authority (MacKenzie) |
 | HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email; HubSpot to WordPress n8n sync | HubSpot owner (Hailey McSpadden); HubSpot admin; n8n sync owner (Cristi Constantin primary, Dmitry Bakaev partner) |
 | Expansion | Pre-announcement and announced campuses, launch dates, community destinations | new programs (Ashley Rahr), founding (rachel@alpha.school) |
-| Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin, the events plugin stack | Elementor owner (not yet named), events plugin owner (Garbhit), WordPress admin, GitHub admin (Fernando) |
+| Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin, the events plugin stack, Community app program routing | Elementor owner (not yet named), events plugin owner (Garbhit), WordPress admin, GitHub admin (Fernando), Community app owner (not yet named) |
 | Operations | The National Growth Map sheet and the map API | not yet named |
 | QC | The production observer and its tickets | observer owner (Matt) |
 
@@ -49,7 +49,7 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | link-cta, observer-link-cta, observer-packet | The destination; the calendar owner for calendar links; packet path roles | the ticket or HubSpot admission_link; calendars (Zara Raheem); marketing-collateral + brand-authority + website-operations (packet-owner person is an open gap) | Director of Admissions, live; calendars; marketing-collateral / brand-authority / website-operations |
 | observer-event, event-sync | The HubSpot marketing event; the event owner | HubSpot; events (Hailey McSpadden, Brittany Goodman) | events |
 | observer-layout, layout | The template owner | Elementor owner, not yet named | Elementor owner, else website operations |
-| observer-map-community | The program row; the Operations sheet row; the expansion owner | HubSpot Programs via the map API; the sheet; expansion new programs (Ashley Rahr) | expansion; Operations sheet owner, not yet named |
+| observer-map-community | The HubSpot program row, Operations sheet row, verified Community identity, requested surface, and expansion owner | HubSpot Programs via the map API; the sheet; `registry/campus-identities.json`; the ticket; expansion new programs (Ashley Rahr) | expansion for campus facts; Operations or growth-map owner for map rows; Community app owner for Community records or routing, currently unnamed |
 | other-workflow | The owning workflow's assignee | APEX request-type routing: photography (Gaby Guajardo), videography (Chris Mass, Alfred Gomez), video editing (Haven Mass, Nick Stich), collateral (Chris Davidson), calendars (Zara Raheem) | the owning workflow |
 
 ## Key contacts (registered roles, confirmed 2026-09-15)
@@ -96,7 +96,7 @@ Refresh the roster and requester extractions monthly, or whenever a staff ticket
 ## Open gaps
 
 - packet-owner person unclear. Dmitry Bakaev was incorrectly the sole holder and was removed. Packet work is campus facts + Chris Davidson (marketing-collateral / Canva) + MacKenzie (brand-authority) signoff + Rachel (expansion-founding) language QA + Matt/Yash (website-operations) hosting public links. See `registry/missing-info-routing.md` class `info_packet`.
-- Elementor owner and Operations owners are not named.
+- Elementor owner, Operations owners, and Community app owner are not named.
 - Nobody is named as the editor of the Admissions Hub org chart; Hailey confirms corrections today.
 - HubSpot has no owner record for several roster names (Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund), so the resolver returns no email for them.
 - Twelve campus pages have no Dean of Parents card and seventeen no Director of Admissions card. Either the role is vacant or the card is missing; each needs a ruling from the Head of Schools.

@@ -1,6 +1,6 @@
 # APEX Website Ticket Protocol
 
-Version 0.2, September 15, 2026. Applies to every APEX ticket whose request type is Website or Website QC, regardless of which agent or person executes it. Machine form of the intake rules: `spec/ticket-classes.json`. Validator: `tests/validate-ticket.mjs`.
+Version 0.3, September 16, 2026. Applies to every APEX ticket whose request type is Website or Website QC, regardless of which agent or person executes it. Machine form of the intake rules: `spec/ticket-classes.json`. Validator: `tests/validate-ticket.mjs`.
 
 The protocol has eight steps. A ticket is complete only when all eight are done and written down.
 
@@ -21,7 +21,7 @@ Every ticket belongs to one class. The class decides the required inputs, the ex
 | status | Publish, unpublish, restore a page | page URL, expected current status, target status, approver |
 | event-sync | HubSpot event missing from site or wrong campus feed | out of scope for a page edit; route to the event owner |
 | layout | Header overlap, overflow, clipped text, offscreen CTA | out of scope for the content MCP; route to the Elementor owner |
-| map-community | Growth map rows, community URLs | out of scope for the website; route to Operations or the map owner |
+| map-community | Growth map rows or Community destinations | identify the surface first: WordPress CTA to `link-cta`; map destination to growth-map owner; Community record, slug, visibility, or router to community-app-owner |
 | health | Observer or source health findings | not a website change; route to the observer owner |
 | hubspot-data | A HubSpot Program or event field contradicts the requirement for the campus state (found by the loop or by step 1b) | page URL, element and CSS ID, source field, current source value with read time, expected value and the rule it comes from, owner |
 | sheet-data | An onboarding-sheet Website Copy value is wrong | page URL, tab, key, current and expected value |
@@ -46,6 +46,8 @@ Before any campus-page edit, and for every observer finding, look the element up
 4. `node tests/diagnose-field.mjs --url <page> --element <key>` performs 1 to 3 and prints the ticket. File it with `tests/file-apex-ticket.mjs`, assigned to the owner role's person from `registry/people.json`, not to the website operators.
 
 The website ticket that triggered the diagnosis is not closed by a WordPress edit when the element is automation-written. It stays open, linked to the source ticket, until the page shows the expected value after the next run.
+
+**Community links cross three surfaces.** Before executing a Community-link request, separate the requested change into: the WordPress CTA, the HubSpot-backed map destination, and the Community program or router. A WordPress ticket may update only the CTA and only when the destination is supplied on the ticket or verified in `registry/campus-identities.json`. A map defect routes to the growth-map owner. A Community ID, slug, visibility, or router defect routes to `community-app-owner`. Use separate linked tickets when more than one surface must change. Never infer a Community slug from the campus name or modify the Community app as a side effect of a WordPress ticket.
 
 **Who to name.** `spec/responsibilities.json` maps every class to the role that supplies missing inputs, the role that approves, and the role that executes. Campus roles (Director of Admissions, Dean of Parents) resolve live: `node tests/resolve-campus-roles.mjs --campus <slug> --role <role>` reads the Admissions Hub and attaches the HubSpot email; `registry/campus-roles-snapshot.json` is the fallback when the hub is down and is stale after seven days. `registry/people.json` names the person for department roles. `spec/responsibilities.json` `registryByTicketClass` lists what each class needs on hand and where Missing Info goes when the campus role is vacant. Missing Info notes and triage notes name the person, not the department.
 

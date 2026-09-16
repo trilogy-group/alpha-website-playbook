@@ -22,6 +22,30 @@
     ],
     "access": "public, read-only"
   },
+  "communityApp": {
+    "url": "https://www.community.alpha.school/",
+    "registry": "deployed Community app program registry (programs and program_summary)",
+    "owns": [
+      "Community program id",
+      "Community slug",
+      "Community lifecycle and visibility",
+      "Community-specific routing behavior"
+    ],
+    "usefulOperationalFields": [
+      "HubSpot program id",
+      "open date",
+      "scheduling and admissions links",
+      "event program-interest fields",
+      "confirmed or proposed location",
+      "campus role holders",
+      "founding, enrollment, and member counts"
+    ],
+    "authorityBoundary": "Community is authoritative only for Community ids, slugs, visibility, and Community-specific behavior. HubSpot remains authoritative for campus facts and business lifecycle.",
+    "publicFactRestriction": "Counts, deposits, staff relationships, and other operational data are not approved website facts without an explicit source decision.",
+    "urlContract": "https://www.community.alpha.school/?campus=<community-slug>; invite and ref are recognized referral parameters; preferred_campus is legacy and absent from the current deployed bundle.",
+    "crosswalk": "registry/campus-identities.json, joined to the growth map by exact HubSpot program id",
+    "access": "read-only inspection of the deployed app; do not store publishable keys or authentication data"
+  },
   "hubspotPrograms": {
     "object": "HubSpot custom object Programs (p_programs, objectTypeId 2-43470849), portal 40051392",
     "propertiesUsedByTheSite": "spec/campus-page-field-map.json hubspotProgramProperties",
