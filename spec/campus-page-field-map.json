@@ -45,7 +45,8 @@
       "expectedFrom": "spec/campus-page-requirements.json campus.hero.ctas",
       "onMismatch": {
         "default": "link-cta"
-      }
+      },
+      "controls": "spec/campus-page-controls.json hero.*"
     },
     "campus.label": {
       "cssId": "campus",
@@ -286,7 +287,8 @@
       "expectedFrom": "spec/campus-page-requirements.json campus.resources.packet",
       "onMismatch": {
         "default": "observer-packet"
-      }
+      },
+      "controls": "spec/campus-page-controls.json resources.info-packet; registry/campus-packets.json"
     },
     "resources.calendar": {
       "cssId": "resource_2",
@@ -298,7 +300,8 @@
       "expectedFrom": "requirement",
       "onMismatch": {
         "default": "link-cta"
-      }
+      },
+      "controls": "spec/campus-page-controls.json resources.calendar"
     },
     "resources.apply": {
       "cssId": "resource_4",
@@ -314,7 +317,8 @@
       "onMismatch": {
         "ifSourceWrong": "hubspot-data",
         "ifRouteBroken": "link-cta (Finalsite routing, hubspot-program-admin)"
-      }
+      },
+      "controls": "spec/campus-page-controls.json resources.apply-today"
     },
     "team.titles": {
       "cssId": "team_top_title, team_title",
@@ -557,5 +561,6 @@
     "copy": [
       "website_campus_intro"
     ]
-  }
+  },
+  "controls": "spec/campus-page-controls.json"
 }

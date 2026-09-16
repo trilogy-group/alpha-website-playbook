@@ -1,0 +1,1168 @@
+{
+  "$comment": "Info packet and calendar links on every campus page, read from the live pages 2026-09-16 with logged-out HTTP status. hidden=true means the button is responsive-hidden on all devices (the template placeholder \"INFO PACKET - update link\" is meant to stay hidden until an approved packet exists). approved is unknown until the APEX CampusPacketProfile status is exposed; as of 2026-09-16 Matt Barge states no 2026-27 packet is approved yet.",
+  "asOf": "2026-09-16",
+  "campuses": {
+    "atlanta": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-atlanta-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Atlanta.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "austin": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-austin-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-austin-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Austin.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "bethesda": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "boca-raton": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Boca-Raton.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "boston": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Boston.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "boston-suburbs": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026-2027 CALENDAR",
+          "url": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view",
+          "httpStatus": 401,
+          "hidden": true
+        }
+      ]
+    },
+    "brownsville": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-brownsville-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-brownsville-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Brownsville.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "carrollton": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "chantilly": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/chantilly-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-chantilly-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Chantilly.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "charlotte": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/charlotte-info-packet",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-charlotte-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Charlotte.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "chicago": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://alpha.school/wp-content/uploads/2026/09/Alpha-Chicago-Info-Packet-2026-2027-CalendarB-3.pdf",
+          "host": "alpha.school",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Chicago.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "denver": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 Calendar",
+          "url": "https://alpha.school/wp-content/uploads/2026/09/2026-2027-Calendar-Denver.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "dorado": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-dorado-pr-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-dorado-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Dorado.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "east-bay": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-east-bay-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-East-Bay.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "fort-worth": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-fort-worth-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://alpha.school/wp-content/uploads/2026/08/Alpha-Fort-Worth-Info-Packet-2026-2027.pdf",
+          "host": "alpha.school",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Fort-Worth.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "franklin": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "greenwich": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Greenwich.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "highland-park": {
+      "state": "Open",
+      "packets": [],
+      "calendars": [
+        {
+          "label": "2026/27 CALENDAR",
+          "url": "https://alpha.school/wp-content/uploads/2026/07/2026-2027-Calendar-Highland-Park.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "houston": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "jamaica-plain": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "kirkland": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET",
+          "url": "https://alpha.school/wp-content/uploads/2026/08/Alpha-Kirkland-Info-Packet-2026-2027-binary.pdf",
+          "host": "alpha.school",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 CALENDAR",
+          "url": "https://alpha.school/wp-content/uploads/2026/09/alpha-kirkland-2026-2027-calendar.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "la-jolla": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 CALENDAR",
+          "url": "https://alpha.school/wp-content/uploads/2026/08/2026-2027-Alpha-La-Jolla-Calendar-B.pdf",
+          "httpStatus": 200,
+          "hidden": true
+        }
+      ]
+    },
+    "lake-travis": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "26/27 CALENDAR",
+          "url": "https://alpha.school/wp-content/uploads/2026/08/alpha-lake-travis-2026-2027-calendar.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "malibu": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 CALENDAR",
+          "url": "https://alpha.school/wp-content/uploads/2026/08/2026_-_2027_calendar_-_malibu.pdf",
+          "httpStatus": 200,
+          "hidden": true
+        }
+      ]
+    },
+    "miami": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/miami-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-miami-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Miami.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "miami-beach": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Miami-Beach.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "nashville": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "new-york-city": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/new-york-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-new-york-info-packet-2026-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-New-York.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "oklahoma-city": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://drive.google.com/file/d/1fyoTEqgiiCtctC80f-eHRdEDlPQnTevL/view?usp=sharing",
+          "host": "drive.google.com",
+          "httpStatus": 401,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://drive.google.com/file/d/1ichtMHhEZTgo6PLAAsyPvCBxsOtKD1PC/view?usp=sharing",
+          "httpStatus": 401,
+          "hidden": false
+        }
+      ]
+    },
+    "orange-county": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-lake-forest-info-pack",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-orange-county-info-pack-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Orange-County.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "palm-beach": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-palm-beach-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-palm-beach-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "26/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Palm-Beach.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "palo-alto": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-palo-alto-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Palo-Alto.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "park-city": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Park-City.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "plano": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/plano-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-plano-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Plano.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "raleigh": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://alpha.school/wp-content/uploads/2026/09/Alpha-Raleigh-Info-Packet-2026-2027.pdf",
+          "host": "alpha.school",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Raleigh.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "san-francisco": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-san-francisco-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-san-francisco-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-San-Francisco.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "san-juan": {
+      "state": "Announced",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": []
+    },
+    "santa-barbara": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/santa-barbara-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-santa-barbara-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Santa-Barbara.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "santa-monica": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-santa-monica-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Santa-Monica.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "scottsdale": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/scottsdale-info-packet/full-view.html",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-scottsdale-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Scottsdale.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "south-bay-la": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://drive.google.com/open?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&#038;usp=drive_copy",
+          "host": "drive.google.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view?usp=drive_link",
+          "httpStatus": 401,
+          "hidden": false
+        }
+      ]
+    },
+    "southlake": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://www.flipsnack.com/...",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://alpha.school/wp-content/uploads/2026/08/Alpha-Southlake-Info-Packet-2026-2027.pdf",
+          "host": "alpha.school",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Southlake.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "the-woodlands": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "2025/26 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-the-woodlands-info-packet",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": false,
+          "schoolYear": "2025-26",
+          "approved": null
+        },
+        {
+          "label": "2026/27 INFO PACKET",
+          "url": "https://www.flipsnack.com/BADA559BDC9/alpha-the-woodlands-info-packet-26-27",
+          "host": "www.flipsnack.com",
+          "httpStatus": 200,
+          "hidden": false,
+          "placeholder": false,
+          "schoolYear": "2026-27",
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-The-Woodlands.pdf",
+          "httpStatus": 200,
+          "hidden": false
+        }
+      ]
+    },
+    "tulsa": {
+      "state": "Open",
+      "packets": [
+        {
+          "label": "INFO PACKET - update link",
+          "url": "https://drive.google.com/open?id=1No782tFBik4nAW1V7AqHA2ETT_Vn6TEf&#038;usp=drive_copy",
+          "host": "drive.google.com",
+          "httpStatus": 200,
+          "hidden": true,
+          "placeholder": true,
+          "schoolYear": null,
+          "approved": null
+        }
+      ],
+      "calendars": [
+        {
+          "label": "2026/27 calendar",
+          "url": "https://drive.google.com/file/d/1kgz9tOAPPLaFifspQmjRzmuOmEBQEkHg/view?usp=sharing",
+          "httpStatus": 401,
+          "hidden": false
+        }
+      ]
+    }
+  }
+}

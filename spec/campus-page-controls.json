@@ -1,0 +1,170 @@
+{
+  "$comment": "Every control (button or link a family can click) on a campus page, from a crawl of 44 live pages on 2026-09-16: where its destination comes from, who writes it, who owns it, and which check watches it. Human form: playbook/campus-page/controls.md. Element ownership for the same controls: spec/campus-page-field-map.json.",
+  "asOf": "2026-09-16",
+  "pagesCrawled": 44,
+  "controls": {
+    "hero.stay-in-the-know": {
+      "label": "STAY IN-THE-KNOW",
+      "section": "hero CTA row",
+      "destination": "# (opens the HubSpot popup form; no navigation)",
+      "urlSource": "HubSpot form embed (leadin / hubspot-content-embed)",
+      "writer": "wordpress-direct",
+      "ownerRole": "hubspot-owner (form) / website-operations (placement)",
+      "count": 44,
+      "checks": [
+        "page-check cta-row"
+      ]
+    },
+    "hero.attend-info-session": {
+      "label": "Attend an Info Session",
+      "section": "hero CTA row",
+      "destination": "#events (scrolls to the campus event strip)",
+      "urlSource": "fixed anchor; the strip itself is the events plugin",
+      "writer": "n8n-sheet (attend_cta_button text) / wordpress-direct (hero copy)",
+      "ownerRole": "website-operations",
+      "count": 51,
+      "checks": [
+        "campus-event-filter"
+      ]
+    },
+    "hero.book-a-call": {
+      "label": "Book a Call",
+      "section": "hero CTA row (and lower CTA rows)",
+      "destination": "https://go.alpha.school/<meetings path>[?uuid=<id>] (HubSpot meetings page for the campus); Dorado points at the events page instead",
+      "urlSource": "HubSpot Program call_scheduling_link (n8n drives show/hide and URL since 2026-03; Cristi 2026-03-11)",
+      "writer": "n8n-hubspot",
+      "ownerRole": "hubspot-program-admin (link value) / hubspot-owner (meetings page)",
+      "count": 71,
+      "checks": [
+        "cta-links-resolve"
+      ],
+      "exceptions": {
+        "dorado": "links to /upcoming-events/?event_school=alpha-dorado"
+      }
+    },
+    "hero.apply-now": {
+      "label": "Apply now",
+      "section": "hero CTA row",
+      "destination": "#resources (scrolls to the resources block where APPLY TODAY! lives); one page links the application directly",
+      "urlSource": "fixed anchor",
+      "writer": "wordpress-direct",
+      "ownerRole": "website-operations",
+      "count": 45,
+      "checks": []
+    },
+    "resources.apply-today": {
+      "label": "APPLY TODAY! (also Apply today, Apply for K-8, Apply for High School)",
+      "section": "resources block",
+      "cssId": "resource_4",
+      "destination": "https://alpha.school/application/?submission_campus=<slug> (32); https://alpha.school/application-fs/?submission_campus=<slug> for Finalsite-migrated campuses (3); https://apply.alpha.school/new-york (New York); /high-school-application/?submission_campus=<slug> for high school (5)",
+      "urlSource": "HubSpot Program admission_link (n8n writes resource_4 link.url); the route behind it is legacy WordPress form, Finalsite redirect, or HubSpot redirect form (hubspot-program-admin)",
+      "writer": "n8n-hubspot",
+      "ownerRole": "hubspot-program-admin",
+      "count": 44,
+      "checks": [
+        "campus-application-source-missing",
+        "campus-page-application-source-sync",
+        "campus-application-placeholder",
+        "campus-application-path"
+      ],
+      "notes": "submission_campus must match the campus configured in the application form; a wrong slug diverts families to another campus"
+    },
+    "resources.admission-guide": {
+      "label": "ADMISSION GUIDE",
+      "section": "resources block",
+      "destination": "https://alpha.school/admissions/ (site-wide page)",
+      "urlSource": "fixed",
+      "writer": "wordpress-direct",
+      "ownerRole": "website-operations",
+      "count": 44,
+      "checks": [
+        "cta-links-resolve"
+      ]
+    },
+    "resources.info-packet": {
+      "label": "2026/27 INFO PACKET, 2025/26 INFO PACKET, INFO PACKET, or the hidden placeholder INFO PACKET - update link",
+      "section": "resources block",
+      "cssId": "resource_1 (and a second slot on pages with two years)",
+      "destination": "Flipsnack (www.flipsnack.com/BADA559BDC9/<packet>) on 56 buttons; alpha.school-hosted PDF on 5; Google Drive on 3",
+      "urlSource": "packet-owner publishes the approved packet; APEX CampusPacketProfile holds pdfUrl and wordpressUrl for generated packets",
+      "writer": "wordpress-direct",
+      "ownerRole": "packet-owner",
+      "count": 64,
+      "checks": [
+        "cta-links-resolve",
+        "campus-packet-* (observer)"
+      ],
+      "rules": [
+        "the placeholder button stays hidden until an approved packet exists",
+        "a 2026-27 button is visible only when that packet is approved (none approved as of 2026-09-16 per Matt Barge)",
+        "Google Drive links must be public; three return 401 today"
+      ],
+      "registry": "registry/campus-packets.json"
+    },
+    "resources.calendar": {
+      "label": "2026/27 CALENDAR (variants 26/27 CALENDAR, 2026-2027 CALENDAR)",
+      "section": "resources block",
+      "cssId": "resource_2",
+      "destination": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-<Campus>.pdf (33); Google Drive on 4",
+      "urlSource": "calendar A or B per campus (Admissions Hub calendar table; APEX INFO_PACKET_CALENDARS A = San Francisco PDF, B = Santa Barbara PDF); calendars role (Zara Raheem) publishes",
+      "writer": "wordpress-direct",
+      "ownerRole": "calendars",
+      "count": 37,
+      "checks": [
+        "cta-links-resolve"
+      ],
+      "rules": [
+        "Announced campuses without a calendar hide the button (7 pages have none)",
+        "Google Drive calendars must be public; four return 401 today"
+      ]
+    },
+    "events.see-all": {
+      "label": "SEE ALL UPCOMING EVENTS",
+      "section": "events strip",
+      "destination": "https://alpha.school/programs-events/ (redirects to /upcoming-events/)",
+      "urlSource": "fixed",
+      "writer": "wordpress-direct",
+      "ownerRole": "website-operations",
+      "count": 44,
+      "checks": [
+        "program-route-redirect"
+      ]
+    },
+    "video.see-more": {
+      "label": "SEE MORE STORIES FROM ALPHA PARENTS / EXPLORE THE FULL VIDEO LIBRARY / VIDEO LIBRARY",
+      "section": "video gallery",
+      "destination": "#videogallery; https://alpha.school/video-library/",
+      "urlSource": "fixed",
+      "writer": "wordpress-direct",
+      "ownerRole": "website-operations",
+      "count": 110,
+      "checks": []
+    },
+    "contact.admissions": {
+      "label": "CONTACT ADMISSIONS",
+      "section": "contact block (older template)",
+      "destination": "https://alpha.school/admission/",
+      "urlSource": "fixed",
+      "writer": "wordpress-direct",
+      "ownerRole": "website-operations",
+      "count": 3,
+      "checks": [
+        "cta-links-resolve"
+      ]
+    },
+    "preopen.join-community": {
+      "label": "JOIN THE COMMUNITY",
+      "section": "Announced or Pre-Announcement pages",
+      "destination": "https://community.alpha.school/?preferred_campus=<Campus display name>",
+      "urlSource": "HubSpot Program community_url (growth map communityUrl)",
+      "writer": "n8n-hubspot (candidate; confirm)",
+      "ownerRole": "expansion-new-programs / community-app-owner",
+      "count": 8,
+      "checks": [
+        "preannouncement-community-url",
+        "preannouncement-community-host",
+        "community-campus-parameter"
+      ]
+    }
+  }
+}

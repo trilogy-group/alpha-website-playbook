@@ -168,5 +168,30 @@
     },
     "access": "n8n Google Sheets credential (Cristi); no agent access yet",
     "owner": "not named"
+  },
+  "infoPackets": {
+    "human": "playbook/site/info-packets.md",
+    "registry": "registry/campus-packets.json",
+    "masters": {
+      "A": {
+        "canvaId": "DAHT_7CFWmY",
+        "title": "WORKING COPY - APEX Autofill - Calendar A - 2026-2027",
+        "calendar": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-San-Francisco.pdf"
+      },
+      "B": {
+        "canvaId": "DAHThjCo7Dw",
+        "title": "MASTER - Alpha Campus Info Packet - Calendar B - 2026-2027",
+        "calendar": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Santa-Barbara.pdf"
+      }
+    },
+    "profile": "APEX CampusPacketProfile (status, approvedBy, pdfUrl, wordpressUrl, hubspotSnapshot); not on the v1 API yet",
+    "flipsnackAccount": "BADA559BDC9",
+    "legacy2025Design": "DAG1VqFXhv8",
+    "asOf": "2026-09-16"
+  },
+  "campusPageControls": {
+    "file": "spec/campus-page-controls.json",
+    "human": "playbook/campus-page/controls.md",
+    "asOf": "2026-09-16"
   }
 }
