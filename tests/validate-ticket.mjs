@@ -52,6 +52,12 @@ export function classify(ticket) {
 }
 
 function extract(ticket, fieldName) {
+  if (!spec.fields[fieldName]) {
+    // contract-style field with no extractor: look for a labeled line in the description
+    const label = fieldName.replace(/([A-Z])/g, ' $1').trim()
+    const m = String(ticket.description || '').match(new RegExp(`^${label}:\\s*(.+)$`, 'mi'))
+    return m ? m[1].trim() : null
+  }
   const field = spec.fields[fieldName]
   const description = strip(ticket.description)
   for (const source of field.from) {
@@ -111,7 +117,7 @@ export function validate(ticket) {
   const found = {}
   for (const f of def.required) { const v = extract(ticket, f); if (v) found[f] = v; else missing.push(f) }
   const ready = missing.length === 0
-  const note = ready ? null : [`MISSING INFO (validator, ${new Date().toISOString().slice(0, 10)})`, 'This ticket needs the following before it can be executed:', ...missing.map((f, i) => `${i + 1}. ${spec.fields[f].missingText}`), 'The agent will execute and verify as soon as the items above are on the ticket.'].join('\n')
+  const note = ready ? null : [`MISSING INFO (validator, ${new Date().toISOString().slice(0, 10)})`, 'This ticket needs the following before it can be executed:', ...missing.map((f, i) => `${i + 1}. ${spec.fields[f]?.missingText || f}`), 'The agent will execute and verify as soon as the items above are on the ticket.'].join('\n')
   return { id: ticket.id, title: ticket.title, status: ticket.status, class: cls, scope: def.scope, recipe: def.recipe, ready, missing, found, note }
 }
 
