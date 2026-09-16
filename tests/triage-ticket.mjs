@@ -20,6 +20,8 @@ const classes = read('spec/ticket-classes.json').classes
 const checkMap = read('spec/observer-check-map.json').checkToElement || {}
 const people = read('registry/people.json').people
 const responsibilities = read('spec/responsibilities.json')
+const campusPages = read('registry/campus-pages.json').campuses
+function campusUrlFromText(text) { let best = null; for (const [slug, page] of Object.entries(campusPages)) for (const name of page.names) if (String(text || '').includes(name) && (!best || name.length > best.name.length)) best = { name, url: page.url }; return best ? best.url : null }
 const base = (process.env.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1').replace(/\/+$/, '')
 const token = process.env.APEX_API_TOKEN
 
@@ -33,7 +35,8 @@ if (!tickets.length) { console.error('Usage: triage-ticket.mjs --id <id> | --fil
 const results = []
 for (const t of tickets) {
   const cf = t.customFields || {}
-  const url = t.url || (t.description || '').match(/Page: (https?:\/\/[^\s]+)/)?.[1]
+  let url = t.url || (t.description || '').match(/Page: (https?:\/\/[^\s]+)/)?.[1]
+  if (!url || !/^https:\/\/alpha\.school\//.test(url)) url = campusUrlFromText(t.title) || url
   const element = args.element || checkMap[cf.check] || (/launch copy|launching|coming soon/i.test(t.title || '') ? 'intro.status-sentence' : null)
   if (!url || !/^https:\/\/alpha\.school\//.test(url) || !element) { results.push({ id: t.id, skipped: `no alpha.school url or element (url=${url}, check=${cf.check})` }); continue }
   const dxFile = path.join(process.env.TMPDIR || '/tmp', `dx-${t.id}.json`)
