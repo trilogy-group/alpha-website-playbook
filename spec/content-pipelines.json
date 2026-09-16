@@ -7,64 +7,37 @@
       "name": "alpha.school website: Update school pages",
       "direction": "HubSpot Programs -> n8n -> WordPress campus pages (Elementor)",
       "platform": "n8n cloud, trilogyinc.app.n8n.cloud, workflow ORgdHC71YJ5RawBy (folder Alpha School > SEO > Alpha School Website)",
-      "schedule": "daily (operators say midnight Central); manual run on request",
+      "schedule": "daily at 00:15 Central (n8n schedule trigger, triggerAtMinute 15); pages show modified 05:18 UTC on 2026-09-16; manual run on demand by anyone with n8n access (Cristi; Yash can add users)",
       "ownerRole": "n8n-sync-owner",
       "sourceOfTruth": "HubSpot Programs record; HubDB for program-interest mappings",
       "creates": "a draft campus page when Program status is Announced, WordPress Post ID is -1, and the campus is in the workflow's own program-interest allowlist; writes the new post id back to HubSpot",
       "targets": {
-        "$comment": "HubSpot property -> Elementor target, keyed by CSS ID. From the APEX repo n8n-staff-source.md export inspection (2026-09-09). Anything with one of these CSS IDs, or whose value comes from a Program property, is n8n-controlled.",
-        "contact_number": [
-          "phone.description_text",
-          "phone visibility",
-          "JSON-LD telephone"
-        ],
-        "school_address": [
-          "address.description_text",
-          "map address and visibility"
-        ],
-        "grade levels": [
-          "address.title_text",
-          "page title",
-          "SEO title"
-        ],
-        "school name, city, state": [
-          "title.title",
-          "SEO, OpenGraph, X titles and descriptions"
-        ],
-        "website copy with display_region, city, name substitutions": [
-          "content_title",
-          "content_body_1",
-          "content_body_2",
-          "content_body_3",
-          "content_body_4",
-          "attend_cta_button"
-        ],
-        "tuition_usd_yearly": [
-          "tuition.description_text"
-        ],
-        "email": [
-          "email.description_text",
-          "JSON-LD email"
-        ],
-        "cognia_accredited": [
-          "cognia_yes visibility and text",
-          "cognia candidate visibility and text"
-        ],
-        "school name": [
-          "gallery_title",
-          "faq_title",
-          "team_title",
-          "team_top_title"
-        ],
-        "form_program_interest_label": [
-          "hubspot_events.shortcode ([hubspot_events school=\"<label>\" show_filters=\"false\" limit=\"3\"])"
-        ],
-        "admission_link": [
-          "resource_4.link.url (Apply button)"
-        ],
-        "book a call (source property not confirmed)": [
-          "Book a call button show/hide and URL, driven from Program data since 2026-03"
-        ]
+        "$comment": "From the Code node \"Update Elementor page content\" in the 2026-09-16 export. Key is the Elementor CSS ID (_element_id); value is the field written and its source. A required ID missing from a page makes the run throw for that page.",
+        "title": "title <- school name + grade levels + \"Private School in\" city, state (New York: \"Serving <grades> Grade in New York City\")",
+        "content_title": "title <- sheet Website Copy Fixed/Dynamic content_title with [CITY], [DISPLAY_REGION], [DISPLAY_NAME*] substitutions",
+        "content_body_1": "editor <- sheet content_body_1 (New York hardcoded in the flow)",
+        "content_body_2": "editor <- sheet content_body_2",
+        "content_body_3": "editor <- sheet content_body_3 (New York hardcoded in the flow)",
+        "content_body_4": "editor <- HubSpot Program website_campus_intro with the same substitutions. THIS IS THE LAUNCH SENTENCE BLOCK.",
+        "content_heading_2": "title (deprecated, optional)",
+        "attend_cta_button": "text <- sheet attend_cta_button; link.url #events (optional; the all-items variant hides it)",
+        "campus": "title <- program campus value",
+        "address": "title_text <- grade levels formatted (\"K - 8th Grade\"; Austin hardcoded \"PreK - 5th Grade\"); description_text <- school_address; hidden when no address (optional; Raleigh post 6547 excluded)",
+        "map": "address <- map_location_name + school_address; hidden when no address",
+        "phone": "description_text <- tel link from contact_number; hidden when empty",
+        "email": "description_text <- mailto link from email",
+        "tuition": "description_text <- \"$\" + tuition_usd_yearly",
+        "cognia_yes": "visibility <- cognia_accredited == Yes",
+        "cognia_yes_text": "editor <- \"<name> is accredited by Cognia\"",
+        "cognia_candidate": "visibility <- cognia_accredited == Candidate",
+        "cognia_candidate_text": "editor <- \"<name> is a candidate for accreditation with Cognia\"",
+        "gallery_title": "title <- \"<name> Gallery\"",
+        "faq_title": "title <- \"<name> FAQs\"",
+        "team_title": "title <- \"Meet our Team\"",
+        "team_top_title": "title <- school name",
+        "hubspot_events": "shortcode <- [hubspot_events school=\"<form_program_interest_label>\" show_filters=\"false\" limit=\"3\"]",
+        "resource_4": "link.url <- admission_link (optional; to be replaced by the Community link concept)",
+        "post fields": "post_title \"SEO - <name>\", seo_title, seo_description (\"Experience Alpha School's AI-powered, personalized learning at the <city> campus for <grades> grades...\"), OpenGraph and X titles and descriptions, JSON-LD School graph (name, url, email, telephone, address, geo, sameAs from Google Maps, Yelp, Niche, GreatSchools, Winnie profiles)"
       },
       "notInScope": [
         "team member cards, bios, headshots",
@@ -79,20 +52,53 @@
         "2025-12-10 daily run failed after the events section layout change removed CSS ID events_subtitle; events_top_title and events_subtitle were then dropped from the flow",
         "2026-02-11 Raleigh temporary address protected by renaming the CSS ID",
         "2026-05-21 the flow pushed a wrong description to every location page; fixed next day",
-        "2026-09-15 Greenwich sync overwrite (cited in Responsibility 0.2.1)"
+        "2026-09-15 Greenwich sync overwrite (cited in Responsibility 0.2.1)",
+        "2026-09-16 00:18 CT: the run rewrote content_body_4 on all 14 group A pages from website_campus_intro, reverting 12 to \"is launching in Fall 2026\", Dorado to \"launching in Fall 2026 and now accepting applications\", Oklahoma City to \"is now open\"; Greenwich stayed \"open and enrolling\" because its HubSpot value already says so"
       ],
       "evidenceOfRun": "n8n execution log (operators only); HubSpot Post ID change from -1; public page fields match HubSpot",
-      "agentRule": "Correct HubSpot first. Ask the n8n-sync-owner to run or confirm the sync. Never hand-edit a listed target as a durable fix.",
+      "agentRule": "Correct HubSpot first (website_campus_intro through the APEX campus Program editor for the intro block; the onboarding sheet Website Copy tabs for content_title, content_body_1 to 3, attend_cta_button), then run or wait for the 00:15 CT run, then verify. Never hand-edit a listed target as a durable fix.",
       "confirmed2026-09-15": {
         "method": "find_text_occurrences through the Alpha MCP on the live Atlanta and Plano documents, plus CSS IDs read from the rendered pages",
         "result": "The intro status sentence (\"Alpha <Campus> is open and enrolling.\" and the \"Join us for an info session\" paragraph) is the text-editor widget with CSS ID content_body_4. The hero subtitle \"<grades> Private School in <City>\" is the widget with CSS ID title. Both are n8n-synced. The 14 group A sentence edits of 2026-09-15 therefore last until the next daily run unless the HubSpot website copy (website_campus_intro and the substituted copy blocks) already carries the open wording.",
         "liveIds": "Plano, Raleigh, Atlanta carry title, address (Raleigh: address-disabled), phone, email, tuition, content_title, content_body_1 to 4, attend_cta_button, cognia_yes, cognia_yes_text, cognia_candidate, cognia_candidate_text, gallery_title, faq_title, team_title, team_top_title, hubspot_events, resource_4"
-      }
+      },
+      "export": "Workflow export supplied by Cristi Constantin 2026-09-16 (36 nodes, active). Read nodes: sub-workflow 6HvmvgkzPkFikc40 \"Read programs and their marketing events\" (HubSpot), Google Sheet 1gnqy32nKoReaoWKaipxg4UnQlqP916N4xsAsM_HzGoU \"School onboarding - single file for all schools\" tabs \"Website Copy Fixed\" (CSS ID -> Value, same for every campus) and \"Website Copy Dynamic\" (one row per HubSpot Program ID). Write nodes: POST custom/v1/clone-elementor-page (post_id 6140, the SEO Template) and POST custom/v1/update-elementor-page with post_id, seo_title, og_title, x_title, seo_description, og_description, x_description, json_ld, post_title, elementor_data; PATCH crm/v3/objects/p_programs/{id} to write wordpress_post_id after creation. WordPress user: n8n.",
+      "programFieldsRead": [
+        "id",
+        "school",
+        "school_with_school_keyword",
+        "school_without_school_keyword",
+        "city",
+        "state",
+        "display_region",
+        "grade_levels",
+        "grade_levels_suffixed",
+        "school_address",
+        "street_address",
+        "zip_code",
+        "school_latitude",
+        "school_longitude",
+        "email",
+        "contact_number",
+        "tuition_usd_yearly",
+        "cognia_accredited",
+        "form_program_interest_label",
+        "admission_link",
+        "website_campus_intro",
+        "wordpress_post_id",
+        "map_location_name",
+        "google_business_profile.is_verified",
+        "google_maps_profile",
+        "yelp_profile",
+        "nichecom_profile",
+        "great_schools_profile",
+        "winnie_profile"
+      ]
     },
     "n8n-locations-list": {
       "name": "Locations page List tab",
       "direction": "HubSpot Programs -> n8n -> alpha.school/locations/#list cards",
-      "platform": "n8n cloud, separate workflow from the campus-page one (id not recorded)",
+      "platform": "n8n cloud workflow RqP1lPvDKvHDxTus (Cristi Constantin, 2026-09-16)",
       "schedule": "nightly at midnight Central; on demand",
       "ownerRole": "n8n-sync-owner",
       "since": "2025-11-27",
@@ -215,7 +221,7 @@
       "name": "Other authenticated write paths into Elementor",
       "list": [
         "alpha-mcp/v1 (Alpha WordPress MCP 0.3.0): the playbook path; field-scoped, snapshot and receipt",
-        "custom/v1/update-elementor-page and clone-elementor-page: broad POST routes with no schema. The APEX hosted worker calls update-elementor-page with {post_id, elementor_data, json_ld} for campus intro, phone, and program edits (workers/hosted-agent/src/campus-intro.ts, campus-phone.ts, campus-program.ts). Whether n8n also uses it is unconfirmed",
+        "custom/v1/update-elementor-page and clone-elementor-page: the n8n campus-page workflow's write path (confirmed in the 2026-09-16 export; clone uses the SEO Template post 6140), also called by the APEX hosted worker for campus intro, phone, and program edits. No published schema; WordPress user \"n8n\"",
         "apex-elementor/v1/pages/{id} GET and POST {revision, source}: guarded Elementor save used by the APEX hosted worker; apex-elementor/v1/event-filter GET and POST sets the events plugin program-interest filter option ahse_program_interest_filter, with Playwright verification at 1440 and 390 px",
         "wp/v2/media POST: APEX hosted worker staff headshot uploads and alt text",
         "elementor/v1/cache DELETE and wpe/cache-plugin/v1/clear_all_caches POST: APEX cache purge with its own ALPHA_CACHE credentials",
@@ -266,9 +272,9 @@
     "SEO Template page used as the n8n boilerplate for new campus pages"
   ],
   "openQuestions": [
-    "Which exact CSS IDs on the current campus template are still in the n8n flow after the 2025-12 events-section change. The export inspection of 2026-09-09 is the newest map; confirm with the n8n-sync-owner.",
     "Whether the events source moves from HubSpot Marketing Events to APEX (Hailey, 2026-08-28).",
-    "Whether n8n writes through custom/v1 or through its own WordPress credentials; the APEX hosted worker is a confirmed caller of custom/v1/update-elementor-page."
+    "Who edits the onboarding sheet tabs Website Copy Fixed and Website Copy Dynamic (content_title, content_body_1 to 3, attend_cta_button)",
+    "Whether the sub-workflow 6HvmvgkzPkFikc40 filters Programs by visibility, and which campuses it returns (41 items on 2026-06-18)"
   ],
   "inboundToApex": {
     "alpha-experiences": "alpha-experiences.manus.space posts event requests to APEX (bearer ALPHA_EXPERIENCES_WEBHOOK_SECRET) and they become intake tasks and events",
