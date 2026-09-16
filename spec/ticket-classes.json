@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. Version 0.3 adds the non-website classes routed by the field map and refines Community tickets by failing surface.",
-  "version": "0.3",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label).",
+  "version": "0.4",
   "classes": {
     "other-workflow": {
       "match": {
@@ -9,7 +9,10 @@
       "required": [],
       "recipe": null,
       "scope": "other-workflow",
-      "note": "Not a website page edit; route to the workflow that owns it (packets, new program launch, videography, PR, brand)."
+      "note": "Not a website page edit; route to the workflow that owns it (packets, new program launch, videography, PR, brand).",
+      "observerChecks": [],
+      "routingLabel": null,
+      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
     "staff-photo": {
       "match": {
@@ -22,7 +25,10 @@
         "requester"
       ],
       "recipe": "staff-card",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "staff-add": {
       "match": {
@@ -40,7 +46,12 @@
         "requester"
       ],
       "recipe": "staff-card",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-staff-missing"
+      ],
+      "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "staff-update": {
       "match": {
@@ -56,7 +67,13 @@
         "requester"
       ],
       "recipe": "staff-card",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-staff-title-missing",
+        "campus-staff-title-sync"
+      ],
+      "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "staff-remove": {
       "match": {
@@ -71,7 +88,10 @@
         "requester"
       ],
       "recipe": "staff-card",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "program-info": {
       "match": {
@@ -86,7 +106,10 @@
         "requester"
       ],
       "recipe": "campus-facts",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "hubspot_campus_facts",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-launch-copy": {
       "match": {
@@ -100,7 +123,13 @@
         "approvedMedia"
       ],
       "recipe": "launch-copy",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-expired-seasonal-cta",
+        "campus-page-status-sentence (to build)"
+      ],
+      "routingLabel": "launch_copy_coming_soon",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-fact-sync": {
       "match": {
@@ -114,7 +143,18 @@
         "sourceValue"
       ],
       "recipe": "campus-facts",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-page-grade-source-sync",
+        "campus-page-phone-source-sync",
+        "campus-page-tuition-source-sync",
+        "campus-page-email-source-sync",
+        "campus-page-source-fact-missing",
+        "campus-schema-address",
+        "campus-schema-required-facts"
+      ],
+      "routingLabel": "hubspot_campus_facts",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-brand-leak": {
       "match": {
@@ -126,7 +166,13 @@
         "observerId"
       ],
       "recipe": "copy",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-sister-brand-leak",
+        "campus-heading-identity"
+      ],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-media-identity": {
       "match": {
@@ -139,7 +185,13 @@
         "approvedMedia"
       ],
       "recipe": "media",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-image-identity-conflict",
+        "campus-image-crop-risk"
+      ],
+      "routingLabel": "launch_copy_coming_soon",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-link-cta": {
       "match": {
@@ -152,7 +204,15 @@
         "destinationUrl"
       ],
       "recipe": "link-cta",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [
+        "campus-application-source-missing",
+        "campus-application-placeholder",
+        "campus-page-application-source-sync",
+        "campus-application-path"
+      ],
+      "routingLabel": "apply_link_admission",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-packet": {
       "match": {
@@ -164,7 +224,12 @@
         "observerId"
       ],
       "recipe": null,
-      "scope": "packet-owner"
+      "scope": "packet-owner",
+      "observerChecks": [
+        "campus-packet-*"
+      ],
+      "routingLabel": "info_packet",
+      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
     "observer-event": {
       "match": {
@@ -176,7 +241,19 @@
         "observerId"
       ],
       "recipe": null,
-      "scope": "event-owner"
+      "scope": "event-owner",
+      "observerChecks": [
+        "public-event-sync",
+        "campus-event-filter",
+        "event-registration-url",
+        "event-registration-reachable",
+        "event-time-valid",
+        "event-weekday-sync",
+        "event-required-facts",
+        "hubspot-event-required-facts"
+      ],
+      "routingLabel": "events_public_sync",
+      "doneWhen": "the event state is right on /upcoming-events/ and the campus strip after the next 30-minute sync, and the observer rerun clears the check"
     },
     "observer-layout": {
       "match": {
@@ -188,7 +265,15 @@
         "observerId"
       ],
       "recipe": null,
-      "scope": "elementor-owner"
+      "scope": "elementor-owner",
+      "observerChecks": [
+        "campus-layout-horizontal-overflow",
+        "campus-layout-header-overlap",
+        "campus-layout-clipped-text",
+        "campus-layout-offscreen-content"
+      ],
+      "routingLabel": null,
+      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
     "observer-map-community": {
       "match": {
@@ -200,6 +285,20 @@
       ],
       "recipe": null,
       "scope": "multi-system-routing",
+      "observerChecks": [
+        "campus-map-*",
+        "operations-map-*",
+        "map-campus-missing-from-operations",
+        "wordpress-campus-missing-from-map",
+        "preannouncement-community-*",
+        "community-campus-parameter",
+        "public-program-url",
+        "public-program-host",
+        "program-page-sync",
+        "program-route-redirect"
+      ],
+      "routingLabel": "hubspot_campus_facts",
+      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check",
       "note": "Classify the failing surface before execution. WordPress CTA placement uses link-cta; a map destination routes to growth-map-owner; a Community record, slug, visibility, or router routes to community-app-owner. Do not change another surface under this ticket."
     },
     "observer-health": {
@@ -211,7 +310,14 @@
         "observerId"
       ],
       "recipe": null,
-      "scope": "observer-owner"
+      "scope": "observer-owner",
+      "observerChecks": [
+        "provider-health",
+        "*-source-collection-*",
+        "browser-errors"
+      ],
+      "routingLabel": null,
+      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
     "copy": {
       "match": {
@@ -226,7 +332,10 @@
         "requester"
       ],
       "recipe": "copy",
-      "scope": "website"
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "hubspot-data": {
       "match": {
@@ -249,7 +358,10 @@
         "hubspot-owner",
         "website-agent-operator"
       ],
-      "verify": "page after the next n8n run"
+      "verify": "page after the next n8n run",
+      "observerChecks": [],
+      "routingLabel": "hubspot_campus_facts",
+      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
     },
     "sheet-data": {
       "match": {
@@ -268,7 +380,10 @@
       "scope": "sheet",
       "note": "The onboarding sheet Website Copy tab holds wrong copy. Fix is in the sheet; owner to be named (open gap).",
       "assignTo": "website-operations",
-      "verify": "page after the next n8n run"
+      "verify": "page after the next n8n run",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
     },
     "sync-mapping": {
       "match": {
@@ -291,7 +406,10 @@
         "hubspot-owner",
         "website-agent-operator"
       ],
-      "verify": "page after the next n8n run on two campuses"
+      "verify": "page after the next n8n run on two campuses",
+      "observerChecks": [],
+      "routingLabel": "n8n_overwrite_or_sync_exception",
+      "doneWhen": "two campuses render correctly after a run with the new derivation, and spec/campus-page-field-map.json is updated"
     },
     "sync-delivery": {
       "match": {
@@ -309,7 +427,10 @@
       "scope": "n8n",
       "note": "Source and mapping are right but the page still shows the old value after the scheduled run: the run failed or skipped the page. Owner: n8n-sync-owner.",
       "assignTo": "n8n-sync-owner",
-      "verify": "page after an on-demand run"
+      "verify": "page after an on-demand run",
+      "observerChecks": [],
+      "routingLabel": "n8n_overwrite_or_sync_exception",
+      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
     }
   },
   "fields": {
@@ -403,5 +524,6 @@
       ],
       "missingText": "the destination URL the CTA should point to, confirmed reachable"
     }
-  }
+  },
+  "contract": "spec/ticket-contract.json"
 }

@@ -870,7 +870,8 @@
     "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops. Sources for Cristi Constantin, Patrick Skinner, and the Dmitry packet-owner removal are a group DM and an ops brief that are not in any repo; confirm with Matt",
     "The n8n field map recorded in spec/content-pipelines.json comes from an export inspected 2026-09-09; confirm with the n8n-sync-owner that the current campus template still carries those CSS IDs, and whether the group A launch-copy sentence sits in an n8n-controlled content body block",
     "growth-map-owner (map API on AWS and map.app.alpha.school) still not named; Fernando Pina dos Santos administers the GitHub repos and is on the HubSpot Admin team, a candidate to ask",
-    "Owner of the custom/v1 update-elementor-page and clone-elementor-page routes not confirmed"
+    "Owner of the custom/v1 update-elementor-page and clone-elementor-page routes not confirmed",
+    "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner"
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",

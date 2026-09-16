@@ -4,6 +4,7 @@
  *
  *   node tests/validate-ticket.mjs --file tickets.json            # array of APEX task objects, or {tasks:[...]}
  *   node tests/validate-ticket.mjs --file tickets.json --summary
+ *   node tests/validate-ticket.mjs --file tickets.json --contract      # enforce spec/ticket-contract.json; report return-to-creator
  *
  * Output per ticket: class, scope, ready, missing fields, and the Missing Info note text.
  */
@@ -12,6 +13,7 @@ import path from 'node:path'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const spec = JSON.parse(fs.readFileSync(path.join(here, '../spec/ticket-classes.json'), 'utf8'))
+const contract = JSON.parse(fs.readFileSync(path.join(here, '../spec/ticket-contract.json'), 'utf8'))
 const media = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-open-media.json'), 'utf8'))
 const campusPages = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-pages.json'), 'utf8')).campuses
 function campusUrlFromText(text) {
@@ -24,6 +26,16 @@ const args = Object.fromEntries(process.argv.slice(2).map((a, i, arr) => a.start
 if (!args.file) { console.error('Usage: validate-ticket.mjs --file tickets.json [--summary]'); process.exit(2) }
 const raw = JSON.parse(fs.readFileSync(args.file, 'utf8'))
 const tickets = Array.isArray(raw) ? raw : raw.tasks || raw.data || []
+if (args.contract) {
+  const rows = tickets.map((t) => ({ id: t.id, title: (t.title || '').slice(0, 90), ...contractCheck(t) }))
+  const invalid = rows.filter((r) => !r.valid)
+  console.log(`${rows.length} tickets; ${rows.length - invalid.length} satisfy the contract; ${invalid.length} return to creator`)
+  const byCreator = {}
+  for (const r of invalid) { byCreator[r.creator] ??= {}; for (const m of r.missing) byCreator[r.creator][m] = (byCreator[r.creator][m] || 0) + 1 }
+  console.log(JSON.stringify(byCreator, null, 2))
+  if (!args.summary) for (const r of invalid) console.log(`- ${r.id} [${r.creator}] missing ${r.missing.join(', ')} :: ${r.title}`)
+  process.exit(invalid.length ? 1 : 0)
+}
 
 const strip = (html) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
 
@@ -59,6 +71,34 @@ function extract(ticket, fieldName) {
     return String(value).trim()
   }
   return null
+}
+
+// Contract check: does the ticket say what is wrong, who owns it, and how it ends, whoever filed it.
+export function contractCheck(ticket) {
+  const cf = ticket.customFields || {}
+  const desc = String(ticket.description || '')
+  const section = (label) => (desc.match(new RegExp(`^${label}:\\s*(.+)$`, 'mi')) || [])[1] || null
+  const fields = {
+    claim: ticket.title || null,
+    page: ticket.url || section('Page'),
+    element: section('Element') || cf.field || null,
+    observed: section('Page shows[^:]*') || section('Observed'),
+    expected: section('Expected'),
+    source: section('Source') || (cf.source && cf.source !== 'alpha-site-qc' && cf.source !== 'agent-found' ? cf.source : null),
+    class: cf.checkId && spec.classes[cf.checkId] ? cf.checkId : (section('Defect class') ? null : null),
+    defectClass: cf.defectClass || (section('Defect class') || '').split('.')[0] || null,
+    owner: (ticket.assignees && ticket.assignees.length === 1 && ticket.assignees[0].name) || (cf.ownerRole ? `${cf.ownerRole}` : null),
+    fixPath: section('Fix path'),
+    doneWhen: section('Done when'),
+    evidence: section('Evidence') || cf.runId || null,
+  }
+  const missing = Object.entries(fields).filter(([, v]) => !v).map(([k]) => k)
+  const sourceOk = fields.source && (/read \d{4}-\d{2}-\d{2}|not read/i.test(fields.source) || /\(read /.test(fields.source))
+  if (fields.source && !sourceOk) missing.push('source.readAt')
+  const creator = cf.source === 'alpha-site-qc' ? 'observer' : (cf.source === 'agent-found' ? 'agent' : (ticket.originalSubmission ? 'form' : 'unknown'))
+  const suggestedOwners = typeof cf.owners === 'string' && cf.owners.includes(',')
+  if (suggestedOwners && !(ticket.assignees && ticket.assignees.length === 1)) missing.push('owner (suggested list, not an owner)')
+  return { valid: missing.length === 0, missing, creator, returnTo: missing.length ? contract.returnToCreator[creator] || 'creator' : null, fields }
 }
 
 export function validate(ticket) {

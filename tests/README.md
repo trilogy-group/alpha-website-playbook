@@ -13,6 +13,18 @@ Planned: spec schema validation in CI, a renderer that fails when prose and spec
 
 On Open and Announced pages the checker now verifies that every CSS ID in `spec/synced-targets.json` `expectedOnCampusPages` is present (`n8n-synced-elements-present`) and flags any `-disabled` override so the ticket and restore condition can be confirmed (`n8n-override-recorded`). The same file drives the Alpha MCP batch runner's `--synced-targets` guard, which refuses edits to those elements.
 
+## validate-ticket.mjs --contract
+
+Enforces `spec/ticket-contract.json` on any ticket set: claim, page, element, observed, expected, source with read time, class, defect class, a single owner, fix path, done condition, evidence. Tickets that fail are listed by creator (observer, form, agent) with the missing fields and go back to that creator. On 2026-09-16 all 15 observer grade tickets failed (no source field or read time, suggested-owner list, no class or fix path).
+
+## render-ticket.mjs and triage-ticket.mjs
+
+`render-ticket.mjs` renders a ticket body from a contract object. `triage-ticket.mjs` brings existing APEX tickets up to the contract: it runs the pathway diagnosis, sets class, defect class, and owner, regenerates the body with a one-line history, and assigns the owner's APEX user. Dry-run by default.
+
+```bash
+node tests/triage-ticket.mjs --file tickets.json [--element intro.status-sentence] [--class hubspot-data] [--owner-role hubspot-program-admin] [--status BLOCKED] [--related <id>] [--note "..."] [--apply]
+```
+
 ## diagnose-field.mjs
 
 Pathway diagnosis (protocol step 1b). Given a campus URL and an element from `spec/campus-page-field-map.json`, it reads the rendered page, the growth map API (HubSpot mirror), HubSpot Programs directly when the token has the scopes, and the requirement for the campus state; then prints the defect class (data, mapping, delivery, presentation, none), the owner role and person, and a ready ticket.

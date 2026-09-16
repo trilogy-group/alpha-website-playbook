@@ -109,7 +109,7 @@ function expectedFor(key, state, map, hubspot) {
     if (state === 'Announced') return { value: null, rule: 'Announced: a launch statement naming month or season and year', pattern: '(opens|opening|launching) (in )?(January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Summer|Winter) \\d{4}' }
     return { value: null, rule: `no public sentence rule for state ${state}` }
   }
-  if (key === 'hero.title' && map?.gradeRange) return { value: `${map.gradeRange} Private School in ${map.city}, ${map.state}`, rule: 'hero subtitle from HubSpot grade range, city, state' }
+  if (key === 'hero.title' && map?.gradeRange) { const g = map.gradeRange.replace(/\s+/g, ''); const alt = g.replace(/^PreK/i, 'Pre-K'); return { value: `${map.gradeRange} Private School in ${map.city}, ${map.state}`, pattern: `(${g}|${alt}|Serving ${g.replace('-', ' - ')}(st|nd|rd|th) Grade)`, rule: 'hero grade range equals HubSpot startGrade-endGrade (growth map gradeRange); city and state wording may differ (abbreviations, New York special case)' } }
   if (key === 'contact.tuition' && hubspot.raw?.tuition_usd_yearly) return { value: `$${Number(hubspot.raw.tuition_usd_yearly).toLocaleString('en-US')}`, rule: 'tuition_usd_yearly formatted' }
   const req = requirements.states?.[state]?.[`campus.${key.replace('.', '.')}`]
   return { value: req?.content || null, rule: req ? `requirements ${state} campus.${key}` : `no rule for ${key} in state ${state}` }

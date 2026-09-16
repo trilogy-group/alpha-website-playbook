@@ -450,5 +450,27 @@
     "campus.resources.apply": "observer routing rule campus-application-* checks (not emitted as finding() literals in checks.mjs; confirm names) plus page-check cta-links-resolve",
     "campus.team.roster": "no roster source configured; requester is the source until one exists",
     "campus.events.strip": "observer campus-event-filter and public-event-sync (routing rules) plus HubSpot events source"
+  },
+  "checkToElement": {
+    "$comment": "observer check -> field-map element for tests/diagnose-field.mjs",
+    "campus-page-grade-source-sync": "hero.title",
+    "campus-page-phone-source-sync": "contact.phone",
+    "campus-page-tuition-source-sync": "contact.tuition",
+    "campus-page-email-source-sync": "contact.email",
+    "campus-schema-address": "schema.school",
+    "campus-schema-required-facts": "schema.school",
+    "campus-expired-seasonal-cta": "intro.status-sentence",
+    "campus-page-status-sentence": "intro.status-sentence",
+    "campus-image-identity-conflict": "intro.media",
+    "campus-application-source-missing": "resources.apply",
+    "campus-page-application-source-sync": "resources.apply",
+    "campus-application-placeholder": "resources.apply",
+    "campus-staff-missing": "team.cards",
+    "campus-staff-title-sync": "team.cards",
+    "campus-staff-title-missing": "team.cards",
+    "campus-sister-brand-leak": "intro.body-1",
+    "campus-heading-identity": "hero.title",
+    "public-event-sync": "events.strip",
+    "campus-event-filter": "events.strip"
   }
 }

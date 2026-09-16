@@ -4,6 +4,14 @@ Version 0.3, September 16, 2026. Applies to every APEX ticket whose request type
 
 The protocol has eight steps. A ticket is complete only when all eight are done and written down.
 
+## 0. The ticket contract
+
+Every ticket, whoever filed it, must carry: a claim, the page, the element, the observed value with the page's modified time, the expected value and its rule, the source that was read with field and read time (or an explicit "not read: reason"), the class, the defect class, the owner role and person, the fix path, the done condition, and evidence. Machine form: `spec/ticket-contract.json`. The validator's `--contract` mode enforces it.
+
+A ticket that fails the contract goes back to its creator, not to a person: an observer ticket without a source field and read time means the observer check or its config is fixed; a form ticket without inputs gets the Missing Info template; an agent ticket that fails means the filer is fixed. Nobody works a ticket that does not say who owns it and how it ends.
+
+The body is rendered from the contract (`tests/render-ticket.mjs`) and regenerated whenever the class or owner changes. History is one line per change. Prior bodies are never appended.
+
 ## 1. Classify and validate the ticket
 
 Every ticket belongs to one class. The class decides the required inputs, the execution recipe, and the tests.
@@ -93,6 +101,9 @@ Any ring 2 or ring 3 failure caused by the change is a mandatory rollback (step 
 Restore from the prepare-time snapshot through the MCP, re-run rings 1 to 3 to confirm the page is back to its prior state, write what happened on the ticket, and set the ticket to Blocked with the cause. Then fix the cause (tool, recipe, or requirement) before retrying.
 
 ## 7. Document, communicate, close
+
+**Done means survived.** For any element the field map marks as automation-written (n8n, the events plugin), the ticket closes only after the public page shows the expected value following the next run of that automation, and the observer rerun clears the check. Same-day verification after a WordPress edit is ring 1, not closure. The class's `doneWhen` in `spec/ticket-classes.json` is the closing test.
+
 
 Write to the ticket, in this order, so a reviewer can read the outcome in ten seconds:
 

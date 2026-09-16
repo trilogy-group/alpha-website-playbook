@@ -1,0 +1,41 @@
+{
+  "$comment": "The one contract every APEX website ticket must satisfy to be valid, whoever or whatever filed it: the observer, a staff form, or an agent. The validator (tests/validate-ticket.mjs --contract) rejects tickets that miss it and returns them to the creator, never to a person. The field map (spec/campus-page-field-map.json) is how a filer fills class and owner; the contract itself does not depend on the map.",
+  "version": "1.0",
+  "asOf": "2026-09-16",
+  "required": {
+    "claim": "One sentence stating what is wrong, in the form '<Campus> <element> shows X; the rule for state <S> requires Y'. Never 'HubSpot says' unless the field and read time are given.",
+    "page": "Canonical public URL.",
+    "element": "Field-map key (for campus pages) or the page section. Carries the CSS ID when known.",
+    "observed": "The value on the public page, verbatim, with the page's modified time.",
+    "expected": "The required value and the rule it comes from (spec path and state).",
+    "source": "System, field, value, and read time of the source of truth that was consulted. 'not read: <reason>' is allowed and must be explicit.",
+    "class": "One class from spec/ticket-classes.json.",
+    "defectClass": "data | mapping | delivery | presentation.",
+    "owner": "Role from spec/responsibilities.json and the person resolved from registry/people.json or the live campus-role resolver, with the APEX user id when assigned.",
+    "fixPath": "Which system changes, by whom, and what publishes it.",
+    "doneWhen": "The observable public condition that closes the ticket, including 'after the next <automation> run' for automation-written elements.",
+    "evidence": "Check name and run id, screenshots, hashes, or the diagnosis file."
+  },
+  "optional": {
+    "history": "One line per prior state change: date, actor, what changed. Never the prior bodies.",
+    "related": "Ticket ids this depends on or duplicates.",
+    "severity": "high | medium | low."
+  },
+  "storage": {
+    "apex": "Title = claim. Description = the rendered body (tests/render-ticket.mjs). customFields.checkId = class; customFields.defectClass; customFields.ownerRole; customFields.contractVersion; customFields.history (array). assignees = the owner's APEX user only.",
+    "bodyRule": "The body is regenerated from the contract on every class or owner change. History is appended as one line. Prior bodies are never appended."
+  },
+  "returnToCreator": {
+    "observer": "A ticket missing source.field or source.readAt, or carrying suggested owners instead of an owner, is invalid: the observer's config or the check is fixed; the ticket is not worked.",
+    "form": "A staff request missing inputs goes back to the requester with the Missing Info template.",
+    "agent": "An agent-filed ticket that fails the contract is a defect in the filer; fix the filer."
+  },
+  "doneWhenDefaults": {
+    "wordpress-direct": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check",
+    "n8n-hubspot": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check",
+    "n8n-sheet": "the public page shows the expected value after the next 00:15 CT n8n run",
+    "events-plugin": "the event appears (or disappears) on /upcoming-events/ and the campus strip after the next 30-minute sync, and the observer rerun clears the check",
+    "sync-mapping": "two campuses render correctly after a run with the new derivation, and spec/campus-page-field-map.json is updated",
+    "decision": "the decision is recorded in docs/decisions.md and the dependent tickets are re-routed"
+  }
+}

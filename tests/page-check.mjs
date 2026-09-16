@@ -92,11 +92,19 @@ async function checkPage(url, stateOverride) {
   const brandHits = SISTER_BRANDS.map((re) => mainText.match(re)?.[0]).filter(Boolean)
   add('no-sister-brand-words', brandHits.length === 0, brandHits.join(', '))
   const imageRefs = [...mainHtml.matchAll(/wp-content\/uploads\/[^"'\s)]+/g)].map((m) => m[0])
+  // person names on the page (Team cards render "Name | Title" headings); a headshot named after a person is not a campus reference
+  const personTokens = new Set([...mainText.matchAll(/([A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3})\s*\|\s*[A-Z]/g)].flatMap((m) => m[1].toLowerCase().split(/\s+/)))
   const otherCampus = new Set()
   for (const [otherSlug, page] of Object.entries(campusPages)) {
     if (otherSlug === slug) continue
     const token = otherSlug.replace(/-/g, '[-_ ]?')
-    for (const ref of imageRefs) if (new RegExp(`(?:^|[/_-])${token}(?:[-_.]|$)`, 'i').test(ref.split('/').pop()) && !/headshot|profile|guide|director|staff/i.test(ref)) otherCampus.add(`${page.names[0]}: ${ref.split('/').pop()}`)
+    for (const ref of imageRefs) {
+      const file = ref.split('/').pop()
+      if (!new RegExp(`(?:^|[/_-])${token}(?:[-_.]|$)`, 'i').test(file) || /headshot|profile|guide|director|staff/i.test(ref)) continue
+      const parts = file.toLowerCase().replace(/\.[a-z0-9]+$/, '').split(/[-_]/)
+      if (parts.some((w) => personTokens.has(w) && w === otherSlug.split('-')[0]) && parts.some((w) => personTokens.has(w) && w !== otherSlug.split('-')[0])) continue
+      otherCampus.add(`${page.names[0]}: ${file}`)
+    }
   }
   add('no-other-campus-in-image-names', otherCampus.size === 0, [...otherCampus].slice(0, 3).join('; '))
 
