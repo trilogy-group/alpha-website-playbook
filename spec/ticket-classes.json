@@ -38,6 +38,45 @@
         "marketing-collateral"
       ]
     },
+    "link-cta": {
+      "match": {
+        "detailPattern": "application (?:page|link|route)|apply(?:ing)? (?:link|page|button|route)|book a (?:call|tour)|calendar link|info session link|community link|packet link",
+        "websiteRequestType": [
+          "links",
+          "cta"
+        ]
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "link-cta",
+      "scope": "website",
+      "note": "A CTA or link request from the form: Apply, Book a Call, Book a Tour, calendar, packet, community. The destination usually comes from HubSpot (admission_link, call_scheduling_link) or a source owner; run step 1b before editing. Application routes (submission_campus) are hubspot-program-admin territory.",
+      "observerChecks": [],
+      "routingLabel": "apply_link_admission",
+      "doneWhen": "the CTA resolves logged out to the right campus and year, ring 2 passes, and the observer rerun clears the check"
+    },
+    "program-info": {
+      "match": {
+        "websiteRequestType": [
+          "update-program-info"
+        ],
+        "titlePattern": "Update program info",
+        "detailPattern": "grade levels|tuition|address|phone number|school year"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "campus-facts",
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "hubspot_campus_facts",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+    },
     "staff-photo": {
       "match": {
         "titlePattern": "team member.*\\[(?:change|just update|update) photo\\]"
@@ -115,24 +154,6 @@
       "scope": "website",
       "observerChecks": [],
       "routingLabel": "staff_photo_title_bio",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
-    },
-    "program-info": {
-      "match": {
-        "websiteRequestType": [
-          "update-program-info"
-        ],
-        "titlePattern": "Update program info"
-      },
-      "required": [
-        "pageUrl",
-        "changeDetail",
-        "requester"
-      ],
-      "recipe": "campus-facts",
-      "scope": "website",
-      "observerChecks": [],
-      "routingLabel": "hubspot_campus_facts",
       "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-launch-copy": {

@@ -859,6 +859,11 @@
       "supplies": "requester (facts), hubspot-program-admin (grades, tuition, address from the Program record)",
       "approves": "packet-owner; brand-authority for new wording",
       "executes": "packet-owner in Canva and Flipsnack; website-agent-operator swaps the campus page link after publication"
+    },
+    "link-cta": {
+      "supplies": "the ticket or HubSpot (admission_link, call_scheduling_link); packet-owner or calendars for documents",
+      "approves": "director-of-admissions (live) for apply and booking destinations",
+      "executes": "website-agent-operator for the button; hubspot-program-admin for application routes and form campus configuration"
     }
   },
   "gaps": [
