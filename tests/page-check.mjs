@@ -152,7 +152,10 @@ async function checkPage(url, stateOverride) {
       const hasLink = !!(anchor && /^https?:\/\//.test(anchor[1]))
       if (!allHidden) bookACall.visible++; else if (hasLink) bookACall.hiddenWithLink++; else bookACall.hiddenNoLink++
     }
-    if (isCta && allHidden && anchor && /^https?:\/\//.test(anchor[1])) hiddenEverywhere.push(`${label} (${id || cls.match(/elementor-element-([a-z0-9]+)/)?.[1] || 'widget'}) -> ${anchor[1]}`)
+    // A hidden placeholder (label "update link", href ending in "/...") is the correct state until an approved packet or
+    // calendar exists (spec/campus-page-controls.json); it is not a hidden CTA (small batch finding, 2026-09-17).
+    const placeholder = anchor && (/\/\.\.\.$/.test(anchor[1]) || /update link/i.test(label))
+    if (isCta && allHidden && anchor && !placeholder && /^https?:\/\//.test(anchor[1])) hiddenEverywhere.push(`${label} (${id || cls.match(/elementor-element-([a-z0-9]+)/)?.[1] || 'widget'}) -> ${anchor[1]}`)
   }
   add('cta-hidden-everywhere', hiddenEverywhere.length === 0, hiddenEverywhere.length ? hiddenEverywhere.join('; ') : 'no linked CTA is hidden on every breakpoint')
   if (bookACall.visible + bookACall.hiddenWithLink + bookACall.hiddenNoLink > 0) add('book-a-call-consistency', bookACall.hiddenWithLink === 0, `visible ${bookACall.visible}, hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)

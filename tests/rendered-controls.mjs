@@ -6,7 +6,8 @@
  * media, and staff classes (protocol step 7, decision 2026-09-17).
  *
  * Usage: node tests/rendered-controls.mjs --url <canonical url> [--url ...] [--json out.json] [--playwright <dir with node_modules/playwright>]
- * Exit 1 when a required control is hidden or a Book a Call widget has a link but is hidden.
+ * Exit 1 when a required control is hidden, a Book a Call widget has a link but is hidden, or a book_a_call_* widget
+ * has been relabelled to something else. --screenshots <dir> writes full-page desktop and mobile PNGs (ring 2).
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -54,6 +55,24 @@ for (const url of urls) {
       return out
     })
     page.viewports[name] = { anchors: anchors.length }
+    // Ring 2 requires actor-inspected screenshots (protocol step 6); write them next to the JSON when --screenshots <dir> is given.
+    if (args.screenshots) {
+      fs.mkdirSync(args.screenshots, { recursive: true })
+      const slug = (new URL(url).pathname.replace(/\/+$/, '').split('/').pop() || 'home')
+      const file = path.join(args.screenshots, `${slug}-${name}.png`)
+      try { await tab.screenshot({ path: file, fullPage: true }); page.viewports[name].screenshot = file } catch (e) { page.viewports[name].screenshotError = e.message.split('\n')[0] }
+    }
+    // Widgets that carry a Book a Call CSS id must still be Book a Call: a repurposed or hidden widget is reported
+    // even when no anchor is labelled Book a Call any more (Houston, 2026-09-17: both ids relabelled Join The Community and hidden).
+    const bookIds = await tab.evaluate(() => [...document.querySelectorAll('[id^="book_a_call"]')].map((el) => {
+      const a = el.querySelector('a'); const r = el.getBoundingClientRect(); let hidden = false; let n = el
+      while (n && n !== document.body) { const s = getComputedStyle(n); if (s.display === 'none' || s.visibility === 'hidden') { hidden = true; break } n = n.parentElement }
+      return { id: el.id, text: (a?.textContent || '').replace(/\s+/g, ' ').trim(), href: a?.getAttribute('href') || '', hidden: hidden || r.width === 0 || r.height === 0 }
+    }))
+    for (const b of bookIds) {
+      const repurposed = b.text && !/^book a call$/i.test(b.text)
+      page.checks.push({ viewport: name, control: `widget.${b.id}`, result: repurposed ? 'fail' : (b.hidden && /^https?:\/\//.test(b.href) ? 'fail' : 'pass'), detail: `${b.hidden ? 'hidden' : 'visible'}; label "${b.text}"; link ${b.href || 'none'}${repurposed ? '; repurposed away from Book a Call' : ''}` })
+    }
     for (const L of LABELS) {
       const hits = anchors.filter((a) => L.re.test(a.text))
       const visible = hits.filter((a) => !a.hiddenBy && a.w > 0 && a.h > 0)
