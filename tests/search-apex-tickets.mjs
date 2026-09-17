@@ -77,21 +77,26 @@ async function liveTasks() {
   const allowed = new Set(String(process.env.APEX_ALLOWED_HOSTS || baseUrl.hostname).split(',').map((value) => value.trim().toLowerCase()).filter(Boolean))
   if (!allowed.has(baseUrl.hostname.toLowerCase())) throw new Error('APEX_API_BASE host is not allowlisted')
 
+  // One status per request: APEX honors a single status parameter and silently ignores repeats, which made the
+  // live duplicate search miss active tickets (stress test, 2026-09-17). Same convention as agent/intake.mjs.
   const tasks = []
-  let cursor = null
-  for (let page = 0; page < 50; page += 1) {
-    const endpoint = new URL(process.env.APEX_AGENT_TASKS_PATH || '/api/agent/tasks', baseUrl)
-    if (endpoint.origin !== baseUrl.origin || !allowed.has(endpoint.hostname.toLowerCase())) throw new Error('APEX task endpoint must remain on the configured origin')
-    endpoint.searchParams.set('workflow', 'website-maintenance')
-    endpoint.searchParams.set('pageSize', '100')
-    for (const status of ['NOT_STARTED', 'IN_PROGRESS', 'MISSING_INFO', 'BLOCKED', 'FOR_REVIEW', 'TESTING', 'APPROVED']) endpoint.searchParams.append('status', status)
-    if (cursor) endpoint.searchParams.set('cursor', cursor)
-    const response = await fetch(endpoint, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }, redirect: 'error' })
-    if (!response.ok) throw new Error(`APEX returned HTTP ${response.status}`)
-    const payload = await response.json()
-    tasks.push(...(payload.items || []))
-    cursor = payload.nextCursor || null
-    if (!cursor) break
+  const seen = new Set()
+  for (const status of ['NOT_STARTED', 'IN_PROGRESS', 'MISSING_INFO', 'BLOCKED', 'FOR_REVIEW', 'TESTING', 'APPROVED']) {
+    let cursor = null
+    for (let page = 0; page < 50; page += 1) {
+      const endpoint = new URL(process.env.APEX_AGENT_TASKS_PATH || '/api/agent/tasks', baseUrl)
+      if (endpoint.origin !== baseUrl.origin || !allowed.has(endpoint.hostname.toLowerCase())) throw new Error('APEX task endpoint must remain on the configured origin')
+      endpoint.searchParams.set('workflow', 'website-maintenance')
+      endpoint.searchParams.set('pageSize', '100')
+      endpoint.searchParams.set('status', status)
+      if (cursor) endpoint.searchParams.set('cursor', cursor)
+      const response = await fetch(endpoint, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }, redirect: 'error' })
+      if (!response.ok) throw new Error(`APEX returned HTTP ${response.status} for status ${status}`)
+      const payload = await response.json()
+      for (const item of payload.items || []) { if (!seen.has(item.id)) { seen.add(item.id); tasks.push(item) } }
+      cursor = payload.nextCursor || null
+      if (!cursor) break
+    }
   }
   return tasks
 }

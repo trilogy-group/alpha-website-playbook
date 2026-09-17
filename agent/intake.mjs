@@ -116,7 +116,7 @@ function finish(t, d) {
   return { ...d, owner: owner?.name || null, patch, body }
 }
 
-function isWebsiteFamily(t) { const cf = t.customFields || {}; return cf.requestFamily === 'website' || /^Website/.test(t.title || '') || (cf.source === 'alpha-site-qc' && /^https:\/\/alpha\.school\//.test(t.url || '')) }
+function isWebsiteFamily(t) { const cf = t.customFields || {}; return cf.requestFamily === 'website' || /^Website/.test(t.title || '') || ['website-agent', 'agent-found'].includes(cf.source) || (cf.source === 'alpha-site-qc' && /^https:\/\/alpha\.school\//.test(t.url || '')) || /^Alpha [A-Z][A-Za-z .]+: /.test(t.title || '') }
 function summarize(rs) {
   const by = (k) => rs.reduce((a, r) => { const v = r[k] || 'none'; a[v] = (a[v] || 0) + 1; return a }, {})
   return { tickets: rs.length, outcomes: by('outcome'), classes: by('class'), owners: by('owner'), skipped: rs.filter((r) => r.skipped).length, applied: rs.filter((r) => r.applied && !r.applied.error).length, errors: rs.filter((r) => r.applied?.error).map((r) => ({ id: r.id, error: r.applied.error })) }

@@ -129,7 +129,10 @@ async function growthMap(id, slug) {
     const res = await fetch(sources.growthMapApi.url, { signal: AbortSignal.timeout(20_000) })
     const data = await res.json()
     const list = data.locations || data
-    return list.find((l) => (id && l.id === id) || (l.url || '').replace(/\/+$/, '').endsWith('/' + slug)) || null
+    const matches = list.filter((l) => (id && l.id === id) || (l.url || '').replace(/\/+$/, '').endsWith('/' + slug))
+    // Two Programs writing one page (Greenwich: Armonk and Port Chester) is a decision, not a source; stop instead of picking one.
+    if (matches.length > 1 && !id) throw new Error(`ambiguous_program: ${matches.length} growth map programs point at /${slug}/ (${matches.map((m) => m.name || m.id).join(', ')}); resolve the decision ticket before diagnosing this page`)
+    return matches[0] || null
   } catch { return null }
 }
 
