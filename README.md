@@ -16,6 +16,8 @@ Status: active and incomplete. See `docs/project-overview.md` for the original c
 8. `playbook/site/community-routing.md`: the Community URL contract, source boundary, identity crosswalk, and ticket routing.
 9. `docs/findings-2026-09-16-community-routing.md`: the dated evidence behind the first verified Community mappings and coverage gaps.
 10. `docs/alpha-website-playbook-strengthening-prd.md`: the approved work plan for closing known documentation gaps.
+11. `docs/maintenance-and-governance.md`: review cadence, freshness, capability promotion and validation.
+12. `docs/findings-2026-09-17-full-site-and-playbook-audit.md`: the read-only audit evidence and separate live-site findings.
 
 ## Rules that never change
 

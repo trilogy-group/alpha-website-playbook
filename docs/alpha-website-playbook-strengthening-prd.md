@@ -1,10 +1,10 @@
 # PRD: Alpha Website Playbook Strengthening
 
-Version: 0.1  
-Date: September 17, 2026  
-Status: Proposed  
-Product owner: Matt Barge  
-Repository: `trilogy-group/alpha-website-playbook`  
+Version: 0.2
+Date: September 17, 2026
+Status: Active audit remediation
+Playbook owner: Matt Barge
+Repository: `trilogy-group/alpha-website-playbook`
 Related overview: `docs/alpha-website-playbook-strengthening-overview.md`
 
 ## 1. Plan definition
@@ -12,6 +12,8 @@ Related overview: `docs/alpha-website-playbook-strengthening-overview.md`
 This plan closes the gaps found in the September 17 audit of the existing Alpha Website Playbook. It does not create a separate feature, product, or workflow. The strengthened playbook must give a fresh agent enough verified context to take an APEX website ticket from intake through public verification without relying on undocumented knowledge.
 
 The remediation work consists of additions and corrections to the playbook's documentation, specifications, inventories, tested recipes, validation tools, and maintenance controls. It does not replace the systems that own or deliver website data.
+
+Every requirement in this document must be satisfied by extending or correcting the existing `playbook/`, `protocols/`, `spec/`, `registry/`, `docs/`, and `tests/` structure. A requirement must not be interpreted as authorization to build a separate website feature, operator application, workflow store, or live-system integration.
 
 ## 2. Problem statement
 
@@ -601,7 +603,19 @@ Initial safety targets:
 - Zero completed tickets without canonical verification
 - Zero automated fallback to unsupported browser or legacy write paths
 
-## 13. Dependencies
+## 13. Audit-remediation implementation map
+
+This table shows where the September 17 findings are incorporated into the existing playbook. It is a review map, not a new product roadmap.
+
+| Requirements | Existing playbook areas strengthened | Review status |
+| --- | --- | --- |
+| FR-1 through FR-4 | `README.md`, `playbook/00-how-to-use.md`, `docs/website-architecture.md`, `docs/actor-capability-matrix.md`, `spec/source-authority.json`, `spec/actor-capabilities.json` | Implemented for review |
+| FR-5 through FR-8 | `protocols/apex-website-ticket-protocol.md`, `protocols/production-and-staging.md`, `protocols/recipes/`, `spec/ticket-classes.json` | Implemented for review; unsupported operations remain fail-closed |
+| FR-9 and FR-10 | `playbook/integrations/hubspot-and-n8n.md`, `playbook/integrations/cache-and-public-verification.md`, supporting source and environment registries | Implemented for review; exact manual-run and alert details remain explicit gaps |
+| FR-11 through FR-16 | `playbook/campus-page/`, `playbook/page-families/`, `playbook/quality/`, `spec/page-family-requirements.json`, infrastructure registries | Implemented for review; incomplete owners and inventories remain warnings |
+| FR-17 through FR-19 | `protocols/rollback-and-incidents.md`, `protocols/evidence-and-screenshots.md`, `docs/maintenance-and-governance.md`, `spec/schemas/`, `tests/` | Implemented for review and covered by repository validation |
+
+## 14. Dependencies
 
 - APEX ticket, lease, and evidence interfaces
 - Alpha MCP documentation and production capability inventory
@@ -612,7 +626,7 @@ Initial safety targets:
 - Named owners for Elementor, templates, maps, community routing, admissions, events, legal, and analytics
 - Approved page exemplars and media standards
 
-## 14. Risks and mitigations
+## 15. Risks and mitigations
 
 | Risk | Mitigation |
 | --- | --- |
@@ -626,7 +640,7 @@ Initial safety targets:
 | Production credentials spread across clients | Use named identities, environment separation, and documented credential custody |
 | The scope expands into every sister brand | Keep version 1 limited to the Alpha public WordPress site |
 
-## 15. Decisions required
+## 16. Decisions required
 
 1. May a human Alpha MCP operator write to production without an APEX-signed token?
 2. Which operations are allowlisted for direct production execution after staging validation?
@@ -637,8 +651,10 @@ Initial safety targets:
 7. What review cadence applies to plugins, workflows, forms, redirects, and global scripts?
 8. Where should the read-only playbook be published for agents that cannot clone the repository?
 
-## 16. Completion definition
+## 17. Completion definition
 
-This strengthening project is complete when the acceptance test passes, all required page families and integrations have owners, every executable ticket class has a tested recipe, production write policy is resolved, and CI prevents the documentation and specifications from silently drifting apart.
+The initial audit-remediation implementation is ready for review when the required playbook additions exist, repository validation passes, and every unresolved owner, policy, or inventory item is recorded as a fail-closed warning instead of being invented.
+
+The playbook reaches operational completeness when the acceptance test passes, all required page families and integrations have owners, every executable ticket class has a tested recipe, production write policy is resolved, and CI prevents the documentation and specifications from silently drifting apart.
 
 Passing documentation review alone is not completion. A fresh-agent replay against representative tickets is required.

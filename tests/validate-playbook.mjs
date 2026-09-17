@@ -41,6 +41,30 @@ function requireFields(object, fields, label, errors) {
   }
 }
 
+function validateSchemaValue(value, schema, label, errors) {
+  if (!schema || typeof schema !== 'object') return
+  if (schema.enum && !schema.enum.includes(value)) errors.push(`${label}: value is not in schema enum`)
+  if (schema.type === 'object') {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      errors.push(`${label}: expected object`)
+      return
+    }
+    for (const key of schema.required || []) if (value[key] === undefined) errors.push(`${label}: schema requires ${key}`)
+    for (const [key, child] of Object.entries(schema.properties || {})) if (value[key] !== undefined) validateSchemaValue(value[key], child, `${label}.${key}`, errors)
+  } else if (schema.type === 'array') {
+    if (!Array.isArray(value)) {
+      errors.push(`${label}: expected array`)
+      return
+    }
+    if (schema.minItems !== undefined && value.length < schema.minItems) errors.push(`${label}: expected at least ${schema.minItems} items`)
+    value.forEach((item, index) => validateSchemaValue(item, schema.items, `${label}[${index}]`, errors))
+  } else if (schema.type === 'string') {
+    if (typeof value !== 'string') errors.push(`${label}: expected string`)
+    else if (schema.pattern && !new RegExp(schema.pattern).test(value)) errors.push(`${label}: does not match ${schema.pattern}`)
+  } else if (schema.type === 'number' && typeof value !== 'number') errors.push(`${label}: expected number`)
+  else if (schema.type === 'boolean' && typeof value !== 'boolean') errors.push(`${label}: expected boolean`)
+}
+
 export function runValidation() {
   const errors = []
   const warnings = []
@@ -129,6 +153,17 @@ export function runValidation() {
   for (const relative of registryFiles) {
     const data = readJson(relative, errors)
     if (data) requireFields(data, ['version', 'asOf'], relative, errors)
+  }
+
+  const schemaTargets = [
+    ['spec/source-authority.json', 'spec/schemas/source-authority.schema.json'],
+    ['spec/actor-capabilities.json', 'spec/schemas/actor-capabilities.schema.json'],
+    ['spec/page-family-requirements.json', 'spec/schemas/page-family-requirements.schema.json'],
+  ]
+  for (const [targetFile, schemaFile] of schemaTargets) {
+    const target = readJson(targetFile, errors)
+    const schema = readJson(schemaFile, errors)
+    if (target && schema) validateSchemaValue(target, schema, targetFile, errors)
   }
 
   const staleMarkers = [

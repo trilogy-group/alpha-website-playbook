@@ -1116,6 +1116,60 @@
       },
       "missingInfoGoesTo": "n8n-sync-owner"
     },
+    "packet": {
+      "needs": {
+        "campus facts and current school year": "HubSpot Program and requester",
+        "approved packet file": "packet workflow and registry/campus-packets.json",
+        "public Flipsnack or approved destination": "packet owner",
+        "brand approval": "brand-authority"
+      },
+      "missingInfoGoesTo": "marketing-collateral, brand-authority and website-operations until packet-owner is named"
+    },
+    "event-request": {
+      "needs": {
+        "event identity or registration link": "the ticket",
+        "HubSpot Marketing Event": "source",
+        "plugin and campus-label evidence": "events-plugin-owner",
+        "event content owner": "events"
+      },
+      "missingInfoGoesTo": "website-agent-operator for triage, then the owner of the failing event layer"
+    },
+    "map-community-request": {
+      "needs": {
+        "HubSpot Program ID and lifecycle": "HubSpot or growth-map API",
+        "requested surface": "the ticket",
+        "verified Community identity": "registry/campus-identities.json",
+        "map and Community owner": "registry/owners.json"
+      },
+      "missingInfoGoesTo": "expansion-new-programs, growth-map-owner or community-app-owner by failing surface"
+    },
+    "platform-request": {
+      "needs": {
+        "exact platform object and affected surfaces": "the ticket plus registries",
+        "environment and versions": "registry/environments.json and registry/plugins.json",
+        "owner and rollback": "platform or Elementor owner",
+        "staging matrix": "protocols/production-and-staging.md"
+      },
+      "missingInfoGoesTo": "elementor-owner or wordpress-admin, else website-operations"
+    },
+    "launch-copy-request": {
+      "needs": {
+        "HubSpot lifecycle and current intro value": "HubSpot or growth-map API",
+        "approved state wording": "spec/campus-page-requirements.json",
+        "approved media": "registry/campus-open-media.json",
+        "writer and delivery path": "spec/campus-page-field-map.json"
+      },
+      "missingInfoGoesTo": "website-operations for media or hubspot-program-admin for source data"
+    },
+    "staff-bulk": {
+      "needs": {
+        "one complete record per person": "ticket, deck or sheet",
+        "explicit name-to-photo mapping": "requester",
+        "placement and order": "dean-of-parents",
+        "recognized page structure": "Alpha MCP read"
+      },
+      "missingInfoGoesTo": "requester, then dean-of-parents"
+    },
     "page-status": {
       "needs": {
         "target status and effective time": "the ticket",

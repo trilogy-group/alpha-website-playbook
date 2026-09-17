@@ -1,4 +1,5 @@
 {
+  "$schema": "./schemas/page-family-requirements.schema.json",
   "$comment": "Machine-readable index of alpha.school page families. Detailed human requirements live under playbook/page-families and playbook/campus-page. Status values prevent incomplete families from being treated as unattended-execution ready.",
   "version": "1.0",
   "asOf": "2026-09-17",

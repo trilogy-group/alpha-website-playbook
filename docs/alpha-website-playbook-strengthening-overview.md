@@ -1,7 +1,7 @@
 # Project Overview: Strengthening the Alpha Website Playbook
 
-Date: September 17, 2026  
-Status: Proposed  
+Date: September 17, 2026
+Status: Active audit remediation
 Primary owner: Matt Barge  
 Repository: `trilogy-group/alpha-website-playbook`  
 Audit baseline: `main` at `828fb37`
@@ -9,6 +9,8 @@ Audit baseline: `main` at `828fb37`
 ## Executive summary
 
 This project strengthens the existing Alpha Website Playbook so it becomes the complete operating reference for anyone or any agent working on `alpha.school`. It is audit remediation, not a separate website feature or a second playbook. A fresh operator should be able to receive an APEX ticket, identify the system that owns the requested value, select the supported execution path, make the change safely, verify the public result, attach evidence, and close or route the ticket without relying on undocumented history.
+
+This overview converts audit findings into additions and corrections inside the existing repository. It does not define a new public website capability, runtime service, user interface, workflow system, or parallel operating product.
 
 The current playbook has a strong foundation. It documents campus-page concepts, several content pipelines, source diagnosis, community routing, and a careful ticket protocol. It is not yet complete enough to serve as the requested operational reference. The largest gaps are the missing start-here guide, incomplete source and capability maps, missing execution recipes, incomplete campus lifecycle requirements, and the lack of operational runbooks for HubSpot, n8n, caching, forms, admissions, SEO, LLM publishing, WordPress infrastructure, and non-campus page families.
 

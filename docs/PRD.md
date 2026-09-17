@@ -1,5 +1,7 @@
 # PRD: Alpha Website Playbook
 
+September 17, 2026 update: this remains the original charter. The audit-remediation plan that expands the existing playbook is `docs/alpha-website-playbook-strengthening-prd.md`. It does not define a separate product.
+
 Version: 0.1 (draft for review)
 Date: September 15, 2026
 Author: Matt Barge with Claude

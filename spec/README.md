@@ -11,3 +11,4 @@
 - `source-authority.json`: authoritative system, delivery path, owner and verification method by website field family.
 - `actor-capabilities.json`: what each human or agent actor can actually execute, separate from the Alpha MCP tool inventory.
 - `page-family-requirements.json`: coverage and readiness status for campus and non-campus page families.
+- `schemas/`: JSON Schemas enforced by `tests/validate-playbook.mjs` for the new authority, capability and page-family specs.
