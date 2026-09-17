@@ -50,6 +50,35 @@ const EVIDENCE = {
   'human-reviewed-multi-system': ['owner-handoff-record', 'safe-qa-record'],
 }
 
+const STEPS = {
+  website: (id, adapter) => [
+    { id: 'diagnose', adapter: adapter || 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'immediate', evidence: 'get_element or page inventory read' },
+    { id: 'prepare', adapter: adapter || 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'inputs complete', evidence: 'prepared diff limited to the declared scope' },
+    { id: 'apply', adapter: adapter || 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'approved proposed hash', evidence: 'mcp-receipt' },
+    { id: 'verify', adapter: adapter || 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'cache flushed', evidence: 'rendered-controls-json-or-screenshots-desktop-mobile, page-check-json' },
+    { id: 'survive', adapter: 'n8n-sync', owner: 'website-agent-operator', wake: 'next nightly run (00:15 CT)', evidence: 'page-check-json-after-run' },
+  ],
+  hubspot: () => [
+    { id: 'source-change', adapter: 'hubspot-programs', owner: 'hubspot-program-admin', wake: 'immediate', evidence: 'hubspot-property-history-or-apex-editor-record' },
+    { id: 'publish', adapter: 'n8n-sync', owner: 'n8n-sync-owner', wake: 'next nightly run (00:15 CT)', evidence: 'nightly-run-reference' },
+    { id: 'verify', adapter: 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'after the run', evidence: 'page-check-json-after-run, rendered-controls-json' },
+  ],
+  sheet: () => [
+    { id: 'source-change', adapter: 'n8n-sync', owner: 'operations-sheet-owner', wake: 'immediate', evidence: 'sheet-row-reference' },
+    { id: 'publish', adapter: 'n8n-sync', owner: 'n8n-sync-owner', wake: 'next nightly run (00:15 CT)', evidence: 'nightly-run-reference' },
+    { id: 'verify', adapter: 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'after the run', evidence: 'page-check-json-after-run' },
+  ],
+  n8n: () => [
+    { id: 'mapping-change', adapter: 'n8n-sync', owner: 'n8n-sync-owner', wake: 'immediate', evidence: 'workflow-version-or-run-reference' },
+    { id: 'verify', adapter: 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'after the run', evidence: 'page-check-json-after-run' },
+  ],
+  'human-reviewed-website': (id, adapter) => [
+    { id: 'approve', adapter: 'human-handoff', owner: 'website-operations', wake: 'immediate', evidence: 'approval note' },
+    { id: 'apply', adapter: adapter || 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'approved', evidence: 'mcp-receipt-or-operator-note' },
+    { id: 'verify', adapter: adapter || 'wordpress-alpha-mcp', owner: 'website-agent-operator', wake: 'cache flushed', evidence: 'rendered-controls-json-or-screenshots-desktop-mobile, redirect-or-sitemap-evidence-when-status-changes' },
+  ],
+}
+
 const classes = {}
 for (const [id, spec] of Object.entries(classesSpec.classes)) {
   if (id.startsWith('$')) continue
@@ -78,6 +107,8 @@ for (const [id, spec] of Object.entries(classesSpec.classes)) {
       ...(adapter ? [] : ['no adapter: typed owner handoff only']),
     ],
     retryPolicy: spec.scope === 'website' ? { transient: 'retry up to 3 with fresh hash', stale: 'reprepare', conflict: 'stop and reread', unsupported: 'route', unauthorized: 'stop' } : { any: 'route to owner' },
+    // Typed step graph per class (workstream 9): each step names its adapter, owner, wake condition, and evidence.
+    steps: STEPS[spec.scope] ? STEPS[spec.scope](id, adapter) : [{ id: 'handoff', adapter: 'human-handoff', owner: routing.executes || 'owner', wake: 'owner reports completion', evidence: 'owner-handoff-record' }],
   }
 }
 
