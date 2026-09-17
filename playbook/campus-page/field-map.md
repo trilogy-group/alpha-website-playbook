@@ -6,7 +6,7 @@ Machine form: `spec/campus-page-field-map.json`. This is the map an agent or the
 
 | Writer | What it means | Fix path |
 | --- | --- | --- |
-| n8n from HubSpot | The element is rewritten every night at 00:15 Central from a HubSpot Program property. A WordPress edit lasts one day. | Change the HubSpot value through the APEX campus Program editor, or change the derivation in the n8n workflow. |
+| n8n from HubSpot | The element is rewritten every night at 00:15 Central from a HubSpot Program property. A WordPress edit lasts one day. | The website operators change the HubSpot value through the APEX campus editor (two-way sync), or a person edits the Program in HubSpot; the n8n derivation is changed only by the n8n-sync-owner. |
 | n8n from the onboarding sheet | Same nightly run, but the value comes from the "School onboarding" Google Sheet, tabs Website Copy Fixed (one value for every campus) and Website Copy Dynamic (per Program). | Change the sheet. |
 | Events plugin | The campus event strip is rendered from `hubspot_event` posts imported from HubSpot Marketing Events every 30 minutes; n8n writes the shortcode that scopes it to the campus. | HubSpot event data, plugin settings, or the shortcode. |
 | WordPress direct | No automation writes it. | Alpha WordPress MCP under the ticket protocol. |

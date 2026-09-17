@@ -184,7 +184,8 @@
         "endGrade",
         "photoUrl (HubSpot file)"
       ],
-      "agentRule": "Read-only mirror of HubSpot for agents without Programs scopes. A wrong pin or label is a HubSpot data fix, or a map app fix if HubSpot is right."
+      "agentRule": "Read-only mirror of HubSpot for agents without Programs scopes. A wrong pin or label is a HubSpot data fix, or a map app fix if HubSpot is right.",
+      "communityUrlFormats": "Two forms observed on 2026-09-17: https://www.community.alpha.school/?campus=<slug> (Short Hills, Jacksonville, The Hamptons) and https://www.community.alpha.school/campuses/prog-<hubspot id> (Indianapolis, Minneapolis, Milwaukee, Columbus, Philadelphia). Confirm with the community app owner which is canonical; the observer check preannouncement-community-url expects the campus parameter form."
     },
     "hubspot-cms-and-forms": {
       "name": "HubSpot hosted surfaces and embeds",

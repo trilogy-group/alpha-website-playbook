@@ -16,7 +16,7 @@ Phone, address, grade range in the hero and titles, tuition, email, the four con
 
 ## The sanctioned path: APEX program change
 
-The tool for changing a campus fact is the APEX campus Program editor, not HubSpot's UI and not WordPress. A program change in APEX is reviewed and approved by a person, written to HubSpot Programs with a baseline conflict check and read-back, and then published by the daily n8n run. Fields it can change: type, visibility, year open, address, city, state, academic calendar, tuition, application fee, start and end grade, email, phone, website, admission link, call scheduling link, and the website intro copy. The `hubspot-program-admin` (Farhan Raja) and `hubspot-owner` (Hailey McSpadden) approve; the requester or Director of Admissions supplies the value.
+The tool for changing a campus fact is the APEX campus Program editor (two-way sync with HubSpot), not WordPress. Per Yash Chitneni (2026-09-17) the website operators may make these updates themselves for website-driven values; a person may also edit the Program in HubSpot directly, which is what was done for the Join Community URLs on 2026-09-17. Never edit n8n. A program change in APEX is reviewed and approved by a person, written to HubSpot Programs with a baseline conflict check and read-back, and then published by the daily n8n run. Fields it can change: type, visibility, year open, address, city, state, academic calendar, tuition, application fee, start and end grade, email, phone, website, admission link, call scheduling link, and the website intro copy. The `hubspot-program-admin` (Farhan Raja) and `hubspot-owner` (Hailey McSpadden) approve; the requester or Director of Admissions supplies the value.
 
 For a fact ticket the agent therefore:
 

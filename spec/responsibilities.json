@@ -224,7 +224,8 @@
       "department": "marketing",
       "owns": [
         "the APEX website queue execution through the Alpha WordPress MCP",
-        "the observer and this playbook"
+        "the observer and this playbook",
+        "website-driven HubSpot Program values through the APEX campus editor (Yash Chitneni, 2026-09-17)"
       ],
       "approves": [
         "prepared diffs on core pages"
@@ -768,7 +769,7 @@
     "program-info": {
       "supplies": "director-of-admissions; n8n-sync-owner when sync or wordpress_post_id needed",
       "approves": "hubspot-owner (record) then director-of-admissions",
-      "executes": "hubspot-program-admin corrects HubSpot (hubspot-owner for event and email fields); n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
+      "executes": "website-agent-operator updates the HubSpot Program value through the APEX campus editor (two-way sync) or asks hubspot-program-admin when the field is outside the website-driven set; n8n publishes at 00:15 CT; website-agent-operator verifies the page"
     },
     "copy": {
       "supplies": "requester",
@@ -783,7 +784,7 @@
     "observer-fact-sync": {
       "supplies": "hubspot-owner; n8n-sync-owner when n8n overwrite or wordpress_post_id missing",
       "approves": "hubspot-owner",
-      "executes": "hubspot-program-admin corrects HubSpot (hubspot-owner for event and email fields); n8n-sync-owner runs the sync; website-agent-operator verifies and patches only unmapped surfaces"
+      "executes": "website-agent-operator updates the HubSpot Program value through the APEX campus editor (two-way sync) or asks hubspot-program-admin when the field is outside the website-driven set; n8n publishes at 00:15 CT; website-agent-operator verifies the page"
     },
     "observer-media-identity": {
       "supplies": "website-operations",
@@ -838,7 +839,7 @@
     "hubspot-data": {
       "supplies": "the loop or agent (element, field, current value, expected value, derivation) from spec/campus-page-field-map.json",
       "approves": "hubspot-program-admin (Program fields) or hubspot-owner (event fields)",
-      "executes": "hubspot-program-admin through the APEX campus Program editor; n8n publishes at 00:15 CT; website-agent-operator verifies the page"
+      "executes": "website-agent-operator updates the HubSpot Program value through the APEX campus editor (two-way sync) or asks hubspot-program-admin when the field is outside the website-driven set; n8n publishes at 00:15 CT; website-agent-operator verifies the page"
     },
     "sheet-data": {
       "supplies": "the loop or agent",
@@ -872,8 +873,8 @@
     },
     "map-community-request": {
       "supplies": "requester",
-      "approves": "expansion-new-programs",
-      "executes": "growth-map-owner (map app) or hubspot-program-admin (community_url on the Program)"
+      "approves": "expansion-new-programs when the campus is not yet a Program",
+      "executes": "website-agent-operator sets community_url on the HubSpot Program (APEX campus editor or HubSpot UI, as a person); growth-map-owner only if the feed does not pick it up"
     },
     "staff-bulk": {
       "supplies": "requester (deck or sheet with name, title, bio, headshot per person); dean-of-parents approves",
@@ -892,24 +893,18 @@
     }
   },
   "gaps": [
-    "elementor-owner not named",
-    "operations-sheet-owner and growth-map-owner not named",
-    "community-app-owner not named; Community record, slug, visibility, and router changes must stop until the role is assigned",
-    "12 campus pages show no Dean of Parents and 17 show no Director of Admissions; either the role is vacant or the card is missing",
-    "Slack directory visible to the bot covers 28 members; users:read at workspace level would give titles for everyone",
     "HubSpot Programs object properties still unreadable with the marketing token (needs crm.objects.custom.read and crm.schemas.custom.read); campus state and facts are read through the public growth map API until Hailey or a HubSpot admin grants the scopes",
     "The Admissions Hub org chart has no owner named on the page; Hailey confirms roster corrections today. Confirm who edits the chart and how often",
     "HubSpot owner records are missing or personal for several roster names (Gaby Sullivan present; Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund absent; Haven Mass under a personal address); the resolver reports email null for them",
     "Elementor owner, Operations sheet owner, and growth map owner are still not named",
     "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops. Sources for Cristi Constantin, Patrick Skinner, and the Dmitry packet-owner removal are a group DM and an ops brief that are not in any repo; confirm with Matt",
     "The n8n field map recorded in spec/content-pipelines.json comes from an export inspected 2026-09-09; confirm with the n8n-sync-owner that the current campus template still carries those CSS IDs, and whether the group A launch-copy sentence sits in an n8n-controlled content body block",
-    "growth-map-owner (map API on AWS and map.app.alpha.school) still not named; Fernando Pina dos Santos administers the GitHub repos and is on the HubSpot Admin team, a candidate to ask",
-    "Owner of the custom/v1 update-elementor-page and clone-elementor-page routes not confirmed",
     "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner",
     "packet-owner: Matt Barge took info packets on 2026-08-27 pending Canva team setup and the current 2026-27 template from Yash; Chris Davidson holds the collateral tickets. Confirm the split (packet document vs flyers) and record it.",
     "Twenty Open campus pages show a visible 2026/27 INFO PACKET button while no 2026-27 packet is approved (Matt Barge, 2026-09-16). Decision: hide until approval, or accept as interim.",
     "Four campus calendars are Google Drive links returning 401 logged out (Boston Suburbs, Oklahoma City, South Bay LA, Tulsa); owner calendars (Zara Raheem) or the campus.",
-    "Hailey McSpadden (2026-09-17): APEX notifications and edits must stay tied to web tasks; event tickets are not hers by default. Event triage sits with the website operators; per-event HubSpot asks go to her as a comment, not a reassignment."
+    "Hailey McSpadden (2026-09-17): APEX notifications and edits must stay tied to web tasks; event tickets are not hers by default. Event triage sits with the website operators; per-event HubSpot asks go to her as a comment, not a reassignment.",
+    "Explicit authorization for website operators to change HubSpot and n8n for website content is still open (Matt Barge asked Yash 2026-09-17 09:17; Rachel Goodlad has not answered on DoA/DoP data). Until answered, HubSpot writes go through the APEX campus editor or are made by Matt as a person; n8n is not touched."
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",
