@@ -26,6 +26,8 @@ Use `upload_media_from_apex_asset` with the exact APEX asset ID, approved downlo
 
 An identical prior upload may return the existing attachment. Confirm the receipt matches this asset before using it.
 
+Before uploading, `search_media` by person name or APEX asset id; a matching attachment with the same source hash is reused. For a better photo of the same person, `replace_attachment_file` keeps the attachment id so every page updates. For alt text, title, or caption that names the wrong campus or person (media-identity findings), `update_attachment_meta` with `expectedCurrent` is the whole fix; no page edit is needed. `get_attachment_usage` before any `delete_attachment`.
+
 ## Prepare
 
 1. Resolve the canonical object.

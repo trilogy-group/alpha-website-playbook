@@ -26,7 +26,7 @@ The staff tool treats a card as part of the leadership collection only when its 
 
 - Photo only: use `prepare_elementor_content_patch` with one `set_image` edit on the card's image widget (`expectedCurrentAttachmentId` set to the current id, `assetMapping` with the confirmed name and attachment). The diff must be exactly the image id and url of that widget. Sarah Rettig on East Bay was done this way.
 - Title, bio, or quote only: `replace_substring` edits on the heading and text widgets with `expectedCurrent` counts, same rings.
-- Add or remove in an untagged row: send back to the Elementor owner to tag the cards (`Team head` on leadership cards) before the ticket is executed, or execute add and remove by hand in Elementor with the same rings.
+- Add or remove in an untagged row: tag the cards first with a structure patch (`set_element_meta` with `title: Team head` and `expectedCurrent` set to the copied title, one operation per card), apply, then run the staff tool normally. Plugin 0.5.0 or later; before that, send back to the Elementor owner.
 
 ## Known tool limits
 

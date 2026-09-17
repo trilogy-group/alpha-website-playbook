@@ -65,7 +65,7 @@ The website ticket that triggered the diagnosis is not closed by a WordPress edi
 
 Set the ticket to In Progress with a note naming the actor, the date, and the playbook version. Claim the ticket through `POST /api/agent/tasks/{id}/claim` and record the execution, revision, lease, and expiration. One actor per ticket at a time. A lease conflict, changed revision, or unresolved prior execution stops a new mutation. Renew an active lease through the execution heartbeat and release it when work stops. Full procedure: `protocols/production-and-staging.md`.
 
-Anyone who changes a page, for any reason, updates the ticket for that page the same day, including partial work.
+Anyone who changes a page, for any reason, updates the ticket for that page the same day, including partial work. Every MCP write is also stored as a receipt in WordPress; `list_receipts` by ticket id is the audit when a ticket note is missing.
 
 ## 3. Reconcile before editing
 
@@ -73,7 +73,7 @@ Read the live page first, rendered, not the source. Compare the full ticket scop
 
 ## 4. Execute
 
-Use the recipe for the class (`protocols/recipes/`). Confirm the actor supports the operation in `spec/actor-capabilities.json`. Supported alpha.school edits go through the Alpha WordPress MCP: resolve the page, find the exact field, prepare without writing, check the prepared diff touches only the intended field, apply, regenerate the page's CSS, clear cache, verify. Keep the prepare-time snapshot reference; it is the rollback. Tool availability does not imply the scheduled APEX agent is integrated for that operation. Unsupported work routes to its owner without browser fallback.
+Use the recipe for the class (`protocols/recipes/`). Confirm the actor supports the operation in `spec/actor-capabilities.json`. Supported alpha.school edits go through the Alpha WordPress MCP: resolve the page, read the stored element with `get_element` (never infer settings from the public HTML), find the exact field, prepare without writing, check the prepared diff touches only the intended field, apply, regenerate the page's CSS, clear cache, verify. Structure (clone, remove, move, tag, repeater items), media library, post fields including noindex and canonical, redirects, scheduled status, popups, template drafts, and batches have their own tools since plugin 0.5.0 (`playbook/integrations/wordpress-elementor-alpha-mcp.md`). Keep the prepare-time snapshot reference; it is the rollback. Tool availability does not imply the scheduled APEX agent is integrated for that operation. Unsupported work routes to its owner without browser fallback.
 
 Choose the environment through `protocols/production-and-staging.md`. Recover through `protocols/rollback-and-incidents.md`.
 

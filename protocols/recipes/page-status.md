@@ -34,6 +34,10 @@ Publishing a draft requires content, forms, metadata, schema, mobile and desktop
 - Page-family requirements incomplete
 - Scheduled actor not integrated for `set_post_status`
 
+## Tools (plugin 0.5.0)
+
+`get_post_fields` shows `seo_noindex` and `seo_canonical`; set them with `prepare_post_fields_patch` (`seo_noindex` `1` to exclude from search, `2` to force index, empty for the site default). An unpublish needs a redirect: `list_redirects` to check, `create_redirect` (301 from the old path to an Alpha URL) before the status change. A dated change uses `set_post_status` with `newStatus: future` and `publishAt`, or `unpublishAt` for a later draft; `list_scheduled_status_changes` shows what is pending. New campus pages start from `create_draft_from_template`, which keeps the CSS ids the nightly sync needs.
+
 ## Rollback
 
 Restore the prior status and fields only when the public route and downstream systems can be returned to their proven prior state. Record any transient indexing or form exposure as an incident.
