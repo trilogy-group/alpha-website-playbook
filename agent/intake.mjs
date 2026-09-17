@@ -28,6 +28,8 @@ const token = process.env.APEX_API_TOKEN
 const args = parse(process.argv.slice(2))
 const statuses = String(args.status || 'NOT_STARTED,MISSING_INFO,BLOCKED,IN_PROGRESS').split(',')
 const VERSION = '0.1'
+// Declared before the ticket loop: personFor runs inside top-level await and hit the temporal dead zone when a role needed a fallback.
+const ROLE_FALLBACK = { 'elementor-owner': 'website-operations', 'wordpress-admin': 'website-operations', 'growth-map-owner': 'expansion-new-programs', 'operations-sheet-owner': 'expansion-new-programs', 'community-app-owner': 'expansion-new-programs', 'marketing-collateral': 'website-operations', 'sister-site-owner': 'website-operations' }
 
 let tickets = []
 if (args.file) { const raw = JSON.parse(fs.readFileSync(args.file, 'utf8')); tickets = Array.isArray(raw) ? raw : raw.tasks || raw.data || [] }
@@ -83,7 +85,6 @@ async function decide(t) {
   return finish(t, { ...decision, outcome: scope === 'website' ? 'ready-for-execution' : 'routed', ownerRole })
 }
 
-const ROLE_FALLBACK = { 'elementor-owner': 'website-operations', 'wordpress-admin': 'website-operations', 'growth-map-owner': 'expansion-new-programs', 'operations-sheet-owner': 'expansion-new-programs', 'community-app-owner': 'expansion-new-programs', 'marketing-collateral': 'website-operations', 'sister-site-owner': 'website-operations' }
 function personFor(role) { let r = role; for (let i = 0; i < 3 && r; i++) { const p = Object.values(people).find((p) => p.roles.some((x) => x.role === r) && p.apexUserId); if (p) return { person: p, role: r }; r = ROLE_FALLBACK[r] } return { person: null, role } }
 function finish(t, d) {
   const resolved = personFor(d.ownerRole); const owner = resolved.person; if (owner && resolved.role !== d.ownerRole) d.ownerRoleResolved = resolved.role
