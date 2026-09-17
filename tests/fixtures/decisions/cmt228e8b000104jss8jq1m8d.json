@@ -1,0 +1,30 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "platform-request",
+    "ownerRole": "elementor-owner",
+    "why": "Vercel launch site, not alpha.school; routed to the web platform owner (elementor-owner in responsibilities until web-platform is named)"
+  },
+  "task": {
+    "id": "cmt228e8b000104jss8jq1m8d",
+    "title": "Website (Other) \u2014 Alpha New York",
+    "status": "BLOCKED",
+    "requestType": "Website",
+    "program": [
+      "Alpha New York"
+    ],
+    "url": null,
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Other</p><p><strong>DETAIL</strong><br>Hi, we need our staff updated on the following launch website:<br><br>https://alpha-school-launch.vercel.app/new-york-city<br><br>Is there any way some of the NYC team admin can get administrator access?</p>",
+    "customFields": {
+      "formSource": "request-form",
+      "requestDetail": "Hi, we need our staff updated on the following launch website:\n\nhttps://alpha-school-launch.vercel.app/new-york-city\n\nIs there any way some of the NYC team admin can get administrator access?",
+      "websiteRequestType": "other",
+      "websiteRequestTypeLabel": "Other"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-08-20T21:56:21.131Z",
+    "updatedAt": "2026-09-10T19:19:14.313Z"
+  }
+}

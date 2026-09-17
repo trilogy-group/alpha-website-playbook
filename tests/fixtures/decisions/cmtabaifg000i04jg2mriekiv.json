@@ -1,0 +1,33 @@
+{
+  "expected": {
+    "outcome": "missing-info",
+    "class": "staff-photo",
+    "ownerRole": "website-agent-operator",
+    "why": "photo change with a Drive folder link and no APEX asset"
+  },
+  "task": {
+    "id": "cmtabaifg000i04jg2mriekiv",
+    "title": "Website \u2014 Add team member \u2014 Asa Siegel [just update photo] \u2014 Alpha New York",
+    "status": "IN_PROGRESS",
+    "requestType": "Website",
+    "program": [
+      "Alpha New York"
+    ],
+    "url": null,
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Add a team member to program page</p><p><strong>NAME</strong><br>Asa Siegel [just update photo]</p><p><strong>TITLE</strong><br>[no change]</p><p><strong>BIO</strong><br>[no change]</p><p><strong>HEADSHOT URL</strong><br>https://drive.google.com/drive/folders/14VN0jGhk90ZsQivV5iYE9eFrmOkriBBe?usp=sharing</p>",
+    "customFields": {
+      "webTmBio": "[no change]",
+      "webTmName": "Asa Siegel [just update photo]",
+      "formSource": "request-form",
+      "webTmTitle": "[no change]",
+      "webTmHeadshotUrl": "https://drive.google.com/drive/folders/14VN0jGhk90ZsQivV5iYE9eFrmOkriBBe?usp=sharing",
+      "websiteRequestType": "add_team_member",
+      "websiteRequestTypeLabel": "Add a team member to program page"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-08-26T16:32:05.836Z",
+    "updatedAt": "2026-08-31T20:01:02.571Z"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "expected": {
+    "outcome": "missing-info",
+    "class": "staff-update",
+    "ownerRole": "website-agent-operator",
+    "why": "agent-found card without photo or bio"
+  },
+  "task": {
+    "id": "cmu4kvhy500000agm20nunige",
+    "title": "Alpha Bethesda: Morgan Hatt | Community Partnerships card has no photo and no bio",
+    "status": "NOT_STARTED",
+    "requestType": "Website QC",
+    "program": [
+      "Alpha Bethesda"
+    ],
+    "url": "https://alpha.school/bethesda/",
+    "requesterEmail": "requester@superbuilders.school",
+    "description": "Alpha Bethesda: Morgan Hatt | Community Partnerships card has no photo and no bio\nPage: https://alpha.school/bethesda/\n\nExpected: every leadership card carries a headshot and a bio (spec/campus-page-requirements.json team section)\nObserved: the card renders the heading only; no image, no bio text, on desktop and mobile (screenshots 2026-09-16)\nEvidence: ring 2 screenshots while executing cmu2ty43300010agmzkq1ck34; team order Tasha Arnold, Pam Jackson, Morgan Hatt, Nicole Noel\nFound while working: cmu2ty43300010agmzkq1ck34\nPlaybook: team.cards\nRecommended path: Missing Info: headshot asset and bio from Morgan Hatt (Sr. Admissions Specialist, Community Partnerships) or the Bethesda Dean of Parents Pam Jackson; then staff-update through the Alpha WordPress MCP; or remove the card if she is not campus staff\nDone when: the card shows a headshot and bio, or is removed, and ring 2 passes on /bethesda/",
+    "customFields": {
+      "owners": "",
+      "source": "agent-found",
+      "severity": "medium",
+      "idempotencyKey": "agent-found:cmu2ty43300010agmzkq1ck34:bethesda:team.cards",
+      "foundWhileWorking": "cmu2ty43300010agmzkq1ck34"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-16T20:53:26.813Z",
+    "updatedAt": "2026-09-16T20:53:27.290Z"
+  }
+}

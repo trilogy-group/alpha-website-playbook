@@ -1,0 +1,30 @@
+{
+  "expected": {
+    "outcome": "ready-for-execution",
+    "class": "program-info",
+    "ownerRole": "website-agent-operator",
+    "why": "hero and address change (diagnosis then routes to HubSpot)"
+  },
+  "task": {
+    "id": "cmtg740cq000204joxw9p9iz2",
+    "title": "Website (Update program info (address, phone, grade levels, etc.)) \u2014 Alpha South Bay",
+    "status": "IN_PROGRESS",
+    "requestType": "Website",
+    "program": [
+      "Alpha South Bay"
+    ],
+    "url": null,
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Update program info (address, phone, grade levels, etc.)</p><p><strong>DETAIL</strong><br>Page URL https://alpha.school/south-bay-la/ <br><br>+ change the hero from Manhattan Beach to Playa Vista <br>+ Site address is confirmed as:  <br>5401 Beethoven StLos Angeles, CA 90066<br><br>Thank you!</p>",
+    "customFields": {
+      "formSource": "request-form",
+      "requestDetail": "Page URL https://alpha.school/south-bay-la/ \n\n+ change the hero from Manhattan Beach to Playa Vista \n+ Site address is confirmed as:  \n5401 Beethoven StLos Angeles, CA 90066\n\nThank you!\n",
+      "websiteRequestType": "update_info",
+      "websiteRequestTypeLabel": "Update program info (address, phone, grade levels, etc.)"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-08-30T19:21:41.066Z",
+    "updatedAt": "2026-09-14T16:54:13.814Z"
+  }
+}

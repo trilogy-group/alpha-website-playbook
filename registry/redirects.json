@@ -11,7 +11,102 @@
     {
       "id": "wordpress-redirection-plugin",
       "ownerRole": "wordpress-admin",
-      "inventoryStatus": "unknown"
+      "inventoryStatus": "observed",
+      "observedAt": "2026-09-17T20:24:09+00:00",
+      "count": 237,
+      "source": "Alpha MCP list_redirects (plugin 0.5.0); full list in marketingsupport work-assets/inventories-2026-09-17/redirects.json",
+      "sample": [
+        {
+          "source": "/application/?submission_campus=carrollton",
+          "target": "https://alpha.school/application-fs/?submission_campus=carrollton",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=lake_travis",
+          "target": "https://alpha.school/application-fs/?submission_campus=lake_travis",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=houston",
+          "target": "https://alpha.school/application-fs/?submission_campus=houston",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=san_juan",
+          "target": "https://alpha.school/application-fs/?submission_campus=san_juan",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=franklin",
+          "target": "https://alpha.school/application-fs/?submission_campus=franklin",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=bethesda",
+          "target": "https://alpha.school/application-fs/?submission_campus=bethesda",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=bathesda",
+          "target": "https://alpha.school/application-fs/?submission_campus=bathesda",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=boston_suburbs",
+          "target": "https://alpha.school/application-fs/?submission_campus=boston_suburbs",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=jamaica_plain",
+          "target": "https://alpha.school/application-fs/?submission_campus=jamaica_plain",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=greenwich",
+          "target": "https://alpha.school/application-fs/?submission_campus=greenwich",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/high-school-application-fs/",
+          "target": "/high-school-application/",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/blog/test2pass-how-alpha-grades-life-skills/",
+          "target": "/blog/alphatest-how-alpha-grades-life-skills/",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=park_city",
+          "target": "https://alpha.school/application-fs/?submission_campus=park_city",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=tulsa",
+          "target": "https://alpha.school/application-fs/?submission_campus=tulsa",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=oklahoma_city",
+          "target": "https://alpha.school/application-fs/?submission_campus=oklahoma_city",
+          "code": 301,
+          "enabled": false
+        }
+      ]
     },
     {
       "id": "wordpress-core-or-theme",

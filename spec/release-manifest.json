@@ -1,0 +1,34 @@
+{
+  "$comment": "Signed release manifest (improvement plan workstream 3). What production must report for the website agent to claim or write. tests/check-release.mjs compares this with the Alpha MCP health route and the committed policy bundle; agent/intake.mjs refuses --apply on a mismatch. Update deliberately with each plugin upload or policy change; the policySha256 comes from spec/policy-bundle.generated.json.",
+  "version": "2026-09-17.1",
+  "policySha256": "23894456898fb72314e05201a2606a708f8936d6ec6880234baed52868e6983c",
+  "playbookCommit": "2ac12d58110d18b5550a85c882a5b8d79da55587",
+  "bridge": {
+    "package": "@alpha/wordpress-mcp",
+    "version": "0.5.1",
+    "toolCount": 43
+  },
+  "production": {
+    "site": "https://alpha.school",
+    "pluginVersion": "0.5.0",
+    "abilityCount": 43,
+    "abilitySchemaSha256": null,
+    "operatorMode": true,
+    "productionWritesEnabled": true,
+    "campusTemplateId": 6140,
+    "note": "abilitySchemaSha256 is reported from plugin 0.5.1 onward; set it after that upload."
+  },
+  "supportedOperations": {
+    "scheduled-apex-alpha-mcp": [
+      "staff-add",
+      "staff-update",
+      "staff-remove"
+    ],
+    "human-alpha-mcp": "every operation in spec/actor-capabilities.json marked implemented"
+  },
+  "canaries": {
+    "staffUpdate": "cmu2yctcn000004jwiqv6o25n (Ashley Storms, Kirkland)",
+    "structure": "site-hygiene-east-bay-tagging (receipt 10016)",
+    "visibility": "cmu4fz15p00020bgmeavp56rn, cmu4g1x6x00000bgmc3hnjxly, cmu5vhf93000004k1320lnmft"
+  }
+}

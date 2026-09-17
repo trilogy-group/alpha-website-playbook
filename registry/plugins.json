@@ -12,7 +12,8 @@
       "productionVersion": "unknown",
       "deployPath": "package from trilogy-group/AlphawordpressMCP, staging validation, canary, production approval",
       "rollback": "restore prior approved plugin artifact and resolve any in-flight APEX execution",
-      "status": "inventory_incomplete"
+      "status": "inventory_incomplete",
+      "productionVersionObserved": "0.5.0 on 2026-09-17"
     },
     {
       "id": "wordpress-mcp-adapter",
@@ -74,5 +75,306 @@
     "WP Engine cache integration version",
     "security and authentication plugins",
     "deploy and rollback owner for each plugin"
-  ]
+  ],
+  "productionInventory": {
+    "observedAt": "2026-09-17T20:24:09+00:00",
+    "source": "Alpha MCP access_report (plugin 0.5.0)",
+    "theme": {
+      "name": "Genesis Block Theme",
+      "version": "1.0.0",
+      "parent": null
+    },
+    "activeCount": 37,
+    "totalCount": 48,
+    "plugins": [
+      {
+        "file": "advanced-custom-fields/acf.php",
+        "name": "Advanced Custom Fields",
+        "version": "6.8.2",
+        "active": true
+      },
+      {
+        "file": "airtable-video-gallery/airtable-video-gallery.php",
+        "name": "Airtable Video Gallery",
+        "version": "2.1.1",
+        "active": true
+      },
+      {
+        "file": "air-wp-sync/air-wp-sync.php",
+        "name": "Air WP Sync - Airtable to WordPress",
+        "version": "2.8.0",
+        "active": false
+      },
+      {
+        "file": "Alpha Blog Posts/alpha-blog-posts.php",
+        "name": "Alpha Blog Posts",
+        "version": "1.1",
+        "active": true
+      },
+      {
+        "file": "alpha-events-core.php_/alpha-events-core.php",
+        "name": "Alpha Events Core (Business Logic)",
+        "version": "1.0.1",
+        "active": true
+      },
+      {
+        "file": "alpha-events-shortcode/alpha-events-shortcode.php",
+        "name": "Alpha Events Shortcode",
+        "version": "3.6.0",
+        "active": true
+      },
+      {
+        "file": "alpha-hubspot-events/alpha-hubspot-events.php",
+        "name": "Alpha HubSpot Events",
+        "version": "3.3.3",
+        "active": false
+      },
+      {
+        "file": "Alpha Hubspot Events/alpha-hubspot-events.php",
+        "name": "Alpha HubSpot Events",
+        "version": "3.6.0",
+        "active": true
+      },
+      {
+        "file": "alpha-life-skills-curriculum-widget/alpha-life-skills-widget.php",
+        "name": "Alpha Life Skills Curriculum Widget",
+        "version": "1.0.5",
+        "active": true
+      },
+      {
+        "file": "alpha-locations-menu-migration/alpha-locations-menu-migration.php",
+        "name": "Alpha Locations Menu Migration",
+        "version": "1.0.0",
+        "active": true
+      },
+      {
+        "file": "alpha-mcp-abilities/alpha-mcp-abilities.php",
+        "name": "Alpha MCP Abilities",
+        "version": "0.5.0",
+        "active": true
+      },
+      {
+        "file": "alpha-video-resources-pilot/alpha-video-resources-pilot.php",
+        "name": "Alpha Video Resources",
+        "version": "0.2.4",
+        "active": true
+      },
+      {
+        "file": "apex-conditional-elementor-save/apex-conditional-elementor-save.php",
+        "name": "APEX Conditional Elementor Save",
+        "version": "0.2.0",
+        "active": true
+      },
+      {
+        "file": "apex-emcp-heading-compat/apex-emcp-heading-compat.php",
+        "name": "APEX EMCP Heading Compatibility",
+        "version": "0.1.0",
+        "active": true
+      },
+      {
+        "file": "botkibble/botkibble.php",
+        "name": "Botkibble",
+        "version": "1.3.0",
+        "active": true
+      },
+      {
+        "file": "custom-post-type-ui/custom-post-type-ui.php",
+        "name": "Custom Post Type UI",
+        "version": "1.19.2",
+        "active": false
+      },
+      {
+        "file": "pexlechris-adminer/pexlechris-adminer.php",
+        "name": "Database Manager - WP Adminer",
+        "version": "4.3.4.1",
+        "active": true
+      },
+      {
+        "file": "elementor/elementor.php",
+        "name": "Elementor",
+        "version": "4.1.1",
+        "active": true
+      },
+      {
+        "file": "elementor-pro/elementor-pro.php",
+        "name": "Elementor Pro",
+        "version": "4.1.0",
+        "active": true
+      },
+      {
+        "file": "elementskit-lite/elementskit-lite.php",
+        "name": "ElementsKit Lite",
+        "version": "3.9.6",
+        "active": true
+      },
+      {
+        "file": "elementskit/elementskit.php",
+        "name": "ElementsKit Pro",
+        "version": "4.4.5",
+        "active": true
+      },
+      {
+        "file": "emcp-tools/emcp-tools.php",
+        "name": "EMCP Tools",
+        "version": "3.15.0",
+        "active": true
+      },
+      {
+        "file": "filter-everything/filter-everything.php",
+        "name": "Filter Everything&nbsp;\u2014 WordPress & WooCommerce Filters",
+        "version": "1.9.2",
+        "active": false
+      },
+      {
+        "file": "genesis-blocks/genesis-blocks.php",
+        "name": "Genesis Blocks",
+        "version": "3.1.9",
+        "active": true
+      },
+      {
+        "file": "leadin/leadin.php",
+        "name": "HubSpot All-In-One Marketing - Forms, Popups, Live Chat",
+        "version": "11.3.45",
+        "active": true
+      },
+      {
+        "file": "hubspot-content-embed/content-embed.php",
+        "name": "HubSpot Content embed",
+        "version": "1.3.7",
+        "active": true
+      },
+      {
+        "file": "HubSpot Events Sync/hubspot-events-sync.php",
+        "name": "HubSpot Events Sync (with registration cap)",
+        "version": "1.2.1",
+        "active": false
+      },
+      {
+        "file": "image-optimization/image-optimization.php",
+        "name": "Image Optimizer - Compress, Resize and Optimize Images",
+        "version": "1.7.4",
+        "active": true
+      },
+      {
+        "file": "instagram-feed-pro/instagram-feed.php",
+        "name": "Instagram Feed Pro Plus",
+        "version": "6.8.1",
+        "active": false
+      },
+      {
+        "file": "news-ticker-for-elementor-pro/news-ticker-for-elementor.php",
+        "name": "News Ticker for Elementor - Pro",
+        "version": "6.0.0",
+        "active": true
+      },
+      {
+        "file": "peec-logger/peec-logger.php",
+        "name": "Peec Logger",
+        "version": "1.0.0",
+        "active": true
+      },
+      {
+        "file": "public-post-preview/public-post-preview.php",
+        "name": "Public Post Preview",
+        "version": "3.1.2",
+        "active": true
+      },
+      {
+        "file": "query-monitor/query-monitor.php",
+        "name": "Query Monitor",
+        "version": "4.0.6",
+        "active": false
+      },
+      {
+        "file": "redirection/redirection.php",
+        "name": "Redirection",
+        "version": "5.7.5",
+        "active": true
+      },
+      {
+        "file": "schema-and-structured-data-for-wp/structured-data-for-wp.php",
+        "name": "Schema & Structured Data for WP & AMP",
+        "version": "1.60",
+        "active": true
+      },
+      {
+        "file": "simple-local-avatars/simple-local-avatars.php",
+        "name": "Simple Local Avatars",
+        "version": "2.8.6",
+        "active": true
+      },
+      {
+        "file": "simple-post-redirect/simple-post-redirect.php",
+        "name": "Simple Post Redirect",
+        "version": "1.7.4",
+        "active": false
+      },
+      {
+        "file": "substack post importer/substack-post-importer.php",
+        "name": "Simple Substack Post Importer",
+        "version": "4.0",
+        "active": true
+      },
+      {
+        "file": "google-site-kit/google-site-kit.php",
+        "name": "Site Kit by Google",
+        "version": "1.179.0",
+        "active": true
+      },
+      {
+        "file": "table-addons-for-elementor/table-addons-for-elementor.php",
+        "name": "Table Addons for Elementor",
+        "version": "2.1.6",
+        "active": false
+      },
+      {
+        "file": "unlimited-elements-for-elementor-premium/unlimited-elements-pro.php",
+        "name": "Unlimited Elements for Elementor (Premium)",
+        "version": "2.0.10",
+        "active": true
+      },
+      {
+        "file": "wordfence/wordfence.php",
+        "name": "Wordfence Security",
+        "version": "8.2.2",
+        "active": true
+      },
+      {
+        "file": "wordpress-importer/wordpress-importer.php",
+        "name": "WordPress Importer",
+        "version": "0.9.5",
+        "active": false
+      },
+      {
+        "file": "wp-all-import/plugin.php",
+        "name": "WP All Import",
+        "version": "4.0.1",
+        "active": false
+      },
+      {
+        "file": "insert-headers-and-footers/ihaf.php",
+        "name": "WPCode Lite",
+        "version": "2.3.6",
+        "active": true
+      },
+      {
+        "file": "duplicate-post/duplicate-post.php",
+        "name": "Yoast Duplicate Post",
+        "version": "4.7",
+        "active": true
+      },
+      {
+        "file": "wordpress-seo/wp-seo.php",
+        "name": "Yoast SEO",
+        "version": "27.7",
+        "active": true
+      },
+      {
+        "file": "wordpress-seo-premium/wp-seo-premium.php",
+        "name": "Yoast SEO Premium",
+        "version": "27.7",
+        "active": true
+      }
+    ]
+  }
 }

@@ -43,12 +43,17 @@ const strip = (html) => String(html || '').replace(/<[^>]+>/g, ' ').replace(/&nb
 export function classify(ticket) {
   const title = ticket.title || ''
   const wrt = ticket.originalSubmission?.websiteRequestType || ''
+  const detail = ticket.customFields?.requestDetail || ticket.originalSubmission?.requestDetail || strip(ticket.description || '')
+  // Pass 1: explicit request types and titles, and detail patterns, in policy order, skipping the generic
+  // "Website (Other)" title fallback so a detail-matched class (FAQ copy, platform request) wins first.
   for (const [name, cls] of Object.entries(spec.classes)) {
-    if (cls.match.websiteRequestType && cls.match.websiteRequestType.includes(wrt)) return name
-    if (cls.match.titlePattern && new RegExp(cls.match.titlePattern, 'i').test(title)) return name
-    const detail = ticket.customFields?.requestDetail || ticket.originalSubmission?.requestDetail || ''
+    // copy is the fallback for "Website (Other)": in pass 1 it may only win on its detail pattern.
+    if (name !== 'copy' && cls.match.websiteRequestType && cls.match.websiteRequestType.includes(wrt)) return name
+    if (name !== 'copy' && cls.match.titlePattern && new RegExp(cls.match.titlePattern, 'i').test(title)) return name
     if (cls.match.detailPattern && new RegExp(cls.match.detailPattern, 'i').test(detail)) return name
   }
+  // Pass 2: the generic copy fallback for "Website (Other)" titles.
+  if (spec.classes.copy?.match.titlePattern && new RegExp(spec.classes.copy.match.titlePattern, 'i').test(title)) return 'copy'
   return 'unclassified'
 }
 

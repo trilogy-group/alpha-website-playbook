@@ -1,0 +1,30 @@
+{
+  "expected": {
+    "outcome": "missing-info",
+    "class": "staff-bulk",
+    "ownerRole": "website-agent-operator",
+    "why": "remove and add with no asset for the added person"
+  },
+  "task": {
+    "id": "cmsulc8b2000004i9i6rskef3",
+    "title": "Website (Other) \u2014 Alpha Fort Worth",
+    "status": "BLOCKED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Fort Worth"
+    ],
+    "url": null,
+    "requesterEmail": "requester@alpha.school",
+    "description": "REQUEST\nOther\n\nDETAIL\nThe Fort Worth team section has the wrong Dean of Parents.\n\nIt currently shows Andy Gibson as Dean of Parents of Alpha School in Fort Worth. Andy has moved off Fort Worth. The Dean of Parents is now Jasmine Cochran.\n\nPlease remove Andy Gibson from the Fort Worth page and add Jasmine Cochran as Dean of Parents. Andy stays on Plano, that one is correct.",
+    "customFields": {
+      "formSource": "request-form",
+      "requestDetail": "The Fort Worth team section has the wrong Dean of Parents.\n\nIt currently shows Andy Gibson as Dean of Parents of Alpha School in Fort Worth. Andy has moved off Fort Worth. The Dean of Parents is now Jasmine Cochran.\n\nPlease remove Andy Gibson from the Fort Worth page and add Jasmine Cochran as Dean of Parents. Andy stays on Plano, that one is correct.",
+      "websiteRequestType": "other",
+      "websiteRequestTypeLabel": "Other"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-08-15T16:29:03.374Z",
+    "updatedAt": "2026-09-08T18:05:33.681Z"
+  }
+}
