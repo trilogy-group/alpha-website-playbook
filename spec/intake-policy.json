@@ -1,0 +1,144 @@
+{
+  "$comment": "Deterministic policy for the scheduled APEX website intake administrator. Ticket requirements remain in ticket-classes.json; this file says who must supply each input, what administrative queue receives a complete ticket, and which requests require review or are refused. The agent never edits the website.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "siteScope": {
+    "publicHosts": ["alpha.school", "www.alpha.school"],
+    "excludedPattern": "\\b(?:Waypoint(?: Academy)?|Texas Sports Academy|Alpha High(?: School)?|Nova(?: Academy)?|NextGen)\\b",
+    "action": "report-only",
+    "reason": "Version 1 governs the Alpha public WordPress site only. Sister-brand and separately hosted school tickets require their own playbook and must not be administered by this intake agent."
+  },
+  "statuses": {
+    "allowed": "The request type is allowed to enter its named execution or owner queue when all inputs are present.",
+    "internal-review": "A named human owner must approve or reshape the request before execution.",
+    "disallowed": "The request conflicts with an explicit website control; intake records the reason and routes it for disposition rather than executing it."
+  },
+  "fieldSources": {
+    "pageUrl": { "kind": "derivable", "reason": "Resolve from APEX targetUrl, the selected Program, or registry/campus-pages.json; never ask for a URL already known to the system." },
+    "staffName": { "kind": "requester", "requirement": { "key": "teamMemberName", "label": "Team member name", "prompt": "Provide the team member's full public name.", "responseType": "short_text", "required": true, "validation": { "minLength": 2, "maxLength": 200 } } },
+    "staffEmail": { "kind": "requester", "requirement": { "key": "teamMemberEmail", "label": "Team member email", "prompt": "Provide the team member's Alpha email address so APEX and the WordPress worker can identify the exact person.", "responseType": "email", "required": true, "validation": { "maxLength": 320 } } },
+    "staffTitle": { "kind": "requester", "requirement": { "key": "publicTitle", "label": "Public title", "prompt": "Provide the exact title that should appear publicly.", "responseType": "short_text", "required": true, "validation": { "minLength": 2, "maxLength": 200 } } },
+    "staffBio": { "kind": "requester", "requirement": { "key": "bio", "label": "Biography", "prompt": "Provide the approved biography text for this team member.", "responseType": "long_text", "required": true, "validation": { "minLength": 20, "maxLength": 10000 } } },
+    "staffHeadshot": { "kind": "requester", "requirement": { "key": "headshot", "label": "Headshot", "prompt": "Upload the approved headshot for this team member. The file must be attached to this APEX request; Slack, Drive, and deck links are not accepted by the WordPress agent.", "responseType": "file", "required": true, "validation": { "allowedMimeTypes": ["image/jpeg", "image/png", "image/webp"], "maxBytes": 15728640 } } },
+    "changeDetail": { "kind": "requester", "requirement": { "key": "details", "label": "Exact requested change", "prompt": "State the current value, the exact replacement or outcome, and what should remain unchanged.", "responseType": "long_text", "required": true, "validation": { "minLength": 5, "maxLength": 10000 } } },
+    "requester": { "kind": "system", "reason": "APEX must carry a requester email. Without one, intake cannot create a safe clarification round." },
+    "observed": { "kind": "system", "reason": "The observer or filing agent must record the public observation; do not ask a staff requester to reconstruct it." },
+    "expected": { "kind": "derivable", "reason": "Derive from the compiled playbook requirement or authoritative source." },
+    "observerId": { "kind": "system", "reason": "The observer must supply its durable finding identifier." },
+    "sourceValue": { "kind": "derivable", "reason": "Read the named authoritative source; do not ask the requester for a value already held in HubSpot, APEX, or another registry." },
+    "approvedMedia": { "kind": "derivable", "reason": "Resolve only from the approved media registry or an approved APEX asset." },
+    "destinationUrl": { "kind": "derivable", "reason": "Resolve from the named source owner or source-of-truth field; do not ask for a URL APEX or HubSpot already holds." },
+    "bulkAssets": { "kind": "requester", "requirement": { "key": "rosterRequestIds", "label": "One request per team member", "prompt": "Create one team-member request per person with that person's approved headshot, title, and biography attached, then paste the new APEX request IDs here. The combined roster will be held for internal review and never sent straight to website execution.", "responseType": "long_text", "required": true, "validation": { "minLength": 5, "maxLength": 5000 } } },
+    "element": { "kind": "system" },
+    "cssId": { "kind": "system" },
+    "currentDerivation": { "kind": "system" },
+    "proposedDerivation": { "kind": "system" },
+    "reason": { "kind": "system" },
+    "owner": { "kind": "system" },
+    "pageValue": { "kind": "system" },
+    "lastRunEvidence": { "kind": "system" },
+    "sourceField": { "kind": "system" },
+    "expectedValue": { "kind": "derivable" },
+    "derivation": { "kind": "system" },
+    "sheetTab": { "kind": "system" },
+    "sheetKey": { "kind": "system" }
+  },
+  "classes": {
+    "other-workflow": { "policy": "internal-review", "ownerRole": "internal-triage", "queue": "owner" },
+    "packet": { "policy": "allowed", "ownerRole": "packet-owner", "queue": "owner" },
+    "event-request": {
+      "policy": "allowed",
+      "ownerRole": "events-plugin-owner",
+      "queue": "owner",
+      "ownerRules": [
+        { "pattern": "public (?:flag|state)|program interest|HubSpot Marketing Event|make (?:this |the )?event public", "ownerRole": "hubspot-owner", "reason": "The HubSpot event record is the failing source." },
+        { "pattern": "drop ?down|time ?zone|campus strip|event feed|not showing|missing from (?:the )?(?:site|page)", "ownerRole": "events-plugin-owner", "reason": "The WordPress event import or display layer is the failing surface." }
+      ]
+    },
+    "map-community-request": {
+      "policy": "internal-review",
+      "ownerRole": "internal-triage",
+      "queue": "owner",
+      "ownerRules": [
+        { "pattern": "community(?:\\.alpha\\.school| button| slug| program| routing)", "ownerRole": "community-app-owner", "reason": "Community identity or routing is controlled outside WordPress." },
+        { "pattern": "map|pin|coordinates", "ownerRole": "growth-map-owner", "reason": "The growth-map owner controls map rows and destinations." }
+      ]
+    },
+    "platform-request": { "policy": "internal-review", "ownerRole": "wordpress-admin", "queue": "owner" },
+    "launch-copy-request": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "sync-mapping": {
+      "policy": "allowed",
+      "ownerRole": "n8n-sync-owner",
+      "queue": "owner",
+      "guards": [
+        { "pattern": "decide one page or two|decision needed", "policy": "internal-review", "ownerRole": "website-operations", "reason": "The website identity decision must be made before n8n can receive an exact proposed derivation." }
+      ]
+    },
+    "sync-delivery": { "policy": "allowed", "ownerRole": "n8n-sync-owner", "queue": "owner" },
+    "hubspot-data": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "sheet-data": { "policy": "internal-review", "ownerRole": "operations-sheet-owner", "queue": "owner" },
+    "staff-photo": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "staff-add": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "execution" },
+    "staff-update": {
+      "policy": "allowed",
+      "ownerRole": "website-agent-operator",
+      "queue": "execution",
+      "conditionalRequired": [
+        {
+          "pattern": "(?:\\b(?:update|replace|add)\\s+(?:the\\s+)?(?:staff\\s+)?(?:photo|headshot|image)\\b|\\b(?:missing|without|has no|no approved)\\s+(?:a\\s+)?(?:photo|headshot|image)\\b|\\b(?:photo|headshot|image)(?:\\s+only)?\\s+(?:update|replacement|change|is missing|is required|is needed)\\b)",
+          "fields": ["staffHeadshot"],
+          "reason": "A staff update that changes or supplies a photo needs the exact verified APEX headshot asset."
+        },
+        {
+          "pattern": "(?:\\b(?:update|replace|add)\\s+(?:the\\s+)?(?:staff\\s+)?(?:bio|biography)\\b|\\b(?:missing|without|has no|no approved)\\s+(?:a\\s+)?(?:bio|biography)\\b|\\bno bio\\b|\\b(?:bio|biography)\\s+(?:update|replacement|change|is missing|is required|is needed)\\b)",
+          "fields": ["staffBio"],
+          "reason": "A staff update that changes or supplies a biography needs the approved biography text."
+        },
+        {
+          "pattern": "(?:\\b(?:update|replace|change)\\s+(?:the\\s+)?(?:public\\s+)?title\\b|\\b(?:public\\s+)?title\\s+(?:update|replacement|change)\\b|\\b(?:new|correct)\\s+(?:public\\s+)?title\\b)",
+          "fields": ["staffTitle"],
+          "reason": "A staff update that changes the public title needs the exact approved title."
+        }
+      ]
+    },
+    "staff-remove": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "execution" },
+    "staff-bulk": { "policy": "internal-review", "ownerRole": "website-operations", "queue": "owner" },
+    "copy": { "policy": "internal-review", "ownerRole": "website-operations", "queue": "owner" },
+    "link-cta": {
+      "policy": "allowed",
+      "ownerRole": "website-agent-operator",
+      "queue": "owner",
+      "guards": [
+        { "pattern": "(?:add|create|include) (?:an? )?(?:extra|additional|second|new|another) (?:campus |local )?(?:button|cta)", "policy": "disallowed", "ownerRole": "website-operations", "reason": "Campus staff may supply destinations but do not control page structure or add local functionality. Use the approved CTA model instead." }
+      ]
+    },
+    "program-info": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-launch-copy": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-fact-sync": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-brand-leak": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-media-identity": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-link-cta": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-packet": { "policy": "allowed", "ownerRole": "packet-owner", "queue": "owner" },
+    "observer-event": {
+      "policy": "allowed",
+      "ownerRole": "events-plugin-owner",
+      "queue": "owner",
+      "ownerRules": [
+        { "pattern": "public in HubSpot|public flag|program interest", "ownerRole": "hubspot-owner", "reason": "The HubSpot event record is the failing source." }
+      ]
+    },
+    "observer-layout": { "policy": "internal-review", "ownerRole": "elementor-owner", "queue": "owner" },
+    "observer-map-community": { "policy": "internal-review", "ownerRole": "internal-triage", "queue": "owner" },
+    "observer-health": { "policy": "allowed", "ownerRole": "observer-owner", "queue": "owner" },
+    "page-status": { "policy": "internal-review", "ownerRole": "website-operations", "queue": "owner" },
+    "seo-redirect": { "policy": "internal-review", "ownerRole": "website-operations", "queue": "owner" },
+    "form-admissions": { "policy": "internal-review", "ownerRole": "hubspot-program-admin", "queue": "owner" },
+    "global-template": { "policy": "internal-review", "ownerRole": "elementor-owner", "queue": "owner" }
+  },
+  "duplicates": {
+    "mode": "exact-open-candidate",
+    "keys": ["class", "pageUrl", "subject"],
+    "action": "block-for-internal-triage",
+    "reason": "Exact duplicate candidates are linked and held for review; intake never auto-closes one."
+  }
+}

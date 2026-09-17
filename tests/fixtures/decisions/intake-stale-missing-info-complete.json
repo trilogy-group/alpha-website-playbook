@@ -1,0 +1,27 @@
+{
+  "expected": {
+    "outcome": "ready-for-execution",
+    "class": "staff-add",
+    "ownerRole": "website-agent-operator",
+    "why": "a requester response on the same Missing Info ticket makes it eligible again"
+  },
+  "task": {
+    "id": "intake-stale-missing-info-complete",
+    "title": "Website — Add team member — Riley Example — Alpha Austin",
+    "status": "MISSING_INFO",
+    "requestType": "Website",
+    "program": ["Alpha Austin"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": {
+      "requestFamily": "website",
+      "websiteRequestType": "add_team_member",
+      "webTmName": "Riley Example",
+      "webTmEmail": "riley.example@alpha.school",
+      "webTmTitle": "Guide",
+      "webTmBio": "Riley helps students build confidence and ownership.",
+      "webTmHeadshotAssetId": "asset-riley",
+      "lastRequesterResponseAt": "2026-09-17T18:00:00.000Z"
+    },
+    "assets": [{ "id": "asset-riley", "kind": "headshot", "status": "VERIFIED", "checksum": "fixture", "source": "CLARIFICATION", "mimeType": "image/png", "sizeBytes": 220000 }]
+  }
+}

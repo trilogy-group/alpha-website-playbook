@@ -1,9 +1,9 @@
 {
   "expected": {
-    "outcome": "routed",
+    "outcome": "policy-review",
     "class": "sync-mapping",
-    "ownerRole": "n8n-sync-owner",
-    "why": "two Programs one page decision"
+    "ownerRole": "website-operations",
+    "why": "the one-page/two-page identity decision must happen before n8n receives a proposed derivation"
   },
   "task": {
     "id": "cmu4hhqoa00000agmeah4myvc",

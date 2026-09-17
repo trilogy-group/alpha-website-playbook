@@ -3,7 +3,8 @@
  * Release attestation (improvement plan workstream 3). Compares spec/release-manifest.json with what
  * production actually reports (Alpha MCP health: plugin version, ability count, abilitySchemaSha256,
  * operator mode, production writes, synced CSS ids, campus template) and with the committed policy
- * bundle hash. Any mismatch exits 1 with a typed reason; the intake agent refuses --apply on a mismatch.
+ * bundle hash. Any mismatch exits 1 with a typed reason; the intake agent refuses to release an
+ * execution-ready ticket while allowing unrelated clarification and human routing to continue.
  *
  * Usage: node tests/check-release.mjs [--json out.json] [--allow-stale-bundle]
  * Env: ALPHA_WP_BASE_URL, ALPHA_WP_USERNAME, ALPHA_WP_APPLICATION_PASSWORD (same as the bridge), or

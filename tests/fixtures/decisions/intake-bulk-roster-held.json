@@ -1,0 +1,23 @@
+{
+  "expected": {
+    "outcome": "policy-review",
+    "class": "staff-bulk",
+    "ownerRole": "website-operations",
+    "why": "a combined roster is held for mapping review even after the requester supplies the child request IDs"
+  },
+  "task": {
+    "id": "intake-bulk-roster-held",
+    "title": "Website — Alpha Scottsdale",
+    "status": "MISSING_INFO",
+    "requestType": "Website",
+    "program": ["Alpha Scottsdale"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": {
+      "requestFamily": "website",
+      "requestDetail": "Update all staff on the Alpha Scottsdale team section.",
+      "requesterResponses": {
+        "rosterRequestIds": "APEX-101, APEX-102, APEX-103"
+      }
+    }
+  }
+}

@@ -13,4 +13,6 @@ Rules:
 
 ## Intake agent
 
-`agent/intake.mjs` is the scheduled ticket intake (see `tests/README.md`). Any agent taking an APEX website ticket by hand follows the same steps it encodes: protocol step 0 (contract), step 1 (class and inputs), step 1b (pathway and owner). Never edit a page from intake.
+`agent/intake.mjs` is the scheduled APEX intake administrator (see `tests/README.md`). It reads only the compiled policy bundle, then classifies, checks policy and input ownership, requests typed requester clarification, and routes to one exact owner. It re-evaluates the same ticket after a requester revision. It never edits WordPress, HubSpot, n8n, or another delivery system.
+
+Any agent taking an APEX website ticket by hand follows the same steps: protocol step 0 (contract), step 1 (class and inputs), and step 1b (pathway and owner). Ask requesters only for requester-owned facts. Derive canonical URLs and source-owned values from the registries and authoritative systems. An unregistered or ambiguous owner fails closed; never fall back to Matt or Yash merely because no rule matched. Only ticket classes in the release manifest's scheduled Alpha MCP allowlist may enter the execution queue.

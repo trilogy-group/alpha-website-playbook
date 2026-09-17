@@ -1,0 +1,20 @@
+{
+  "expected": {
+    "outcome": "out-of-scope",
+    "class": null,
+    "ownerRole": "internal-triage",
+    "why": "the Alpha public WordPress v1 intake reports but never administers sister-brand website tickets"
+  },
+  "task": {
+    "id": "intake-sister-brand-out-of-scope",
+    "title": "Website — Texas Sports Academy",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": ["Texas Sports Academy"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": {
+      "requestFamily": "website",
+      "requestDetail": "Update the Lake Travis page."
+    }
+  }
+}

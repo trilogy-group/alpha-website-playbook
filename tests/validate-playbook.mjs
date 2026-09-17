@@ -95,6 +95,7 @@ export function runValidation() {
   }
 
   const ticketSpec = readJson('spec/ticket-classes.json', errors)
+  const intakePolicy = readJson('spec/intake-policy.json', errors)
   const responsibilities = readJson('spec/responsibilities.json', errors)
   if (ticketSpec) {
     requireFields(ticketSpec, ['version', 'classes', 'fields'], 'spec/ticket-classes.json', errors)
@@ -106,6 +107,59 @@ export function runValidation() {
       }
       if (!responsibilities?.ticketRouting?.[id]) warnings.push(`ticket class ${id}: no responsibility route`)
       if (!responsibilities?.registryByTicketClass?.[id] && ticketClass.scope !== 'other-workflow') warnings.push(`ticket class ${id}: no input registry route`)
+    }
+  }
+
+  if (ticketSpec && intakePolicy) {
+    requireFields(intakePolicy, ['version', 'asOf', 'siteScope', 'statuses', 'fieldSources', 'classes', 'duplicates'], 'spec/intake-policy.json', errors)
+    requireFields(intakePolicy.siteScope, ['publicHosts', 'excludedPattern', 'action', 'reason'], 'spec/intake-policy.json siteScope', errors)
+    try { new RegExp(intakePolicy.siteScope?.excludedPattern, 'i') } catch (error) { errors.push(`spec/intake-policy.json siteScope: invalid excludedPattern (${error.message})`) }
+    const classIds = Object.keys(ticketSpec.classes || {}).filter((id) => !id.startsWith('$')).sort()
+    const intakeClassIds = Object.keys(intakePolicy.classes || {}).sort()
+    for (const id of classIds.filter((id) => !intakeClassIds.includes(id))) errors.push(`intake policy missing ticket class ${id}`)
+    for (const id of intakeClassIds.filter((id) => !classIds.includes(id))) errors.push(`intake policy names unknown ticket class ${id}`)
+
+    const allowedPolicies = new Set(['allowed', 'internal-review', 'disallowed'])
+    const allowedQueues = new Set(['execution', 'owner'])
+    const allowedKinds = new Set(['requester', 'derivable', 'system'])
+    const allowedResponseTypes = new Set(['short_text', 'long_text', 'email', 'url', 'date', 'file', 'choice'])
+    for (const [id, policy] of Object.entries(intakePolicy.classes || {})) {
+      requireFields(policy, ['policy', 'ownerRole', 'queue'], `intake policy ${id}`, errors)
+      if (!allowedPolicies.has(policy.policy)) errors.push(`intake policy ${id}: unknown policy ${policy.policy}`)
+      if (!allowedQueues.has(policy.queue)) errors.push(`intake policy ${id}: unknown queue ${policy.queue}`)
+      for (const [kind, rules] of [['guard', policy.guards], ['owner rule', policy.ownerRules]]) {
+        for (const [index, rule] of (rules || []).entries()) {
+          requireFields(rule, ['pattern', 'ownerRole', 'reason'], `intake policy ${id} ${kind} ${index}`, errors)
+          try { new RegExp(rule.pattern, 'i') } catch (error) { errors.push(`intake policy ${id} ${kind} ${index}: invalid pattern (${error.message})`) }
+          if (rule.policy && !allowedPolicies.has(rule.policy)) errors.push(`intake policy ${id} ${kind} ${index}: unknown policy ${rule.policy}`)
+        }
+      }
+      for (const [index, rule] of (policy.conditionalRequired || []).entries()) {
+        requireFields(rule, ['pattern', 'fields', 'reason'], `intake policy ${id} conditional requirement ${index}`, errors)
+        try { new RegExp(rule.pattern, 'i') } catch (error) { errors.push(`intake policy ${id} conditional requirement ${index}: invalid pattern (${error.message})`) }
+        if (!Array.isArray(rule.fields) || !rule.fields.length) errors.push(`intake policy ${id} conditional requirement ${index}: fields must be a non-empty array`)
+        for (const field of rule.fields || []) if (!intakePolicy.fieldSources?.[field]) errors.push(`intake policy ${id} conditional requirement ${index}: unknown field ${field}`)
+      }
+    }
+
+    const requirementKeys = new Map()
+    for (const [field, source] of Object.entries(intakePolicy.fieldSources || {})) {
+      requireFields(source, ['kind'], `intake field ${field}`, errors)
+      if (!allowedKinds.has(source.kind)) errors.push(`intake field ${field}: unknown kind ${source.kind}`)
+      if (source.kind !== 'requester') continue
+      requireFields(source, ['requirement'], `intake requester field ${field}`, errors)
+      requireFields(source.requirement, ['key', 'label', 'prompt', 'responseType', 'required', 'validation'], `intake requester field ${field} requirement`, errors)
+      if (!allowedResponseTypes.has(source.requirement?.responseType)) errors.push(`intake requester field ${field}: unsupported response type ${source.requirement?.responseType}`)
+      if (source.requirement?.responseType === 'file' && source.requirement?.key !== 'headshot') errors.push(`intake requester field ${field}: APEX only accepts file clarification for the headshot key`)
+      const key = source.requirement?.key
+      if (key && requirementKeys.has(key)) errors.push(`intake requester fields ${requirementKeys.get(key)} and ${field} reuse requirement key ${key}`)
+      else if (key) requirementKeys.set(key, field)
+    }
+    for (const [id, ticketClass] of Object.entries(ticketSpec.classes || {})) {
+      if (id.startsWith('$')) continue
+      for (const field of ticketClass.required || []) {
+        if (!intakePolicy.fieldSources?.[field]) errors.push(`ticket class ${id}: required field ${field} has no intake source`)
+      }
     }
   }
 
@@ -192,6 +246,13 @@ export function runValidation() {
     for (const id of Object.keys(classes.classes || {})) if (!id.startsWith('$') && !mapped.has(id)) errors.push(`ticket class ${id} maps to no adapter in spec/adapters.json`)
     for (const [id, a] of Object.entries(adapters.adapters || {})) for (const cls of a.ticketClasses || []) if (!classes.classes?.[cls]) errors.push(`adapter ${id} names unknown ticket class ${cls}`)
     if (manifest && manifest.policySha256 !== bundle.policySha256) errors.push('spec/release-manifest.json policySha256 does not match the policy bundle')
+    if (manifest && intakePolicy) {
+      const scheduled = new Set(manifest.supportedOperations?.['scheduled-apex-alpha-mcp'] || [])
+      for (const [id, policy] of Object.entries(intakePolicy.classes || {})) {
+        if (policy.queue === 'execution' && !scheduled.has(id)) errors.push(`intake policy ${id}: execution queue is not in the scheduled Alpha MCP release allowlist`)
+      }
+      for (const id of scheduled) if (intakePolicy.classes?.[id]?.queue !== 'execution') errors.push(`scheduled Alpha MCP operation ${id}: intake policy does not route it to execution`)
+    }
   }
 
   return { errors, warnings, jsonFiles: jsonFiles.length, requiredFiles: requiredFiles.length }

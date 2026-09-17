@@ -1,6 +1,6 @@
 {
   "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label).",
-  "version": "0.7",
+  "version": "0.8",
   "classes": {
     "other-workflow": {
       "match": {
@@ -203,6 +203,7 @@
       "required": [
         "pageUrl",
         "staffName",
+        "staffEmail",
         "staffHeadshot",
         "requester"
       ],
@@ -222,6 +223,7 @@
       "required": [
         "pageUrl",
         "staffName",
+        "staffEmail",
         "staffTitle",
         "staffBio",
         "staffHeadshot",
@@ -245,6 +247,7 @@
       "required": [
         "pageUrl",
         "staffName",
+        "staffEmail",
         "changeDetail",
         "requester"
       ],
@@ -267,6 +270,7 @@
       "required": [
         "pageUrl",
         "staffName",
+        "staffEmail",
         "requester"
       ],
       "recipe": "staff-card",
@@ -635,37 +639,58 @@
   "fields": {
     "pageUrl": {
       "from": [
+        "program:campus-pages",
+        "title:campus-pages",
+        "targetUrl",
         "url",
         "description:Page: (https?://[^\\s]+)",
-        "customFields.requestDetail:(https?://alpha\\.school/[^\\s]+)",
-        "program:campus-pages",
-        "title:campus-pages"
+        "customFields.details:(https?://alpha\\.school/[^\\s]+)",
+        "customFields.requestDetail:(https?://alpha\\.school/[^\\s]+)"
       ],
       "missingText": "the exact page URL"
     },
     "staffName": {
       "from": [
         "originalSubmission.webTmName",
-        "title:\u2014 ([A-Z][^\u2014]+?) \u2014",
+        "customFields.webTmName",
+        "customFields.requesterResponses.teamMemberName",
+        "title:(?:Add|Update) (?:a )?team member(?: to| on)?(?: program page)? \u2014 ([^\u2014]+?) \u2014",
         "title:^Alpha [^:]+: ([^|]+?) \\|"
       ],
       "missingText": "the team member's full name"
     },
     "staffTitle": {
       "from": [
-        "originalSubmission.webTmTitle"
+        "originalSubmission.webTmTitle",
+        "customFields.webTmTitle",
+        "customFields.requesterResponses.publicTitle"
       ],
       "missingText": "the public title"
     },
+    "staffEmail": {
+      "from": [
+        "originalSubmission.webTmEmail",
+        "customFields.webTmEmail",
+        "customFields.requesterResponses.teamMemberEmail",
+        "apex:users-by-exact-name"
+      ],
+      "missingText": "the team member's Alpha email address used to identify the exact person"
+    },
     "staffBio": {
       "from": [
-        "originalSubmission.webTmBio"
+        "originalSubmission.webTmBio",
+        "customFields.webTmBio",
+        "customFields.requesterResponses.bio"
       ],
       "missingText": "the bio text"
     },
     "staffHeadshot": {
       "from": [
         "originalSubmission.webTmHeadshotAssetId",
+        "customFields.webTmHeadshotAssetId",
+        "customFields.webTmHeadshotAsset.id",
+        "customFields.requesterResponses.headshot",
+        "assets.0.id",
         "requestAssets.0.id",
         "description:HEADSHOT ASSET\\s*([A-Za-z0-9]+)"
       ],
@@ -674,6 +699,8 @@
     "changeDetail": {
       "from": [
         "customFields.requestDetail",
+        "customFields.requesterFollowUp",
+        "customFields.requesterResponses.details",
         "originalSubmission.requestDetail",
         "description:DETAIL\\s*(.+)"
       ],
@@ -705,6 +732,7 @@
     },
     "sourceValue": {
       "from": [
+        "description:Source value: (.+)",
         "title:(?:HubSpot|Operations|source \\w+) (?:says|is|are) (.+?)(?:, and| and website)",
         "title:HubSpot email is ([^,]+),",
         "title:(?:HubSpot|Operations|source \\w+) (?:says|is|are) ([^,]+?)(?:,| and)"
@@ -726,7 +754,9 @@
     },
     "bulkAssets": {
       "from": [
+        "assets.0.id",
         "requestAssets.0.id",
+        "customFields.requesterResponses.rosterRequestIds",
         "originalSubmission.webTmHeadshotAssetId"
       ],
       "missingText": "headshots and bios attached to this request as APEX assets, one Add a team member request per person"

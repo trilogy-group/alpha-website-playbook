@@ -1,13 +1,14 @@
 name: APEX intake agent
 # Runs the playbook intake agent on top of the APEX API. Dry-run unless the repository variable INTAKE_APPLY is "true".
-# It validates, classifies, routes, and renders website-family tickets; it never edits a page.
+# It classifies, checks completeness and policy, requests typed clarification, and routes website-family tickets.
+# It administers APEX only; it never edits WordPress, HubSpot, n8n, or any other delivery system.
 on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
     inputs:
       since:
-        description: 'ISO time; only tickets updated after this (default: 40 minutes ago)'
+        description: 'ISO time; only tickets updated after this (default: 24 hours ago)'
         required: false
       apply:
         description: 'write to APEX (true/false); overrides INTAKE_APPLY for this run'
@@ -29,15 +30,19 @@ jobs:
         env:
           APEX_API_TOKEN: ${{ secrets.APEX_API_TOKEN }}
           APEX_API_BASE: ${{ vars.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1' }}
-          HUBSPOT_SERVICE_KEY: ${{ secrets.HUBSPOT_SERVICE_KEY }}
+          APEX_AGENT_API_BASE: ${{ vars.APEX_AGENT_API_BASE || 'https://apex.2hourlearning.com/api/agent' }}
+          ALPHA_WP_BASE_URL: ${{ vars.ALPHA_WP_BASE_URL || 'https://alpha.school' }}
+          ALPHA_WP_USERNAME: ${{ secrets.ALPHA_WP_USERNAME }}
+          ALPHA_WP_APPLICATION_PASSWORD: ${{ secrets.ALPHA_WP_APPLICATION_PASSWORD }}
         run: |
           SINCE="${{ github.event.inputs.since }}"
-          if [ -z "$SINCE" ]; then SINCE=$(date -u -d '40 minutes ago' +%Y-%m-%dT%H:%M:%SZ); fi
+          if [ -z "$SINCE" ]; then SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ); fi
           APPLY="${{ github.event.inputs.apply }}"
           if [ "$APPLY" != "true" ] && [ "${{ vars.INTAKE_APPLY }}" = "true" ] && [ "${{ github.event_name }}" = "schedule" ]; then APPLY=true; fi
           mkdir -p out
           if [ "$APPLY" = "true" ]; then node agent/intake.mjs --since "$SINCE" --apply --report out/intake.json; else node agent/intake.mjs --since "$SINCE" --report out/intake.json; fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: intake-${{ github.run_id }}
           path: out/intake.json
