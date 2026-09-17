@@ -16,6 +16,8 @@ Every WordPress page must belong to one documented family or an explicit excepti
 | Articles, press, podcasts, and events | `editorial-and-events.md` | Family baseline documented |
 | Global templates and navigation | `global-templates.md` | IDs and change controls documented; owner gap remains |
 | Legal, campaigns, reviews, and sandboxes | `legal-campaign-review.md` | Publication and ownership baseline documented |
+| Program, reference, careers, authors | `program-reference-and-careers.md` | Requirements proposed 2026-09-17; inventory observed; owners partly missing |
+| Video resources and media library | `video-and-media-library.md` | Requirements proposed 2026-09-17; rights owner missing |
 
 ## Rule
 
@@ -35,5 +37,7 @@ For each published or intentionally unpublished page, record:
 - Redirects
 - Sitemap, Markdown, and LLM export behavior
 - Last verified date
+
+Foundation (purpose, audience, control, origin, design, information architecture): `playbook/foundation/`. Full URL inventory by family: `spec/inventory/site-url-inventory-2026-09-17.json` (347 sitemap URLs plus reachable non-sitemap pages).
 
 The September 17 audit counted about 100 published pages, including 44 registered campus pages and 56 non-campus pages. The remaining page-to-family inventory must be generated and reviewed before the family coverage can be called complete.
