@@ -31,16 +31,19 @@
       "label": "Book a Call",
       "section": "hero CTA row (and lower CTA rows)",
       "destination": "https://go.alpha.school/<meetings path>[?uuid=<id>] (HubSpot meetings page for the campus); Dorado points at the events page instead",
-      "urlSource": "HubSpot Program call_scheduling_link (n8n drives show/hide and URL since 2026-03; Cristi 2026-03-11)",
-      "writer": "n8n-hubspot",
+      "urlSource": "HubSpot Program call_scheduling_link, per Cristi 2026-03-11; UNVERIFIED: the 2026-09-16 export of the Update school pages workflow contains no book_a_call, meetings or call_scheduling reference (sync-mapping ticket filed 2026-09-17)",
+      "writer": "unverified (recorded as n8n-hubspot; not in the current workflow export)",
       "ownerRole": "hubspot-program-admin (link value) / hubspot-owner (meetings page)",
       "count": 71,
       "checks": [
+        "book-a-call-consistency",
+        "cta-hidden-everywhere",
         "cta-links-resolve"
       ],
       "exceptions": {
         "dorado": "links to /upcoming-events/?event_school=alpha-dorado"
-      }
+      },
+      "visibility": "Elementor hide_desktop / hide_tablet / hide_mobile on widgets book_a_call_1 (hero) and book_a_call_2 (CTA row). Scan 2026-09-17 of 44 campus pages: 15 visible, 7 hidden with no link (correct), 3 hidden with a link (Oklahoma City, Tulsa, South Bay LA: defects), 19 older-template pages use unnamed widgets."
     },
     "hero.apply-now": {
       "label": "Apply now",

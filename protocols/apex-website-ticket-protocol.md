@@ -69,7 +69,7 @@ Anyone who changes a page, for any reason, updates the ticket for that page the 
 
 ## 3. Reconcile before editing
 
-Read the live page first. Compare the full ticket scope against what the page shows now, not only the element the ticket names. Record what is already correct, what is still wrong, and anything else on the page that violates the playbook. Partial prior work is common; the ticket must end in the true state of the page.
+Read the live page first, rendered, not the source. Compare the full ticket scope against what the page shows now, not only the element the ticket names. "Shows" means a parent can see it: run `node tests/rendered-controls.mjs --url <page>` (desktop and mobile, reports every control as visible or hidden with the reason) or take the ring 2 screenshots. A string in the HTML, a link in the source, or `verified_pass` from the MCP proves presence in the document, not visibility; an Elementor widget hidden on every breakpoint passes all three. Never close a ticket as already correct on a source check (decision 2026-09-17, after the Oklahoma City and Tulsa Book a Call misses). Record what is already correct, what is still wrong, and anything else on the page that violates the playbook. Partial prior work is common; the ticket must end in the true state of the page.
 
 ## 4. Execute
 
@@ -85,7 +85,7 @@ All three rings run on the canonical public URL after cache clearing. Screenshot
 
 **Ring 1, the change.** The requested content is present, the old content is absent, exactly one field changed.
 
-**Ring 2, the whole page.** On desktop and mobile:
+**Ring 2, the whole page.** Mandatory for every closure, including no-change closures. On desktop and mobile:
 
 - Header renders with logo and navigation styled; footer renders.
 - Hero title, subtitle, and CTA row present.

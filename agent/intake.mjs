@@ -40,6 +40,8 @@ else {
 // APEX users by email, so a Missing Info ticket can be assigned to its requester (decision, Matt Barge, 2026-09-17).
 const apexUsersByEmail = new Map()
 if (token && !args.replay) { try { const u = await apex('/users?limit=500'); for (const x of (u.users || u.data || (Array.isArray(u) ? u : []))) if (x.email && x.id) apexUsersByEmail.set(String(x.email).toLowerCase(), x) } catch (e) { console.error(`users lookup failed: ${e.message}`) } }
+const rendered = args.rendered ? JSON.parse(fs.readFileSync(args.rendered, 'utf8')) : null
+function renderedPassFor(url) { if (!rendered || !url) return false; const norm = (u) => String(u).replace(/\/+$/, '').toLowerCase(); const page = (rendered.results || []).find((p) => norm(p.url) === norm(url)); return !!page && page.checks.every((c) => c.result !== 'fail') }
 const since = args.since ? new Date(args.since) : null
 const website = tickets.filter(isWebsiteFamily).filter((t) => !since || new Date(t.updatedAt || t.createdAt) >= since).slice(0, Number(args.limit || 500))
 
@@ -75,7 +77,12 @@ async function decide(t) {
     const r = await triageOne(t, { element })
     if (!r.skipped) {
       // no defect on the page relative to its source: not for the source owner; the observer rerun clears it, operator reviews
-      if (r.defectClass === 'none') return finish(t, { ...decision, outcome: 'no-defect', class: r.class, ownerRole: 'website-agent-operator', newStatus: t.status === 'COMPLETED' ? undefined : 'FOR_REVIEW', note: `page already matches its source (${r.element}); closes when the observer rerun clears the check` })
+      // A source-level match is not evidence a parent sees it (decision 2026-09-17). The status only moves to FOR_REVIEW when a
+      // rendered-controls pass for this page is supplied via --rendered <json>; otherwise the ticket stays where it is with a note.
+      if (r.defectClass === 'none') {
+        const renderedPass = renderedPassFor(t.url || d.pageUrl)
+        return finish(t, { ...decision, outcome: renderedPass ? 'no-defect' : 'needs-rendered-check', class: r.class, ownerRole: 'website-agent-operator', newStatus: renderedPass && t.status !== 'COMPLETED' ? 'FOR_REVIEW' : undefined, note: renderedPass ? `page already matches its source (${r.element}) and the rendered check passed; closes when the observer rerun clears the check` : `source matches (${r.element}) but no rendered check on file; run tests/rendered-controls.mjs before closing` })
+      }
       if (r.defectClass === 'unknown') return finish(t, { ...decision, outcome: 'needs-rule', class: r.class, ownerRole: 'website-agent-operator', note: `no requirement rule for ${r.element} in this state yet; add it to spec/campus-page-requirements.json` })
       return { ...decision, outcome: 'diagnosed', defectClass: r.defectClass, class: r.class, ownerRole: r.ownerRole, owner: r.owner, patch: r.patch, body: r.body }
     }

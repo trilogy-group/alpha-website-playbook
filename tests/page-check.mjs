@@ -135,6 +135,28 @@ async function checkPage(url, stateOverride) {
   }
   add('cta-links-resolve', bad.length === 0, bad.length ? bad.join('; ') : `${linkTargets.length} CTA links checked`)
 
+  // rendered-visibility proxies (static): an Elementor wrapper hidden on desktop, tablet and mobile renders nowhere.
+  // Source presence of a CTA proves nothing to a parent; this catches the Oklahoma City / Tulsa Book a Call case (2026-09-17).
+  const hiddenEverywhere = []
+  const bookACall = { visible: 0, hiddenWithLink: 0, hiddenNoLink: 0 }
+  const wrapperRe = /<div\b([^>]*\bclass="[^"]*elementor-widget\b[^"]*"[^>]*)>([\s\S]*?)<\/div>\s*<\/div>/gi
+  for (const m of mainHtml.matchAll(wrapperRe)) {
+    const attrs = m[1]; const inner = m[2]
+    const cls = (attrs.match(/class="([^"]*)"/) || [, ''])[1]
+    const id = (attrs.match(/(?:^|\s)id="([^"]*)"/) || [, ''])[1]
+    const allHidden = /elementor-hidden-desktop/.test(cls) && /elementor-hidden-tablet/.test(cls) && /elementor-hidden-mobile/.test(cls)
+    const anchor = inner.match(/<a[^>]+href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/i)
+    const label = anchor ? visibleText(anchor[2]).trim() : ''
+    const isCta = /apply|info session|book a call|book a tour|info packet|calendar|stay in-the-know|admission guide|video library/i.test(label) && !/update link|placeholder/i.test(label)
+    if (/^book_a_call/.test(id)) {
+      const hasLink = !!(anchor && /^https?:\/\//.test(anchor[1]))
+      if (!allHidden) bookACall.visible++; else if (hasLink) bookACall.hiddenWithLink++; else bookACall.hiddenNoLink++
+    }
+    if (isCta && allHidden && anchor && /^https?:\/\//.test(anchor[1])) hiddenEverywhere.push(`${label} (${id || cls.match(/elementor-element-([a-z0-9]+)/)?.[1] || 'widget'}) -> ${anchor[1]}`)
+  }
+  add('cta-hidden-everywhere', hiddenEverywhere.length === 0, hiddenEverywhere.length ? hiddenEverywhere.join('; ') : 'no linked CTA is hidden on every breakpoint')
+  if (bookACall.visible + bookACall.hiddenWithLink + bookACall.hiddenNoLink > 0) add('book-a-call-consistency', bookACall.hiddenWithLink === 0, `visible ${bookACall.visible}, hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)
+
   return { url, slug, state, cache: { cfCacheStatus: headers['cf-cache-status'] || null, age: headers.age || null }, checks }
 }
 
