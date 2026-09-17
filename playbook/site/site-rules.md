@@ -58,4 +58,5 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 
 ## Accessibility (`site.a11y.*`)
 
-- Not yet specified. Candidate rules: alt text on content images, heading order, focus states, contrast on hero overlays. Needs a source before it can be enforced.
+- A proposed operational baseline now covers WCAG 2.2 AA, alt text, semantic headings, keyboard operation, focus, contrast, forms, captions, reduced motion, performance, browser support and media handling in `playbook/quality/accessibility-performance-browser-media.md`.
+- It is not an enforced rule until a named owner approves it. Existing source-backed media identity and safe-upload controls remain active.

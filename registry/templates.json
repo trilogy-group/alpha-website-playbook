@@ -1,0 +1,45 @@
+{
+  "$comment": "Known WordPress and Elementor shared objects. Resolve in the target environment before mutation.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "templates": [
+    {
+      "id": "front-page",
+      "wordpressObjectId": 3657,
+      "label": "Alpha homepage",
+      "scope": "site entry",
+      "ownerRole": "website-operations",
+      "lastVerified": "2026-09-17"
+    },
+    {
+      "id": "theme-header",
+      "wordpressObjectId": 76,
+      "label": "Theme-builder header",
+      "scope": "global",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17"
+    },
+    {
+      "id": "theme-footer",
+      "wordpressObjectId": 77,
+      "label": "Theme-builder footer",
+      "scope": "global",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17"
+    },
+    {
+      "id": "campus-seo-template",
+      "wordpressObjectId": 6140,
+      "label": "Campus SEO and new-page template",
+      "scope": "campus creation and synchronized metadata",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17"
+    }
+  ],
+  "gaps": [
+    "global template owner is not named",
+    "template conditions and all dependent page families need export",
+    "popup and form templates need inventory",
+    "approved rollback artifact and last reviewed commit are not recorded"
+  ]
+}

@@ -2,12 +2,12 @@
 
 The single source of truth for what every page of alpha.school must be, and for how an agent or a person executes and tests an APEX website ticket against it. Written to be agent-independent: Claude Code, Codex, Grok, Perplexity, or a human should reach the same conclusion from the same files.
 
-Status: scaffolding. See `docs/project-overview.md` for the why and `docs/PRD.md` for what will be built and in what order.
+Status: active and incomplete. See `docs/project-overview.md` for the original charter and `docs/alpha-website-playbook-strengthening-overview.md` for the September 17 audit-remediation scope.
 
 ## Read in this order
 
-1. `docs/project-overview.md`: what this repo is, who owns it, how it is used.
-2. `playbook/`: human-readable requirements. Start with `playbook/00-how-to-use.md`.
+1. `playbook/00-how-to-use.md`: start here when handling a website request.
+2. `docs/project-overview.md`: original charter, ownership, and governance.
 3. `spec/`: the machine-readable form of the same requirements. Checks, validators, and the observer read these files. If prose and spec disagree, the spec is wrong or the prose is wrong; fix one, never work from the disagreement.
 4. `protocols/`: how to take, execute, test, document, and close an APEX website ticket.
 5. `registry/`: approved assets, exemplar pages, owners, and source-of-truth pointers.
@@ -15,6 +15,9 @@ Status: scaffolding. See `docs/project-overview.md` for the why and `docs/PRD.md
 7. `docs/decisions-2026-09-15-findings.md`: proposed answers to the Sep 15 findings questions (awaiting Yash + Matt). See also the audit trail in `docs/decisions.md`.
 8. `playbook/site/community-routing.md`: the Community URL contract, source boundary, identity crosswalk, and ticket routing.
 9. `docs/findings-2026-09-16-community-routing.md`: the dated evidence behind the first verified Community mappings and coverage gaps.
+10. `docs/alpha-website-playbook-strengthening-prd.md`: the approved work plan for closing known documentation gaps.
+11. `docs/maintenance-and-governance.md`: review cadence, freshness, capability promotion and validation.
+12. `docs/findings-2026-09-17-full-site-and-playbook-audit.md`: the read-only audit evidence and separate live-site findings.
 
 ## Rules that never change
 

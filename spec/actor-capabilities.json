@@ -1,0 +1,163 @@
+{
+  "$schema": "./schemas/actor-capabilities.schema.json",
+  "$comment": "Current actor support and policy. Tool availability is not the same as scheduled-agent integration or production authorization. Human form: docs/actor-capability-matrix.md.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "scope": "alpha.school",
+  "statuses": ["integrated", "implemented", "human_only", "source_only", "unsupported", "decision_needed"],
+  "actors": [
+    {
+      "id": "scheduled-apex-alpha-mcp",
+      "label": "Scheduled APEX agent through Alpha MCP",
+      "environment": ["staging", "production when enabled"],
+      "operations": {
+        "read-resolve-find": "integrated",
+        "staff-add": "integrated",
+        "staff-copy-update": "integrated",
+        "staff-remove": "integrated",
+        "staff-photo-only": "unsupported",
+        "staff-reorder": "unsupported",
+        "general-elementor-content": "unsupported",
+        "post-fields": "unsupported",
+        "post-status": "unsupported",
+        "media-upload": "integrated",
+        "snapshot-restore": "integrated",
+        "css-regeneration": "integrated",
+        "wp-engine-cache": "integrated",
+        "cloudflare-purge": "implemented",
+        "public-verification": "integrated",
+        "visual-verification": "integrated",
+        "structural-elementor": "unsupported",
+        "hubspot-data": "source_only",
+        "n8n-workflow": "unsupported"
+      },
+      "source": "APEX alpha-mcp-contract and alpha-mcp-execution at the audited main integration",
+      "notes": "Feature flags, pilot IDs, current ticket revision, eligibility, approval and lease still gate every run. Staff photo has a legacy APEX path but is not documented as the same scheduled Alpha MCP operation."
+    },
+    {
+      "id": "human-alpha-mcp",
+      "label": "Authorized human Alpha MCP operator",
+      "environment": ["staging", "production subject to approved policy"],
+      "operations": {
+        "read-resolve-find": "integrated",
+        "staff-add": "implemented",
+        "staff-copy-update": "implemented",
+        "staff-remove": "implemented",
+        "staff-photo-only": "implemented",
+        "staff-reorder": "implemented",
+        "general-elementor-content": "implemented",
+        "post-fields": "implemented",
+        "post-status": "implemented",
+        "media-upload": "implemented",
+        "snapshot-restore": "implemented",
+        "css-regeneration": "implemented",
+        "wp-engine-cache": "implemented",
+        "cloudflare-purge": "implemented",
+        "public-verification": "implemented",
+        "visual-verification": "human_only",
+        "structural-elementor": "unsupported",
+        "hubspot-data": "source_only",
+        "n8n-workflow": "unsupported"
+      },
+      "source": "Alpha MCP 0.3.2 generated tool contract",
+      "notes": "Production operator mode without an APEX token is decision_needed. Use an APEX ticket and lease until decided."
+    },
+    {
+      "id": "wordpress-browser-human",
+      "label": "Authorized human using wp-admin or Elementor",
+      "environment": ["staging", "production emergency or approved project work"],
+      "operations": {
+        "read-resolve-find": "human_only",
+        "staff-add": "human_only",
+        "staff-copy-update": "human_only",
+        "staff-remove": "human_only",
+        "staff-photo-only": "human_only",
+        "staff-reorder": "human_only",
+        "general-elementor-content": "human_only",
+        "post-fields": "human_only",
+        "post-status": "human_only",
+        "media-upload": "human_only",
+        "snapshot-restore": "unsupported",
+        "css-regeneration": "human_only",
+        "wp-engine-cache": "human_only",
+        "cloudflare-purge": "unsupported",
+        "public-verification": "human_only",
+        "visual-verification": "human_only",
+        "structural-elementor": "human_only",
+        "hubspot-data": "unsupported",
+        "n8n-workflow": "unsupported"
+      },
+      "source": "current operating policy",
+      "notes": "Never an unattended fallback. WordPress revisions are not sufficient Elementor rollback."
+    },
+    {
+      "id": "hubspot-or-apex-program-human",
+      "label": "Authorized HubSpot or APEX Program editor",
+      "environment": ["production source system"],
+      "operations": {
+        "campus-lifecycle": "source_only",
+        "campus-facts": "source_only",
+        "campus-intro": "source_only",
+        "booking-link": "source_only",
+        "application-routing": "source_only",
+        "program-name": "unsupported",
+        "event-data": "source_only"
+      },
+      "source": "Yash Chitneni statement recorded 2026-09-17 and existing APEX Program editor",
+      "notes": "Website operators may update approved website-driven Program values. Program names at the top remain off limits."
+    },
+    {
+      "id": "n8n-owner",
+      "label": "Named n8n workflow owner",
+      "environment": ["n8n production and test workflows"],
+      "operations": {
+        "inspect-execution": "source_only",
+        "manual-run": "source_only",
+        "mapping-change": "source_only",
+        "disable-recover": "source_only",
+        "export-version": "source_only"
+      },
+      "source": "registry/people.json and playbook/site/content-pipelines.md",
+      "notes": "Website operators diagnose and route workflow failures. They do not change n8n logic unless they are the named owner."
+    },
+    {
+      "id": "observer",
+      "label": "Production observer",
+      "environment": ["public production"],
+      "operations": {
+        "read-public": "integrated",
+        "compare-source": "integrated",
+        "file-ticket": "integrated",
+        "close-ticket": "decision_needed",
+        "mutate": "unsupported"
+      },
+      "source": "registry/observer-checks.json and spec/observer-check-map.json",
+      "notes": "Observer success is independent evidence. It does not authorize a write."
+    }
+  ],
+  "alphaMcpToolInventory": {
+    "versionObserved": "0.3.2",
+    "tools": [
+      "resolve_page",
+      "get_page",
+      "find_elementor_component",
+      "upload_media_from_apex_asset",
+      "prepare_elementor_staff_patch",
+      "apply_elementor_staff_patch",
+      "restore_elementor_snapshot",
+      "regenerate_elementor_css",
+      "flush_wp_engine_cache",
+      "purge_cloudflare_url",
+      "verify_public_page",
+      "inspect_hubspot_event",
+      "find_text_occurrences",
+      "get_post_fields",
+      "prepare_elementor_content_patch",
+      "apply_elementor_content_patch",
+      "prepare_post_fields_patch",
+      "apply_post_fields_patch",
+      "restore_post_fields_snapshot",
+      "set_post_status"
+    ]
+  }
+}

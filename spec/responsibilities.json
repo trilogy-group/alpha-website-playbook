@@ -890,6 +890,26 @@
       "supplies": "requester",
       "approves": "website-operations",
       "executes": "elementor-owner or wordpress-admin; website-operations until named"
+    },
+    "page-status": {
+      "supplies": "requester with target status, effective time and public-route expectation",
+      "approves": "website-operations plus page-family owner",
+      "executes": "authorized human website operator until scheduled support is released"
+    },
+    "seo-redirect": {
+      "supplies": "requester or observer with exact current and expected discovery behavior",
+      "approves": "website-operations; n8n-sync-owner for synchronized campus metadata",
+      "executes": "authorized human website operator or authoritative redirect-layer owner"
+    },
+    "form-admissions": {
+      "supplies": "requester, hubspot-program-admin and admissions owner",
+      "approves": "hubspot-program-admin and admissions owner; finance owner for payment behavior",
+      "executes": "named source-system or platform owner after safe QA is defined"
+    },
+    "global-template": {
+      "supplies": "requester with affected surfaces and desired outcome",
+      "approves": "elementor-owner or platform owner; website-operations until named",
+      "executes": "named human owner through staged project work"
     }
   },
   "gaps": [
@@ -1095,6 +1115,94 @@
         "owner": "n8n-sync-owner"
       },
       "missingInfoGoesTo": "n8n-sync-owner"
+    },
+    "packet": {
+      "needs": {
+        "campus facts and current school year": "HubSpot Program and requester",
+        "approved packet file": "packet workflow and registry/campus-packets.json",
+        "public Flipsnack or approved destination": "packet owner",
+        "brand approval": "brand-authority"
+      },
+      "missingInfoGoesTo": "marketing-collateral, brand-authority and website-operations until packet-owner is named"
+    },
+    "event-request": {
+      "needs": {
+        "event identity or registration link": "the ticket",
+        "HubSpot Marketing Event": "source",
+        "plugin and campus-label evidence": "events-plugin-owner",
+        "event content owner": "events"
+      },
+      "missingInfoGoesTo": "website-agent-operator for triage, then the owner of the failing event layer"
+    },
+    "map-community-request": {
+      "needs": {
+        "HubSpot Program ID and lifecycle": "HubSpot or growth-map API",
+        "requested surface": "the ticket",
+        "verified Community identity": "registry/campus-identities.json",
+        "map and Community owner": "registry/owners.json"
+      },
+      "missingInfoGoesTo": "expansion-new-programs, growth-map-owner or community-app-owner by failing surface"
+    },
+    "platform-request": {
+      "needs": {
+        "exact platform object and affected surfaces": "the ticket plus registries",
+        "environment and versions": "registry/environments.json and registry/plugins.json",
+        "owner and rollback": "platform or Elementor owner",
+        "staging matrix": "protocols/production-and-staging.md"
+      },
+      "missingInfoGoesTo": "elementor-owner or wordpress-admin, else website-operations"
+    },
+    "launch-copy-request": {
+      "needs": {
+        "HubSpot lifecycle and current intro value": "HubSpot or growth-map API",
+        "approved state wording": "spec/campus-page-requirements.json",
+        "approved media": "registry/campus-open-media.json",
+        "writer and delivery path": "spec/campus-page-field-map.json"
+      },
+      "missingInfoGoesTo": "website-operations for media or hubspot-program-admin for source data"
+    },
+    "staff-bulk": {
+      "needs": {
+        "one complete record per person": "ticket, deck or sheet",
+        "explicit name-to-photo mapping": "requester",
+        "placement and order": "dean-of-parents",
+        "recognized page structure": "Alpha MCP read"
+      },
+      "missingInfoGoesTo": "requester, then dean-of-parents"
+    },
+    "page-status": {
+      "needs": {
+        "target status and effective time": "the ticket",
+        "page-family publication requirements": "spec/page-family-requirements.json",
+        "redirect, sitemap, noindex, Markdown and LLM behavior": "the ticket and SEO runbook",
+        "approver": "website-operations plus page-family owner"
+      },
+      "missingInfoGoesTo": "website-operations and the page-family owner"
+    },
+    "seo-redirect": {
+      "needs": {
+        "authoritative SEO or redirect layer": "registry/redirects.json and spec/source-authority.json",
+        "expected discovery behavior": "spec/page-family-requirements.json",
+        "approver": "website-operations or n8n-sync-owner by field"
+      },
+      "missingInfoGoesTo": "website-operations"
+    },
+    "form-admissions": {
+      "needs": {
+        "form and routing inventory": "registry/forms.json",
+        "HubSpot Program and submission_campus": "HubSpot source",
+        "downstream side effects and safe QA": "form owner",
+        "approver": "hubspot-program-admin and admissions owner"
+      },
+      "missingInfoGoesTo": "hubspot-program-admin and admissions owner"
+    },
+    "global-template": {
+      "needs": {
+        "template or global object": "registry/templates.json, registry/navigation.json or registry/global-runtime.json",
+        "affected page families": "spec/page-family-requirements.json",
+        "owner and rollback": "elementor-owner or platform owner"
+      },
+      "missingInfoGoesTo": "elementor-owner, else website-operations"
     }
   }
 }

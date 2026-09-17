@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "ticket-austin-placeholder",
+      "status": "NOT_STARTED",
+      "title": "Alpha Austin: remove John Doe placeholder",
+      "url": "https://alpha.school/austin/",
+      "description": "Observed: John Doe staff card",
+      "customFields": {
+        "checkId": "campus-staff-placeholder"
+      }
+    },
+    {
+      "id": "ticket-palo-alto-placeholder",
+      "status": "NOT_STARTED",
+      "title": "Alpha Palo Alto: remove bio placeholder",
+      "url": "https://alpha.school/palo-alto/",
+      "description": "Observed: bio",
+      "customFields": {
+        "checkId": "campus-staff-placeholder"
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$comment": "Redirect governance inventory. Populate exact rules from each authoritative layer before changing or consolidating redirects.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "layers": [
+    {
+      "id": "yoast",
+      "ownerRole": "website-operations",
+      "inventoryStatus": "unknown"
+    },
+    {
+      "id": "wordpress-redirection-plugin",
+      "ownerRole": "wordpress-admin",
+      "inventoryStatus": "unknown"
+    },
+    {
+      "id": "wordpress-core-or-theme",
+      "ownerRole": "wordpress-admin",
+      "inventoryStatus": "unknown"
+    },
+    {
+      "id": "wp-engine-or-cloudflare",
+      "ownerRole": "wordpress-admin",
+      "inventoryStatus": "unknown"
+    },
+    {
+      "id": "application-code",
+      "ownerRole": "platform-owner",
+      "inventoryStatus": "unknown"
+    }
+  ],
+  "rules": [],
+  "knownAuditFinding": "Three legacy application routes were excluded from the page sitemap because they redirect; exact rules require export.",
+  "policy": "One authoritative rule per source route, one hop where practical, preserve approved campus and tracking parameters, and verify sitemap and LLM export behavior.",
+  "status": "inventory_incomplete"
+}

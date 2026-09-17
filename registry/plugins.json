@@ -1,0 +1,78 @@
+{
+  "$comment": "Known WordPress plugin and writer inventory. Unknown versions are explicit blockers for deploy or migration work.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "plugins": [
+    {
+      "id": "alpha-mcp-abilities",
+      "purpose": "Alpha-specific canonical resolution, bounded Elementor and post-field mutations, media, restore, cache and verification abilities",
+      "ownerRole": "website-operations",
+      "stagingVersionObserved": "0.1.6 on 2026-09-11",
+      "repositoryContractVersionObserved": "0.3.2 on 2026-09-17",
+      "productionVersion": "unknown",
+      "deployPath": "package from trilogy-group/AlphawordpressMCP, staging validation, canary, production approval",
+      "rollback": "restore prior approved plugin artifact and resolve any in-flight APEX execution",
+      "status": "inventory_incomplete"
+    },
+    {
+      "id": "wordpress-mcp-adapter",
+      "purpose": "Remote MCP transport over WordPress Abilities",
+      "ownerRole": "wordpress-admin",
+      "stagingVersionObserved": "0.6.1 on 2026-09-11",
+      "productionVersion": "unknown",
+      "deployPath": "pinned adapter after staging compatibility test; direct Alpha REST bridge is the fallback",
+      "rollback": "disable adapter transport and use the approved fixed direct bridge",
+      "status": "inventory_incomplete"
+    },
+    {
+      "id": "elementor",
+      "purpose": "Page and template composition",
+      "ownerRole": "elementor-owner",
+      "productionVersion": "unknown",
+      "status": "owner_and_version_gap"
+    },
+    {
+      "id": "elementor-pro",
+      "purpose": "Theme-builder templates and advanced widgets",
+      "ownerRole": "elementor-owner",
+      "productionVersion": "unknown",
+      "status": "owner_and_version_gap"
+    },
+    {
+      "id": "hubspot-events-importer",
+      "purpose": "Import HubSpot Marketing Events into the hubspot_event post type and taxonomies",
+      "ownerRole": "events-plugin-owner",
+      "productionVersion": "unknown",
+      "status": "version_gap"
+    },
+    {
+      "id": "yoast-seo",
+      "purpose": "Page SEO fields, canonicals, schema and possible redirects",
+      "ownerRole": "website-operations",
+      "productionVersion": "unknown",
+      "status": "version_and_boundary_gap"
+    },
+    {
+      "id": "redirection",
+      "purpose": "WordPress redirect rules and REST namespace",
+      "ownerRole": "wordpress-admin",
+      "productionVersion": "unknown",
+      "status": "version_and_boundary_gap"
+    },
+    {
+      "id": "elementskit",
+      "purpose": "Dynamic and presentation components observed in public output",
+      "ownerRole": "elementor-owner",
+      "productionVersion": "unknown",
+      "status": "owner_and_version_gap"
+    }
+  ],
+  "requiredNextInventory": [
+    "complete production active-plugin export",
+    "WordPress and PHP versions",
+    "active theme and version",
+    "WP Engine cache integration version",
+    "security and authentication plugins",
+    "deploy and rollback owner for each plugin"
+  ]
+}

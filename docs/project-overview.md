@@ -1,5 +1,7 @@
 # Project Overview: Alpha Website Playbook
 
+September 17, 2026 update: the full-site audit found coverage gaps beyond the original campus-page scope. The remediation strengthens this same playbook; it is not a separate website feature or workflow. See `docs/alpha-website-playbook-strengthening-overview.md` and `docs/alpha-website-playbook-strengthening-prd.md`.
+
 Date: September 15, 2026
 Owners: Matt Barge (Superbuilders), Yash Chitneni (Alpha)
 Repository: `trilogy-group/alpha-website-playbook` (private)

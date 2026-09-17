@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alpha.school/playbook/source-authority.schema.json",
+  "type": "object",
+  "required": ["version", "asOf", "scope", "precedence", "fields"],
+  "properties": {
+    "version": { "type": "string" },
+    "asOf": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+    "scope": { "type": "string" },
+    "precedence": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "surface", "authority", "sourceLocator", "delivery", "destination", "allowedEditors", "refresh", "conflictRule", "ownerRole", "verify", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "surface": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "authority": { "type": "string" },
+          "sourceLocator": { "type": "string" },
+          "delivery": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "destination": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "allowedEditors": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "refresh": { "type": "string" },
+          "conflictRule": { "type": "string" },
+          "ownerRole": { "type": "string" },
+          "verify": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    }
+  }
+}

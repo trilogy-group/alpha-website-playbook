@@ -1,6 +1,6 @@
 {
   "$comment": "Site-wide rule ids and one-line statements; prose in playbook/site/site-rules.md.",
-  "version": "0.2",
+  "version": "0.3",
   "rules": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
@@ -37,6 +37,38 @@
       "source": "#admin-websites 2025-12-10",
       "check": "manual until the CSS ID inventory is confirmed",
       "spec": "spec/content-pipelines.json"
+    },
+    "site.accessibility.proposed-baseline": {
+      "id": "site.accessibility.proposed-baseline",
+      "statement": "Proposed WCAG 2.2 AA baseline covering semantic headings, alt text, accessible names, keyboard operation, visible focus, contrast, forms, captions and reduced motion.",
+      "source": "Audit remediation proposal dated 2026-09-17; named approval still required",
+      "check": "not enforced until approved",
+      "spec": "playbook/quality/accessibility-performance-browser-media.md",
+      "status": "proposed"
+    },
+    "site.performance.proposed-baseline": {
+      "id": "site.performance.proposed-baseline",
+      "statement": "Record before and after performance evidence for global and media-heavy changes; do not add unowned global weight; numeric Core Web Vitals budgets require approval.",
+      "source": "Audit remediation proposal dated 2026-09-17",
+      "check": "manual baseline comparison until budgets are approved",
+      "spec": "playbook/quality/accessibility-performance-browser-media.md",
+      "status": "proposed"
+    },
+    "site.browser.proposed-baseline": {
+      "id": "site.browser.proposed-baseline",
+      "statement": "Verify current Chrome, Safari, iPhone Safari and Android Chrome for presentation work; Firefox and Edge for global navigation, forms and templates until support policy is approved.",
+      "source": "Audit remediation proposal dated 2026-09-17",
+      "check": "manual browser matrix until approved",
+      "spec": "playbook/quality/accessibility-performance-browser-media.md",
+      "status": "proposed"
+    },
+    "site.media.proposed-standard": {
+      "id": "site.media.proposed-standard",
+      "statement": "Every asset records rights, owner, identity, source hash, filename, title, alt text, slot, crop, dimensions, focal point and seasonal window when applicable.",
+      "source": "Alpha MCP media safety contract plus audit remediation proposal",
+      "check": "media registry validator to build after approval",
+      "spec": "playbook/quality/accessibility-performance-browser-media.md",
+      "status": "partially_active"
     }
   }
 }

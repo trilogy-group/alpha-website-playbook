@@ -2,7 +2,7 @@
 
 You are working with the source of truth for alpha.school page requirements and the APEX website ticket protocol.
 
-Read in this order: `README.md`, `docs/project-overview.md`, then the part you need: `playbook/` for what a page must be, `protocols/` for how to execute and test a ticket, `spec/` for the machine-readable rules, `registry/` for approved assets, exemplars, owners, and sources.
+Read in this order: `README.md`, `playbook/00-how-to-use.md`, then the part you need: `playbook/` for what a page must be, `protocols/` for how to execute and test a ticket, `spec/` for the machine-readable rules, `registry/` for approved assets, exemplars, owners, and sources.
 
 Rules:
 

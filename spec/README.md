@@ -7,4 +7,8 @@
 - `observer-check-map.json`: every production observer check mapped to a requirement row, with status, plus requirements covered by other tools.
 - `ticket-classes.json`: intake requirements per ticket class.
 - `inventory/`: raw per-page and cross-system routing inventories (dated).
-- `campus-page-requirements.json`: per-state, per-section requirements (M3, not written yet).
+- `campus-page-requirements.json`: per-state and per-section campus requirements; observed baselines are labeled separately from active source-backed rules.
+- `source-authority.json`: authoritative system, delivery path, owner and verification method by website field family.
+- `actor-capabilities.json`: what each human or agent actor can actually execute, separate from the Alpha MCP tool inventory.
+- `page-family-requirements.json`: coverage and readiness status for campus and non-campus page families.
+- `schemas/`: JSON Schemas enforced by `tests/validate-playbook.mjs` for the new authority, capability and page-family specs.

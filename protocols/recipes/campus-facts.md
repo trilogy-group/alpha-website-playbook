@@ -18,6 +18,17 @@ Phone, address, grade range in the hero and titles, tuition, email, the four con
 
 The tool for changing a campus fact is the APEX campus Program editor (two-way sync with HubSpot), not WordPress. Per Yash Chitneni (2026-09-17) the website operators may make these updates themselves for website-driven values; a person may also edit the Program in HubSpot directly, which is what was done for the Join Community URLs on 2026-09-17. Never edit n8n. A program change in APEX is reviewed and approved by a person, written to HubSpot Programs with a baseline conflict check and read-back, and then published by the daily n8n run. Fields it can change: type, visibility, year open, address, city, state, academic calendar, tuition, application fee, start and end grade, email, phone, website, admission link, call scheduling link, and the website intro copy. The `hubspot-program-admin` (Farhan Raja) and `hubspot-owner` (Hailey McSpadden) approve; the requester or Director of Admissions supplies the value.
 
+## Trailing audit (required for every HubSpot or n8n change)
+
+Yash Chitneni authorized website operators to change HubSpot Program values and n8n mappings for website content on 2026-09-17, on the condition that every change leaves a trailing audit. The audit is the APEX ticket plus the playbook:
+
+1. Before the change, the ticket carries the field, the current value, the new value, the source of the new value, and who approved it.
+2. The change is made through the APEX campus editor when the field is one it exposes (it records the change itself), otherwise directly in HubSpot with the ticket id in the property's note, or in n8n by the `n8n-sync-owner` with the workflow version noted.
+3. After the change, the ticket's resolution block records the HubSpot property history timestamp (or the n8n version), the run that published it, and the public page check that proved it.
+4. The change is listed in `docs/decisions.md` when it sets or changes a rule, and in the marketing workspace task record otherwise.
+
+A HubSpot or n8n change without these four entries is out of policy and is reverted.
+
 For a fact ticket the agent therefore:
 
 1. Confirms the requested value against the requester and, when it changes an admissions promise, the Director of Admissions (live resolver).

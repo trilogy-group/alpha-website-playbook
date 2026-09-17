@@ -1,6 +1,6 @@
 {
   "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label).",
-  "version": "0.5",
+  "version": "0.6",
   "classes": {
     "other-workflow": {
       "match": {
@@ -441,6 +441,80 @@
       ],
       "routingLabel": null,
       "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
+    },
+    "page-status": {
+      "match": {
+        "titlePattern": "publish|unpublish|restore page|change page status",
+        "detailPattern": "publish|unpublish|set .* to draft|restore .* page"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "page-status",
+      "scope": "human-reviewed-website",
+      "note": "Publishing and unpublishing require page-family, redirect, sitemap, noindex, Markdown and LLM-export decisions. The scheduled Alpha MCP path is not documented as integrated for status.",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the approved public or non-public route, redirect, sitemap, robots, Markdown and LLM-export behavior are verified"
+    },
+    "seo-redirect": {
+      "match": {
+        "titlePattern": "meta description|canonical|redirect|noindex|sitemap|llms\\.txt|schema",
+        "detailPattern": "meta description|canonical|redirect|noindex|sitemap|llms\\.txt|structured data|schema"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "seo-redirect",
+      "scope": "human-reviewed-website",
+      "note": "Identify whether WordPress, Yoast, n8n, a template, Redirection, infrastructure or generated output owns the exact field before editing.",
+      "observerChecks": [
+        "canonical-present",
+        "duplicate-title",
+        "duplicate-canonical",
+        "sitemap-populated",
+        "json-ld-valid",
+        "llm-file-reachable"
+      ],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "canonical, metadata, indexability, sitemap, redirect, schema, Markdown and LLM surfaces match the approved page-family rule"
+    },
+    "form-admissions": {
+      "match": {
+        "titlePattern": "HubSpot form|submission_campus|Finalsite|confirmation page|payment|paygate",
+        "detailPattern": "HubSpot form|submission_campus|Finalsite|confirmation page|payment|paygate|contact routing"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "forms-admissions",
+      "scope": "human-reviewed-multi-system",
+      "note": "Forms and application paths can create contacts, messages, tasks or charges. They require an inventory row and approved safe QA.",
+      "observerChecks": [],
+      "routingLabel": "apply_link_admission",
+      "doneWhen": "the approved end-to-end campus route, confirmation and downstream behavior are verified without unintended communication or charge"
+    },
+    "global-template": {
+      "match": {
+        "titlePattern": "global header|global footer|navigation|site menu|popup|global script|consent banner",
+        "detailPattern": "global header|global footer|navigation|site menu|popup|global script|consent banner"
+      },
+      "required": [
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "global-template",
+      "scope": "web-platform",
+      "note": "Global template and script work is staged human project work with complete dependency and rollback evidence.",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the target and representative pages pass shared-surface, accessibility, form, consent, desktop and mobile verification"
     },
     "copy": {
       "match": {

@@ -35,6 +35,9 @@ else {
   if (!token) { console.error('APEX_API_TOKEN required'); process.exit(2) }
   for (const st of statuses) { let page = 1; while (page <= 10) { const d = await apex(`/tasks?status=${st}&page=${page}&pageSize=100`); const items = d.items || d.tasks || d.data || []; tickets.push(...items); if (items.length < 100) break; page++ } }
 }
+// APEX users by email, so a Missing Info ticket can be assigned to its requester (decision, Matt Barge, 2026-09-17).
+const apexUsersByEmail = new Map()
+if (token && !args.replay) { try { const u = await apex('/users?limit=500'); for (const x of (u.users || u.data || (Array.isArray(u) ? u : []))) if (x.email && x.id) apexUsersByEmail.set(String(x.email).toLowerCase(), x) } catch (e) { console.error(`users lookup failed: ${e.message}`) } }
 const since = args.since ? new Date(args.since) : null
 const website = tickets.filter(isWebsiteFamily).filter((t) => !since || new Date(t.updatedAt || t.createdAt) >= since).slice(0, Number(args.limit || 500))
 
@@ -98,7 +101,10 @@ function finish(t, d) {
     doneWhen: classes[d.class]?.doneWhen || 'the observer rerun clears the check', evidence: `intake agent ${VERSION} ${new Date().toISOString().slice(0, 10)}`, history, playbook: `spec/ticket-classes.json ${d.class}; protocol step 0 and 1`,
   }
   const body = renderBody(contract)
-  const patch = { description: body, customFields: { ...cf, checkId: d.class || cf.checkId, ownerRole: d.ownerRole, contractVersion: '1.0', intakeHash: hash, intakeVersion: VERSION, history }, ...(owner ? { assignees: { set: [{ id: owner.apexUserId }] } } : {}), ...(d.newStatus && d.newStatus !== t.status ? { status: d.newStatus } : {}) }
+  const requesterUser = d.outcome === 'missing-info' && t.requesterEmail ? apexUsersByEmail.get(String(t.requesterEmail).toLowerCase()) : null
+  const assigneeIds = [owner?.apexUserId, requesterUser?.id].filter(Boolean).filter((id, i, a) => a.indexOf(id) === i)
+  if (requesterUser) d.requesterAssigned = requesterUser.name || requesterUser.email
+  const patch = { description: body, customFields: { ...cf, checkId: d.class || cf.checkId, ownerRole: d.ownerRole, contractVersion: '1.0', intakeHash: hash, intakeVersion: VERSION, history }, ...(assigneeIds.length ? { assignees: { set: assigneeIds.map((id) => ({ id })) } } : {}), ...(d.newStatus && d.newStatus !== t.status ? { status: d.newStatus } : {}) }
   return { ...d, owner: owner?.name || null, patch, body }
 }
 
