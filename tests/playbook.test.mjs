@@ -7,6 +7,7 @@ import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { runValidation } from './validate-playbook.mjs'
+import { composeDescription, triageCustomFields, TRIAGE_BODY_MARKER } from './triage-ticket.mjs'
 import {
   administrativeAction,
   applyDuplicateCandidates,
@@ -452,4 +453,23 @@ test('an empty owner role routes to the unresolved-owner queue, never to an empt
     assert.match(result.reason, /unresolved-owner queue/)
     assert.equal(administrativeAction(result).kind, 'blocked-review')
   }
+})
+
+test('triage keeps the requester description first and regenerates only the rendered body', () => {
+  const original = 'Please update the Santa Barbara page.\nPage: https://alpha.school/santa-barbara/'
+  const first = composeDescription(original, 'Owner: fix path\n\nWhat was asked: v1')
+  assert.ok(first.startsWith(original), 'original words come first')
+  assert.ok(first.includes(`${TRIAGE_BODY_MARKER}\nOwner: fix path`))
+  const second = composeDescription(first, 'Owner: fix path\n\nWhat was asked: v2')
+  assert.ok(second.startsWith(original))
+  assert.equal(second.split(TRIAGE_BODY_MARKER).length, 2, 'exactly one rendered body')
+  assert.ok(second.includes('v2') && !second.includes('v1'), 'rendered body regenerated in place')
+  assert.equal(composeDescription('', 'body'), `${TRIAGE_BODY_MARKER}\nbody`)
+})
+
+test('triage keeps an existing checkId and records the class separately', () => {
+  const cf = triageCustomFields({ checkId: 'SITE-31323DE752', source: 'alpha-site-qc' }, { checkId: 'media', ownerRole: 'website-operations' })
+  assert.equal(cf.checkId, 'SITE-31323DE752')
+  assert.equal(cf.triagedClass, 'media')
+  assert.equal(triageCustomFields({}, { checkId: 'media' }).checkId, 'media')
 })
