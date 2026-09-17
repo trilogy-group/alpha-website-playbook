@@ -80,15 +80,15 @@
         "structural-elementor": "unsupported",
         "hubspot-data": "source_only",
         "n8n-workflow": "unsupported",
-        "element-and-page-reads": "unsupported",
-        "structure-clone-remove-move-tag-repeater": "unsupported",
-        "media-library-search-usage-meta-replace-delete": "unsupported",
-        "seo-noindex-canonical": "unsupported",
-        "scheduled-status-and-popups": "unsupported",
-        "redirects": "unsupported",
-        "draft-from-template": "unsupported",
-        "batch-content-patch": "unsupported",
-        "receipts-and-governance": "unsupported"
+        "element-and-page-reads": "implemented",
+        "structure-clone-remove-move-tag-repeater": "implemented",
+        "media-library-search-usage-meta-replace-delete": "implemented",
+        "seo-noindex-canonical": "implemented",
+        "scheduled-status-and-popups": "implemented",
+        "redirects": "implemented",
+        "draft-from-template": "implemented",
+        "batch-content-patch": "implemented",
+        "receipts-and-governance": "implemented"
       },
       "source": "Alpha MCP 0.3.2 generated tool contract",
       "notes": "Production operator mode without an APEX token is decision_needed. Use an APEX ticket and lease until decided."
@@ -146,16 +146,7 @@
         "booking-link": "source_only",
         "application-routing": "source_only",
         "program-name": "unsupported",
-        "event-data": "source_only",
-        "element-and-page-reads": "unsupported",
-        "structure-clone-remove-move-tag-repeater": "unsupported",
-        "media-library-search-usage-meta-replace-delete": "unsupported",
-        "seo-noindex-canonical": "unsupported",
-        "scheduled-status-and-popups": "unsupported",
-        "redirects": "unsupported",
-        "draft-from-template": "unsupported",
-        "batch-content-patch": "unsupported",
-        "receipts-and-governance": "unsupported"
+        "event-data": "source_only"
       },
       "source": "Yash Chitneni statement recorded 2026-09-17 and existing APEX Program editor",
       "notes": "Website operators may update approved website-driven Program values. Program names at the top remain off limits."
@@ -171,16 +162,7 @@
         "manual-run": "source_only",
         "mapping-change": "source_only",
         "disable-recover": "source_only",
-        "export-version": "source_only",
-        "element-and-page-reads": "unsupported",
-        "structure-clone-remove-move-tag-repeater": "unsupported",
-        "media-library-search-usage-meta-replace-delete": "unsupported",
-        "seo-noindex-canonical": "unsupported",
-        "scheduled-status-and-popups": "unsupported",
-        "redirects": "unsupported",
-        "draft-from-template": "unsupported",
-        "batch-content-patch": "unsupported",
-        "receipts-and-governance": "unsupported"
+        "export-version": "source_only"
       },
       "source": "registry/people.json and playbook/site/content-pipelines.md",
       "notes": "Website operators diagnose and route workflow failures. They do not change n8n logic unless they are the named owner."
@@ -196,16 +178,7 @@
         "compare-source": "integrated",
         "file-ticket": "integrated",
         "close-ticket": "decision_needed",
-        "mutate": "unsupported",
-        "element-and-page-reads": "unsupported",
-        "structure-clone-remove-move-tag-repeater": "unsupported",
-        "media-library-search-usage-meta-replace-delete": "unsupported",
-        "seo-noindex-canonical": "unsupported",
-        "scheduled-status-and-popups": "unsupported",
-        "redirects": "unsupported",
-        "draft-from-template": "unsupported",
-        "batch-content-patch": "unsupported",
-        "receipts-and-governance": "unsupported"
+        "mutate": "unsupported"
       },
       "source": "registry/observer-checks.json and spec/observer-check-map.json",
       "notes": "Observer success is independent evidence. It does not authorize a write."
