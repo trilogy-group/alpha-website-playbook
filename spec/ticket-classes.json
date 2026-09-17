@@ -50,11 +50,11 @@
       ],
       "recipe": null,
       "scope": "event-owner",
-      "note": "Events reach the site from HubSpot Marketing Events through the plugin sync; APEX is where events are created. Route to the HubSpot owner (public flag, program interest) or the events plugin owner (filter, sync); never add an event in WordPress.",
+      "note": "Events reach the site from HubSpot Marketing Events through the WordPress plugin. A request about events on a campus page is triaged by the website operators: campus missing from the events drop-down, wrong time zone display, or a campus strip not showing events is plugin configuration (events-plugin-owner, Garbhit Sharma); an event missing because it is not public or has the wrong program interest is the HubSpot owner, asked per event, never by reassigning the ticket. Hailey McSpadden, 2026-09-17: event tickets are not hers by default.",
       "observerChecks": [],
       "routingLabel": "events_public_sync",
-      "doneWhen": "the event appears (or disappears) on /upcoming-events/ and the campus strip after the next 30-minute sync",
-      "assignTo": "hubspot-owner"
+      "doneWhen": "the requested events show on the campus strip and /upcoming-events/ after the next 30-minute sync, verified by the website agent",
+      "assignTo": "website-agent-operator"
     },
     "map-community-request": {
       "match": {

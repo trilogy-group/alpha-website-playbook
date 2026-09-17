@@ -8,23 +8,19 @@
 import fs from 'node:fs'
 
 export function renderBody(c) {
+  const known = (v) => v !== null && v !== undefined && v !== '' && v !== 'unknown' && v !== 'see request'
   const lines = [
-    c.claim,
-    `Page: ${c.page}`,
-    `Element: ${c.element}${c.cssId ? ` (CSS ID ${c.cssId})` : ''}${c.writer ? `; writer ${c.writer}` : ''}`,
-    `Campus state: ${c.state || 'unknown'}${c.stateSource ? ` (${c.stateSource})` : ''}`,
-    `Page shows${c.pageModified ? ` (modified ${c.pageModified})` : ''}: "${c.observed}"`,
-    `Source: ${c.source}`,
-    `Expected: "${c.expected}"${c.rule ? ` (${c.rule})` : ''}`,
-    c.derivation ? `Derivation today: ${c.derivation}` : null,
-    `Defect class: ${c.defectClass}. ${c.reason || ''}`.trim(),
-    `Class: ${c.class}`,
-    `Owner: ${c.ownerRole}${c.ownerName ? ` (${c.ownerName})` : ''}`,
-    `Fix path: ${c.fixPath}`,
+    `${c.ownerName || c.ownerRole || 'Owner'}: ${c.fixPath}`,
+    '',
+    `What was asked: ${c.observed}`,
+    known(c.page) ? `Page: ${c.page}` : null,
+    known(c.expected) && c.expected !== 'per the class recipe' ? `What the playbook expects: ${c.expected}` : null,
+    c.source && !/^request as filed/.test(c.source) ? `Source checked: ${c.source}` : null,
+    `Why it is routed here: ${c.reason || ''}`.trim(),
     `Done when: ${c.doneWhen}`,
-    `Evidence: ${c.evidence}`,
     c.related?.length ? `Related: ${c.related.join(', ')}` : null,
-    `Playbook: ${c.playbook || 'trilogy-group/alpha-website-playbook protocols/apex-website-ticket-protocol.md'}`,
+    '',
+    `Class ${c.class}${c.defectClass && c.defectClass !== 'presentation' ? ` (${c.defectClass})` : ''}; element ${c.element || 'n/a'}${c.cssId ? ` (${c.cssId})` : ''}; ${c.evidence}; ${c.playbook || 'alpha-website-playbook'}`,
     '',
     'History:',
     ...(c.history || []).map((h) => `- ${h}`),

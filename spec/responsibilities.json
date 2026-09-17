@@ -868,7 +868,7 @@
     "event-request": {
       "supplies": "requester (event id or registration link)",
       "approves": "events",
-      "executes": "hubspot-owner sets public flag and program interest; events-plugin-owner for filter and sync; website-agent-operator verifies the strip"
+      "executes": "website-agent-operator triages; events-plugin-owner for filter, sync, and display; hubspot-owner asked per event only for the public flag or program interest"
     },
     "map-community-request": {
       "supplies": "requester",
@@ -908,7 +908,8 @@
     "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner",
     "packet-owner: Matt Barge took info packets on 2026-08-27 pending Canva team setup and the current 2026-27 template from Yash; Chris Davidson holds the collateral tickets. Confirm the split (packet document vs flyers) and record it.",
     "Twenty Open campus pages show a visible 2026/27 INFO PACKET button while no 2026-27 packet is approved (Matt Barge, 2026-09-16). Decision: hide until approval, or accept as interim.",
-    "Four campus calendars are Google Drive links returning 401 logged out (Boston Suburbs, Oklahoma City, South Bay LA, Tulsa); owner calendars (Zara Raheem) or the campus."
+    "Four campus calendars are Google Drive links returning 401 logged out (Boston Suburbs, Oklahoma City, South Bay LA, Tulsa); owner calendars (Zara Raheem) or the campus.",
+    "Hailey McSpadden (2026-09-17): APEX notifications and edits must stay tied to web tasks; event tickets are not hers by default. Event triage sits with the website operators; per-event HubSpot asks go to her as a comment, not a reassignment."
   ],
   "registryByTicketClass": {
     "$comment": "What an agent must have on hand, and where it comes from, before it can validate, route, or execute a ticket of each class. live = resolve at run time; registry = read the committed file; source = read the system of record.",
