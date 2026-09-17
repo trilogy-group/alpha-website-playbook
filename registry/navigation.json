@@ -1,10 +1,538 @@
 {
-  "$comment": "Navigation inventory shell. Populate from WordPress menus and theme-template conditions before global navigation work.",
+  "$comment": "Navigation inventory observed from the live homepage on 2026-09-17 (spec/inventory/navigation-2026-09-17.json). Menu IDs are WordPress menu item ids. Owner (Elementor owner) is not named; conditional visibility and WordPress menu location names still require an admin export.",
   "version": "1.0",
   "asOf": "2026-09-17",
   "headerTemplateId": 76,
   "footerTemplateId": 77,
-  "menus": [],
+  "menus": [
+    {
+      "id": "header-primary",
+      "location": "Elementor header template 76, nav widget",
+      "menuUlId": "menu-1-16c1b6e",
+      "variants": "desktop and mobile identical (observed)",
+      "items": [
+        {
+          "label": "The Program",
+          "href": "https://alpha.school/the-program/",
+          "menuItemId": "3778",
+          "children": [
+            {
+              "label": "Love School",
+              "href": "https://alpha.school/the-program/#love",
+              "menuItemId": "3780"
+            },
+            {
+              "label": "Learn 2x in 2hrs",
+              "href": "https://alpha.school/the-program/#learn",
+              "menuItemId": "3781"
+            },
+            {
+              "label": "Learn Life Skills",
+              "href": "https://alpha.school/the-program/#lifeskills",
+              "menuItemId": "3782"
+            },
+            {
+              "label": "Alpha in Action",
+              "href": "https://alpha.school/video-library/",
+              "menuItemId": "3783"
+            },
+            {
+              "label": "Life Skills Workshops",
+              "href": "https://alpha.school/lifeskills-workshops",
+              "menuItemId": "6529"
+            },
+            {
+              "label": "Alpha High School (Grades 9\u201312)",
+              "href": "https://alphahigh.school/",
+              "menuItemId": "9830"
+            }
+          ]
+        },
+        {
+          "label": "Admission",
+          "href": "https://alpha.school/admission/",
+          "menuItemId": "3965"
+        },
+        {
+          "label": "Locations",
+          "href": "https://alpha.school/locations/",
+          "menuItemId": "6708",
+          "children": [
+            {
+              "label": "See Alpha on the Map",
+              "href": "https://alpha.school/locations/",
+              "menuItemId": "7873"
+            },
+            {
+              "label": "Arizona",
+              "href": "#",
+              "menuItemId": "3961",
+              "children": [
+                {
+                  "label": "Scottsdale",
+                  "href": "/scottsdale/",
+                  "menuItemId": "6555"
+                }
+              ]
+            },
+            {
+              "label": "California",
+              "href": "#",
+              "menuItemId": "6607",
+              "children": [
+                {
+                  "label": "San Francisco",
+                  "href": "/san-francisco/",
+                  "menuItemId": "6558"
+                },
+                {
+                  "label": "Santa Barbara",
+                  "href": "/santa-barbara/",
+                  "menuItemId": "6557"
+                },
+                {
+                  "label": "Orange County",
+                  "href": "/orange-county/",
+                  "menuItemId": "6556"
+                },
+                {
+                  "label": "East Bay",
+                  "href": "https://alpha.school/east-bay/",
+                  "menuItemId": "8552"
+                },
+                {
+                  "label": "San Diego",
+                  "href": "#",
+                  "menuItemId": "9900",
+                  "children": [
+                    {
+                      "label": "La Jolla",
+                      "href": "https://alpha.school/la-jolla/",
+                      "menuItemId": "9252"
+                    }
+                  ]
+                },
+                {
+                  "label": "Malibu",
+                  "href": "https://alpha.school/malibu/",
+                  "menuItemId": "9259"
+                },
+                {
+                  "label": "Palo Alto",
+                  "href": "https://alpha.school/palo-alto/",
+                  "menuItemId": "8470"
+                },
+                {
+                  "label": "Santa Monica",
+                  "href": "https://alpha.school/santa-monica/",
+                  "menuItemId": "8469"
+                },
+                {
+                  "label": "South Bay",
+                  "href": "https://alpha.school/south-bay-la/",
+                  "menuItemId": "9267"
+                }
+              ]
+            },
+            {
+              "label": "Colorado",
+              "href": "#",
+              "menuItemId": "9290",
+              "children": [
+                {
+                  "label": "Denver",
+                  "href": "https://alpha.school/denver/",
+                  "menuItemId": "9291"
+                }
+              ]
+            },
+            {
+              "label": "Connecticut",
+              "href": "#",
+              "menuItemId": "9261",
+              "children": [
+                {
+                  "label": "Greenwich",
+                  "href": "https://alpha.school/greenwich/",
+                  "menuItemId": "9260"
+                }
+              ]
+            },
+            {
+              "label": "Florida",
+              "href": "#",
+              "menuItemId": "4399",
+              "children": [
+                {
+                  "label": "Miami",
+                  "href": "/miami/",
+                  "menuItemId": "6517"
+                },
+                {
+                  "label": "Palm Beach",
+                  "href": "/palm-beach/",
+                  "menuItemId": "6559"
+                },
+                {
+                  "label": "Boca Raton",
+                  "href": "https://alpha.school/boca-raton/",
+                  "menuItemId": "9264"
+                },
+                {
+                  "label": "Miami Beach",
+                  "href": "https://alpha.school/miami-beach/",
+                  "menuItemId": "9253"
+                }
+              ]
+            },
+            {
+              "label": "Georgia",
+              "href": "#",
+              "menuItemId": "8631",
+              "children": [
+                {
+                  "label": "Atlanta",
+                  "href": "https://alpha.school/atlanta/",
+                  "menuItemId": "8632"
+                }
+              ]
+            },
+            {
+              "label": "Illinois",
+              "href": "#",
+              "menuItemId": "8472",
+              "children": [
+                {
+                  "label": "Chicago",
+                  "href": "https://alpha.school/chicago/",
+                  "menuItemId": "8471"
+                }
+              ]
+            },
+            {
+              "label": "Massachusetts",
+              "href": "#",
+              "menuItemId": "9262",
+              "children": [
+                {
+                  "label": "Boston",
+                  "href": "https://alpha.school/boston/",
+                  "menuItemId": "9263"
+                },
+                {
+                  "label": "Boston Suburbs",
+                  "href": "https://alpha.school/boston-suburbs/",
+                  "menuItemId": "9276"
+                },
+                {
+                  "label": "Jamaica Plain",
+                  "href": "https://alpha.school/jamaica-plain/",
+                  "menuItemId": "9288"
+                }
+              ]
+            },
+            {
+              "label": "Maryland",
+              "href": "#",
+              "menuItemId": "9682",
+              "children": [
+                {
+                  "label": "Bethesda",
+                  "href": "https://alpha.school/bethesda/",
+                  "menuItemId": "9686"
+                }
+              ]
+            },
+            {
+              "label": "New York",
+              "href": "#",
+              "menuItemId": "4266",
+              "children": [
+                {
+                  "label": "New York City",
+                  "href": "/new-york-city/",
+                  "menuItemId": "6560"
+                }
+              ]
+            },
+            {
+              "label": "North Carolina",
+              "href": "#",
+              "menuItemId": "5702",
+              "children": [
+                {
+                  "label": "Charlotte",
+                  "href": "/charlotte/",
+                  "menuItemId": "6561"
+                },
+                {
+                  "label": "Raleigh",
+                  "href": "/raleigh/",
+                  "menuItemId": "6562"
+                }
+              ]
+            },
+            {
+              "label": "Oklahoma",
+              "href": "#",
+              "menuItemId": "9257",
+              "children": [
+                {
+                  "label": "Oklahoma City",
+                  "href": "https://alpha.school/oklahoma-city/",
+                  "menuItemId": "9268"
+                },
+                {
+                  "label": "Tulsa",
+                  "href": "https://alpha.school/tulsa/",
+                  "menuItemId": "9258"
+                }
+              ]
+            },
+            {
+              "label": "Puerto Rico",
+              "href": "#",
+              "menuItemId": "5858",
+              "children": [
+                {
+                  "label": "Dorado",
+                  "href": "/dorado/",
+                  "menuItemId": "6566"
+                },
+                {
+                  "label": "San Juan",
+                  "href": "https://alpha.school/san-juan/",
+                  "menuItemId": "9685"
+                }
+              ]
+            },
+            {
+              "label": "Tennessee",
+              "href": "#",
+              "menuItemId": "9250",
+              "children": [
+                {
+                  "label": "Nashville",
+                  "href": "https://alpha.school/nashville/",
+                  "menuItemId": "9251"
+                },
+                {
+                  "label": "Franklin",
+                  "href": "https://alpha.school/franklin/",
+                  "menuItemId": "9684"
+                }
+              ]
+            },
+            {
+              "label": "Texas",
+              "href": "#",
+              "menuItemId": "3960",
+              "children": [
+                {
+                  "label": "Austin",
+                  "href": "/austin/",
+                  "menuItemId": "6518"
+                },
+                {
+                  "label": "Alpha High Austin",
+                  "href": "https://alphahigh.school/",
+                  "menuItemId": "3263"
+                },
+                {
+                  "label": "Brownsville",
+                  "href": "/brownsville/",
+                  "menuItemId": "6523"
+                },
+                {
+                  "label": "Dallas",
+                  "href": "#",
+                  "menuItemId": "5713",
+                  "children": [
+                    {
+                      "label": "Highland Park",
+                      "href": "https://alpha.school/highland-park/",
+                      "menuItemId": "9249"
+                    },
+                    {
+                      "label": "Plano",
+                      "href": "/plano/",
+                      "menuItemId": "6553"
+                    }
+                  ]
+                },
+                {
+                  "label": "Fort Worth",
+                  "href": "/fort-worth/",
+                  "menuItemId": "6554"
+                },
+                {
+                  "label": "Carrollton",
+                  "href": "https://alpha.school/carrollton/",
+                  "menuItemId": "9289"
+                },
+                {
+                  "label": "Houston",
+                  "href": "#",
+                  "menuItemId": "7669",
+                  "children": [
+                    {
+                      "label": "Houston Heights",
+                      "href": "https://alpha.school/houston/",
+                      "menuItemId": "9680"
+                    },
+                    {
+                      "label": "The Woodlands",
+                      "href": "/the-woodlands/",
+                      "menuItemId": "6564"
+                    }
+                  ]
+                },
+                {
+                  "label": "Southlake",
+                  "href": "https://alpha.school/southlake/",
+                  "menuItemId": "8633"
+                },
+                {
+                  "label": "Lake Travis",
+                  "href": "https://alpha.school/lake-travis/",
+                  "menuItemId": "9411"
+                }
+              ]
+            },
+            {
+              "label": "Utah",
+              "href": "#",
+              "menuItemId": "9266",
+              "children": [
+                {
+                  "label": "Park City",
+                  "href": "https://alpha.school/park-city/",
+                  "menuItemId": "9265"
+                }
+              ]
+            },
+            {
+              "label": "Virginia",
+              "href": "#",
+              "menuItemId": "5703",
+              "children": [
+                {
+                  "label": "DC",
+                  "href": "#",
+                  "menuItemId": "5716",
+                  "children": [
+                    {
+                      "label": "Chantilly",
+                      "href": "/chantilly/",
+                      "menuItemId": "6563"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Washington",
+              "href": "#",
+              "menuItemId": "9255",
+              "children": [
+                {
+                  "label": "Kirkland",
+                  "href": "https://alpha.school/kirkland/",
+                  "menuItemId": "9256"
+                }
+              ]
+            },
+            {
+              "label": "Alpha Anywhere",
+              "href": "https://alphaanywhere.co/",
+              "menuItemId": "6126"
+            }
+          ]
+        },
+        {
+          "label": "Events",
+          "href": "https://alpha.school/upcoming-events/",
+          "menuItemId": "5089"
+        },
+        {
+          "label": "Resources",
+          "href": "#",
+          "menuItemId": "8609",
+          "children": [
+            {
+              "label": "Blog",
+              "href": "https://alpha.school/blog/",
+              "menuItemId": "8700"
+            },
+            {
+              "label": "In the Media",
+              "href": "https://alpha.school/news/",
+              "menuItemId": "9552"
+            },
+            {
+              "label": "Alpha Answers",
+              "href": "/resources/",
+              "menuItemId": "9520"
+            },
+            {
+              "label": "Video Library",
+              "href": "https://alpha.school/video-library/",
+              "menuItemId": "3561"
+            },
+            {
+              "label": "FAQ",
+              "href": "https://alpha.school/faq/",
+              "menuItemId": "3307"
+            },
+            {
+              "label": "Careers",
+              "href": "https://alpha.school/careers/",
+              "menuItemId": "3301"
+            }
+          ]
+        },
+        {
+          "label": "Specialty Schools",
+          "href": "#",
+          "menuItemId": "4532",
+          "children": [
+            {
+              "label": "GT School",
+              "href": "https://gt.school",
+              "menuItemId": "7396"
+            },
+            {
+              "label": "Montessorium",
+              "href": "https://montessorium.school",
+              "menuItemId": "7391"
+            },
+            {
+              "label": "NextGen Academy",
+              "href": "https://nextgenacademy.school",
+              "menuItemId": "7693"
+            },
+            {
+              "label": "Nova Academy",
+              "href": "https://novaacademy.school/",
+              "menuItemId": "7389"
+            },
+            {
+              "label": "Texas Sports Academy",
+              "href": "https://sportsacademy.school",
+              "menuItemId": "7388"
+            },
+            {
+              "label": "Waypoint Academy",
+              "href": "https://waypointacademy.school/",
+              "menuItemId": "7390"
+            }
+          ]
+        }
+      ],
+      "observed": "2026-09-17",
+      "source": "spec/inventory/navigation-2026-09-17.json"
+    }
+  ],
   "knownControls": [
     "Alpha logo",
     "primary navigation",
@@ -15,12 +543,144 @@
     "Learn 2x in 2hrs"
   ],
   "requiredInventory": [
-    "WordPress menu IDs and locations",
-    "labels and exact destinations",
-    "desktop and mobile variants",
+    "WordPress menu location names and menu IDs (admin export)",
     "conditional visibility",
     "owner",
     "last verified date"
   ],
-  "status": "inventory_incomplete"
+  "status": "inventory_observed_owner_gap",
+  "headerCta": {
+    "text": "Contact Us",
+    "href": "https://alpha.school/learn-more/",
+    "observed": "2026-09-17"
+  },
+  "footer": {
+    "templateId": 77,
+    "variantTemplateIds": [
+      4107
+    ],
+    "groups": [
+      {
+        "heading": null,
+        "links": [
+          {
+            "label": "[icon/image link]",
+            "href": "https://home.cognia.org/p/registry"
+          }
+        ]
+      },
+      {
+        "heading": "About",
+        "links": [
+          {
+            "label": "Love School",
+            "href": "https://alpha.school/the-program/#love"
+          },
+          {
+            "label": "Learn 2x in 2hrs",
+            "href": "https://alpha.school/the-program/#learn"
+          },
+          {
+            "label": "Learn Life Skills",
+            "href": "https://alpha.school/the-program/#lifeskills"
+          },
+          {
+            "label": "Life Skills Workshops",
+            "href": "/lifeskills-workshops"
+          }
+        ]
+      },
+      {
+        "heading": "Resources",
+        "links": [
+          {
+            "label": "Alpha in Action",
+            "href": "https://alpha.school/video-library/"
+          },
+          {
+            "label": "Alpha Anywhere",
+            "href": "https://alphaanywhere.co/"
+          },
+          {
+            "label": "Locations",
+            "href": "https://alpha.school/locations/"
+          },
+          {
+            "label": "Bring Alpha to My City",
+            "href": "https://alpha.school/bring-alpha-to-your-city/"
+          },
+          {
+            "label": "FAQs",
+            "href": "https://alpha.school/faq/"
+          }
+        ]
+      },
+      {
+        "heading": "Insights",
+        "links": [
+          {
+            "label": "Blog",
+            "href": "https://alpha.school/blog/"
+          },
+          {
+            "label": "In the Media",
+            "href": "https://alpha.school/news/"
+          },
+          {
+            "label": "Other Articles",
+            "href": "/blog/"
+          }
+        ]
+      },
+      {
+        "heading": "Other Schools",
+        "links": [
+          {
+            "label": "Future of Education",
+            "href": "https://linktr.ee/Futureof_Education"
+          },
+          {
+            "label": "GT School",
+            "href": "https://gt.school/"
+          },
+          {
+            "label": "Texas Sports Academy",
+            "href": "https://sportsacademy.school/"
+          },
+          {
+            "label": "NextGen Academy",
+            "href": "https://nextgenacademy.school/"
+          },
+          {
+            "label": "Nova Academy",
+            "href": "https://novaacademy.school/"
+          }
+        ]
+      },
+      {
+        "heading": null,
+        "links": [
+          {
+            "label": "Privacy Policy",
+            "href": "https://alpha.school/privacy-policy/"
+          },
+          {
+            "label": "Terms of Use",
+            "href": "https://alpha.school/terms-of-use/"
+          },
+          {
+            "label": "Editorial Policy",
+            "href": "https://alpha.school/editorial-policy/"
+          }
+        ]
+      },
+      {
+        "heading": "Copyright 2026 \u00a9 All Right Reserved Alpha School",
+        "links": []
+      }
+    ],
+    "observed": "2026-09-17"
+  },
+  "popupTemplateId": 3713,
+  "kitId": 8
 }

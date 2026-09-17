@@ -1,0 +1,988 @@
+{
+  "generated": "2026-09-17",
+  "method": "curl HEAD per hop (GET fallback on 405), browser UA, 20s timeout, manual Location following up to 10 hops",
+  "checks": [
+    {
+      "requested": "/lake-forest/",
+      "start_url": "https://alpha.school/lake-forest/",
+      "hops": [
+        {
+          "url": "https://alpha.school/lake-forest/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/orange-county/",
+          "x-redirect-by": "Yoast SEO Premium",
+          "cf-cache-status": "MISS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/orange-county/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/orange-county.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/6551>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=6551>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/orange-county/",
+      "final_status": 200,
+      "redirect_by": [
+        "Yoast SEO Premium"
+      ]
+    },
+    {
+      "requested": "/apply/",
+      "start_url": "https://alpha.school/apply/",
+      "hops": [
+        {
+          "url": "https://alpha.school/apply/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "/apply-austin/",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/apply-austin/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "/application/?submission_campus=austin_k8",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/application/?submission_campus=austin_k8",
+          "status": 301,
+          "method": "HEAD",
+          "location": "/application-fs/?submission_campus=austin_k8",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/application-fs/?submission_campus=austin_k8",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/application-fs.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/8352>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=8352>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 3,
+      "final_url": "https://alpha.school/application-fs/?submission_campus=austin_k8",
+      "final_status": 200,
+      "redirect_by": [
+        "redirection",
+        "redirection",
+        "redirection"
+      ]
+    },
+    {
+      "requested": "/alpha-answers/",
+      "start_url": "https://alpha.school/alpha-answers/",
+      "hops": [
+        {
+          "url": "https://alpha.school/alpha-answers/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/alpha-answers/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/locations",
+      "start_url": "https://alpha.school/locations",
+      "hops": [
+        {
+          "url": "https://alpha.school/locations",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/locations/",
+          "x-redirect-by": "WordPress",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/locations.md>; rel=\"alternate\"; type=\"text/markdown\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/locations/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/locations.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/6703>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=6703>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/locations/",
+      "final_status": 200,
+      "redirect_by": [
+        "WordPress"
+      ]
+    },
+    {
+      "requested": "/admissions/",
+      "start_url": "https://alpha.school/admissions/",
+      "hops": [
+        {
+          "url": "https://alpha.school/admissions/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "/admission/",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "HIT",
+          "x-cache": "HIT: 1",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/admission/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/admission.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/3789>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=3789>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/admission/",
+      "final_status": 200,
+      "redirect_by": [
+        "redirection"
+      ]
+    },
+    {
+      "requested": "/events/",
+      "start_url": "https://alpha.school/events/",
+      "hops": [
+        {
+          "url": "https://alpha.school/events/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/upcoming-events/",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "MISS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/upcoming-events/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/upcoming-events.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/3414>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=3414>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/upcoming-events/",
+      "final_status": 200,
+      "redirect_by": [
+        "redirection"
+      ]
+    },
+    {
+      "requested": "/contact/",
+      "start_url": "https://alpha.school/contact/",
+      "hops": [
+        {
+          "url": "https://alpha.school/contact/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/contact/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/tuition/",
+      "start_url": "https://alpha.school/tuition/",
+      "hops": [
+        {
+          "url": "https://alpha.school/tuition/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/tuition/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/about/",
+      "start_url": "https://alpha.school/about/",
+      "hops": [
+        {
+          "url": "https://alpha.school/about/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "/the-program",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "MISS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/the-program",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/the-program/",
+          "x-redirect-by": "WordPress",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/the-program.md>; rel=\"alternate\"; type=\"text/markdown\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "EXPIRED",
+          "x-cache": "HIT: 1",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/the-program/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/the-program.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/3719>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=3719>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 2,
+      "final_url": "https://alpha.school/the-program/",
+      "final_status": 200,
+      "redirect_by": [
+        "redirection",
+        "WordPress"
+      ]
+    },
+    {
+      "requested": "/campuses/",
+      "start_url": "https://alpha.school/campuses/",
+      "hops": [
+        {
+          "url": "https://alpha.school/campuses/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/campuses/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/austin-founders/",
+      "start_url": "https://alpha.school/austin-founders/",
+      "hops": [
+        {
+          "url": "https://alpha.school/austin-founders/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/austin-founders/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/new-york/",
+      "start_url": "https://alpha.school/new-york/",
+      "hops": [
+        {
+          "url": "https://alpha.school/new-york/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "/new-york-city/",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "MISS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/new-york-city/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/new-york-city.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/6542>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=6542>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/new-york-city/",
+      "final_status": 200,
+      "redirect_by": [
+        "redirection"
+      ]
+    },
+    {
+      "requested": "/nyc/",
+      "start_url": "https://alpha.school/nyc/",
+      "hops": [
+        {
+          "url": "https://alpha.school/nyc/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/nyc/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/los-angeles/",
+      "start_url": "https://alpha.school/los-angeles/",
+      "hops": [
+        {
+          "url": "https://alpha.school/los-angeles/",
+          "status": 404,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "BYPASS",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/los-angeles/",
+      "final_status": 404,
+      "redirect_by": []
+    },
+    {
+      "requested": "/houston/",
+      "start_url": "https://alpha.school/houston/",
+      "hops": [
+        {
+          "url": "https://alpha.school/houston/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/houston.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/9625>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=9625>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/houston/",
+      "final_status": 200,
+      "redirect_by": []
+    },
+    {
+      "requested": "/boston/",
+      "start_url": "https://alpha.school/boston/",
+      "hops": [
+        {
+          "url": "https://alpha.school/boston/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/boston.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/9271>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=9271>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/boston/",
+      "final_status": 200,
+      "redirect_by": []
+    },
+    {
+      "requested": "http://alpha.school/",
+      "start_url": "http://alpha.school/",
+      "hops": [
+        {
+          "url": "http://alpha.school/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/",
+          "cf-cache-status": "BYPASS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/?format=markdown>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/3657>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/",
+      "final_status": 200,
+      "redirect_by": []
+    },
+    {
+      "requested": "https://www.alpha.school/",
+      "start_url": "https://www.alpha.school/",
+      "hops": [
+        {
+          "url": "https://www.alpha.school/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/",
+          "cf-cache-status": "BYPASS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/?format=markdown>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/3657>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/",
+      "final_status": 200,
+      "redirect_by": []
+    },
+    {
+      "requested": "/application-fs/",
+      "start_url": "https://alpha.school/application-fs/",
+      "hops": [
+        {
+          "url": "https://alpha.school/application-fs/",
+          "status": 301,
+          "method": "HEAD",
+          "location": "https://alpha.school/admission-forms/",
+          "x-redirect-by": "redirection",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        },
+        {
+          "url": "https://alpha.school/admission-forms/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/admission-forms.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+            "<https://alpha.school/wp-json/wp/v2/pages/3481>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+            "<https://alpha.school/?p=3481>; rel=shortlink"
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 1,
+      "final_url": "https://alpha.school/admission-forms/",
+      "final_status": 200,
+      "redirect_by": [
+        "redirection"
+      ]
+    },
+    {
+      "requested": "/resources/",
+      "start_url": "https://alpha.school/resources/",
+      "hops": [
+        {
+          "url": "https://alpha.school/resources/",
+          "status": 200,
+          "method": "HEAD",
+          "link": [
+            "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+            "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+          ],
+          "x-llms-txt": "/llms.txt",
+          "cf-cache-status": "HIT",
+          "x-cache": "MISS",
+          "server": "cloudflare"
+        }
+      ],
+      "hop_count": 0,
+      "final_url": "https://alpha.school/resources/",
+      "final_status": 200,
+      "redirect_by": []
+    }
+  ],
+  "headers_of_interest_seen": {
+    "x-redirect-by": {
+      "https://alpha.school/lake-forest/": [
+        "Yoast SEO Premium"
+      ],
+      "https://alpha.school/apply/": [
+        "redirection"
+      ],
+      "https://alpha.school/apply-austin/": [
+        "redirection"
+      ],
+      "https://alpha.school/application/?submission_campus=austin_k8": [
+        "redirection"
+      ],
+      "https://alpha.school/locations": [
+        "WordPress"
+      ],
+      "https://alpha.school/admissions/": [
+        "redirection"
+      ],
+      "https://alpha.school/events/": [
+        "redirection"
+      ],
+      "https://alpha.school/about/": [
+        "redirection"
+      ],
+      "https://alpha.school/the-program": [
+        "WordPress"
+      ],
+      "https://alpha.school/new-york/": [
+        "redirection"
+      ],
+      "https://alpha.school/application-fs/": [
+        "redirection"
+      ]
+    },
+    "link": {
+      "https://alpha.school/orange-county/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/orange-county.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/6551>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=6551>; rel=shortlink"
+      ],
+      "https://alpha.school/application-fs/?submission_campus=austin_k8": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/application-fs.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/8352>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=8352>; rel=shortlink"
+      ],
+      "https://alpha.school/alpha-answers/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/locations": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/locations.md>; rel=\"alternate\"; type=\"text/markdown\""
+      ],
+      "https://alpha.school/locations/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/locations.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/6703>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=6703>; rel=shortlink"
+      ],
+      "https://alpha.school/admission/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/admission.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/3789>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=3789>; rel=shortlink"
+      ],
+      "https://alpha.school/upcoming-events/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/upcoming-events.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/3414>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=3414>; rel=shortlink"
+      ],
+      "https://alpha.school/contact/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/tuition/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/the-program": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/the-program.md>; rel=\"alternate\"; type=\"text/markdown\""
+      ],
+      "https://alpha.school/the-program/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/the-program.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/3719>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=3719>; rel=shortlink"
+      ],
+      "https://alpha.school/campuses/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/austin-founders/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/new-york-city/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/new-york-city.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/6542>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=6542>; rel=shortlink"
+      ],
+      "https://alpha.school/nyc/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/los-angeles/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ],
+      "https://alpha.school/houston/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/houston.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/9625>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=9625>; rel=shortlink"
+      ],
+      "https://alpha.school/boston/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/boston.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/9271>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=9271>; rel=shortlink"
+      ],
+      "https://alpha.school/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/?format=markdown>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/3657>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/>; rel=shortlink"
+      ],
+      "https://alpha.school/admission-forms/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/admission-forms.md>; rel=\"alternate\"; type=\"text/markdown\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+        "<https://alpha.school/wp-json/wp/v2/pages/3481>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+        "<https://alpha.school/?p=3481>; rel=shortlink"
+      ],
+      "https://alpha.school/resources/": [
+        "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\""
+      ]
+    },
+    "x-llms-txt": {
+      "https://alpha.school/orange-county/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/application-fs/?submission_campus=austin_k8": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/alpha-answers/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/locations": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/locations/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/admission/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/upcoming-events/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/contact/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/tuition/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/the-program": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/the-program/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/campuses/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/austin-founders/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/new-york-city/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/nyc/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/los-angeles/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/houston/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/boston/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/admission-forms/": [
+        "/llms.txt"
+      ],
+      "https://alpha.school/resources/": [
+        "/llms.txt"
+      ]
+    },
+    "html_pages": {
+      "https://alpha.school/": {
+        "link": [
+          "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+          "<https://alpha.school/?format=markdown>; rel=\"alternate\"; type=\"text/markdown\"",
+          "<https://alpha.school/wp-json/>; rel=\"https://api.w.org/\"",
+          "<https://alpha.school/wp-json/wp/v2/pages/3657>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+          "<https://alpha.school/>; rel=shortlink"
+        ],
+        "x-llms-txt": "/llms.txt",
+        "cf-cache-status": "HIT",
+        "x-cacheable": "YES:3600.000"
+      },
+      "https://alpha.school/admission/": {
+        "link": [
+          "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+          "<https://alpha.school/admission.md>; rel=\"alternate\"; type=\"text/markdown\"",
+          "<https://alpha.school/wp-json/wp/v2/pages/3789>; rel=\"alternate\"; title=\"JSON\"; type=\"application/json\"",
+          "<https://alpha.school/?p=3789>; rel=shortlink"
+        ],
+        "x-llms-txt": "/llms.txt"
+      },
+      "https://alpha.school/llms.txt": {
+        "content-type": "text/plain; charset=utf-8",
+        "link": "</llms.txt>; rel=\"llms-txt\", </llms-full.txt>; rel=\"llms-full-txt\"",
+        "x-llms-txt": "/llms.txt",
+        "x-llms-cache-source": "file-fresh",
+        "x-llms-admin": "0",
+        "x-llms-bypass": "0",
+        "last-modified": "Thu, 17 Sep 2026 20:33:26 GMT",
+        "size_bytes": 26827,
+        "lines": 154
+      }
+    }
+  },
+  "llm_discovery_endpoints": [
+    {
+      "url": "https://alpha.school/llms.txt",
+      "status": 200,
+      "note": "Yoast-style llms.txt; lists menu + pages with descriptions; 'Last updated: 2026-09-17'; says append .md to any page URL for Markdown"
+    },
+    {
+      "url": "https://alpha.school/llms-full.txt",
+      "status": "timeout (000 after 20s)",
+      "note": "advertised in Link header; did not respond within 20s"
+    },
+    {
+      "url": "https://alpha.school/admission.md",
+      "status": 200,
+      "content_type": "text/markdown",
+      "size_bytes": 40549
+    },
+    {
+      "url": "https://alpha.school/the-program.md",
+      "status": 200,
+      "content_type": "text/markdown",
+      "size_bytes": 39820
+    },
+    {
+      "url": "https://alpha.school/austin.md",
+      "status": 200,
+      "content_type": "text/markdown",
+      "size_bytes": 57936
+    },
+    {
+      "url": "https://alpha.school/?format=markdown",
+      "status": 200,
+      "content_type": "text/markdown",
+      "size_bytes": 44416
+    },
+    {
+      "url": "https://alpha.school/robots.txt",
+      "status": 200,
+      "note": "User-agent: * / Disallow: (empty) / Sitemap: https://alpha.school/sitemap_index.xml"
+    }
+  ],
+  "extra_checks": [
+    {
+      "requested": "/programs-events",
+      "hops": [
+        {
+          "url": "https://alpha.school/programs-events",
+          "status": 301,
+          "location": "https://alpha.school/upcoming-events/"
+        }
+      ],
+      "note": "target of homepage/admission 'ATTEND AN EVENT' CTAs"
+    },
+    {
+      "requested": "/lifeskills-workshops",
+      "hops": [
+        {
+          "url": "https://alpha.school/lifeskills-workshops",
+          "status": 301,
+          "location": "https://alpha.school/lifeskills-workshops/"
+        }
+      ],
+      "note": "nav/footer link omits trailing slash -> extra 301"
+    },
+    {
+      "requested": "https://match.app.alpha.school/",
+      "status": 200
+    }
+  ],
+  "observations": [
+    "No x-redirect-by header was returned on any redirect hop (redirects are served at the edge/Cloudflare or by a plugin that strips it); WordPress core canonical redirects normally set x-redirect-by.",
+    "Dead paths (404): /alpha-answers/, /contact/, /tuition/, /campuses/, /austin-founders/, /nyc/, /los-angeles/.",
+    "/apply/ is a 3-hop chain: /apply/ -> /apply-austin/ -> /application/?submission_campus=austin_k8 -> /application-fs/?submission_campus=austin_k8 (200). Bare /application-fs/ 301s to /admission-forms/.",
+    "/lake-forest/ 301s to /orange-county/ but two local-SEO posts still live under /lake-forest/... in the post sitemap.",
+    "/about/ chains through /the-program (no slash) to /the-program/ (2 hops)."
+  ]
+}

@@ -3,7 +3,19 @@
   "version": "1.0",
   "asOf": "2026-09-17",
   "hubspotPortalId": "40051392",
-  "forms": [],
+  "forms": [
+    {
+      "page": "https://alpha.school/learn-more/",
+      "wordpressObjectId": 3635,
+      "hubspotFormId": "d95ac89a-10ad-43c4-a90f-460cd0fd3179",
+      "portalId": "40051392",
+      "purpose": "general inquiry (header Contact Us destination)",
+      "owner": null,
+      "submissionCampus": null,
+      "observed": "2026-09-17",
+      "status": "observed_owner_unknown"
+    }
+  ],
   "routingContract": {
     "campusField": "submission_campus",
     "campusValueSource": "approved HubSpot Program or form mapping",
@@ -23,5 +35,11 @@
     "contact and workflow side effects",
     "safe test identity and cleanup procedure"
   ],
-  "status": "inventory_incomplete"
+  "status": "inventory_incomplete_one_form_observed",
+  "observedApplicationRoutes": {
+    "k8Application": "/application/?submission_campus=<slug> (page 8352) and /application-fs/?submission_campus=<slug>; HubSpot form rendered client-side, formId not in HTML",
+    "highSchool": "/high-school-application/ (page 8429) and alphahigh.school/application/",
+    "genericApply": "/apply/ chains to austin_k8",
+    "note": "Campus H1 and admissions email are swapped by client-side script keyed on submission_campus; not crawlable"
+  }
 }
