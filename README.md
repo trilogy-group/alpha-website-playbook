@@ -18,6 +18,7 @@ Status: active and incomplete. See `docs/project-overview.md` for the original c
 10. `docs/alpha-website-playbook-strengthening-prd.md`: the approved work plan for closing known documentation gaps.
 11. `docs/maintenance-and-governance.md`: review cadence, freshness, capability promotion and validation.
 12. `docs/findings-2026-09-17-full-site-and-playbook-audit.md`: the read-only audit evidence and separate live-site findings.
+13. `docs/stress-test-2026-09-17-website-agent-system.md`: scored end-to-end stress test of the playbook, APEX ticket protocol, Alpha MCP, and scheduled hosted agent.
 
 ## Rules that never change
 
