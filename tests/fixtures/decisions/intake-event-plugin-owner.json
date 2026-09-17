@@ -1,0 +1,17 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "event-request",
+    "ownerRole": "events-plugin-owner",
+    "why": "a campus-strip display defect belongs to the event plugin owner, not Hailey by default"
+  },
+  "task": {
+    "id": "intake-event-plugin-owner",
+    "title": "Website (Other) — Alpha Tampa",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": ["Alpha Tampa"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": { "requestFamily": "website", "websiteRequestType": "events", "requestDetail": "The public event is in HubSpot but is not showing in the campus strip on the website." }
+  }
+}

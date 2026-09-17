@@ -1,0 +1,21 @@
+{
+  "expected": {
+    "outcome": "policy-denied",
+    "class": "link-cta",
+    "ownerRole": "website-operations",
+    "why": "campus staff can supply a destination but cannot add local page structure or functionality"
+  },
+  "task": {
+    "id": "intake-extra-campus-button-denied",
+    "title": "Website (Other) — Alpha Short Hills",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": ["Alpha Short Hills"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": {
+      "requestFamily": "website",
+      "websiteRequestType": "links",
+      "requestDetail": "Add an extra campus button below Book a Call that links to https://community.alpha.school/program/short-hills."
+    }
+  }
+}

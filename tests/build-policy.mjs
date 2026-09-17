@@ -4,7 +4,7 @@
  * spec/policy-bundle.generated.json. The intake agent, the release check, and any runner read the
  * bundle only, so a playbook change is a policy change and two harnesses cannot decide differently.
  *
- * Sources: spec/ticket-classes.json, spec/responsibilities.json, spec/source-authority.json,
+ * Sources: spec/ticket-classes.json, spec/intake-policy.json, spec/responsibilities.json, spec/source-authority.json,
  * spec/actor-capabilities.json, spec/campus-page-field-map.json, spec/synced-targets.json,
  * spec/adapters.json, spec/observer-check-map.json, registry/people.json (roles and APEX ids only,
  * no emails), registry/missing-info-routing.json.
@@ -22,6 +22,7 @@ const read = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'))
 const check = process.argv.includes('--check')
 
 const classesSpec = read('spec/ticket-classes.json')
+const intakeSpec = read('spec/intake-policy.json')
 const responsibilities = read('spec/responsibilities.json')
 const sourceAuthority = read('spec/source-authority.json')
 const actors = read('spec/actor-capabilities.json')
@@ -30,7 +31,17 @@ const synced = read('spec/synced-targets.json')
 const adapters = read('spec/adapters.json')
 const checkMap = read('spec/observer-check-map.json')
 const people = read('registry/people.json').people
+const campusPages = read('registry/campus-pages.json').campuses
+const campusOpenMedia = read('registry/campus-open-media.json').campuses
 const missingInfoRouting = fs.existsSync(path.join(root, 'registry/missing-info-routing.json')) ? read('registry/missing-info-routing.json') : {}
+
+const ticketClassIds = Object.keys(classesSpec.classes).filter((id) => !id.startsWith('$'))
+const intakeClassIds = Object.keys(intakeSpec.classes || {})
+const missingIntakeClasses = ticketClassIds.filter((id) => !intakeSpec.classes[id])
+const unknownIntakeClasses = intakeClassIds.filter((id) => !classesSpec.classes[id])
+if (missingIntakeClasses.length || unknownIntakeClasses.length) {
+  throw new Error(`intake policy class mismatch; missing=${missingIntakeClasses.join(',') || 'none'} unknown=${unknownIntakeClasses.join(',') || 'none'}`)
+}
 
 // Evidence profiles: what a closure must attach, by class scope. Rendered evidence is mandatory for any
 // closure that touches a public page (decision 2026-09-17).
@@ -82,6 +93,17 @@ const STEPS = {
 const classes = {}
 for (const [id, spec] of Object.entries(classesSpec.classes)) {
   if (id.startsWith('$')) continue
+  const intake = intakeSpec.classes[id]
+  const requiredByKind = { requester: [], derivable: [], system: [] }
+  const possibleRequired = [...new Set([
+    ...(spec.required || []),
+    ...(intake.conditionalRequired || []).flatMap((rule) => rule.fields || []),
+  ])]
+  for (const field of possibleRequired) {
+    const fieldPolicy = intakeSpec.fieldSources[field]
+    if (!fieldPolicy) throw new Error(`ticket class ${id} requires ${field}, but spec/intake-policy.json does not define its source`)
+    requiredByKind[fieldPolicy.kind].push(field)
+  }
   const routing = responsibilities.ticketRouting?.[id] || {}
   const registry = responsibilities.registryByTicketClass?.[id] || null
   const adapter = Object.entries(adapters.adapters || {}).find(([, a]) => (a.ticketClasses || []).includes(id))?.[0] || null
@@ -107,6 +129,17 @@ for (const [id, spec] of Object.entries(classesSpec.classes)) {
       ...(adapter ? [] : ['no adapter: typed owner handoff only']),
     ],
     retryPolicy: spec.scope === 'website' ? { transient: 'retry up to 3 with fresh hash', stale: 'reprepare', conflict: 'stop and reread', unsupported: 'route', unauthorized: 'stop' } : { any: 'route to owner' },
+    intake: {
+      policy: intake.policy,
+      ownerRole: intake.ownerRole,
+      queue: intake.queue,
+      requesterRequired: requiredByKind.requester,
+      derivable: requiredByKind.derivable,
+      systemRequired: requiredByKind.system,
+      guards: intake.guards || [],
+      ownerRules: intake.ownerRules || [],
+      conditionalRequired: intake.conditionalRequired || [],
+    },
     // Typed step graph per class (workstream 9): each step names its adapter, owner, wake condition, and evidence.
     steps: STEPS[spec.scope] ? STEPS[spec.scope](id, adapter) : [{ id: 'handoff', adapter: 'human-handoff', owner: routing.executes || 'owner', wake: 'owner reports completion', evidence: 'owner-handoff-record' }],
   }
@@ -126,21 +159,27 @@ const bundle = {
   generatedAt: new Date().toISOString(),
   playbookCommit: gitCommit(),
   sources: {
-    ticketClasses: classesSpec.version, responsibilities: responsibilities.version, sourceAuthority: sourceAuthority.version, actorCapabilities: actors.version,
+    ticketClasses: classesSpec.version, intakePolicy: intakeSpec.version, responsibilities: responsibilities.version, sourceAuthority: sourceAuthority.version, actorCapabilities: actors.version,
     fieldMap: fieldMap.version || null, syncedTargets: synced.version, adapters: adapters.version, people: read('registry/people.json').version || null,
   },
   classes,
+  fields: classesSpec.fields,
+  intakeFieldSources: intakeSpec.fieldSources,
+  siteScope: intakeSpec.siteScope,
+  duplicatePolicy: intakeSpec.duplicates,
   familyFilter: { requestFamily: 'website', titlePrefixes: ['Website'], sources: ['website-agent', 'agent-found', 'alpha-site-qc'], observerTitlePattern: '^Alpha [A-Z][A-Za-z .]+: ' },
   sourceAuthority: { precedence: sourceAuthority.precedence, fields: sourceAuthority.fields },
   actors: actors.actors,
   toolInventory: actors.alphaMcpToolInventory,
   fieldMap: fieldMap.elements,
+  campusPages,
+  campusOpenMedia,
   syncedCssIds: [...new Set([...Object.keys(synced.synced || {}), ...(synced.requiredIds || []), ...(synced.optionalIds || []), ...(synced.expectedOnCampusPages || [])].filter((id) => !id.includes('*')))].sort(),
   syncedOverrideSuffix: synced.overrideSuffix,
   adapters: adapters.adapters,
   observerCheckToElement: checkMap.checkToElement || {},
   roleOwners,
-  roleFallback: { 'elementor-owner': 'website-operations', 'wordpress-admin': 'website-operations', 'growth-map-owner': 'expansion-new-programs', 'operations-sheet-owner': 'expansion-new-programs', 'community-app-owner': 'expansion-new-programs', 'marketing-collateral': 'website-operations', 'sister-site-owner': 'website-operations' },
+  roleFallback: {},
   evidenceProfiles: EVIDENCE,
 }
 // Deterministic hash over everything except the timestamp and commit, so a rebuild without changes is a no-op.

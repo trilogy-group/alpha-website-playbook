@@ -1,9 +1,9 @@
 {
   "expected": {
-    "outcome": "ready-for-execution",
+    "outcome": "routed",
     "class": "link-cta",
     "ownerRole": "website-agent-operator",
-    "why": "Book a Call missing with the destination given"
+    "why": "Book a Call is complete but routes to a human operator because general CTA edits are outside the scheduled Alpha MCP allowlist"
   },
   "task": {
     "id": "cmu4g1x6x00000bgmc3hnjxly",

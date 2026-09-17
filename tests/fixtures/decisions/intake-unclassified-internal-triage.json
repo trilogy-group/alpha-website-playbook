@@ -1,0 +1,17 @@
+{
+  "expected": {
+    "outcome": "needs-rule",
+    "class": null,
+    "ownerRole": "internal-triage",
+    "why": "unknown requests fail into explicit internal triage instead of Matt or Yash"
+  },
+  "task": {
+    "id": "intake-unclassified-internal-triage",
+    "title": "Please help with this unusual thing",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": ["Alpha Austin"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": { "requestFamily": "website", "requestDetail": "Please review the unusual request." }
+  }
+}

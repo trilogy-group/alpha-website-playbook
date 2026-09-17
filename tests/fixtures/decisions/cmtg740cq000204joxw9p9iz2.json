@@ -1,9 +1,9 @@
 {
   "expected": {
-    "outcome": "ready-for-execution",
+    "outcome": "routed",
     "class": "program-info",
     "ownerRole": "website-agent-operator",
-    "why": "hero and address change (diagnosis then routes to HubSpot)"
+    "why": "hero and address change routes to the website operator for source-path diagnosis rather than unattended WordPress execution"
   },
   "task": {
     "id": "cmtg740cq000204joxw9p9iz2",

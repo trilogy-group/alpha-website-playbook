@@ -1,9 +1,9 @@
 {
   "expected": {
-    "outcome": "routed",
+    "outcome": "policy-review",
     "class": "platform-request",
-    "ownerRole": "elementor-owner",
-    "why": "Vercel launch site, not alpha.school; routed to the web platform owner (elementor-owner in responsibilities until web-platform is named)"
+    "ownerRole": "wordpress-admin",
+    "why": "Vercel or infrastructure work needs internal platform review; intake does not fall back to a website operator"
   },
   "task": {
     "id": "cmt228e8b000104jss8jq1m8d",

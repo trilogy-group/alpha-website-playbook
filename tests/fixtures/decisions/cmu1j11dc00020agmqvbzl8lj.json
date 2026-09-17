@@ -1,9 +1,9 @@
 {
   "expected": {
-    "outcome": "ready-for-execution",
+    "outcome": "policy-review",
     "class": "copy",
-    "ownerRole": "website-agent-operator",
-    "why": "FAQ copy with full text supplied"
+    "ownerRole": "website-operations",
+    "why": "new FAQ copy contains admissions and pricing claims and requires website/brand review"
   },
   "task": {
     "id": "cmu1j11dc00020agmqvbzl8lj",

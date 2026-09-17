@@ -1,0 +1,18 @@
+{
+  "expected": {
+    "outcome": "ready-for-execution",
+    "class": "staff-add",
+    "ownerRole": "website-agent-operator",
+    "why": "the selected campus resolves the canonical URL; the requester is not asked for it"
+  },
+  "task": {
+    "id": "intake-derivable-campus-url",
+    "title": "Website — Add team member — Avery Example — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": ["Alpha Austin"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": { "requestFamily": "website", "websiteRequestType": "add_team_member", "webTmName": "Avery Example", "webTmEmail": "avery.example@alpha.school", "webTmTitle": "Guide", "webTmBio": "Avery supports Alpha students and families.", "webTmHeadshotAssetId": "asset-avery" },
+    "assets": [{ "id": "asset-avery", "kind": "headshot", "status": "VERIFIED", "checksum": "fixture", "source": "REQUEST_FORM", "mimeType": "image/jpeg", "sizeBytes": 120000 }]
+  }
+}

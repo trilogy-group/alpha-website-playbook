@@ -2,7 +2,7 @@
   "expected": {
     "outcome": "missing-info",
     "class": "staff-update",
-    "ownerRole": "website-agent-operator",
+    "ownerRole": "requester",
     "why": "agent-found card without photo or bio"
   },
   "task": {

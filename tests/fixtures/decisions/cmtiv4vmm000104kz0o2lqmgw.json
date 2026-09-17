@@ -2,7 +2,7 @@
   "expected": {
     "outcome": "missing-info",
     "class": "staff-remove",
-    "ownerRole": "website-agent-operator",
+    "ownerRole": "requester",
     "why": "old-form remove request names \"Chelsea\" only; the contract needs the full name in a structured field"
   },
   "task": {

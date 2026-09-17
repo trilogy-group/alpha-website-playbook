@@ -54,12 +54,16 @@ Without a HubSpot token the emails come from the last snapshot. The hub page is 
 
 ## agent/intake.mjs (the intake agent)
 
-Runs on top of the APEX API. For every website-family ticket created or changed since `--since`, it validates against the contract, classifies, diagnoses the pathway when the element is known, sets class, defect class, and the single owner, renders the body, and with `--apply` writes it back. Missing inputs become Missing Info with the list addressed to the requester. It never edits a page. Scheduled by `.github/workflows/intake-agent.yml` every ten minutes, dry-run unless the repository variable `INTAKE_APPLY` is `true`; each run uploads its report as an artifact.
+Runs on top of the APEX API as an administrative gatekeeper, not a website executor. For every new or revised website-family ticket it reads the compiled policy, classifies the request, separates requester-owned inputs from derivable and system-owned inputs, applies the policy guard, and resolves one exact owner. Missing requester inputs become typed APEX clarification requirements assigned to the requester. Canonical page URLs and authoritative source values are never requested merely because they were absent from the prose brief. Requester revisions, verified assets, and human comments change the input fingerprint and trigger re-evaluation; intake-authored fields and comments do not.
+
+Complete tickets either enter the scheduled execution queue or route to a human/system owner. The execution queue is limited to the operations explicitly listed in `spec/release-manifest.json`; an Alpha MCP tool existing is not enough. Before an execution-ready ticket is released, intake runs `tests/check-release.mjs` and refuses that handoff unless the compiled policy, production plugin health, and release manifest agree. This gate does not block unrelated clarification or human routing. Ambiguous or unregistered owners, policy exceptions, unknown classes, and exact duplicate candidates fail closed for review. Intake preserves the original description and never edits WordPress, HubSpot, n8n, or another delivery system.
+
+Writes use a two-phase marker: `intakePendingHash` is stored before the typed APEX action, and `intakeHash` is finalized only after that action succeeds and the ticket input fingerprint is still current. A failed or concurrent action therefore retries instead of being skipped. Scheduled by `.github/workflows/intake-agent.yml` every ten minutes, dry-run unless the repository variable `INTAKE_APPLY` is `true`; each run scans a 24-hour revision window and uploads its report as an artifact.
 
 ```bash
 node agent/intake.mjs --file tickets.json --replay --report replay.json     # score a saved set, no writes
-node agent/intake.mjs --since 2026-09-16T00:00:00Z --report out.json         # dry-run against APEX
-node agent/intake.mjs --since 2026-09-16T00:00:00Z --apply                   # live
+node agent/intake.mjs --since 2026-09-17T00:00:00Z --report out.json         # read-only dry-run against APEX
+node agent/intake.mjs --since 2026-09-17T00:00:00Z --apply                   # administer APEX only
 ```
 
-Rollout: dry-run replay over the open queue, then one live batch of new tickets reviewed by Matt and Yash, then the schedule with `INTAKE_APPLY=true`.
+Rollout: keep `INTAKE_APPLY` false; replay the open queue read-only; review missing-info, owner, duplicate, and execution-eligibility deltas; then run one explicitly dispatched APEX-only canary batch reviewed by Matt and Yash. Enable scheduled apply only after the canaries and owner-registry gaps are accepted.

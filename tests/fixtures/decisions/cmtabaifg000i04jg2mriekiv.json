@@ -2,7 +2,7 @@
   "expected": {
     "outcome": "missing-info",
     "class": "staff-photo",
-    "ownerRole": "website-agent-operator",
+    "ownerRole": "requester",
     "why": "photo change with a Drive folder link and no APEX asset"
   },
   "task": {

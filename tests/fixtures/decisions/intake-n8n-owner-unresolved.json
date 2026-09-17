@@ -1,0 +1,19 @@
+{
+  "expected": {
+    "outcome": "owner-unresolved",
+    "class": "sync-delivery",
+    "ownerRole": "n8n-sync-owner",
+    "why": "two registered n8n owners exist and intake must not pick one arbitrarily"
+  },
+  "task": {
+    "id": "intake-n8n-owner-unresolved",
+    "title": "Website delivery: Alpha Austin did not update after the n8n run",
+    "status": "NOT_STARTED",
+    "requestType": "Website QC",
+    "program": ["Alpha Austin"],
+    "url": "https://alpha.school/austin/",
+    "requesterEmail": "observer@superbuilders.school",
+    "description": "CSS ID: website-campus-address\nSource value: 2001 McKinney Ave, Dallas, TX\nPage value: old address\nLast run evidence: run-123",
+    "customFields": { "source": "agent-found", "checkId": "sync-delivery" }
+  }
+}

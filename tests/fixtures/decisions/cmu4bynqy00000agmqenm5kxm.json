@@ -2,8 +2,8 @@
   "expected": {
     "outcome": "routed",
     "class": "event-request",
-    "ownerRole": "website-agent-operator",
-    "why": "event listing request"
+    "ownerRole": "hubspot-owner",
+    "why": "event request explicitly asks to make a HubSpot event public"
   },
   "task": {
     "id": "cmu4bynqy00000agmqenm5kxm",
