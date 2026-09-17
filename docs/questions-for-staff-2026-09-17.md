@@ -4,21 +4,30 @@ Date: September 17, 2026
 Compiled by: Matt Barge's website agent while writing `playbook/foundation/`  
 Purpose: every item below is a fact or decision the foundation layer needs and that no repository, Slack export, meeting record, or system of record answers. Each names who should be asked and what the answer unlocks. Answers become decisions in `docs/decisions.md` and rules in `spec/`.
 
-Grouped by who to ask. An item appears once under its primary respondent even when several people should weigh in.
+Grouped by who to ask. An item appears once under its primary respondent even when several people should weigh in. A shareable copy for staff lives as a Claude doc titled "Alpha Website Staff Questions" (September 17, 2026).
 
-## Ask Yash Chitneni (website operations)
+## Matt Barge and Yash Chitneni: decide together
+
+The website owners' own calls. Matt Barge runs the website agent, the observer, and the Alpha WordPress MCP; Yash Chitneni runs website operations. Q-04 and Q-20 should be taken to Joe Liemandt.
 
 | Id | Question | Why it matters | Unlocks |
 | --- | --- | --- | --- |
 | Q-04 | Who is the product owner of alpha.school as a product: the person who sets purpose, audience, priorities, and accepts or rejects requirements? Is it you, MacKenzie, Joe, or a role to be created? Is Joe Liemandt the executive sponsor? | Every open decision in `docs/decisions.md` is waiting on someone; today that is "Yash and Matt" by default | Charter section 6; unblocks Q-01, Q-03, Q-20 |
 | Q-03 | What is the website accountable for? Booked calls, event registrations, applications started, waitlist sign-ups, search click-through, LLM citations, campus-truth defects, brand violations, or something else? Who looks at the number, and how often? | No outcome measure exists; the site cannot be judged better or worse after a change | Charter section 5; analytics owner scope |
+| Q-20 | Is the Next.js refresh (`trilogy-group/alpha-school-website`, built by Garbhit from April 2026) sanctioned to replace production? Who sponsors it, and on what timeline? Also ask Joe. | Decides how deeply to document the WordPress design system and whether requirements should target both | Origin section 2; design-system scope |
 | Q-13 | Campus and admissions staff control: (a) do Directors of Admissions have write access to HubSpot Program properties today, and should they; (b) may a campus request messaging changes to its page, or only facts and staff; (c) may a campus request functionality (a form, a booking link, a calendar embed); (d) who at a campus approves a staff add or removal when the Head of Schools is not the requester? | The control matrix says campus staff supply, marketing decides; that rule is inferred from practice, not stated by you | Control matrix section 2 becomes Confirmed |
+
+Decisions already raised in `docs/decisions.md` and still waiting on you two: the 2026-27 info packet button on 20 Open pages (Matt); live campus-role resolution from the Admissions Hub (Matt); the four New York City headshot tickets (Yash); Greenwich one page or two (Yash with Farhan and Hailey); Alpha McLean new Program or Chantilly relocation (Yash with expansion).
+
+## Ask Yash Chitneni (website operations)
+
+| Id | Question | Why it matters | Unlocks |
+| --- | --- | --- | --- |
 | Q-14 | Who owns blog, news, and podcast landing pages editorially? Is there an editorial calendar, an approval path, and an expiry rule for podcast and press landing pages? | About 125 editorial URLs have no recorded owner | Editorial family owner; `pr-and-comms` role holder |
 | Q-15 | Who approves a change to the Locations page or a map pin when the underlying HubSpot Program is correct but the map app or card renders it wrong? | The growth-map owner is unnamed; Locations tickets have no approver | Locations family status |
 | Q-17 | Who are the WordPress administrators (11 on August 6, 2026), who holds the WP Engine account, who holds the Cloudflare account, and who is the DNS registrar contact? Should the admin list be reduced? | Eleven admins with no names is the largest unrecorded risk on the site | Origin section 3; `registry/people.json` wordpress-admin; least-privilege workstream |
 | Q-18 | Who owns the Airtable base (Alpha Answers, video gallery), the Flipsnack account (info packets), the Goldcast account, and the Vercel team `alpha-school-admissions`? | Four production dependencies with no recorded owner | `registry/owners.json`, control matrix section 4 |
 | Q-19 | Who designed and built the WordPress site, when did it launch, what preceded it (Finalsite, Substack, another CMS), and is anyone from that build still reachable? Also ask Garbhit Sharma and Hailey McSpadden. | No origin record exists at all; Austin and Miami sit on an older template nobody can explain | Origin section 1 |
-| Q-20 | Is the Next.js refresh (`trilogy-group/alpha-school-website`, built by Garbhit from April 2026) sanctioned to replace production? Who sponsors it, and on what timeline? Also ask Joe. | Decides how deeply to document the WordPress design system and whether requirements should target both | Origin section 2; design-system scope |
 | Q-21 | Where do the brand source documents live (MacKenzie's quiz workbook, the choices document, the April 1, 2026 style guide transcript, Dmitri's document), and can they be committed to `alpha-branding-skill`? Also ask Haven Mass. | The word-level rules cite documents no agent can open | Brand rules provenance |
 | Q-22 | Should author pages (`/author/...`) be indexed? | They are in the sitemap today with no decision | Author family status |
 | Q-23 | Should `/resources-austin/`, `/resources-miami/`, `/resources-brownsville/` exist as separate pages, or redirect to their campus pages? | Campus-scoped pages outside the campus template drift | Reference family |
