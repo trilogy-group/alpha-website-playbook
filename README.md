@@ -7,6 +7,7 @@ Status: active and incomplete. See `docs/project-overview.md` for the original c
 ## Read in this order
 
 1. `playbook/00-how-to-use.md`: start here when handling a website request.
+1a. `playbook/foundation/`: what the site is for, who it serves, who supplies content, who designs it, who controls functionality, and where it came from. Read `website-charter.md` and `control-matrix.md` before judging any requirement. Unanswered items are in `docs/questions-for-staff-2026-09-17.md`.
 2. `docs/project-overview.md`: original charter, ownership, and governance.
 3. `spec/`: the machine-readable form of the same requirements. Checks, validators, and the observer read these files. If prose and spec disagree, the spec is wrong or the prose is wrong; fix one, never work from the disagreement.
 4. `protocols/`: how to take, execute, test, document, and close an APEX website ticket.

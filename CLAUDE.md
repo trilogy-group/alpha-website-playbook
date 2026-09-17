@@ -2,7 +2,7 @@
 
 You are working with the source of truth for alpha.school page requirements and the APEX website ticket protocol.
 
-Read in this order: `README.md`, `playbook/00-how-to-use.md`, then the part you need: `playbook/` for what a page must be, `protocols/` for how to execute and test a ticket, `spec/` for the machine-readable rules, `registry/` for approved assets, exemplars, owners, and sources.
+Read in this order: `README.md`, `playbook/00-how-to-use.md`, then the part you need: `playbook/` for what a page must be, `protocols/` for how to execute and test a ticket, `spec/` for the machine-readable rules, `registry/` for approved assets, exemplars, owners, and sources. `playbook/foundation/` states purpose, audience, and who controls content, design, and functionality; when a request conflicts with a requirement, apply the decision rule in `playbook/foundation/website-charter.md` section 8.
 
 Rules:
 
@@ -10,3 +10,7 @@ Rules:
 - If prose and spec disagree, stop and report the disagreement; do not pick one.
 - A ticket is done only when the ticketed change, the whole page, and any shared template are verified with evidence, per `protocols/`.
 - Changes to this repo go through a pull request approved by a code owner.
+
+## Intake agent
+
+`agent/intake.mjs` is the scheduled ticket intake (see `tests/README.md`). Any agent taking an APEX website ticket by hand follows the same steps it encodes: protocol step 0 (contract), step 1 (class and inputs), step 1b (pathway and owner). Never edit a page from intake.
