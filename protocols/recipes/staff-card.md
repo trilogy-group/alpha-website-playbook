@@ -32,6 +32,7 @@ The staff tool treats a card as part of the leadership collection only when its 
 
 - `add` on plugin builds before 0.3.3 clones the template card with duplicate element ids on every child. Refuse to apply an add unless `health` reports 0.3.3 or later. Production has run 0.3.3 since 2026-09-17; the Tara Marlow add on Tulsa was the first add applied.
 - Two uploads in one session on plugin builds before 0.3.3 replay the first upload's attachment. The bridge now keys each upload by asset id and hash; always compare `sourceSha256` in the receipt with the file you approved before using the attachment id.
+- Uploads wider or taller than 2560 px are served by WordPress as the `-scaled` copy, so `verify_public_page` reports the original file name as missing media. Pass the `-scaled` URL (or check the live `src`) for large headshots; Edward Kang on Chicago (4672 by 7008) was verified this way.
 - Full-page screenshots show team photos blank because the images lazy-load. For ring 2, scroll the card into view and record `complete` and `naturalWidth` on the image before taking the card screenshot.
 
 ## Refuse and send back when

@@ -10,3 +10,9 @@ The production observer (`superbuilders/aeo alpha-site-system`) today compares t
 6. **Check synced elements exist.** Port `n8n-synced-elements-present` from `tests/page-check.mjs` so a layout change that drops a CSS ID is caught before the nightly run fails.
 
 Until 1 to 4 land, the loop's campus-fact and launch-copy findings are triaged by an agent running `tests/diagnose-field.mjs` before any ticket is worked.
+
+## Added 2026-09-17: event permalinks redirect by design
+
+- `event-page-reachable` and the HTTP checks on `alpha.school/events/<slug>/` must follow redirects and judge the final response. Every event permalink on alpha.school answers 301 or 302 to its `events.alpha.school/register/<uuid>/` page, and the Upcoming Events listing links there directly. Three tickets (Palo Alto open house 522, Miami Beach coffee 404, San Francisco open house 502) were transient or a re-slugged event; all three resolve to a 200 registration page today and were set For Review.
+- A 404 on an event permalink whose HubSpot event was re-synced under a new slug (`-2`) is a plugin behavior, not a content defect; the old slug 301s. The check should treat a 301 to the same event's new slug as pass.
+- Render-timeout findings (page.goto 20 s) need a second attempt before a ticket is filed. Five tickets from the September 14 run were filed for pages that answer in 0.3 to 3.6 s today.
