@@ -1,15 +1,25 @@
 {
   "$schema": "./schemas/actor-capabilities.schema.json",
-  "$comment": "Current actor support and policy. Tool availability is not the same as scheduled-agent integration or production authorization. Human form: docs/actor-capability-matrix.md.",
+  "$comment": "Current actor support and policy. Tool availability is not the same as scheduled-agent integration or production authorization. Human form: docs/actor-capability-matrix.md. 2026-09-17: plugin 0.5.0 adds element and page reads, structure patches, media library operations, SEO robots and canonical, scheduled status and popups, redirects, template drafts, batches, and stored receipts; implemented for the human Alpha MCP operator (and the website agent in operator mode), not yet a scheduled APEX route.",
   "version": "1.0",
   "asOf": "2026-09-17",
   "scope": "alpha.school",
-  "statuses": ["integrated", "implemented", "human_only", "source_only", "unsupported", "decision_needed"],
+  "statuses": [
+    "integrated",
+    "implemented",
+    "human_only",
+    "source_only",
+    "unsupported",
+    "decision_needed"
+  ],
   "actors": [
     {
       "id": "scheduled-apex-alpha-mcp",
       "label": "Scheduled APEX agent through Alpha MCP",
-      "environment": ["staging", "production when enabled"],
+      "environment": [
+        "staging",
+        "production when enabled"
+      ],
       "operations": {
         "read-resolve-find": "integrated",
         "staff-add": "integrated",
@@ -29,7 +39,16 @@
         "visual-verification": "integrated",
         "structural-elementor": "unsupported",
         "hubspot-data": "source_only",
-        "n8n-workflow": "unsupported"
+        "n8n-workflow": "unsupported",
+        "element-and-page-reads": "implemented",
+        "structure-clone-remove-move-tag-repeater": "unsupported",
+        "media-library-search-usage-meta-replace-delete": "unsupported",
+        "seo-noindex-canonical": "unsupported",
+        "scheduled-status-and-popups": "unsupported",
+        "redirects": "unsupported",
+        "draft-from-template": "unsupported",
+        "batch-content-patch": "unsupported",
+        "receipts-and-governance": "implemented"
       },
       "source": "APEX alpha-mcp-contract and alpha-mcp-execution at the audited main integration",
       "notes": "Feature flags, pilot IDs, current ticket revision, eligibility, approval and lease still gate every run. Staff photo has a legacy APEX path but is not documented as the same scheduled Alpha MCP operation."
@@ -37,7 +56,10 @@
     {
       "id": "human-alpha-mcp",
       "label": "Authorized human Alpha MCP operator",
-      "environment": ["staging", "production subject to approved policy"],
+      "environment": [
+        "staging",
+        "production subject to approved policy"
+      ],
       "operations": {
         "read-resolve-find": "integrated",
         "staff-add": "implemented",
@@ -57,7 +79,16 @@
         "visual-verification": "human_only",
         "structural-elementor": "unsupported",
         "hubspot-data": "source_only",
-        "n8n-workflow": "unsupported"
+        "n8n-workflow": "unsupported",
+        "element-and-page-reads": "unsupported",
+        "structure-clone-remove-move-tag-repeater": "unsupported",
+        "media-library-search-usage-meta-replace-delete": "unsupported",
+        "seo-noindex-canonical": "unsupported",
+        "scheduled-status-and-popups": "unsupported",
+        "redirects": "unsupported",
+        "draft-from-template": "unsupported",
+        "batch-content-patch": "unsupported",
+        "receipts-and-governance": "unsupported"
       },
       "source": "Alpha MCP 0.3.2 generated tool contract",
       "notes": "Production operator mode without an APEX token is decision_needed. Use an APEX ticket and lease until decided."
@@ -65,7 +96,10 @@
     {
       "id": "wordpress-browser-human",
       "label": "Authorized human using wp-admin or Elementor",
-      "environment": ["staging", "production emergency or approved project work"],
+      "environment": [
+        "staging",
+        "production emergency or approved project work"
+      ],
       "operations": {
         "read-resolve-find": "human_only",
         "staff-add": "human_only",
@@ -85,7 +119,16 @@
         "visual-verification": "human_only",
         "structural-elementor": "human_only",
         "hubspot-data": "unsupported",
-        "n8n-workflow": "unsupported"
+        "n8n-workflow": "unsupported",
+        "element-and-page-reads": "unsupported",
+        "structure-clone-remove-move-tag-repeater": "unsupported",
+        "media-library-search-usage-meta-replace-delete": "unsupported",
+        "seo-noindex-canonical": "unsupported",
+        "scheduled-status-and-popups": "unsupported",
+        "redirects": "unsupported",
+        "draft-from-template": "unsupported",
+        "batch-content-patch": "unsupported",
+        "receipts-and-governance": "unsupported"
       },
       "source": "current operating policy",
       "notes": "Never an unattended fallback. WordPress revisions are not sufficient Elementor rollback."
@@ -93,7 +136,9 @@
     {
       "id": "hubspot-or-apex-program-human",
       "label": "Authorized HubSpot or APEX Program editor",
-      "environment": ["production source system"],
+      "environment": [
+        "production source system"
+      ],
       "operations": {
         "campus-lifecycle": "source_only",
         "campus-facts": "source_only",
@@ -101,7 +146,16 @@
         "booking-link": "source_only",
         "application-routing": "source_only",
         "program-name": "unsupported",
-        "event-data": "source_only"
+        "event-data": "source_only",
+        "element-and-page-reads": "unsupported",
+        "structure-clone-remove-move-tag-repeater": "unsupported",
+        "media-library-search-usage-meta-replace-delete": "unsupported",
+        "seo-noindex-canonical": "unsupported",
+        "scheduled-status-and-popups": "unsupported",
+        "redirects": "unsupported",
+        "draft-from-template": "unsupported",
+        "batch-content-patch": "unsupported",
+        "receipts-and-governance": "unsupported"
       },
       "source": "Yash Chitneni statement recorded 2026-09-17 and existing APEX Program editor",
       "notes": "Website operators may update approved website-driven Program values. Program names at the top remain off limits."
@@ -109,13 +163,24 @@
     {
       "id": "n8n-owner",
       "label": "Named n8n workflow owner",
-      "environment": ["n8n production and test workflows"],
+      "environment": [
+        "n8n production and test workflows"
+      ],
       "operations": {
         "inspect-execution": "source_only",
         "manual-run": "source_only",
         "mapping-change": "source_only",
         "disable-recover": "source_only",
-        "export-version": "source_only"
+        "export-version": "source_only",
+        "element-and-page-reads": "unsupported",
+        "structure-clone-remove-move-tag-repeater": "unsupported",
+        "media-library-search-usage-meta-replace-delete": "unsupported",
+        "seo-noindex-canonical": "unsupported",
+        "scheduled-status-and-popups": "unsupported",
+        "redirects": "unsupported",
+        "draft-from-template": "unsupported",
+        "batch-content-patch": "unsupported",
+        "receipts-and-governance": "unsupported"
       },
       "source": "registry/people.json and playbook/site/content-pipelines.md",
       "notes": "Website operators diagnose and route workflow failures. They do not change n8n logic unless they are the named owner."
@@ -123,20 +188,31 @@
     {
       "id": "observer",
       "label": "Production observer",
-      "environment": ["public production"],
+      "environment": [
+        "public production"
+      ],
       "operations": {
         "read-public": "integrated",
         "compare-source": "integrated",
         "file-ticket": "integrated",
         "close-ticket": "decision_needed",
-        "mutate": "unsupported"
+        "mutate": "unsupported",
+        "element-and-page-reads": "unsupported",
+        "structure-clone-remove-move-tag-repeater": "unsupported",
+        "media-library-search-usage-meta-replace-delete": "unsupported",
+        "seo-noindex-canonical": "unsupported",
+        "scheduled-status-and-popups": "unsupported",
+        "redirects": "unsupported",
+        "draft-from-template": "unsupported",
+        "batch-content-patch": "unsupported",
+        "receipts-and-governance": "unsupported"
       },
       "source": "registry/observer-checks.json and spec/observer-check-map.json",
       "notes": "Observer success is independent evidence. It does not authorize a write."
     }
   ],
   "alphaMcpToolInventory": {
-    "versionObserved": "0.3.2",
+    "versionObserved": "0.5.0",
     "tools": [
       "resolve_page",
       "get_page",
@@ -157,7 +233,30 @@
       "prepare_post_fields_patch",
       "apply_post_fields_patch",
       "restore_post_fields_snapshot",
-      "set_post_status"
+      "set_post_status",
+      "get_element",
+      "get_page_inventory",
+      "list_revisions",
+      "compare_to_template",
+      "list_campus_pages",
+      "search_site",
+      "access_report",
+      "prepare_elementor_structure_patch",
+      "apply_elementor_structure_patch",
+      "list_receipts",
+      "search_media",
+      "get_attachment_usage",
+      "update_attachment_meta",
+      "replace_attachment_file",
+      "delete_attachment",
+      "list_scheduled_status_changes",
+      "list_popups",
+      "set_popup_status",
+      "list_redirects",
+      "create_redirect",
+      "create_draft_from_template",
+      "prepare_batch_content_patch",
+      "apply_batch_content_patch"
     ]
   }
 }

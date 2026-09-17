@@ -1,6 +1,6 @@
 # Actor and Capability Matrix
 
-Last verified: September 17, 2026  
+Last verified: September 17, 2026 (plugin 0.5.0 rows added the same day)  
 Machine form: `spec/actor-capabilities.json`
 
 The existence of a WordPress endpoint or Alpha MCP tool does not mean every actor may use it. This matrix separates tool capability, APEX integration, production authorization, and human fallback.
@@ -38,6 +38,15 @@ The existence of a WordPress endpoint or Alpha MCP tool does not mean every acto
 | Public text and media verification | Integrated | Implemented | Browser provides required visual supplement | Observer may independently confirm |
 | Desktop and mobile visual verification | Integrated in APEX release path where enabled | Required human or browser-backed check | Human-only | Observer may independently confirm |
 | HubSpot Program data | Not a WordPress mutation; use approved APEX Program path | Website operators may change permitted values in APEX or HubSpot | Do not patch synchronized Elementor fields | HubSpot Program owner |
+| Element and page reads: `get_element`, inventory, revisions, template drift, campus list, site search, access report (0.5.0) | Implemented, read-only | Implemented, read-only | Possible but not authoritative | Not applicable |
+| Structure: clone, remove, move, tag elements, repeater items (0.5.0) | Tool exists; scheduled route not established | Implemented with scoped diffs and unique-id checks | Supervised fallback only | Copy or template owner supplies the target |
+| Media library: search, usage, alt and title, replace file, delete (0.5.0) | Tool exists; scheduled route not established | Implemented; delete requires zero usage | Human-only fallback | Asset owner supplies the file and mapping |
+| Yoast noindex and canonical (0.5.0) | Tool exists; scheduled route not established | Implemented through post fields | Human-only fallback | SEO owner approves |
+| Scheduled publish or unpublish, popup status (0.5.0) | Tool exists; scheduled route not established | Implemented with bounded status rules | Human-only | Approver required |
+| Redirects through the Redirection plugin (0.5.0) | Tool exists; scheduled route not established | Implemented; Alpha paths and hosts only | Human-only fallback | Redirect owner approves |
+| Draft page from the campus template (0.5.0) | Tool exists; scheduled route not established | Implemented; never publishes | Human-only fallback | Expansion supplies the campus facts |
+| Batch content patches across pages (0.5.0) | Tool exists; scheduled route not established | Implemented; one approval hash, per-page reports | Not applicable | Copy owner approves the batch |
+| Stored receipts, kill switch, rate limits, synced-target guard (0.5.0) | Enforced for every caller | Enforced for every caller | Not applicable | Administrator sets the configuration |
 | n8n mapping or workflow | Unsupported | Unsupported unless the person is the named n8n owner | Not applicable | n8n owner only |
 | HubSpot event publication | Unsupported | Unsupported as a WordPress edit | Do not hand-edit event posts | Authorized event and HubSpot operator |
 | New carousel, new section, new page, or structural clone | Unsupported | Unsupported by Alpha MCP | Human project work after staging and approval | Elementor owner |
