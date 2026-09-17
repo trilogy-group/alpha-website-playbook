@@ -19,17 +19,20 @@ import { renderBody } from '../tests/render-ticket.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const read = (p) => JSON.parse(fs.readFileSync(path.join(here, '..', p), 'utf8'))
-const classes = read('spec/ticket-classes.json').classes
-const responsibilities = read('spec/responsibilities.json')
-const people = read('registry/people.json').people
-const checkMap = read('spec/observer-check-map.json').checkToElement || {}
+// Policy comes from the compiled bundle only (tests/build-policy.mjs); the specs are its sources, never read here directly.
+const bundle = read('spec/policy-bundle.generated.json')
+const classes = bundle.classes
+const responsibilities = { ticketRouting: Object.fromEntries(Object.entries(classes).map(([k, v]) => [k, { supplies: v.supplies, approves: v.approves, executes: v.executes }])) }
+const roleOwners = bundle.roleOwners
+const checkMap = bundle.observerCheckToElement || {}
+const familyFilter = bundle.familyFilter
 const base = (process.env.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1').replace(/\/+$/, '')
 const token = process.env.APEX_API_TOKEN
 const args = parse(process.argv.slice(2))
 const statuses = String(args.status || 'NOT_STARTED,MISSING_INFO,BLOCKED,IN_PROGRESS').split(',')
 const VERSION = '0.1'
 // Declared before the ticket loop: personFor runs inside top-level await and hit the temporal dead zone when a role needed a fallback.
-const ROLE_FALLBACK = { 'elementor-owner': 'website-operations', 'wordpress-admin': 'website-operations', 'growth-map-owner': 'expansion-new-programs', 'operations-sheet-owner': 'expansion-new-programs', 'community-app-owner': 'expansion-new-programs', 'marketing-collateral': 'website-operations', 'sister-site-owner': 'website-operations' }
+const ROLE_FALLBACK = bundle.roleFallback
 
 let tickets = []
 if (args.file) { const raw = JSON.parse(fs.readFileSync(args.file, 'utf8')); tickets = Array.isArray(raw) ? raw : raw.tasks || raw.data || [] }
@@ -45,6 +48,12 @@ function renderedPassFor(url) { if (!rendered || !url) return false; const norm 
 const since = args.since ? new Date(args.since) : null
 const website = tickets.filter(isWebsiteFamily).filter((t) => !since || new Date(t.updatedAt || t.createdAt) >= since).slice(0, Number(args.limit || 500))
 
+// Release attestation: refuse to write when production disagrees with spec/release-manifest.json (workstream 3).
+if (args.apply && !args['skip-release-check']) {
+  const { spawnSync } = await import('node:child_process')
+  const gate = spawnSync(process.execPath, [path.join(here, '..', 'tests', 'check-release.mjs')], { encoding: 'utf8', env: process.env })
+  if (gate.status !== 0) { console.error('release check failed; refusing --apply\n' + (gate.stdout || '') + (gate.stderr || '')); process.exit(3) }
+}
 const results = []
 for (const t of website) {
   const r = await decide(t)
@@ -92,7 +101,7 @@ async function decide(t) {
   return finish(t, { ...decision, outcome: scope === 'website' ? 'ready-for-execution' : 'routed', ownerRole })
 }
 
-function personFor(role) { let r = role; for (let i = 0; i < 3 && r; i++) { const p = Object.values(people).find((p) => p.roles.some((x) => x.role === r) && p.apexUserId); if (p) return { person: p, role: r }; r = ROLE_FALLBACK[r] } return { person: null, role } }
+function personFor(role) { let r = role; for (let i = 0; i < 3 && r; i++) { const p = (roleOwners[r] || []).find((x) => x.apexUserId); if (p) return { person: p, role: r }; r = ROLE_FALLBACK[r] } return { person: null, role } }
 function finish(t, d) {
   const resolved = personFor(d.ownerRole); const owner = resolved.person; if (owner && resolved.role !== d.ownerRole) d.ownerRoleResolved = resolved.role
   const cf = t.customFields || {}
@@ -116,7 +125,7 @@ function finish(t, d) {
   return { ...d, owner: owner?.name || null, patch, body }
 }
 
-function isWebsiteFamily(t) { const cf = t.customFields || {}; return cf.requestFamily === 'website' || /^Website/.test(t.title || '') || ['website-agent', 'agent-found'].includes(cf.source) || (cf.source === 'alpha-site-qc' && /^https:\/\/alpha\.school\//.test(t.url || '')) || /^Alpha [A-Z][A-Za-z .]+: /.test(t.title || '') }
+function isWebsiteFamily(t) { const cf = t.customFields || {}; const f = familyFilter; return cf.requestFamily === f.requestFamily || f.titlePrefixes.some((p) => (t.title || '').startsWith(p)) || (f.sources.includes(cf.source) && (cf.source !== 'alpha-site-qc' || /^https:\/\/alpha\.school\//.test(t.url || ''))) || new RegExp(f.observerTitlePattern).test(t.title || '') }
 function summarize(rs) {
   const by = (k) => rs.reduce((a, r) => { const v = r[k] || 'none'; a[v] = (a[v] || 0) + 1; return a }, {})
   return { tickets: rs.length, outcomes: by('outcome'), classes: by('class'), owners: by('owner'), skipped: rs.filter((r) => r.skipped).length, applied: rs.filter((r) => r.applied && !r.applied.error).length, errors: rs.filter((r) => r.applied?.error).map((r) => ({ id: r.id, error: r.applied.error })) }

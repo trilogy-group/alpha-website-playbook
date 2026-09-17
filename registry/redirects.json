@@ -6,17 +6,112 @@
     {
       "id": "yoast",
       "ownerRole": "website-operations",
-      "inventoryStatus": "observed_partial; full export required (225 Redirection rules counted 2026-08-06)"
+      "inventoryStatus": "observed_partial: one rule seen by x-redirect-by header (/lake-forest/ to /orange-county/); full export required"
     },
     {
       "id": "wordpress-redirection-plugin",
       "ownerRole": "wordpress-admin",
-      "inventoryStatus": "observed_partial; full export required (225 Redirection rules counted 2026-08-06)"
+      "inventoryStatus": "observed",
+      "observedAt": "2026-09-17T20:24:09+00:00",
+      "count": 237,
+      "source": "Alpha MCP list_redirects (plugin 0.5.0); full list in marketingsupport work-assets/inventories-2026-09-17/redirects.json",
+      "sample": [
+        {
+          "source": "/application/?submission_campus=carrollton",
+          "target": "https://alpha.school/application-fs/?submission_campus=carrollton",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=lake_travis",
+          "target": "https://alpha.school/application-fs/?submission_campus=lake_travis",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=houston",
+          "target": "https://alpha.school/application-fs/?submission_campus=houston",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=san_juan",
+          "target": "https://alpha.school/application-fs/?submission_campus=san_juan",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=franklin",
+          "target": "https://alpha.school/application-fs/?submission_campus=franklin",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=bethesda",
+          "target": "https://alpha.school/application-fs/?submission_campus=bethesda",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=bathesda",
+          "target": "https://alpha.school/application-fs/?submission_campus=bathesda",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=boston_suburbs",
+          "target": "https://alpha.school/application-fs/?submission_campus=boston_suburbs",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=jamaica_plain",
+          "target": "https://alpha.school/application-fs/?submission_campus=jamaica_plain",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=greenwich",
+          "target": "https://alpha.school/application-fs/?submission_campus=greenwich",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/high-school-application-fs/",
+          "target": "/high-school-application/",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/blog/test2pass-how-alpha-grades-life-skills/",
+          "target": "/blog/alphatest-how-alpha-grades-life-skills/",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=park_city",
+          "target": "https://alpha.school/application-fs/?submission_campus=park_city",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=tulsa",
+          "target": "https://alpha.school/application-fs/?submission_campus=tulsa",
+          "code": 301,
+          "enabled": false
+        },
+        {
+          "source": "/application/?submission_campus=oklahoma_city",
+          "target": "https://alpha.school/application-fs/?submission_campus=oklahoma_city",
+          "code": 301,
+          "enabled": false
+        }
+      ]
     },
     {
       "id": "wordpress-core-or-theme",
       "ownerRole": "wordpress-admin",
-      "inventoryStatus": "observed_partial; full export required (225 Redirection rules counted 2026-08-06)"
+      "inventoryStatus": "observed_partial: trailing-slash canonical redirects seen by x-redirect-by header"
     },
     {
       "id": "wp-engine-or-cloudflare",
@@ -29,118 +124,123 @@
       "inventoryStatus": "unknown"
     }
   ],
-  "rules": [
-    {
-      "from": "https://alpha.school/lake-forest/",
-      "to": "https://alpha.school/orange-county/",
-      "status": 301,
-      "layer": "yoast",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/apply/",
-      "to": "/apply-austin/",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/apply-austin/",
-      "to": "/application/?submission_campus=austin_k8",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/application/?submission_campus=austin_k8",
-      "to": "/application-fs/?submission_campus=austin_k8",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/locations",
-      "to": "https://alpha.school/locations/",
-      "status": 301,
-      "layer": "wordpress-core-or-theme",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/admissions/",
-      "to": "/admission/",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/events/",
-      "to": "https://alpha.school/upcoming-events/",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/about/",
-      "to": "/the-program",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/the-program",
-      "to": "https://alpha.school/the-program/",
-      "status": 301,
-      "layer": "wordpress-core-or-theme",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/new-york/",
-      "to": "/new-york-city/",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "http://alpha.school/",
-      "to": "https://alpha.school/",
-      "status": 301,
-      "layer": "unknown",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://www.alpha.school/",
-      "to": "https://alpha.school/",
-      "status": 301,
-      "layer": "unknown",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/application-fs/",
-      "to": "https://alpha.school/admission-forms/",
-      "status": 301,
-      "layer": "wordpress-redirection-plugin",
-      "observed": "2026-09-17"
-    },
-    {
-      "from": "https://alpha.school/programs-events",
-      "to": "https://alpha.school/upcoming-events/",
-      "status": 301,
-      "layer": "unknown",
-      "observed": "2026-09-17",
-      "note": "target of homepage/admission 'ATTEND AN EVENT' CTAs"
-    },
-    {
-      "from": "https://alpha.school/lifeskills-workshops",
-      "to": "https://alpha.school/lifeskills-workshops/",
-      "status": 301,
-      "layer": "unknown",
-      "observed": "2026-09-17",
-      "note": "nav/footer link omits trailing slash -> extra 301"
-    }
-  ],
+  "rules": [],
   "knownAuditFinding": "Three legacy application routes were excluded from the page sitemap because they redirect; exact rules require export.",
   "policy": "One authoritative rule per source route, one hop where practical, preserve approved campus and tracking parameters, and verify sitemap and LLM export behavior.",
-  "status": "inventory_observed_partial",
+  "status": "inventory_partial: Redirection plugin read from production (237 rules); Yoast and core layers observed by trace only; edge layer unknown",
+  "observedHops": {
+    "observedAt": "2026-09-17",
+    "source": "spec/inventory/redirects-observed-2026-09-17.json (public HEAD traces)",
+    "rules": [
+      {
+        "from": "https://alpha.school/lake-forest/",
+        "to": "https://alpha.school/orange-county/",
+        "status": 301,
+        "layer": "yoast",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/apply/",
+        "to": "/apply-austin/",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/apply-austin/",
+        "to": "/application/?submission_campus=austin_k8",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/application/?submission_campus=austin_k8",
+        "to": "/application-fs/?submission_campus=austin_k8",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/locations",
+        "to": "https://alpha.school/locations/",
+        "status": 301,
+        "layer": "wordpress-core-or-theme",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/admissions/",
+        "to": "/admission/",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/events/",
+        "to": "https://alpha.school/upcoming-events/",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/about/",
+        "to": "/the-program",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/the-program",
+        "to": "https://alpha.school/the-program/",
+        "status": 301,
+        "layer": "wordpress-core-or-theme",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/new-york/",
+        "to": "/new-york-city/",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "http://alpha.school/",
+        "to": "https://alpha.school/",
+        "status": 301,
+        "layer": "unknown",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://www.alpha.school/",
+        "to": "https://alpha.school/",
+        "status": 301,
+        "layer": "unknown",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/application-fs/",
+        "to": "https://alpha.school/admission-forms/",
+        "status": 301,
+        "layer": "wordpress-redirection-plugin",
+        "observed": "2026-09-17"
+      },
+      {
+        "from": "https://alpha.school/programs-events",
+        "to": "https://alpha.school/upcoming-events/",
+        "status": 301,
+        "layer": "unknown",
+        "observed": "2026-09-17",
+        "note": "target of homepage/admission 'ATTEND AN EVENT' CTAs"
+      },
+      {
+        "from": "https://alpha.school/lifeskills-workshops",
+        "to": "https://alpha.school/lifeskills-workshops/",
+        "status": 301,
+        "layer": "unknown",
+        "observed": "2026-09-17",
+        "note": "nav/footer link omits trailing slash -> extra 301"
+      }
+    ]
+  },
   "deadPaths": [
     "https://alpha.school/alpha-answers/",
     "https://alpha.school/contact/",

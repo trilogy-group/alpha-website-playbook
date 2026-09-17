@@ -1,0 +1,331 @@
+{
+  "$comment": "Typed adapter registry (improvement plan workstream 10). Every ticket class maps to exactly one adapter or to the human-handoff adapter; tests/validate-playbook.mjs fails when a class maps to none. An adapter declares what it can read, write, verify, and roll back, which credential it uses, its error taxonomy, and the classes it serves. 'implemented' means code exists in the named tool; 'handoff' means a person acts and the agent verifies.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "adapters": {
+    "wordpress-alpha-mcp": {
+      "system": "alpha.school WordPress and Elementor",
+      "tool": "Alpha WordPress MCP bridge and plugin 0.5.x",
+      "credential": "ALPHA_WP_APPLICATION_PASSWORD (executor role), operator mode",
+      "read": [
+        "resolve_page",
+        "get_page",
+        "get_element",
+        "get_page_inventory",
+        "find_elementor_component",
+        "find_text_occurrences",
+        "get_post_fields",
+        "list_revisions",
+        "compare_to_template",
+        "list_campus_pages",
+        "search_site",
+        "search_media",
+        "get_attachment_usage",
+        "list_popups",
+        "list_scheduled_status_changes",
+        "list_receipts"
+      ],
+      "write": [
+        "prepare/apply_elementor_content_patch",
+        "prepare/apply_elementor_structure_patch",
+        "prepare/apply_elementor_staff_patch",
+        "prepare/apply_post_fields_patch",
+        "prepare/apply_batch_content_patch",
+        "upload_media_from_apex_asset",
+        "update_attachment_meta",
+        "replace_attachment_file",
+        "delete_attachment",
+        "set_post_status",
+        "set_popup_status",
+        "create_draft_from_template",
+        "regenerate_elementor_css",
+        "flush_wp_engine_cache"
+      ],
+      "verify": [
+        "verify_public_page (source, hidden_everywhere)",
+        "tests/rendered-controls.mjs (rendered)",
+        "tests/page-check.mjs"
+      ],
+      "rollback": [
+        "restore_elementor_snapshot",
+        "restore_post_fields_snapshot"
+      ],
+      "errorTaxonomy": {
+        "transient": [
+          "alpha_mcp_cache_cooldown",
+          "network_error"
+        ],
+        "stale": [
+          "alpha_mcp_stale_elementor_hash",
+          "alpha_mcp_stale_content_hash",
+          "alpha_mcp_concurrent_edit"
+        ],
+        "conflict": [
+          "alpha_mcp_component_ambiguous",
+          "alpha_mcp_duplicate_staff_card",
+          "alpha_mcp_redirect_exists"
+        ],
+        "unsupported": [
+          "alpha_mcp_unknown_staff_structure",
+          "alpha_mcp_field_not_editable",
+          "alpha_mcp_synced_target"
+        ],
+        "unauthorized": [
+          "alpha_mcp_forbidden",
+          "alpha_mcp_ability_disabled",
+          "alpha_mcp_rate_limited",
+          "alpha_mcp_production_writes_disabled"
+        ]
+      },
+      "ticketClasses": [
+        "staff-add",
+        "staff-update",
+        "staff-remove",
+        "staff-photo",
+        "staff-bulk",
+        "copy",
+        "link-cta",
+        "observer-link-cta",
+        "observer-media-identity",
+        "observer-brand-leak",
+        "launch-copy-request",
+        "observer-launch-copy",
+        "program-info",
+        "observer-fact-sync",
+        "page-status",
+        "seo-redirect",
+        "global-template"
+      ],
+      "status": "implemented"
+    },
+    "hubspot-programs": {
+      "system": "HubSpot Programs custom object (p_programs, 2-43470849)",
+      "tool": "APEX campus editor (two-way sync) for writes; growth map API mirror for reads until crm.objects.custom.read is granted",
+      "credential": "HUBSPOT_SERVICE_KEY (reads, scopes pending); APEX editor session for writes",
+      "read": [
+        "growth map API (type, name, address, city, state, url, communityUrl, coordinates, gradeRange, launchDate, photoUrl)",
+        "HubSpot direct (blocked: missing scopes)"
+      ],
+      "write": [
+        "APEX campus editor: type, visibility, year open, address, city, state, calendar, tuition, application fee, start and end grade, email, phone, website, admission link, call scheduling link, website intro copy",
+        "HubSpot UI by an authorized person with the ticket id in the property note"
+      ],
+      "verify": [
+        "growth map API read-back",
+        "page check after the nightly n8n run"
+      ],
+      "rollback": [
+        "previous value from HubSpot property history"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "field not in the editor"
+        ],
+        "unauthorized": [
+          "missing scopes"
+        ]
+      },
+      "ticketClasses": [
+        "hubspot-data"
+      ],
+      "status": "handoff-with-verification"
+    },
+    "n8n-sync": {
+      "system": "n8n workflows (Update school pages ORgdHC71YJ5RawBy, Locations RqP1lPvDKvHDxTus)",
+      "tool": "none; n8n-sync-owner runs or edits the workflow",
+      "credential": "none",
+      "read": [
+        "workflow export supplied by the owner",
+        "list_revisions on the page (n8n user saves)"
+      ],
+      "write": [
+        "owner only"
+      ],
+      "verify": [
+        "page check after 00:15 CT",
+        "list_revisions shows the n8n save"
+      ],
+      "rollback": [
+        "owner reverts the workflow version"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "mapping change"
+        ],
+        "transient": [
+          "run did not fire"
+        ]
+      },
+      "ticketClasses": [
+        "sync-mapping",
+        "sync-delivery",
+        "sheet-data"
+      ],
+      "status": "handoff-with-verification"
+    },
+    "events-hubspot": {
+      "system": "HubSpot marketing events and the Alpha HubSpot Events plugin",
+      "tool": "inspect_hubspot_event (read); event owner acts",
+      "credential": "none for writes",
+      "read": [
+        "inspect_hubspot_event",
+        "public event listing"
+      ],
+      "write": [
+        "event owner in HubSpot or APEX"
+      ],
+      "verify": [
+        "public-event-sync observer check"
+      ],
+      "rollback": [
+        "event owner"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "any write"
+        ]
+      },
+      "ticketClasses": [
+        "event-request",
+        "observer-event"
+      ],
+      "status": "handoff-with-verification"
+    },
+    "packets": {
+      "system": "campus info packets (Canva masters, Flipsnack, Drive)",
+      "tool": "registry/campus-packets.json (read); packet owner acts; link edits through wordpress-alpha-mcp",
+      "credential": "none",
+      "read": [
+        "registry/campus-packets.json",
+        "logged-out link check"
+      ],
+      "write": [
+        "packet owner"
+      ],
+      "verify": [
+        "logged-out 200 on the approved packet link",
+        "rendered-controls"
+      ],
+      "rollback": [
+        "previous link value"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "packet content edits"
+        ]
+      },
+      "ticketClasses": [
+        "packet",
+        "observer-packet"
+      ],
+      "status": "handoff-with-verification"
+    },
+    "community-app": {
+      "system": "community.alpha.school",
+      "tool": "none; community-app-owner acts",
+      "credential": "none",
+      "read": [
+        "tests/validate-community-routing.mjs"
+      ],
+      "write": [
+        "owner only"
+      ],
+      "verify": [
+        "community routing validator",
+        "map observer checks"
+      ],
+      "rollback": [
+        "owner"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "any write"
+        ]
+      },
+      "ticketClasses": [
+        "map-community-request",
+        "observer-map-community"
+      ],
+      "status": "handoff-with-verification"
+    },
+    "forms-admissions": {
+      "system": "HubSpot forms, Finalsite, application routing",
+      "tool": "none; registry/forms.json has no form ids yet",
+      "credential": "none",
+      "read": [
+        "registry/forms.json (empty)"
+      ],
+      "write": [
+        "owner only"
+      ],
+      "verify": [
+        "manual QA"
+      ],
+      "rollback": [
+        "owner"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "any change"
+        ]
+      },
+      "ticketClasses": [
+        "form-admissions"
+      ],
+      "status": "handoff"
+    },
+    "observer": {
+      "system": "superbuilders/aeo site observer",
+      "tool": "observer rerun; docs/observer-requirements.md for changes",
+      "credential": "none",
+      "read": [
+        "observer run output"
+      ],
+      "write": [
+        "observer-owner changes checks"
+      ],
+      "verify": [
+        "rerun clears the check"
+      ],
+      "rollback": [
+        "not applicable"
+      ],
+      "errorTaxonomy": {
+        "transient": [
+          "render timeout",
+          "5xx"
+        ]
+      },
+      "ticketClasses": [
+        "observer-health",
+        "observer-layout"
+      ],
+      "status": "handoff-with-verification"
+    },
+    "human-handoff": {
+      "system": "a named person in another system",
+      "tool": "APEX assignment with the contract's fix path",
+      "credential": "none",
+      "read": [],
+      "write": [
+        "person"
+      ],
+      "verify": [
+        "the class's done condition, checked by the website agent when public"
+      ],
+      "rollback": [
+        "person"
+      ],
+      "errorTaxonomy": {
+        "unsupported": [
+          "everything"
+        ]
+      },
+      "ticketClasses": [
+        "other-workflow",
+        "platform-request"
+      ],
+      "status": "handoff"
+    }
+  }
+}

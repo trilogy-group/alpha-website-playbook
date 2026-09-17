@@ -1,0 +1,31 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "sync-mapping",
+    "ownerRole": "n8n-sync-owner",
+    "why": "two Programs one page decision"
+  },
+  "task": {
+    "id": "cmu4hhqoa00000agmeah4myvc",
+    "title": "Website mapping: Greenwich has two HubSpot Programs (Armonk, Port Chester) pointing at one page; decide one page or two. 9 observer tickets depend on it",
+    "status": "NOT_STARTED",
+    "requestType": "Website QC",
+    "program": [
+      "Alpha Greenwich"
+    ],
+    "url": "https://alpha.school/greenwich/",
+    "requesterEmail": "requester@superbuilders.school",
+    "description": "Element: the whole campus page /greenwich/ (schema, address, map, email, hero) plus the Locations List card and the map pins\nCurrent derivation: HubSpot has program-60804396611 Alpha Greenwich Armonk (20 Old Post Road, Armonk, NY 10504; 41.1088,-73.7268) and program-49011192959 Alpha Greenwich Port Chester (575 King St., Port Chester, NY; 41.0183,-73.6684), both Open, both with url https://alpha.school/greenwich/. The n8n campus-page workflow writes address, map, JSON-LD, titles and intro from whichever Program it processes last; on 2026-09-16 the page carries the Armonk facts while the intro sentence says \"Alpha Greenwich Port Chester is open and enrolling\".\nEvidence (2026-09-16 diagnosis): page schema and address equal the Armonk Program exactly; every Port Chester comparison fails; every Armonk comparison passes. The Operations sheet has 355 Main St., Armonk for the Armonk row and 575 King Street Port Chester for the other.\nDecision needed (Yash Chitneni for the website, with Farhan Raja for the HubSpot records and Hailey McSpadden): \n  Option A: two pages. Create /greenwich-armonk/ (or keep /greenwich/ for one campus) and give each Program its own wordpress_post_id; n8n creates the second page from the SEO Template when the Program is Announced with wordpress_post_id -1.\n  Option B: one page. Merge into one Program for the website (or mark one Program not visible to the site) and make the page copy, address, and schema describe the campus that families visit; the Locations List and map still show two pins from two Programs.\n  Either way the observer needs the alias rule (spec/campus-lifecycle.json, observer config campusAliases) updated so it stops filing both names against one page.\nOwner: website-operations (Yash Chitneni) for the decision; hubspot-program-admin (Farhan Raja) executes the HubSpot side; n8n-sync-owner (Cristi Constantin) runs the create path if two pages.\nDone when: the decision is in alpha-website-playbook docs/decisions.md, each Greenwich Program maps to exactly one page, the observer rerun files no Greenwich source conflicts, and the 9 dependent tickets are closed.\nDependent tickets: cmtmecu1b000504jvw3s2g79k, cmu1edgni00000agmiltn9jfo, cmtmecsk3000204jvjzq668tt, cmu3nsstn000004jpgbj90jml, cmtnc9xz500020agmzxbykybk, cmu1edfzj00020agmcc5xfhha, cmu1edf8600010agme5dwotdy, cmtu4su3g00000agmfw1enojf, cmtmp9484000404jv2w43jq36\nPlaybook: docs/findings-2026-09-15.md (Greenwich), spec/campus-page-field-map.json page.existence; protocol step 0 and 1b.\n\nFound while working: cmtmecu1b000504jvw3s2g79k\nIdempotency: agent-found:cmtmecu1b000504jvw3s2g79k:greenwich:field-map page.existence",
+    "customFields": {
+      "owners": "",
+      "source": "agent-found",
+      "severity": "high",
+      "idempotencyKey": "agent-found:cmtmecu1b000504jvw3s2g79k:greenwich:field-map page.existence",
+      "foundWhileWorking": "cmtmecu1b000504jvw3s2g79k"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-16T19:18:46.090Z",
+    "updatedAt": "2026-09-16T19:18:46.616Z"
+  }
+}

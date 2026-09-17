@@ -1,0 +1,28 @@
+{
+  "expected": {
+    "outcome": "missing-info",
+    "class": "staff-bulk",
+    "ownerRole": "website-agent-operator",
+    "why": "bulk roster with no assets attached"
+  },
+  "task": {
+    "id": "cmsgak1mu000304ky2v3av9st",
+    "title": "Website \u2014 Alpha Scottsdale",
+    "status": "BLOCKED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Scottsdale"
+    ],
+    "url": null,
+    "requesterEmail": "requester@alpha.school",
+    "description": "I need to update all staff on the Alpha Scottsdale website. Here are correct titles/names (bios and pictures are on the spreadsheet).\n\nHead of School - Tasha Arnold\nDean of Parents - Dawn Adams\nHead Guide - Matt Shenker\nLead Guide - Christi Gordon\nLead Guide - Caitlin DeMello\nReading Specialist - Jenn Lopes\nGuide - Jessica Gile\nGuide - Patricio Rojas\nGuide - Zach DeJovine",
+    "customFields": {
+      "formSource": "request-form",
+      "requestDetail": "I need to update all staff on the Alpha Scottsdale website. Here are correct titles/names (bios and pictures are on the spreadsheet).\n\nHead of School - Tasha Arnold\nDean of Parents - Dawn Adams\nHead Guide - Matt Shenker\nLead Guide - Christi Gordon\nLead Guide - Caitlin DeMello\nReading Specialist - Jenn Lopes\nGuide - Jessica Gile\nGuide - Patricio Rojas\nGuide - Zach DeJovine"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-08-05T16:18:25.734Z",
+    "updatedAt": "2026-09-10T19:40:40.925Z"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "expected": {
+    "outcome": "missing-info",
+    "class": "staff-remove",
+    "ownerRole": "website-agent-operator",
+    "why": "old-form remove request names \"Chelsea\" only; the contract needs the full name in a structured field"
+  },
+  "task": {
+    "id": "cmtiv4vmm000104kz0o2lqmgw",
+    "title": "Website (Remove a team member from program page) \u2014 Alpha Bethesda",
+    "status": "IN_PROGRESS",
+    "requestType": "Website",
+    "program": [
+      "Alpha Bethesda"
+    ],
+    "url": null,
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Remove a team member from program page</p><p><strong>DETAIL</strong><br>Remove Chelsea as Dean of Parents<br><br>Add Pam Jackson, PhD as Dean of Parents<br><br>BIO - Dr. Pam Jackson has spent more than two decades at the intersection of organizational and behavioral economics, helping people and institutions across the Middle East, the UK, Europe, and Capitol Hill unlock their full potential. Her path has taken her from advising organizations and building high-performing teams to a deep, hands-on commitment to education \u2014 ten years on the board of directors of a DC public charter school, and another ten years with an educational nonprofit. Every chapter of her career has led to the same conviction: that when people are given the right support, there is no limit to what they can become. She brings that conviction to Alpha Bethesda, where her purpose is singular \u2014 to stand as a true partner in every family's success.<br><br>Pam states: \"I joined Alpha to be a part of the most remarkable innovation in education today, and I want to empower the people who are committed to their children's limitlessness. The world that gets created because young people flourish and thrive everywhere in life is phenomenal.\"<br><br>Add Nicole Noel as Director of Admissions (Chantilly/McLean/Bethesda)<br><br>Change tuition $65,000<br><br>Change email - admissions.bethesda@alpha.school<br><br>Phone # 240-206-1830</p>",
+    "customFields": {
+      "details": "Alpha Bethesda page \nhttps://alpha.school/bethesda/",
+      "readiness": {
+        "ready": false,
+        "requirements": [
+          {
+            "key": "teamMemberName",
+            "label": "Team member name",
+            "prompt": "Enter the staff member's canonical public name.",
+            "required": true,
+            "validation": {
+              "maxLength": 200,
+              "minLength": 2
+            },
+            "responseType": "short_text"
+          },
+          {
+            "key": "teamMemberEmail",
+            "label": "Team member email",
+            "prompt": "Enter the staff member's Alpha email address.",
+            "required": true,
+            "validation": {
+              "maxLength": 320
+            },
+            "responseType": "email"
+          }
+        ],
+        "schemaVersion": 1,
+        "legacyClarificationFields": [
+          "teamMemberName",
+          "teamMemberEmail"
+        ]
+      },
+      "formSource": "request-form",
+      "requestDetail": "Remove Chelsea as Dean of Parents\n\nAdd Pam Jackson, PhD as Dean of Parents\n\nBIO - Dr. Pam Jackson has spent more than two decades at the intersection of organizational and behavioral economics, helping people and institutions across the Middle East, the UK, Europe, and Capitol Hill unlock their full potential. Her path has taken her from advising organizations and building high-performing teams to a deep, hands-on commitment to education \u2014 ten years on the board of directors of a DC public charter school, and another ten years with an educational nonprofit. Every chapter of her career has led to the same conviction: that when people are given the right support, there is no limit to what they can become. She brings that conviction to Alpha Bethesda, where her purpose is singular \u2014 to stand as a true partner in every family's success.\n\nPam states: \"I joined Alpha to be a part of the most remarkable innovation in education today, and I want to empower the people who are committed to their children's limitlessness. The world that gets created because young people flourish and thrive everywhere in life is phenomenal.\"\n\nAdd Nicole Noel as Director of Admissions (Chantilly/McLean/Bethesda)\n\nChange tuition $65,000\n\nChange email - admissions.bethesda@alpha.school\n\nPhone # 240-206-1830 ",
+      "requesterFollowUp": "Alpha Bethesda page \nhttps://alpha.school/bethesda/",
+      "requesterResponses": {
+        "details": "Alpha Bethesda page \nhttps://alpha.school/bethesda/"
+      },
+      "websiteRequestType": "remove_team_member",
+      "lastRequesterResponseAt": "2026-09-09T15:02:38.634Z",
+      "websiteRequestTypeLabel": "Remove a team member from program page"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-01T16:09:44.734Z",
+    "updatedAt": "2026-09-10T04:32:42.637Z"
+  }
+}

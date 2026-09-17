@@ -1,0 +1,40 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "observer-health",
+    "ownerRole": "observer-owner",
+    "why": "render timeout from the observer"
+  },
+  "task": {
+    "id": "cmu1thmi800020agmsg6c02f3",
+    "title": "Atlanta: expected rendered HTTP 2xx page, found page.goto: Timeout 20000ms exceeded.\nCall log:\n  - navigating to \"https://alpha.school/atlanta/\", waiting until \"domcontentloaded\"\n.",
+    "status": "NOT_STARTED",
+    "requestType": "Website QC",
+    "program": [
+      "Alpha School"
+    ],
+    "url": "https://alpha.school/atlanta/",
+    "requesterEmail": "requester@superbuilders.school",
+    "description": "Atlanta: expected rendered HTTP 2xx page, found page.goto: Timeout 20000ms exceeded.\nCall log:\n  - navigating to \"https://alpha.school/atlanta/\", waiting until \"domcontentloaded\"\n.\nPage: https://alpha.school/atlanta/\n\nExpected: rendered HTTP 2xx page\nObserved: page.goto: Timeout 20000ms exceeded.\nCall log:\n  - navigating to \"https://alpha.school/atlanta/\", waiting until \"domcontentloaded\"\n\nEvidence: page.goto: Timeout 20000ms exceeded.\nCall log:\n  - navigating to \"https://alpha.school/atlanta/\", waiting until \"domcontentloaded\"\n\nObserver ID: SITE-C5C5F76978\nObserver run: https://github.com/superbuilders/aeo/actions/workflows/site-observe.yml\nSuggested owners: Matt Barge, Yash Chitneni\n\nRecommended path: Needs triage: assign an owner, confirm the source of truth, then rerun QC after the fix.\nDone when: The finding clears in the next observer run.",
+    "customFields": {
+      "loop": "functional",
+      "check": "route-reachable",
+      "field": "status",
+      "runId": "site-full-2026-09-14T22-23-32-254Z",
+      "entity": "campus-program-42698676589-mobile",
+      "owners": "Matt Barge, Yash Chitneni",
+      "runUrl": "https://github.com/superbuilders/aeo/actions/workflows/site-observe.yml",
+      "source": "alpha-site-qc",
+      "severity": "critical",
+      "workType": "triage",
+      "externalId": "alpha-site-observer:SITE-C5C5F76978",
+      "localTaskId": "website-update-qc-2026-09-14-campus-program-42698676589-fails-on-mobile",
+      "idempotencyKey": "alpha-site-qc:SITE-C5C5F76978:2026-09-14t22-30-40-581z",
+      "selfServiceCandidate": "false"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-14T22:31:17.552Z",
+    "updatedAt": "2026-09-14T22:31:17.552Z"
+  }
+}

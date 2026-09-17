@@ -1,6 +1,6 @@
 {
   "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label).",
-  "version": "0.6",
+  "version": "0.7",
   "classes": {
     "other-workflow": {
       "match": {
@@ -73,7 +73,7 @@
     },
     "platform-request": {
       "match": {
-        "detailPattern": "\\bdns\\b|\\bcname\\b|domain|subdomain|portal|meta tag|site-?wide|thumbnail|video grid|every page"
+        "detailPattern": "\\bdns\\b|\\bcname\\b|domain|subdomain|portal|meta tag|site-?wide|thumbnail|video grid|every page|vercel\\.app|launch (?:web)?site|administrator access"
       },
       "required": [
         "requester"
@@ -101,59 +101,100 @@
       "routingLabel": "launch_copy_coming_soon",
       "doneWhen": "the page shows the open sentence after the next 00:15 CT n8n run and the approved card"
     },
-    "staff-bulk": {
+    "sync-mapping": {
       "match": {
-        "detailPattern": "team section|guides\\x27? profiles|update (?:all )?(?:staff|our staff|our team|the team)|team bio|bios and pictures|add (?:these|the following) (?:people|team members)|new guides|staff updated"
+        "titlePattern": "^(Website mapping|n8n mapping):|^Website mapping:",
+        "customFields.checkId": "sync-mapping"
       },
       "required": [
-        "pageUrl",
-        "requester"
+        "element",
+        "cssId",
+        "currentDerivation",
+        "proposedDerivation",
+        "reason",
+        "owner"
       ],
-      "recipe": "staff-card",
-      "scope": "website",
-      "note": "A roster update for several people at once, usually with a deck or sheet. Executed as one staff-card recipe per person; each person needs name, title, bio, and headshot. Missing Info lists the people whose inputs are absent.",
+      "recipe": "sync-mapping",
+      "scope": "n8n",
+      "note": "The source value is right but the way n8n derives the page element is wrong or missing. Fix is a change to the n8n workflow (or the field map). Owner is the n8n-sync-owner; the decision is recorded in docs/decisions.md.",
+      "assignTo": "n8n-sync-owner",
+      "cc": [
+        "hubspot-owner",
+        "website-agent-operator"
+      ],
+      "verify": "page after the next n8n run on two campuses",
       "observerChecks": [],
-      "routingLabel": "staff_photo_title_bio",
-      "doneWhen": "every named card renders with the requested name, title, bio, and photo; ring 2 passes; requester confirms"
+      "routingLabel": "n8n_overwrite_or_sync_exception",
+      "doneWhen": "two campuses render correctly after a run with the new derivation, and spec/campus-page-field-map.json is updated"
     },
-    "link-cta": {
+    "sync-delivery": {
       "match": {
-        "detailPattern": "application (?:page|link|route)|apply(?:ing)? (?:link|page|button|route)|book a (?:call|tour)|calendar link|info session link|community link|packet link",
-        "websiteRequestType": [
-          "links",
-          "cta"
-        ]
+        "titlePattern": "^n8n run:|^Website delivery:|did not (?:update|rewrite|sync)",
+        "customFields.checkId": "sync-delivery"
       },
       "required": [
         "pageUrl",
-        "changeDetail",
-        "requester"
+        "cssId",
+        "sourceValue",
+        "pageValue",
+        "lastRunEvidence"
       ],
-      "recipe": "link-cta",
-      "scope": "website",
-      "note": "A CTA or link request from the form: Apply, Book a Call, Book a Tour, calendar, packet, community. The destination usually comes from HubSpot (admission_link, call_scheduling_link) or a source owner; run step 1b before editing. Application routes (submission_campus) are hubspot-program-admin territory.",
+      "recipe": "sync-mapping",
+      "scope": "n8n",
+      "note": "Source and mapping are right but the page still shows the old value after the scheduled run: the run failed or skipped the page. Owner: n8n-sync-owner.",
+      "assignTo": "n8n-sync-owner",
+      "verify": "page after an on-demand run",
       "observerChecks": [],
-      "routingLabel": "apply_link_admission",
-      "doneWhen": "the CTA resolves logged out to the right campus and year, ring 2 passes, and the observer rerun clears the check"
+      "routingLabel": "n8n_overwrite_or_sync_exception",
+      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
     },
-    "program-info": {
+    "hubspot-data": {
       "match": {
-        "websiteRequestType": [
-          "update-program-info"
-        ],
-        "titlePattern": "Update program info",
-        "detailPattern": "grade levels|tuition|address|phone number|school year"
+        "titlePattern": "^(HubSpot data|HubSpot Program):|^HubSpot data:|update (?:the )?HubSpot",
+        "customFields.checkId": "hubspot-data"
       },
       "required": [
         "pageUrl",
-        "changeDetail",
-        "requester"
+        "sourceField",
+        "sourceValue",
+        "expectedValue",
+        "derivation",
+        "owner"
       ],
-      "recipe": "campus-facts",
-      "scope": "website",
+      "recipe": "hubspot-data",
+      "scope": "hubspot",
+      "note": "A HubSpot Program (or Marketing Event) field holds a value that contradicts the requirement for the campus state. Fix is in HubSpot through the APEX campus Program editor; the website follows after the 00:15 CT n8n run. Never a WordPress edit.",
+      "assignTo": "hubspot-program-admin",
+      "cc": [
+        "hubspot-owner",
+        "website-agent-operator"
+      ],
+      "verify": "page after the next n8n run",
       "observerChecks": [],
       "routingLabel": "hubspot_campus_facts",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
+    },
+    "sheet-data": {
+      "match": {
+        "titlePattern": "^Onboarding sheet:|^Sheet data:|onboarding sheet",
+        "customFields.checkId": "sheet-data"
+      },
+      "required": [
+        "pageUrl",
+        "sheetTab",
+        "sheetKey",
+        "sourceValue",
+        "expectedValue",
+        "owner"
+      ],
+      "recipe": "hubspot-data",
+      "scope": "sheet",
+      "note": "The onboarding sheet Website Copy tab holds wrong copy. Fix is in the sheet; owner to be named (open gap).",
+      "assignTo": "website-operations",
+      "verify": "page after the next n8n run",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
     },
     "staff-photo": {
       "match": {
@@ -199,7 +240,7 @@
         "websiteRequestType": [
           "update-team-member"
         ],
-        "titlePattern": "Update a team member"
+        "titlePattern": "Update a team member|card has no photo|card without (?:a )?photo"
       },
       "required": [
         "pageUrl",
@@ -232,6 +273,80 @@
       "scope": "website",
       "observerChecks": [],
       "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+    },
+    "staff-bulk": {
+      "match": {
+        "detailPattern": "team section|guides\\x27? profiles|update (?:all )?(?:staff|our staff|our team|the team)|team bio|bios and pictures|add (?:these|the following) (?:people|team members)|new guides|staff updated"
+      },
+      "required": [
+        "pageUrl",
+        "requester",
+        "bulkAssets"
+      ],
+      "recipe": "staff-card",
+      "scope": "website",
+      "note": "A roster update for several people at once, usually with a deck or sheet. Executed as one staff-card recipe per person; each person needs name, title, bio, and headshot. Missing Info lists the people whose inputs are absent.",
+      "observerChecks": [],
+      "routingLabel": "staff_photo_title_bio",
+      "doneWhen": "every named card renders with the requested name, title, bio, and photo; ring 2 passes; requester confirms"
+    },
+    "copy": {
+      "match": {
+        "websiteRequestType": [
+          "other"
+        ],
+        "titlePattern": "Website \\(Other\\)|Website \u2014 Alpha",
+        "detailPattern": "\\bFAQ\\b|questions/answers|typo|wording|rename|reword"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "copy",
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+    },
+    "link-cta": {
+      "match": {
+        "detailPattern": "application (?:page|link|route)|apply(?:ing)? (?:link|page|button|route)|book a (?:call|tour)|calendar link|info session link|community link|packet link",
+        "websiteRequestType": [
+          "links",
+          "cta"
+        ]
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "link-cta",
+      "scope": "website",
+      "note": "A CTA or link request from the form: Apply, Book a Call, Book a Tour, calendar, packet, community. The destination usually comes from HubSpot (admission_link, call_scheduling_link) or a source owner; run step 1b before editing. Application routes (submission_campus) are hubspot-program-admin territory.",
+      "observerChecks": [],
+      "routingLabel": "apply_link_admission",
+      "doneWhen": "the CTA resolves logged out to the right campus and year, ring 2 passes, and the observer rerun clears the check"
+    },
+    "program-info": {
+      "match": {
+        "websiteRequestType": [
+          "update-program-info"
+        ],
+        "titlePattern": "Update program info",
+        "detailPattern": "^(?![\\s\\S]*\\bFAQ\\b)[\\s\\S]*?(?:grade levels|tuition|address|phone number|school year)"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "campus-facts",
+      "scope": "website",
+      "observerChecks": [],
+      "routingLabel": "hubspot_campus_facts",
       "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-launch-copy": {
@@ -515,119 +630,6 @@
       "observerChecks": [],
       "routingLabel": "brand_copy_voice_ux",
       "doneWhen": "the target and representative pages pass shared-surface, accessibility, form, consent, desktop and mobile verification"
-    },
-    "copy": {
-      "match": {
-        "websiteRequestType": [
-          "other"
-        ],
-        "titlePattern": "Website \\(Other\\)|Website \u2014 Alpha"
-      },
-      "required": [
-        "pageUrl",
-        "changeDetail",
-        "requester"
-      ],
-      "recipe": "copy",
-      "scope": "website",
-      "observerChecks": [],
-      "routingLabel": "brand_copy_voice_ux",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
-    },
-    "hubspot-data": {
-      "match": {
-        "titlePattern": "^(HubSpot data|HubSpot Program):",
-        "customFields.checkId": "hubspot-data"
-      },
-      "required": [
-        "pageUrl",
-        "sourceField",
-        "sourceValue",
-        "expectedValue",
-        "derivation",
-        "owner"
-      ],
-      "recipe": "hubspot-data",
-      "scope": "hubspot",
-      "note": "A HubSpot Program (or Marketing Event) field holds a value that contradicts the requirement for the campus state. Fix is in HubSpot through the APEX campus Program editor; the website follows after the 00:15 CT n8n run. Never a WordPress edit.",
-      "assignTo": "hubspot-program-admin",
-      "cc": [
-        "hubspot-owner",
-        "website-agent-operator"
-      ],
-      "verify": "page after the next n8n run",
-      "observerChecks": [],
-      "routingLabel": "hubspot_campus_facts",
-      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
-    },
-    "sheet-data": {
-      "match": {
-        "titlePattern": "^Onboarding sheet:",
-        "customFields.checkId": "sheet-data"
-      },
-      "required": [
-        "pageUrl",
-        "sheetTab",
-        "sheetKey",
-        "sourceValue",
-        "expectedValue",
-        "owner"
-      ],
-      "recipe": "hubspot-data",
-      "scope": "sheet",
-      "note": "The onboarding sheet Website Copy tab holds wrong copy. Fix is in the sheet; owner to be named (open gap).",
-      "assignTo": "website-operations",
-      "verify": "page after the next n8n run",
-      "observerChecks": [],
-      "routingLabel": "brand_copy_voice_ux",
-      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
-    },
-    "sync-mapping": {
-      "match": {
-        "titlePattern": "^(Website mapping|n8n mapping):",
-        "customFields.checkId": "sync-mapping"
-      },
-      "required": [
-        "element",
-        "cssId",
-        "currentDerivation",
-        "proposedDerivation",
-        "reason",
-        "owner"
-      ],
-      "recipe": "sync-mapping",
-      "scope": "n8n",
-      "note": "The source value is right but the way n8n derives the page element is wrong or missing. Fix is a change to the n8n workflow (or the field map). Owner is the n8n-sync-owner; the decision is recorded in docs/decisions.md.",
-      "assignTo": "n8n-sync-owner",
-      "cc": [
-        "hubspot-owner",
-        "website-agent-operator"
-      ],
-      "verify": "page after the next n8n run on two campuses",
-      "observerChecks": [],
-      "routingLabel": "n8n_overwrite_or_sync_exception",
-      "doneWhen": "two campuses render correctly after a run with the new derivation, and spec/campus-page-field-map.json is updated"
-    },
-    "sync-delivery": {
-      "match": {
-        "titlePattern": "^n8n run:",
-        "customFields.checkId": "sync-delivery"
-      },
-      "required": [
-        "pageUrl",
-        "cssId",
-        "sourceValue",
-        "pageValue",
-        "lastRunEvidence"
-      ],
-      "recipe": "sync-mapping",
-      "scope": "n8n",
-      "note": "Source and mapping are right but the page still shows the old value after the scheduled run: the run failed or skipped the page. Owner: n8n-sync-owner.",
-      "assignTo": "n8n-sync-owner",
-      "verify": "page after an on-demand run",
-      "observerChecks": [],
-      "routingLabel": "n8n_overwrite_or_sync_exception",
-      "doneWhen": "the public page shows the expected value after the next 00:15 CT n8n run, and the observer rerun clears the check"
     }
   },
   "fields": {
@@ -644,7 +646,8 @@
     "staffName": {
       "from": [
         "originalSubmission.webTmName",
-        "title:\u2014 ([A-Z][^\u2014]+?) \u2014"
+        "title:\u2014 ([A-Z][^\u2014]+?) \u2014",
+        "title:^Alpha [^:]+: ([^|]+?) \\|"
       ],
       "missingText": "the team member's full name"
     },
@@ -663,10 +666,10 @@
     "staffHeadshot": {
       "from": [
         "originalSubmission.webTmHeadshotAssetId",
-        "originalSubmission.webTmHeadshotUrl",
-        "description:HEADSHOT (?:URL|ASSET)\\s*([^\\s<]+)"
+        "requestAssets.0.id",
+        "description:HEADSHOT ASSET\\s*([A-Za-z0-9]+)"
       ],
-      "missingText": "the headshot (APEX asset or URL)"
+      "missingText": "the headshot attached to this request as an APEX asset (Drive, Slack, or deck links are not accepted: the agent cannot verify who a file belongs to)"
     },
     "changeDetail": {
       "from": [
@@ -720,6 +723,13 @@
         "customFields.requestDetail:(https?://[^\\s]+)"
       ],
       "missingText": "the destination URL the CTA should point to, confirmed reachable"
+    },
+    "bulkAssets": {
+      "from": [
+        "requestAssets.0.id",
+        "originalSubmission.webTmHeadshotAssetId"
+      ],
+      "missingText": "headshots and bios attached to this request as APEX assets, one Add a team member request per person"
     }
   },
   "contract": "spec/ticket-contract.json"

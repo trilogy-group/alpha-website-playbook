@@ -136,3 +136,27 @@ Drafted 2026-09-17 from `docs/stress-test-2026-09-17-website-agent-system.md`, t
 ## Exit criteria (from the stress test, unchanged)
 
 Every supported class maps to a typed adapter or handoff; unknown classes fail closed; cross-harness fixtures agree; contract-invalid Requests cannot be execution-ready; the release fingerprint is enforced before claim or write; compound state survives interruption; completion is impossible without rendered evidence; failure drills produce a recoverable state with an owner; agent credentials cannot bypass the control plane; a staged multi-class pilot and an allowlisted production pilot run with zero unsafe writes.
+
+---
+## Build status (2026-09-17, end of day)
+
+Built by the website agent and either merged, pushed to main, or open for review:
+
+| Workstream | Where | State |
+| --- | --- | --- |
+| 1 Intake validity and execution readiness columns | APEX PR 330 (`agent/website-control-plane`) | open, needs Hailey |
+| 2 Reconcile evidence gate (rendered evidence required to complete) | APEX PR 330 | open; step-level evidence profiles still to come |
+| 3 Release manifest, `tests/check-release.mjs`, intake `--apply` gate, bridge `abilitySchemaSha256`, worker `--preflight-alpha-mcp` | playbook main, MCP 0.5.1, APEX PR 330 | done; manifest hash set after the 0.5.1 or 0.5.2 upload |
+| 4 Ready queue serves only execution-ready Requests | APEX PR 330 | open |
+| 5 Policy bundle (`tests/build-policy.mjs`, `spec/policy-bundle.generated.json`), intake reads the bundle only | playbook main | done |
+| 6 Agent OpenAPI at `/api/docs/agent` | APEX PR 330 | open |
+| 7 Twenty decision fixtures asserted by `npm test` | playbook main | done; second-harness run still to do |
+| 8 API key scopes | APEX PR 330 | open |
+| 9 Step graph per class (`steps` in the bundle: adapter, owner, wake, evidence) | playbook main | definitions done; APEX step model waits on Hailey |
+| 10 Adapter registry (`spec/adapters.json`, validator fails on unmapped classes) | playbook main | done |
+| 11 Telemetry (`tests/telemetry-report.mjs` from receipts and APEX; first report `docs/telemetry/2026-09-17.md`) | playbook main | report done; retry states and dead letter wait on APEX |
+| 12 HubSpot scopes and agent key | Hailey | waiting |
+| 13 Staging with an application-password path | Yash or Dmitry | waiting |
+| 14 Decision cadence, seven Proposed decisions | Matt, Yash, Farhan | waiting |
+| 15 Inventories (`registry/plugins.json`, `redirects.json`, `global-runtime.json`) | playbook main | done; forms ids still empty |
+| 16 East Bay tagging, drift report (MCP 0.5.2 normalizes drift keys) | done; MCP PR 17 | 0.5.2 open |

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs'
+import { spawnSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -178,6 +179,20 @@ export function runValidation() {
     ...(readJson('registry/templates.json', errors)?.gaps || []),
   ]
   if (unresolved.length) warnings.push(`${unresolved.length} explicit owner or inventory gaps remain and must stay fail-closed`)
+
+  // Policy bundle, adapters, and release manifest (improvement plan workstreams 3, 5, 10).
+  const bundle = readJson('spec/policy-bundle.generated.json', errors)
+  const adapters = readJson('spec/adapters.json', errors)
+  const manifest = readJson('spec/release-manifest.json', errors)
+  const classes = readJson('spec/ticket-classes.json', errors)
+  if (bundle && adapters && classes) {
+    const built = spawnSync(process.execPath, [path.join(root, 'tests', 'build-policy.mjs'), '--check'], { encoding: 'utf8' })
+    if (built.status !== 0) errors.push('policy bundle is stale: run node tests/build-policy.mjs')
+    const mapped = new Set(Object.values(adapters.adapters || {}).flatMap((a) => a.ticketClasses || []))
+    for (const id of Object.keys(classes.classes || {})) if (!id.startsWith('$') && !mapped.has(id)) errors.push(`ticket class ${id} maps to no adapter in spec/adapters.json`)
+    for (const [id, a] of Object.entries(adapters.adapters || {})) for (const cls of a.ticketClasses || []) if (!classes.classes?.[cls]) errors.push(`adapter ${id} names unknown ticket class ${cls}`)
+    if (manifest && manifest.policySha256 !== bundle.policySha256) errors.push('spec/release-manifest.json policySha256 does not match the policy bundle')
+  }
 
   return { errors, warnings, jsonFiles: jsonFiles.length, requiredFiles: requiredFiles.length }
 }
