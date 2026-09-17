@@ -1,0 +1,27 @@
+{
+  "$comment": "Forms and admissions inventory. Empty or unknown values are execution blockers, not values to infer.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "hubspotPortalId": "40051392",
+  "forms": [],
+  "routingContract": {
+    "campusField": "submission_campus",
+    "campusValueSource": "approved HubSpot Program or form mapping",
+    "utmPropagation": "global website JavaScript, exact behavior requires inventory",
+    "applicationDestination": "HubSpot Program admission_link to approved Finalsite or application route",
+    "confirmationPages": "inventory_required",
+    "paymentOrPaygate": "inventory_required"
+  },
+  "requiredBeforeAutomatedChange": [
+    "page and canonical URL",
+    "HubSpot form ID",
+    "owner",
+    "submission_campus value",
+    "HubSpot Program ID",
+    "destination and redirect behavior",
+    "confirmation page",
+    "contact and workflow side effects",
+    "safe test identity and cleanup procedure"
+  ],
+  "status": "inventory_incomplete"
+}

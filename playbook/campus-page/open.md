@@ -1,6 +1,8 @@
-# Open campus page requirements (partial)
+# Open Campus Page Requirements
 
-State: Open, as decided by HubSpot Programs. Machine form: `spec/campus-page-requirements.json`. Rows written so far are the ones the September 15 launch-copy tickets exercised; the remaining sections follow.
+State: Open, as decided by HubSpot Programs. Machine form: `spec/campus-page-requirements.json`.
+
+Rows sourced from a named decision or system rule are active. Rows sourced only from the 44-page live inventory are an observed baseline and still need owner approval before an agent restructures a page to match them.
 
 | Section | Requirement | Source | Owner when missing | Checks | Exemplar |
 | --- | --- | --- | --- | --- | --- |
@@ -11,5 +13,16 @@ State: Open, as decided by HubSpot Programs. Machine form: `spec/campus-page-req
 | Intro heading | "Welcome to the Future of Education in City" (held: the word "education" is MacKenzie's call) | Demonstrated-correct pages | None | Screenshot | Plano |
 | Header and footer | Theme-builder header with stylesheet, logo, nav, Contact Us; footer | Atlanta incident | Elementor owner | page-check header stylesheet, footer | Any |
 | Info packet | When an approved packet exists, the CTA opens a public document for this campus and year | Requirement catalog; replay found 401s | Packet owner | page-check links; observer packet checks | Plano |
+| Top section | Optional. Its absence alone is not a defect. Any visible content follows the source and seasonal rules. | Live inventory: present on 29 of 44 pages | Content owner | Whole-page and seasonal checks | None approved |
+| Founding families | Parent-proof section remains present when the approved template includes it; videos and claims must be approved and playable | Live inventory: present on 44 of 44 pages | Brand and website operations | Screenshot, links, media, claim checks | Needs approval |
+| Events | Campus strip is present and scoped to the exact HubSpot program-interest label; public events match HubSpot | HubSpot event-import contract | Events plugin owner | Event sync and campus filter checks | Any verified scoped page |
+| Contact and resources | Address, phone, email, map, Apply, booking, calendar, Community, and packet values come from their exact field-map sources; optional controls appear only when a verified destination exists | HubSpot, field map, packet and Community registries | Field-specific owner | Source diagnosis, logged-out link, schema and map checks | Needs approval |
+| Team | Only approved current staff cards; exact name, public title, bio, photo, and order; no placeholders or crossed photos | APEX staff request and campus role owner | Dean of Parents, then Head of Schools | Same-card MCP verification, desktop and mobile | Needs approval |
+| Video gallery | Approved Alpha and campus-relevant records imported from Airtable; no wrong-campus or sister-brand content | Airtable video pipeline and site identity rules | Website operations | Import, media, identity and link checks | Needs approval |
+| Photo gallery | Optional until approved assets exist; every visible image has rights, campus identity, alt text, and an acceptable crop | Approved media source and media standard | Photography and website operations | Media identity, render, crop, desktop and mobile | Needs approval |
+| Lower section | Retains the approved template structure and contains no stale launch, seasonal, cross-brand, or unapproved claim content | Live inventory: present on 42 of 44 pages; site rules | Elementor and content owner | Whole-page, brand, seasonal and claim checks | Needs approval |
+| Accreditation | Candidate and accredited states reflect `cognia_accredited`; mutually inconsistent badges cannot be visible | HubSpot Program through n8n | HubSpot Program and n8n owners | Source read, CSS-ID presence and screenshot | Needs approval |
+| SEO and schema | Unique campus title and description, canonical URL, semantic H1, indexable state, School schema matching source facts, sitemap entry | Site rules and HubSpot campus facts | Website operations or n8n owner by field | Metadata, canonical, schema, sitemap and Googlebot parity | Needs approval |
+| Global header and footer | Shared templates and styles render normally; never modified under the campus ticket | Shared template rule and Atlanta incident | Elementor owner | Header stylesheet, footer and ring 3 | Any healthy campus page |
 
 Announced campuses differ in one row: the status sentence names a month or season and a year (`playbook/campus-page/announced.md`, to be written).

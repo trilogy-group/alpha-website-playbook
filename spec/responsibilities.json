@@ -890,6 +890,26 @@
       "supplies": "requester",
       "approves": "website-operations",
       "executes": "elementor-owner or wordpress-admin; website-operations until named"
+    },
+    "page-status": {
+      "supplies": "requester with target status, effective time and public-route expectation",
+      "approves": "website-operations plus page-family owner",
+      "executes": "authorized human website operator until scheduled support is released"
+    },
+    "seo-redirect": {
+      "supplies": "requester or observer with exact current and expected discovery behavior",
+      "approves": "website-operations; n8n-sync-owner for synchronized campus metadata",
+      "executes": "authorized human website operator or authoritative redirect-layer owner"
+    },
+    "form-admissions": {
+      "supplies": "requester, hubspot-program-admin and admissions owner",
+      "approves": "hubspot-program-admin and admissions owner; finance owner for payment behavior",
+      "executes": "named source-system or platform owner after safe QA is defined"
+    },
+    "global-template": {
+      "supplies": "requester with affected surfaces and desired outcome",
+      "approves": "elementor-owner or platform owner; website-operations until named",
+      "executes": "named human owner through staged project work"
     }
   },
   "gaps": [
@@ -1095,6 +1115,40 @@
         "owner": "n8n-sync-owner"
       },
       "missingInfoGoesTo": "n8n-sync-owner"
+    },
+    "page-status": {
+      "needs": {
+        "target status and effective time": "the ticket",
+        "page-family publication requirements": "spec/page-family-requirements.json",
+        "redirect, sitemap, noindex, Markdown and LLM behavior": "the ticket and SEO runbook",
+        "approver": "website-operations plus page-family owner"
+      },
+      "missingInfoGoesTo": "website-operations and the page-family owner"
+    },
+    "seo-redirect": {
+      "needs": {
+        "authoritative SEO or redirect layer": "registry/redirects.json and spec/source-authority.json",
+        "expected discovery behavior": "spec/page-family-requirements.json",
+        "approver": "website-operations or n8n-sync-owner by field"
+      },
+      "missingInfoGoesTo": "website-operations"
+    },
+    "form-admissions": {
+      "needs": {
+        "form and routing inventory": "registry/forms.json",
+        "HubSpot Program and submission_campus": "HubSpot source",
+        "downstream side effects and safe QA": "form owner",
+        "approver": "hubspot-program-admin and admissions owner"
+      },
+      "missingInfoGoesTo": "hubspot-program-admin and admissions owner"
+    },
+    "global-template": {
+      "needs": {
+        "template or global object": "registry/templates.json, registry/navigation.json or registry/global-runtime.json",
+        "affected page families": "spec/page-family-requirements.json",
+        "owner and rollback": "elementor-owner or platform owner"
+      },
+      "missingInfoGoesTo": "elementor-owner, else website-operations"
     }
   }
 }

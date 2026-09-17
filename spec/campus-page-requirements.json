@@ -1,6 +1,6 @@
 {
-  "$comment": "Per-state, per-section requirements (M3). Started with the rows exercised by the group A launch-copy tickets; the rest of the Open state and the other states follow. Each row: requirement, source, owner when missing, check, exemplar.",
-  "version": "0.1",
+  "$comment": "Per-state, per-section requirements. Rows marked observed_baseline need owner approval before they justify restructuring a page. Each row names its source, owner, checks and exemplar status.",
+  "version": "0.2",
   "states": {
     "Open": {
       "campus.hero.identity": {
@@ -106,6 +106,96 @@
         "exemplars": [
           "https://alpha.school/plano/"
         ]
+      },
+      "campus.top-section": {
+        "required": false,
+        "content": "Optional. Its absence alone is not a defect. Visible content still follows source, brand and seasonal rules.",
+        "source": "Live inventory: present on 29 of 44 campus pages",
+        "ownerWhenMissing": "content owner",
+        "checks": ["whole-page seasonal and brand checks"],
+        "exemplars": [],
+        "status": "observed_baseline"
+      },
+      "campus.founding-families": {
+        "required": true,
+        "content": "Parent-proof section remains present when the approved template includes it; videos and claims are approved and playable.",
+        "source": "Live inventory: present on 44 of 44 campus pages",
+        "ownerWhenMissing": "brand authority and website operations",
+        "checks": ["media render", "link reachability", "claim evidence"],
+        "exemplars": [],
+        "status": "observed_baseline"
+      },
+      "campus.events": {
+        "required": true,
+        "content": "Campus event strip is scoped to the exact HubSpot program-interest label and public events match HubSpot.",
+        "source": "HubSpot event-import contract and live page model",
+        "ownerWhenMissing": "events-plugin-owner",
+        "checks": ["observer public-event-sync", "observer campus-event-filter"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.contact-resources": {
+        "required": true,
+        "content": "Address, phone, email, map and CTAs come from their field-specific source; optional controls appear only with a verified destination.",
+        "source": "spec/campus-page-field-map.json and spec/source-authority.json",
+        "ownerWhenMissing": "field-specific owner",
+        "checks": ["source diagnosis", "link reachability", "schema", "map"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.team": {
+        "required": true,
+        "content": "Only approved current staff cards with exact name, public title, biography, photo and order. No placeholders or crossed photos.",
+        "source": "APEX staff request, campus role owner and staff-card safety contract",
+        "ownerWhenMissing": "dean-of-parents, then head-of-schools",
+        "checks": ["same-card verification", "placeholder check", "desktop and mobile"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.video-gallery": {
+        "required": true,
+        "content": "Approved Alpha and campus-relevant records imported from Airtable; no wrong-campus or sister-brand content.",
+        "source": "Airtable video pipeline and identity rules",
+        "ownerWhenMissing": "website-operations",
+        "checks": ["import", "media", "identity", "links"],
+        "exemplars": [],
+        "status": "observed_baseline"
+      },
+      "campus.photo-gallery": {
+        "required": "when approved assets exist",
+        "content": "Visible images have rights, campus identity, alt text and an acceptable crop.",
+        "source": "approved media source and proposed media standard",
+        "ownerWhenMissing": "photography and website-operations",
+        "checks": ["image render", "identity", "crop", "desktop and mobile"],
+        "exemplars": [],
+        "status": "observed_baseline"
+      },
+      "campus.lower-section": {
+        "required": true,
+        "content": "Approved template structure with no stale launch, seasonal, cross-brand or unapproved claim content.",
+        "source": "Live inventory: present on 42 of 44 pages; site rules",
+        "ownerWhenMissing": "elementor-owner and content owner",
+        "checks": ["whole-page", "brand", "seasonal", "claim"],
+        "exemplars": [],
+        "status": "observed_baseline"
+      },
+      "campus.accreditation": {
+        "required": "source dependent",
+        "content": "Candidate and accredited badge states reflect cognia_accredited and cannot be visibly inconsistent.",
+        "source": "HubSpot Programs through n8n",
+        "ownerWhenMissing": "hubspot-program-admin and n8n-sync-owner",
+        "checks": ["source read", "synced CSS IDs", "screenshot"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.discovery": {
+        "required": true,
+        "content": "Unique title and description, canonical, semantic H1, indexable state, School schema matching source facts, sitemap entry and approved Markdown and LLM behavior.",
+        "source": "site search rules and HubSpot campus facts",
+        "ownerWhenMissing": "website-operations or n8n-sync-owner by field",
+        "checks": ["metadata", "canonical", "schema", "sitemap", "Googlebot parity"],
+        "exemplars": [],
+        "status": "active"
       }
     },
     "Announced": {
@@ -121,6 +211,107 @@
         "exemplars": [
           "https://alpha.school/bethesda/"
         ]
+      },
+      "campus.page-existence": {
+        "required": "when launch owner approves publication",
+        "content": "Any published page is canonical, intentionally indexable and complete enough for parents. A public page is not required solely because the Program is Announced.",
+        "source": "HubSpot lifecycle meaning and launch owner",
+        "ownerWhenMissing": "expansion and website-operations",
+        "checks": ["status", "canonical", "sitemap", "noindex"],
+        "exemplars": ["https://alpha.school/bethesda/"],
+        "status": "active"
+      },
+      "campus.hero.identity": {
+        "required": "when page is published",
+        "content": "H1, grade and location identity match the exact HubSpot Program.",
+        "source": "HubSpot Programs",
+        "ownerWhenMissing": "hubspot-program-admin",
+        "checks": ["h1", "identity", "grade source"],
+        "exemplars": ["https://alpha.school/bethesda/"],
+        "status": "active"
+      },
+      "campus.hero.ctas": {
+        "required": "source dependent",
+        "content": "Only approved destinations appear. Apply, booking, event, packet and Community controls are conditional on verified routes.",
+        "source": "spec/source-authority.json",
+        "ownerWhenMissing": "field-specific owner",
+        "checks": ["logged-out destination", "campus identity"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.intro.media": {
+        "required": "when page is published",
+        "content": "Approved launch-stage media for this campus and date; no other campus, expired season or open-state claim.",
+        "source": "approved media registry",
+        "ownerWhenMissing": "website-operations",
+        "checks": ["media identity", "seasonal", "crop", "screenshot"],
+        "exemplars": [],
+        "status": "approval_needed"
+      },
+      "campus.events": {
+        "required": false,
+        "content": "If present, the strip is scoped to the exact HubSpot program-interest label.",
+        "source": "HubSpot event-import contract",
+        "ownerWhenMissing": "events-plugin-owner",
+        "checks": ["event filter", "source sync"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.contact-resources": {
+        "required": "source dependent",
+        "content": "Only verified public facts and destinations are shown. Missing values are not invented.",
+        "source": "HubSpot and owner registries",
+        "ownerWhenMissing": "field-specific owner",
+        "checks": ["source", "link", "schema", "map"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.team": {
+        "required": false,
+        "content": "Any visible person has an approved name, public title, biography, photo and effective date.",
+        "source": "APEX staff request and campus owner",
+        "ownerWhenMissing": "expansion or campus role owner",
+        "checks": ["same-card", "placeholder"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.discovery": {
+        "required": "when page is published",
+        "content": "Canonical, metadata, H1, indexability, schema, sitemap, Markdown and LLM behavior are explicit for the launch page.",
+        "source": "SEO and LLM publishing rules",
+        "ownerWhenMissing": "website-operations",
+        "checks": ["discovery-surface checks"],
+        "exemplars": [],
+        "status": "active"
+      }
+    },
+    "Pre-Announcement": {
+      "campus.page-existence": {
+        "required": false,
+        "content": "No public campus WordPress page is required. Any internal draft stays unpublished, noindex and absent from sitemap, Markdown and LLM exports.",
+        "source": "spec/campus-lifecycle.json Pre-Announcement meaning",
+        "ownerWhenMissing": "expansion and website-operations",
+        "checks": ["WordPress status", "robots", "sitemap", "LLM exports"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.map-community": {
+        "required": true,
+        "content": "One approved map pin for the exact Program routes to a visible Community program through https://www.community.alpha.school/?campus=<slug>.",
+        "source": "HubSpot lifecycle and spec/community-routing.json",
+        "ownerWhenMissing": "growth-map-owner or community-app-owner by failing surface",
+        "checks": ["map identity", "program ID join", "Community route"],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.public-claims": {
+        "required": false,
+        "content": "Do not publish Apply, booking, packet, event, tuition, grade, opening-date or staff claims without an approved source and launch-stage rule.",
+        "source": "source authority and fail-closed policy",
+        "ownerWhenMissing": "field-specific owner",
+        "checks": ["public route inventory", "claim and source checks"],
+        "exemplars": [],
+        "status": "active"
       }
     }
   }

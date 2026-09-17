@@ -1,0 +1,26 @@
+{
+  "$comment": "Navigation inventory shell. Populate from WordPress menus and theme-template conditions before global navigation work.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "headerTemplateId": 76,
+  "footerTemplateId": 77,
+  "menus": [],
+  "knownControls": [
+    "Alpha logo",
+    "primary navigation",
+    "Contact Us",
+    "responsive menu"
+  ],
+  "heldCopy": [
+    "Learn 2x in 2hrs"
+  ],
+  "requiredInventory": [
+    "WordPress menu IDs and locations",
+    "labels and exact destinations",
+    "desktop and mobile variants",
+    "conditional visibility",
+    "owner",
+    "last verified date"
+  ],
+  "status": "inventory_incomplete"
+}

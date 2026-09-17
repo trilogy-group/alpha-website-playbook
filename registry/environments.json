@@ -1,0 +1,45 @@
+{
+  "$comment": "Environment inventory without credentials. Confirm versions and clone dates before relying on a row.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "environments": [
+    {
+      "id": "alpha-production",
+      "type": "production",
+      "publicBaseUrl": "https://alpha.school/",
+      "wpEngineInstallObserved": "alpha2022",
+      "indexing": "enabled",
+      "externalSideEffects": "enabled",
+      "identityBoundary": "production-only WordPress users, APEX receipt key and environment secrets",
+      "mutationPolicy": "eligible approved supported APEX execution; human operator policy pending",
+      "lastVerified": "2026-09-17",
+      "notes": "Resolve the runtime environment before every write. Public REST namespaces prove exposure, not authorization."
+    },
+    {
+      "id": "alpha-wpengine-staging",
+      "type": "staging",
+      "originBaseUrl": "https://alpha20245stg.wpenginepowered.com/",
+      "wpEngineInstallObserved": "alpha20245stg",
+      "clonedFrom": "alpha-production",
+      "cloneDate": "2026-09-11",
+      "indexing": "disabled",
+      "externalSideEffects": "must remain disabled or isolated during tests",
+      "access": "WP Engine password protection normally enabled",
+      "identityBoundary": "staging-only reader, executor, cache identities and receipt key",
+      "mutationPolicy": "supervised validation and recovery tests",
+      "lastVerified": "2026-09-11",
+      "notes": "Password protection may be temporarily disabled for application-password validation and must be restored afterward."
+    },
+    {
+      "id": "review-deployment",
+      "type": "review",
+      "baseUrl": null,
+      "indexing": "disabled",
+      "externalSideEffects": "must be disabled",
+      "identityBoundary": "review-only",
+      "mutationPolicy": "no WordPress authority",
+      "lastVerified": "2026-09-17",
+      "notes": "A Vercel review copy is a stakeholder aid, not a WordPress source or completion proof."
+    }
+  ]
+}

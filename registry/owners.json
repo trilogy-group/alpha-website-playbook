@@ -1,0 +1,45 @@
+{
+  "$comment": "Owner-registry index. Person records remain in people.json; campus assignments are resolved live. This file records completeness and review paths without duplicating personal data.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "sources": {
+    "departmentRoles": "registry/people.json",
+    "responsibilities": "spec/responsibilities.json",
+    "campusRoles": "Admissions Hub via tests/resolve-campus-roles.mjs",
+    "campusFallback": "registry/campus-roles-snapshot.json",
+    "campusOverrides": "registry/campus-roles-overrides.json"
+  },
+  "namedRoles": [
+    "website-operations",
+    "website-agent-operator",
+    "hubspot-owner",
+    "hubspot-program-admin",
+    "hubspot-admin",
+    "n8n-sync-owner",
+    "events-plugin-owner",
+    "events",
+    "brand-authority",
+    "calendar-owner",
+    "photography",
+    "videography",
+    "marketing-collateral",
+    "expansion-new-programs",
+    "expansion-founding",
+    "observer-owner"
+  ],
+  "gaps": [
+    "elementor-owner",
+    "growth-map-owner",
+    "operations-sheet-owner",
+    "community-app-owner",
+    "packet-owner",
+    "Admissions Hub editor",
+    "legal-content-owner",
+    "analytics-and-consent-owner"
+  ],
+  "reviewCadence": {
+    "campusRoles": "live lookup; cached snapshot stale after seven days",
+    "departmentRoles": "monthly and after an announced ownership change",
+    "systemOwners": "quarterly and after an incident or deployment"
+  }
+}

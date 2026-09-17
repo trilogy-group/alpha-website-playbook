@@ -63,7 +63,9 @@ The website ticket that triggered the diagnosis is not closed by a WordPress edi
 
 ## 2. Claim
 
-Set the ticket to In Progress with a note naming the actor, the date, and the playbook version. One actor per ticket at a time. Anyone who changes a page, for any reason, updates the ticket for that page the same day, including partial work.
+Set the ticket to In Progress with a note naming the actor, the date, and the playbook version. Claim the ticket through `POST /api/agent/tasks/{id}/claim` and record the execution, revision, lease, and expiration. One actor per ticket at a time. A lease conflict, changed revision, or unresolved prior execution stops a new mutation. Renew an active lease through the execution heartbeat and release it when work stops. Full procedure: `protocols/production-and-staging.md`.
+
+Anyone who changes a page, for any reason, updates the ticket for that page the same day, including partial work.
 
 ## 3. Reconcile before editing
 
@@ -71,13 +73,15 @@ Read the live page first. Compare the full ticket scope against what the page sh
 
 ## 4. Execute
 
-Use the recipe for the class (`protocols/recipes/`). All alpha.school edits go through the Alpha WordPress MCP: resolve the page, find the exact field, prepare without writing, check the prepared diff touches only the intended field, apply, regenerate the page's CSS, clear cache, verify. Keep the prepare-time snapshot reference; it is the rollback.
+Use the recipe for the class (`protocols/recipes/`). Confirm the actor supports the operation in `spec/actor-capabilities.json`. Supported alpha.school edits go through the Alpha WordPress MCP: resolve the page, find the exact field, prepare without writing, check the prepared diff touches only the intended field, apply, regenerate the page's CSS, clear cache, verify. Keep the prepare-time snapshot reference; it is the rollback. Tool availability does not imply the scheduled APEX agent is integrated for that operation. Unsupported work routes to its owner without browser fallback.
+
+Choose the environment through `protocols/production-and-staging.md`. Recover through `protocols/rollback-and-incidents.md`.
 
 Refuse and send back rather than guess when: the target field cannot be found exactly once; the replacement text or asset is not specified or not approved; the change would touch claims, pricing, admissions, legal text, or campus-opening facts without the named owner's approval; the page structure is not one the recipe supports.
 
 ## 5. Test in three rings
 
-All three rings run on the canonical public URL after cache clearing. Screenshots are taken in the agent's browser and attached.
+All three rings run on the canonical public URL after cache clearing. Screenshots are taken in the agent's browser and attached according to `protocols/evidence-and-screenshots.md`.
 
 **Ring 1, the change.** The requested content is present, the old content is absent, exactly one field changed.
 
@@ -191,7 +195,7 @@ Payload (all fields required unless marked optional):
 
 The helper `tests/file-apex-ticket.mjs` builds and validates this payload and runs dry by default; pass `--create` to file it. After filing, add one line to the parent ticket: `Filed <new id> for <defect> found during this work.`
 
-Do not file a new ticket for something the observer already has open on the same page and check; link the existing one instead (search the queue by page URL first).
+Do not file a new ticket for something the observer already has open on the same page and check; link the existing one instead. Search the active queue with `node tests/search-apex-tickets.mjs --url <canonical> --check <requirement-id>` and add `--text <person-or-value>` when the page can carry several similar findings.
 
 ## What this protocol changes from before
 

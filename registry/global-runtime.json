@@ -1,0 +1,63 @@
+{
+  "$comment": "Global runtime markers observed in rendered alpha.school output. Configuration ownership and versions require administrator export.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "items": [
+    {
+      "id": "gtm",
+      "marker": "GTM-5W56ZLQJ",
+      "purpose": "tag management",
+      "ownerRole": "analytics-and-consent-owner",
+      "status": "owner_gap"
+    },
+    {
+      "id": "google-tag",
+      "marker": "GT-PJNQ32T9",
+      "purpose": "Google measurement",
+      "ownerRole": "analytics-and-consent-owner",
+      "status": "owner_gap"
+    },
+    {
+      "id": "hubspot-tracking-consent",
+      "marker": "rendered HubSpot tracking and consent scripts",
+      "purpose": "forms, tracking and consent",
+      "ownerRole": "hubspot-admin",
+      "status": "inventory_incomplete"
+    },
+    {
+      "id": "meta-linkedin",
+      "marker": "rendered tracking markers",
+      "purpose": "advertising and attribution",
+      "ownerRole": "analytics-and-consent-owner",
+      "status": "owner_gap"
+    },
+    {
+      "id": "voiceflow",
+      "marker": "chatbot rollout logic",
+      "purpose": "visitor chat",
+      "ownerRole": "platform-owner",
+      "status": "owner_gap"
+    },
+    {
+      "id": "founder-chat",
+      "marker": "agent query-parameter behavior",
+      "purpose": "founder chat experience",
+      "ownerRole": "platform-owner",
+      "status": "owner_gap"
+    },
+    {
+      "id": "utm-propagation",
+      "marker": "global JavaScript",
+      "purpose": "carry attribution across the funnel",
+      "ownerRole": "analytics-and-consent-owner",
+      "status": "owner_gap"
+    },
+    {
+      "id": "homepage-maps",
+      "marker": "two map technologies observed",
+      "purpose": "campus discovery",
+      "ownerRole": "growth-map-owner",
+      "status": "owner_and_inventory_gap"
+    }
+  ]
+}

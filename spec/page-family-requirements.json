@@ -1,0 +1,148 @@
+{
+  "$comment": "Machine-readable index of alpha.school page families. Detailed human requirements live under playbook/page-families and playbook/campus-page. Status values prevent incomplete families from being treated as unattended-execution ready.",
+  "version": "1.0",
+  "asOf": "2026-09-17",
+  "scope": "alpha.school",
+  "commonRequiredFields": [
+    "canonicalUrl",
+    "wordpressObjectId",
+    "family",
+    "status",
+    "indexability",
+    "ownerRole",
+    "authoritativeSource",
+    "globalDependencies",
+    "sitemapPolicy",
+    "markdownPolicy",
+    "llmExportPolicy",
+    "lastVerified"
+  ],
+  "families": [
+    {
+      "id": "homepage",
+      "humanFile": "playbook/page-families/homepage-and-locations.md",
+      "knownObjectIds": [3657],
+      "required": ["semantic H1", "unique title and description", "primary funnel CTA", "campus discovery", "header", "footer", "desktop and mobile"],
+      "sources": ["WordPress and Elementor", "HubSpot-backed growth map", "approved admissions routes"],
+      "ownerRole": "website-operations",
+      "status": "component_inventory_incomplete"
+    },
+    {
+      "id": "locations",
+      "humanFile": "playbook/page-families/homepage-and-locations.md",
+      "knownObjectIds": [],
+      "required": ["canonical", "semantic H1", "unique Program entries", "source-accurate map", "verified destinations", "accessible interaction"],
+      "sources": ["HubSpot Programs", "Operations", "growth-map API", "Community identity join"],
+      "ownerRole": "growth-map-owner",
+      "status": "owner_and_object_inventory_incomplete"
+    },
+    {
+      "id": "campus-open",
+      "humanFile": "playbook/campus-page/open.md",
+      "knownObjectIds": [],
+      "required": ["Open lifecycle requirements", "canonical public page", "School schema", "sitemap", "public verification"],
+      "sources": ["HubSpot Programs", "n8n", "approved APEX content and media"],
+      "ownerRole": "website-operations",
+      "status": "active_with_observed_baselines"
+    },
+    {
+      "id": "campus-announced",
+      "humanFile": "playbook/campus-page/announced.md",
+      "knownObjectIds": [],
+      "required": ["named month or season and year", "no Open claim", "source-backed CTAs", "explicit discovery policy"],
+      "sources": ["HubSpot Programs", "expansion owner", "approved media"],
+      "ownerRole": "expansion-new-programs",
+      "status": "active_with_approval_gaps"
+    },
+    {
+      "id": "campus-pre-announcement",
+      "humanFile": "playbook/campus-page/pre-announcement.md",
+      "knownObjectIds": [],
+      "required": ["no required public campus page", "one source-accurate map pin", "exact Community identity join"],
+      "sources": ["HubSpot Programs", "growth map", "Community"],
+      "ownerRole": "expansion-new-programs",
+      "status": "active_with_owner_gaps"
+    },
+    {
+      "id": "admissions-forms-applications",
+      "humanFile": "playbook/page-families/admissions-forms-and-confirmations.md",
+      "knownObjectIds": [],
+      "required": ["form ID", "Program", "submission_campus", "destination", "confirmation", "side effects", "safe QA"],
+      "sources": ["HubSpot", "Finalsite", "WordPress", "approved scheduling and payment systems"],
+      "ownerRole": "hubspot-program-admin",
+      "status": "inventory_incomplete"
+    },
+    {
+      "id": "alpha-answers",
+      "humanFile": "playbook/page-families/alpha-answers.md",
+      "knownObjectIds": [],
+      "required": ["approved Airtable record", "stable identity", "canonical entry", "human navigation", "readable source content", "import validation"],
+      "sources": ["Airtable", "WordPress import"],
+      "ownerRole": "website-operations",
+      "status": "schema_and_grouping_incomplete"
+    },
+    {
+      "id": "editorial",
+      "humanFile": "playbook/page-families/editorial-and-events.md",
+      "knownObjectIds": [],
+      "required": ["canonical", "semantic H1", "unique metadata", "author or source", "claim evidence", "approved media"],
+      "sources": ["WordPress", "Substack", "ART19", "approved editorial source"],
+      "ownerRole": "pr-and-comms",
+      "status": "page_inventory_incomplete"
+    },
+    {
+      "id": "events",
+      "humanFile": "playbook/page-families/editorial-and-events.md",
+      "knownObjectIds": [],
+      "required": ["HubSpot source", "public state", "program interest", "time and timezone", "registration", "aggregate and campus verification"],
+      "sources": ["HubSpot Marketing Events", "WordPress event importer"],
+      "ownerRole": "events-plugin-owner",
+      "status": "active_with_plugin_version_gap"
+    },
+    {
+      "id": "legal",
+      "humanFile": "playbook/page-families/legal-campaign-review.md",
+      "knownObjectIds": [],
+      "required": ["exact approved legal text", "semantic H1", "effective or review date", "indexability", "change history"],
+      "sources": ["named legal or executive owner"],
+      "ownerRole": "legal-content-owner",
+      "status": "owner_and_inventory_incomplete"
+    },
+    {
+      "id": "campaign",
+      "humanFile": "playbook/page-families/legal-campaign-review.md",
+      "knownObjectIds": [],
+      "required": ["campaign owner", "audience", "claim sources", "conversion", "start and end dates", "archive policy"],
+      "sources": ["approved campaign brief", "WordPress", "HubSpot forms"],
+      "ownerRole": "website-operations",
+      "status": "page_inventory_incomplete"
+    },
+    {
+      "id": "review-sandbox-confirmation",
+      "humanFile": "playbook/page-families/legal-campaign-review.md",
+      "knownObjectIds": [],
+      "required": ["noindex", "sitemap excluded", "LLM exports excluded", "side effects isolated", "owner and expiration"],
+      "sources": ["WordPress status and SEO settings", "review workflow"],
+      "ownerRole": "website-operations",
+      "status": "inventory_incomplete"
+    },
+    {
+      "id": "global-template",
+      "humanFile": "playbook/page-families/global-templates.md",
+      "knownObjectIds": [76, 77, 6140],
+      "required": ["dedicated ticket", "staging", "complete rollback", "dependent page families", "ring 3", "desktop and mobile"],
+      "sources": ["Elementor theme builder", "WordPress menus", "global code and plugins"],
+      "ownerRole": "elementor-owner",
+      "status": "owner_and_dependency_inventory_incomplete"
+    }
+  ],
+  "inventorySummary": {
+    "publishedPagesObserved": 100,
+    "registeredCampusPages": 44,
+    "nonCampusPagesEstimated": 56,
+    "postsObserved": 163,
+    "alphaAnswersResourcesObserved": 88,
+    "hubspotEventPostsObserved": 123,
+    "inventoryDate": "2026-09-17"
+  }
+}

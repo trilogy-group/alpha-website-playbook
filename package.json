@@ -1,0 +1,13 @@
+{
+  "name": "alpha-website-playbook",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node tests/validate-playbook.mjs",
+    "test": "node --test tests/playbook.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
