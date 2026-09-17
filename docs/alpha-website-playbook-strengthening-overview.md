@@ -1,4 +1,4 @@
-# Project Overview: Alpha Website Operating Bible
+# Project Overview: Strengthening the Alpha Website Playbook
 
 Date: September 17, 2026  
 Status: Proposed  
@@ -8,9 +8,9 @@ Audit baseline: `main` at `828fb37`
 
 ## Executive summary
 
-The Alpha Website Playbook should become the complete operating reference for anyone or any agent working on `alpha.school`. A fresh operator should be able to receive an APEX ticket, identify the system that owns the requested value, select the supported execution path, make the change safely, verify the public result, attach evidence, and close or route the ticket without relying on undocumented history.
+This project strengthens the existing Alpha Website Playbook so it becomes the complete operating reference for anyone or any agent working on `alpha.school`. It is audit remediation, not a separate website feature or a second playbook. A fresh operator should be able to receive an APEX ticket, identify the system that owns the requested value, select the supported execution path, make the change safely, verify the public result, attach evidence, and close or route the ticket without relying on undocumented history.
 
-The current playbook has a strong foundation. It documents campus-page concepts, several content pipelines, source diagnosis, community routing, and a careful ticket protocol. It is not yet the complete website operating bible. The largest gaps are the missing start-here guide, incomplete source and capability maps, missing execution recipes, incomplete campus lifecycle requirements, and the lack of operational runbooks for HubSpot, n8n, caching, forms, admissions, SEO, LLM publishing, WordPress infrastructure, and non-campus page families.
+The current playbook has a strong foundation. It documents campus-page concepts, several content pipelines, source diagnosis, community routing, and a careful ticket protocol. It is not yet complete enough to serve as the requested operational reference. The largest gaps are the missing start-here guide, incomplete source and capability maps, missing execution recipes, incomplete campus lifecycle requirements, and the lack of operational runbooks for HubSpot, n8n, caching, forms, admissions, SEO, LLM publishing, WordPress infrastructure, and non-campus page families.
 
 HubSpot and n8n documentation is a major part of the work, but it is not the whole project. The playbook must explain the entire chain from request to authoritative source to delivery system to public verification.
 
@@ -206,4 +206,4 @@ These findings should be deduplicated against APEX before new tickets are filed.
 | 4. Cover the whole website | Add requirements for every major page family and global surface |
 | 5. Keep it trustworthy | Add CI, automated drift checks, observer coverage, ownership, and review cadence |
 
-The detailed requirements and acceptance criteria are defined in `docs/website-operating-bible-prd.md`.
+The detailed requirements and acceptance criteria are defined in `docs/alpha-website-playbook-strengthening-prd.md`.

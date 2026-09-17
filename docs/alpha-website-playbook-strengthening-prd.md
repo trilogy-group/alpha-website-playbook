@@ -1,17 +1,17 @@
-# PRD: Alpha Website Operating Bible
+# PRD: Alpha Website Playbook Strengthening
 
 Version: 0.1  
 Date: September 17, 2026  
 Status: Proposed  
 Product owner: Matt Barge  
 Repository: `trilogy-group/alpha-website-playbook`  
-Related overview: `docs/website-operating-bible-project-overview.md`
+Related overview: `docs/alpha-website-playbook-strengthening-overview.md`
 
-## 1. Product definition
+## 1. Plan definition
 
-The Alpha Website Operating Bible is a versioned, human-readable and machine-checkable operating system for `alpha.school`. It must give a fresh agent enough verified context to take an APEX website ticket from intake through public verification without relying on undocumented knowledge.
+This plan closes the gaps found in the September 17 audit of the existing Alpha Website Playbook. It does not create a separate feature, product, or workflow. The strengthened playbook must give a fresh agent enough verified context to take an APEX website ticket from intake through public verification without relying on undocumented knowledge.
 
-The product consists of documentation, specifications, inventories, tested recipes, validation tools, and maintenance controls. It does not replace the systems that own or deliver website data.
+The remediation work consists of additions and corrections to the playbook's documentation, specifications, inventories, tested recipes, validation tools, and maintenance controls. It does not replace the systems that own or deliver website data.
 
 ## 2. Problem statement
 
@@ -561,9 +561,9 @@ Exit criteria:
 - A pull request cannot introduce broken references, missing required owners, invalid specs, or executable ticket classes without recipes.
 - A scheduled review identifies stale inventories and integration changes.
 
-## 11. Product acceptance test
+## 11. Acceptance test
 
-The version 1 product is accepted when a fresh agent, given only repository access and ten representative APEX tickets, can:
+The audit remediation is accepted when a fresh agent, given only repository access and ten representative APEX tickets, can:
 
 1. Find the correct operating entry point.
 2. Identify the canonical URL and backing object.
@@ -639,6 +639,6 @@ Initial safety targets:
 
 ## 16. Completion definition
 
-This project is complete when the product acceptance test passes, all required page families and integrations have owners, every executable ticket class has a tested recipe, production write policy is resolved, and CI prevents the documentation and specifications from silently drifting apart.
+This strengthening project is complete when the acceptance test passes, all required page families and integrations have owners, every executable ticket class has a tested recipe, production write policy is resolved, and CI prevents the documentation and specifications from silently drifting apart.
 
 Passing documentation review alone is not completion. A fresh-agent replay against representative tickets is required.

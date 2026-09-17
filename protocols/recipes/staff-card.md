@@ -20,6 +20,20 @@ Classes `staff-add`, `staff-update`, `staff-remove`, `staff-photo`. The Team sec
 5. Apply, regenerate the page's CSS, clear cache.
 6. Tests. Ring 1: the card shows the requested name, title, bio, and photo, and no other card changed. Ring 2: full page check plus screenshots of the Team section on desktop and mobile; faces not clipped. Ring 3 after the cache clear.
 
+## Card tagging decides which tool applies (2026-09-17)
+
+The staff tool treats a card as part of the leadership collection only when its Elementor title starts with `Team head`. Pages built by copying a card keep the copied person's title (East Bay: ten cards titled `Dr. Kori Riordan`), so `find_elementor_component` by `personName` finds the card but `prepare_elementor_staff_patch` reports `alpha_mcp_staff_card_not_found`. Then:
+
+- Photo only: use `prepare_elementor_content_patch` with one `set_image` edit on the card's image widget (`expectedCurrentAttachmentId` set to the current id, `assetMapping` with the confirmed name and attachment). The diff must be exactly the image id and url of that widget. Sarah Rettig on East Bay was done this way.
+- Title, bio, or quote only: `replace_substring` edits on the heading and text widgets with `expectedCurrent` counts, same rings.
+- Add or remove in an untagged row: send back to the Elementor owner to tag the cards (`Team head` on leadership cards) before the ticket is executed, or execute add and remove by hand in Elementor with the same rings.
+
+## Known tool limits
+
+- `add` on plugin builds before 0.3.3 clones the template card with duplicate element ids on every child. Refuse to apply an add until production runs 0.3.3 or later (`health` reports the version). Tara Marlow on Tulsa is blocked on this.
+- Two uploads in one session on plugin builds before 0.3.3 replay the first upload's attachment. The bridge now keys each upload by asset id and hash; always compare `sourceSha256` in the receipt with the file you approved before using the attachment id.
+- Full-page screenshots show team photos blank because the images lazy-load. For ring 2, scroll the card into view and record `complete` and `naturalWidth` on the image before taking the card screenshot.
+
 ## Refuse and send back when
 
 - The person cannot be found exactly once (update, remove) or the target row is not a recognized structure (add).
