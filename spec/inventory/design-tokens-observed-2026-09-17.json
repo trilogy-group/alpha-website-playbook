@@ -1,0 +1,318 @@
+{
+  "generated": "2026-09-17",
+  "source_page": "https://alpha.school/",
+  "kit": {
+    "id": "8",
+    "css_url": "https://alpha.school/wp-content/uploads/elementor/css/post-8.css",
+    "body_class_present": true
+  },
+  "global_colors": {
+    "primary": "#0000EF",
+    "secondary": "#F8F8F8",
+    "text": "#7A7A7A",
+    "accent": "#F8F8F8",
+    "d26f039": "#47C4E6",
+    "e7f879b": "#0000EF",
+    "4310afa": "#47C4E6",
+    "c01ff5f": "#02010100",
+    "50fe928": "#2D2D2D",
+    "80a5f70": "#9BCFE036",
+    "535a52b": "#C2ECFD",
+    "5da0a71": "#F2FBFF",
+    "f88b821": "#F2FBFF"
+  },
+  "global_color_usage_count_in_loaded_css": {
+    "primary": 51,
+    "secondary": 46,
+    "text": 11,
+    "accent": 10,
+    "d26f039": 31,
+    "e7f879b": 21,
+    "4310afa": 1,
+    "c01ff5f": 5,
+    "50fe928": 14,
+    "80a5f70": 5,
+    "535a52b": 1,
+    "5da0a71": 1,
+    "f88b821": 1
+  },
+  "global_typography": {
+    "primary": {
+      "font-family": "Montserrat",
+      "font-size": "4rem",
+      "font-weight": "700"
+    },
+    "secondary": {
+      "font-family": "Montserrat",
+      "font-size": "16px",
+      "font-weight": "400"
+    },
+    "text": {
+      "font-family": "Montserrat",
+      "font-size": "2rem",
+      "font-weight": "600",
+      "line-height": "1.6em"
+    },
+    "accent": {
+      "font-family": "Montserrat",
+      "font-size": "1rem",
+      "font-weight": "600",
+      "line-height": "1.3em",
+      "letter-spacing": "0.2em"
+    },
+    "f60860f": {
+      "font-family": "Montserrat",
+      "font-size": "5rem",
+      "font-weight": "700",
+      "line-height": "1.2em"
+    },
+    "a1f0d37": {
+      "font-family": "Montserrat",
+      "font-size": "4rem",
+      "font-weight": "700",
+      "line-height": "1.2em"
+    },
+    "2265119": {
+      "font-family": "Montserrat",
+      "font-size": "3rem",
+      "font-weight": "600",
+      "line-height": "1.1em"
+    },
+    "61f4d03": {
+      "font-family": "Montserrat",
+      "font-size": "1.6rem",
+      "font-weight": "600",
+      "line-height": "1.2em"
+    },
+    "14b315f": {
+      "font-family": "Montserrat",
+      "font-size": "1.3rem",
+      "font-weight": "600"
+    },
+    "4b7939a": {
+      "font-family": "Montserrat",
+      "font-size": "1rem",
+      "font-weight": "400"
+    },
+    "417736c": {
+      "font-family": "Montserrat",
+      "font-size": "1rem",
+      "font-weight": "700",
+      "line-height": "1.8em",
+      "letter-spacing": "0.3em"
+    },
+    "fa21d01": {
+      "font-family": "Montserrat",
+      "font-size": "1.2rem",
+      "font-weight": "400",
+      "line-height": "1.6em"
+    },
+    "89df7ad": {
+      "font-family": "Montserrat",
+      "font-size": "3.5rem",
+      "font-weight": "700",
+      "line-height": "1.1em"
+    },
+    "857b381": {
+      "font-family": "Montserrat",
+      "font-size": "14rem",
+      "font-weight": "700",
+      "line-height": "1em"
+    },
+    "7f61a08": {
+      "font-family": "Montserrat",
+      "font-size": "0.9rem",
+      "font-weight": "400"
+    },
+    "a2338a1": {
+      "font-family": "Montserrat",
+      "font-size": "3rem",
+      "font-weight": "700",
+      "font-style": "italic",
+      "line-height": "1.1em"
+    },
+    "0177235": {
+      "font-family": "Montserrat",
+      "font-size": "1.4rem",
+      "font-weight": "400",
+      "font-style": "italic",
+      "line-height": "1.6em"
+    }
+  },
+  "kit_body_defaults": {
+    "background-color": "var( --e-global-color-secondary )",
+    "color": "var( --e-global-color-text )",
+    "font-family": "var( --e-global-typography-secondary-font-family ), Sans-serif",
+    "font-size": "var( --e-global-typography-secondary-font-size )",
+    "font-weight": "var( --e-global-typography-secondary-font-weight )"
+  },
+  "kit_element_rules_resolved": {
+    ".elementor-kit-8button,.elementor-kit-8 input[type=\"button\"],.elementor-kit-8 input[type=\"submit\"],.elementor-kit-8 .elementor-button": {
+      "background-color": "--e-global-color-e7f879b=#0000EF",
+      "font-family": "--e-global-typography-accent-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-accent-font-size=1rem",
+      "font-weight": "--e-global-typography-accent-font-weight=600",
+      "line-height": "--e-global-typography-accent-line-height=1.3em",
+      "letter-spacing": "--e-global-typography-accent-letter-spacing=0.2em",
+      "color": "--e-global-color-secondary=#F8F8F8",
+      "border-style": "solid",
+      "border-width": "1px 1px 1px 1px",
+      "border-color": "--e-global-color-c01ff5f=#02010100"
+    },
+    ".elementor-kit-8button:hover,.elementor-kit-8 button:focus,.elementor-kit-8 input[type=\"button\"]:hover,.elementor-kit-8 input[type=\"button\"]:focus,.elementor-kit-8 input[type=\"submit\"]:hover,.elementor-kit-8 input[type=\"submit\"]:focus,.elementor-kit-8 .elementor-button:hover,.elementor-kit-8 .elementor-button:focus": {
+      "background-color": "--e-global-color-c01ff5f=#02010100",
+      "color": "--e-global-color-e7f879b=#0000EF",
+      "border-style": "solid",
+      "border-width": "1px 1px 1px 1px",
+      "border-color": "--e-global-color-d26f039=#47C4E6"
+    },
+    ".elementor-kit-8e-page-transition": {
+      "background-color": "#FFBC7D"
+    },
+    ".elementor-kit-8a": {
+      "color": "--e-global-color-e7f879b=#0000EF"
+    },
+    ".elementor-kit-8a:hover": {
+      "color": "--e-global-color-d26f039=#47C4E6"
+    },
+    ".elementor-kit-8h1": {
+      "color": "--e-global-color-primary=#0000EF",
+      "font-family": "--e-global-typography-f60860f-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-f60860f-font-size=5rem",
+      "font-weight": "--e-global-typography-f60860f-font-weight=700",
+      "line-height": "--e-global-typography-f60860f-line-height=1.2em"
+    },
+    ".elementor-kit-8h2": {
+      "color": "--e-global-color-primary=#0000EF",
+      "font-family": "--e-global-typography-a1f0d37-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-a1f0d37-font-size=4rem",
+      "font-weight": "--e-global-typography-a1f0d37-font-weight=700",
+      "line-height": "--e-global-typography-a1f0d37-line-height=1.2em",
+      "word-spacing": "--e-global-typography-a1f0d37-word-spacing=?"
+    },
+    ".elementor-kit-8h3": {
+      "color": "#0000EF",
+      "font-family": "--e-global-typography-2265119-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-2265119-font-size=3rem",
+      "font-weight": "--e-global-typography-2265119-font-weight=600",
+      "line-height": "--e-global-typography-2265119-line-height=1.1em",
+      "letter-spacing": "--e-global-typography-2265119-letter-spacing=?"
+    },
+    ".elementor-kit-8h4": {
+      "color": "--e-global-color-primary=#0000EF",
+      "font-family": "--e-global-typography-61f4d03-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-61f4d03-font-size=1.6rem",
+      "font-weight": "--e-global-typography-61f4d03-font-weight=600",
+      "line-height": "--e-global-typography-61f4d03-line-height=1.2em"
+    },
+    ".elementor-kit-8h5": {
+      "color": "--e-global-color-primary=#0000EF",
+      "font-family": "--e-global-typography-14b315f-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-14b315f-font-size=1.3rem",
+      "font-weight": "--e-global-typography-14b315f-font-weight=600"
+    },
+    ".elementor-kit-8h6": {
+      "color": "--e-global-color-e7f879b=#0000EF",
+      "font-family": "--e-global-typography-4b7939a-font-family=Montserrat, Sans-serif",
+      "font-size": "--e-global-typography-4b7939a-font-size=1rem",
+      "font-weight": "--e-global-typography-4b7939a-font-weight=400"
+    }
+  },
+  "body_font_family_resolved": {
+    "from": ".elementor-kit-8 font-family",
+    "value": "--e-global-typography-secondary-font-family=Montserrat, Sans-serif",
+    "note": "Elementor kit sets body font via secondary typography; theme (genesis-block-theme) font-style.css declares Public Sans but is overridden by the kit on Elementor pages"
+  },
+  "google_fonts_links": [
+    "https://fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&display=swap",
+    "https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap&ver=7.0.4"
+  ],
+  "google_fonts_families": [
+    "Montserrat"
+  ],
+  "font_face_declarations": [
+    {
+      "file": "theme-font-style.css",
+      "family": "Public Sans",
+      "src": [
+        "../webfonts/ps_le_i.woff2"
+      ]
+    },
+    {
+      "file": "theme-font-style.css",
+      "family": "Public Sans",
+      "src": [
+        "../webfonts/ps_l_i.woff2"
+      ]
+    },
+    {
+      "file": "theme-font-style.css",
+      "family": "Public Sans",
+      "src": [
+        "../webfonts/ps_le_n.woff2"
+      ]
+    },
+    {
+      "file": "theme-font-style.css",
+      "family": "Public Sans",
+      "src": [
+        "../webfonts/ps_l_n.woff2"
+      ]
+    }
+  ],
+  "theme_font_css_families": [
+    "\"Public Sans\""
+  ],
+  "inline_font_family_values_on_homepage": [
+    "Montserrat, sans-serif",
+    "inherit"
+  ],
+  "other_hex_colors_in_header_footer_home_css_top": {
+    "#FFFFFF": 8,
+    "#0000EF": 3,
+    "#B9EEFF": 3,
+    "#A1A1A1": 2,
+    "#3B5998": 2,
+    "#656565": 2,
+    "#DDD": 1,
+    "#0000DB": 1
+  },
+  "logo_images": [
+    {
+      "src": "https://alpha.school/wp-content/uploads/2024/03/logowhite-2.svg",
+      "alt": "Alpha School",
+      "class": "attachment-full size-full wp-image-81"
+    }
+  ],
+  "custom_logo_src": null,
+  "favicons": [
+    {
+      "rel": "icon",
+      "href": "https://alpha.school/wp-content/uploads/2024/04/cropped-2hr-Logos-All_2hr-Learning-Logo-Alpha-32x32.webp",
+      "sizes": "32x32"
+    },
+    {
+      "rel": "icon",
+      "href": "https://alpha.school/wp-content/uploads/2024/04/cropped-2hr-Logos-All_2hr-Learning-Logo-Alpha-192x192.webp",
+      "sizes": "192x192"
+    },
+    {
+      "rel": "apple-touch-icon",
+      "href": "https://alpha.school/wp-content/uploads/2024/04/cropped-2hr-Logos-All_2hr-Learning-Logo-Alpha-180x180.webp",
+      "sizes": ""
+    }
+  ],
+  "msapplication_tile": "https://alpha.school/wp-content/uploads/2024/04/cropped-2hr-Logos-All_2hr-Learning-Logo-Alpha-270x270.webp",
+  "og_image": "https://alpha.school/wp-content/uploads/2024/12/7.webp",
+  "theme_color_meta": null,
+  "elementor_version": "4.1.1",
+  "elementor_pro_version": "4.1.0",
+  "theme": "genesis-block-theme",
+  "elementor_templates_on_homepage": {
+    "header": "76",
+    "footer": "77",
+    "popup": "3713",
+    "page": "3657",
+    "kit": "8"
+  }
+}

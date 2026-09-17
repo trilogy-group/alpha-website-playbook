@@ -72,3 +72,16 @@ Grouped by who to ask. An item appears once under its primary respondent even wh
 ## How to answer
 
 Reply in the APEX ticket or Slack thread that carries this list, or edit this file in a pull request. Each answer is recorded in `docs/decisions.md` with the date and the name, then applied to `spec/` and the relevant `playbook/` file. Unanswered items stay Open; the playbook keeps failing closed on them.
+
+## Added after the design and information-architecture inventory (September 17, 2026)
+
+| Id | Ask | Question | Unlocks |
+| --- | --- | --- | --- |
+| Q-27 | MacKenzie Price, with the Elementor owner | The live site's primary blue is `#0000EF` and its accent is `#47C4E6`; the Alpha Event Design Guidelines name `#110068`, `#0D4AD1`, `#418BE9`, `#00BCFF`. Which palette is the web palette? Also: body text `#7A7A7A` on `#F8F8F8` fails AA contrast; may it change? Is the white logo the only approved mark? | `design-system.md` section 1; a tokens file; an observer color check |
+| Q-28 | Yash Chitneni | One canonical Alpha Answers destination: `/ai/` (38 posts, titled "Artificial Intelligence"), `/resources/` (video archive, titled "Alpha Answers", the nav target), or a new hub? `/alpha-answers/` is a 404. | Alpha Answers family; navigation registry |
+| Q-29 | Yash Chitneni | Indexability policy by family: confirmation pages, application pages, and author archives are indexable and in the sitemap today. Who owns Yoast settings? | `legal-campaign-review.md`; SEO runbook; observer check |
+| Q-30 | Yash Chitneni | Popup template 3713 ("Stay in the know") loads on the homepage and `/jb/`. Purpose, owner, HubSpot destination, expiry? | Templates registry |
+| Q-31 | Yash Chitneni | Campaign landings (`/jb/`, `/learn-more/`, `/bring-alpha-to-your-city/`, `/austin-ai-summer-camp/`): owner and expiry for each. `/jb/` is a homepage clone with three H1s. | Campaign family |
+| Q-32 | Yash Chitneni or Garbhit Sharma | `/llms-full.txt` timed out at 20 seconds. Who owns the Yoast LLM export settings and is the full export meant to be served? | SEO and LLM publishing runbook |
+| Q-33 | Garbhit Sharma | Why two single-post templates (4476 blog and `/ai/`, 8919 news) and a footer variant (4107 on `/founders/`)? Consolidate or document. | Templates registry; global-template family |
+| Q-34 | Farhan Raja with Yash | The generic `/apply/` route pre-selects Austin K-8 through three hops, and the application page renders campus identity client-side. What is the intended generic application entry, and must campus identity be server-rendered? | Admissions family; redirects policy |

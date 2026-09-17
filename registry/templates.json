@@ -34,6 +34,87 @@
       "scope": "campus creation and synchronized metadata",
       "ownerRole": "elementor-owner",
       "lastVerified": "2026-09-17"
+    },
+    {
+      "id": "elementor-kit",
+      "wordpressObjectId": 8,
+      "label": "Elementor global kit (colors, typography, button defaults)",
+      "scope": "global",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "popup-home",
+      "wordpressObjectId": 3713,
+      "label": "Popup loaded on homepage and /jb/",
+      "scope": "homepage and /jb/",
+      "ownerRole": "unknown",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "footer-variant-founders",
+      "wordpressObjectId": 4107,
+      "label": "Footer variant used by /founders/",
+      "scope": "one page",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "single-post-blog",
+      "wordpressObjectId": 4476,
+      "label": "Single post template for blog, /ai/, and campus local-SEO posts",
+      "scope": "posts",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "single-post-news",
+      "wordpressObjectId": 8919,
+      "label": "Single post template for news posts",
+      "scope": "news posts",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "archive-author",
+      "wordpressObjectId": 9123,
+      "label": "Author archive template",
+      "scope": "author archives",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "error-404",
+      "wordpressObjectId": 3427,
+      "label": "404 template",
+      "scope": "errors",
+      "ownerRole": "elementor-owner",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "page-the-program",
+      "wordpressObjectId": 3719,
+      "label": "The Program page",
+      "scope": "one page",
+      "ownerRole": "website-operations",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
+    },
+    {
+      "id": "page-locations",
+      "wordpressObjectId": 6703,
+      "label": "Locations page",
+      "scope": "one page",
+      "ownerRole": "website-operations",
+      "lastVerified": "2026-09-17",
+      "source": "observed in live HTML 2026-09-17"
     }
   ],
   "gaps": [

@@ -1,0 +1,3311 @@
+{
+  "generated": "2026-09-17",
+  "source": "https://alpha.school/sitemap_index.xml (Yoast) + 4 child sitemaps",
+  "family_rules": "homepage; campus-page = single-segment page slug not in non-campus map; campus-local-seo-post = post nested under a campus-like slug; /ai/=alpha-answers; /resources/=video-resource; others by explicit slug map",
+  "non_campus_single_segment_map": {
+    "2-hour-learning": "program",
+    "the-program": "program",
+    "overview": "program",
+    "lifeskills-workshops": "program",
+    "workshops": "program",
+    "guides": "program",
+    "admission": "admissions",
+    "admission-forms": "admissions",
+    "high-school-application": "admissions",
+    "upcoming-events": "events",
+    "upcoming-virtual-information-session": "events",
+    "find-an-event-near-you": "events",
+    "the-future-of-school-live-stream": "events",
+    "blog": "blog",
+    "ai": "alpha-answers",
+    "news": "news",
+    "resources": "video-resource",
+    "billionares-advice-to-young-people-joe-liemandt-at-bigdeal-by-codie-sanchez": "podcast-landing",
+    "joe-liemandt-and-the-future-of-education": "podcast-landing",
+    "joe-lonsdale-how-ai-incentives-can-10x-learning-save-american-education-with-tech-legend-joe-liemandt": "podcast-landing",
+    "mike-rowe-can-two-hours-of-school-really-be-enough": "podcast-landing",
+    "no-priors-reinventing-k-12-education-using-ai-with-alpha-school-principal-joe-liemandt": "podcast-landing",
+    "shane-parrish-alpha-school-2-hour-school-day": "podcast-landing",
+    "the-future-of-education-joe-liemandts-vision-for-alpha-school": "podcast-landing",
+    "jb": "campaign-landing",
+    "learn-more": "campaign-landing",
+    "bring-alpha-to-your-city": "campaign-landing",
+    "bring-alpha-details": "campaign-landing",
+    "austin-ai-summer-camp": "campaign-landing",
+    "success": "utility-confirmation",
+    "thank-you": "utility-confirmation",
+    "referral-thank-you": "utility-confirmation",
+    "application-submission": "utility-confirmation",
+    "application-status": "utility-confirmation",
+    "faq": "reference",
+    "founders": "reference",
+    "video-library": "reference",
+    "virtual-tour": "reference",
+    "end-of-2025-parent-survey-results": "reference",
+    "locations": "reference",
+    "resources-austin": "reference",
+    "resources-brownsville": "reference",
+    "resources-miami": "reference",
+    "privacy-policy": "legal",
+    "terms-of-use": "legal",
+    "editorial-policy": "legal",
+    "careers": "careers"
+  },
+  "summary": {
+    "total_urls": 347,
+    "by_type": {
+      "post": 163,
+      "page": 92,
+      "alpha_video_resource": 89,
+      "author": 3
+    },
+    "by_family": {
+      "video-resource": 89,
+      "blog": 69,
+      "campus-page": 44,
+      "alpha-answers": 38,
+      "campus-local-seo-post": 33,
+      "news": 26,
+      "reference": 9,
+      "podcast-landing": 7,
+      "program": 6,
+      "utility-confirmation": 5,
+      "campaign-landing": 5,
+      "events": 5,
+      "legal": 3,
+      "admissions": 3,
+      "author": 3,
+      "homepage": 1,
+      "careers": 1
+    },
+    "by_sitemap": {
+      "post-sitemap.xml": 163,
+      "page-sitemap.xml": 92,
+      "alpha_video_resource-sitemap.xml": 89,
+      "author-sitemap.xml": 3
+    },
+    "campus_page_count": 44,
+    "campus_slugs": [
+      "atlanta",
+      "austin",
+      "bethesda",
+      "boca-raton",
+      "boston",
+      "boston-suburbs",
+      "brownsville",
+      "carrollton",
+      "chantilly",
+      "charlotte",
+      "chicago",
+      "denver",
+      "dorado",
+      "east-bay",
+      "fort-worth",
+      "franklin",
+      "greenwich",
+      "highland-park",
+      "houston",
+      "jamaica-plain",
+      "kirkland",
+      "la-jolla",
+      "lake-travis",
+      "malibu",
+      "miami",
+      "miami-beach",
+      "nashville",
+      "new-york-city",
+      "oklahoma-city",
+      "orange-county",
+      "palm-beach",
+      "palo-alto",
+      "park-city",
+      "plano",
+      "raleigh",
+      "san-francisco",
+      "san-juan",
+      "santa-barbara",
+      "santa-monica",
+      "scottsdale",
+      "south-bay-la",
+      "southlake",
+      "the-woodlands",
+      "tulsa"
+    ],
+    "campus_local_seo_posts_by_parent": {
+      "houston": 3,
+      "miami": 4,
+      "san-francisco": 2,
+      "brownsville": 4,
+      "scottsdale": 3,
+      "chantilly": 2,
+      "raleigh": 2,
+      "palm-beach": 3,
+      "plano": 2,
+      "fort-worth": 3,
+      "santa-barbara": 3,
+      "lake-forest": 2
+    },
+    "local_seo_parents_without_campus_page": [
+      "lake-forest"
+    ],
+    "lastmod_range": {
+      "min": "2024-11-26T18:14:03+00:00",
+      "max": "2026-09-17T20:21:30+00:00"
+    }
+  },
+  "non_sitemap_pages_checked": [
+    {
+      "path": "/apply/",
+      "in_sitemap": false,
+      "status": 200,
+      "final_url": "https://alpha.school/application-fs/?submission_campus=austin_k8",
+      "redirects": 3
+    },
+    {
+      "path": "/application-fs/",
+      "in_sitemap": false,
+      "status": 200,
+      "final_url": "https://alpha.school/admission-forms/",
+      "redirects": 1
+    },
+    {
+      "path": "/alpha-answers/",
+      "in_sitemap": false,
+      "status": 404,
+      "final_url": "https://alpha.school/alpha-answers/",
+      "redirects": 0
+    },
+    {
+      "path": "/locations/",
+      "in_sitemap": true,
+      "status": 200,
+      "final_url": "https://alpha.school/locations/",
+      "redirects": 0
+    }
+  ],
+  "urls": [
+    {
+      "url": "https://alpha.school/blog/why-kindergarten-matters/",
+      "path": "/blog/why-kindergarten-matters/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-06-19T00:15:20+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/5-ways-covid-changed-kindergarten/",
+      "path": "/blog/5-ways-covid-changed-kindergarten/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-06-19T00:15:29+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/5-reasons-why-movement-matters-in-kindergarten/",
+      "path": "/blog/5-reasons-why-movement-matters-in-kindergarten/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-06-19T00:15:33+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/featured/ai-in-schools-3-ways-ai-parallels-the-internet-revolution/",
+      "path": "/blog/featured/ai-in-schools-3-ways-ai-parallels-the-internet-revolution/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-06-19T00:15:41+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/3-reasons-die-hard-public-school-parents-are-choosing-private-schools-for-their-kids/",
+      "path": "/blog/3-reasons-die-hard-public-school-parents-are-choosing-private-schools-for-their-kids/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-06-19T00:16:01+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/5-reasons-why-kindergarten-matters-most/",
+      "path": "/blog/5-reasons-why-kindergarten-matters-most/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-06-19T00:16:05+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/5-positive-ways-your-kids-should-be-using-ai/",
+      "path": "/blog/5-positive-ways-your-kids-should-be-using-ai/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-08-12T06:03:31+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/how-ai-and-humans-will-transform-the-current-education-system/",
+      "path": "/blog/how-ai-and-humans-will-transform-the-current-education-system/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-08-28T06:10:33+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/student-spotlight-this-16-year-old-is-building-a-skincare-empire/",
+      "path": "/blog/student-spotlight-this-16-year-old-is-building-a-skincare-empire/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-02T07:28:10+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/the-untapped-potential-in-your-childs-education-is-it-time-to-rethink-schooling/",
+      "path": "/ai/the-untapped-potential-in-your-childs-education-is-it-time-to-rethink-schooling/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-08T06:31:15+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/how-to-find-and-evaluate-quality-private-schools-in-your-local-area/",
+      "path": "/ai/how-to-find-and-evaluate-quality-private-schools-in-your-local-area/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-08T06:31:15+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/unlocking-your-childs-potential-the-key-advantages-of-private-school-education/",
+      "path": "/ai/unlocking-your-childs-potential-the-key-advantages-of-private-school-education/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-08T06:31:16+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/choosing-the-right-school-why-the-traditional-debate-misses-the-point/",
+      "path": "/ai/choosing-the-right-school-why-the-traditional-debate-misses-the-point/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-08T06:31:17+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/sorry-but-love-of-learning-isnt-enough/",
+      "path": "/blog/sorry-but-love-of-learning-isnt-enough/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-08T06:33:02+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/from-i-hate-school-to-can-we-skip-summer-alphas-motivation-formula/",
+      "path": "/blog/from-i-hate-school-to-can-we-skip-summer-alphas-motivation-formula/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-09-23T16:01:57+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/private-elementary-schools-in-austin-with-the-best-academics/",
+      "path": "/ai/private-elementary-schools-in-austin-with-the-best-academics/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-10-08T11:50:16+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/your-kid-is-limitless-if-you-believe-they-are/",
+      "path": "/blog/your-kid-is-limitless-if-you-believe-they-are/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-10-08T12:57:24+00:00",
+      "image_count": 2,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/best-private-elementary-schools-in-austin-for-spanish-language-learning/",
+      "path": "/ai/best-private-elementary-schools-in-austin-for-spanish-language-learning/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:48:45+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/private-elementary-schools-in-austin-known-for-their-strong-arts-and-music-curriculum/",
+      "path": "/ai/private-elementary-schools-in-austin-known-for-their-strong-arts-and-music-curriculum/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:49:28+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/top-austin-private-elementary-schools-for-children-with-adhd/",
+      "path": "/ai/top-austin-private-elementary-schools-for-children-with-adhd/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:50:07+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/austin-private-elementary-schools-with-gifted-and-talented-programs-for-k-5/",
+      "path": "/ai/austin-private-elementary-schools-with-gifted-and-talented-programs-for-k-5/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:51:40+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/nurturing-private-elementary-schools-in-austin-for-shy-or-anxious-children/",
+      "path": "/ai/nurturing-private-elementary-schools-in-austin-for-shy-or-anxious-children/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:52:11+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/private-elementary-schools-in-austin-with-small-class-sizes-for-personalized-attention/",
+      "path": "/ai/private-elementary-schools-in-austin-with-small-class-sizes-for-personalized-attention/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:52:43+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/austin-private-elementary-schools-offering-mandarin-immersion-programs/",
+      "path": "/ai/austin-private-elementary-schools-offering-mandarin-immersion-programs/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:56:11+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/non-religious-private-elementary-schools-in-austin-with-a-focus-on-character-development/",
+      "path": "/ai/non-religious-private-elementary-schools-in-austin-with-a-focus-on-character-development/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:56:53+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/christian-private-elementary-schools-in-austin-with-excellent-academics/",
+      "path": "/ai/christian-private-elementary-schools-in-austin-with-excellent-academics/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:57:58+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/austin-private-k-5-schools-focusing-on-project-based-learning/",
+      "path": "/ai/austin-private-k-5-schools-focusing-on-project-based-learning/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:58:48+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/private-elementary-schools-in-austin-with-strong-stem-programs-for-young-learners/",
+      "path": "/ai/private-elementary-schools-in-austin-with-strong-stem-programs-for-young-learners/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T13:59:35+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/houston/best-kindergarten-school-in-houston-top-10-choices-for-2025/",
+      "path": "/houston/best-kindergarten-school-in-houston-top-10-choices-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:02:24+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/houston/best-elementary-school-in-houston-top-10-ranked-for-2025/",
+      "path": "/houston/best-elementary-school-in-houston-top-10-ranked-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:03:04+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/houston/best-high-school-in-houston-top-10-ranked-for-2025/",
+      "path": "/houston/best-high-school-in-houston-top-10-ranked-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:05:11+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/ai/austin-private-elementary-schools-with-play-based-kindergarten-programs/",
+      "path": "/ai/austin-private-elementary-schools-with-play-based-kindergarten-programs/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:14:10+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/best-montessori-private-elementary-schools-in-austin-tx/",
+      "path": "/ai/best-montessori-private-elementary-schools-in-austin-tx/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:15:27+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/top-reggio-emilia-inspired-private-elementary-schools-in-austin/",
+      "path": "/ai/top-reggio-emilia-inspired-private-elementary-schools-in-austin/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:16:04+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/private-elementary-school-tour-checklist-for-parents-new-to-austin/",
+      "path": "/ai/private-elementary-school-tour-checklist-for-parents-new-to-austin/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:16:34+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/securing-a-spot-in-austin-private-elementary-schools-for-2025-if-moving-soon/",
+      "path": "/ai/securing-a-spot-in-austin-private-elementary-schools-for-2025-if-moving-soon/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:17:13+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/best-private-elementary-schools-near-downtown-austin-for-relocating-families/",
+      "path": "/ai/best-private-elementary-schools-near-downtown-austin-for-relocating-families/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:21:52+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/what-is-the-best-private-school-in-austin-for-elementary-school/",
+      "path": "/ai/what-is-the-best-private-school-in-austin-for-elementary-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:23:08+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/how-to-choose-a-private-elementary-school-in-austin-when-moving-mid-year/",
+      "path": "/ai/how-to-choose-a-private-elementary-school-in-austin-when-moving-mid-year/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:26:09+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/south-austin-private-elementary-schools-for-families-moving-with-early-elementary-kids/",
+      "path": "/ai/south-austin-private-elementary-schools-for-families-moving-with-early-elementary-kids/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:26:57+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/top-private-k-5-schools-in-austin-for-parents-relocating-with-a-5-year-old/",
+      "path": "/ai/top-private-k-5-schools-in-austin-for-parents-relocating-with-a-5-year-old/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:28:40+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/finding-the-right-private-elementary-school-in-austin-when-moving-from-california/",
+      "path": "/ai/finding-the-right-private-elementary-school-in-austin-when-moving-from-california/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:29:27+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/the-definitive-guide-to-austins-best-private-kindergartens/",
+      "path": "/ai/the-definitive-guide-to-austins-best-private-kindergartens/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:31:07+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/the-best-private-elementary-schools-in-austin-for-aspiring-college-students/",
+      "path": "/ai/the-best-private-elementary-schools-in-austin-for-aspiring-college-students/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2025-12-18T14:36:06+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/your-50000-private-school-is-lying-to-you/",
+      "path": "/blog/your-50000-private-school-is-lying-to-you/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T20:33:52+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/11-things-your-kids-brain-actually-needs-according-to-science/",
+      "path": "/blog/11-things-your-kids-brain-actually-needs-according-to-science/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T21:06:32+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/alpha-bans-chatgpt-in-academics-heres-why/",
+      "path": "/blog/alpha-bans-chatgpt-in-academics-heres-why/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T21:22:38+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/introducing-timeback-the-next-evolution-of-alphas-model/",
+      "path": "/blog/introducing-timeback-the-next-evolution-of-alphas-model/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T21:30:52+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/how-alpha-uses-ai-to-get-kids-off-screens-and-back-into-real-life/",
+      "path": "/blog/how-alpha-uses-ai-to-get-kids-off-screens-and-back-into-real-life/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T21:38:26+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/stressed-out-kid-it-might-be-time-to-switch-schools/",
+      "path": "/blog/stressed-out-kid-it-might-be-time-to-switch-schools/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T21:53:35+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/i-went-on-a-podcast-about-supporting-your-kids-curiosity/",
+      "path": "/blog/i-went-on-a-podcast-about-supporting-your-kids-curiosity/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T21:56:39+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/your-kids-social-life-matters-more-than-academics/",
+      "path": "/blog/your-kids-social-life-matters-more-than-academics/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T22:05:17+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/alphas-mid-year-report-card-is-in-heres-what-the-data-actually-says/",
+      "path": "/blog/alphas-mid-year-report-card-is-in-heres-what-the-data-actually-says/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T23:39:47+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/part-ii-things-parents-wish-were-true-but-arent/",
+      "path": "/blog/part-ii-things-parents-wish-were-true-but-arent/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T23:43:36+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/things-parents-wish-were-truebut-arent/",
+      "path": "/blog/things-parents-wish-were-truebut-arent/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-02-28T23:44:21+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/4-controversial-motivation-systems-that-actually-work/",
+      "path": "/blog/4-controversial-motivation-systems-that-actually-work/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-01T00:23:55+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/the-5-life-skills-we-teach-at-alpha-that-will-set-your-kid-up-for-life/",
+      "path": "/blog/the-5-life-skills-we-teach-at-alpha-that-will-set-your-kid-up-for-life/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-01T00:31:24+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/what-private-schools-dont-want-you-to-know/",
+      "path": "/blog/what-private-schools-dont-want-you-to-know/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-24T02:08:54+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/why-every-textbook-is-obsolete-the-end-of-one-size-fits-all-learning/",
+      "path": "/blog/why-every-textbook-is-obsolete-the-end-of-one-size-fits-all-learning/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:40:05+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/motivation-is-90-of-learning-the-science-behind-kids-who-love-school/",
+      "path": "/blog/motivation-is-90-of-learning-the-science-behind-kids-who-love-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:40:05+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/learning-at-the-speed-of-thought-how-ai-tutors-make-every-lesson-personal/",
+      "path": "/blog/learning-at-the-speed-of-thought-how-ai-tutors-make-every-lesson-personal/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:40:06+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/the-two-hour-school-day-how-ai-tutors-are-redefining-learning-efficiency/",
+      "path": "/blog/the-two-hour-school-day-how-ai-tutors-are-redefining-learning-efficiency/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:40:56+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/how-ai-and-gamification-transform-learning-at-alpha-school/",
+      "path": "/blog/how-ai-and-gamification-transform-learning-at-alpha-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:41:30+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/reinventing-education-how-alphas-personalized-learning-creates-high-achievers-in-just-2-hours/",
+      "path": "/blog/reinventing-education-how-alphas-personalized-learning-creates-high-achievers-in-just-2-hours/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:41:31+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/alpha-school-earns-cognia-accreditation-creativity-meets-excellence/",
+      "path": "/blog/alpha-school-earns-cognia-accreditation-creativity-meets-excellence/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:41:31+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/fostering-a-love-for-learning-inside-the-alpha-school-experience/",
+      "path": "/blog/fostering-a-love-for-learning-inside-the-alpha-school-experience/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:42:07+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/3-things-to-look-for-in-a-kindergarten-for-advanced-children/",
+      "path": "/blog/3-things-to-look-for-in-a-kindergarten-for-advanced-children/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:42:08+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/7-things-to-look-for-in-a-kindergarten-so-your-child-isnt-bored/",
+      "path": "/blog/7-things-to-look-for-in-a-kindergarten-so-your-child-isnt-bored/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-03-30T15:42:08+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/7-reasons-your-kids-creativity-thrives-without-traditional-arts/",
+      "path": "/blog/7-reasons-your-kids-creativity-thrives-without-traditional-arts/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-08T16:41:49+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/4-reasons-your-kid-is-learning-more-from-sports-than-from-school/",
+      "path": "/blog/4-reasons-your-kid-is-learning-more-from-sports-than-from-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-08T16:51:56+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/we-built-a-school-to-double-your-kids-d1-odds/",
+      "path": "/blog/we-built-a-school-to-double-your-kids-d1-odds/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-15T14:19:59+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/news/should-we-allow-ai-into-the-classroom/",
+      "path": "/news/should-we-allow-ai-into-the-classroom/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T06:54:40+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/alpha-schools-reimagine-education-through-ai/",
+      "path": "/news/alpha-schools-reimagine-education-through-ai/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T06:56:54+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/could-ai-really-replace-teachers-not-so-fast-experts-say/",
+      "path": "/news/could-ai-really-replace-teachers-not-so-fast-experts-say/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T06:58:09+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/ai-is-running-the-classroom-at-this-texas-school-and-students-say-its-awesome/",
+      "path": "/news/ai-is-running-the-classroom-at-this-texas-school-and-students-say-its-awesome/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T06:58:57+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/the-snapchat-move-that-leaves-teen-girls-heartbroken/",
+      "path": "/news/the-snapchat-move-that-leaves-teen-girls-heartbroken/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T06:59:39+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/alpha-school-miami-the-future-of-education-in-our-community/",
+      "path": "/news/alpha-school-miami-the-future-of-education-in-our-community/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T07:00:59+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/the-six-hour-school-day-is-dead-luckily-theres-an-even-better-solution/",
+      "path": "/news/the-six-hour-school-day-is-dead-luckily-theres-an-even-better-solution/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T07:17:42+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/blog/why-traditional-school-is-broken-and-how-were-fixing-it/",
+      "path": "/blog/why-traditional-school-is-broken-and-how-were-fixing-it/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T07:18:13+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/news/austin-school-that-uses-ai-instead-of-teachers-opens-esports-academy-with-similar-concept/",
+      "path": "/news/austin-school-that-uses-ai-instead-of-teachers-opens-esports-academy-with-similar-concept/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-21T07:20:22+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/blog/the-power-of-a-personalized-education/",
+      "path": "/blog/the-power-of-a-personalized-education/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-28T18:58:08+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/the-adhd-epidemic-how-we-misdiagnosed-an-entire-generation-of-movement-starved-kids/",
+      "path": "/blog/the-adhd-epidemic-how-we-misdiagnosed-an-entire-generation-of-movement-starved-kids/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-28T18:59:32+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/what-happens-when-you-let-kids-choose-their-own-rules-rewards-and-punishments/",
+      "path": "/blog/what-happens-when-you-let-kids-choose-their-own-rules-rewards-and-punishments/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-28T19:06:19+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/we-have-been-underestimating-children/",
+      "path": "/blog/we-have-been-underestimating-children/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-04-30T09:47:19+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/how-to-actually-help-your-kid-build-grit/",
+      "path": "/blog/how-to-actually-help-your-kid-build-grit/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-20T15:26:25+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/your-kid-fidgets-for-a-reason-and-its-not-adhd/",
+      "path": "/blog/your-kid-fidgets-for-a-reason-and-its-not-adhd/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-20T15:29:12+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/the-future-of-school-is-more-human-not-less/",
+      "path": "/blog/the-future-of-school-is-more-human-not-less/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-20T15:33:19+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/cognitive-offloading-is-the-new-illiteracy/",
+      "path": "/blog/cognitive-offloading-is-the-new-illiteracy/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-20T15:38:24+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/unlocking-potential-in-kids-empowering-the-path-to-a-brighter-tomorrow/",
+      "path": "/blog/unlocking-potential-in-kids-empowering-the-path-to-a-brighter-tomorrow/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:08:33+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/news/5-forces-educational-innovators-should-know-about/",
+      "path": "/news/5-forces-educational-innovators-should-know-about/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:08:59+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/ai-focused-private-school-expands/",
+      "path": "/news/ai-focused-private-school-expands/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:09:20+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/ai-powered-virtual-school-where-kids-spend-just-2-hours-on-academics-coming-to-arizona/",
+      "path": "/news/ai-powered-virtual-school-where-kids-spend-just-2-hours-on-academics-coming-to-arizona/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:09:39+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/ai-system-will-drive-academics-at-new-virtual-charter-school/",
+      "path": "/news/ai-system-will-drive-academics-at-new-virtual-charter-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:09:59+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/alpha-school-uses-ai-to-teach-students-academics-for-just-two-hours-a-day/",
+      "path": "/news/alpha-school-uses-ai-to-teach-students-academics-for-just-two-hours-a-day/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:10:17+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/dont-dismantle-the-department-of-education-just-yet/",
+      "path": "/news/dont-dismantle-the-department-of-education-just-yet/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:10:33+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/how-ai-and-humans-will-transform-the-current-education-system-2/",
+      "path": "/news/how-ai-and-humans-will-transform-the-current-education-system-2/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:11:08+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/how-ai-is-changing-the-role-of-teachers-in-education/",
+      "path": "/news/how-ai-is-changing-the-role-of-teachers-in-education/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:38:30+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/theres-no-such-thing-as-a-c-student-how-edtech-will-democratize-learning/",
+      "path": "/news/theres-no-such-thing-as-a-c-student-how-edtech-will-democratize-learning/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:39:05+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/this-pennsylvania-cyber-charter-proposal-would-replace-teachers-with-ai-based-lessons/",
+      "path": "/news/this-pennsylvania-cyber-charter-proposal-would-replace-teachers-with-ai-based-lessons/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-05-29T09:39:36+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/blog/not-all-screen-time-is-equal/",
+      "path": "/blog/not-all-screen-time-is-equal/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-01T15:34:57+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/top-1-academics-now-at-your-kitchen-table/",
+      "path": "/blog/top-1-academics-now-at-your-kitchen-table/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-01T15:37:13+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/news/nbcs-today-show-pilot-program-teaches-kids-with-ai-instead-of-teachers/",
+      "path": "/news/nbcs-today-show-pilot-program-teaches-kids-with-ai-instead-of-teachers/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:14:29+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/alpha-school-featured-on-abc-news-a-new-model-for-learning/",
+      "path": "/news/alpha-school-featured-on-abc-news-a-new-model-for-learning/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:14:30+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/what-public-schools-and-parents-can-learn-from-a-40000-a-year-private-school/",
+      "path": "/news/what-public-schools-and-parents-can-learn-from-a-40000-a-year-private-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:14:31+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/a-i-driven-education-founded-in-texas-and-coming-to-a-school-near-you/",
+      "path": "/news/a-i-driven-education-founded-in-texas-and-coming-to-a-school-near-you/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:14:33+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/texas-school-finds-valuable-classroom-inside-a-food-truck/",
+      "path": "/news/texas-school-finds-valuable-classroom-inside-a-food-truck/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:14:34+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/alpha-school-using-ai-to-unleash-students-and-transform-teaching/",
+      "path": "/news/alpha-school-using-ai-to-unleash-students-and-transform-teaching/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:14:35+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/news/this-10-year-olds-history-knowledge-will-blow-your-mind/",
+      "path": "/news/this-10-year-olds-history-knowledge-will-blow-your-mind/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-04T15:32:55+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/miami/best-elementary-school-in-miami-top-10-schools-for-your-childs-success/",
+      "path": "/miami/best-elementary-school-in-miami-top-10-schools-for-your-childs-success/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:08:50+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/miami/best-kindergarten-school-in-miami-your-complete-guide-to-top-programs/",
+      "path": "/miami/best-kindergarten-school-in-miami-your-complete-guide-to-top-programs/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:08:54+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/san-francisco/best-kindergarten-schools-in-san-francisco-top-choices-for-your-childs-early-education/",
+      "path": "/san-francisco/best-kindergarten-schools-in-san-francisco-top-choices-for-your-childs-early-education/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:10:29+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/brownsville/best-kindergarten-school-in-brownsville-top-picks-for-2025/",
+      "path": "/brownsville/best-kindergarten-school-in-brownsville-top-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:34+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/brownsville/best-elementary-school-in-brownsville-top-10-choices-for-2025/",
+      "path": "/brownsville/best-elementary-school-in-brownsville-top-10-choices-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:37+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/brownsville/best-pre-k-school-in-brownsville-top-10-options-for-your-childs-early-years/",
+      "path": "/brownsville/best-pre-k-school-in-brownsville-top-10-options-for-your-childs-early-years/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:40+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/brownsville/best-high-school-in-brownsville-top-10-picks-for-2025/",
+      "path": "/brownsville/best-high-school-in-brownsville-top-10-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:43+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/miami/best-high-school-in-miami-2025-parent-guide-to-top-programs/",
+      "path": "/miami/best-high-school-in-miami-2025-parent-guide-to-top-programs/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:46+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/scottsdale/best-high-school-in-scottsdale-top-10-options-for-2025/",
+      "path": "/scottsdale/best-high-school-in-scottsdale-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:53+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/scottsdale/best-elementary-school-in-scottsdale-top-10-options-for-2025/",
+      "path": "/scottsdale/best-elementary-school-in-scottsdale-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:55+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/scottsdale/best-kindergarten-school-in-scottsdale-top-10-options-for-2025/",
+      "path": "/scottsdale/best-kindergarten-school-in-scottsdale-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:32:57+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/chantilly/best-elementary-school-in-chantilly-top-10-options-for-2025/",
+      "path": "/chantilly/best-elementary-school-in-chantilly-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:00+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/chantilly/best-kindergarten-school-in-chantilly-top-10-options-for-2025/",
+      "path": "/chantilly/best-kindergarten-school-in-chantilly-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:03+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/raleigh/best-kindergarten-school-in-raleigh-top-10-options-for-2025/",
+      "path": "/raleigh/best-kindergarten-school-in-raleigh-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:05+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/raleigh/best-elementary-school-in-raleigh-top-10-picks-for-2025/",
+      "path": "/raleigh/best-elementary-school-in-raleigh-top-10-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:07+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/palm-beach/best-high-school-in-palm-beach-top-10-picks-for-2025/",
+      "path": "/palm-beach/best-high-school-in-palm-beach-top-10-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:09+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/palm-beach/best-kindergarten-school-in-palm-beach-top-10-picks-for-2025/",
+      "path": "/palm-beach/best-kindergarten-school-in-palm-beach-top-10-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:11+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/palm-beach/best-elementary-school-in-palm-beach-top-10-picks-for-2025/",
+      "path": "/palm-beach/best-elementary-school-in-palm-beach-top-10-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:13+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/plano/best-kindergarten-school-in-plano-top-10-choices-for-2025/",
+      "path": "/plano/best-kindergarten-school-in-plano-top-10-choices-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:24+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/plano/best-elementary-school-in-plano-top-10-choices-for-2025/",
+      "path": "/plano/best-elementary-school-in-plano-top-10-choices-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:26+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/fort-worth/best-elementary-school-in-fort-worth-top-10-options-for-2025/",
+      "path": "/fort-worth/best-elementary-school-in-fort-worth-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:28+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/fort-worth/best-high-school-in-fort-worth-top-10-options-for-2025/",
+      "path": "/fort-worth/best-high-school-in-fort-worth-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:30+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/fort-worth/best-kindergarten-school-in-fort-worth-top-10-options-for-2025/",
+      "path": "/fort-worth/best-kindergarten-school-in-fort-worth-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:33+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/san-francisco/best-elementary-school-in-san-francisco-top-10-options-for-2025/",
+      "path": "/san-francisco/best-elementary-school-in-san-francisco-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:35+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/santa-barbara/best-high-school-in-santa-barbara-top-10-options-for-2025/",
+      "path": "/santa-barbara/best-high-school-in-santa-barbara-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:37+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/santa-barbara/best-kindergarten-school-in-santa-barbara-top-10-options-for-2025/",
+      "path": "/santa-barbara/best-kindergarten-school-in-santa-barbara-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:39+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/santa-barbara/best-elementary-school-in-santa-barbara-top-10-options-for-2025/",
+      "path": "/santa-barbara/best-elementary-school-in-santa-barbara-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:33:41+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/lake-forest/best-elementary-school-in-lake-forest-orange-county-top-10-options-for-2025/",
+      "path": "/lake-forest/best-elementary-school-in-lake-forest-orange-county-top-10-options-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:38:18+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/miami/best-pre-k-school-in-miami-top-picks-for-early-education/",
+      "path": "/miami/best-pre-k-school-in-miami-top-picks-for-early-education/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:38:21+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/lake-forest/best-kindergarten-school-in-orange-county-lake-forest-top-10-picks-for-2025/",
+      "path": "/lake-forest/best-kindergarten-school-in-orange-county-lake-forest-top-10-picks-for-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-06-12T00:40:44+00:00",
+      "image_count": 1,
+      "family": "campus-local-seo-post"
+    },
+    {
+      "url": "https://alpha.school/blog/teach-your-kid-what-school-doesnt-pt-3-life-skills-at-home/",
+      "path": "/blog/teach-your-kid-what-school-doesnt-pt-3-life-skills-at-home/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-07-13T13:11:44+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/teach-your-kid-what-school-doesnt-pt-2-applying-knowledge-in-the-real-world/",
+      "path": "/blog/teach-your-kid-what-school-doesnt-pt-2-applying-knowledge-in-the-real-world/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-07-13T13:18:29+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/teach-your-kid-what-school-doesnt-pt-1-personalized-learning-at-home/",
+      "path": "/blog/teach-your-kid-what-school-doesnt-pt-1-personalized-learning-at-home/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-07-13T13:21:23+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/teach-your-kid-what-school-doesnt-pt-5-unleashing-their-creative-genius-at-home/",
+      "path": "/blog/teach-your-kid-what-school-doesnt-pt-5-unleashing-their-creative-genius-at-home/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-07-22T13:57:47+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/teach-your-kid-what-school-doesnt-pt-4-how-to-regulate-emotions-at-home/",
+      "path": "/blog/teach-your-kid-what-school-doesnt-pt-4-how-to-regulate-emotions-at-home/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-07-22T14:39:56+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/exploring-the-best-private-pre-k-options-in-austin/",
+      "path": "/ai/exploring-the-best-private-pre-k-options-in-austin/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-14T15:14:16+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/10-ai-tools-we-use-at-alpha-and-you-should-too/",
+      "path": "/blog/10-ai-tools-we-use-at-alpha-and-you-should-too/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T01:40:23+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/alphatest-how-alpha-grades-life-skills/",
+      "path": "/blog/alphatest-how-alpha-grades-life-skills/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T01:40:25+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/we-gave-kids-their-afternoons-back-heres-what-they-did-with-them/",
+      "path": "/blog/we-gave-kids-their-afternoons-back-heres-what-they-did-with-them/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T01:40:25+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/we-asked-parents-how-alpha-was-going-heres-what-they-said/",
+      "path": "/blog/we-asked-parents-how-alpha-was-going-heres-what-they-said/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T01:40:26+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/what-are-the-top-rated-alternative-private-schools-in-austin/",
+      "path": "/ai/what-are-the-top-rated-alternative-private-schools-in-austin/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T01:48:14+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/your-kids-only-edge-against-ai-soft-skills/",
+      "path": "/blog/your-kids-only-edge-against-ai-soft-skills/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T07:55:27+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/the-parent-advantage-why-you-are-the-most-powerful-force-in-your-kids-education/",
+      "path": "/blog/the-parent-advantage-why-you-are-the-most-powerful-force-in-your-kids-education/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-20T07:56:10+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/best-private-elementary-schools-in-austin-supporting-students-with-dyslexia/",
+      "path": "/ai/best-private-elementary-schools-in-austin-supporting-students-with-dyslexia/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-08-25T16:46:34+00:00",
+      "image_count": 0,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/inside-alphas-olympic-level-project-for-high-schoolers/",
+      "path": "/blog/inside-alphas-olympic-level-project-for-high-schoolers/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T15:08:17+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/what-schools-use-a-2-hour-learning-model-for-high-school-students/",
+      "path": "/ai/what-schools-use-a-2-hour-learning-model-for-high-school-students/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T15:26:27+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/what-is-the-best-private-high-school-in-austin/",
+      "path": "/ai/what-is-the-best-private-high-school-in-austin/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T15:27:40+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/which-austin-high-schools-are-architecting-the-future-with-ai-a-2025-parents-compass/",
+      "path": "/ai/which-austin-high-schools-are-architecting-the-future-with-ai-a-2025-parents-compass/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T15:35:03+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/ai/which-high-schools-implement-mastery-based-progression/",
+      "path": "/ai/which-high-schools-implement-mastery-based-progression/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T15:35:39+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/life-skills-workshops-at-alpha-school-creating-future-ready-students/",
+      "path": "/blog/life-skills-workshops-at-alpha-school-creating-future-ready-students/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T16:21:37+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/confidence-is-a-skill-heres-how-to-teach-it-to-your-daughter/",
+      "path": "/blog/confidence-is-a-skill-heres-how-to-teach-it-to-your-daughter/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T16:30:47+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/ai/best-austin-private-elementary-schools-for-families-moving-to-austin-in-2025/",
+      "path": "/ai/best-austin-private-elementary-schools-for-families-moving-to-austin-in-2025/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T16:32:45+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/blog/redefining-school-in-the-21st-century/",
+      "path": "/blog/redefining-school-in-the-21st-century/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-08T16:34:11+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/does-alpha-school-replace-teachers-with-ai/",
+      "path": "/blog/does-alpha-school-replace-teachers-with-ai/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-11T13:42:40+00:00",
+      "image_count": 0,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/blog/why-our-family-loves-alpha-school/",
+      "path": "/blog/why-our-family-loves-alpha-school/",
+      "sitemap": "post-sitemap.xml",
+      "type": "post",
+      "lastmod": "2026-09-11T13:42:41+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/",
+      "path": "/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-12T05:55:04+00:00",
+      "image_count": 17,
+      "family": "homepage"
+    },
+    {
+      "url": "https://alpha.school/success/",
+      "path": "/success/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2024-11-26T18:14:03+00:00",
+      "image_count": 0,
+      "family": "utility-confirmation"
+    },
+    {
+      "url": "https://alpha.school/thank-you/",
+      "path": "/thank-you/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-01-20T11:55:12+00:00",
+      "image_count": 0,
+      "family": "utility-confirmation"
+    },
+    {
+      "url": "https://alpha.school/resources-austin/",
+      "path": "/resources-austin/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-02-19T19:35:15+00:00",
+      "image_count": 1,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/referral-thank-you/",
+      "path": "/referral-thank-you/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-06-07T09:17:08+00:00",
+      "image_count": 0,
+      "family": "utility-confirmation"
+    },
+    {
+      "url": "https://alpha.school/2-hour-learning/",
+      "path": "/2-hour-learning/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-08-08T11:38:03+00:00",
+      "image_count": 1,
+      "family": "program"
+    },
+    {
+      "url": "https://alpha.school/application-submission/",
+      "path": "/application-submission/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-09-04T08:09:10+00:00",
+      "image_count": 0,
+      "family": "utility-confirmation"
+    },
+    {
+      "url": "https://alpha.school/bring-alpha-to-your-city/",
+      "path": "/bring-alpha-to-your-city/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-10-13T18:18:28+00:00",
+      "image_count": 1,
+      "family": "campaign-landing"
+    },
+    {
+      "url": "https://alpha.school/application-status/",
+      "path": "/application-status/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2025-11-28T09:31:12+00:00",
+      "image_count": 0,
+      "family": "utility-confirmation"
+    },
+    {
+      "url": "https://alpha.school/learn-more/",
+      "path": "/learn-more/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-01-21T08:48:44+00:00",
+      "image_count": 1,
+      "family": "campaign-landing"
+    },
+    {
+      "url": "https://alpha.school/the-future-of-school-live-stream/",
+      "path": "/the-future-of-school-live-stream/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-02-10T16:38:18+00:00",
+      "image_count": 0,
+      "family": "events"
+    },
+    {
+      "url": "https://alpha.school/blog/",
+      "path": "/blog/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-02-22T11:03:34+00:00",
+      "image_count": 1,
+      "family": "blog"
+    },
+    {
+      "url": "https://alpha.school/lifeskills-workshops/",
+      "path": "/lifeskills-workshops/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-02-22T11:04:41+00:00",
+      "image_count": 20,
+      "family": "program"
+    },
+    {
+      "url": "https://alpha.school/upcoming-events/",
+      "path": "/upcoming-events/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-02-22T11:05:03+00:00",
+      "image_count": 1,
+      "family": "events"
+    },
+    {
+      "url": "https://alpha.school/upcoming-virtual-information-session/",
+      "path": "/upcoming-virtual-information-session/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-04-23T02:56:09+00:00",
+      "image_count": 1,
+      "family": "events"
+    },
+    {
+      "url": "https://alpha.school/the-future-of-education-joe-liemandts-vision-for-alpha-school/",
+      "path": "/the-future-of-education-joe-liemandts-vision-for-alpha-school/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-02T11:36:18+00:00",
+      "image_count": 3,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/billionares-advice-to-young-people-joe-liemandt-at-bigdeal-by-codie-sanchez/",
+      "path": "/billionares-advice-to-young-people-joe-liemandt-at-bigdeal-by-codie-sanchez/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-02T11:38:06+00:00",
+      "image_count": 2,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/joe-lonsdale-how-ai-incentives-can-10x-learning-save-american-education-with-tech-legend-joe-liemandt/",
+      "path": "/joe-lonsdale-how-ai-incentives-can-10x-learning-save-american-education-with-tech-legend-joe-liemandt/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-02T11:40:59+00:00",
+      "image_count": 2,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/no-priors-reinventing-k-12-education-using-ai-with-alpha-school-principal-joe-liemandt/",
+      "path": "/no-priors-reinventing-k-12-education-using-ai-with-alpha-school-principal-joe-liemandt/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-02T11:42:01+00:00",
+      "image_count": 2,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/resources-brownsville/",
+      "path": "/resources-brownsville/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:09:07+00:00",
+      "image_count": 1,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/austin-ai-summer-camp/",
+      "path": "/austin-ai-summer-camp/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:10:17+00:00",
+      "image_count": 5,
+      "family": "campaign-landing"
+    },
+    {
+      "url": "https://alpha.school/shane-parrish-alpha-school-2-hour-school-day/",
+      "path": "/shane-parrish-alpha-school-2-hour-school-day/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:12:34+00:00",
+      "image_count": 3,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/resources-miami/",
+      "path": "/resources-miami/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:13:39+00:00",
+      "image_count": 1,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/virtual-tour/",
+      "path": "/virtual-tour/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:14:27+00:00",
+      "image_count": 0,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/ai/",
+      "path": "/ai/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:17:07+00:00",
+      "image_count": 1,
+      "family": "alpha-answers"
+    },
+    {
+      "url": "https://alpha.school/find-an-event-near-you/",
+      "path": "/find-an-event-near-you/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:18:14+00:00",
+      "image_count": 37,
+      "family": "events"
+    },
+    {
+      "url": "https://alpha.school/bring-alpha-details/",
+      "path": "/bring-alpha-details/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:22:59+00:00",
+      "image_count": 1,
+      "family": "campaign-landing"
+    },
+    {
+      "url": "https://alpha.school/editorial-policy/",
+      "path": "/editorial-policy/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:23:44+00:00",
+      "image_count": 0,
+      "family": "legal"
+    },
+    {
+      "url": "https://alpha.school/privacy-policy/",
+      "path": "/privacy-policy/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:24:22+00:00",
+      "image_count": 0,
+      "family": "legal"
+    },
+    {
+      "url": "https://alpha.school/terms-of-use/",
+      "path": "/terms-of-use/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-11T02:25:35+00:00",
+      "image_count": 0,
+      "family": "legal"
+    },
+    {
+      "url": "https://alpha.school/admission-forms/",
+      "path": "/admission-forms/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-29T13:03:15+00:00",
+      "image_count": 1,
+      "family": "admissions"
+    },
+    {
+      "url": "https://alpha.school/admission/",
+      "path": "/admission/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-06-30T21:29:29+00:00",
+      "image_count": 1,
+      "family": "admissions"
+    },
+    {
+      "url": "https://alpha.school/mike-rowe-can-two-hours-of-school-really-be-enough/",
+      "path": "/mike-rowe-can-two-hours-of-school-really-be-enough/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-07-08T04:11:21+00:00",
+      "image_count": 3,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/high-school-application/",
+      "path": "/high-school-application/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-07-14T17:42:36+00:00",
+      "image_count": 0,
+      "family": "admissions"
+    },
+    {
+      "url": "https://alpha.school/workshops/",
+      "path": "/workshops/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-08-20T01:47:01+00:00",
+      "image_count": 2,
+      "family": "program"
+    },
+    {
+      "url": "https://alpha.school/end-of-2025-parent-survey-results/",
+      "path": "/end-of-2025-parent-survey-results/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-08-20T01:47:35+00:00",
+      "image_count": 0,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/jb/",
+      "path": "/jb/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-08-20T18:39:51+00:00",
+      "image_count": 0,
+      "family": "campaign-landing"
+    },
+    {
+      "url": "https://alpha.school/overview/",
+      "path": "/overview/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-08-21T16:40:50+00:00",
+      "image_count": 26,
+      "family": "program"
+    },
+    {
+      "url": "https://alpha.school/upcoming-events/info-session/",
+      "path": "/upcoming-events/info-session/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-08-24T15:09:10+00:00",
+      "image_count": 1,
+      "family": "events"
+    },
+    {
+      "url": "https://alpha.school/video-library/",
+      "path": "/video-library/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-08-24T15:16:35+00:00",
+      "image_count": 141,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/news/",
+      "path": "/news/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-03T14:28:24+00:00",
+      "image_count": 1,
+      "family": "news"
+    },
+    {
+      "url": "https://alpha.school/san-juan/",
+      "path": "/san-juan/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-05T11:00:07+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/franklin/",
+      "path": "/franklin/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-08T19:39:56+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/the-program/",
+      "path": "/the-program/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-11T13:39:03+00:00",
+      "image_count": 0,
+      "family": "program"
+    },
+    {
+      "url": "https://alpha.school/joe-liemandt-and-the-future-of-education/",
+      "path": "/joe-liemandt-and-the-future-of-education/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-11T13:41:11+00:00",
+      "image_count": 2,
+      "family": "podcast-landing"
+    },
+    {
+      "url": "https://alpha.school/founders/",
+      "path": "/founders/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-11T13:49:25+00:00",
+      "image_count": 23,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/guides/",
+      "path": "/guides/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-11T13:52:05+00:00",
+      "image_count": 1,
+      "family": "program"
+    },
+    {
+      "url": "https://alpha.school/houston/",
+      "path": "/houston/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-11T18:45:12+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/locations/",
+      "path": "/locations/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:04:01+00:00",
+      "image_count": 93,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/atlanta/",
+      "path": "/atlanta/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:39+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/dorado/",
+      "path": "/dorado/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:39+00:00",
+      "image_count": 33,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/chantilly/",
+      "path": "/chantilly/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:40+00:00",
+      "image_count": 46,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/southlake/",
+      "path": "/southlake/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:40+00:00",
+      "image_count": 41,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/palm-beach/",
+      "path": "/palm-beach/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:40+00:00",
+      "image_count": 43,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/austin/",
+      "path": "/austin/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:41+00:00",
+      "image_count": 32,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/palo-alto/",
+      "path": "/palo-alto/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:42+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/new-york-city/",
+      "path": "/new-york-city/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:48+00:00",
+      "image_count": 83,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/boca-raton/",
+      "path": "/boca-raton/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:56+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/la-jolla/",
+      "path": "/la-jolla/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:57+00:00",
+      "image_count": 43,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/boston/",
+      "path": "/boston/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:57+00:00",
+      "image_count": 37,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/santa-monica/",
+      "path": "/santa-monica/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:57+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/miami-beach/",
+      "path": "/miami-beach/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:58+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/santa-barbara/",
+      "path": "/santa-barbara/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:18:58+00:00",
+      "image_count": 43,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/park-city/",
+      "path": "/park-city/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:06+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/greenwich/",
+      "path": "/greenwich/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:06+00:00",
+      "image_count": 35,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/nashville/",
+      "path": "/nashville/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:06+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/scottsdale/",
+      "path": "/scottsdale/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:07+00:00",
+      "image_count": 48,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/malibu/",
+      "path": "/malibu/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:07+00:00",
+      "image_count": 37,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/the-woodlands/",
+      "path": "/the-woodlands/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:07+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/highland-park/",
+      "path": "/highland-park/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:07+00:00",
+      "image_count": 35,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/kirkland/",
+      "path": "/kirkland/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:09+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/miami/",
+      "path": "/miami/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:14+00:00",
+      "image_count": 51,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/boston-suburbs/",
+      "path": "/boston-suburbs/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:21+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/lake-travis/",
+      "path": "/lake-travis/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:21+00:00",
+      "image_count": 33,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/carrollton/",
+      "path": "/carrollton/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:22+00:00",
+      "image_count": 34,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/jamaica-plain/",
+      "path": "/jamaica-plain/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:22+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/denver/",
+      "path": "/denver/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:23+00:00",
+      "image_count": 41,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/charlotte/",
+      "path": "/charlotte/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:23+00:00",
+      "image_count": 49,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/fort-worth/",
+      "path": "/fort-worth/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:23+00:00",
+      "image_count": 46,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/san-francisco/",
+      "path": "/san-francisco/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:23+00:00",
+      "image_count": 44,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/orange-county/",
+      "path": "/orange-county/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:24+00:00",
+      "image_count": 43,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/plano/",
+      "path": "/plano/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T05:19:28+00:00",
+      "image_count": 42,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/brownsville/",
+      "path": "/brownsville/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T16:09:19+00:00",
+      "image_count": 47,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/bethesda/",
+      "path": "/bethesda/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T17:48:17+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/chicago/",
+      "path": "/chicago/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T18:00:47+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/raleigh/",
+      "path": "/raleigh/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T18:24:31+00:00",
+      "image_count": 45,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/faq/",
+      "path": "/faq/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T18:24:48+00:00",
+      "image_count": 0,
+      "family": "reference"
+    },
+    {
+      "url": "https://alpha.school/careers/",
+      "path": "/careers/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T19:39:38+00:00",
+      "image_count": 0,
+      "family": "careers"
+    },
+    {
+      "url": "https://alpha.school/oklahoma-city/",
+      "path": "/oklahoma-city/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T20:03:58+00:00",
+      "image_count": 35,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/tulsa/",
+      "path": "/tulsa/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T20:04:08+00:00",
+      "image_count": 36,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/south-bay-la/",
+      "path": "/south-bay-la/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T20:04:17+00:00",
+      "image_count": 41,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/east-bay/",
+      "path": "/east-bay/",
+      "sitemap": "page-sitemap.xml",
+      "type": "page",
+      "lastmod": "2026-09-17T20:21:30+00:00",
+      "image_count": 44,
+      "family": "campus-page"
+    },
+    {
+      "url": "https://alpha.school/resources/",
+      "path": "/resources/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-09-14T23:44:32+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-personalized-learning-and-life-skills-deve/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-personalized-learning-and-life-skills-deve/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-ai-and-technology-to-support-growth-mindset-and-person/",
+      "path": "/resources/how-does-alpha-school-use-ai-and-technology-to-support-growth-mindset-and-person/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-motivat/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-motivat/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-love-of-learning-and-student-engagement-i/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-love-of-learning-and-student-engagement-i/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-bd139b16/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-bd139b16/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-8cf9187f/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-8cf9187f/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-cc7119dd/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-cc7119dd/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-b63aa8e4/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-b63aa8e4/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-personalized-learning-to-support-innovation-in-educati/",
+      "path": "/resources/how-does-alpha-school-use-personalized-learning-to-support-innovation-in-educati/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-personalized-learning-and-ai-tutoring/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-personalized-learning-and-ai-tutoring/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-innovative-education-and-student-engageme/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-innovative-education-and-student-engageme/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-student-growth-and-growth-mindset/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-student-growth-and-growth-mindset/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-hands-on-learning-and-stem-education/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-hands-on-learning-and-stem-education/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-self-driving-technology-and-innovation/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-self-driving-technology-and-innovation/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-socialization-and-interpersonal-communicat/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-socialization-and-interpersonal-communicat/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-life-skills-and-personalized-learning/",
+      "path": "/resources/what-do-alpha-school-students-say-about-life-skills-and-personalized-learning/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-innovation-in-education-and-ai-powered-lea/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-innovation-in-education-and-ai-powered-lea/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-culinary-skills-and-hands-on-learning/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-culinary-skills-and-hands-on-learning/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-enrichment-activities-and-ai-powered-learn/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-enrichment-activities-and-ai-powered-learn/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-linc-use-ai-and-personalized-learning/",
+      "path": "/resources/how-does-alpha-linc-use-ai-and-personalized-learning/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-ai-and-technology-to-support-personalized-learning-and-0e7dd0ce/",
+      "path": "/resources/how-does-alpha-school-use-ai-and-technology-to-support-personalized-learning-and-0e7dd0ce/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-guides-motivate-students-to-love-learning/",
+      "path": "/resources/how-do-alpha-school-guides-motivate-students-to-love-learning/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-self-paced-learning-and-ai-tutoring-in-sa/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-self-paced-learning-and-ai-tutoring-in-sa/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-scottsdale-help-students-discover-their-strengths/",
+      "path": "/resources/how-does-alpha-scottsdale-help-students-discover-their-strengths/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/why-do-some-alpha-scottsdale-students-love-going-to-school/",
+      "path": "/resources/why-do-some-alpha-scottsdale-students-love-going-to-school/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-community-building-and-active-learning-in/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-community-building-and-active-learning-in/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-can-one-school-support-children-with-different-learning-needs/",
+      "path": "/resources/how-can-one-school-support-children-with-different-learning-needs/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-3df920e0/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-3df920e0/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-7b2a53d3/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-7b2a53d3/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-student-engagement-and-personalized-learn/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-student-engagement-and-personalized-learn/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-personalized-learning-to-support-enrichment-activities/",
+      "path": "/resources/how-does-alpha-school-use-personalized-learning-to-support-enrichment-activities/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-2b3504a4/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-2b3504a4/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-ai-and-technology-to-support-personalized-learning-and-26cf0218/",
+      "path": "/resources/how-does-alpha-school-use-ai-and-technology-to-support-personalized-learning-and-26cf0218/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-personalized-learning-to-support-student-success-and-g/",
+      "path": "/resources/how-does-alpha-school-use-personalized-learning-to-support-student-success-and-g/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-personalized-learning-and-student-indepe/",
+      "path": "/resources/what-do-alpha-school-students-say-about-personalized-learning-and-student-indepe/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-motivat-8a128e25/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-motivat-8a128e25/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-46c6476b/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-46c6476b/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-student-excitement-and-community-transiti/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-student-excitement-and-community-transiti/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-student-success-and-growth-mindset-in-new/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-student-success-and-growth-mindset-in-new/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-approach-student-enthusiasm-and-supportive-learning-enviro/",
+      "path": "/resources/how-does-alpha-school-approach-student-enthusiasm-and-supportive-learning-enviro/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-010d91bd/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-010d91bd/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-potenti/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-potenti/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-prepare-students-for-ai-in-education-and-personalized-lear/",
+      "path": "/resources/how-does-alpha-school-prepare-students-for-ai-in-education-and-personalized-lear/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-parents-say-about-alpha-school-in-fort-worth/",
+      "path": "/resources/what-do-parents-say-about-alpha-school-in-fort-worth/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-4e376675/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success-4e376675/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-enthusi/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-enthusi/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-8d3466aa/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem-8d3466aa/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-27T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-student-independence-and-time-management/",
+      "path": "/resources/what-do-alpha-school-students-say-about-student-independence-and-time-management/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-01-28T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-approach-limitless-mindset-and-early-literacy/",
+      "path": "/resources/how-does-alpha-school-approach-limitless-mindset-and-early-literacy/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-group-students-beyond-age-and-grade/",
+      "path": "/resources/how-does-alpha-school-group-students-beyond-age-and-grade/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-guides-support-personalized-learning-and-teacher-support/",
+      "path": "/resources/how-do-alpha-school-guides-support-personalized-learning-and-teacher-support/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-student-enthusiasm-and-enrichment-activit/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-student-enthusiasm-and-enrichment-activit/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-success/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-real-world-skills-and-teamwork/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-real-world-skills-and-teamwork/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-student-success-and-college-readiness/",
+      "path": "/resources/what-do-alpha-school-students-say-about-student-success-and-college-readiness/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-is-a-shadow-day-at-alpha/",
+      "path": "/resources/what-is-a-shadow-day-at-alpha/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-community-building-and-parent-involvement/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-community-building-and-parent-involvement/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-03T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-personalized-learning-and-life-skills/",
+      "path": "/resources/what-do-alpha-school-students-say-about-personalized-learning-and-life-skills/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-07T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-if-kindergarten-felt-like-this/",
+      "path": "/resources/what-if-kindergarten-felt-like-this/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-17T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-grit-and-teamwork/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-grit-and-teamwork/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-19T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/why-do-some-students-prefer-alpha-summer-to-traditional-camps/",
+      "path": "/resources/why-do-some-students-prefer-alpha-summer-to-traditional-camps/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-21T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/can-families-try-alpha-school-through-alpha-summer/",
+      "path": "/resources/can-families-try-alpha-school-through-alpha-summer/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-02-28T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-engagem/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-03-13T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-experie/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-student-experie/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-03-13T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-personalized-learning-to-support-entrepreneurship-and/",
+      "path": "/resources/how-does-alpha-school-use-personalized-learning-to-support-entrepreneurship-and/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-03-18T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-ai-and-technology-to-support-student-empowerment-and-i/",
+      "path": "/resources/how-does-alpha-school-use-ai-and-technology-to-support-student-empowerment-and-i/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-01T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-ai-and-technology-to-support-entrepreneurship-and-ment/",
+      "path": "/resources/how-does-alpha-school-use-ai-and-technology-to-support-entrepreneurship-and-ment/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-09T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-student-experience-and-personalized-lear/",
+      "path": "/resources/what-do-alpha-school-students-say-about-student-experience-and-personalized-lear/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-13T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-sports-training/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-personalized-learning-and-sports-training/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-21T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-texas-sports-academy-develop-athlete-development-and-alternative-educat/",
+      "path": "/resources/how-does-texas-sports-academy-develop-athlete-development-and-alternative-educat/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-21T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-ai-and-technology-to-support-ai-powered-learning-and-r/",
+      "path": "/resources/how-does-alpha-school-use-ai-and-technology-to-support-ai-powered-learning-and-r/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-22T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-student-entrepreneurship-and-ai-powered-le/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-student-entrepreneurship-and-ai-powered-le/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-23T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/why-do-some-students-prefer-alphas-two-hour-academic-model/",
+      "path": "/resources/why-do-some-students-prefer-alphas-two-hour-academic-model/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-23T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-personalized-learning-and-student-experi/",
+      "path": "/resources/what-do-alpha-school-students-say-about-personalized-learning-and-student-experi/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-23T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-ai-education-and-student-empowerment/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-ai-education-and-student-empowerment/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-04-30T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-athlete-mindset-and-high-standards/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-athlete-mindset-and-high-standards/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-05-12T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-summer-build-hands-on-learning-and-confidence-building/",
+      "path": "/resources/how-does-alpha-summer-build-hands-on-learning-and-confidence-building/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-06-17T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-parents-say-about-student-excitement-and-summer-camp-experi/",
+      "path": "/resources/what-do-alpha-school-parents-say-about-student-excitement-and-summer-camp-experi/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-06-19T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-much-screen-time-do-alpha-school-students-have/",
+      "path": "/resources/how-much-screen-time-do-alpha-school-students-have/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-06-29T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/what-do-alpha-school-students-say-about-student-success-and-personalized-learnin/",
+      "path": "/resources/what-do-alpha-school-students-say-about-student-success-and-personalized-learnin/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-06-29T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/why-are-families-rearranging-vacations-for-alpha-summer/",
+      "path": "/resources/why-are-families-rearranging-vacations-for-alpha-summer/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-07-06T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-does-alpha-school-use-personalized-learning-to-support-student-mastery-and-s/",
+      "path": "/resources/how-does-alpha-school-use-personalized-learning-to-support-student-mastery-and-s/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-07-10T12:00:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-alpha-two-hour-school-day-works/",
+      "path": "/resources/how-alpha-two-hour-school-day-works/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-07-21T21:46:58+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/alpha-fort-worth-parent-resilience/",
+      "path": "/resources/alpha-fort-worth-parent-resilience/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-07-21T21:46:58+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/alpha-san-francisco-growth-mindset/",
+      "path": "/resources/alpha-san-francisco-growth-mindset/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-07-21T21:47:00+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/do-alpha-school-students-spend-all-day-on-screens/",
+      "path": "/resources/do-alpha-school-students-spend-all-day-on-screens/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-08-20T01:53:22+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/how-do-alpha-school-workshops-develop-real-world-challenges-and-teamwork/",
+      "path": "/resources/how-do-alpha-school-workshops-develop-real-world-challenges-and-teamwork/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-08-20T01:54:32+00:00",
+      "image_count": 0,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/resources/alpha-high-bootcamp/",
+      "path": "/resources/alpha-high-bootcamp/",
+      "sitemap": "alpha_video_resource-sitemap.xml",
+      "type": "alpha_video_resource",
+      "lastmod": "2026-09-14T23:44:32+00:00",
+      "image_count": 1,
+      "family": "video-resource"
+    },
+    {
+      "url": "https://alpha.school/author/yash-chitneni/",
+      "path": "/author/yash-chitneni/",
+      "sitemap": "author-sitemap.xml",
+      "type": "author",
+      "lastmod": "2026-07-22T14:51:38+00:00",
+      "image_count": 0,
+      "family": "author"
+    },
+    {
+      "url": "https://alpha.school/author/mackenzie-price/",
+      "path": "/author/mackenzie-price/",
+      "sitemap": "author-sitemap.xml",
+      "type": "author",
+      "lastmod": "2026-05-27T13:17:25+00:00",
+      "image_count": 0,
+      "family": "author"
+    },
+    {
+      "url": "https://alpha.school/author/info/",
+      "path": "/author/info/",
+      "sitemap": "author-sitemap.xml",
+      "type": "author",
+      "lastmod": "2025-09-08T06:18:00+00:00",
+      "image_count": 0,
+      "family": "author"
+    }
+  ]
+}

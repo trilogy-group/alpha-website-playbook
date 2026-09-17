@@ -6,11 +6,11 @@ Last verified: September 17, 2026.
 
 | Sub-family | URLs | Examples | Source system |
 | --- | ---: | --- | --- |
-| Blog posts at `/blog/<slug>/` | about 85 | `/blog/does-alpha-school-replace-teachers-with-ai/` (transcript, FAQ, sources format) | WordPress; some Substack imports |
-| Alpha Answers posts at `/ai/<slug>/` | 39 plus the `/ai/` hub | `/ai/what-is-the-best-private-high-school-in-austin/` | Airtable import (see `alpha-answers.md`) |
+| Blog posts at `/blog/<slug>/` | 69 plus `/blog/` | `/blog/does-alpha-school-replace-teachers-with-ai/` (transcript, FAQ, sources format) | WordPress; some Substack imports |
+| Alpha Answers posts at `/ai/<slug>/` | 38 plus the `/ai/` hub (titled "Artificial Intelligence"; the nav's "Alpha Answers" points at the `/resources/` video archive, Q-28) | `/ai/what-is-the-best-private-high-school-in-austin/` | Airtable import (see `alpha-answers.md`) |
 | Campus local-SEO posts nested under a campus slug | 33 | `/houston/best-elementary-school-in-houston-.../`, `/lake-forest/...` (still live under a redirected campus slug) | WordPress |
-| News and press at `/news/<slug>/` | about 31 plus `/news/` | `/news/alpha-school-featured-on-abc-news-.../` | WordPress |
-| Podcast and media landing pages | 8 | `/mike-rowe-.../`, `/shane-parrish-.../`, `/joe-lonsdale-.../` | WordPress pages |
+| News and press at `/news/<slug>/` | 26 plus `/news/` | `/news/alpha-school-featured-on-abc-news-.../` | WordPress |
+| Podcast and media landing pages | 7 | `/mike-rowe-.../`, `/shane-parrish-.../`, `/joe-lonsdale-.../` | WordPress pages |
 | Events | 4 pages plus imported `hubspot_event` posts | `/upcoming-events/` (119 Goldcast registration links), `/find-an-event-near-you/`, `/upcoming-virtual-information-session/` | HubSpot Marketing Events via the `ahse-events` plugin |
 
 Exact list: `spec/inventory/site-url-inventory-2026-09-17.json`.
