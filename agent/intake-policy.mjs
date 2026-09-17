@@ -39,7 +39,7 @@ export function evaluateTicket(bundle, ticket, context = {}) {
   const text = ticketText(ticket)
   const required = new Set(spec.required || [])
   for (const rule of spec.intake.conditionalRequired || []) {
-    if (new RegExp(rule.pattern, 'i').test(text)) for (const field of rule.fields || []) required.add(field)
+    if (trustedPolicyRegex(rule.pattern).test(text)) for (const field of rule.fields || []) required.add(field)
   }
   const found = {}
   const invalid = []
@@ -55,8 +55,8 @@ export function evaluateTicket(bundle, ticket, context = {}) {
   const requesterMissing = missing.filter((field) => spec.intake.requesterRequired.includes(field))
   const derivableMissing = missing.filter((field) => spec.intake.derivable.includes(field))
   const systemMissing = missing.filter((field) => spec.intake.systemRequired.includes(field))
-  const guard = (spec.intake.guards || []).find((item) => new RegExp(item.pattern, 'i').test(text))
-  const ownerRule = (spec.intake.ownerRules || []).find((item) => new RegExp(item.pattern, 'i').test(text))
+  const guard = (spec.intake.guards || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
+  const ownerRule = (spec.intake.ownerRules || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
   const policy = guard?.policy || spec.intake.policy
   const ownerRole = guard?.ownerRole || ownerRule?.ownerRole || spec.intake.ownerRole
   const reason = guard?.reason || ownerRule?.reason || spec.note || null
@@ -183,16 +183,16 @@ export function classifyTicket(bundle, ticket) {
     if (spec.match?.['customFields.checkId'] && ticket.customFields?.checkId === spec.match['customFields.checkId']) return id
   }
   for (const [id, spec] of Object.entries(bundle.classes || {})) {
-    if (id !== 'copy' && spec.match?.titlePattern && new RegExp(spec.match.titlePattern, 'i').test(title)) return id
+    if (id !== 'copy' && spec.match?.titlePattern && trustedPolicyRegex(spec.match.titlePattern).test(title)) return id
   }
   for (const [id, spec] of Object.entries(bundle.classes || {})) {
     if (id !== 'copy' && (spec.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return id
   }
   for (const [id, spec] of Object.entries(bundle.classes || {})) {
-    if (spec.match?.detailPattern && new RegExp(spec.match.detailPattern, 'i').test(detail)) return id
+    if (spec.match?.detailPattern && trustedPolicyRegex(spec.match.detailPattern).test(detail)) return id
   }
   const copy = bundle.classes?.copy
-  if (copy?.match?.titlePattern && new RegExp(copy.match.titlePattern, 'i').test(title)) return 'copy'
+  if (copy?.match?.titlePattern && trustedPolicyRegex(copy.match.titlePattern).test(title)) return 'copy'
   if ((copy?.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return 'copy'
   return null
 }
@@ -238,7 +238,7 @@ export function extractField(bundle, ticket, fieldName, context = {}) {
       if (fieldName === 'pageUrl' && !isPublicAlphaPage(bundle, value)) continue
       return value
     }
-    const match = String(raw).match(new RegExp(pattern, 'i'))
+    const match = String(raw).match(trustedPolicyRegex(pattern))
     if (match) {
       const value = normalizeFieldValue(fieldName, match[1])
       if (fieldName === 'pageUrl' && !isPublicAlphaPage(bundle, value)) continue
@@ -386,7 +386,7 @@ function sourceOwnerRole(ticket) {
 function outOfScopeReason(bundle, ticket) {
   const scope = bundle.siteScope
   if (!scope) return null
-  const excluded = scope.excludedPattern ? new RegExp(scope.excludedPattern, 'i') : null
+  const excluded = scope.excludedPattern ? trustedPolicyRegex(scope.excludedPattern) : null
   const programs = (ticket.program || [])
     .map((item) => String(item || '').trim())
     .filter((item) => item && !/^Alpha School$/i.test(item))
@@ -425,7 +425,19 @@ function getPath(object, path) {
 
 function extractLabeled(description, fieldName) {
   const label = String(fieldName).replace(/([A-Z])/g, ' $1').trim()
-  return String(description || '').match(new RegExp(`^${label}:\\s*(.+)$`, 'mi'))?.[1]?.trim() || null
+  const prefix = `${label}:`.toLowerCase()
+  for (const line of String(description || '').split(/\r?\n/)) {
+    const trimmed = line.trimStart()
+    if (trimmed.toLowerCase().startsWith(prefix)) return trimmed.slice(prefix.length).trim() || null
+  }
+  return null
+}
+
+function trustedPolicyRegex(pattern) {
+  if (typeof pattern !== 'string' || !pattern || pattern.length > 2000) throw new Error('Invalid compiled policy pattern')
+  // Patterns are repository-controlled, compiled into the signed policy bundle, length-bounded here,
+  // and validated by tests/validate-playbook.mjs before deployment.
+  return new RegExp(pattern, 'i') // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
 }
 
 function normalizeRequestType(value) {

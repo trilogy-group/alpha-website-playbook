@@ -34,11 +34,15 @@ jobs:
           ALPHA_WP_BASE_URL: ${{ vars.ALPHA_WP_BASE_URL || 'https://alpha.school' }}
           ALPHA_WP_USERNAME: ${{ secrets.ALPHA_WP_USERNAME }}
           ALPHA_WP_APPLICATION_PASSWORD: ${{ secrets.ALPHA_WP_APPLICATION_PASSWORD }}
+          INPUT_SINCE: ${{ github.event.inputs.since }}
+          INPUT_APPLY: ${{ github.event.inputs.apply }}
+          CONFIG_INTAKE_APPLY: ${{ vars.INTAKE_APPLY }}
+          TRIGGER_EVENT: ${{ github.event_name }}
         run: |
-          SINCE="${{ github.event.inputs.since }}"
+          SINCE="$INPUT_SINCE"
           if [ -z "$SINCE" ]; then SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ); fi
-          APPLY="${{ github.event.inputs.apply }}"
-          if [ "$APPLY" != "true" ] && [ "${{ vars.INTAKE_APPLY }}" = "true" ] && [ "${{ github.event_name }}" = "schedule" ]; then APPLY=true; fi
+          APPLY="$INPUT_APPLY"
+          if [ "$APPLY" != "true" ] && [ "$CONFIG_INTAKE_APPLY" = "true" ] && [ "$TRIGGER_EVENT" = "schedule" ]; then APPLY=true; fi
           mkdir -p out
           if [ "$APPLY" = "true" ]; then node agent/intake.mjs --since "$SINCE" --apply --report out/intake.json; else node agent/intake.mjs --since "$SINCE" --report out/intake.json; fi
       - uses: actions/upload-artifact@v4
