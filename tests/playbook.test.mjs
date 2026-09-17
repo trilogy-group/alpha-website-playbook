@@ -10,7 +10,10 @@ import { runValidation } from './validate-playbook.mjs'
 import {
   administrativeAction,
   applyDuplicateCandidates,
+  assigneePatch,
   clarificationRequirements,
+  intakeCustomFieldsPatch,
+  UNRESOLVED_OWNER_ROLE,
   evaluateTicket,
   resolveDecisionOwner,
   normalizePersonName,
@@ -418,3 +421,35 @@ function runChild(command, args, env) {
     child.on('close', (code) => resolve({ code, stdout, stderr }))
   })
 }
+
+// Small-batch defects, 2026-09-17 (six live tickets): observer id overwritten, assignees replaced, empty owner role.
+test('intake never overwrites foreign custom fields such as the observer checkId', () => {
+  const existing = { checkId: 'SITE-31323DE752', source: 'alpha-site-qc', requestFamily: 'website', ownerRole: 'stale' }
+  const patched = intakeCustomFieldsPatch(existing, { ownerRole: 'website-operations', intakePendingHash: 'abc', intakeVersion: '0.2' })
+  assert.equal(patched.checkId, 'SITE-31323DE752')
+  assert.equal(patched.source, 'alpha-site-qc')
+  assert.equal(patched.ownerRole, 'website-operations')
+  assert.throws(() => intakeCustomFieldsPatch(existing, { checkId: 'media' }), /refused: checkId/)
+})
+
+test('intake adds the resolved owner to assignees without removing existing assignees', () => {
+  const existing = [{ id: 'user-farhan' }, { id: 'user-yash' }]
+  const patch = assigneePatch(existing, 'user-owner')
+  assert.deepEqual(patch.assignees.set.map((item) => item.id), ['user-farhan', 'user-yash', 'user-owner'])
+  assert.deepEqual(assigneePatch(existing, 'user-yash'), {}, 'owner already assigned: no patch')
+  assert.deepEqual(assigneePatch(existing, null), {}, 'no owner: existing assignment preserved')
+  assert.deepEqual(assigneePatch(undefined, 'user-owner').assignees.set, [{ id: 'user-owner' }])
+})
+
+test('an empty owner role routes to the unresolved-owner queue, never to an empty string', () => {
+  for (const emptyRole of ['', '   ', null, undefined]) {
+    const result = { id: 'boston-empty-owner', outcome: 'routed', ownerRole: emptyRole, policySha256: bundle.policySha256, inputSha256: 'x' }
+    resolveDecisionOwner(bundle, result, { id: 'boston-empty-owner', requesterEmail: 'someone@alpha.school' })
+    assert.equal(result.ownerRole, UNRESOLVED_OWNER_ROLE)
+    assert.equal(result.outcome, 'owner-unresolved')
+    assert.equal(result.ownerResolution, 'unresolved-owner-role')
+    assert.equal(result.ownerUser, null)
+    assert.match(result.reason, /unresolved-owner queue/)
+    assert.equal(administrativeAction(result).kind, 'blocked-review')
+  }
+})
