@@ -132,10 +132,11 @@
     },
     "n8n-sync": {
       "system": "n8n workflows (Update school pages ORgdHC71YJ5RawBy, Locations RqP1lPvDKvHDxTus)",
-      "tool": "none; n8n-sync-owner runs or edits the workflow",
-      "credential": "none",
+      "tool": "n8n cloud API (trilogyinc.app.n8n.cloud), read-only: workflows, nodes, executions with data; writes remain owner-only until the write policy (trailing audit per change) is recorded",
+      "credential": "N8N_API_KEY (Matt Barge personal key, marketingsupport .env; catalogued in the Superbuilders context secrets)",
       "read": [
-        "workflow export supplied by the owner",
+        "GET /api/v1/workflows and /workflows/{id} (node parameters, expressions, code)",
+        "GET /api/v1/executions?workflowId= and /executions/{id}?includeData=true (per-program values as written)",
         "list_revisions on the page (n8n user saves)"
       ],
       "write": [
@@ -161,7 +162,12 @@
         "sync-delivery",
         "sheet-data"
       ],
-      "status": "handoff-with-verification"
+      "status": "implemented-read, handoff-write",
+      "keyWorkflows": {
+        "ORgdHC71YJ5RawBy": "alpha.school website: Update school pages (nightly 05:15 UTC; writes the 24 synced ids)",
+        "RqP1lPvDKvHDxTus": "alpha.school website: Update the Locations Page",
+        "6HvmvgkzPkFikc40": "Read programs and their marketing events (HubSpot Programs + Marketing Events + HubDB FormProgramInterestToInterestAndCampusMapping)"
+      }
     },
     "events-hubspot": {
       "system": "HubSpot marketing events and the Alpha HubSpot Events plugin",

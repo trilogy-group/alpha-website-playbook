@@ -34,3 +34,10 @@ The staff write path works on the tagged leadership layout. On a nested carousel
 ## Defects found and saved (not filed; the brief withheld ticket creation)
 
 Miami: Michael Dillow's card is hidden on every breakpoint but still holds a carousel slot; the 2025/26 packet CTA is hidden everywhere; the intro media is not in the approved registry. Boston: the Open page still says launching (n8n-written sentence). Lexington: the packet link returns 401 and the Announced launch statement names no date.
+
+## n8n read access (2026-09-18, later)
+
+Matt Barge's n8n API key connected the playbook to trilogyinc.app.n8n.cloud read-only (33 workflows). Two open questions closed the same hour:
+
+- Book a Call writer: the nightly workflow writes exactly the 24 synced ids and never `book_a_call_1/2`, so the widget is wordpress-direct (recorded in `spec/campus-page-controls.json`; sync-mapping ticket cmu5vhg6t closed on verification).
+- Park City events: the shortcode is built from `form_program_interest_label`, which the HubDB table FormProgramInterestToInterestAndCampusMapping supplies; Park City and La Jolla have no row, so the label is null and the filter is empty. Fix is two HubDB rows (on the ticket). The marketing HubSpot key has no hubdb scope, so the rows need a HubSpot admin.
