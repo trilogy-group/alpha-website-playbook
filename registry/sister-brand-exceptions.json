@@ -1,0 +1,18 @@
+{
+  "$comment": "Named exceptions to site.identity.sister-brand (spec/observer-check-map.json). A sister-brand word on an Alpha campus page is a defect unless it matches an allowed phrase here, appears in the shared header/footer/navigation, is a proper noun that merely contains the word (universities, venues), or is rendered by a HubSpot-fed event card. tests/page-check.mjs reads this file; the observer should too. Add an exception only with the campus owner's decision recorded in docs/decisions.md.",
+  "version": "1.0",
+  "asOf": "2026-09-18",
+  "properNouns": [
+    "Nova Southeastern University"
+  ],
+  "campuses": {
+    "brownsville": {
+      "decision": "Alpha Brownsville and Nova Academy share an application path; the resources block carries an Apply for Nova High School button by design (spec/observer-check-map.json, protocols/recipes/media-copy-links.md).",
+      "allowedPhrases": [
+        "Apply for Nova High School",
+        "Nova High School",
+        "Alpha-Brownsville-Nova-Academy"
+      ]
+    }
+  }
+}

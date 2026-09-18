@@ -23,6 +23,7 @@ const media = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-ope
 const campusPages = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-pages.json'), 'utf8')).campuses
 const syncedTargets = JSON.parse(fs.readFileSync(path.join(here, '../spec/synced-targets.json'), 'utf8'))
 
+const brandExceptions = fs.existsSync(path.join(here, '..', 'registry', 'sister-brand-exceptions.json')) ? JSON.parse(fs.readFileSync(path.join(here, '..', 'registry', 'sister-brand-exceptions.json'), 'utf8')) : { properNouns: [], campuses: {} }
 const SISTER_BRANDS = [/\bNova\b/, /\bNextGen(?:\s+Academy)?\b/, /\bWaypoint(?:\s+Academy)?\b/, /\b(?:Texas\s+Sports\s+Academy|TSA)\b/]
 const LAUNCH_WORDS = [/\bComing\s+Soon\b/i, /\bComing\s+(?:Fall|Spring|Winter|Summer)\b/i, /\bis\s+launching\b/i, /\bLaunching\s+(?:in\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bOpening\s+(?:Fall|Spring|Winter|Summer)\b/i]
 const UA = 'alpha-website-playbook-page-check/0.1 (read-only)'
@@ -88,9 +89,18 @@ async function checkPage(url, stateOverride) {
     add('announced-names-launch-date', /(?:opens|launching|opening|coming)\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\s+20\d\d/i.test(mainText), 'launch statement must name a month or season and a year')
   }
 
-  // identity
-  const brandHits = SISTER_BRANDS.map((re) => mainText.match(re)?.[0]).filter(Boolean)
-  add('no-sister-brand-words', brandHits.length === 0, brandHits.join(', '))
+  // identity: page-owned copy only. Shared navigation is already outside mainHtml; HubSpot-fed event cards and the
+  // In the News gallery are not page-owned, proper nouns that contain a brand word are not brand words, and a campus
+  // may carry a named exception (registry/sister-brand-exceptions.json). Batch 2 (2026-09-18) traced three false
+  // tickets to this check: a university name, an event venue, and the documented Brownsville/Nova path.
+  const identityHtml = mainHtml
+    .replace(/<div[^>]*\bid="hubspot_events"[\s\S]*?<\/div>\s*<\/div>/g, ' ')
+    .replace(/<div[^>]*class="[^"]*\batvg-wrapper\b[^"]*"[\s\S]*?(?=<\/section>|<section|<div[^>]*data-element_type="container")/g, ' ')
+  let identityText = visibleText(identityHtml)
+  for (const noun of brandExceptions.properNouns || []) identityText = identityText.split(noun).join(' ')
+  for (const phrase of brandExceptions.campuses?.[slug]?.allowedPhrases || []) identityText = identityText.split(phrase).join(' ')
+  const brandHits = SISTER_BRANDS.map((re) => identityText.match(re)?.[0]).filter(Boolean)
+  add('no-sister-brand-words', brandHits.length === 0, brandHits.length ? `${brandHits.join(', ')} in page-owned copy` : (brandExceptions.campuses?.[slug] ? 'named exception applied' : ''))
   const imageRefs = [...mainHtml.matchAll(/wp-content\/uploads\/[^"'\s)]+/g)].map((m) => m[0])
   // person names on the page (Team cards render "Name | Title" headings); a headshot named after a person is not a campus reference
   const personTokens = new Set([...mainText.matchAll(/([A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3})\s*\|\s*[A-Z]/g)].flatMap((m) => m[1].toLowerCase().split(/\s+/)))
