@@ -6,3 +6,7 @@
 - `evidence-and-screenshots.md`: required artifacts, viewport set, labels, privacy and APEX evidence upload.
 - `recipes/`: one canonical recipe per executable ticket class. `media-copy-links.md` remains a combined historical overview; use `copy.md`, `link-cta.md`, and `media.md` for current execution.
 - Helpers: `tests/validate-ticket.mjs` (intake), `tests/page-check.mjs` (ring 2), `tests/file-apex-ticket.mjs` (step 8, dry-run by default).
+
+## Running as a fresh agent from a worktree
+
+Work from a detached worktree of `origin/main` so a shared checkout is never edited. The playbook has no npm dependencies; do not symlink another checkout's `node_modules` into the worktree (a later `git worktree remove --force` follows the symlink and deletes the target, which happened on 2026-09-18). Pass `--playwright /Users/matthewbarge/DevProjects/aeo` to `tests/rendered-controls.mjs` instead. `list_receipts` filters by `ticketId` (not `apexTicketId`) and `runId`; unknown keys are dropped silently. A 429 from `flush_wp_engine_cache` carries `retryAfterSeconds` in the REST body; wait that long once rather than looping on `cooldownSeconds`.

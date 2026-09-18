@@ -61,6 +61,10 @@ The website ticket that triggered the diagnosis is not closed by a WordPress edi
 
 **Do as much good as the ticket allows.** When a ticket has several parts and only some inputs are missing, execute the parts that are complete, test them, and send the ticket back for the rest. Never leave a fixable defect on the page because a different part of the same ticket is blocked. Example: a launch-copy ticket whose approved card is missing still gets its sentence fixed; the ticket then goes to Missing Info for the card, with the resolution block listing the sentence as done. The ticket is never marked Completed while any part is open.
 
+### 1c. Operator instructions outrank classification
+
+A note on the ticket headed OPERATOR INSTRUCTION from website operations (Matt Barge or Yash Chitneni) is authoritative for scope and route. It overrides the policy bundle's class, owner, and review hold for that ticket, and the scheduled intake administrator must not re-route, re-block, or re-assign a ticket that carries one; it may add its evaluation as a note only. The agent executes what the instruction names, nothing wider, and cites the instruction in the closing note. (Decision 2026-09-18: intake re-blocked Southlake cmu74g0xt00020agmm2s74dey minutes before an operator-instructed execution on 0.5.3.)
+
 ## 2. Claim
 
 Set the ticket to In Progress with a note naming the actor, the date, and the playbook version. Claim the ticket through `POST /api/agent/tasks/{id}/claim` and record the execution, revision, lease, and expiration. One actor per ticket at a time. A lease conflict, changed revision, or unresolved prior execution stops a new mutation. Renew an active lease through the execution heartbeat and release it when work stops. Full procedure: `protocols/production-and-staging.md`.
