@@ -100,7 +100,7 @@ All three rings run on the canonical public URL after cache clearing. Screenshot
 - The page's own observer assertions pass (`registry/observer-checks.json`).
 - Screenshot of the top of the page and of the changed section, inspected by the actor.
 
-**Ring 3, shared templates.** After any site-wide action (cache clear, CSS regeneration, header or footer edit, plugin change), re-verify ring 2's header and footer checks on two untouched pages. This is what catches a cached render that lost its stylesheet.
+**Ring 3, shared templates.** After any site-wide action (cache clear, CSS regeneration, header or footer edit, plugin change), re-verify ring 2's header and footer checks on two untouched pages. This is what catches a cached render that lost its stylesheet. After a cache flush, `tests/page-check.mjs` on the edited page must show `edge-cache-current` passing: it compares the visitor-facing copy with a cache-busting fetch. Rendered checks bypass the edge cache and cannot see a stale copy; on 2026-09-18 four Southlake flushes replayed as noops and visitors kept the old page while every rendered check passed.
 
 Any ring 2 or ring 3 failure caused by the change is a mandatory rollback (step 6). A ring 2 failure not caused by the change is a new finding: file its own ticket (step 8) and reference it on the current ticket; do not fold it into this one and do not fix it under this ticket.
 
