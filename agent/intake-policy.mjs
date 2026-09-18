@@ -1,6 +1,31 @@
 import crypto from 'node:crypto'
 
 const INTAKE_OWNED_FIELDS = new Set(['intakeHash', 'intakePendingHash', 'intakeVersion', 'intakeDecision', 'ownerRole'])
+export const UNRESOLVED_OWNER_ROLE = 'internal-triage'
+
+/**
+ * Merge intake-owned custom fields into a ticket's existing custom fields. Every field intake writes
+ * must be in INTAKE_OWNED_FIELDS; anything else (checkId, source, requestFamily, observer ids) is
+ * preserved untouched. Cause: 2026-09-17, intake overwrote customFields.checkId SITE-31323DE752
+ * with the ticket class and broke the link back to the observer check.
+ */
+export function intakeCustomFieldsPatch(existing, fields) {
+  const foreign = Object.keys(fields || {}).filter((key) => !INTAKE_OWNED_FIELDS.has(key))
+  if (foreign.length) throw new Error(`intake may only write its own custom fields; refused: ${foreign.join(', ')}`)
+  return { ...(existing || {}), ...fields }
+}
+
+/**
+ * Assignee patch that adds the resolved owner without removing anyone already assigned.
+ * Returns {} when there is nothing to add. Cause: 2026-09-17, applying intake replaced the assignee
+ * list on Houston cmu4g7ozk00000agmwlkwsdsf and dropped Farhan Raja and Yash Chitneni.
+ */
+export function assigneePatch(existingAssignees, ownerUserId) {
+  if (!ownerUserId) return {}
+  const existing = (existingAssignees || []).map((item) => (typeof item === 'string' ? item : item?.id)).filter(Boolean)
+  if (existing.includes(ownerUserId)) return {}
+  return { assignees: { set: [...existing, ownerUserId].map((id) => ({ id })) } }
+}
 
 export function evaluateTicket(bundle, ticket, context = {}) {
   const scopeReason = outOfScopeReason(bundle, ticket)
@@ -58,8 +83,10 @@ export function evaluateTicket(bundle, ticket, context = {}) {
   const guard = (spec.intake.guards || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
   const ownerRule = (spec.intake.ownerRules || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
   const policy = guard?.policy || spec.intake.policy
-  const ownerRole = guard?.ownerRole || ownerRule?.ownerRole || spec.intake.ownerRole
-  const reason = guard?.reason || ownerRule?.reason || spec.note || null
+  const configuredOwnerRole = guard?.ownerRole || ownerRule?.ownerRole || spec.intake.ownerRole
+  const ownerRole = typeof configuredOwnerRole === 'string' && configuredOwnerRole.trim() ? configuredOwnerRole.trim() : UNRESOLVED_OWNER_ROLE
+  const reason = guard?.reason || ownerRule?.reason || spec.note
+    || (ownerRole === UNRESOLVED_OWNER_ROLE && configuredOwnerRole !== UNRESOLVED_OWNER_ROLE ? `Class ${classId} names no owner role; routed to the unresolved-owner queue.` : null)
 
   let outcome
   let finalOwnerRole = ownerRole
@@ -136,6 +163,17 @@ export function refreshDecisionHash(result) {
 }
 
 export function resolveDecisionOwner(bundle, result, ticket, usersByEmail = new Map()) {
+  if (typeof result.ownerRole !== 'string' || !result.ownerRole.trim()) {
+    // An unresolved owner goes to the explicit unresolved-owner queue, never to an empty string.
+    // Cause: 2026-09-17, Boston resolved ownerRole to '' so no assignee was set and the body said "Owner: see class".
+    result.ownerRole = UNRESOLVED_OWNER_ROLE
+    result.owner = null
+    result.ownerUser = null
+    result.ownerResolution = 'unresolved-owner-role'
+    if (['ready-for-execution', 'routed'].includes(result.outcome)) result.outcome = 'owner-unresolved'
+    result.reason = result.reason || 'No owner role resolved for this ticket; routed to the unresolved-owner queue for internal triage.'
+    return refreshDecisionHash(result)
+  }
   if (result.ownerRole === 'requester') {
     result.owner = ticket.requesterEmail || null
     result.ownerUser = ticket.requesterEmail ? usersByEmail.get(String(ticket.requesterEmail).toLowerCase()) || null : null

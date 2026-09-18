@@ -14,6 +14,8 @@ import { spawnSync } from 'node:child_process'
 import {
   administrativeAction,
   applyDuplicateCandidates,
+  assigneePatch,
+  intakeCustomFieldsPatch,
   clarificationNote,
   clarificationRequirements,
   evaluateTicket,
@@ -164,8 +166,7 @@ async function applyDecision(ticket, result) {
     throw new Error('Ticket received new requester or human input before administration; evaluate the fresh revision instead')
   }
   if (result.action.kind === 'execution-ready') assertExecutionRelease()
-  const pendingCustomFields = {
-    ...(preflight.customFields || {}),
+  const pendingCustomFields = intakeCustomFieldsPatch(preflight.customFields, {
     ownerRole: result.ownerRole,
     intakePendingHash: result.decisionSha256,
     intakeVersion: VERSION,
@@ -185,11 +186,10 @@ async function applyDecision(ticket, result) {
       relatedTicketIds: result.relatedTicketIds || [],
       evaluatedAt: new Date().toISOString(),
     },
-  }
-  const assigneeIds = result.ownerUser?.id ? [result.ownerUser.id] : []
+  })
   await v1(`/tasks/${ticket.id}`, 'PATCH', {
     customFields: pendingCustomFields,
-    ...(assigneeIds.length ? { assignees: { set: assigneeIds.map((id) => ({ id })) } } : {}),
+    ...assigneePatch(preflight.assignees, result.ownerUser?.id),
     agentStatus: 'BLOCKED',
     agentEligible: false,
   })
@@ -266,11 +266,10 @@ async function applyDecision(ticket, result) {
     throw new Error('Ticket received new requester or human input during administration; leaving the decision pending for a fresh evaluation')
   }
   await v1(`/tasks/${ticket.id}`, 'PATCH', {
-    customFields: {
-      ...currentCustomFields,
+    customFields: intakeCustomFieldsPatch(currentCustomFields, {
       intakeHash: result.decisionSha256,
       intakeVersion: VERSION,
-    },
+    }),
   })
   return { ok: true, ...actionResult, finalized: true }
 }

@@ -13,6 +13,28 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { renderBody } from './render-ticket.mjs'
+import { assigneePatch } from '../agent/intake-policy.mjs'
+
+export const TRIAGE_BODY_MARKER = '--- Website agent triage ---'
+
+/**
+ * The requester's own words stay first and verbatim. The rendered contract body follows under a marker; regenerating
+ * the body replaces only the part below the marker. Cause: 2026-09-17, Santa Barbara cmu5z5od3000004jq9d327chk showed
+ * the agent's framing first and Matt asked whether the original had been overridden.
+ */
+export function composeDescription(existing, body) {
+  const current = String(existing || '')
+  const markerAt = current.indexOf(TRIAGE_BODY_MARKER)
+  const original = (markerAt >= 0 ? current.slice(0, markerAt) : current).trimEnd()
+  const rendered = `${TRIAGE_BODY_MARKER}\n${body}`
+  return original ? `${original}\n\n${rendered}` : rendered
+}
+
+/** Keep an existing checkId (observer SITE-* ids and class tags alike); record the triaged class in its own field. */
+export function triageCustomFields(cf, fields) {
+  const { checkId, ...rest } = fields
+  return { ...cf, ...rest, checkId: cf.checkId || checkId, triagedClass: checkId }
+}
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const read = (p) => JSON.parse(fs.readFileSync(path.join(here, '..', p), 'utf8'))
@@ -63,7 +85,12 @@ export async function triageOne(t, args = {}) {
     related: [].concat(args.related || []), playbook: `spec/campus-page-field-map.json ${element}; protocol step 0 and 1b`, history,
   }
   const body = renderBody(contract)
-  const patch = { description: body, customFields: { ...cf, checkId: ticketClass, defectClass: dx.defectClass, ownerRole, contractVersion: '1.0', history, element }, ...(owner ? { assignees: { set: [{ id: owner.apexUserId }] } } : {}), ...(args.status ? { status: args.status } : {}) }
+  const patch = {
+    description: composeDescription(t.description, body),
+    customFields: triageCustomFields(cf, { checkId: ticketClass, defectClass: dx.defectClass, ownerRole, contractVersion: '1.0', history, element }),
+    ...assigneePatch(t.assignees, owner?.apexUserId),
+    ...(args.status ? { status: args.status } : {}),
+  }
   let applied = null
   if (args.apply) { try { const r = await apex(`/tasks/${t.id}`, 'PATCH', patch); applied = { status: r.status, assignees: (r.assignees || []).map((a) => a.name) } } catch (e) { applied = { error: e.message } } }
   return { id: t.id, url, element, defectClass: dx.defectClass, class: ticketClass, ownerRole, owner: owner?.name || null, status: args.status || t.status, applied, body: args.apply ? undefined : body, contract, patch }

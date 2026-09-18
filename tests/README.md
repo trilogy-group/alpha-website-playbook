@@ -23,7 +23,7 @@ Enforces `spec/ticket-contract.json` on any ticket set: claim, page, element, ob
 
 ## render-ticket.mjs and triage-ticket.mjs
 
-`render-ticket.mjs` renders a ticket body from a contract object. `triage-ticket.mjs` brings existing APEX tickets up to the contract: it runs the pathway diagnosis, sets class, defect class, and owner, regenerates the body with a one-line history, and assigns the owner's APEX user. Dry-run by default.
+`render-ticket.mjs` renders a ticket body from a contract object. `triage-ticket.mjs` brings existing APEX tickets up to the contract: it runs the pathway diagnosis, sets class, defect class, and owner, regenerates the rendered body below the `--- Website agent triage ---` marker while keeping the requester's original description first and verbatim, keeps any existing `checkId` (the triaged class is recorded in `triagedClass`), and adds the owner's APEX user to the assignees without removing anyone. Dry-run by default.
 
 ```bash
 node tests/triage-ticket.mjs --file tickets.json [--element intro.status-sentence] [--class hubspot-data] [--owner-role hubspot-program-admin] [--status BLOCKED] [--related <id>] [--note "..."] [--apply]

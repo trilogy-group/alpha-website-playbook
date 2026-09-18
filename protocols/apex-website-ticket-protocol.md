@@ -10,7 +10,7 @@ Every ticket, whoever filed it, must carry: a claim, the page, the element, the 
 
 A ticket that fails the contract goes back to its creator, not to a person: an observer ticket without a source field and read time means the observer check or its config is fixed; a form ticket without inputs gets the Missing Info template; an agent ticket that fails means the filer is fixed. Nobody works a ticket that does not say who owns it and how it ends.
 
-The body is rendered from the contract (`tests/render-ticket.mjs`) and regenerated whenever the class or owner changes. History is one line per change. Prior bodies are never appended.
+The requester's original submission stays first in the description, verbatim, and is never rewritten by an agent. The rendered contract body (`tests/render-ticket.mjs`) follows it under the marker `--- Website agent triage ---` and is regenerated in place whenever the class or owner changes. History is one line per change. Prior rendered bodies are never appended. (Proposed rule from Matt Barge's Santa Barbara review, 2026-09-17; the code follows it pending confirmation.)
 
 ## 1. Classify and validate the ticket
 
