@@ -231,5 +231,6 @@
       "prepare_batch_content_patch",
       "apply_batch_content_patch"
     ]
-  }
+  },
+  "carouselCaveat": "staff-add, staff-update, staff-remove on an Elementor nested-carousel team section require plugin 0.5.3 or later (carousel_items sync); on 0.5.2 the change renders a blank slide and must be refused (protocols/recipes/staff-card.md)."
 }
