@@ -96,7 +96,12 @@ async function checkPage(url, stateOverride) {
   // may carry a named exception (registry/sister-brand-exceptions.json). Batch 2 (2026-09-18) traced three false
   // tickets to this check: a university name, an event venue, and the documented Brownsville/Nova path.
   const identityHtml = mainHtml
-    .replace(/<div[^>]*\bid="hubspot_events"[\s\S]*?<\/div>\s*<\/div>/g, ' ')
+    // Alpha HubSpot Events cards (class prefix ahse-): venue, title, and time come from the HubSpot Marketing Event.
+    .replace(/<(span|div|p|a|h[1-6])\b[^>]*class="[^"]*\bahse-[^"]*"[^>]*>[\s\S]*?<\/\1>/g, ' ')
+    // Navigation menus that render after </header> (mobile dropdown, off-canvas): shared template, not page copy.
+    .replace(/<a\b[^>]*class="[^"]*\belementor-(?:sub-item|item)\b[^"]*"[^>]*>[\s\S]*?<\/a>/g, ' ')
+    .replace(/<(nav|ul)\b[^>]*class="[^"]*\belementor-nav-menu[^"]*"[^>]*>[\s\S]*?<\/\1>/g, ' ')
+    // In the News gallery (Airtable video gallery): article thumbnails are not campus media.
     .replace(/<div[^>]*class="[^"]*\batvg-wrapper\b[^"]*"[\s\S]*?(?=<\/section>|<section|<div[^>]*data-element_type="container")/g, ' ')
   let identityText = visibleText(identityHtml)
   for (const noun of brandExceptions.properNouns || []) identityText = identityText.split(noun).join(' ')
