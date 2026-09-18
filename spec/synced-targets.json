@@ -99,5 +99,13 @@
     "address",
     "content_heading_2",
     "resource_4"
-  ]
+  ],
+  "verifiedAgainstWorkflow": {
+    "workflowId": "ORgdHC71YJ5RawBy",
+    "workflowName": "alpha.school website: Update school pages",
+    "readVia": "n8n API 2026-09-18",
+    "executionId": "247078",
+    "writtenIds": 24,
+    "note": "The code node \"Update Elementor page content\" writes exactly the 24 keys in synced; nothing else on a campus page is n8n-written. Book a Call (book_a_call_1/2) is wordpress-direct."
+  }
 }

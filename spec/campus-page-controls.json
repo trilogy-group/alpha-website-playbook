@@ -31,9 +31,9 @@
       "label": "Book a Call",
       "section": "hero CTA row (and lower CTA rows)",
       "destination": "https://go.alpha.school/<meetings path>[?uuid=<id>] (HubSpot meetings page for the campus); Dorado points at the events page instead",
-      "urlSource": "HubSpot Program call_scheduling_link, per Cristi 2026-03-11; UNVERIFIED: the 2026-09-16 export of the Update school pages workflow contains no book_a_call, meetings or call_scheduling reference (sync-mapping ticket filed 2026-09-17)",
-      "writer": "unverified (recorded as n8n-hubspot; not in the current workflow export)",
-      "ownerRole": "hubspot-program-admin (link value) / hubspot-owner (meetings page)",
+      "urlSource": "WordPress widget link (book_a_call_1, book_a_call_2), edited through the Alpha WordPress MCP. HubSpot Program call_scheduling_link is the intended source of truth for the URL but nothing writes it to the page: the nightly n8n workflow \"alpha.school website: Update school pages\" (ORgdHC71YJ5RawBy) writes exactly the 24 ids in spec/synced-targets.json and no book_a_call id (workflow read through the n8n API on 2026-09-18; execution 247078). Verified writer: wordpress-direct.",
+      "writer": "wordpress-direct",
+      "ownerRole": "website-agent-operator (widget); hubspot-program-admin keeps call_scheduling_link in step as the record",
       "count": 71,
       "checks": [
         "book-a-call-consistency",
