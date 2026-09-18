@@ -1,22 +1,22 @@
 {
   "$comment": "Signed release manifest (improvement plan workstream 3). What production must report for the website agent to claim or write. tests/check-release.mjs compares this with the Alpha MCP health route and the committed policy bundle; agent/intake.mjs refuses to release execution-ready tickets on a mismatch while unrelated intake administration continues. Update deliberately with each plugin upload or policy change; the policySha256 comes from spec/policy-bundle.generated.json.",
-  "version": "2026-09-18.1",
+  "version": "2026-09-18.2",
   "policySha256": "7469f86bfba6b5d335955132f54246f46a16b93f623e0bc8d65de97bc5b5e8e7",
   "playbookCommit": "afcdf53bd1dabe39173541a8febe293378e7cf29",
   "bridge": {
     "package": "@alpha/wordpress-mcp",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "toolCount": 43
   },
   "production": {
     "site": "https://alpha.school",
-    "pluginVersion": "0.5.2",
+    "pluginVersion": "0.5.3",
     "abilityCount": 43,
-    "abilitySchemaSha256": "31737a5fb2e570800e11c4595f973418264ac772d4dd9fe0ec52cc2525738952",
+    "abilitySchemaSha256": "1038eda201d694315d85edbc826ffeaec7ad5d0ee60b5a59c24b9547e6844870",
     "operatorMode": true,
     "productionWritesEnabled": true,
     "campusTemplateId": 6140,
-    "note": "abilitySchemaSha256 read from the health route after the 0.5.2 upload on 2026-09-17; update with every plugin upload."
+    "note": "0.5.3 uploaded 2026-09-18 (nested carousel slide sync); fingerprint read from the health route after upload."
   },
   "supportedOperations": {
     "scheduled-apex-alpha-mcp": [
