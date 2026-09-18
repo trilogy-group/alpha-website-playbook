@@ -40,7 +40,7 @@ The staff tool treats a card as part of the leadership collection only when its 
 - The person cannot be found exactly once (update, remove) or the target row is not a recognized structure (add).
 - The title is not in the approved title list, or the bio contains claims, pricing, or admissions promises.
 - The photo mapping is not explicitly confirmed, or the file is not JPEG, PNG, or WebP within limits.
-- The request asks to create, clone, or restructure a carousel or row.
+- The request asks to create, clone, or restructure a carousel or row. Adding a person to an existing carousel is not that: use `prepare/apply_elementor_staff_patch` with action add and placement existing_carousel, which builds the slide from the carousel's own template (Southlake, 2026-09-18). Never move a leadership-card container into a carousel; it keeps its row layout and renders squeezed.
 - The team section is an Elementor `nested-carousel` and production runs plugin 0.5.2 or older. Those versions remove or add the slide container without updating the widget's `carousel_items` repeater, and the public page renders a blank slide (Alpha Miami, 2026-09-18, rolled back as receipt 10055). Plugin 0.5.3 keeps the repeater in step; check `access_report.alphaMcp.pluginVersion` before any staff change on a carousel page and route to website-operations on an older version.
 
 ## Related

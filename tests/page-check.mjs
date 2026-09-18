@@ -61,6 +61,17 @@ async function checkPage(url, stateOverride) {
   } catch (e) { add('page-reachable', false, e.message); return { url, slug, state, checks } }
   add('page-reachable', status === 200, `HTTP ${status}`)
   if (status !== 200) return { url, slug, state, checks }
+  // Edge cache currency: the plain URL above is what a visitor gets (Cloudflare and WP Engine may serve a cached copy);
+  // rendered checks bypass that cache with ?nocache. Compare the page-owned element ids of both fetches so a stale
+  // edge copy after an edit fails here instead of hiding behind the bypass (Southlake, 2026-09-18).
+  try {
+    const fresh = await fetch(url + (url.includes('?') ? '&' : '?') + 'nocache=' + Date.now(), { headers: { 'User-Agent': UA }, redirect: 'manual', signal: AbortSignal.timeout(30_000) })
+    const freshHtml = fresh.status === 200 ? await fresh.text() : ''
+    const ids = (h) => new Set([...h.matchAll(/elementor-element-([a-z0-9]{6,8})\b/g)].map((m) => m[1]))
+    const a = ids(html), b = ids(freshHtml)
+    const missing = [...b].filter((id) => !a.has(id)).length, extra = [...a].filter((id) => !b.has(id)).length
+    add('edge-cache-current', freshHtml !== '' && missing === 0 && extra === 0, `cf-cache-status ${headers['cf-cache-status'] || 'n/a'}, age ${headers.age || 'n/a'}; ${missing} elements missing from the cached copy, ${extra} stale elements still served`)
+  } catch (e) { add('edge-cache-current', false, `fresh fetch failed: ${e.message}`) }
   const text = visibleText(html)
   // Page-owned content only: between the header template and the footer template, so shared
   // navigation (which lists the specialty schools) and footer media do not count against the page.

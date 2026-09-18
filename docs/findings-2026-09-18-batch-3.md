@@ -41,3 +41,9 @@ Matt Barge's n8n API key connected the playbook to trilogyinc.app.n8n.cloud read
 
 - Book a Call writer: the nightly workflow writes exactly the 24 synced ids and never `book_a_call_1/2`, so the widget is wordpress-direct (recorded in `spec/campus-page-controls.json`; sync-mapping ticket cmu5vhg6t closed on verification).
 - Park City events: the shortcode is built from `form_program_interest_label`, which the HubDB table FormProgramInterestToInterestAndCampusMapping supplies; Park City and La Jolla have no row, so the label is null and the filter is empty. Fix is two HubDB rows (on the ticket). The marketing HubSpot key has no hubdb scope, so the rows need a HubSpot admin.
+
+## Batch 4 (2026-09-18, evening): carousel reruns on 0.5.3
+
+Miami removal and Southlake reorder both Completed. Jason DeMaria sits under Tasha Arnold; the three guides are carousel slides built through staff add with placement existing_carousel from their own cards, old cards removed, six slides and six items after every apply. One rollback on the way (a leadership container moved into the carousel renders squeezed); the staff-add path is now in the recipe.
+
+The find that matters: `flush_wp_engine_cache` replayed as a noop for the same ticket after its first call, so the four flushes after the Southlake writes did nothing and the visitor-facing page (no cache-busting) still served the old cards while every rendered check passed. Fixed in plugin 0.5.5 (a flush replays only inside the cooldown window) and in `tests/page-check.mjs` (`edge-cache-current` compares the visitor copy with the bypass copy). Also from this run: 0.5.4 attributes MCP writes in `list_revisions` and passes `retryAfterSeconds` through the bridge; protocol 1c makes operator instructions authoritative over the intake classifier; the fresh-agent worktree notes in protocols/README.
