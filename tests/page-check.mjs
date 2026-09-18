@@ -41,6 +41,8 @@ for (const r of results) {
   for (const c of fails) console.log(`      ${c.id}: ${c.detail}`)
 }
 process.exitCode = results.some((r) => r.checks.some((c) => c.result === 'fail')) ? 1 : 0
+// Keep-alive sockets from the destination checks held the event loop open after the last page; exit explicitly.
+process.exit(process.exitCode)
 
 async function checkPage(url, stateOverride) {
   const slug = new URL(url).pathname.replace(/^\/+|\/+$/g, '')
