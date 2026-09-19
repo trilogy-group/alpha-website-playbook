@@ -1,22 +1,22 @@
 {
   "$comment": "Signed release manifest (improvement plan workstream 3). What production must report for the website agent to claim or write. tests/check-release.mjs compares this with the Alpha MCP health route and the committed policy bundle; agent/intake.mjs refuses to release execution-ready tickets on a mismatch while unrelated intake administration continues. Update deliberately with each plugin upload or policy change; the policySha256 comes from spec/policy-bundle.generated.json.",
-  "version": "2026-09-18.5",
+  "version": "2026-09-19.1",
   "policySha256": "3aaef6a9d3f4ffdc703d6e6b83a2190d421971e0a2a36982cc1adb34f1541c90",
   "playbookCommit": "3e6b75a045f5a28cd6d7d82fffc529a260725d3a",
   "bridge": {
     "package": "@alpha/wordpress-mcp",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "toolCount": 43
   },
   "production": {
     "site": "https://alpha.school",
-    "pluginVersion": "0.5.4",
+    "pluginVersion": "0.5.5",
     "abilityCount": 43,
-    "abilitySchemaSha256": "a7a5ef130321fa65c32ddd3e4b807ad8684d758a5dac0e2012c7b665d1de86d7",
+    "abilitySchemaSha256": "4cd94d50a26ca77bf5c3b5a52abb604fe472eabd10023a679de25d379cb4f821",
     "operatorMode": true,
     "productionWritesEnabled": true,
     "campusTemplateId": 6140,
-    "note": "0.5.4 uploaded 2026-09-18 (write attribution, retryAfterSeconds through the bridge); fingerprint read from the health route after upload."
+    "note": "0.5.5 uploaded 2026-09-19 (cache flush replay limited to the cooldown window)."
   },
   "supportedOperations": {
     "scheduled-apex-alpha-mcp": [

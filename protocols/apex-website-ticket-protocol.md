@@ -178,7 +178,7 @@ Done when: two campuses render correctly after a run with the new rule, and the 
 
 Anything wrong on the page that is outside the current ticket's scope gets its own APEX ticket, filed before the current ticket closes. This keeps every ticket to one verifiable change and keeps the queue honest about what the site needs.
 
-File it through the APEX API, the same way the observer does, so it lands in the same queue with the same fields:
+The agent files it itself; this is standing authority, not something a run brief grants (decision 2026-09-19, Matt Barge). Use `node agent/file-found-ticket.mjs <payload.json>`, which deduplicates against open tickets (idempotency key, exact title, page plus check), creates the Request, and assigns the class owner from the policy bundle (website operations when the role has no person). Tooling defects in the Alpha MCP or the playbook scripts are not website tickets; they go to the repository and are named in the run report. The raw API shape, for reference:
 
 ```
 POST https://apex.2hourlearning.com/api/v1/tasks
