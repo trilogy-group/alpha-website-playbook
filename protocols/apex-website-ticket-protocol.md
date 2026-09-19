@@ -61,6 +61,10 @@ The website ticket that triggered the diagnosis is not closed by a WordPress edi
 
 **Do as much good as the ticket allows.** When a ticket has several parts and only some inputs are missing, execute the parts that are complete, test them, and send the ticket back for the rest. Never leave a fixable defect on the page because a different part of the same ticket is blocked. Example: a launch-copy ticket whose approved card is missing still gets its sentence fixed; the ticket then goes to Missing Info for the card, with the resolution block listing the sentence as done. The ticket is never marked Completed while any part is open.
 
+### 1d. A ticket is never left without a person
+
+Fail closed on execution, never on ownership. When the ticket's owner role has no registered person (registry/people.json), the agent does not leave it unassigned: it sets Blocked, assigns website operations (Matt Barge), and writes a note that names the role, the system the work lives in, and the exact change requested, so a human can name the owner in one step. The first such case, Waypoint Academy (cmu73k0jw002i04l5exxhv2jb, a HighLevel site), sat unassigned for a day. (Decision 2026-09-19, Matt Barge.)
+
 ### 1c. Operator instructions outrank classification
 
 A note on the ticket headed OPERATOR INSTRUCTION from website operations (Matt Barge or Yash Chitneni) is authoritative for scope and route. It overrides the policy bundle's class, owner, and review hold for that ticket, and the scheduled intake administrator must not re-route, re-block, or re-assign a ticket that carries one; it may add its evaluation as a note only. The agent executes what the instruction names, nothing wider, and cites the instruction in the closing note. (Decision 2026-09-18: intake re-blocked Southlake cmu74g0xt00020agmm2s74dey minutes before an operator-instructed execution on 0.5.3.)
