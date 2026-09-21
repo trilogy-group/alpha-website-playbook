@@ -122,6 +122,33 @@
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Announced",
       "addedBy": "sweep-2026-09-21 partition C"
+    },
+    "miami": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "intro slot plays Welcome Alpha School MacKenzie.mp4 via insert_url (video widget); Gaby Guajardo asks for the campus YouTube video, ticket cmubcluiz000304jy9pnujyhx",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition A"
+    },
+    "santa-barbara": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "no approved intro asset recorded",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition A"
+    },
+    "plano": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "no approved intro asset recorded (ticket cmubc5q5x000c04ibpqx5x4os)",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition A"
     }
   }
 }

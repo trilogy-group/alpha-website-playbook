@@ -46,3 +46,11 @@ The staff tool treats a card as part of the leadership collection only when its 
 ## Related
 
 `registry/sources.json` staffRoster: no roster source is configured yet, so the requester is the source of truth for names and titles until one exists.
+
+## Rules settled by the 2026-09-21 sweep
+
+- A headshot is only ever an APEX asset on the ticket (`webTmHeadshotAssetId`, placed through `upload_media_from_apex_asset`). A Google Drive, Slack, or Canva link is not a substitute and never becomes one by downloading it: an image in the library with no asset id, no source hash, and no confirmed person mapping cannot be placed on a card. Missing Info to the requester for the asset.
+- When a page has both a leadership row and a carousel (or scroll row), new leadership titles (Head of School, Dean, Director) go in the leadership row and everyone else goes in the carousel or row, matching who is already in each. Say which you chose and why on the ticket.
+- The heading uses the NAME field exactly as submitted. If the bio or the page's convention implies an honorific the requester omitted (Dr.), keep the submitted name and note the one-field edit on the ticket for the campus to confirm.
+- Title case follows the page: normalize an all-caps submitted title only when every other card on the page is title case, and say so.
+- A multi-part ticket whose parts belong to different owners: do the complete parts, send the parent back to the requester when the requester owns the missing inputs, split each other-owner part into its own linked ticket through `agent/file-found-ticket.mjs`, and keep exactly one person on each ticket.
