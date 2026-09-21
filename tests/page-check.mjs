@@ -119,7 +119,15 @@ async function checkPage(url, stateOverride) {
   for (const phrase of brandExceptions.campuses?.[slug]?.allowedPhrases || []) identityText = identityText.split(phrase).join(' ')
   const brandHits = SISTER_BRANDS.map((re) => identityText.match(re)?.[0]).filter(Boolean)
   add('no-sister-brand-words', brandHits.length === 0, brandHits.length ? `${brandHits.join(', ')} in page-owned copy` : (brandExceptions.campuses?.[slug] ? 'named exception applied' : ''))
-  const imageRefs = [...mainHtml.matchAll(/wp-content\/uploads\/[^"'\s)]+/g)].map((m) => m[0])
+  // Elementor emits section and container background images into the page's generated stylesheet, not the HTML
+  // (post-<id>.css); a visitor sees them just the same (Lake Travis hero showed Dorado's beach, 2026-09-21).
+  const pageId = html.match(/data-elementor-id="(\d+)"[^>]*data-elementor-type="wp-page"/)?.[1] || html.match(/class="[^"]*\bpage-id-(\d+)\b/)?.[1]
+  const pageCss = pageId ? html.match(new RegExp(`https?://[^"'\\s]+/elementor/css/post-${pageId}\\.css[^"'\\s]*`))?.[0] : null
+  let cssRefs = []
+  if (pageCss) {
+    try { const cssRes = await fetch(pageCss.replace(/&amp;/g, '&'), { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15_000) }); if (cssRes.ok) cssRefs = [...(await cssRes.text()).matchAll(/wp-content\/uploads\/[^"')\s]+/g)].map((m) => m[0]) } catch { /* the HTML refs still apply */ }
+  }
+  const imageRefs = [...new Set([...[...mainHtml.matchAll(/wp-content\/uploads\/[^"'\s)]+/g)].map((m) => m[0]), ...cssRefs])]
   // person names on the page (Team cards render "Name | Title" headings); a headshot named after a person is not a campus reference
   const personTokens = new Set([...mainText.matchAll(/([A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3})\s*\|\s*[A-Z]/g)].flatMap((m) => m[1].toLowerCase().split(/\s+/)))
   const otherCampus = new Set()

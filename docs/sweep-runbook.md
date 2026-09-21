@@ -12,7 +12,7 @@ How the website agent works the whole APEX website queue on a cadence (every two
 
 The Alpha MCP refuses a write against a stale document hash, so two agents editing the same page cannot silently overwrite each other, but they would waste each other's work and the site-wide cache cooldown. Partition the sweep so no two agents hold the same campus page:
 
-1. Run `agent/intake.mjs` dry over the open queue and group tickets by the campus page (`found.pageUrl`, then `url`, then the program's page from `registry/campus-pages.json`). Multi-page tickets (a removal across three campuses) go to one agent with all their pages.
+1. Run `agent/intake.mjs` dry over the open queue and group tickets by the campus page; each partition agent then runs intake with `--ticket id,id` (or `--page <url>`) so it administers only its own tickets (`found.pageUrl`, then `url`, then the program's page from `registry/campus-pages.json`). Multi-page tickets (a removal across three campuses) go to one agent with all their pages.
 2. Assign each group to one fresh agent; a group is one page or a few small pages, up to about eight tickets. Tickets with no page (mapping questions, sister sites, tooling) go to a routing-only agent that makes no WordPress writes.
 3. Each agent uses its own run id (`sweep-<date>-<partition>`), so receipts and the report are separable.
 4. One site cache flush per agent at the end of its writes, honoring `retryAfterSeconds` on a 429; the flush replays as a noop only inside the cooldown (plugin 0.5.5), so a second agent's flush after the window purges again.

@@ -104,6 +104,24 @@
       "status": "missing",
       "current": "stale card attachment 8465 (Santa-Monica.png, \"Coming Fall 2026 To Santa Monica\")",
       "apexStatus": "MISSING_INFO 2026-09-15"
+    },
+    "southlake": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "southlake: attachment 8789 keller.webp (generic Fort Worth skyline stock, alt empty); lake-travis: intro slot attachment 0 (empty), hero background attachment 8422 dorado-beach-min.webp (Alpha Dorado)",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition C"
+    },
+    "lake-travis": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "intro slot attachment 0 (empty); hero background attachment 8422 dorado-beach-min.webp belongs to Alpha Dorado (ticket cmubc0h9j00000agmteobt3jx)",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Announced",
+      "addedBy": "sweep-2026-09-21 partition C"
     }
   }
 }

@@ -5,7 +5,7 @@
  * re-evaluates requester revisions, and routes the ticket to one exact owner or an explicit
  * unresolved-owner queue. It never edits WordPress, HubSpot, n8n, or any other delivery system.
  *
- *   node agent/intake.mjs --since 2026-09-17T00:00:00Z [--apply] [--report out.json]
+ *   node agent/intake.mjs --since 2026-09-17T00:00:00Z [--apply] [--report out.json] [--ticket id,id] [--page https://alpha.school/<slug>/]
  *   node agent/intake.mjs --file tickets.json --replay --report replay.json
  */
 import fs from 'node:fs'
@@ -37,6 +37,10 @@ const v1Base = /\/api\/v1$/.test(configuredApexBase) ? configuredApexBase : `${c
 const agentBase = (process.env.APEX_AGENT_API_BASE || new URL('/api/agent', `${v1Base}/`).toString()).replace(/\/+$/, '')
 const token = process.env.APEX_API_TOKEN
 const statuses = String(args.status || 'NOT_STARTED,MISSING_INFO,BLOCKED,IN_PROGRESS').split(',').filter(Boolean)
+// --ticket id[,id...] restricts administration to those tickets (sweep partitions must not administer each other's
+// tickets, 2026-09-21); --page <canonical url> restricts to tickets whose derived or declared page matches.
+const onlyTickets = new Set(String(args.ticket || '').split(',').map((v) => v.trim()).filter(Boolean))
+const onlyPage = args.page ? String(args.page).replace(/\/+$/, '').toLowerCase() : null
 const duplicateStatuses = [...new Set([...statuses, 'FOR_REVIEW', 'TESTING', 'APPROVED'])]
 let executionReleaseCheck = null
 const agentOperatorIds = new Set(['website-agent-operator', 'website-operations']
@@ -58,6 +62,9 @@ if (args.file) {
   if (!token) fail('APEX_API_TOKEN required')
   tickets = await listTickets(duplicateStatuses)
 }
+
+if (onlyTickets.size) tickets = tickets.filter((t) => onlyTickets.has(t.id))
+if (onlyPage) tickets = tickets.filter((t) => [t.url, (t.customFields || {}).pageUrl, (t.customFields || {}).targetPageUrl].some((u) => typeof u === 'string' && u.replace(/\/+$/, '').toLowerCase() === onlyPage))
 
 const since = args.since ? new Date(args.since) : null
 if (since && Number.isNaN(since.getTime())) fail(`invalid --since value: ${args.since}`)
