@@ -1,0 +1,14 @@
+{
+  "$comment": "Synthetic roster deck for agent/roster-diff.mjs tests. Every person, title, and bio here is invented; build-synthetic-pptx.mjs turns it into a pptx shaped like the Google Slides export of the Meet the Team template.",
+  "campusLabel": "ALPHA EXAMPLE CAMPUS",
+  "slides": [
+    { "kind": "cover", "text": "Alpha Example Campus" },
+    { "name": "Dr. Avery Example", "title": "HEAD GUIDE", "bio": "Avery has guided invented students for ten invented years.", "interests": "Avery likes fixture data.", "image": "avery" },
+    { "name": "Jordan Lee Sample", "title": "GUIDE · LEVEL 1", "bio": "Jordan teaches the sample cohort.", "interests": "Jordan enjoys test runs.", "image": "jordan", "frameText": "stray words", "placeholder": "Upload/Copy Image" },
+    { "name": "Riley Placeholder", "title": "CAMPUS COORDINATOR", "bio": "Riley keeps the example campus running.", "interests": "Riley collects placeholders.", "image": "riley" },
+    { "name": "Casey Morgan-Fixture", "title": "GUIDE", "bio": "Casey wrote a new bio for this school year.", "interests": "Casey hikes synthetic trails.", "image": "casey-new" },
+    { "name": "Taylor Specimen", "title": "LEAD GUIDE", "bio": "Taylor leads the specimen studio.", "interests": "Taylor reads changelogs.", "image": "taylor" },
+    { "name": "Devon Unfilled", "title": "GUIDE · LEVEL 2" },
+    { "kind": "closing", "text": "We are glad you are here." }
+  ]
+}

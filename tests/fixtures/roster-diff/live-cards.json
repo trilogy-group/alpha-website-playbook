@@ -1,0 +1,11 @@
+{
+  "$comment": "Synthetic live Team section for agent/roster-diff.mjs tests, in the Alpha WordPress MCP staff card state shape (name, title, biographyHtml, attachmentId) plus optional imageUrl and imageSha256. Everyone is invented.",
+  "cards": [
+    { "name": "Quinn Departed", "title": "Head of Schools", "biographyHtml": "<p>Quinn left the example campus.</p>", "attachmentId": 9001, "imageUrl": "https://alpha.school/wp-content/uploads/synthetic/quinn.png" },
+    { "name": "Avery Example", "title": "Head Guide", "biographyHtml": "<p>Avery has guided invented students for ten invented years.</p>", "attachmentId": 9002, "imageUrl": "https://alpha.school/wp-content/uploads/synthetic/avery.png", "imageSha256": "e366e1dd693f67282cdfe699ff69ba0158dc4e36664346e82db1f101e7263def" },
+    { "name": "Jordan Sample", "title": "Lead Guide", "biographyHtml": "<p>Jordan teaches the sample cohort.</p>", "attachmentId": 9003, "imageUrl": "https://alpha.school/wp-content/uploads/synthetic/jordan.png" },
+    { "name": "Casey Morgan-Fixture", "title": "Guide", "biographyHtml": "<p>Casey&#8217;s bio from last school year.</p>", "attachmentId": 9004, "imageUrl": "https://alpha.school/wp-content/uploads/synthetic/casey.png", "imageSha256": "a83919341be483e90c65a7e3b304e0792db3c6705a1a17d5897976846866f973" },
+    { "name": "Tayler Specimen", "title": "Lead Guide", "biographyHtml": "<p>Taylor leads the specimen studio.</p>", "attachmentId": 9005, "imageUrl": "https://alpha.school/wp-content/uploads/synthetic/taylor.png" },
+    { "name": "Devon Unfilled", "title": "Guide · Level 2", "biographyHtml": "<p>Devon joined this year.</p>", "attachmentId": 9006, "imageUrl": "https://alpha.school/wp-content/uploads/synthetic/devon.png" }
+  ]
+}

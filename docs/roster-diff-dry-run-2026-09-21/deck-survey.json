@@ -1,0 +1,401 @@
+[
+  {
+    "campus": "atlanta",
+    "status": "ok",
+    "slides": 8,
+    "people": 6,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 3,
+    "noPhoto": 3,
+    "warnings": 0
+  },
+  {
+    "campus": "austin",
+    "status": "ok",
+    "slides": 44,
+    "people": 42,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 1,
+    "warnings": 1
+  },
+  {
+    "campus": "bethesda",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 3,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "boca-raton",
+    "status": "ok",
+    "slides": 9,
+    "people": 7,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "boston-suburbs",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 2,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "boston",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 4,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "brownsville",
+    "status": "ok",
+    "slides": 12,
+    "people": 10,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "chantilly",
+    "status": "ok",
+    "slides": 8,
+    "people": 6,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "charlotte",
+    "status": "ok",
+    "slides": 11,
+    "people": 9,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "chicago",
+    "status": "ok",
+    "slides": 9,
+    "people": 7,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "denver",
+    "status": "ok",
+    "slides": 9,
+    "people": 7,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "dorado",
+    "status": "ok",
+    "slides": 10,
+    "people": 8,
+    "templateSlidesSkipped": 0,
+    "noTitle": 1,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "east-bay",
+    "status": "ok",
+    "slides": 11,
+    "people": 9,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "fort-worth",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 4,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "greenwich",
+    "status": "ok",
+    "slides": 6,
+    "people": 4,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 3,
+    "noPhoto": 3,
+    "warnings": 0
+  },
+  {
+    "campus": "highland-park",
+    "status": "ok",
+    "slides": 8,
+    "people": 6,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "kirkland",
+    "status": "ok",
+    "slides": 13,
+    "people": 11,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 1
+  },
+  {
+    "campus": "la-jolla",
+    "status": "ok",
+    "slides": 7,
+    "people": 5,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "lake-travis",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 3,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "malibu",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 4,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "miami-beach",
+    "status": "ok",
+    "slides": 8,
+    "people": 6,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "miami",
+    "status": "ok",
+    "slides": 24,
+    "people": 22,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "nashville",
+    "status": "ok",
+    "slides": 9,
+    "people": 7,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "new-york-city",
+    "status": "ok",
+    "slides": 18,
+    "people": 16,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 13,
+    "noPhoto": 13,
+    "warnings": 0
+  },
+  {
+    "campus": "oklahoma-city",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 4,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "orange-county",
+    "status": "ok",
+    "slides": 14,
+    "people": 12,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 6,
+    "noPhoto": 6,
+    "warnings": 0
+  },
+  {
+    "campus": "palm-beach",
+    "status": "ok",
+    "slides": 11,
+    "people": 9,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 2,
+    "noPhoto": 2,
+    "warnings": 0
+  },
+  {
+    "campus": "palo-alto",
+    "status": "ok",
+    "slides": 9,
+    "people": 7,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "park-city",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 2,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "plano",
+    "status": "ok",
+    "slides": 6,
+    "people": 4,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 2,
+    "noPhoto": 2,
+    "warnings": 0
+  },
+  {
+    "campus": "raleigh",
+    "status": "ok",
+    "slides": 10,
+    "people": 8,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 0
+  },
+  {
+    "campus": "san-francisco",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 3,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "santa-barbara",
+    "status": "ok",
+    "slides": 7,
+    "people": 5,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 0,
+    "noPhoto": 0,
+    "warnings": 1
+  },
+  {
+    "campus": "santa-monica",
+    "status": "ok",
+    "slides": 11,
+    "people": 9,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 2,
+    "noPhoto": 4,
+    "warnings": 0
+  },
+  {
+    "campus": "scottsdale",
+    "status": "ok",
+    "slides": 12,
+    "people": 10,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 4,
+    "noPhoto": 4,
+    "warnings": 0
+  },
+  {
+    "campus": "south-bay-la",
+    "status": "ok",
+    "slides": 11,
+    "people": 9,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 4,
+    "noPhoto": 4,
+    "warnings": 0
+  },
+  {
+    "campus": "southlake",
+    "status": "slide_without_name",
+    "detail": {
+      "slide": 3,
+      "found": "[ Name ]"
+    }
+  },
+  {
+    "campus": "the-woodlands",
+    "status": "ok",
+    "slides": 9,
+    "people": 7,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 2,
+    "noPhoto": 2,
+    "warnings": 0
+  },
+  {
+    "campus": "tulsa",
+    "status": "ok",
+    "slides": 5,
+    "people": 3,
+    "templateSlidesSkipped": 0,
+    "noTitle": 0,
+    "noBio": 1,
+    "noPhoto": 1,
+    "warnings": 0
+  }
+]
