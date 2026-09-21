@@ -44,4 +44,5 @@ Tickets whose photo is a Drive, Slides, or Slack link stay Missing Info until th
 
 - Slack notice for Missing Info and routed tickets (Hailey is building it in APEX); until then assignment alone tells nobody, and the coordinator sends the nudges.
 - Automatic partitioning and launch of the parallel agents; today the coordinator partitions by hand.
+- The APEX agent-API completion gate (`POST /tasks/{id}/status COMPLETED` answers 409 "Successful public verification evidence for this agent run is required") reads a hosted execution checkpoint that playbook agents do not write, and `/release` rejects the operator key. Until APEX documents the checkpoint and release calls for playbook agents (asked of Hailey 2026-09-21), an agent that has receipts and rendered evidence sets For Review with a RESOLUTION note and the coordinator marks Completed through the v1 task API after reviewing the run folder.
 - The roster diff from a campus deck or sheet to a For Review plan, and Slack file access for bindings (`docs/headshot-binding.md`).
