@@ -47,3 +47,20 @@ Matt Barge's n8n API key connected the playbook to trilogyinc.app.n8n.cloud read
 Miami removal and Southlake reorder both Completed. Jason DeMaria sits under Tasha Arnold; the three guides are carousel slides built through staff add with placement existing_carousel from their own cards, old cards removed, six slides and six items after every apply. One rollback on the way (a leadership container moved into the carousel renders squeezed); the staff-add path is now in the recipe.
 
 The find that matters: `flush_wp_engine_cache` replayed as a noop for the same ticket after its first call, so the four flushes after the Southlake writes did nothing and the visitor-facing page (no cache-busting) still served the old cards while every rendered check passed. Fixed in plugin 0.5.5 (a flush replays only inside the cooldown window) and in `tests/page-check.mjs` (`edge-cache-current` compares the visitor copy with the bypass copy). Also from this run: 0.5.4 attributes MCP writes in `list_revisions` and passes `retryAfterSeconds` through the bridge; protocol 1c makes operator instructions authoritative over the intake classifier; the fresh-agent worktree notes in protocols/README.
+
+## Sweep 2026-09-21: first page-partitioned parallel run (three agents, ten staff-submitted tickets)
+
+| Measure | Value |
+| --- | ---: |
+| Decisions correct | 10 of 10 |
+| Page changes | 2 (Remi Ho, Alexander Humphreys), full evidence |
+| Rollbacks / unsafe writes | 0 / 0 |
+| Defects found and filed by the agents | 5 (Lake Travis Dorado hero, Greenwich Port Chester sentence, Plano and Miami media, Miami Beach event duplicated into Miami) |
+| Checks, recipes, registries fixed the same day | 9 |
+| Wall clock | 33 minutes (longest partition); about 713k tokens |
+
+What the sweep proved: page partitioning works (no collisions, no shared-page writes); most staff tickets older than a week are already satisfied by the nightly sync or by prior work and close on verification; the remaining blockers are approved media (no rows in `registry/campus-open-media.json` for seven Open campuses) and HubSpot fields the agent cannot read or write.
+
+Fixed from its findings: page-check reads Elementor background images from the page stylesheet (the Lake Travis hero showed Dorado's beach and every check passed); `open-status-sentence` requires the campus name; retired prior-year packets are not hidden CTAs; the FAQ recipe named the wrong widget (`nested-accordion`); intake `--ticket` and `--page` filters; Greenwich's retired Port Chester name out of the registry; staff-card rules for assets, placement, names, titles, and multi-owner tickets; plugin 0.5.6 (alt follows the attachment on staff add; video widget URLs editable). Not reproducible: two agents reported `list_receipts` returning nothing; the coordinator listed every receipt by run and by ticket both times.
+
+Still open: seven Open campuses without approved intro media (Yash); HubSpot read scopes; no supersedes relation or note endpoint in APEX (Hailey); Greenwich applicant-routing split (existing ticket cmtncnhf9); `list_revisions` returns no revisions on several pages.
