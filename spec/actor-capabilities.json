@@ -232,5 +232,6 @@
       "apply_batch_content_patch"
     ]
   },
-  "carouselCaveat": "staff-add, staff-update, staff-remove on an Elementor nested-carousel team section require plugin 0.5.3 or later (carousel_items sync); on 0.5.2 the change renders a blank slide and must be refused (protocols/recipes/staff-card.md)."
+  "carouselCaveat": "staff-add, staff-update, staff-remove on an Elementor nested-carousel team section require plugin 0.5.3 or later (carousel_items sync); on 0.5.2 the change renders a blank slide and must be refused (protocols/recipes/staff-card.md).",
+  "videoWidgets": "From plugin 0.5.6 the video widget's youtube_url, vimeo_url, dailymotion_url, insert_url and external_url.url are editable through prepare_elementor_content_patch (replace_field) under link validation, and video_type accepts youtube, vimeo, dailymotion, videopress, hosted. A hosted-to-YouTube swap is two edits on the same widget in one patch. The approved video still comes from registry/campus-open-media.json or the ticket."
 }
