@@ -63,7 +63,7 @@ The website ticket that triggered the diagnosis is not closed by a WordPress edi
 
 ### 1d. A ticket is never left without a person
 
-Fail closed on execution, never on ownership. When the ticket's owner role has no registered person (registry/people.json), the agent does not leave it unassigned: it sets Blocked, assigns website operations (Matt Barge), and writes a note that names the role, the system the work lives in, and the exact change requested, so a human can name the owner in one step. The first such case, Waypoint Academy (cmu73k0jw002i04l5exxhv2jb, a HighLevel site), sat unassigned for a day. (Decision 2026-09-19, Matt Barge.)
+Fail closed on execution, never on ownership. When the ticket's owner role has no registered person (registry/people.json), the agent does not leave it unassigned: it sets Blocked, assigns the website agent operator (Matt Barge, role `website-agent-operator` in registry/people.json; Yash Chitneni holds `website-operations`), and writes a note that names the role, the system the work lives in, and the exact change requested, so a human can name the owner in one step. The first such case, Waypoint Academy (cmu73k0jw002i04l5exxhv2jb, a HighLevel site), sat unassigned for a day. (Decision 2026-09-19, Matt Barge.)
 
 ### 1c. Operator instructions outrank classification
 

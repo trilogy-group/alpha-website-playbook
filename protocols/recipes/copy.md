@@ -4,7 +4,7 @@ Classes: `copy`, `observer-brand-leak`, and the WordPress-direct portion of othe
 
 ## Inputs
 
-FAQ items (plugin 0.5.0): the campus FAQ is an Elementor accordion with five template slots. Replace existing questions with `prepare_elementor_content_patch` on `tabs.N.tab_title` and `tabs.N.tab_content`; add or remove items with `prepare_elementor_structure_patch` (`repeater_add_item`, `repeater_remove_item` on the accordion widget, `repeater: tabs`, `expectedCount` set). Unhide the section with `set_visibility` when it ships hidden.
+FAQ items: the campus FAQ is an Elementor `nested-accordion` (verified on Plano and Greenwich, 2026-09-21), not a classic accordion. Questions live in the widget's `items` repeater (`items.N.item_title`); each answer is its own `text-editor` widget (`faq_a_N`) inside the N-th child container. Edit a question with `prepare_elementor_content_patch` on `items.N.item_title` and an answer on the child text-editor's `editor`. Add an item with `prepare_elementor_structure_patch`: `repeater_add_item` on the accordion (`repeater: items`, `expectedCount` set) plus `clone_element` of an existing answer container into the accordion at the matching position; remove with `repeater_remove_item` plus `remove_element`. The number of items is not fixed at five. Unhide the section with the `set_visibility` mode of `prepare_elementor_content_patch` when it ships hidden.
 
 - Canonical page URL
 - Exact current text

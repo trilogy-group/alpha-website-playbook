@@ -97,7 +97,12 @@ async function checkPage(url, stateOverride) {
   const launchHits = LAUNCH_WORDS.map((re) => mainText.match(re)?.[0]).filter(Boolean)
   if (state === 'Open') {
     add('open-no-launch-words', launchHits.length === 0, launchHits.length ? `found: ${launchHits.join(', ')}` : '')
-    add('open-status-sentence', /is open and enrolling\.|is now open|is open K-|open and enrolling for the/i.test(mainText), 'expects "Alpha <Campus> is open and enrolling."')
+    // The sentence must name this campus: Greenwich passed with "Alpha Greenwich Port Chester is open and enrolling."
+    // after the rename to Armonk (sweep 2026-09-21).
+    const sentence = mainText.match(/((?:Alpha|Nova|NextGen)[A-Za-z .'-]{0,60}?) (?:is open and enrolling\.|is now open|is open K-|open and enrolling for the)/i)
+    const campusNames = [...(campus?.names || []), ...(campusPages[slug]?.names || [])]
+    const namesThisCampus = sentence ? campusNames.some((n) => sentence[1].trim().toLowerCase() === n.toLowerCase()) : false
+    add('open-status-sentence', Boolean(sentence) && namesThisCampus, sentence ? (namesThisCampus ? sentence[0] : `sentence names "${sentence[1].trim()}", not this campus (${campusNames.join(' / ')})`) : 'expects "Alpha <Campus> is open and enrolling."')
   } else if (state === 'Announced') {
     add('announced-names-launch-date', /(?:opens|launching|opening|coming)\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\s+20\d\d/i.test(mainText), 'launch statement must name a month or season and a year')
   }
@@ -193,7 +198,13 @@ async function checkPage(url, stateOverride) {
     const placeholder = anchor && (/\/\.\.\.$/.test(anchor[1]) || /update link/i.test(label))
     if (isCta && allHidden && anchor && !placeholder && /^https?:\/\//.test(anchor[1])) hiddenEverywhere.push(`${label} (${id || cls.match(/elementor-element-([a-z0-9]+)/)?.[1] || 'widget'}) -> ${anchor[1]}`)
   }
-  add('cta-hidden-everywhere', hiddenEverywhere.length === 0, hiddenEverywhere.length ? hiddenEverywhere.join('; ') : 'no linked CTA is hidden on every breakpoint')
+  // A hidden prior-year packet or calendar is the retired state when a newer year's is visible on the page (14 campuses
+  // hide 2025/26 next to a visible 2026/27; sweep 2026-09-21). Compare school years in the labels.
+  const visibleYears = [...mainHtml.matchAll(wrapperRe)].filter((m) => !(/elementor-hidden-desktop/.test(m[1]) && /elementor-hidden-tablet/.test(m[1]) && /elementor-hidden-mobile/.test(m[1]))).flatMap((m) => [...visibleText(m[2]).matchAll(/\b(20\d\d)\s*[/-]\s*(?:20)?(\d\d)\b/g)].map((y) => Number(y[1])))
+  const newestVisible = visibleYears.length ? Math.max(...visibleYears) : null
+  const retired = (entry) => { const y = entry.match(/\b(20\d\d)\s*[/-]\s*(?:20)?\d\d\b/); return Boolean(y && newestVisible && Number(y[1]) < newestVisible && /info packet|calendar/i.test(entry)) }
+  const stillHidden = hiddenEverywhere.filter((entry) => !retired(entry))
+  add('cta-hidden-everywhere', stillHidden.length === 0, stillHidden.length ? stillHidden.join('; ') : (hiddenEverywhere.length ? `only retired prior-year packets or calendars are hidden (${hiddenEverywhere.length})` : 'no linked CTA is hidden on every breakpoint'))
   if (bookACall.visible + bookACall.hiddenWithLink + bookACall.hiddenNoLink > 0) add('book-a-call-consistency', bookACall.hiddenWithLink === 0, `visible ${bookACall.visible}, hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)
 
   return { url, slug, state, cache: { cfCacheStatus: headers['cf-cache-status'] || null, age: headers.age || null }, checks }

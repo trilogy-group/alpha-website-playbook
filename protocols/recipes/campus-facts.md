@@ -55,3 +55,7 @@ The website ticket is not complete when HubSpot is saved or when n8n reports suc
 ## Grade range wording
 
 Locations card uses `K-8`, `PK-8`, `K-12`. The hero subtitle uses `K-8 Private School in City, State`. The intro or contact block may use `K - 8th Grade`. Change all forms together; the check `campus-page-grade-source-sync` and the Locations card comparison must both pass.
+
+## When the requester and the Operations sheet agree against HubSpot
+
+HubSpot is the source of truth, and a requester whose value disagrees updates HubSpot first. But two independent non-HubSpot sources agreeing (the requester and the Operations growth-map sheet, as with Greenwich's 355 Main Street vs HubSpot's 20 Old Post Road on 2026-09-21) is evidence that HubSpot is stale, not a reason to dismiss the request. In that case: Missing Info to the requester to confirm the value, and route the HubSpot change to hubspot-program-admin with both sources named, so the record moves rather than the page.

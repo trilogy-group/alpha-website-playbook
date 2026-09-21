@@ -193,5 +193,8 @@
     "file": "spec/campus-page-controls.json",
     "human": "playbook/campus-page/controls.md",
     "asOf": "2026-09-16"
+  },
+  "readPaths": {
+    "hubspotProgramFieldsNotOnGrowthMap": "n8n execution payload of workflow ORgdHC71YJ5RawBy (GET /api/v1/executions?workflowId=...&limit=1, then /executions/{id}?includeData=true, about 65 MB) carries every Program property the nightly run read, including website_campus_intro, tuition, phone, email; use it when the HubSpot token lacks crm.objects.custom.read and the growth map omits the field"
   }
 }

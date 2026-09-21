@@ -7,7 +7,7 @@
  * Each file holds either the payload itself or { idempotencyKey, payload }. Deduplicates against open tickets by
  * customFields.idempotencyKey, then by exact title, then by page URL plus checkId; existing matches are reported and
  * skipped. The owner comes from the payload's customFields.ownerRole through the policy bundle's roleOwners, else
- * website operations (Matt Barge). Env: APEX_API_TOKEN (APEX_API_BASE optional).
+ * the website agent operator (Matt Barge). Env: APEX_API_TOKEN (APEX_API_BASE optional).
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -48,7 +48,7 @@ function ownerFor(role) {
   if (withId) return { id: withId.apexUserId, name: withId.name, via: role }
   const fallbackRole = bundle.roleFallback?.[role]
   if (fallbackRole) { const f = (bundle.roleOwners?.[fallbackRole] || []).find((o) => o.apexUserId); if (f) return { id: f.apexUserId, name: f.name, via: `${role} -> ${fallbackRole}` } }
-  return { id: fallbackOwner, name: 'Matt Barge', via: `${role || 'no role'} -> website-operations` }
+  return { id: fallbackOwner, name: 'Matt Barge', via: `${role || 'no role'} -> website-agent-operator` }
 }
 
 for (const file of files) {
