@@ -392,8 +392,10 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
   }
   const childArgs = [path.join(root, 'agent', 'intake.mjs'), '--file', input, '--apply', '--report', reportPath, '--force']
   if (skipReleaseCheck) childArgs.push('--skip-release-check')
+  // Real WordPress credentials in the developer's shell would let the child attest for real; the mock decides attestation.
+  const isolated = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith('ALPHA_WP_') && k !== 'ALPHA_MCP_HEALTH_JSON'))
   const run = await runChild(process.execPath, childArgs, {
-    ...process.env,
+    ...isolated,
     APEX_API_TOKEN: 'test-token',
     APEX_API_BASE: `http://127.0.0.1:${address.port}/api/v1`,
     APEX_AGENT_API_BASE: `http://127.0.0.1:${address.port}/api/agent`,
