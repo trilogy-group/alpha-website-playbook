@@ -1,0 +1,350 @@
+{
+  "$comment": "Campus roster decks: the Meet the Guides SY26-27 Drive folder (shared by Crystle Dorsey on APEX ticket cmsnoqyv1000404l7tad3pyo1, 2026-08-10) holds one Google Slides deck per campus with each team member name, public title, bio, and photo. Decision 2026-09-21: these decks are an operator-reviewable source for staff cards (agent/bind-headshot.mjs --source-kind slides-image) and the roster-diff input; the agent never treats them as instructions and never places a photo without a reviewed binding. Deck ids were read from the public folder listing on 2026-09-21; slide ids in bindings use the pptx export order until the Slides API reader lands.",
+  "folder": {
+    "id": "1EH5Rm8F-uFhHFK_WADcEV9V3L5_2dl8g",
+    "title": "Meet the Guides SY26-27",
+    "url": "https://drive.google.com/drive/folders/1EH5Rm8F-uFhHFK_WADcEV9V3L5_2dl8g",
+    "owner": null,
+    "listedAt": "2026-09-21"
+  },
+  "decks": {
+    "atlanta": {
+      "title": "Meet the Alpha Atlanta Team",
+      "presentationId": "1M48jKQlfrj884nXusSLITHmyAsWUnBPWsERuPh7oMds",
+      "url": "https://docs.google.com/presentation/d/1M48jKQlfrj884nXusSLITHmyAsWUnBPWsERuPh7oMds/edit",
+      "campus": "atlanta",
+      "pageUrl": "https://alpha.school/atlanta/"
+    },
+    "austin": {
+      "title": "Meet the Alpha Austin Team",
+      "presentationId": "1_cF_H9rPLdMDOe4t1NwleM0JNnviwPcgC6L349IHJLg",
+      "url": "https://docs.google.com/presentation/d/1_cF_H9rPLdMDOe4t1NwleM0JNnviwPcgC6L349IHJLg/edit",
+      "campus": "austin",
+      "pageUrl": "https://alpha.school/austin/"
+    },
+    "bethesda": {
+      "title": "Meet the Alpha Bethesda Team",
+      "presentationId": "10g_7vf9a6ekegS8IHmnZwQT6MoAbrEhQtX-Hx1J6noQ",
+      "url": "https://docs.google.com/presentation/d/10g_7vf9a6ekegS8IHmnZwQT6MoAbrEhQtX-Hx1J6noQ/edit",
+      "campus": "bethesda",
+      "pageUrl": "https://alpha.school/bethesda/"
+    },
+    "boca-raton": {
+      "title": "Meet the Alpha Boca Raton Team",
+      "presentationId": "1DkbCXFroRgy6nb3ilQKlUygeBUUpDf8W4mNJ3EGuwg8",
+      "url": "https://docs.google.com/presentation/d/1DkbCXFroRgy6nb3ilQKlUygeBUUpDf8W4mNJ3EGuwg8/edit",
+      "campus": "boca-raton",
+      "pageUrl": "https://alpha.school/boca-raton/"
+    },
+    "boston-suburbs": {
+      "title": "Meet the Alpha Boston Suburbs Team",
+      "presentationId": "1E63uLoi8-53vF6Z6q8apG0oikGQO545RWqYvPj77eag",
+      "url": "https://docs.google.com/presentation/d/1E63uLoi8-53vF6Z6q8apG0oikGQO545RWqYvPj77eag/edit",
+      "campus": "boston-suburbs",
+      "pageUrl": "https://alpha.school/boston-suburbs/"
+    },
+    "boston": {
+      "title": "Meet the Alpha Boston Team",
+      "presentationId": "1EDq4qWl2HsUfDMiu-KOozKKON8aHWBAulQpaDJUfFyE",
+      "url": "https://docs.google.com/presentation/d/1EDq4qWl2HsUfDMiu-KOozKKON8aHWBAulQpaDJUfFyE/edit",
+      "campus": "boston",
+      "pageUrl": "https://alpha.school/boston/"
+    },
+    "brownsville": {
+      "title": "Meet the Alpha Brownsville Team",
+      "presentationId": "1ktP8hXAHaZWytEzNUoooCf6axvd2GUXaUnm_UwVy2ME",
+      "url": "https://docs.google.com/presentation/d/1ktP8hXAHaZWytEzNUoooCf6axvd2GUXaUnm_UwVy2ME/edit",
+      "campus": "brownsville",
+      "pageUrl": "https://alpha.school/brownsville/"
+    },
+    "chantilly": {
+      "title": "Meet the Alpha Chantilly Team",
+      "presentationId": "1RZYp7XixVbm9sDqguRa3YMawKSlQbTU_hWYQ5fSjW38",
+      "url": "https://docs.google.com/presentation/d/1RZYp7XixVbm9sDqguRa3YMawKSlQbTU_hWYQ5fSjW38/edit",
+      "campus": "chantilly",
+      "pageUrl": "https://alpha.school/chantilly/"
+    },
+    "charlotte": {
+      "title": "Meet the Alpha Charlotte Team",
+      "presentationId": "1m2dgMShttlCJTwECh--QiK0lU7MZZuyNLtmU9i8Hrgc",
+      "url": "https://docs.google.com/presentation/d/1m2dgMShttlCJTwECh--QiK0lU7MZZuyNLtmU9i8Hrgc/edit",
+      "campus": "charlotte",
+      "pageUrl": "https://alpha.school/charlotte/"
+    },
+    "chicago": {
+      "title": "Meet the Alpha Chicago Team",
+      "presentationId": "1hT4bQEOFz-DwNDOAdWZR94e0Yguu2QSCC6mrlk0Moco",
+      "url": "https://docs.google.com/presentation/d/1hT4bQEOFz-DwNDOAdWZR94e0Yguu2QSCC6mrlk0Moco/edit",
+      "campus": "chicago",
+      "pageUrl": "https://alpha.school/chicago/"
+    },
+    "denver": {
+      "title": "Meet the Alpha Denver Team",
+      "presentationId": "1bDc9pFt9Kf8KSaMH1-XHslDvaDb4XnbTQUgbtanHjuY",
+      "url": "https://docs.google.com/presentation/d/1bDc9pFt9Kf8KSaMH1-XHslDvaDb4XnbTQUgbtanHjuY/edit",
+      "campus": "denver",
+      "pageUrl": "https://alpha.school/denver/"
+    },
+    "dorado": {
+      "title": "Meet the Alpha Dorado Team",
+      "presentationId": "17gzJxDxThcW5wGwtUy5f5PTr0z8Hs3uCbGontGKHYbs",
+      "url": "https://docs.google.com/presentation/d/17gzJxDxThcW5wGwtUy5f5PTr0z8Hs3uCbGontGKHYbs/edit",
+      "campus": "dorado",
+      "pageUrl": "https://alpha.school/dorado/"
+    },
+    "east-bay": {
+      "title": "Meet the Alpha East Bay Team",
+      "presentationId": "10DVE-8a4lUgHNUzUEi6BIXxX-3BNxsMxah5f3GADDaw",
+      "url": "https://docs.google.com/presentation/d/10DVE-8a4lUgHNUzUEi6BIXxX-3BNxsMxah5f3GADDaw/edit",
+      "campus": "east-bay",
+      "pageUrl": "https://alpha.school/east-bay/"
+    },
+    "fort-worth": {
+      "title": "Meet the Alpha Fort Worth Team",
+      "presentationId": "1sglksi8-ov1syjrcLZSBSQx9YzIgXg-lsLd9zCbl0WQ",
+      "url": "https://docs.google.com/presentation/d/1sglksi8-ov1syjrcLZSBSQx9YzIgXg-lsLd9zCbl0WQ/edit",
+      "campus": "fort-worth",
+      "pageUrl": "https://alpha.school/fort-worth/"
+    },
+    "greenwich": {
+      "title": "Meet the Alpha Greenwich Team",
+      "presentationId": "1cIx3JVHTG2g_VopZKExCCen7tir5cd95B_WvNcx72vY",
+      "url": "https://docs.google.com/presentation/d/1cIx3JVHTG2g_VopZKExCCen7tir5cd95B_WvNcx72vY/edit",
+      "campus": "greenwich",
+      "pageUrl": "https://alpha.school/greenwich/"
+    },
+    "highland-park": {
+      "title": "Meet the Alpha Highland Park Team",
+      "presentationId": "1Ex9QV0qm4hrgNgEwkuRSLtQc3Y-WqIHkp-j9gddKlgI",
+      "url": "https://docs.google.com/presentation/d/1Ex9QV0qm4hrgNgEwkuRSLtQc3Y-WqIHkp-j9gddKlgI/edit",
+      "campus": "highland-park",
+      "pageUrl": "https://alpha.school/highland-park/"
+    },
+    "kirkland": {
+      "title": "Meet the Alpha Kirkland Team",
+      "presentationId": "141vU_RtxSmjwhSjWd_cd5gbODvuFMtw9Urfq2FR-xDg",
+      "url": "https://docs.google.com/presentation/d/141vU_RtxSmjwhSjWd_cd5gbODvuFMtw9Urfq2FR-xDg/edit",
+      "campus": "kirkland",
+      "pageUrl": "https://alpha.school/kirkland/"
+    },
+    "la-jolla": {
+      "title": "Meet the Alpha La Jolla Team",
+      "presentationId": "1C_73v8WlkPcgxpnmIkgN1yim_vNQkVaAwYUCjjB2MZI",
+      "url": "https://docs.google.com/presentation/d/1C_73v8WlkPcgxpnmIkgN1yim_vNQkVaAwYUCjjB2MZI/edit",
+      "campus": "la-jolla",
+      "pageUrl": "https://alpha.school/la-jolla/"
+    },
+    "lake-travis": {
+      "title": "Meet the Alpha Lake Travis Team",
+      "presentationId": "1Ia1lDtD0kaLWwaGmmL7b9nuiGb7hbGg69jVunvoHePE",
+      "url": "https://docs.google.com/presentation/d/1Ia1lDtD0kaLWwaGmmL7b9nuiGb7hbGg69jVunvoHePE/edit",
+      "campus": "lake-travis",
+      "pageUrl": "https://alpha.school/lake-travis/"
+    },
+    "malibu": {
+      "title": "Meet the Alpha Malibu Team",
+      "presentationId": "1fMpLhu_CREcJZyX9imlZyX1RIcgfYuJ8j9n6jfQOWdE",
+      "url": "https://docs.google.com/presentation/d/1fMpLhu_CREcJZyX9imlZyX1RIcgfYuJ8j9n6jfQOWdE/edit",
+      "campus": "malibu",
+      "pageUrl": "https://alpha.school/malibu/"
+    },
+    "miami-beach": {
+      "title": "Meet the Alpha Miami Beach Team",
+      "presentationId": "14p1qsWhn1G4QZf1QAzMgC2nhG2BUZORfVOWzCa0EoWc",
+      "url": "https://docs.google.com/presentation/d/14p1qsWhn1G4QZf1QAzMgC2nhG2BUZORfVOWzCa0EoWc/edit",
+      "campus": "miami-beach",
+      "pageUrl": "https://alpha.school/miami-beach/"
+    },
+    "miami": {
+      "title": "Meet the Alpha Miami Team",
+      "presentationId": "1j7VyOgSUrU84zhcCAHUM-nqrrfOPMEOHE2ybxqP1jbs",
+      "url": "https://docs.google.com/presentation/d/1j7VyOgSUrU84zhcCAHUM-nqrrfOPMEOHE2ybxqP1jbs/edit",
+      "campus": "miami",
+      "pageUrl": "https://alpha.school/miami/"
+    },
+    "nashville": {
+      "title": "Meet the Alpha Nashville Team",
+      "presentationId": "14v6_7Is3M4aDFL95Nnw7nm_d80CwsSD3yBXeyl3rzM8",
+      "url": "https://docs.google.com/presentation/d/14v6_7Is3M4aDFL95Nnw7nm_d80CwsSD3yBXeyl3rzM8/edit",
+      "campus": "nashville",
+      "pageUrl": "https://alpha.school/nashville/"
+    },
+    "new-york-city": {
+      "title": "Meet the Alpha New York Team",
+      "presentationId": "1xAxeSLgL-Vhn6eG3szm3N1OukFJbwbSvIXa_ldOOId8",
+      "url": "https://docs.google.com/presentation/d/1xAxeSLgL-Vhn6eG3szm3N1OukFJbwbSvIXa_ldOOId8/edit",
+      "campus": "new-york-city",
+      "pageUrl": "https://alpha.school/new-york-city/"
+    },
+    "oklahoma-city": {
+      "title": "Meet the Alpha Oklahoma City Team",
+      "presentationId": "1NqYj6LviSyMEKkm1O4oBLsc2J_NOHw5J_zCFG378VAE",
+      "url": "https://docs.google.com/presentation/d/1NqYj6LviSyMEKkm1O4oBLsc2J_NOHw5J_zCFG378VAE/edit",
+      "campus": "oklahoma-city",
+      "pageUrl": "https://alpha.school/oklahoma-city/"
+    },
+    "orange-county": {
+      "title": "Meet the Alpha Orange County Team",
+      "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+      "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+      "campus": "orange-county",
+      "pageUrl": "https://alpha.school/orange-county/"
+    },
+    "palm-beach": {
+      "title": "Meet the Alpha Palm Beach Team",
+      "presentationId": "1bqiziQZwzp7u5lIJsU60rGkS9-8uXcFNk-ulRwxFVxI",
+      "url": "https://docs.google.com/presentation/d/1bqiziQZwzp7u5lIJsU60rGkS9-8uXcFNk-ulRwxFVxI/edit",
+      "campus": "palm-beach",
+      "pageUrl": "https://alpha.school/palm-beach/"
+    },
+    "palo-alto": {
+      "title": "Meet the Alpha Palo Alto Team",
+      "presentationId": "1tpMtXi0DS1o1skA3nV5VPMi6t5rqsTV_vzGlTkByf6M",
+      "url": "https://docs.google.com/presentation/d/1tpMtXi0DS1o1skA3nV5VPMi6t5rqsTV_vzGlTkByf6M/edit",
+      "campus": "palo-alto",
+      "pageUrl": "https://alpha.school/palo-alto/"
+    },
+    "park-city": {
+      "title": "Meet the Alpha Park City Team",
+      "presentationId": "1HdGNzZcHTrsNv3QpMFK2EDmD3xIohnbzUQM2_nDLgto",
+      "url": "https://docs.google.com/presentation/d/1HdGNzZcHTrsNv3QpMFK2EDmD3xIohnbzUQM2_nDLgto/edit",
+      "campus": "park-city",
+      "pageUrl": "https://alpha.school/park-city/"
+    },
+    "plano": {
+      "title": "Meet the Alpha Plano Team",
+      "presentationId": "1f6ox3ghY2t0UyMewsB18akP2bZRpe6PMJTRymRcYxNY",
+      "url": "https://docs.google.com/presentation/d/1f6ox3ghY2t0UyMewsB18akP2bZRpe6PMJTRymRcYxNY/edit",
+      "campus": "plano",
+      "pageUrl": "https://alpha.school/plano/"
+    },
+    "raleigh": {
+      "title": "Meet the Alpha Raleigh Team",
+      "presentationId": "1ahFLJU_V5bOWCwU7CuKGruBC_0kQPjcCcYsn-5q9t0g",
+      "url": "https://docs.google.com/presentation/d/1ahFLJU_V5bOWCwU7CuKGruBC_0kQPjcCcYsn-5q9t0g/edit",
+      "campus": "raleigh",
+      "pageUrl": "https://alpha.school/raleigh/"
+    },
+    "san-francisco": {
+      "title": "Meet the Alpha San Francisco Team",
+      "presentationId": "1St6EuHJVYJeNucdhh4dkl0v06JqMmN4WqtWueyOmiJ4",
+      "url": "https://docs.google.com/presentation/d/1St6EuHJVYJeNucdhh4dkl0v06JqMmN4WqtWueyOmiJ4/edit",
+      "campus": "san-francisco",
+      "pageUrl": "https://alpha.school/san-francisco/"
+    },
+    "santa-barbara": {
+      "title": "Meet the Alpha Santa Barbara Team",
+      "presentationId": "1I4O9UuCdREDxKqwrRg5SXoM6msx6bV2i0gzh7AMgQxk",
+      "url": "https://docs.google.com/presentation/d/1I4O9UuCdREDxKqwrRg5SXoM6msx6bV2i0gzh7AMgQxk/edit",
+      "campus": "santa-barbara",
+      "pageUrl": "https://alpha.school/santa-barbara/"
+    },
+    "santa-monica": {
+      "title": "Meet the Alpha Santa Monica Team",
+      "presentationId": "19c0dV0JMviB8pbd1Ol5RB29IHm_x8iZj9mHVXloyQQA",
+      "url": "https://docs.google.com/presentation/d/19c0dV0JMviB8pbd1Ol5RB29IHm_x8iZj9mHVXloyQQA/edit",
+      "campus": "santa-monica",
+      "pageUrl": "https://alpha.school/santa-monica/"
+    },
+    "scottsdale": {
+      "title": "Meet the Alpha Scottsdale Team",
+      "presentationId": "1p_UstYKTOxJr-Sc1iPckpkNL5Fdj_Rfzn0OskLenfPY",
+      "url": "https://docs.google.com/presentation/d/1p_UstYKTOxJr-Sc1iPckpkNL5Fdj_Rfzn0OskLenfPY/edit",
+      "campus": "scottsdale",
+      "pageUrl": "https://alpha.school/scottsdale/"
+    },
+    "south-bay-la": {
+      "title": "Meet the Alpha South Bay Team",
+      "presentationId": "1clkC04ll0y0WV_P4SeYv-acM683DzSDrG9XjOsIPZK0",
+      "url": "https://docs.google.com/presentation/d/1clkC04ll0y0WV_P4SeYv-acM683DzSDrG9XjOsIPZK0/edit",
+      "campus": "south-bay-la",
+      "pageUrl": "https://alpha.school/south-bay-la/"
+    },
+    "southlake": {
+      "title": "Meet the Alpha Southlake Team",
+      "presentationId": "10Wx5CLqbIt7wml005_iSGqM9U6298HTzO_T0pPbHJw4",
+      "url": "https://docs.google.com/presentation/d/10Wx5CLqbIt7wml005_iSGqM9U6298HTzO_T0pPbHJw4/edit",
+      "campus": "southlake",
+      "pageUrl": "https://alpha.school/southlake/"
+    },
+    "the-woodlands": {
+      "title": "Meet the Alpha The Woodlands Team",
+      "presentationId": "156uuzDtqQL-0AboA66u18O0TOC7DU9aDRybhOCrH03M",
+      "url": "https://docs.google.com/presentation/d/156uuzDtqQL-0AboA66u18O0TOC7DU9aDRybhOCrH03M/edit",
+      "campus": "the-woodlands",
+      "pageUrl": "https://alpha.school/the-woodlands/"
+    },
+    "tulsa": {
+      "title": "Meet the Alpha Tulsa Team",
+      "presentationId": "1AsfdRcSMNBN9ktocQQq_d9_0JnktBS1XgcGyg01JBqw",
+      "url": "https://docs.google.com/presentation/d/1AsfdRcSMNBN9ktocQQq_d9_0JnktBS1XgcGyg01JBqw/edit",
+      "campus": "tulsa",
+      "pageUrl": "https://alpha.school/tulsa/"
+    }
+  },
+  "unmatched": [
+    {
+      "id": "1hMZ68iSONVPu6fubTlIngEVrShQwA0FXFb9C0Zwn7m4",
+      "title": "[TEMPLATE] Meet the Alpha [Area] Team"
+    },
+    {
+      "title": "Meet the Alpha Austin High School Team",
+      "presentationId": "1odTvrjovQ2Qy3VmVZ0uVszUXP_INXrIZU5g9PsqilS8",
+      "url": "https://docs.google.com/presentation/d/1odTvrjovQ2Qy3VmVZ0uVszUXP_INXrIZU5g9PsqilS8/edit"
+    },
+    {
+      "title": "Meet the Alpha Beverly Hills Team",
+      "presentationId": "1IKn65GtzNh1BehVw73A_5uIx-kg1V3cnqqmqOD5Yov4",
+      "url": "https://docs.google.com/presentation/d/1IKn65GtzNh1BehVw73A_5uIx-kg1V3cnqqmqOD5Yov4/edit"
+    },
+    {
+      "title": "Meet the Alpha Orlando Team",
+      "presentationId": "12_xfMsSrMglT1a2sOXtE4tOXRuaLdU2aABbd4dwQx-4",
+      "url": "https://docs.google.com/presentation/d/12_xfMsSrMglT1a2sOXtE4tOXRuaLdU2aABbd4dwQx-4/edit"
+    },
+    {
+      "title": "Meet the Alpha Tampa Team",
+      "presentationId": "1UlvR_Ge8m9PxoufCKhBbAnz8FaHmJvNehZ_Ji1CkIsQ",
+      "url": "https://docs.google.com/presentation/d/1UlvR_Ge8m9PxoufCKhBbAnz8FaHmJvNehZ_Ji1CkIsQ/edit"
+    },
+    {
+      "id": "1XzTYRXDKxh9rkIU8h1bcvHWBbhARG2RxMmFLJ7VNSXo",
+      "title": "Meet the GT School Guides"
+    },
+    {
+      "title": "Meet the HISD - Gregg Team",
+      "presentationId": "1VnOwkh_zzPGXIyF8YoisRRuzdXGar62sNfhiLq0K7tU",
+      "url": "https://docs.google.com/presentation/d/1VnOwkh_zzPGXIyF8YoisRRuzdXGar62sNfhiLq0K7tU/edit"
+    },
+    {
+      "title": "Meet the HISD C. Martinez Team",
+      "presentationId": "1TcN49WDVDeekagbrNrkGNg-e4yy1C9wm7rFbfMRTyyE",
+      "url": "https://docs.google.com/presentation/d/1TcN49WDVDeekagbrNrkGNg-e4yy1C9wm7rFbfMRTyyE/edit"
+    },
+    {
+      "title": "Meet the NextGen Academy Team",
+      "presentationId": "1l_eGObWp05QBKyovHyzgPctq0PpWfiHLI2cNmEeqx7s",
+      "url": "https://docs.google.com/presentation/d/1l_eGObWp05QBKyovHyzgPctq0PpWfiHLI2cNmEeqx7s/edit"
+    },
+    {
+      "title": "Meet the Nova Academy Team",
+      "presentationId": "1kNvEsWhxboxTKid59-nY5Rq2YV42ICnbTBtLLSLyblk",
+      "url": "https://docs.google.com/presentation/d/1kNvEsWhxboxTKid59-nY5Rq2YV42ICnbTBtLLSLyblk/edit"
+    },
+    {
+      "title": "Meet the Texas Sports Academy Team",
+      "presentationId": "18SBowN9SqLORNq7L-R05dMpPQnSTSYxbmEcggHAuh2k",
+      "url": "https://docs.google.com/presentation/d/18SBowN9SqLORNq7L-R05dMpPQnSTSYxbmEcggHAuh2k/edit"
+    },
+    {
+      "title": "Meet the TSA Carrollton Team",
+      "presentationId": "1RIuj-UdSYR_ff-wNs21tHhBhXdu91R3FFu2UX7siJkg",
+      "url": "https://docs.google.com/presentation/d/1RIuj-UdSYR_ff-wNs21tHhBhXdu91R3FFu2UX7siJkg/edit"
+    },
+    {
+      "title": "Meet the Waypoint Academy Team",
+      "presentationId": "1LMjlrpVRvWFNgOT6qPPz7Qk_eApEXdMhvptoZmc58yg",
+      "url": "https://docs.google.com/presentation/d/1LMjlrpVRvWFNgOT6qPPz7Qk_eApEXdMhvptoZmc58yg/edit"
+    }
+  ]
+}

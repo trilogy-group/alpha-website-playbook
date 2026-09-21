@@ -332,6 +332,21 @@
         "platform-request"
       ],
       "status": "handoff"
+    },
+    "apex-request-assets": {
+      "system": "APEX request assets (staff headshots) in the request-assets Supabase bucket",
+      "tool": "APEX public headshot routes (/api/public/request-assets/headshot, finalize) and the operator-reviewed binding route (/api/agent/tasks/{id}/staff-asset-binding); playbook tool agent/bind-headshot.mjs",
+      "credential": "APEX_API_TOKEN (operator key with website-operator assignment) for the binding; the public upload is owned by APEX_OPERATOR_EMAIL",
+      "storageOrigin": "https://exlreixmbgprujlbesae.supabase.co",
+      "read": [
+        "GET /api/agent/tasks/{id}/staff-asset-binding"
+      ],
+      "write": [
+        "POST /api/public/request-assets/headshot (create + finalize, checksum recomputed by APEX)",
+        "POST /api/agent/tasks/{id}/staff-asset-binding (attach a VERIFIED asset to the ticket with source provenance)"
+      ],
+      "status": "implemented-pending-deploy",
+      "note": "Decision 2026-09-21: a headshot that arrived as a Drive, Slides, or Slack link is reviewed by the website operator and bound as an APEX asset; the agent never fetches the link itself. Binding route ships in APEX PR agent/headshot-bind."
     }
   }
 }

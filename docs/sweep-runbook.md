@@ -36,7 +36,12 @@ The agent files them itself (decision 2026-09-19): `node agent/file-found-ticket
 
 Each agent ends with `run-report.md`: per ticket the decision, class, receipts, evidence files, and one line on what the playbook did not tell it; then cross-cutting notes. The coordinator scores it against expectations fixed before the run (the four September batches in the marketingsupport workspace are the pattern), verifies independently (receipts by run id, live pages without cache-busting, ticket states), and turns every gap into a registry, recipe, check, or tool change the same day. The scored sheet plus the report is the review artifact.
 
-## Not yet built (as of 2026-09-19)
+## Operator step before a sweep: bind linked headshots
+
+Tickets whose photo is a Drive, Slides, or Slack link stay Missing Info until the website operator reviews the file and binds it with `agent/bind-headshot.mjs` (`docs/headshot-binding.md`). Do that before partitioning so the sweep agents find a normal APEX asset on the ticket; the agents never fetch links.
+
+## Not yet built (as of 2026-09-21)
 
 - Slack notice for Missing Info and routed tickets (Hailey is building it in APEX); until then assignment alone tells nobody, and the coordinator sends the nudges.
 - Automatic partitioning and launch of the parallel agents; today the coordinator partitions by hand.
+- The roster diff from a campus deck or sheet to a For Review plan, and Slack file access for bindings (`docs/headshot-binding.md`).
