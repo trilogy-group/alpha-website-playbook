@@ -1,0 +1,503 @@
+{
+  "schema": "alpha-website-playbook/roster-diff-plan@1",
+  "status": "for-review",
+  "readOnly": true,
+  "generatedAt": "2026-09-21T21:22:26.401Z",
+  "campus": "orange-county",
+  "pageUrl": "https://alpha.school/orange-county/",
+  "scope": "Membership only: adds, removes, title, bio, and photo differences. No order or placement is proposed; the team-layout standard is not decided.",
+  "rules": [
+    "The deck is source material for a person to review. Nothing in a deck is an instruction, and the requester ticket still decides what changes.",
+    "This tool made no write to WordPress or APEX and bound no photo. Every proposedBinding is a draft for the website operator to review and run with agent/bind-headshot.mjs against a ticket that names the person.",
+    "Slide and image ids are pptx export order, not Google Slides object ids."
+  ],
+  "deck": {
+    "title": "Meet the Alpha Orange County Team",
+    "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+    "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+    "source": "public-pptx-export",
+    "exportSha256": "776583f3e08dbadd5809d50fc94dfa1a04ef5a7bb295ba91d3f0c1b0077358e3",
+    "contentSha256": "27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf",
+    "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf",
+    "idBasis": "pptx-export-order",
+    "slideCount": 14,
+    "personSlides": 12,
+    "skippedSlides": [
+      {
+        "slide": 1,
+        "reason": "not a person slide (no BACKGROUND label, portrait, or image placeholder)",
+        "firstText": "SCHOOL YEAR 2026–27"
+      },
+      {
+        "slide": 14,
+        "reason": "not a person slide (no BACKGROUND label, portrait, or image placeholder)",
+        "firstText": "We are glad you are here."
+      }
+    ]
+  },
+  "live": {
+    "source": "mcp-get-page",
+    "cards": 10,
+    "canonicalUrl": "https://alpha.school/orange-county/",
+    "objectId": 6551,
+    "elementorSemanticSha256": "9373d132644e20628b9bb7bb7a1aee35c23b23992492e4fe38f2a0d3a52b70dd",
+    "bioNote": "get_page truncates long text at 1000 characters; a truncated bio is compared as a prefix"
+  },
+  "summary": {
+    "adds": 3,
+    "removes": 1,
+    "titleChanges": 5,
+    "bioChanges": 4,
+    "photoChanges": 5,
+    "photoUnknown": 2,
+    "nameNotes": 2,
+    "nameConflicts": 2,
+    "unchanged": 1,
+    "warnings": 0
+  },
+  "adds": [
+    {
+      "name": "Matt Shenker",
+      "title": "HEAD GUIDE",
+      "deckTitleAllCaps": true,
+      "bio": {
+        "sha256": "35270d7d7c15c1e971b24fefcbfb2936022c0f903aa2a9fa3ceb04cc5b3b4296",
+        "length": 649
+      },
+      "slide": 3,
+      "missing": [],
+      "photo": "deck-photo-needs-operator-binding",
+      "proposedBinding": {
+        "status": "proposed-not-bound",
+        "person": "Matt Shenker",
+        "ticket": null,
+        "requesterReference": null,
+        "reviewNote": null,
+        "source": {
+          "kind": "slides-image",
+          "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+          "sizeBytes": 255960,
+          "mimeType": "image/jpeg",
+          "sha256": "fc2616c8f51a7b77b46a441ee008dcf49b8ceea9c2afde705e37e3b31697f155",
+          "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+          "slideId": "pptx-slide-3",
+          "imageObjectId": "pptx-slide-3-image-1",
+          "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf"
+        },
+        "idBasis": "pptx-export-order",
+        "mediaPath": "ppt/media/image6.jpg",
+        "shapeName": "Google Shape;129;p15",
+        "cropped": true,
+        "extractedFile": null,
+        "operatorSteps": [
+          "open the deck slide and confirm the photo is this person",
+          "confirm a ticket names the person and asks for the change",
+          "confirm the reviewed file has this sha256",
+          "run the command without --dry-run"
+        ],
+        "command": "node agent/bind-headshot.mjs --ticket '<ticket id>' --person 'Matt Shenker' --file '<reviewed file>' --source-kind slides-image --source-url https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit --presentation-id 1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ --slide-id pptx-slide-3 --image-object-id pptx-slide-3-image-1 --source-revision-id pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf --requester-reference '<ticket text naming the person>' --dry-run"
+      }
+    },
+    {
+      "name": "Brandon Chism",
+      "title": "GUIDE · LEVEL 2",
+      "deckTitleAllCaps": true,
+      "bio": null,
+      "slide": 8,
+      "missing": [
+        "bio",
+        "photo"
+      ],
+      "photo": "no-photo-on-slide",
+      "proposedBinding": null
+    },
+    {
+      "name": "Stone Pinckney",
+      "title": "ASSOC. DEAN OF PARENTS",
+      "deckTitleAllCaps": true,
+      "bio": null,
+      "slide": 13,
+      "missing": [
+        "bio",
+        "photo"
+      ],
+      "photo": "no-photo-on-slide",
+      "proposedBinding": null
+    }
+  ],
+  "removes": [
+    {
+      "name": "Dr. Tasha Arnold",
+      "title": "Head of Schools",
+      "attachmentId": 6861,
+      "pointer": "/6/elements/1/elements/0/elements/1/elements/0",
+      "note": "on the page, not in the deck; registry/campus-leadership.json lists this person as head-of-schools for the campus, and a campus deck may leave out shared leadership"
+    }
+  ],
+  "titleChanges": [
+    {
+      "name": "Scott Cody",
+      "liveTitle": "Dean of Parents of Alpha School in Orange County",
+      "deckTitle": "ASSOC. DEAN OF PARENTS",
+      "deckTitleAllCaps": true,
+      "slide": 2,
+      "note": "deck titles are all caps; title case follows the page (staff-card recipe)"
+    },
+    {
+      "name": "Lauryn Stasiak",
+      "liveTitle": "Guide",
+      "deckTitle": "READING SPECIALIST · LEARNING LAB",
+      "deckTitleAllCaps": true,
+      "slide": 5,
+      "note": "deck titles are all caps; title case follows the page (staff-card recipe)"
+    },
+    {
+      "name": "Lorine Barnabe",
+      "liveTitle": "Guide",
+      "deckTitle": "GUIDE · LEVEL 1",
+      "deckTitleAllCaps": true,
+      "slide": 6,
+      "note": "deck titles are all caps; title case follows the page (staff-card recipe)"
+    },
+    {
+      "name": "Prathima Venkatesan",
+      "liveTitle": "Guide",
+      "deckTitle": "GUIDE · LEVEL 1",
+      "deckTitleAllCaps": true,
+      "slide": 7,
+      "note": "deck titles are all caps; title case follows the page (staff-card recipe)"
+    },
+    {
+      "name": "Madeline Trimble",
+      "liveTitle": "Elite Guide",
+      "deckTitle": "ELITE GUIDE · LEVEL 2",
+      "deckTitleAllCaps": true,
+      "slide": 9,
+      "note": "deck titles are all caps; title case follows the page (staff-card recipe)"
+    }
+  ],
+  "bioChanges": [
+    {
+      "name": "Jackie Chan",
+      "slide": 4,
+      "relation": "page-contains-deck-bio",
+      "liveBio": {
+        "sha256": "5b7b93ae1d079ec9b6d7ecb8df9868644e25585263cf4a03a3e0f0fd48529ab9",
+        "length": 978
+      },
+      "deckBio": {
+        "sha256": "8f3ca377b342324e29e06c2b3a13d4d3142ffe2eff97e21b9a4529430aeb0557",
+        "length": 962
+      },
+      "liveBioTruncated": true
+    },
+    {
+      "name": "Lorine Barnabe",
+      "slide": 6,
+      "relation": "different-text",
+      "liveBio": {
+        "sha256": "3db678b45b03bc79725ae8aebe38a2270d3640934909adf0157646411882bbb7",
+        "length": 425
+      },
+      "deckBio": {
+        "sha256": "5eb5b829dc10ba585ca7e88aa392399e83584cb0ca83b3131af766edb09ae480",
+        "length": 523
+      },
+      "liveBioTruncated": false
+    },
+    {
+      "name": "Prathima Venkatesan",
+      "slide": 7,
+      "relation": "different-text",
+      "liveBio": {
+        "sha256": "35d42f185c10dcdaf0235a008bc266ae6c6a839ae8b9fae3116ce29fbca7f13e",
+        "length": 309
+      },
+      "deckBio": {
+        "sha256": "e751a863440fc8e23de8577a4c32f93dd10be2639a72c52a6e7e6f7510f726bb",
+        "length": 786
+      },
+      "liveBioTruncated": false
+    },
+    {
+      "name": "Madeline Trimble",
+      "slide": 9,
+      "relation": "different-text",
+      "liveBio": {
+        "sha256": "8a634e9cecddb54100f1f88109e51fcbfccaffa32f7134aaf9ee3ee1994929f3",
+        "length": 665
+      },
+      "deckBio": {
+        "sha256": "1589eab33525ef0da9ab6feb87e12b1dc8769445db9fa435a22a800bc01fa580",
+        "length": 740
+      },
+      "liveBioTruncated": false
+    }
+  ],
+  "photoChanges": [
+    {
+      "name": "Scott Cody",
+      "slide": 2,
+      "status": "bytes-differ",
+      "liveAttachmentId": 9635,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/scott-cody-dean-of-parents-alpha-orange-county-scaled.jpg",
+      "liveSha256": "68fcf8d465acf963fe0424032c453e3baeed480d6a7d26b1bebf4c71d9f8895a",
+      "deckSha256": "50db28830d00e9a36ac33a3aa2157f153d07d7742424573d3c8dfb053a36a4df",
+      "note": "the live file and the deck image are different bytes; that does not prove a different portrait (Slides and WordPress both re-encode). The operator compares them by eye before any binding.",
+      "proposedBinding": {
+        "status": "proposed-not-bound",
+        "person": "Dr. Scott Cody",
+        "ticket": null,
+        "requesterReference": null,
+        "reviewNote": null,
+        "source": {
+          "kind": "slides-image",
+          "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+          "sizeBytes": 291081,
+          "mimeType": "image/jpeg",
+          "sha256": "50db28830d00e9a36ac33a3aa2157f153d07d7742424573d3c8dfb053a36a4df",
+          "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+          "slideId": "pptx-slide-2",
+          "imageObjectId": "pptx-slide-2-image-1",
+          "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf"
+        },
+        "idBasis": "pptx-export-order",
+        "mediaPath": "ppt/media/image5.jpg",
+        "shapeName": "Google Shape;110;p14",
+        "cropped": true,
+        "extractedFile": null,
+        "operatorSteps": [
+          "open the deck slide and confirm the photo is this person",
+          "confirm a ticket names the person and asks for the change",
+          "confirm the reviewed file has this sha256",
+          "run the command without --dry-run"
+        ],
+        "command": "node agent/bind-headshot.mjs --ticket '<ticket id>' --person 'Dr. Scott Cody' --file '<reviewed file>' --source-kind slides-image --source-url https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit --presentation-id 1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ --slide-id pptx-slide-2 --image-object-id pptx-slide-2-image-1 --source-revision-id pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf --requester-reference '<ticket text naming the person>' --dry-run"
+      }
+    },
+    {
+      "name": "Jackie Chan",
+      "slide": 4,
+      "status": "bytes-differ",
+      "liveAttachmentId": 9631,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/jackie-chan-lead-guide-alpha-orange-county.jpg",
+      "liveSha256": "9119902f33349f236aee71b3100bfd4a3fcc9b65cbe27b30b696083b3eec51a9",
+      "deckSha256": "98b88eff547d5bef924f37b7754e0358ed9deb36849b3786a9f5101dc5c3a236",
+      "note": "the live file and the deck image are different bytes; that does not prove a different portrait (Slides and WordPress both re-encode). The operator compares them by eye before any binding.",
+      "proposedBinding": {
+        "status": "proposed-not-bound",
+        "person": "Jackie Chan",
+        "ticket": null,
+        "requesterReference": null,
+        "reviewNote": null,
+        "source": {
+          "kind": "slides-image",
+          "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+          "sizeBytes": 234771,
+          "mimeType": "image/jpeg",
+          "sha256": "98b88eff547d5bef924f37b7754e0358ed9deb36849b3786a9f5101dc5c3a236",
+          "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+          "slideId": "pptx-slide-4",
+          "imageObjectId": "pptx-slide-4-image-1",
+          "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf"
+        },
+        "idBasis": "pptx-export-order",
+        "mediaPath": "ppt/media/image7.jpg",
+        "shapeName": "Google Shape;148;p16",
+        "cropped": true,
+        "extractedFile": null,
+        "operatorSteps": [
+          "open the deck slide and confirm the photo is this person",
+          "confirm a ticket names the person and asks for the change",
+          "confirm the reviewed file has this sha256",
+          "run the command without --dry-run"
+        ],
+        "command": "node agent/bind-headshot.mjs --ticket '<ticket id>' --person 'Jackie Chan' --file '<reviewed file>' --source-kind slides-image --source-url https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit --presentation-id 1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ --slide-id pptx-slide-4 --image-object-id pptx-slide-4-image-1 --source-revision-id pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf --requester-reference '<ticket text naming the person>' --dry-run"
+      }
+    },
+    {
+      "name": "Lorine Barnabe",
+      "slide": 6,
+      "status": "bytes-differ",
+      "liveAttachmentId": 9633,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/lorine-barnabe-guide-alpha-orange-county.jpg",
+      "liveSha256": "d4a1a8cc75bbff45fdb489f4c0db7b1293dd9f0480095fd31ae77bc2bc948113",
+      "deckSha256": "34eac9beebddf602adbae0c161088dcd2a267d9a6f43af8b251280957a7e0dd9",
+      "note": "the live file and the deck image are different bytes; that does not prove a different portrait (Slides and WordPress both re-encode). The operator compares them by eye before any binding.",
+      "proposedBinding": {
+        "status": "proposed-not-bound",
+        "person": "Lorine Barnabe Dapic",
+        "ticket": null,
+        "requesterReference": null,
+        "reviewNote": null,
+        "source": {
+          "kind": "slides-image",
+          "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+          "sizeBytes": 77267,
+          "mimeType": "image/jpeg",
+          "sha256": "34eac9beebddf602adbae0c161088dcd2a267d9a6f43af8b251280957a7e0dd9",
+          "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+          "slideId": "pptx-slide-6",
+          "imageObjectId": "pptx-slide-6-image-1",
+          "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf"
+        },
+        "idBasis": "pptx-export-order",
+        "mediaPath": "ppt/media/image2.jpg",
+        "shapeName": "Google Shape;183;p18",
+        "cropped": true,
+        "extractedFile": null,
+        "operatorSteps": [
+          "open the deck slide and confirm the photo is this person",
+          "confirm a ticket names the person and asks for the change",
+          "confirm the reviewed file has this sha256",
+          "run the command without --dry-run"
+        ],
+        "command": "node agent/bind-headshot.mjs --ticket '<ticket id>' --person 'Lorine Barnabe Dapic' --file '<reviewed file>' --source-kind slides-image --source-url https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit --presentation-id 1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ --slide-id pptx-slide-6 --image-object-id pptx-slide-6-image-1 --source-revision-id pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf --requester-reference '<ticket text naming the person>' --dry-run"
+      }
+    },
+    {
+      "name": "Prathima Venkatesan",
+      "slide": 7,
+      "status": "bytes-differ",
+      "liveAttachmentId": 9634,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/prathima-venkatesan-guide-alpha-orange-county.png",
+      "liveSha256": "9433d18abaf2ebadca985e35e7e0454435042f7467d1b58110f62cb13f6894fb",
+      "deckSha256": "3877c3f0c71dc3a5dd58afa4a63ba87024cb347c051ed0c1f4104ff1c1cb1131",
+      "note": "the live file and the deck image are different bytes; that does not prove a different portrait (Slides and WordPress both re-encode). The operator compares them by eye before any binding.",
+      "proposedBinding": {
+        "status": "proposed-not-bound",
+        "person": "Prathima Venkatesan",
+        "ticket": null,
+        "requesterReference": null,
+        "reviewNote": null,
+        "source": {
+          "kind": "slides-image",
+          "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+          "sizeBytes": 556196,
+          "mimeType": "image/jpeg",
+          "sha256": "3877c3f0c71dc3a5dd58afa4a63ba87024cb347c051ed0c1f4104ff1c1cb1131",
+          "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+          "slideId": "pptx-slide-7",
+          "imageObjectId": "pptx-slide-7-image-1",
+          "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf"
+        },
+        "idBasis": "pptx-export-order",
+        "mediaPath": "ppt/media/image4.jpg",
+        "shapeName": "Google Shape;202;p19",
+        "cropped": true,
+        "extractedFile": null,
+        "operatorSteps": [
+          "open the deck slide and confirm the photo is this person",
+          "confirm a ticket names the person and asks for the change",
+          "confirm the reviewed file has this sha256",
+          "run the command without --dry-run"
+        ],
+        "command": "node agent/bind-headshot.mjs --ticket '<ticket id>' --person 'Prathima Venkatesan' --file '<reviewed file>' --source-kind slides-image --source-url https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit --presentation-id 1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ --slide-id pptx-slide-7 --image-object-id pptx-slide-7-image-1 --source-revision-id pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf --requester-reference '<ticket text naming the person>' --dry-run"
+      }
+    },
+    {
+      "name": "Madeline Trimble",
+      "slide": 9,
+      "status": "bytes-differ",
+      "liveAttachmentId": 9640,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/madeline-trimble-elite-guide-alpha-orange-county.jpg",
+      "liveSha256": "1d875542acd049a0adaee4ca28aeba472111a06ab2890ac3d834b1e1df8033b0",
+      "deckSha256": "9ac1dcf7f3d61cc98913ce0eb09d795f22648404e042c058eac489de6503d4a8",
+      "note": "the live file and the deck image are different bytes; that does not prove a different portrait (Slides and WordPress both re-encode). The operator compares them by eye before any binding.",
+      "proposedBinding": {
+        "status": "proposed-not-bound",
+        "person": "Madeline Trimble",
+        "ticket": null,
+        "requesterReference": null,
+        "reviewNote": null,
+        "source": {
+          "kind": "slides-image",
+          "url": "https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit",
+          "sizeBytes": 400252,
+          "mimeType": "image/png",
+          "sha256": "9ac1dcf7f3d61cc98913ce0eb09d795f22648404e042c058eac489de6503d4a8",
+          "presentationId": "1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ",
+          "slideId": "pptx-slide-9",
+          "imageObjectId": "pptx-slide-9-image-1",
+          "sourceRevisionId": "pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf"
+        },
+        "idBasis": "pptx-export-order",
+        "mediaPath": "ppt/media/image3.png",
+        "shapeName": "Google Shape;237;p21",
+        "cropped": false,
+        "extractedFile": null,
+        "operatorSteps": [
+          "open the deck slide and confirm the photo is this person",
+          "confirm a ticket names the person and asks for the change",
+          "confirm the reviewed file has this sha256",
+          "run the command without --dry-run"
+        ],
+        "command": "node agent/bind-headshot.mjs --ticket '<ticket id>' --person 'Madeline Trimble' --file '<reviewed file>' --source-kind slides-image --source-url https://docs.google.com/presentation/d/1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ/edit --presentation-id 1BeHL678nPvWFKjvIsk7tyhLyvBI5NKrvs0kK0S8F7hQ --slide-id pptx-slide-9 --image-object-id pptx-slide-9-image-1 --source-revision-id pptx-content-sha256:27e9302849603cea35c60f208772ce7e9c986f3023c75f32e8e6691133e22aaf --requester-reference '<ticket text naming the person>' --dry-run"
+      }
+    }
+  ],
+  "photoUnknown": [
+    {
+      "name": "Lauryn Stasiak",
+      "slide": 5,
+      "status": "deck-photo-missing",
+      "liveAttachmentId": 9637,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/lauryn-stasiak-guide-alpha-orange-county.png",
+      "deckSha256": null,
+      "note": "the slide has no photo; nothing to compare or bind"
+    },
+    {
+      "name": "Michaela Bosco",
+      "slide": 11,
+      "status": "deck-photo-missing",
+      "liveAttachmentId": 9639,
+      "liveImageUrl": "https://alpha.school/wp-content/uploads/2026/08/michaela-bosco-campus-coordinator-alpha-orange-county.png",
+      "deckSha256": null,
+      "note": "the slide has no photo; nothing to compare or bind"
+    }
+  ],
+  "nameNotes": [
+    {
+      "kind": "honorific",
+      "deckName": "Dr. Scott Cody",
+      "liveName": "Scott Cody",
+      "slide": 2,
+      "note": "the heading uses the submitted name exactly (staff-card recipe); confirm the honorific with the campus"
+    },
+    {
+      "kind": "middle-or-extra-name",
+      "deckName": "Lorine Barnabe Dapic",
+      "liveName": "Lorine Barnabe",
+      "slide": 6
+    }
+  ],
+  "nameConflicts": [
+    {
+      "deckName": "Sonja Bumann",
+      "deckTitle": "GUIDE · MIDDLE SCHOOL",
+      "slide": 10,
+      "liveName": "Dr. Sonja Burmann",
+      "liveTitle": "Guide",
+      "editDistance": 1,
+      "note": "spelling differs between the deck and the page; not treated as an add or a remove until a person confirms which is right"
+    },
+    {
+      "deckName": "Lorelai Newman",
+      "deckTitle": "ADMISSIONS DIRECTOR",
+      "slide": 12,
+      "liveName": "Lorelei Newman",
+      "liveTitle": "Director of Admissions",
+      "editDistance": 1,
+      "note": "spelling differs between the deck and the page; not treated as an add or a remove until a person confirms which is right"
+    }
+  ],
+  "unchanged": [
+    {
+      "name": "Michaela Bosco",
+      "slide": 11,
+      "bio": "deck-bio-missing",
+      "photo": "deck-photo-missing"
+    }
+  ],
+  "warnings": []
+}

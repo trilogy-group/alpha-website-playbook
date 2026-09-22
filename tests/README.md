@@ -67,3 +67,14 @@ node agent/intake.mjs --since 2026-09-17T00:00:00Z --apply                   # a
 ```
 
 Rollout: keep `INTAKE_APPLY` false; replay the open queue read-only; review missing-info, owner, duplicate, and execution-eligibility deltas; then run one explicitly dispatched APEX-only canary batch reviewed by Matt and Yash. Enable scheduled apply only after the canaries and owner-registry gaps are accepted.
+
+## agent/roster-diff.mjs (read-only roster plan)
+
+Compares a registered campus "Meet the Team" deck (`registry/staff-source-decks.json`) with the live Team section and writes a For Review plan: adds, removes, title, bio, and photo differences, membership only, with a proposed `agent/bind-headshot.mjs` binding per add and photo change. It never writes to WordPress or APEX and never binds a photo. Usage, typed errors, and limits: `docs/headshot-binding.md`.
+
+```bash
+node agent/roster-diff.mjs --campus orange-county --live get-page.json --out ./run --images-dir ./run/deck-photos
+node agent/roster-diff.mjs --campus scottsdale --redact-bios          # rendered public page as the live side
+```
+
+Tests use synthetic fixtures only (`tests/fixtures/roster-diff/`): `build-synthetic-pptx.mjs` builds a pptx shaped like the Google Slides export from `synthetic-deck.json`, and the live side comes as a staff cards list, a `get_page` result, and rendered HTML.

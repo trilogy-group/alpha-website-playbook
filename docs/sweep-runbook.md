@@ -40,9 +40,13 @@ Each agent ends with `run-report.md`: per ticket the decision, class, receipts, 
 
 Tickets whose photo is a Drive, Slides, or Slack link stay Missing Info until the website operator reviews the file and binds it with `agent/bind-headshot.mjs` (`docs/headshot-binding.md`). Do that before partitioning so the sweep agents find a normal APEX asset on the ticket; the agents never fetch links.
 
+## Operator step for a roster ticket: run the roster diff
+
+For a ticket that points at a campus deck (class `staff-bulk`, or several staff tickets for one campus), run `node agent/roster-diff.mjs --campus <slug> --live <get_page result> --out <run folder> --images-dir <run folder>/deck-photos` before partitioning. It is read only: it compares the registered deck with the live Team section and writes a For Review plan of adds, removes, title, bio, and photo differences, with a proposed binding per add and photo change. The plan is source material: the ticket still decides what changes, the operator still reviews and binds each photo, and the sweep agents still execute one staff-card recipe per person. A typed error (unregistered deck, deck not exportable, slide without a name, ambiguous name match) means fix the deck or the registry first; never work around it by hand-editing the plan.
+
 ## Not yet built (as of 2026-09-21)
 
 - Slack notice for Missing Info and routed tickets (Hailey is building it in APEX); until then assignment alone tells nobody, and the coordinator sends the nudges.
 - Automatic partitioning and launch of the parallel agents; today the coordinator partitions by hand.
 - The APEX agent-API completion gate (`POST /tasks/{id}/status COMPLETED` answers 409 "Successful public verification evidence for this agent run is required") reads a hosted execution checkpoint that playbook agents do not write, and `/release` rejects the operator key. Until APEX documents the checkpoint and release calls for playbook agents (asked of Hailey 2026-09-21), an agent that has receipts and rendered evidence sets For Review with a RESOLUTION note and the coordinator marks Completed through the v1 task API after reviewing the run folder.
-- The roster diff from a campus deck or sheet to a For Review plan, and Slack file access for bindings (`docs/headshot-binding.md`).
+- Slack file access for bindings, a Google Slides API reader (the roster diff uses pptx export order for slide and image ids), a sheet reader for roster sheets, and order or placement in roster plans, which waits on the team-layout standard (`docs/headshot-binding.md`).

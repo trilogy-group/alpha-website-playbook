@@ -1,0 +1,23 @@
+{
+  "$comment": "Synthetic Alpha WordPress MCP get_page result, still inside the MCP tool envelope. Two staff cards in the production layout: an image container and a text container under one card container. Everyone is invented.",
+  "structuredContent": {
+    "id": 4242,
+    "canonicalUrl": "https://alpha.school/example-campus/",
+    "hashes": { "rawSha256": "synthetic-raw", "semanticSha256": "synthetic-semantic", "canonicalBytes": 1 },
+    "elementorSummary": [
+      { "id": "a0", "path": "/0", "elType": "container", "widgetType": "", "settings": { "_title": "Team members" } },
+      { "id": "a1", "path": "/0/elements/0", "elType": "widget", "widgetType": "heading", "settings": { "title": "Meet the team" } },
+      { "id": "b0", "path": "/0/elements/1", "elType": "container", "widgetType": "", "settings": {} },
+      { "id": "b1", "path": "/0/elements/1/elements/0", "elType": "container", "widgetType": "", "settings": {} },
+      { "id": "b2", "path": "/0/elements/1/elements/0/elements/0", "elType": "widget", "widgetType": "image", "settings": { "image": { "url": "https://alpha.school/wp-content/uploads/synthetic/avery.png", "id": 9002, "alt": "Avery Example" } } },
+      { "id": "b3", "path": "/0/elements/1/elements/1", "elType": "container", "widgetType": "", "settings": {} },
+      { "id": "b4", "path": "/0/elements/1/elements/1/elements/0", "elType": "widget", "widgetType": "heading", "settings": { "title": "Avery Example | Head Guide​" } },
+      { "id": "b5", "path": "/0/elements/1/elements/1/elements/1", "elType": "widget", "widgetType": "text-editor", "settings": { "editor": "<p>Avery has guided invented students for ten invented years.</p>" } },
+      { "id": "c0", "path": "/0/elements/2", "elType": "container", "widgetType": "", "settings": {} },
+      { "id": "c2", "path": "/0/elements/2/elements/0", "elType": "widget", "widgetType": "image", "settings": { "image": { "url": "https://alpha.school/wp-content/uploads/synthetic/quinn.png", "id": 9001, "alt": "" } } },
+      { "id": "c4", "path": "/0/elements/2/elements/1", "elType": "widget", "widgetType": "heading", "settings": { "title": "Quinn Departed | Head of Schools" } },
+      { "id": "c5", "path": "/0/elements/2/elements/2", "elType": "widget", "widgetType": "text-editor", "settings": { "editor": "<p>Quinn left the example campus.</p>" } }
+    ]
+  },
+  "isError": false
+}

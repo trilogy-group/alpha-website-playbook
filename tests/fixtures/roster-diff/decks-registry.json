@@ -1,0 +1,15 @@
+{
+  "$comment": "Synthetic copy of registry/staff-source-decks.json for agent/roster-diff.mjs tests. The campus, deck ids, and page are invented.",
+  "decks": {
+    "example-campus": {
+      "title": "Meet the Alpha Example Campus Team",
+      "presentationId": "synthetic-presentation-id",
+      "url": "https://docs.google.com/presentation/d/synthetic-presentation-id/edit",
+      "campus": "example-campus",
+      "pageUrl": "https://alpha.school/example-campus/"
+    }
+  },
+  "unmatched": [
+    { "title": "Meet the Example Sister School Team", "presentationId": "synthetic-unmatched-id", "url": "https://docs.google.com/presentation/d/synthetic-unmatched-id/edit" }
+  ]
+}

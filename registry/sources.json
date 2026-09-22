@@ -77,7 +77,7 @@
     "sitemap": "https://alpha.school/sitemap_index.xml"
   },
   "staffRoster": {
-    "status": "Per-campus Meet the Guides SY26-27 decks registered 2026-09-21 in registry/staff-source-decks.json (name, public title, bio, photo per slide). Reviewable source for photos and the planned roster diff; the requester ticket still decides what changes. DoA and DoP come from campusRoles.",
+    "status": "Per-campus Meet the Guides SY26-27 decks registered 2026-09-21 in registry/staff-source-decks.json (name, public title, bio, photo per slide). Reviewable source for photos and the input of the read-only roster diff (agent/roster-diff.mjs); the requester ticket still decides what changes. DoA and DoP come from campusRoles.",
     "registry": "registry/staff-source-decks.json",
     "readPath": "public pptx export of the deck (docs.google.com/presentation/d/<id>/export/pptx) until a Slides API reader exists",
     "since": "2026-09-21"

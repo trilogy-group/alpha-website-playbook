@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import http from 'node:http'
 import os from 'node:os'
@@ -20,6 +21,20 @@ import {
   normalizePersonName,
   ticketInputSha256,
 } from '../agent/intake-policy.mjs'
+import {
+  RosterDiffError,
+  buildPlan,
+  deckFromJson,
+  exportDeckPptx,
+  loadDeckRegistry,
+  parseDeckPptx,
+  parseLiveCards,
+  parseRenderedTeam,
+  personKey,
+  renderMarkdown,
+  resolveDeck,
+} from '../agent/roster-diff.mjs'
+import { buildSyntheticPptx, syntheticImage } from './fixtures/roster-diff/build-synthetic-pptx.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'policy-bundle.generated.json'), 'utf8'))
@@ -474,4 +489,135 @@ test('triage keeps an existing checkId and records the class separately', () => 
   assert.equal(cf.checkId, 'SITE-31323DE752')
   assert.equal(cf.triagedClass, 'media')
   assert.equal(triageCustomFields({}, { checkId: 'media' }).checkId, 'media')
+})
+
+// Roster diff (agent/roster-diff.mjs): a read-only planning tool. Fixtures are synthetic; nobody in them exists.
+const rosterDir = path.join(root, 'tests', 'fixtures', 'roster-diff')
+const rosterJson = (name) => JSON.parse(fs.readFileSync(path.join(rosterDir, name), 'utf8'))
+const rosterDeckEntry = () => resolveDeck(rosterJson('decks-registry.json'), { campus: 'example-campus' })
+const rosterPlan = (live = parseLiveCards(rosterJson('live-cards.json')), spec = rosterJson('synthetic-deck.json')) =>
+  buildPlan({ deckEntry: rosterDeckEntry(), deck: parseDeckPptx(buildSyntheticPptx(spec)), live, now: new Date('2026-09-21T00:00:00Z') })
+const rosterError = (fn, code) => assert.throws(fn, (e) => e instanceof RosterDiffError && e.code === code, `expected ${code}`)
+
+test('roster diff parses the exported deck into person slides in export order', () => {
+  const deck = parseDeckPptx(buildSyntheticPptx(rosterJson('synthetic-deck.json')))
+  assert.equal(deck.slideCount, 8)
+  assert.deepEqual(deck.skipped.map((s) => s.slide), [1, 8], 'cover and closing slides are skipped, not guessed at')
+  assert.deepEqual(deck.slides.map((s) => [s.slide, s.name, s.title]).slice(0, 2), [[2, 'Dr. Avery Example', 'HEAD GUIDE'], [3, 'Jordan Lee Sample', 'GUIDE · LEVEL 1']])
+  assert.deepEqual(deck.slides[1].warnings, [], 'stray text in the tall portrait frame is neither the name nor the title')
+  const avery = deck.slides[0]
+  assert.equal(avery.bio, 'Avery has guided invented students for ten invented years.')
+  assert.equal(avery.image.sha256, crypto.createHash('sha256').update(syntheticImage('avery')).digest('hex'))
+  assert.deepEqual([avery.image.slideId, avery.image.imageObjectId, avery.image.idBasis], ['pptx-slide-2', 'pptx-slide-2-image-1', 'pptx-export-order'])
+  const devon = deck.slides.find((s) => s.name === 'Devon Unfilled')
+  assert.deepEqual([devon.bio, devon.image], [null, null], 'template placeholders are not a bio or a photo')
+})
+
+test('roster diff plans adds, removes, and title, bio, and photo changes for review', () => {
+  const plan = rosterPlan()
+  assert.equal(plan.status, 'for-review')
+  assert.equal(plan.readOnly, true)
+  assert.deepEqual(plan.adds.map((a) => a.name), ['Riley Placeholder'])
+  assert.deepEqual(plan.removes.map((r) => r.name), ['Quinn Departed'])
+  assert.deepEqual(plan.titleChanges.map((t) => [t.name, t.liveTitle, t.deckTitle]), [['Jordan Sample', 'Lead Guide', 'GUIDE · LEVEL 1']])
+  assert.deepEqual(plan.bioChanges.map((b) => b.name), ['Casey Morgan-Fixture'])
+  assert.deepEqual(plan.photoChanges.map((p) => [p.name, p.status]), [['Casey Morgan-Fixture', 'bytes-differ']])
+  assert.deepEqual(plan.photoUnknown.map((p) => [p.name, p.status]), [['Jordan Sample', 'photo-unknown'], ['Devon Unfilled', 'deck-photo-missing']])
+  assert.deepEqual(plan.unchanged.map((u) => [u.name, u.photo]), [['Avery Example', 'same-bytes'], ['Devon Unfilled', 'deck-photo-missing']], 'all-caps deck titles equal to the page title are not a change')
+  assert.ok(!('order' in plan) && !JSON.stringify(plan).includes('placement":'), 'membership only: no order or placement')
+  const md = renderMarkdown(plan)
+  assert.match(md, /Read only\. The deck is source material/)
+  assert.match(md, /Riley Placeholder, CAMPUS COORDINATOR \(slide 4\)/)
+})
+
+test('roster diff proposes a binding for each add and photo change and binds nothing', () => {
+  const plan = rosterPlan()
+  const binding = plan.adds[0].proposedBinding
+  assert.equal(binding.status, 'proposed-not-bound')
+  assert.equal(binding.ticket, null, 'the operator names the ticket')
+  assert.equal(binding.requesterReference, null, 'the operator quotes the ticket text')
+  assert.deepEqual(Object.keys(binding.source).sort(), ['imageObjectId', 'kind', 'mimeType', 'presentationId', 'sha256', 'sizeBytes', 'slideId', 'sourceRevisionId', 'url'], 'same source fields bind-headshot.mjs sends')
+  assert.equal(binding.source.kind, 'slides-image')
+  assert.equal(binding.source.sha256, crypto.createHash('sha256').update(syntheticImage('riley')).digest('hex'))
+  assert.match(binding.source.sourceRevisionId, /^pptx-content-sha256:[0-9a-f]{64}$/)
+  assert.match(binding.command, /^node agent\/bind-headshot\.mjs --ticket '<ticket id>' --person 'Riley Placeholder' .* --dry-run$/)
+  assert.ok(plan.photoChanges[0].proposedBinding, 'a photo change carries a proposed binding too')
+  const source = fs.readFileSync(path.join(root, 'agent', 'roster-diff.mjs'), 'utf8')
+  for (const forbidden of [/APEX_API_TOKEN/, /ALPHA_WP_/, /method:\s*'(POST|PUT|PATCH|DELETE)'/, /staff-asset-binding/, /request-assets/]) assert.doesNotMatch(source, forbidden, `read-only tool must not contain ${forbidden}`)
+})
+
+test('roster diff normalizes honorifics, case, credentials, middle names, and whitespace', () => {
+  assert.equal(personKey('Dr.  Avery   EXAMPLE').full, personKey('avery example').full)
+  assert.equal(personKey('<b>Ms. Avery Example</b>, PhD').full, 'avery example')
+  assert.equal(personKey('Avery Example Jr.').full, 'avery example')
+  assert.equal(personKey('Avéry Example\u200b').full, 'avery example')
+  assert.equal(personKey('Jordan Lee Sample').firstLast, personKey('Jordan Sample').firstLast)
+  const plan = rosterPlan()
+  assert.deepEqual(plan.nameNotes.map((n) => [n.kind, n.deckName, n.liveName]), [['honorific', 'Dr. Avery Example', 'Avery Example'], ['middle-or-extra-name', 'Jordan Lee Sample', 'Jordan Sample']])
+  assert.deepEqual(plan.nameConflicts.map((c) => [c.deckName, c.liveName]), [['Taylor Specimen', 'Tayler Specimen']], 'a near spelling is a conflict for a person, never an add plus a remove')
+})
+
+test('roster diff fails closed on an ambiguous name match', () => {
+  const live = rosterJson('live-cards.json')
+  live.cards.push({ name: 'Jordan Q. Sample', title: 'Guide' })
+  rosterError(() => rosterPlan(parseLiveCards(live)), 'ambiguous_name_match')
+  const twice = rosterJson('live-cards.json')
+  twice.cards.push({ name: 'Dr. Avery Example', title: 'Dean' })
+  rosterError(() => rosterPlan(parseLiveCards(twice)), 'ambiguous_name_match')
+  const spec = rosterJson('synthetic-deck.json')
+  spec.slides.splice(2, 0, { name: 'Avery Example', title: 'GUIDE' })
+  rosterError(() => rosterPlan(undefined, spec), 'ambiguous_name_match')
+})
+
+test('roster diff fails closed on an unregistered deck, an unexportable deck, and a slide without a name', async () => {
+  rosterError(() => resolveDeck(loadDeckRegistry(), { campus: 'atlantis' }), 'deck_not_registered')
+  rosterError(() => resolveDeck(loadDeckRegistry(), { deck: 'not-a-registered-presentation' }), 'deck_not_registered')
+  rosterError(() => resolveDeck(rosterJson('decks-registry.json'), { deck: 'synthetic-unmatched-id' }), 'deck_not_registered')
+  rosterError(() => resolveDeck(rosterJson('decks-registry.json'), { campus: 'example-campus', deck: 'some-other-deck' }), 'deck_not_registered')
+  assert.equal(resolveDeck(rosterJson('decks-registry.json'), { deck: 'synthetic-presentation-id' }).campus, 'example-campus')
+
+  const signIn = async () => new Response('<html>Sign in</html>', { status: 200, headers: { 'content-type': 'text/html' } })
+  await assert.rejects(exportDeckPptx('synthetic-presentation-id', { fetchImpl: signIn }), (e) => e.code === 'deck_not_exportable')
+  await assert.rejects(exportDeckPptx('synthetic-presentation-id', { fetchImpl: async () => new Response('', { status: 404 }) }), (e) => e.code === 'deck_not_exportable')
+  await assert.rejects(exportDeckPptx('synthetic-presentation-id', { fetchImpl: async () => { throw new Error('offline') } }), (e) => e.code === 'deck_not_exportable')
+  rosterError(() => parseDeckPptx(Buffer.from('not a zip at all, just text')), 'deck_not_exportable')
+
+  const spec = rosterJson('synthetic-deck.json')
+  spec.slides[3] = { name: '[ Name ]', title: '[ROLE]' }
+  assert.deepEqual(parseDeckPptx(buildSyntheticPptx(spec)).skipped.map((s) => s.slide), [1, 4, 8], 'an untouched template slide names no one: skipped and listed')
+  spec.slides[3] = { name: '[ Name ]', title: 'LEAD GUIDE' }
+  rosterError(() => parseDeckPptx(buildSyntheticPptx(spec)), 'slide_without_name')
+  assert.equal(parseDeckPptx(buildSyntheticPptx(spec), { allowOpenRoles: true }).skipped.find((s) => s.slide === 4).openRoleTitle, 'LEAD GUIDE', 'an open role is skipped only when the operator allows it')
+  spec.slides[3] = { name: '[ Name ]', title: 'GUIDE', bio: 'A real bio on a slide nobody named.', image: 'nameless' }
+  rosterError(() => parseDeckPptx(buildSyntheticPptx(spec), { allowOpenRoles: true }), 'slide_without_name')
+  rosterError(() => deckFromJson({ slides: [{ slide: 2, name: '  ', title: 'GUIDE' }] }), 'slide_without_name')
+})
+
+test('roster diff reads live cards from get_page, a staff cards list, and the rendered page alike', () => {
+  const fromPage = parseLiveCards(rosterJson('live-get-page.json'))
+  assert.equal(fromPage.source, 'mcp-get-page')
+  assert.deepEqual(fromPage.cards.map((c) => [c.name, c.title, c.attachmentId]), [['Avery Example', 'Head Guide', 9002], ['Quinn Departed', 'Head of Schools', 9001]])
+  assert.equal(fromPage.cards[0].bio, 'Avery has guided invented students for ten invented years.')
+  const rendered = parseRenderedTeam(fs.readFileSync(path.join(rosterDir, 'live-page.html'), 'utf8'))
+  assert.deepEqual(rendered.cards.map((c) => [c.name, c.title, c.attachmentId, c.bio]), fromPage.cards.map((c) => [c.name, c.title, c.attachmentId, c.bio]))
+  rosterError(() => parseLiveCards({ objectId: 1, widgets: [], images: [] }), 'live_cards_unreadable')
+  rosterError(() => parseLiveCards({ match: { id: 'abc' } }), 'live_cards_unreadable')
+})
+
+test('roster diff CLI writes the plan and summary, and exits 2 with a typed error', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-roster-diff-'))
+  const pptx = path.join(tmp, 'deck.pptx')
+  fs.writeFileSync(pptx, buildSyntheticPptx(rosterJson('synthetic-deck.json')))
+  const base = [path.join(root, 'agent', 'roster-diff.mjs'), '--registry', path.join(rosterDir, 'decks-registry.json'), '--deck-file', pptx, '--live', path.join(rosterDir, 'live-cards.json')]
+  const ok = spawnSync(process.execPath, [...base, '--campus', 'example-campus', '--redact-bios', '--out', tmp, '--images-dir', path.join(tmp, 'images')], { encoding: 'utf8' })
+  assert.equal(ok.status, 0, ok.stderr)
+  const plan = JSON.parse(fs.readFileSync(path.join(tmp, 'roster-diff-example-campus.plan.json'), 'utf8'))
+  assert.deepEqual(plan.summary, { adds: 1, removes: 1, titleChanges: 1, bioChanges: 1, photoChanges: 1, photoUnknown: 2, nameNotes: 2, nameConflicts: 1, unchanged: 2, warnings: 0 })
+  assert.ok(!JSON.stringify(plan).includes('Casey wrote a new bio'), '--redact-bios keeps hashes and lengths only')
+  assert.ok(fs.existsSync(path.join(tmp, 'roster-diff-example-campus.md')))
+  const extracted = plan.adds[0].proposedBinding.extractedFile
+  assert.equal(crypto.createHash('sha256').update(fs.readFileSync(extracted)).digest('hex'), plan.adds[0].proposedBinding.source.sha256, 'the extracted review file is the hashed deck image')
+  const bad = spawnSync(process.execPath, [...base, '--campus', 'atlantis'], { encoding: 'utf8' })
+  assert.equal(bad.status, 2)
+  assert.equal(JSON.parse(bad.stderr).error.code, 'deck_not_registered')
 })

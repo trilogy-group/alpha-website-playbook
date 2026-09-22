@@ -45,7 +45,7 @@ The staff tool treats a card as part of the leadership collection only when its 
 
 ## Related
 
-`registry/staff-source-decks.json`: the per-campus "Meet the Alpha <Campus> Team" Google Slides decks (Meet the Guides SY26-27 folder) carry each team member's name, public title, bio, and photo. They are a reviewable source for photos and a planned input for roster diffs (`docs/headshot-binding.md`), not an instruction: the requester's ticket still decides what changes, and the agent never places a photo from a deck without an operator binding.
+`registry/staff-source-decks.json`: the per-campus "Meet the Alpha <Campus> Team" Google Slides decks (Meet the Guides SY26-27 folder) carry each team member's name, public title, bio, and photo. They are a reviewable source for photos and the input of the read-only roster diff (`agent/roster-diff.mjs`, `docs/headshot-binding.md`), which writes a For Review plan of adds, removes, and title, bio, and photo differences with a proposed binding per photo. A deck and its plan are not an instruction: the requester's ticket still decides what changes, and the agent never places a photo from a deck without an operator binding.
 
 ## Rules settled by the 2026-09-21 sweep
 
