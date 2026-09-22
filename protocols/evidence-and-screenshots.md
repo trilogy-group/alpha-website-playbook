@@ -20,13 +20,14 @@ Every completed website ticket records:
 - Observer run when the ticket came from an observer check
 - Playbook commit
 
-Use the APEX evidence endpoint for the ticket:
+Use the APEX evidence endpoints for the ticket:
 
 ```text
-POST /api/agent/tasks/{id}/evidence
+POST /api/agent/tasks/{id}/evidence                 structured evidence (URL, notes, the Public page verification entry)
+POST /api/agent/tasks/{id}/evidence/screenshots     the desktop and mobile PNGs themselves (multipart), via agent/attach-evidence.mjs
 ```
 
-The authenticated APEX client or worker performs the upload. Do not place credentials or private source documents in the evidence body.
+The authenticated APEX client or worker performs the upload. `agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <file> --mobile <file>` hashes each file, posts it with the operator key, and prints the served URLs; APEX stores the bytes on the ticket (kind `EVIDENCE_SCREENSHOT`), posts the agent comment, logs `agent_evidence_added` with viewport, page, capture time, sha256, run id, and who attached it, and shows the pair in the ticket panel's Evidence section. It is idempotent per (ticket, viewport, sha256). Do not place credentials or private source documents in the evidence body or in the captures.
 
 ## Screenshot set
 
@@ -39,6 +40,8 @@ Minimum set:
 3. Mobile top of page at 390 by 844.
 4. Mobile changed section with the changed content visible.
 5. Two untouched representative pages after a global, CSS, plugin, template, or site-wide cache action.
+
+Items 1 to 4 are covered by the full-page desktop and mobile captures `tests/rendered-controls.mjs --screenshots <dir>` writes (`<slug>-desktop.png`, `<slug>-mobile.png`); those two files are what `agent/attach-evidence.mjs` attaches to the ticket. PNG or JPEG, 6 MB each at most; a larger full-page capture is re-encoded as JPEG before attaching.
 
 Scroll lazy-loaded images into view and confirm they are loaded before capture. A blank lazy image is not acceptable evidence.
 

@@ -19,6 +19,7 @@ Classes `staff-add`, `staff-update`, `staff-remove`, `staff-photo`. The Team sec
 4. `prepare_elementor_staff_patch` with the action, the person fields, and `expectedCurrent` for update and remove. Check the diff touches only that card.
 5. Apply, regenerate the page's CSS, clear cache.
 6. Tests. Ring 1: the card shows the requested name, title, bio, and photo, and no other card changed. Ring 2: full page check plus screenshots of the Team section on desktop and mobile; faces not clipped. Ring 3 after the cache clear.
+7. Attach the ring 2 captures to the ticket: `node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <slug>-desktop.png --mobile <slug>-mobile.png --label "Team section after <person>"`, then write the RESOLUTION note with Look for pointing at the card the screenshots show (protocol section 7).
 
 ## Card tagging decides which tool applies (2026-09-17)
 
