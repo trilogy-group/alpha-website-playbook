@@ -11,10 +11,16 @@
  * look at the element "Look for" names, at a legible size, with its images painted.
  *
  * Usage: node tests/section-shot.mjs --url <page> --selector <css> [--name <section name>] [--out <dir>]
- *        [--viewports desktop,mobile] [--json out.json] [--timeout <ms, default 15000>] [--playwright <dir>]
+ *        [--slide-containing "<text>"] [--viewports desktop,mobile] [--json out.json] [--timeout <ms, default 15000>]
+ *        [--playwright <dir>]
  * Writes <out>/<slug>-desktop.png and <out>/<slug>-mobile.png where <slug> is the section name slugified (default:
  * the selector). Exit 0 when every image decoded; 1 when some never decoded (the capture is still written and the
  * report names each image); 2 when the selector matched nothing, the page did not load, or Playwright is missing.
+ *
+ * Carousel cards: `--slide-containing "Jason Tan"` picks, among the selector's matches, the one whose text contains
+ * that string (so `--selector "#team_carousel .swiper-slide" --slide-containing "Jason Tan"` is the card itself), and
+ * when the chosen element sits in a Swiper carousel the tool calls slideTo on its index first, so a card past the
+ * visible slides is on screen and painted before the capture. `--scroll-to-text` is the same option.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -66,7 +72,10 @@ export function planSectionShot(args) {
   const timeoutMs = args.timeout && args.timeout !== true ? Number(args.timeout) : DEFAULT_DECODE_TIMEOUT_MS
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new SectionShotError('MISSING_ARG', `--timeout must be a positive number of milliseconds, got ${args.timeout}`)
   const files = Object.fromEntries(viewports.map((viewport) => [viewport, outputFile(out, name, viewport)]))
-  return { url: url.toString(), selector, name, out, viewports, timeoutMs, files, json: args.json && args.json !== true ? path.resolve(String(args.json)) : null }
+  const containing = args['slide-containing'] ?? args['scroll-to-text']
+  if (containing === true || (containing !== undefined && !String(containing).trim())) throw new SectionShotError('MISSING_ARG', '--slide-containing needs the text the card shows, for example the person name')
+  const slideContaining = containing === undefined ? null : String(containing).trim()
+  return { url: url.toString(), selector, name, out, viewports, timeoutMs, files, slideContaining, json: args.json && args.json !== true ? path.resolve(String(args.json)) : null }
 }
 
 /** Playwright is not a dependency of the playbook; borrow it the way rendered-controls.mjs does. */
@@ -79,12 +88,26 @@ export function loadChromium(args = {}, env = process.env) {
 }
 
 /**
- * Runs inside the page. Forces every <img> in the element to load now (a lazy image below the fold never starts
- * otherwise), then awaits decode() on each with one shared deadline. Returns one row per image so the report can
- * name the ones that never painted.
+ * Runs inside the page on the chosen element. When it is (or sits inside) a Swiper slide, asks the carousel to show
+ * that slide (Elementor keeps the instance on the .swiper element). Returns null outside a carousel.
  */
-function waitForImagesInPage({ selector, timeoutMs }) {
-  const root = document.querySelector(selector)
+function bringSlideIntoView(el) {
+  const slide = el.closest('.swiper-slide')
+  const swiper = slide?.closest('.swiper, .swiper-container')
+  if (!slide || !swiper) return null
+  const index = [...slide.parentElement.children].indexOf(slide)
+  const instance = swiper.swiper
+  if (!instance || typeof instance.slideTo !== 'function') return { index, moved: false, reason: 'no swiper instance on the carousel element' }
+  instance.slideTo(index, 0)
+  return { index, moved: true, activeIndex: instance.activeIndex }
+}
+
+/**
+ * Runs inside the page on the chosen element (element.evaluate). Forces every <img> in it to load now (a lazy image
+ * below the fold never starts otherwise), then awaits decode() on each with one shared deadline. Returns one row per
+ * image so the report can name the ones that never painted.
+ */
+function waitForImagesInElement(root, { timeoutMs }) {
   if (!root) return { found: false, images: [] }
   const imgs = [...root.querySelectorAll('img')]
   for (const img of imgs) { if (img.loading === 'lazy') img.loading = 'eager' }
@@ -119,13 +142,20 @@ export async function captureSection(browser, plan, viewport, { log = () => {} }
     try { await page.goto(plan.url + (plan.url.includes('?') ? '&' : '?') + 'nocache=' + Date.now(), { waitUntil: 'load', timeout: 90_000 }) } catch (error) {
       throw new SectionShotError('NAV_FAILED', `${viewport}: ${plan.url} did not load: ${error.message.split('\n')[0]}`, { viewport })
     }
-    const locator = page.locator(plan.selector)
-    const matches = await locator.count()
+    const all = page.locator(plan.selector)
+    const matches = await all.count()
     if (matches === 0) throw new SectionShotError('SELECTOR_NOT_FOUND', `${viewport}: nothing on ${plan.url} matches ${plan.selector}`, { viewport, selector: plan.selector })
+    // --slide-containing: the match whose text holds the string (a looped carousel clones slides; the first real one wins).
+    const locator = plan.slideContaining ? all.filter({ hasText: plan.slideContaining }) : all
+    const chosen = plan.slideContaining ? await locator.count() : matches
+    if (chosen === 0) throw new SectionShotError('SELECTOR_NOT_FOUND', `${viewport}: ${matches} element(s) match ${plan.selector} on ${plan.url} but none contains "${plan.slideContaining}"`, { viewport, selector: plan.selector, matches, slideContaining: plan.slideContaining })
     const element = locator.first()
+    // A card inside a Swiper carousel is translated off screen until its slide is active: move the carousel first.
+    const slide = await element.evaluate(bringSlideIntoView)
+    if (slide?.moved) await page.waitForTimeout(400)
     await element.scrollIntoViewIfNeeded({ timeout: 10_000 })
     await page.waitForTimeout(500)
-    const waited = await page.evaluate(waitForImagesInPage, { selector: plan.selector, timeoutMs: plan.timeoutMs })
+    const waited = await element.evaluate(waitForImagesInElement, { timeoutMs: plan.timeoutMs })
     // A settle so a just-decoded image has painted before the capture.
     await page.waitForTimeout(300)
     const box = await element.boundingBox()
@@ -137,8 +167,8 @@ export async function captureSection(browser, plan, viewport, { log = () => {} }
     await page.screenshot({ path: file, fullPage: true, clip })
     const images = waited.images
     const undecoded = images.filter((img) => !img.decoded)
-    const result = { viewport, file, matches, box: { x: Math.round(box.x + scroll.x), y: Math.round(box.y + scroll.y), width: Math.round(box.width), height: Math.round(box.height) }, clip, deviceScaleFactor: DEVICE_SCALE_FACTOR, images, undecoded: undecoded.length, capturedAt: new Date().toISOString() }
-    log(`${viewport}: ${file} (${result.box.width}x${result.box.height} css px, ${images.length} images, ${undecoded.length} not decoded${matches > 1 ? `, first of ${matches} matches` : ''})`)
+    const result = { viewport, file, matches, ...(plan.slideContaining ? { slideContaining: plan.slideContaining, containing: chosen } : {}), ...(slide ? { slide } : {}), box: { x: Math.round(box.x + scroll.x), y: Math.round(box.y + scroll.y), width: Math.round(box.width), height: Math.round(box.height) }, clip, deviceScaleFactor: DEVICE_SCALE_FACTOR, images, undecoded: undecoded.length, capturedAt: new Date().toISOString() }
+    log(`${viewport}: ${file} (${result.box.width}x${result.box.height} css px, ${images.length} images, ${undecoded.length} not decoded${plan.slideContaining ? `, "${plan.slideContaining}" in ${chosen} of ${matches} matches` : (matches > 1 ? `, first of ${matches} matches` : '')}${slide?.moved ? `, carousel moved to slide ${slide.index + 1}` : ''})`)
     return result
   } finally {
     await context.close()

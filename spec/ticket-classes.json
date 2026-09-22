@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label).",
-  "version": "0.8",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22.",
+  "version": "0.9",
   "classes": {
     "other-workflow": {
       "match": {
@@ -211,7 +211,11 @@
       "scope": "website",
       "observerChecks": [],
       "routingLabel": "staff_photo_title_bio",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, tests/page-check.mjs team-photo-framing passes on desktop and mobile for the card (the bound headshot is inside its rendered frame: full head, no top or bottom cut) and the section capture of the card is attached with agent/attach-evidence.mjs --section, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply",
+      "evidence": [
+        "team-photo-framing-json",
+        "section-capture-of-the-card-desktop-mobile"
+      ]
     },
     "staff-add": {
       "match": {
@@ -235,7 +239,11 @@
         "campus-staff-missing"
       ],
       "routingLabel": "staff_photo_title_bio",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, tests/page-check.mjs team-photo-framing passes on desktop and mobile for the card (the bound headshot is inside its rendered frame: full head, no top or bottom cut) and the section capture of the card is attached with agent/attach-evidence.mjs --section, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply",
+      "evidence": [
+        "team-photo-framing-json",
+        "section-capture-of-the-card-desktop-mobile"
+      ]
     },
     "staff-update": {
       "match": {
@@ -258,7 +266,11 @@
         "campus-staff-title-sync"
       ],
       "routingLabel": "staff_photo_title_bio",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, tests/page-check.mjs team-photo-framing passes on desktop and mobile for the card (the bound headshot is inside its rendered frame: full head, no top or bottom cut) and the section capture of the card is attached with agent/attach-evidence.mjs --section, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply",
+      "evidence": [
+        "team-photo-framing-json",
+        "section-capture-of-the-card-desktop-mobile"
+      ]
     },
     "staff-remove": {
       "match": {
@@ -293,7 +305,11 @@
       "note": "A roster update for several people at once, usually with a deck or sheet. Executed as one staff-card recipe per person; each person needs name, title, bio, and headshot. Missing Info lists the people whose inputs are absent.",
       "observerChecks": [],
       "routingLabel": "staff_photo_title_bio",
-      "doneWhen": "every named card renders with the requested name, title, bio, and photo; ring 2 passes; requester confirms"
+      "doneWhen": "every named card renders with the requested name, title, bio, and photo; ring 2 passes; tests/page-check.mjs team-photo-framing passes on desktop and mobile for the card (the bound headshot is inside its rendered frame: full head, no top or bottom cut) and the section capture of the card is attached with agent/attach-evidence.mjs --section for every card touched; requester confirms",
+      "evidence": [
+        "team-photo-framing-json",
+        "section-capture-of-the-card-desktop-mobile"
+      ]
     },
     "copy": {
       "match": {

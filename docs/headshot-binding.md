@@ -30,6 +30,26 @@ The binding route refuses a non-operator key, an asset that is not `STAFF_HEADSH
 
 From the binding on, the ticket carries a normal asset and `protocols/recipes/staff-card.md` applies unchanged: the executing agent uses `upload_media_from_apex_asset` with the asset id and hash, with receipts, rendered evidence, and For Review.
 
+## Frame before you bind (2026-09-22)
+
+The card box on the page crops the photo. Every team-card image renders with `object-fit: cover` into a box of fixed CSS height whose width follows the column, so a portrait bound at its native ratio is scaled to the box width and loses its top and bottom: Jason Tan's 1130x1533 headshot on San Francisco showed 57% of its height and the top of his head was cut (found by Matt on the card capture; the recipe's checks had only confirmed the image was present and decoded). Three Santa Barbara cards have the same defect (ticket cmucxbw0d000004l2zawagb5j).
+
+Rule: the file the operator binds is already framed to the card's rendered aspect ratio, with the full head and headroom comparable to the neighbouring cards. Review the source, frame it, look at the preview, then bind the framed file:
+
+```
+node agent/frame-headshot.mjs --file ./reviewed.jpg --ratio auto --page https://alpha.school/<campus>/ \
+  --out ./reviewed-framed.jpg --preview ./reviewed-framed-preview.png [--selector "<css of a leadership card>"] \
+  [--focus top|center|bottom|<0..1>] [--json ./frame.json] [--playwright <dir>]
+node agent/bind-headshot.mjs --ticket <id> --person "First Last" --file ./reviewed-framed.jpg ... \
+  --review-note "framed to 1.2939:1 (card box 285x220 css px on https://alpha.school/san-francisco/ at desktop 1440px); crop 1130x873 at 0,0 of 1130x1533, focus 0"
+```
+
+What the framing tool does: measures the page's desktop carousel card box read-only in Playwright (`--ratio auto`; `--selector` measures a specific card, a leadership card for a Head of School; `--ratio 1.2939` or `--ratio 284.66:220` takes a known value), crops the source to that ratio as large as the source allows with no scaling, keeps the head by anchoring a portrait's window to the top (headroom stays, shoulders go) and a landscape's to the centre, writes a side-by-side preview (source with the window outlined, result beside it) for the operator to look at, and prints the framed file's dimensions and sha256 and a `reviewNote` line. `--focus center` or a fraction moves the window down when the source has a lot of air above the head; the preview decides. The ratio is per page and per viewport, never one site value (`spec/team-card-frame.json` records the measured boxes: San Francisco 1.29:1, Santa Barbara 1.61:1, Miami 1.46:1 on desktop); frame to the desktop box, and the squarer mobile box then cuts only the sides, symmetrically, which `team-photo-framing` tolerates.
+
+`bind-headshot.mjs` is unchanged: it hashes whatever file it is given, so the binding records the framed bytes, and `--review-note` carries the "framed to <ratio>" line so a reviewer can tell a framed asset from an unframed one. PNG in and out is pure JavaScript; JPEG and WebP input and JPEG output go through macOS `sips`, so on another machine convert to PNG first. EXIF orientation is not applied (a sideways preview means rotate the source first). No face detection: the operator's look at the preview is the face check.
+
+After placement the agent's ring 2 runs `tests/page-check.mjs`, whose `team-photo-framing` check measures every card on desktop and mobile, and captures the card itself with `tests/section-shot.mjs --slide-containing "<person>"`; the RESOLUTION note's Look for line names the framing ("full head visible, headroom like the neighbouring cards").
+
 ## Sources and how each is reviewed
 
 | Source | How the operator reads it | What the binding records |

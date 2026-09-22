@@ -3,6 +3,7 @@
  * Ring 2 page check for alpha.school campus pages (protocol step 5), agent-independent.
  *
  *   node tests/page-check.mjs --url https://alpha.school/atlanta/ [--url ...] [--state Open] [--json out.json]
+ *                             [--playwright <dir>] [--skip-rendered]
  *
  * Fetches the canonical public URL as a visitor (no cache-busting), then checks the rendered HTML:
  *   structure  header template linked to its stylesheet, footer present, H1, hero CTA row, intro section
@@ -11,11 +12,20 @@
  *   links      every hero/resource CTA resolves (HEAD/GET 2xx, no cross-host surprises)
  *   media      intro card slot is an approved card, a video, or flagged
  *   sync       the CSS IDs the n8n workflow writes are still present (a layout change that drops one breaks the daily sync)
- * Screenshots are still required by the protocol; this script covers the text and structure part.
+ * Then one rendered check in a real browser on desktop (1440x1000) and mobile (390x844):
+ *   framing    team-photo-framing: every team-card image (leadership row and carousel slides, lazy loading forced
+ *              eager) is inside its object-fit: cover box; a portrait bound at its native ratio into the landscape
+ *              card box loses its head (Jason Tan, San Francisco, 2026-09-22). Math in tests/photo-framing.mjs.
+ *              Playwright is borrowed like rendered-controls.mjs does (--playwright <dir>, PLAYWRIGHT_ROOT, or the
+ *              sibling aeo checkout); without it the check is reported as skipped, never as passed. --skip-rendered
+ *              skips it on purpose (ring 3 header and footer checks on untouched pages do not need a browser).
+ * Screenshots are still required by the protocol; this script covers the text, structure, and framing part.
  * Exit code 1 when any check fails.
  */
 import fs from 'node:fs'
 import path from 'node:path'
+import { loadChromium, SectionShotError } from './section-shot.mjs'
+import { measureTeamCards, teamPhotoFramingCheck } from './photo-framing.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const lifecycle = JSON.parse(fs.readFileSync(path.join(here, '../spec/campus-lifecycle.json'), 'utf8'))
@@ -30,15 +40,23 @@ const UA = 'alpha-website-playbook-page-check/0.1 (read-only)'
 
 const args = parse(process.argv.slice(2))
 const urls = [].concat(args.url || [])
-if (!urls.length) { console.error('Usage: page-check.mjs --url <canonical url> [--url ...] [--state Open|Announced] [--json out.json]'); process.exit(2) }
+if (!urls.length) { console.error('Usage: page-check.mjs --url <canonical url> [--url ...] [--state Open|Announced] [--json out.json] [--playwright <dir>] [--skip-rendered]'); process.exit(2) }
+
+// Rendered checks need a browser. Resolve it once; a missing Playwright makes every rendered check "skipped" with the
+// reason, so a run without a browser never reads as a pass on framing.
+let chromium = null
+let renderedSkipReason = args['skip-rendered'] ? 'skipped on request (--skip-rendered)' : null
+if (!renderedSkipReason) { try { chromium = loadChromium(args) } catch (e) { renderedSkipReason = e instanceof SectionShotError ? e.message.split('\n')[0] : e.message } }
 
 const results = []
 for (const url of urls) results.push(await checkPage(url, args.state))
 if (args.json) fs.writeFileSync(args.json, `${JSON.stringify(results, null, 2)}\n`)
 for (const r of results) {
   const fails = r.checks.filter((c) => c.result === 'fail')
-  console.log(`${fails.length ? 'FAIL' : 'PASS'}  ${r.url}  state=${r.state}  ${r.checks.length} checks, ${fails.length} failing${fails.length ? ': ' + fails.map((c) => c.id).join(', ') : ''}`)
+  const skips = r.checks.filter((c) => c.result === 'skipped')
+  console.log(`${fails.length ? 'FAIL' : 'PASS'}  ${r.url}  state=${r.state}  ${r.checks.length} checks, ${fails.length} failing${fails.length ? ': ' + fails.map((c) => c.id).join(', ') : ''}${skips.length ? `, ${skips.length} skipped: ${skips.map((c) => c.id).join(', ')}` : ''}`)
   for (const c of fails) console.log(`      ${c.id}: ${c.detail}`)
+  for (const c of skips) console.log(`      ${c.id}: skipped, ${c.detail}`)
 }
 process.exitCode = results.some((r) => r.checks.some((c) => c.result === 'fail')) ? 1 : 0
 // Keep-alive sockets from the destination checks held the event loop open after the last page; exit explicitly.
@@ -206,6 +224,13 @@ async function checkPage(url, stateOverride) {
   const stillHidden = hiddenEverywhere.filter((entry) => !retired(entry))
   add('cta-hidden-everywhere', stillHidden.length === 0, stillHidden.length ? stillHidden.join('; ') : (hiddenEverywhere.length ? `only retired prior-year packets or calendars are hidden (${hiddenEverywhere.length})` : 'no linked CTA is hidden on every breakpoint'))
   if (bookACall.visible + bookACall.hiddenWithLink + bookACall.hiddenNoLink > 0) add('book-a-call-consistency', bookACall.hiddenWithLink === 0, `visible ${bookACall.visible}, hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)
+
+  // rendered: team-photo-framing (desktop and mobile). Static HTML cannot see the box a headshot is squeezed into.
+  if (chromium) {
+    try { checks.push(teamPhotoFramingCheck(await measureTeamCards(chromium, url))) } catch (e) { add('team-photo-framing', false, `browser measurement failed: ${e.message.split('\n')[0]}`) }
+  } else {
+    checks.push({ id: 'team-photo-framing', result: 'skipped', detail: renderedSkipReason })
+  }
 
   return { url, slug, state, cache: { cfCacheStatus: headers['cf-cache-status'] || null, age: headers.age || null }, checks }
 }

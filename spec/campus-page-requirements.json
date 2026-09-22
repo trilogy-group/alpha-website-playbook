@@ -148,7 +148,7 @@
         "content": "Only approved current staff cards with exact name, public title, biography, photo and order. No placeholders or crossed photos.",
         "source": "APEX staff request, campus role owner and staff-card safety contract",
         "ownerWhenMissing": "dean-of-parents, then head-of-schools",
-        "checks": ["same-card verification", "placeholder check", "desktop and mobile"],
+        "checks": ["same-card verification", "placeholder check", "desktop and mobile", "page-check team-photo-framing"],
         "exemplars": [],
         "status": "active"
       },
@@ -271,7 +271,7 @@
         "content": "Any visible person has an approved name, public title, biography, photo and effective date.",
         "source": "APEX staff request and campus owner",
         "ownerWhenMissing": "expansion or campus role owner",
-        "checks": ["same-card", "placeholder"],
+        "checks": ["same-card", "placeholder", "page-check team-photo-framing"],
         "exemplars": [],
         "status": "active"
       },

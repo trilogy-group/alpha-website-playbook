@@ -43,6 +43,8 @@ Minimum set:
 
 Items 1 and 3 are the full-page desktop and mobile captures `tests/rendered-controls.mjs --screenshots <dir>` writes (`<slug>-desktop.png`, `<slug>-mobile.png`). Items 2 and 4 are the section captures `tests/section-shot.mjs --url <page> --selector <css> --name "<section>"` writes (`<slug>-desktop.png`, `<slug>-mobile.png` at deviceScaleFactor 2, the element plus a 16 px margin) after every image inside the element has decoded. `agent/attach-evidence.mjs` attaches each pair, the section pair with `--section "<section>"`. PNG or JPEG, 6 MB each at most; a larger full-page capture is re-encoded as JPEG before attaching.
 
+For a staff change the section capture is the card itself: `tests/section-shot.mjs --selector "#team_carousel .swiper-slide" --slide-containing "<person>"` moves the carousel to that slide before capturing, and the crop must show the full head with headroom like the neighbouring cards; `tests/page-check.mjs team-photo-framing` is the mechanical form of the same criterion (protocol section 7, decision 2026-09-22).
+
 A blank or grey lazy image is not acceptable evidence. `section-shot.mjs` forces the element's lazy images to load, awaits `img.decode()` on each with a bounded timeout, and exits 1 with the image named when one never decodes; the file is still written so the actor can see what happened, but it is not attached as the section pair until the images paint.
 
 ## Screenshot labels
