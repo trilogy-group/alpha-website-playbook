@@ -123,7 +123,8 @@ Write to the ticket, in this order, so a reviewer can read the outcome in ten se
 RESOLUTION (actor, date, playbook version)
 Go here: <canonical URL>            (also set as the ticket's URL field, so the panel shows the link)
 Look for: <one line: the exact card, sentence, or button the reviewer should see, and where on the page>
-Recommend: Complete | Complete after <one question for the reviewer>   (a ticket that is not completable by the reviewer is not For Review: Missing Info or Blocked, see docs/sweep-runbook.md "Status means one thing")
+Recommend: Complete | Complete after <one question for the reviewer>
+Also open on this page: <ticket id, age, one phrase> per open defect page-check or the observer already reports on this URL, or "none"   (a ticket that is not completable by the reviewer is not For Review: Missing Info or Blocked, see docs/sweep-runbook.md "Status means one thing")
 Page: <canonical URL> (object <id>)
 Change: "<before>" -> "<after>" in <section / field>
 Evidence: before hash, after hash, snapshot ref; section capture of <the element Look for names> attached with agent/attach-evidence.mjs --section (desktop, mobile) plus the full-page pair; the Look for line names what the section capture shows
@@ -133,7 +134,7 @@ Observer: <check ids> cleared on run <id>   (observer tickets only)
 
 Then set Completed. If any item cannot be written, the ticket is not complete.
 
-The first three lines exist so the reviewer can work from the APEX For Review queue alone: open the ticket, read three lines, click the URL, look at one thing, decide. A note that makes the reviewer search APEX or the site for the page is not finished. When the ticket names several pages, "Go here" is the page with the largest change and the others follow on the Page lines.
+The first four lines exist so the reviewer can work from the APEX For Review queue alone (Matt reviewed the Boston links on 2026-09-22 without knowing the same page carried an 18-day-old wrong status sentence; the fourth line exists so that cannot recur): open the ticket, read three lines, click the URL, look at one thing, decide. A note that makes the reviewer search APEX or the site for the page is not finished. When the ticket names several pages, "Go here" is the page with the largest change and the others follow on the Page lines.
 
 The Evidence line is satisfied by attaching, not by linking, and it requires two pairs on the same run id (decision 2026-09-22, Matt Barge, after the Park City events ticket could not be verified from a full-page thumbnail whose event cards were grey):
 

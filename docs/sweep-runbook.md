@@ -28,6 +28,10 @@ Rules from `protocols/apex-website-ticket-protocol.md`, in order: intake (dry, t
 
 An OPERATOR INSTRUCTION note on a ticket outranks the classifier (protocol 1c). A ticket whose done condition is already met on the rendered page closes on verification with the actor named from `list_revisions`.
 
+## Open campus with launch words: fix, do not park
+
+An Open campus page showing launch copy ("is launching in Fall 2026", "Coming Fall 2026") is the most damaging copy defect on the site (decision 2026-09-22). The element is n8n-written from the HubSpot Program, so the fix is the Program field, never WordPress. Rule: the finding is filed HIGH, it goes to the website-agent-operator with the requirement sentence pre-filled ("Alpha <Campus> is open and enrolling.") and the APEX campus editor path, it is listed at the top of every sweep report until the page is clean after a nightly run, and it never sits in Blocked waiting on a scope or a decision. The reviewer's note on any other ticket for that page names it on the "Also open on this page" line.
+
 ## Defects found while working
 
 The agent files them itself (decision 2026-09-19): `node agent/file-found-ticket.mjs <payload.json>` deduplicates against open tickets by idempotency key, title, and page plus check, creates the APEX Request, and assigns the class owner from the policy bundle (website operations when the role has no person). The payload shape is the one the batches produced: title, description (page, expected, observed, evidence, recommended path, done when), url, program, customFields with `source: agent-found`, `checkId`, `foundWhileWorking`, `idempotencyKey`, `ownerRole`. Tooling defects (Alpha MCP, playbook scripts) are not APEX website tickets; they go to the repo as issues or PRs and are named in the run report.
