@@ -28,6 +28,17 @@ Rules from `protocols/apex-website-ticket-protocol.md`, in order: intake (dry, t
 
 An OPERATOR INSTRUCTION note on a ticket outranks the classifier (protocol 1c). A ticket whose done condition is already met on the rendered page closes on verification with the actor named from `list_revisions`.
 
+## HubSpot Program fields: the agent writes them, with an audit line
+
+Since 2026-09-22 the website agent reads and writes HubSpot Programs (object 2-43470849) directly through the Marketing Syncing private app (`HUBSPOT_MARKETING_SYNCING_TOKEN` in the marketingsupport `.env`; 151 properties readable). The APEX campus editor and the hosted `campus-intro` route are no longer the only write path. Rules:
+
+- Read first, always: the audit line on the ticket names field, before, after, actor, time, and the ticket ids; the same line goes to `work-assets/apex-website-tickets/hubspot-program-writes-<date>.jsonl` in marketingsupport.
+- `website_campus_intro` keeps the `[DISPLAY_NAME]` placeholder and the second paragraph; only the status sentence changes. Open campus: "[DISPLAY_NAME] is open and enrolling."; Announced with a confirmed date: "[DISPLAY_NAME] is opening <Month Year>."; a requester's sentence only with the brand rules applied (no em dash).
+- `type` (Pre-Announcement, Announced, Open) changes only on an explicit decision recorded on the ticket (Jamaica Plain, Matt, 2026-09-22): it moves the map pin, community routing, and the page template.
+- `wordpress_post_id` is set only after the synced fields are compared with the page (the workflow skips empty values; a filled wrong value overwrites the page nightly).
+- Never change `display_name`, `admission_link`, tuition, or address without the owning person's decision (Farhan, Cory, Rachel) on the ticket.
+- Nothing publishes until the nightly run (00:15 CT); the ticket stays In Progress until the page is verified the next morning with a section capture.
+
 ## Open campus with launch words: fix, do not park
 
 An Open campus page showing launch copy ("is launching in Fall 2026", "Coming Fall 2026") is the most damaging copy defect on the site (decision 2026-09-22). The element is n8n-written from the HubSpot Program, so the fix is the Program field, never WordPress. Rule: the finding is filed HIGH, it goes to the website-agent-operator with the requirement sentence pre-filled ("Alpha <Campus> is open and enrolling.") and the APEX campus editor path, it is listed at the top of every sweep report until the page is clean after a nightly run, and it never sits in Blocked waiting on a scope or a decision. The reviewer's note on any other ticket for that page names it on the "Also open on this page" line.
