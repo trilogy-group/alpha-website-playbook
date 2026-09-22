@@ -32,6 +32,17 @@ An OPERATOR INSTRUCTION note on a ticket outranks the classifier (protocol 1c). 
 
 The agent files them itself (decision 2026-09-19): `node agent/file-found-ticket.mjs <payload.json>` deduplicates against open tickets by idempotency key, title, and page plus check, creates the APEX Request, and assigns the class owner from the policy bundle (website operations when the role has no person). The payload shape is the one the batches produced: title, description (page, expected, observed, evidence, recommended path, done when), url, program, customFields with `source: agent-found`, `checkId`, `foundWhileWorking`, `idempotencyKey`, `ownerRole`. Tooling defects (Alpha MCP, playbook scripts) are not APEX website tickets; they go to the repo as issues or PRs and are named in the run report.
 
+## Status means one thing
+
+Decided 2026-09-22 after Matt's first review pass found plan-only and waiting tickets parked in For Review:
+
+- **For Review**: the work is done and verified, and the reviewer's click completes it. Nothing else goes here. A ticket that also needs a yes-or-no from the reviewer may stay only when that answer is the last step (the note says "Complete after <one question>").
+- **Missing Info**: waiting on the requester, with the exact ask; assigned to the requester (the coordinator relays when the requester has no APEX user).
+- **Blocked**: waiting on anyone else (a decision, another system's owner, a packet, a deploy); assigned to that person, with "DECISION NEEDED" in the note when it is a decision. Reviewer decisions live here, filtered by assignee, not in For Review.
+- **In Progress**: a person or agent is executing now, or a published source change is waiting for its nightly run.
+
+A plan the reviewer must approve before execution is Blocked on the reviewer, not For Review.
+
 ## The review
 
 The reviewer works from APEX, not from a dashboard: the For Review queue filtered to website requests (`/intake?status=FOR_REVIEW&requestType=Website`), one ticket at a time. Each agent-closed ticket carries the page in its URL field (set by intake when the requester left it empty, or by the agent), its screenshots in the panel's Evidence section directly under that field, and a RESOLUTION note whose first three lines are Go here, Look for, Recommend (protocol section 7). The Evidence section shows one card per run: the section crops first, at a legible size, each labelled with the element it shows ("events strip", "team carousel: Isabella Cofresi card"), its viewport, and its capture time; then the full-page desktop and mobile pair as context; the card names the page, run id, and who attached it, and every thumbnail opens full size. The reviewer reads the three lines, looks at the section crop for the thing Look for names, clicks the URL only when the crop leaves a doubt, and completes or sends back. Send back, without looking further, when: there is no Evidence section (the rendered result was never attached); there is only a full-page pair and no section crop (the reviewer would have to hunt inside a thumbnail, which is what failed on the Park City events ticket, 2026-09-22); or the section crop does not show what Look for names (wrong element, images grey, the card cut off). The readiness card above the URL field reads "Awaiting review" on a For Review ticket; its intake checks are history, not a claim that the work is still to be done. Anything that needs more than that from the reviewer is the agent's gap to fix in the note, not the reviewer's job to dig for.

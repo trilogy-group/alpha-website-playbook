@@ -123,7 +123,7 @@ Write to the ticket, in this order, so a reviewer can read the outcome in ten se
 RESOLUTION (actor, date, playbook version)
 Go here: <canonical URL>            (also set as the ticket's URL field, so the panel shows the link)
 Look for: <one line: the exact card, sentence, or button the reviewer should see, and where on the page>
-Recommend: Complete | Complete after <decision> | Keep open because <reason>
+Recommend: Complete | Complete after <one question for the reviewer>   (a ticket that is not completable by the reviewer is not For Review: Missing Info or Blocked, see docs/sweep-runbook.md "Status means one thing")
 Page: <canonical URL> (object <id>)
 Change: "<before>" -> "<after>" in <section / field>
 Evidence: before hash, after hash, snapshot ref; section capture of <the element Look for names> attached with agent/attach-evidence.mjs --section (desktop, mobile) plus the full-page pair; the Look for line names what the section capture shows
