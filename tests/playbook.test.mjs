@@ -35,7 +35,8 @@ import {
   resolveDeck,
 } from '../agent/roster-diff.mjs'
 import { buildSyntheticPptx, syntheticImage } from './fixtures/roster-diff/build-synthetic-pptx.mjs'
-import { AttachEvidenceError, MAX_BYTES, apexBases, attachEvidence, main as attachEvidenceMain, planEvidence } from '../agent/attach-evidence.mjs'
+import { AttachEvidenceError, MAX_BYTES, MAX_SECTION_LENGTH, apexBases, attachEvidence, main as attachEvidenceMain, planEvidence } from '../agent/attach-evidence.mjs'
+import { DEVICE_SCALE_FACTOR, PADDING_PX, SectionShotError, VIEWPORTS as SECTION_VIEWPORTS, clipWithPadding, outputFile, parseArgs as parseSectionArgs, planSectionShot, slugify } from './section-shot.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'policy-bundle.generated.json'), 'utf8'))
@@ -706,7 +707,7 @@ test('attach-evidence posts exactly the route fields for desktop then mobile and
     assert.equal(call.url, 'http://127.0.0.1:4010/api/agent/tasks/cmticket1/evidence/screenshots')
     assert.equal(call.method, 'POST')
     assert.equal(call.authorization, 'Bearer test-operator-key')
-    assert.deepEqual(Object.keys(call.fields).sort(), ['agentRunId', 'capturedAt', 'label', 'pageUrl', 'sha256', 'viewport'], 'nothing else is sent')
+    assert.deepEqual(Object.keys(call.fields).sort(), ['agentRunId', 'capturedAt', 'label', 'pageUrl', 'sha256', 'viewport'], 'nothing else is sent; no section means the full page')
     assert.equal(call.fields.pageUrl, 'https://alpha.school/austin/')
     assert.equal(call.fields.agentRunId, 'sweep-2026-09-22-a')
     assert.equal(call.fields.capturedAt, '2026-09-22T09:58:00.000Z')
@@ -720,6 +721,83 @@ test('attach-evidence posts exactly the route fields for desktop then mobile and
   assert.match(logs[1], /^mobile: already attached https:\/\/cdn\.example\/mobile\.png/)
   const source = fs.readFileSync(path.join(root, 'agent', 'attach-evidence.mjs'), 'utf8')
   for (const forbidden of [/ALPHA_WP_/, /staff-asset-binding/, /\/status/, /\/comment'/, /wp-json/]) assert.doesNotMatch(source, forbidden, `the tool must not reach ${forbidden}`)
+})
+
+// Section captures, 2026-09-22: the crop of the element "Look for" names goes up as its own pair with --section, so the
+// reviewer sees it first and legible instead of hunting inside a full-page thumbnail (Park City events review).
+test('attach-evidence --section posts the section name with both files and refuses an empty or over-long one', async () => {
+  const fixture = evidenceFixture()
+  const plan = planEvidence({ ...fixture.args, section: '  team carousel: Isabella Cofresi card  ' })
+  assert.equal(plan.section, 'team carousel: Isabella Cofresi card', 'trimmed')
+  assert.equal(planEvidence(fixture.args).section, null, 'omitted means the full-page pair')
+  assert.equal(attachError(() => planEvidence({ ...fixture.args, section: true }), 'MISSING_ARG').message.startsWith('--section needs the name'), true)
+  attachError(() => planEvidence({ ...fixture.args, section: '   ' }), 'MISSING_ARG')
+  attachError(() => planEvidence({ ...fixture.args, section: 's'.repeat(MAX_SECTION_LENGTH + 1) }), 'MISSING_ARG')
+  assert.equal(planEvidence({ ...fixture.args, section: 's'.repeat(MAX_SECTION_LENGTH) }).section.length, MAX_SECTION_LENGTH)
+  const { calls, fetchImpl } = mockApex((call, n) => ({ status: 201, body: { existing: false, claimPath: 'operator', screenshotUrl: `https://cdn.example/events-${call.fields.viewport}.png`, section: call.fields.section, asset: { id: `asset${n}`, url: `https://cdn.example/events-${call.fields.viewport}.png`, sha256: call.file.sha256 } } }))
+  const logs = []
+  await attachEvidence(planEvidence({ ...fixture.args, section: 'events strip' }), { token: 'test-operator-key', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl, log: (line) => logs.push(line) })
+  assert.equal(calls.length, 2)
+  for (const call of calls) {
+    assert.deepEqual(Object.keys(call.fields).sort(), ['agentRunId', 'capturedAt', 'pageUrl', 'section', 'sha256', 'viewport'], 'the section rides with the same fields, nothing else')
+    assert.equal(call.fields.section, 'events strip')
+    assert.equal(call.fields.sha256, call.file.sha256)
+  }
+  assert.deepEqual(calls.map((c) => c.fields.viewport), ['desktop', 'mobile'])
+  assert.match(logs[0], /^desktop \[events strip\]: attached https:\/\/cdn\.example\/events-desktop\.png/)
+  // A second invocation for the full-page pair on the same run posts without the field; the route keys on the bytes, so the two pairs never collide.
+  const full = mockApex(() => ({ status: 201, body: {} }))
+  await attachEvidence(planEvidence(fixture.args), { token: 't', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl: full.fetchImpl })
+  assert.ok(full.calls.every((c) => !('section' in c.fields)))
+  const dryLogs = []
+  const dry = await attachEvidenceMain(['--ticket', 'cmticket1', '--run', 'r', '--page', 'https://alpha.school/austin/', '--desktop', fixture.desktop, '--mobile', fixture.mobile, '--section', 'events strip', '--dry-run'], { APEX_API_TOKEN: '' }, { log: (line) => dryLogs.push(line), error: () => {} })
+  assert.equal(dry.plan.section, 'events strip')
+  assert.equal(JSON.parse(dryLogs[0]).section, 'events strip')
+})
+
+test('section-shot plans the two crops from the arguments without launching a browser', () => {
+  const args = parseSectionArgs(['--url', 'https://alpha.school/park-city/', '--selector', '#hubspot_events', '--name', 'events strip', '--out', '/tmp/ev', '--json', '/tmp/ev/shot.json'])
+  const plan = planSectionShot(args)
+  assert.equal(plan.url, 'https://alpha.school/park-city/')
+  assert.equal(plan.selector, '#hubspot_events')
+  assert.equal(plan.name, 'events strip')
+  assert.deepEqual(plan.viewports, ['desktop', 'mobile'], 'both by default, in the order attach-evidence posts them')
+  assert.deepEqual(plan.files, { desktop: '/tmp/ev/events-strip-desktop.png', mobile: '/tmp/ev/events-strip-mobile.png' }, 'named like the rendered-controls pair so attach-evidence takes them unchanged')
+  assert.equal(plan.json, '/tmp/ev/shot.json')
+  assert.equal(plan.timeoutMs, 15000)
+  assert.deepEqual(SECTION_VIEWPORTS, { desktop: { width: 1440, height: 1000 }, mobile: { width: 390, height: 844 } }, 'the rendered-controls viewports')
+  assert.equal(DEVICE_SCALE_FACTOR, 2)
+  // The name defaults to the selector; either way the file slug is filesystem-safe and the section name keeps its spelling for --section.
+  const bySelector = planSectionShot({ url: 'https://alpha.school/miami/', selector: '#team_carousel .swiper-slide:nth-child(4)', viewports: 'desktop', timeout: '5000' })
+  assert.equal(bySelector.name, '#team_carousel .swiper-slide:nth-child(4)')
+  assert.deepEqual(Object.keys(bySelector.files), ['desktop'])
+  assert.match(bySelector.files.desktop, /\/evidence\/team-carousel-swiper-slide-nth-child-4-desktop\.png$/)
+  assert.equal(bySelector.timeoutMs, 5000)
+  assert.equal(slugify('team carousel: Isabella Cofresi card'), 'team-carousel-isabella-cofresi-card')
+  assert.equal(slugify('!!!'), 'section')
+  assert.equal(outputFile('/x', 'Events Strip', 'mobile'), '/x/events-strip-mobile.png')
+  // Typed failures before any browser work.
+  const shotError = (fn, code) => { try { fn() } catch (error) { assert.ok(error instanceof SectionShotError, error.stack); assert.equal(error.code, code); return error } assert.fail(`expected ${code}`) }
+  shotError(() => planSectionShot({ selector: '#x' }), 'MISSING_ARG')
+  shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: true }), 'MISSING_ARG')
+  shotError(() => planSectionShot({ url: 'http://alpha.school/', selector: '#x' }), 'BAD_URL')
+  shotError(() => planSectionShot({ url: 'alpha.school', selector: '#x' }), 'BAD_URL')
+  shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: '#x', viewports: 'desktop,tablet' }), 'BAD_VIEWPORT')
+  shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: '#x', timeout: 'soon' }), 'MISSING_ARG')
+  // The clip is the element's page-coordinate box plus the margin, never outside the document.
+  assert.deepEqual(clipWithPadding({ x: 20, y: 300, width: 1400, height: 483 }, { x: 0, y: 1869, width: 1440, height: 6000 }, PADDING_PX), { x: 4, y: 2153, width: 1432, height: 515 })
+  assert.deepEqual(clipWithPadding({ x: 0, y: 0, width: 1440, height: 100 }, { x: 0, y: 0, width: 1440, height: 5000 }, PADDING_PX), { x: 0, y: 0, width: 1440, height: 116 }, 'clamped at the top-left')
+  assert.deepEqual(clipWithPadding({ x: 10, y: 4950, width: 1420, height: 60 }, { x: 0, y: 0, width: 1440, height: 5000 }, PADDING_PX), { x: 0, y: 4934, width: 1440, height: 66 }, 'clamped at the bottom-right')
+  const source = fs.readFileSync(path.join(root, 'tests', 'section-shot.mjs'), 'utf8')
+  assert.match(source, /img\.decode\(\)/, 'waits on decode, not only complete/naturalWidth (San Francisco 2026-09-22: decoding=async reported complete before painting)')
+  assert.match(source, /deviceScaleFactor: DEVICE_SCALE_FACTOR/)
+  for (const forbidden of [/ALPHA_WP_/, /APEX_API_TOKEN/, /wp-json/]) assert.doesNotMatch(source, forbidden, `the capture tool must not reach ${forbidden}`)
+})
+
+test('section-shot CLI exits 2 on a typed input error without launching a browser', () => {
+  const run = spawnSync(process.execPath, [path.join(root, 'tests', 'section-shot.mjs'), '--url', 'http://alpha.school/park-city/', '--selector', '#hubspot_events'], { encoding: 'utf8' })
+  assert.equal(run.status, 2, run.stderr)
+  assert.match(run.stderr, /^BAD_URL: --url must be https/)
 })
 
 test('attach-evidence surfaces an APEX 4xx with its body, stops before the next file, and reports a hash disagreement', async () => {

@@ -8,7 +8,7 @@ Applies to the intro card slot and any image whose file name, alt text, or nearb
 2. Look up the approved asset in `registry/campus-open-media.json` (intro card) or in the ticket (requester-supplied image with the requester's confirmation). No approved asset means Missing Info naming the owner. Never substitute another campus's image or unrelated footage.
 3. If the asset is not yet in WordPress, `upload_media_from_apex_asset` with a confirmed mapping.
 4. `prepare_elementor_content_patch` with one `set_image` edit and `expectedCurrentAttachmentId`; check the diff touches only that widget.
-5. Apply, regenerate CSS, clear cache. Ring 1: the new attachment id renders on the canonical URL. Ring 2: screenshot of the section; no other campus named in any image name or alt text on the page. Ring 3 after cache clear. Attach the desktop and mobile captures to the ticket with `agent/attach-evidence.mjs` before the RESOLUTION note (protocol section 7).
+5. Apply, regenerate CSS, clear cache. Ring 1: the new attachment id renders on the canonical URL. Ring 2: section capture of the changed section (`tests/section-shot.mjs`, images decoded) attached with `agent/attach-evidence.mjs --section`, plus the full-page pair; no other campus named in any image name or alt text on the page. Ring 3 after cache clear. Attach the desktop and mobile captures to the ticket with `agent/attach-evidence.mjs` before the RESOLUTION note (protocol section 7).
 
 ## Copy (`copy`, `observer-brand-leak`, `observer-launch-copy` text part)
 

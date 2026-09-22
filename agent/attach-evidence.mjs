@@ -5,14 +5,18 @@
  *
  *   node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical url> \
  *     --desktop ./evidence/austin-desktop.png --mobile ./evidence/austin-mobile.png [--label "..."] \
- *     [--captured-at <ISO datetime, default: each file's mtime>] [--dry-run]
+ *     [--section "<element the pair is cropped to>"] [--captured-at <ISO datetime, default: each file's mtime>] [--dry-run]
  *
- * The two files are the `tests/rendered-controls.mjs --screenshots <dir>` output (`<slug>-desktop.png`,
- * `<slug>-mobile.png`, full page at 1440x1000 and 390x844). Each is hashed and posted as multipart form data to
- * POST /api/agent/tasks/{id}/evidence/screenshots with the operator key; APEX verifies the hash, stores the
- * bytes as an EVIDENCE_SCREENSHOT request asset on the ticket, posts the agent comment, and logs
- * agent_evidence_added. The call is idempotent on (ticket, viewport, sha256): a rerun answers 200 with the
- * existing record. Nothing else is sent, and nothing here writes to WordPress.
+ * Without --section the two files are the full-page `tests/rendered-controls.mjs --screenshots <dir>` output
+ * (`<slug>-desktop.png`, `<slug>-mobile.png`, 1440x1000 and 390x844). With --section "<name>" they are the
+ * `tests/section-shot.mjs` crops of the element "Look for" names (`<slug>-desktop.png`, `<slug>-mobile.png` at
+ * deviceScaleFactor 2, images decoded), and APEX shows them first in the ticket's Evidence section at a legible
+ * size. One invocation per pair: run it once for the section pair and once for the full-page pair, same run id.
+ * Each file is hashed and posted as multipart form data to POST /api/agent/tasks/{id}/evidence/screenshots with
+ * the operator key; APEX verifies the hash, stores the bytes as an EVIDENCE_SCREENSHOT request asset on the
+ * ticket, posts the agent comment, and logs agent_evidence_added. The call is idempotent on (ticket, viewport,
+ * sha256): a rerun answers 200 with the existing record, and a section crop is a different file from the full
+ * page so the two pairs never collide. Nothing else is sent, and nothing here writes to WordPress.
  *
  * Env: APEX_API_TOKEN (operator key), APEX_API_BASE (optional; derived the way agent/intake.mjs derives it),
  * APEX_AGENT_API_BASE (optional override of the /api/agent origin).
@@ -24,6 +28,8 @@ import { fileURLToPath } from 'node:url'
 
 export const MAX_BYTES = 6 * 1024 * 1024
 export const VIEWPORTS = ['desktop', 'mobile']
+/** The route's cap on the section name (EvidenceScreenshotFieldsSchema in APEX). */
+export const MAX_SECTION_LENGTH = 80
 
 export class AttachEvidenceError extends Error {
   /** @param {'MISSING_ARG'|'MISSING_TOKEN'|'BAD_PAGE_URL'|'MISSING_FILE'|'NOT_IMAGE'|'TOO_LARGE'|'APEX_ERROR'|'NETWORK'} code */
@@ -67,6 +73,12 @@ export function planEvidence(args) {
   if (page.protocol !== 'https:') throw new AttachEvidenceError('BAD_PAGE_URL', `--page must be https, got ${args.page}`)
   if (page.search) throw new AttachEvidenceError('BAD_PAGE_URL', `--page must be the query-free canonical URL, got ${args.page}`)
   const label = args.label && args.label !== true ? String(args.label).trim().slice(0, 200) : null
+  let section = null
+  if (args.section !== undefined) {
+    section = args.section === true ? '' : String(args.section).trim()
+    if (!section) throw new AttachEvidenceError('MISSING_ARG', '--section needs the name of the element the pair is cropped to (for example "events strip"); omit it for the full-page pair')
+    if (section.length > MAX_SECTION_LENGTH) throw new AttachEvidenceError('MISSING_ARG', `--section must be ${MAX_SECTION_LENGTH} characters or fewer, got ${section.length}`)
+  }
   let capturedAt = null
   if (args['captured-at'] && args['captured-at'] !== true) {
     const parsed = new Date(args['captured-at'])
@@ -74,7 +86,7 @@ export function planEvidence(args) {
     capturedAt = parsed.toISOString()
   }
   const screenshots = VIEWPORTS.map((viewport) => readScreenshot(viewport, args[viewport], capturedAt))
-  return { ticket: String(args.ticket), run: String(args.run), page: page.toString(), label, screenshots }
+  return { ticket: String(args.ticket), run: String(args.run), page: page.toString(), label, section, screenshots }
 }
 
 function multipart(plan, shot) {
@@ -86,6 +98,7 @@ function multipart(plan, shot) {
   form.append('capturedAt', shot.capturedAt)
   form.append('sha256', shot.sha256)
   if (plan.label) form.append('label', plan.label)
+  if (plan.section) form.append('section', plan.section)
   return form
 }
 
@@ -113,7 +126,7 @@ export async function attachEvidence(plan, { token, agentBase, fetchImpl = globa
     const result = { viewport: shot.viewport, file: shot.file, sha256: shot.sha256, sizeBytes: shot.sizeBytes, status: response.status, existing: Boolean(body.existing),
       screenshotUrl: body.screenshotUrl || body.asset?.url || null, assetId: body.asset?.id || null, claimPath: body.claimPath || null, commentId: body.commentId || null, activityId: body.activityId || null }
     results.push(result)
-    log(`${shot.viewport}: ${result.existing ? 'already attached' : 'attached'} ${result.screenshotUrl || '(no url returned)'} (sha256 ${shot.sha256.slice(0, 12)}…, ${result.claimPath || 'unknown'} path)`)
+    log(`${shot.viewport}${plan.section ? ` [${plan.section}]` : ''}: ${result.existing ? 'already attached' : 'attached'} ${result.screenshotUrl || '(no url returned)'} (sha256 ${shot.sha256.slice(0, 12)}…, ${result.claimPath || 'unknown'} path)`)
   }
   return results
 }
@@ -131,7 +144,7 @@ export function parseArgs(argv) {
 export async function main(argv = process.argv.slice(2), env = process.env, io = { log: console.log, error: console.error }) {
   const args = parseArgs(argv)
   const plan = planEvidence(args)
-  const shown = { ticket: plan.ticket, run: plan.run, page: plan.page, label: plan.label, screenshots: plan.screenshots.map(({ bytes, ...rest }) => rest) }
+  const shown = { ticket: plan.ticket, run: plan.run, page: plan.page, label: plan.label, section: plan.section, screenshots: plan.screenshots.map(({ bytes, ...rest }) => rest) }
   if (args['dry-run']) { io.log(JSON.stringify({ dryRun: true, ...shown }, null, 2)); return { dryRun: true, plan: shown } }
   const { agentBase } = apexBases(env)
   const results = await attachEvidence(plan, { token: env.APEX_API_TOKEN, agentBase, log: io.log })

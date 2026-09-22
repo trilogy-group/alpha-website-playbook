@@ -102,7 +102,7 @@ All three rings run on the canonical public URL after cache clearing. Screenshot
 - Every CTA and resource link resolves to a reachable, campus-specific destination.
 - Staff cards render without clipped faces; events strip shows only this campus's events.
 - The page's own observer assertions pass (`registry/observer-checks.json`).
-- Screenshot of the top of the page and of the changed section, inspected by the actor; the full-page desktop and mobile captures (`tests/rendered-controls.mjs --screenshots <dir>`) are attached to the ticket in step 7 with `agent/attach-evidence.mjs`.
+- Screenshot of the top of the page and of the changed section, inspected by the actor. Two pairs go to the ticket in step 7 with `agent/attach-evidence.mjs`: the section pair, a crop of the element "Look for" names taken with `tests/section-shot.mjs --url <page> --selector <css> --name "<section>"` after every image inside it has decoded (`img.decode()`; a lazy image that reports `complete` before it paints is a grey box, Park City events 2026-09-22), and the full-page pair from `tests/rendered-controls.mjs --screenshots <dir>`. If `section-shot.mjs` exits 1 (`IMAGES_NOT_DECODED`) the crop is not evidence yet: scroll or wait again, and if an image never loads for a visitor either, that is a finding.
 
 **Ring 3, shared templates.** After any site-wide action (cache clear, CSS regeneration, header or footer edit, plugin change), re-verify ring 2's header and footer checks on two untouched pages. This is what catches a cached render that lost its stylesheet. After a cache flush, `tests/page-check.mjs` on the edited page must show `edge-cache-current` passing: it compares the visitor-facing copy with a cache-busting fetch. Rendered checks bypass the edge cache and cannot see a stale copy; on 2026-09-18 four Southlake flushes replayed as noops and visitors kept the old page while every rendered check passed.
 
@@ -126,7 +126,7 @@ Look for: <one line: the exact card, sentence, or button the reviewer should see
 Recommend: Complete | Complete after <decision> | Keep open because <reason>
 Page: <canonical URL> (object <id>)
 Change: "<before>" -> "<after>" in <section / field>
-Evidence: before hash, after hash, snapshot ref; desktop and mobile screenshots attached to the ticket with agent/attach-evidence.mjs; the Go here / Look for lines point at what the screenshots show
+Evidence: before hash, after hash, snapshot ref; section capture of <the element Look for names> attached with agent/attach-evidence.mjs --section (desktop, mobile) plus the full-page pair; the Look for line names what the section capture shows
 Tests: ring 1 pass; ring 2 pass (desktop, mobile); ring 3 pass (<two pages>)
 Observer: <check ids> cleared on run <id>   (observer tickets only)
 ```
@@ -135,7 +135,14 @@ Then set Completed. If any item cannot be written, the ticket is not complete.
 
 The first three lines exist so the reviewer can work from the APEX For Review queue alone: open the ticket, read three lines, click the URL, look at one thing, decide. A note that makes the reviewer search APEX or the site for the page is not finished. When the ticket names several pages, "Go here" is the page with the largest change and the others follow on the Page lines.
 
-The Evidence line is satisfied by attaching, not by linking. Before writing the note, run `node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <slug>-desktop.png --mobile <slug>-mobile.png` on the ring 2 files that `tests/rendered-controls.mjs --screenshots <dir>` wrote after the cache clear. APEX stores them on the ticket and shows them in the panel's Evidence section under the URL field (desktop and mobile side by side, page, capture time, run id, who attached them), so the reviewer sees the rendered page without leaving APEX; the tool prints the served URLs for the run report. A ticket that names several pages gets one attach call per page with the same run id. If the tool refuses (typed error: missing file, not a PNG or JPEG, over 6 MB, or an APEX 4xx with its body), fix the cause and rerun; it is idempotent, so a rerun never duplicates a screenshot. The Go here and Look for lines describe what those screenshots show.
+The Evidence line is satisfied by attaching, not by linking, and it requires two pairs on the same run id (decision 2026-09-22, Matt Barge, after the Park City events ticket could not be verified from a full-page thumbnail whose event cards were grey):
+
+1. The section pair: a crop of the element the Look for line names, on desktop and mobile, with every image inside it decoded. `node tests/section-shot.mjs --url <canonical URL> --selector <css of that element> --name "<section>" --out <dir>` writes `<slug>-desktop.png` and `<slug>-mobile.png` at deviceScaleFactor 2 and refuses to call it done while an image has not decoded (exit 1, the file is still written and the report names the image). Attach with `node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <slug>-desktop.png --mobile <slug>-mobile.png --section "<section>"`. The section name is what the reviewer reads above the thumbnail: name the element, not the file ("events strip", "team carousel: Isabella Cofresi card"), 80 characters at most.
+2. The full-page pair: the ring 2 files that `tests/rendered-controls.mjs --screenshots <dir>` wrote after the cache clear, attached with the same command without `--section`.
+
+APEX stores both pairs on the ticket and shows them in the panel's Evidence section under the URL field: the section crops first at a legible size, then the full page, each thumbnail with its section name or "full page", viewport, and capture time, and the run's page, run id, and who attached it; the reviewer sees the element without leaving APEX, and the tool prints the served URLs for the run report. A ticket that names several pages gets the two pairs per page with the same run id. If the tool refuses (typed error: missing file, not a PNG or JPEG, over 6 MB, or an APEX 4xx with its body), fix the cause and rerun; it is idempotent on the file bytes, so a rerun never duplicates a screenshot and the section pair never collides with the full-page pair.
+
+The Look for line and the section capture must agree: a note whose Look for names something the attached section capture does not show (a card the crop cut off, an event strip captured before its images painted, a different section) is not finished, and the reviewer sends it back.
 
 Missing Info template:
 
