@@ -273,7 +273,10 @@ async function applyDecision(ticket, result) {
   if (intakePendingHash !== result.decisionSha256) {
     throw new Error('Ticket input or intake state changed during administration; leaving the decision pending for a fresh evaluation')
   }
-  if (ticketInputSha256(finalized) !== result.inputSha256) {
+  // The URL intake wrote for the reviewer is intake's own, not requester input: compare against the value the
+  // requester left (2026-09-22; L1 found finalization failing on every ticket whose requester left it empty).
+  const finalizedInput = reviewUrl.url && finalized.url === reviewUrl.url ? { ...finalized, url: preflight.url } : finalized
+  if (ticketInputSha256(finalizedInput) !== result.inputSha256) {
     throw new Error('Ticket received new requester or human input during administration; leaving the decision pending for a fresh evaluation')
   }
   await v1(`/tasks/${ticket.id}`, 'PATCH', {
