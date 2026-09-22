@@ -102,7 +102,7 @@ All three rings run on the canonical public URL after cache clearing. Screenshot
 - Every CTA and resource link resolves to a reachable, campus-specific destination.
 - Staff cards render without clipped faces; events strip shows only this campus's events.
 - The page's own observer assertions pass (`registry/observer-checks.json`).
-- Screenshot of the top of the page and of the changed section, inspected by the actor.
+- Screenshot of the top of the page and of the changed section, inspected by the actor; the full-page desktop and mobile captures (`tests/rendered-controls.mjs --screenshots <dir>`) are attached to the ticket in step 7 with `agent/attach-evidence.mjs`.
 
 **Ring 3, shared templates.** After any site-wide action (cache clear, CSS regeneration, header or footer edit, plugin change), re-verify ring 2's header and footer checks on two untouched pages. This is what catches a cached render that lost its stylesheet. After a cache flush, `tests/page-check.mjs` on the edited page must show `edge-cache-current` passing: it compares the visitor-facing copy with a cache-busting fetch. Rendered checks bypass the edge cache and cannot see a stale copy; on 2026-09-18 four Southlake flushes replayed as noops and visitors kept the old page while every rendered check passed.
 
@@ -126,7 +126,7 @@ Look for: <one line: the exact card, sentence, or button the reviewer should see
 Recommend: Complete | Complete after <decision> | Keep open because <reason>
 Page: <canonical URL> (object <id>)
 Change: "<before>" -> "<after>" in <section / field>
-Evidence: before hash, after hash, snapshot ref, screenshot links
+Evidence: before hash, after hash, snapshot ref; desktop and mobile screenshots attached to the ticket with agent/attach-evidence.mjs; the Go here / Look for lines point at what the screenshots show
 Tests: ring 1 pass; ring 2 pass (desktop, mobile); ring 3 pass (<two pages>)
 Observer: <check ids> cleared on run <id>   (observer tickets only)
 ```
@@ -134,6 +134,8 @@ Observer: <check ids> cleared on run <id>   (observer tickets only)
 Then set Completed. If any item cannot be written, the ticket is not complete.
 
 The first three lines exist so the reviewer can work from the APEX For Review queue alone: open the ticket, read three lines, click the URL, look at one thing, decide. A note that makes the reviewer search APEX or the site for the page is not finished. When the ticket names several pages, "Go here" is the page with the largest change and the others follow on the Page lines.
+
+The Evidence line is satisfied by attaching, not by linking. Before writing the note, run `node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <slug>-desktop.png --mobile <slug>-mobile.png` on the ring 2 files that `tests/rendered-controls.mjs --screenshots <dir>` wrote after the cache clear. APEX stores them on the ticket and shows them in the panel's Evidence section under the URL field (desktop and mobile side by side, page, capture time, run id, who attached them), so the reviewer sees the rendered page without leaving APEX; the tool prints the served URLs for the run report. A ticket that names several pages gets one attach call per page with the same run id. If the tool refuses (typed error: missing file, not a PNG or JPEG, over 6 MB, or an APEX 4xx with its body), fix the cause and rerun; it is idempotent, so a rerun never duplicates a screenshot. The Go here and Look for lines describe what those screenshots show.
 
 Missing Info template:
 

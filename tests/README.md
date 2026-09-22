@@ -68,6 +68,15 @@ node agent/intake.mjs --since 2026-09-17T00:00:00Z --apply                   # a
 
 Rollout: keep `INTAKE_APPLY` false; replay the open queue read-only; review missing-info, owner, duplicate, and execution-eligibility deltas; then run one explicitly dispatched APEX-only canary batch reviewed by Matt and Yash. Enable scheduled apply only after the canaries and owner-registry gaps are accepted.
 
+## agent/attach-evidence.mjs (screenshots onto the ticket)
+
+Attaches the ring 2 desktop and mobile captures (`tests/rendered-controls.mjs --screenshots <dir>` output) to the APEX ticket through `POST /api/agent/tasks/{id}/evidence/screenshots` with the operator key (`APEX_API_TOKEN`, `APEX_API_BASE` derived as intake derives them). Each file is hashed and posted with the viewport, page URL, run id, and capture time; APEX verifies the hash, stores the bytes on the ticket, posts the agent comment, logs who attached what and when, and shows the pair in the ticket panel's Evidence section. Idempotent per (ticket, viewport, sha256). Fails closed with typed errors (`MISSING_ARG`, `BAD_PAGE_URL`, `MISSING_FILE`, `NOT_IMAGE`, `TOO_LARGE`, `MISSING_TOKEN`, `APEX_ERROR` with the status and body, `NETWORK`) and sends nothing else. Tests use a mocked fetch.
+
+```bash
+node agent/attach-evidence.mjs --ticket <id> --run <runId> --page https://alpha.school/austin/ \
+  --desktop ./evidence/austin-desktop.png --mobile ./evidence/austin-mobile.png [--label "..."] [--captured-at <ISO>] [--dry-run]
+```
+
 ## agent/roster-diff.mjs (read-only roster plan)
 
 Compares a registered campus "Meet the Team" deck (`registry/staff-source-decks.json`) with the live Team section and writes a For Review plan: adds, removes, title, bio, and photo differences, membership only, with a proposed `agent/bind-headshot.mjs` binding per add and photo change. It never writes to WordPress or APEX and never binds a photo. Usage, typed errors, and limits: `docs/headshot-binding.md`.

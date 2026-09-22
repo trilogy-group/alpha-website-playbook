@@ -21,7 +21,7 @@ The Alpha MCP refuses a write against a stale document hash, so two agents editi
 
 Rules from `protocols/apex-website-ticket-protocol.md`, in order: intake (dry, then `--apply`), read the live rendered page, diagnose who writes the element (`spec/synced-targets.json`, `spec/campus-page-controls.json`), then one of four ends, each leaving the ticket with a named person:
 
-- Execute with receipts (`apexTicketId`, `runId` on every call), rendered evidence on desktop and mobile, `page-check` including `edge-cache-current`, and Completed.
+- Execute with receipts (`apexTicketId`, `runId` on every call), rendered evidence on desktop and mobile attached to the ticket (`agent/attach-evidence.mjs` on the `rendered-controls.mjs --screenshots` files, same `runId`), `page-check` including `edge-cache-current`, and Completed.
 - Missing Info to the requester, listing exactly what is needed.
 - Route to the owning system's person with the audit line (field, current value, new value, source); never touch WordPress for an n8n- or HubSpot-written element.
 - Escalate to website operations (Matt Barge) as Blocked when the owner role has no registered person (protocol 1d).
@@ -34,7 +34,7 @@ The agent files them itself (decision 2026-09-19): `node agent/file-found-ticket
 
 ## The review
 
-The reviewer works from APEX, not from a dashboard: the For Review queue filtered to website requests (`/intake?status=FOR_REVIEW&requestType=Website`), one ticket at a time. Each agent-closed ticket carries the page in its URL field (set by intake when the requester left it empty, or by the agent) and a RESOLUTION note whose first three lines are Go here, Look for, Recommend (protocol section 7). The reviewer reads the three lines, clicks the URL, checks the one thing named, and completes or sends back. Anything that needs more than that from the reviewer is the agent's gap to fix in the note, not the reviewer's job to dig for.
+The reviewer works from APEX, not from a dashboard: the For Review queue filtered to website requests (`/intake?status=FOR_REVIEW&requestType=Website`), one ticket at a time. Each agent-closed ticket carries the page in its URL field (set by intake when the requester left it empty, or by the agent), its desktop and mobile screenshots in the panel's Evidence section directly under that field (attached by `agent/attach-evidence.mjs`; each card names the page, capture time, run id, and who attached it, and the thumbnails open full size), and a RESOLUTION note whose first three lines are Go here, Look for, Recommend (protocol section 7). The reviewer reads the three lines, looks at the two screenshots for the thing Look for names, clicks the URL only when the screenshots leave a doubt, and completes or sends back. A ticket with no Evidence section is not ready for review: send it back to the agent, because the rendered result was never attached. Anything that needs more than that from the reviewer is the agent's gap to fix in the note, not the reviewer's job to dig for.
 
 ## The report
 

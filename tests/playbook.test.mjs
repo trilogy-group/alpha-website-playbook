@@ -35,6 +35,7 @@ import {
   resolveDeck,
 } from '../agent/roster-diff.mjs'
 import { buildSyntheticPptx, syntheticImage } from './fixtures/roster-diff/build-synthetic-pptx.mjs'
+import { AttachEvidenceError, MAX_BYTES, apexBases, attachEvidence, main as attachEvidenceMain, planEvidence } from '../agent/attach-evidence.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'policy-bundle.generated.json'), 'utf8'))
@@ -620,4 +621,130 @@ test('roster diff CLI writes the plan and summary, and exits 2 with a typed erro
   const bad = spawnSync(process.execPath, [...base, '--campus', 'atlantis'], { encoding: 'utf8' })
   assert.equal(bad.status, 2)
   assert.equal(JSON.parse(bad.stderr).error.code, 'deck_not_registered')
+})
+
+// Screenshot evidence on the ticket, 2026-09-22: ring 2's desktop and mobile PNGs go to APEX so the reviewer sees them in the panel.
+const PNG_HEADER = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+function evidenceFixture({ desktopBytes = Buffer.concat([PNG_HEADER, Buffer.from('desktop')]), mobileBytes = Buffer.concat([PNG_HEADER, Buffer.from('mobile')]) } = {}) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-attach-evidence-'))
+  const desktop = path.join(tmp, 'austin-desktop.png'); fs.writeFileSync(desktop, desktopBytes)
+  const mobile = path.join(tmp, 'austin-mobile.png'); fs.writeFileSync(mobile, mobileBytes)
+  return { tmp, desktop, mobile, args: { ticket: 'cmticket1', run: 'sweep-2026-09-22-a', page: 'https://alpha.school/austin/', desktop, mobile } }
+}
+function attachError(fn, code) {
+  try { fn() } catch (error) { assert.ok(error instanceof AttachEvidenceError, error.stack); assert.equal(error.code, code); return error }
+  assert.fail(`expected ${code}`)
+}
+async function attachErrorAsync(promise, code) {
+  try { await promise } catch (error) { assert.ok(error instanceof AttachEvidenceError, error.stack); assert.equal(error.code, code); return error }
+  assert.fail(`expected ${code}`)
+}
+/** A fetch double that records each multipart post the way the APEX route would read it. */
+function mockApex(respond) {
+  const calls = []
+  const fetchImpl = async (url, init) => {
+    const form = init.body
+    const file = form.get('file')
+    const fields = Object.fromEntries([...form.entries()].filter(([key]) => key !== 'file'))
+    const bytes = Buffer.from(await file.arrayBuffer())
+    const call = { url, method: init.method, authorization: init.headers.Authorization, fields, file: { name: file.name, type: file.type, size: file.size, sha256: crypto.createHash('sha256').update(bytes).digest('hex') } }
+    calls.push(call)
+    const reply = respond(call, calls.length)
+    return new Response(JSON.stringify(reply.body), { status: reply.status, headers: { 'content-type': 'application/json' } })
+  }
+  return { calls, fetchImpl }
+}
+
+test('attach-evidence hashes both screenshots, derives the APEX bases like intake, and writes nothing on --dry-run', async () => {
+  const fixture = evidenceFixture()
+  const plan = planEvidence({ ...fixture.args, label: ' After staff update ', 'captured-at': '2026-09-22T09:58:00Z' })
+  assert.deepEqual(plan.screenshots.map((s) => [s.viewport, s.mimeType, s.sizeBytes, s.capturedAt]), [['desktop', 'image/png', 15, '2026-09-22T09:58:00.000Z'], ['mobile', 'image/png', 14, '2026-09-22T09:58:00.000Z']])
+  assert.equal(plan.screenshots[0].sha256, crypto.createHash('sha256').update(fs.readFileSync(fixture.desktop)).digest('hex'))
+  assert.equal(plan.label, 'After staff update')
+  assert.match(planEvidence(fixture.args).screenshots[1].capturedAt, /^\d{4}-\d{2}-\d{2}T/, 'defaults to the file mtime')
+  assert.deepEqual(apexBases({}), { v1Base: 'https://apex.2hourlearning.com/api/v1', agentBase: 'https://apex.2hourlearning.com/api/agent', origin: 'https://apex.2hourlearning.com' })
+  assert.equal(apexBases({ APEX_API_BASE: 'http://127.0.0.1:4010' }).agentBase, 'http://127.0.0.1:4010/api/agent')
+  assert.equal(apexBases({ APEX_API_BASE: 'http://127.0.0.1:4010/api/v1/', APEX_AGENT_API_BASE: 'http://127.0.0.1:4011/api/agent/' }).agentBase, 'http://127.0.0.1:4011/api/agent')
+  const logs = []
+  const dry = await attachEvidenceMain(['--ticket', 'cmticket1', '--run', 'r', '--page', 'https://alpha.school/austin/', '--desktop', fixture.desktop, '--mobile', fixture.mobile, '--dry-run'], { APEX_API_TOKEN: '' }, { log: (line) => logs.push(line), error: () => {} })
+  assert.equal(dry.dryRun, true)
+  assert.equal(JSON.parse(logs[0]).dryRun, true)
+  assert.ok(!JSON.stringify(dry).includes('"bytes"'), 'the plan shown never carries the bytes')
+})
+
+test('attach-evidence fails closed with typed errors: missing args, non-https or query page, missing file, not an image, over 6 MB, no token', async () => {
+  const fixture = evidenceFixture()
+  assert.equal(attachError(() => planEvidence({ ...fixture.args, ticket: undefined }), 'MISSING_ARG').message, '--ticket is required')
+  attachError(() => planEvidence({ ...fixture.args, run: true }), 'MISSING_ARG')
+  attachError(() => planEvidence({ ...fixture.args, mobile: undefined }), 'MISSING_ARG')
+  attachError(() => planEvidence({ ...fixture.args, page: 'http://alpha.school/austin/' }), 'BAD_PAGE_URL')
+  attachError(() => planEvidence({ ...fixture.args, page: 'https://alpha.school/austin/?nocache=1' }), 'BAD_PAGE_URL')
+  attachError(() => planEvidence({ ...fixture.args, page: 'alpha.school/austin' }), 'BAD_PAGE_URL')
+  attachError(() => planEvidence({ ...fixture.args, 'captured-at': 'yesterday' }), 'MISSING_ARG')
+  const missing = attachError(() => planEvidence({ ...fixture.args, desktop: path.join(fixture.tmp, 'nope.png') }), 'MISSING_FILE')
+  assert.match(missing.message, /ENOENT/)
+  const svg = path.join(fixture.tmp, 'fake.png'); fs.writeFileSync(svg, '<svg xmlns="http://www.w3.org/2000/svg"/>')
+  attachError(() => planEvidence({ ...fixture.args, desktop: svg }), 'NOT_IMAGE')
+  const big = path.join(fixture.tmp, 'big.png'); fs.writeFileSync(big, Buffer.concat([PNG_HEADER, Buffer.alloc(MAX_BYTES - PNG_HEADER.length + 1)]))
+  const tooLarge = attachError(() => planEvidence({ ...fixture.args, mobile: big }), 'TOO_LARGE')
+  assert.equal(tooLarge.bytes, MAX_BYTES + 1)
+  const jpeg = path.join(fixture.tmp, 'photo.jpg'); fs.writeFileSync(jpeg, Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2]))
+  assert.equal(planEvidence({ ...fixture.args, mobile: jpeg }).screenshots[1].mimeType, 'image/jpeg')
+  const { calls, fetchImpl } = mockApex(() => ({ status: 201, body: {} }))
+  await attachErrorAsync(attachEvidence(planEvidence(fixture.args), { token: '', agentBase: 'http://127.0.0.1:1/api/agent', fetchImpl }), 'MISSING_TOKEN')
+  assert.equal(calls.length, 0, 'nothing is posted without the operator key')
+})
+
+test('attach-evidence posts exactly the route fields for desktop then mobile and prints the returned URLs', async () => {
+  const fixture = evidenceFixture()
+  const { calls, fetchImpl } = mockApex((call, n) => ({ status: n === 1 ? 201 : 200, body: { existing: n !== 1, claimPath: 'operator', commentId: `c${n}`, activityId: `a${n}`, screenshotUrl: `https://cdn.example/${call.fields.viewport}.png`, asset: { id: `asset${n}`, url: `https://cdn.example/${call.fields.viewport}.png`, sha256: call.file.sha256 } } }))
+  const plan = planEvidence({ ...fixture.args, label: 'After staff update', 'captured-at': '2026-09-22T09:58:00Z' })
+  const logs = []
+  const results = await attachEvidence(plan, { token: 'test-operator-key', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl, log: (line) => logs.push(line) })
+  assert.equal(calls.length, 2)
+  for (const call of calls) {
+    assert.equal(call.url, 'http://127.0.0.1:4010/api/agent/tasks/cmticket1/evidence/screenshots')
+    assert.equal(call.method, 'POST')
+    assert.equal(call.authorization, 'Bearer test-operator-key')
+    assert.deepEqual(Object.keys(call.fields).sort(), ['agentRunId', 'capturedAt', 'label', 'pageUrl', 'sha256', 'viewport'], 'nothing else is sent')
+    assert.equal(call.fields.pageUrl, 'https://alpha.school/austin/')
+    assert.equal(call.fields.agentRunId, 'sweep-2026-09-22-a')
+    assert.equal(call.fields.capturedAt, '2026-09-22T09:58:00.000Z')
+    assert.equal(call.fields.label, 'After staff update')
+    assert.equal(call.file.type, 'image/png')
+    assert.equal(call.fields.sha256, call.file.sha256, 'the posted hash is the hash of the posted bytes')
+  }
+  assert.deepEqual(calls.map((c) => [c.fields.viewport, c.file.name]), [['desktop', 'austin-desktop.png'], ['mobile', 'austin-mobile.png']])
+  assert.deepEqual(results.map((r) => [r.viewport, r.status, r.existing, r.screenshotUrl, r.assetId, r.claimPath]), [['desktop', 201, false, 'https://cdn.example/desktop.png', 'asset1', 'operator'], ['mobile', 200, true, 'https://cdn.example/mobile.png', 'asset2', 'operator']])
+  assert.match(logs[0], /^desktop: attached https:\/\/cdn\.example\/desktop\.png/)
+  assert.match(logs[1], /^mobile: already attached https:\/\/cdn\.example\/mobile\.png/)
+  const source = fs.readFileSync(path.join(root, 'agent', 'attach-evidence.mjs'), 'utf8')
+  for (const forbidden of [/ALPHA_WP_/, /staff-asset-binding/, /\/status/, /\/comment'/, /wp-json/]) assert.doesNotMatch(source, forbidden, `the tool must not reach ${forbidden}`)
+})
+
+test('attach-evidence surfaces an APEX 4xx with its body, stops before the next file, and reports a hash disagreement', async () => {
+  const fixture = evidenceFixture()
+  const refused = mockApex(() => ({ status: 409, body: { error: 'Task is not actively claimed by this agent', code: 'NOT_CLAIMED' } }))
+  const error = await attachErrorAsync(attachEvidence(planEvidence(fixture.args), { token: 't', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl: refused.fetchImpl }), 'APEX_ERROR')
+  assert.equal(error.status, 409)
+  assert.equal(error.body.code, 'NOT_CLAIMED')
+  assert.equal(error.viewport, 'desktop')
+  assert.match(error.message, /APEX 409 on the desktop screenshot: .*NOT_CLAIMED/)
+  assert.equal(refused.calls.length, 1, 'mobile is not posted after desktop fails')
+  const mismatch = mockApex((call) => ({ status: 201, body: { asset: { id: 'x', url: 'https://cdn.example/x.png', sha256: 'f'.repeat(64) }, screenshotUrl: 'https://cdn.example/x.png' } }))
+  const bad = await attachErrorAsync(attachEvidence(planEvidence(fixture.args), { token: 't', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl: mismatch.fetchImpl }), 'APEX_ERROR')
+  assert.match(bad.message, /stored sha256 ffffffffffff/)
+  const partial = mockApex((call, n) => n === 1 ? { status: 201, body: { screenshotUrl: 'https://cdn.example/d.png', asset: { id: 'a1', url: 'https://cdn.example/d.png' } } } : { status: 413, body: { error: 'too large', code: 'FILE_TOO_LARGE' } })
+  const second = await attachErrorAsync(attachEvidence(planEvidence(fixture.args), { token: 't', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl: partial.fetchImpl }), 'APEX_ERROR')
+  assert.deepEqual(second.results.map((r) => r.viewport), ['desktop'], 'what was attached before the failure is reported')
+  const down = async () => { throw new Error('ECONNREFUSED') }
+  await attachErrorAsync(attachEvidence(planEvidence(fixture.args), { token: 't', agentBase: 'http://127.0.0.1:4010/api/agent', fetchImpl: down }), 'NETWORK')
+})
+
+test('attach-evidence CLI exits 1 on a typed input error without contacting APEX', () => {
+  const fixture = evidenceFixture()
+  const run = spawnSync(process.execPath, [path.join(root, 'agent', 'attach-evidence.mjs'), '--ticket', 'cmticket1', '--run', 'r', '--page', 'https://alpha.school/austin/', '--desktop', fixture.desktop, '--mobile', path.join(fixture.tmp, 'missing.png')], { encoding: 'utf8', env: { ...process.env, APEX_API_TOKEN: 'never-used', APEX_API_BASE: 'http://127.0.0.1:1' } })
+  assert.equal(run.status, 1, run.stderr)
+  assert.match(run.stderr, /^MISSING_FILE: mobile screenshot .*missing\.png cannot be read: ENOENT/)
+  assert.ok(!run.stderr.includes('never-used'), 'the token is never printed')
 })
