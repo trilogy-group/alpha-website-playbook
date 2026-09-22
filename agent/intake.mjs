@@ -194,9 +194,13 @@ async function applyDecision(ticket, result) {
       evaluatedAt: new Date().toISOString(),
     },
   })
+  // The ticket's own URL field is the reviewer's "go here" link in the APEX panel (decision 2026-09-22):
+  // write the derived page once when the requester left it empty; never overwrite a URL a person set.
+  const reviewUrl = !preflight.url && /^https:\/\//.test(result.found?.pageUrl || '') ? { url: result.found.pageUrl } : {}
   await v1(`/tasks/${ticket.id}`, 'PATCH', {
     customFields: pendingCustomFields,
     ...assigneePatch(preflight.assignees, result.ownerUser?.id),
+    ...reviewUrl,
     agentStatus: 'BLOCKED',
     agentEligible: false,
   })

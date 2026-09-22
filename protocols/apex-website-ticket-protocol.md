@@ -121,6 +121,9 @@ Write to the ticket, in this order, so a reviewer can read the outcome in ten se
 
 ```
 RESOLUTION (actor, date, playbook version)
+Go here: <canonical URL>            (also set as the ticket's URL field, so the panel shows the link)
+Look for: <one line: the exact card, sentence, or button the reviewer should see, and where on the page>
+Recommend: Complete | Complete after <decision> | Keep open because <reason>
 Page: <canonical URL> (object <id>)
 Change: "<before>" -> "<after>" in <section / field>
 Evidence: before hash, after hash, snapshot ref, screenshot links
@@ -129,6 +132,8 @@ Observer: <check ids> cleared on run <id>   (observer tickets only)
 ```
 
 Then set Completed. If any item cannot be written, the ticket is not complete.
+
+The first three lines exist so the reviewer can work from the APEX For Review queue alone: open the ticket, read three lines, click the URL, look at one thing, decide. A note that makes the reviewer search APEX or the site for the page is not finished. When the ticket names several pages, "Go here" is the page with the largest change and the others follow on the Page lines.
 
 Missing Info template:
 

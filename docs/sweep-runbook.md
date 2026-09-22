@@ -32,6 +32,10 @@ An OPERATOR INSTRUCTION note on a ticket outranks the classifier (protocol 1c). 
 
 The agent files them itself (decision 2026-09-19): `node agent/file-found-ticket.mjs <payload.json>` deduplicates against open tickets by idempotency key, title, and page plus check, creates the APEX Request, and assigns the class owner from the policy bundle (website operations when the role has no person). The payload shape is the one the batches produced: title, description (page, expected, observed, evidence, recommended path, done when), url, program, customFields with `source: agent-found`, `checkId`, `foundWhileWorking`, `idempotencyKey`, `ownerRole`. Tooling defects (Alpha MCP, playbook scripts) are not APEX website tickets; they go to the repo as issues or PRs and are named in the run report.
 
+## The review
+
+The reviewer works from APEX, not from a dashboard: the For Review queue filtered to website requests (`/intake?status=FOR_REVIEW&requestType=Website`), one ticket at a time. Each agent-closed ticket carries the page in its URL field (set by intake when the requester left it empty, or by the agent) and a RESOLUTION note whose first three lines are Go here, Look for, Recommend (protocol section 7). The reviewer reads the three lines, clicks the URL, checks the one thing named, and completes or sends back. Anything that needs more than that from the reviewer is the agent's gap to fix in the note, not the reviewer's job to dig for.
+
 ## The report
 
 Each agent ends with `run-report.md`: per ticket the decision, class, receipts, evidence files, and one line on what the playbook did not tell it; then cross-cutting notes. The coordinator scores it against expectations fixed before the run (the four September batches in the marketingsupport workspace are the pattern), verifies independently (receipts by run id, live pages without cache-busting, ticket states), and turns every gap into a registry, recipe, check, or tool change the same day. The scored sheet plus the report is the review artifact.
