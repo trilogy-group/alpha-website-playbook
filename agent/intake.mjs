@@ -263,7 +263,9 @@ async function applyDecision(ticket, result) {
       agentRunId: `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`,
     })
     if (pending.length) {
-      await v1(`/tasks/${ticket.id}`, 'PATCH', { agentEligible: false })
+      // A PATCH whose only keys are agentEligible:false is APEX's "revoke hosted Alpha MCP authorization" shape
+      // (src/app/api/v1/tasks/[id]/route.ts isAlphaMcpRevocationOnly); carry agentStatus so it is a plain field write.
+      await v1(`/tasks/${ticket.id}`, 'PATCH', { agentEligible: false, agentStatus: response.task?.agentStatus ?? 'BLOCKED' })
     }
     actionResult = { api: 'agent-reconcile', disposition, status: response.task?.status, agentStatus: response.task?.agentStatus, retiredClarifications: pending.length }
   }
