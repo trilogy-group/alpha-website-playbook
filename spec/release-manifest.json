@@ -1,22 +1,22 @@
 {
   "$comment": "Signed release manifest (improvement plan workstream 3). What production must report for the website agent to claim or write. tests/check-release.mjs compares this with the Alpha MCP health route and the committed policy bundle; agent/intake.mjs refuses to release execution-ready tickets on a mismatch while unrelated intake administration continues. Update deliberately with each plugin upload or policy change; the policySha256 comes from spec/policy-bundle.generated.json.",
-  "version": "2026-09-22.1",
+  "version": "2026-09-22.2",
   "policySha256": "eadb8fba73df21e266c3d788d99cc17e7d7cd483f8ebc64fa55d2ad02c770857",
   "playbookCommit": "bb8ac571050dbe48b739e76b84e22bd1756797e2",
   "bridge": {
     "package": "@alpha/wordpress-mcp",
-    "version": "0.5.6",
+    "version": "0.5.8",
     "toolCount": 43
   },
   "production": {
     "site": "https://alpha.school",
-    "pluginVersion": "0.5.6",
+    "pluginVersion": "0.5.8",
     "abilityCount": 43,
-    "abilitySchemaSha256": "91e20b2e9b400dee4cfa13171757ffc3780ee0926fc2f3e976d2ed5d90aab68f",
+    "abilitySchemaSha256": "ce09991878f012b598b5e864ea5c80cec95e230a8fdfd8fe7ff9208e7eaf717e",
     "operatorMode": true,
     "productionWritesEnabled": true,
     "campusTemplateId": 6140,
-    "note": "0.5.6 uploaded 2026-09-21 (staff-add alt text from the attachment or person name; video widget fields editable)."
+    "note": "0.5.8 uploaded 2026-09-22 by Matt (display settings in the content patch: carousel arrows/infinite/autoplay/slides_to_show, image object-fit/object-position/image_size; verify_public_page pattern checks incl. post stylesheets). 0.5.7 (PR 23, URL resolution) not yet merged."
   },
   "supportedOperations": {
     "scheduled-apex-alpha-mcp": [
