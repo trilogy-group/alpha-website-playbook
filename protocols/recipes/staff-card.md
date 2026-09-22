@@ -18,8 +18,8 @@ Classes `staff-add`, `staff-update`, `staff-remove`, `staff-photo`. The Team sec
 3. Photo: `upload_media_from_apex_asset` with the confirmed mapping. Never infer who a portrait is; never reuse a similar-looking image. The attachment is applied at full size.
 4. `prepare_elementor_staff_patch` with the action, the person fields, and `expectedCurrent` for update and remove. Check the diff touches only that card.
 5. Apply, regenerate the page's CSS, clear cache.
-6. Tests. Ring 1: the card shows the requested name, title, bio, and photo, and no other card changed. Ring 2: full page check plus screenshots of the Team section on desktop and mobile; faces not clipped. Ring 3 after the cache clear.
-7. Attach the ring 2 captures to the ticket: `node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <slug>-desktop.png --mobile <slug>-mobile.png --label "Team section after <person>"`, then write the RESOLUTION note with Look for pointing at the card the screenshots show (protocol section 7).
+6. Tests. Ring 1: the card shows the requested name, title, bio, and photo, and no other card changed. Ring 2: full page check plus a section capture of the card on desktop and mobile with its photo decoded (`node tests/section-shot.mjs --url <canonical URL> --selector "<css of the card>" --name "team carousel: <person> card" --out <dir>`; bring a carousel slide beyond the first few into view first, then capture, or select the slide itself); faces not clipped. Ring 3 after the cache clear.
+7. Attach both pairs to the ticket on the same run id: the card crop with `node agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <slug>-desktop.png --mobile <slug>-mobile.png --section "team carousel: <person> card"`, then the full-page ring 2 pair with the same command without `--section` (`--label "Team section after <person>"` optional). Then write the RESOLUTION note with Look for naming the card the section capture shows (protocol section 7); a Look for that names a card the crop does not show is not finished.
 
 ## Card tagging decides which tool applies (2026-09-17)
 
@@ -34,7 +34,7 @@ The staff tool treats a card as part of the leadership collection only when its 
 - `add` on plugin builds before 0.3.3 clones the template card with duplicate element ids on every child. Refuse to apply an add unless `health` reports 0.3.3 or later. Production has run 0.3.3 since 2026-09-17; the Tara Marlow add on Tulsa was the first add applied.
 - Two uploads in one session on plugin builds before 0.3.3 replay the first upload's attachment. The bridge now keys each upload by asset id and hash; always compare `sourceSha256` in the receipt with the file you approved before using the attachment id.
 - Uploads wider or taller than 2560 px are served by WordPress as the `-scaled` copy, so `verify_public_page` reports the original file name as missing media. Pass the `-scaled` URL (or check the live `src`) for large headshots; Edward Kang on Chicago (4672 by 7008) was verified this way.
-- Full-page screenshots show team photos blank because the images lazy-load. For ring 2, scroll the card into view and record `complete` and `naturalWidth` on the image before taking the card screenshot.
+- Full-page screenshots show team photos blank because the images lazy-load, and a lazy image with `decoding=async` reports `complete` and `naturalWidth` before it paints (San Francisco, 2026-09-22). For ring 2, capture the card with `tests/section-shot.mjs`, which scrolls it into view and awaits `img.decode()` on every image inside before the screenshot, and attach that pair with `--section`.
 
 ## Refuse and send back when
 

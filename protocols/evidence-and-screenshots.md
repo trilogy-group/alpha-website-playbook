@@ -24,10 +24,10 @@ Use the APEX evidence endpoints for the ticket:
 
 ```text
 POST /api/agent/tasks/{id}/evidence                 structured evidence (URL, notes, the Public page verification entry)
-POST /api/agent/tasks/{id}/evidence/screenshots     the desktop and mobile PNGs themselves (multipart), via agent/attach-evidence.mjs
+POST /api/agent/tasks/{id}/evidence/screenshots     the desktop and mobile PNGs themselves (multipart), via agent/attach-evidence.mjs; optional section field names the element a crop shows
 ```
 
-The authenticated APEX client or worker performs the upload. `agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <file> --mobile <file>` hashes each file, posts it with the operator key, and prints the served URLs; APEX stores the bytes on the ticket (kind `EVIDENCE_SCREENSHOT`), posts the agent comment, logs `agent_evidence_added` with viewport, page, capture time, sha256, run id, and who attached it, and shows the pair in the ticket panel's Evidence section. It is idempotent per (ticket, viewport, sha256). Do not place credentials or private source documents in the evidence body or in the captures.
+The authenticated APEX client or worker performs the upload. `agent/attach-evidence.mjs --ticket <id> --run <runId> --page <canonical URL> --desktop <file> --mobile <file>` hashes each file, posts it with the operator key, and prints the served URLs; APEX stores the bytes on the ticket (kind `EVIDENCE_SCREENSHOT`), posts the agent comment, logs `agent_evidence_added` with viewport, page, capture time, sha256, run id, and who attached it, and shows the pair in the ticket panel's Evidence section. It is idempotent per (ticket, viewport, sha256). Run it twice per page on the same run id: once with `--section "<element>"` for the `tests/section-shot.mjs` crop of the element the Look for line names, once without for the full-page pair; APEX shows the section crops first and legible, the full page after. Do not place credentials or private source documents in the evidence body or in the captures.
 
 ## Screenshot set
 
@@ -41,9 +41,9 @@ Minimum set:
 4. Mobile changed section with the changed content visible.
 5. Two untouched representative pages after a global, CSS, plugin, template, or site-wide cache action.
 
-Items 1 to 4 are covered by the full-page desktop and mobile captures `tests/rendered-controls.mjs --screenshots <dir>` writes (`<slug>-desktop.png`, `<slug>-mobile.png`); those two files are what `agent/attach-evidence.mjs` attaches to the ticket. PNG or JPEG, 6 MB each at most; a larger full-page capture is re-encoded as JPEG before attaching.
+Items 1 and 3 are the full-page desktop and mobile captures `tests/rendered-controls.mjs --screenshots <dir>` writes (`<slug>-desktop.png`, `<slug>-mobile.png`). Items 2 and 4 are the section captures `tests/section-shot.mjs --url <page> --selector <css> --name "<section>"` writes (`<slug>-desktop.png`, `<slug>-mobile.png` at deviceScaleFactor 2, the element plus a 16 px margin) after every image inside the element has decoded. `agent/attach-evidence.mjs` attaches each pair, the section pair with `--section "<section>"`. PNG or JPEG, 6 MB each at most; a larger full-page capture is re-encoded as JPEG before attaching.
 
-Scroll lazy-loaded images into view and confirm they are loaded before capture. A blank lazy image is not acceptable evidence.
+A blank or grey lazy image is not acceptable evidence. `section-shot.mjs` forces the element's lazy images to load, awaits `img.decode()` on each with a bounded timeout, and exits 1 with the image named when one never decodes; the file is still written so the actor can see what happened, but it is not attached as the section pair until the images paint.
 
 ## Screenshot labels
 
