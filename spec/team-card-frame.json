@@ -1,0 +1,38 @@
+{
+  "$comment": "The rendered box a team-card headshot is squeezed into on campus pages, measured read-only with Playwright on 2026-09-22 (tests/photo-framing.mjs measureTeamCardsInPage, desktop 1440x1000 and mobile 390x844). Every card image renders with object-fit: cover into a box of fixed CSS height whose width follows the column, so the ratio is per page and per viewport, not one site value: San Francisco's carousel is 1.29:1 on desktop, Santa Barbara's 1.61:1, Miami's 1.46:1, and the same boxes are 1.09:1, 0.91:1 and 1.25:1 on mobile. Rule (protocols/recipes/staff-card.md, docs/headshot-binding.md): a headshot is framed to the desktop carousel ratio of the page it goes on, measured on that page (agent/frame-headshot.mjs --ratio auto --page <url>), never to a constant; the mobile box then cuts only the sides, symmetrically, which the team-photo-framing check tolerates up to 30% per edge. Leadership boxes vary more (San Francisco follows the image, Santa Barbara and Miami fix the height) and are measured with --selector. Re-measure when the Elementor team template changes; the check reads the live box every run and does not depend on these numbers.",
+  "version": "0.1",
+  "asOf": "2026-09-22",
+  "viewports": { "desktop": { "width": 1440, "height": 1000 }, "mobile": { "width": 390, "height": 844 } },
+  "rule": {
+    "frameTo": "desktop carousel card box of the target page, measured live",
+    "measure": "node agent/frame-headshot.mjs --file <img> --ratio auto --page <canonical URL> [--selector <card css>] --out <framed> --preview <png>",
+    "check": "tests/page-check.mjs team-photo-framing (tests/photo-framing.mjs)",
+    "verticalMinCoverage": 0.95,
+    "horizontalMaxEdgeCut": 0.3,
+    "horizontalMinCoverage": 0.5
+  },
+  "measured": {
+    "san-francisco": {
+      "pageUrl": "https://alpha.school/san-francisco/",
+      "carousel": { "desktop": { "width": 284.66, "height": 220, "ratio": 1.2939 }, "mobile": { "width": 240, "height": 220, "ratio": 1.0909 } },
+      "leadership": { "desktop": { "width": 303.47, "height": 455.2, "ratio": 0.6667, "note": "height follows the image; nothing cropped" }, "mobile": { "width": 295.91, "height": 443.64, "ratio": 0.6667 } },
+      "cssHeight": "220px on carousel images",
+      "example": "Jason Tan 1130x1533 into 284.66x220 showed 57% of its height (top and bottom cut, object-position 50% 50%); reframed 1130x873 shows 99.96%"
+    },
+    "santa-barbara": {
+      "pageUrl": "https://alpha.school/santa-barbara/",
+      "carousel": { "desktop": { "width": 450, "height": 280, "ratio": 1.6071 }, "mobile": { "width": 256, "height": 280, "ratio": 0.9143 } },
+      "leadership": { "desktop": { "width": 465.22, "height": 330, "ratio": 1.4098, "note": "two-card row, fixed 330px height" }, "mobile": { "width": 311.16, "height": 330, "ratio": 0.9429 } },
+      "cssHeight": "280px on carousel images, 330px on the leadership row",
+      "example": "Kele Mkpado 1024x1024 62%, Carson Lehmann 974x1024 59%, Catherine Streicher 1024x1024 62% visible on desktop (ticket cmucxbw0d000004l2zawagb5j); Whitney Snow and Remi Ho render with object-fit contain (letterboxed, nothing cropped)"
+    },
+    "miami": {
+      "pageUrl": "https://alpha.school/miami/",
+      "carousel": { "desktop": { "width": 321.33, "height": 220, "ratio": 1.4606 }, "mobile": { "width": 275, "height": 220, "ratio": 1.25 } },
+      "leadership": { "desktop": { "width": 1034, "height": 520, "ratio": 1.9885, "note": "full-width head card, fixed 520px height; Dr. Tasha Arnold 1280x1920 shows 34%" }, "mobile": { "width": 347.81, "height": 420, "ratio": 0.8281 } },
+      "cssHeight": "220px on carousel images, 520px on the head card",
+      "example": "looped carousel (duplicate slides skipped); 21 of 27 desktop cards fail today"
+    }
+  },
+  "notMeasured": "older-template pages without a #team section (Austin) report no team cards; their grade-level cards are not staff cards"
+}

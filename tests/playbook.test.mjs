@@ -37,6 +37,8 @@ import {
 import { buildSyntheticPptx, syntheticImage } from './fixtures/roster-diff/build-synthetic-pptx.mjs'
 import { AttachEvidenceError, MAX_BYTES, MAX_SECTION_LENGTH, apexBases, attachEvidence, main as attachEvidenceMain, planEvidence } from '../agent/attach-evidence.mjs'
 import { DEVICE_SCALE_FACTOR, PADDING_PX, SectionShotError, VIEWPORTS as SECTION_VIEWPORTS, clipWithPadding, outputFile, parseArgs as parseSectionArgs, planSectionShot, slugify } from './section-shot.mjs'
+import { VERTICAL_MIN_COVERAGE, frameCoverage, frameForFit, judgeFraming, parseObjectPosition, scoreCards, teamPhotoFramingCheck } from './photo-framing.mjs'
+import { FrameHeadshotError, cropWindow, decodePng, encodePng, main as frameMain, parseFocus, parseRatio, planFrame } from '../agent/frame-headshot.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'policy-bundle.generated.json'), 'utf8'))
@@ -825,4 +827,187 @@ test('attach-evidence CLI exits 1 on a typed input error without contacting APEX
   assert.equal(run.status, 1, run.stderr)
   assert.match(run.stderr, /^MISSING_FILE: mobile screenshot .*missing\.png cannot be read: ENOENT/)
   assert.ok(!run.stderr.includes('never-used'), 'the token is never printed')
+})
+
+test('team-photo-framing math: coverage and cropped edges for cover-fit boxes', () => {
+  // Jason Tan's 1130x1533 portrait in the San Francisco carousel box measured 2026-09-22 (284.66x220, object-position 50% 50%).
+  const jason = frameCoverage({ naturalWidth: 1130, naturalHeight: 1533, boxWidth: 284.66, boxHeight: 220 })
+  assert.equal(jason.croppedAxis, 'vertical')
+  assert.ok(jason.coverage > 0.56 && jason.coverage < 0.58, `57% of the height is visible, got ${jason.coverage}`)
+  assert.deepEqual(jason.croppedEdges, ['top', 'bottom'], 'centred object-position cuts both edges')
+  assert.equal(judgeFraming(jason).result, 'fail')
+  // The same file top-anchored keeps the head and loses the shoulders; still a framing failure, the coverage is the same.
+  const anchored = frameCoverage({ naturalWidth: 1130, naturalHeight: 1533, boxWidth: 284.66, boxHeight: 220, objectPosition: '50% 0%' })
+  assert.equal(anchored.coverage, jason.coverage)
+  assert.deepEqual(anchored.croppedEdges, ['bottom'])
+  // The reframed 1130x873 file is the box ratio: nothing cut.
+  const reframed = frameCoverage({ naturalWidth: 1130, naturalHeight: 873, boxWidth: 284.66, boxHeight: 220 })
+  assert.ok(reframed.coverage > 0.999, String(reframed.coverage))
+  assert.equal(judgeFraming(reframed).result, 'pass')
+  // Landscape into a portrait box: the sides go. Symmetric within 30% per edge passes (mobile shows the desktop frame's middle).
+  const sides = frameCoverage({ naturalWidth: 1600, naturalHeight: 1000, boxWidth: 256, boxHeight: 280 })
+  assert.equal(sides.croppedAxis, 'horizontal')
+  assert.ok(Math.abs(sides.coverage - 0.5714) < 0.001, String(sides.coverage))
+  assert.deepEqual(sides.croppedEdges, ['left', 'right'])
+  assert.equal(judgeFraming(sides).result, 'pass', 'a framed headshot keeps its head band inside a 21% side cut')
+  const wide = frameCoverage({ naturalWidth: 3000, naturalHeight: 1000, boxWidth: 256, boxHeight: 280 })
+  assert.equal(judgeFraming(wide).result, 'fail', 'a 3:1 group photo loses its middle 40%')
+  // Equal ratios: coverage 1, no axis.
+  const same = frameCoverage({ naturalWidth: 1280, naturalHeight: 1920, boxWidth: 303.47, boxHeight: 455.2 })
+  assert.equal(same.croppedAxis, 'none')
+  assert.equal(same.coverage, 1)
+  // Thresholds: 95% vertical is the line; 94% fails.
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1000, naturalHeight: 1000, boxWidth: 1000, boxHeight: 950 })).result, 'pass')
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1000, naturalHeight: 1000, boxWidth: 1000, boxHeight: 940 })).result, 'fail')
+  assert.equal(VERTICAL_MIN_COVERAGE, 0.95)
+  // object-position keywords and asymmetric cuts.
+  assert.deepEqual(parseObjectPosition('center top'), { x: 0.5, y: 0 })
+  assert.deepEqual(parseObjectPosition('top left'), { x: 0, y: 0 })
+  assert.deepEqual(parseObjectPosition('right 25%'), { x: 1, y: 0.25 })
+  assert.deepEqual(parseObjectPosition(undefined), { x: 0.5, y: 0.5 })
+  const leftAnchored = frameCoverage({ naturalWidth: 3000, naturalHeight: 1000, boxWidth: 256, boxHeight: 280, objectPosition: '0% 50%' })
+  assert.deepEqual(leftAnchored.croppedEdges, ['right'])
+  // object-fit: contain never crops, fill stretches.
+  assert.equal(frameForFit({ naturalWidth: 1439, naturalHeight: 1919, boxWidth: 450, boxHeight: 280, objectFit: 'contain' }).coverage, 1)
+  assert.equal(judgeFraming(frameForFit({ naturalWidth: 1000, naturalHeight: 1000, boxWidth: 450, boxHeight: 280, objectFit: 'fill' })).result, 'fail')
+  assert.equal(judgeFraming(frameForFit({ naturalWidth: 1000, naturalHeight: 1000, boxWidth: 300, boxHeight: 290, objectFit: 'fill' })).result, 'pass')
+  // No box or no natural size is unmeasured, never a pass.
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1024, naturalHeight: 768, boxWidth: 0, boxHeight: 0 })).result, 'unmeasured')
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 0, naturalHeight: 0, boxWidth: 300, boxHeight: 220 })).result, 'unmeasured')
+})
+
+test('team-photo-framing check row names each failing card with coverage, sizes, and edges', () => {
+  const card = (name, naturalWidth, naturalHeight, boxWidth, boxHeight, objectPosition = '50% 50%', extra = {}) => ({ name, kind: 'carousel', decoded: true, naturalWidth, naturalHeight, boxWidth, boxHeight, objectFit: 'cover', objectPosition, selector: '#team_carousel .swiper-slide:nth-child(1)', src: 'https://alpha.school/x.jpg', ...extra })
+  const desktop = [card('Dr. Tasha Arnold', 1280, 1920, 303.47, 455.2), card('Jason Tan', 1130, 1533, 284.66, 220), card('Ruby Holman', 1439, 1800, 284.66, 220, '50% 0%'), card('Michael Dillow', 1024, 768, 0, 0)]
+  const mobile = [card('Jason Tan', 389, 528, 240, 220)]
+  const measured = { url: 'https://alpha.school/san-francisco/', viewports: { desktop: { cards: desktop, failing: scoreCards(desktop) }, mobile: { cards: mobile, failing: scoreCards(mobile) } } }
+  const row = teamPhotoFramingCheck(measured)
+  assert.equal(row.id, 'team-photo-framing')
+  assert.equal(row.result, 'fail')
+  assert.match(row.detail, /desktop Jason Tan: 57% visible, natural 1130x1533, box 285x220 css px, top and bottom cropped/)
+  assert.match(row.detail, /desktop Ruby Holman: 62% visible, natural 1439x1800, box 285x220 css px, bottom cropped/)
+  assert.match(row.detail, /mobile Jason Tan: 68% visible/)
+  assert.doesNotMatch(row.detail, /Tasha Arnold: \d+% visible/, 'a matching ratio is not listed')
+  assert.match(row.detail, /unmeasured: desktop Michael Dillow \(no rendered box/, 'a hidden slide is reported, not judged')
+  assert.equal(row.viewports.desktop.cards.find((c) => c.name === 'Jason Tan').result, 'fail')
+  assert.equal(row.viewports.desktop.cards.find((c) => c.name === 'Michael Dillow').result, 'unmeasured')
+  const clean = [card('Jason Tan', 1130, 873, 284.66, 220)]
+  const pass = teamPhotoFramingCheck({ url: 'x', viewports: { desktop: { cards: clean, failing: scoreCards(clean) } } })
+  assert.equal(pass.result, 'pass')
+  assert.match(pass.detail, /desktop 1 card: every card image is inside its frame/)
+  assert.equal(teamPhotoFramingCheck({ url: 'x', viewports: { desktop: { cards: [], failing: [] } } }).detail, 'no team cards on this page')
+  assert.equal(teamPhotoFramingCheck({ url: 'x', viewports: { desktop: { error: 'net::ERR_FAILED', cards: [], failing: [] } } }).result, 'fail', 'a viewport that did not load is a failure, not a pass')
+  // The check is registered where staff closures read their evidence.
+  for (const id of ['staff-add', 'staff-update', 'staff-photo', 'staff-bulk']) {
+    assert.ok(bundle.classes[id].evidenceProfile.includes('team-photo-framing-json'), `${id} evidence profile`)
+    assert.match(bundle.classes[id].doneWhen, /team-photo-framing/)
+  }
+  const pageCheckSource = fs.readFileSync(path.join(root, 'tests', 'page-check.mjs'), 'utf8')
+  assert.match(pageCheckSource, /result: 'skipped', detail: renderedSkipReason/, 'without a browser the check is skipped, never passed')
+  const frameSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'team-card-frame.json'), 'utf8'))
+  assert.equal(frameSpec.measured['san-francisco'].carousel.desktop.ratio, 1.2939)
+  assert.equal(frameSpec.rule.verticalMinCoverage, VERTICAL_MIN_COVERAGE)
+})
+
+/** A tiny RGB PNG with a distinct colour per quadrant so a crop can be checked pixel by pixel. */
+function syntheticPng(width, height) {
+  const rgba = new Uint8Array(width * height * 4)
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+    const i = (y * width + x) * 4
+    const top = y < height / 2, left = x < width / 2
+    rgba[i] = top ? 200 : 20; rgba[i + 1] = left ? 200 : 20; rgba[i + 2] = y; rgba[i + 3] = 255
+  }
+  return { width, height, rgba }
+}
+
+test('frame-headshot crop geometry keeps the head: top-anchored portraits, centred landscapes, no crop on a match', () => {
+  // The Jason numbers: 1130x1533 into the San Francisco desktop box ratio.
+  const jason = cropWindow({ width: 1130, height: 1533, ratio: 1.2939 })
+  assert.deepEqual(jason, { x: 0, y: 0, width: 1130, height: 873, axis: 'vertical', focus: 0 }, 'full width, height from the top: 873 px, the file the site now serves')
+  assert.deepEqual(cropWindow({ width: 1130, height: 1533, ratio: 1.2939, focus: 0.5 }), { x: 0, y: 330, width: 1130, height: 873, axis: 'vertical', focus: 0.5 })
+  assert.deepEqual(cropWindow({ width: 1130, height: 1533, ratio: 1.2939, focus: 1 }), { x: 0, y: 660, width: 1130, height: 873, axis: 'vertical', focus: 1 })
+  // Landscape into a narrower ratio: full height, width from the centre.
+  assert.deepEqual(cropWindow({ width: 1600, height: 1000, ratio: 1.0909 }), { x: 255, y: 0, width: 1091, height: 1000, axis: 'horizontal', focus: 0.5 })
+  // Equal ratios: the whole image.
+  assert.deepEqual(cropWindow({ width: 1280, height: 1920, ratio: 2 / 3 }), { x: 0, y: 0, width: 1280, height: 1920, axis: 'none', focus: null })
+  assert.equal(parseRatio('4:3'), 1.3333)
+  assert.equal(parseRatio('284.66/220'), 1.2939)
+  assert.equal(parseRatio('1.2939'), 1.2939)
+  assert.equal(parseRatio('auto'), 'auto')
+  assert.equal(parseFocus('top'), 0); assert.equal(parseFocus('center'), 0.5); assert.equal(parseFocus('0.25'), 0.25); assert.equal(parseFocus(undefined), null)
+  const frameError = (fn, code) => { try { fn() } catch (error) { assert.ok(error instanceof FrameHeadshotError, error.stack); assert.equal(error.code, code); return error } assert.fail(`expected ${code}`) }
+  frameError(() => parseRatio('wide'), 'BAD_RATIO')
+  frameError(() => parseRatio('0'), 'BAD_RATIO')
+  frameError(() => parseRatio('10:1'), 'BAD_RATIO')
+  frameError(() => parseRatio(undefined), 'MISSING_ARG')
+  frameError(() => parseFocus('left'), 'BAD_FOCUS')
+  frameError(() => planFrame({ file: 'a.jpg', ratio: 'auto', out: 'b.jpg' }), 'MISSING_ARG')
+  frameError(() => planFrame({ file: 'a.jpg', ratio: '4:3' }), 'MISSING_ARG')
+  assert.equal(planFrame({ file: 'a.jpg', ratio: '4:3', out: 'b.jpg', focus: 'center' }).focus, 0.5)
+})
+
+test('frame-headshot crops a synthetic PNG to the ratio, round-trips through the PNG codec, and writes the preview', async () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'frame-headshot-test-'))
+  const source = syntheticPng(40, 60)
+  const sourceFile = path.join(tmp, 'source.png')
+  fs.writeFileSync(sourceFile, encodePng(source))
+  // Codec round trip is lossless.
+  const decoded = decodePng(fs.readFileSync(sourceFile))
+  assert.equal(decoded.width, 40); assert.equal(decoded.height, 60)
+  assert.deepEqual([...decoded.rgba], [...source.rgba])
+  // Crop to 4:3 from the top: 40x30, the top half of the image (all "top" colours).
+  const logs = []
+  const report = await frameMain(['--file', sourceFile, '--ratio', '4:3', '--out', path.join(tmp, 'framed.png'), '--preview', path.join(tmp, 'preview.png'), '--json', path.join(tmp, 'frame.json')], {}, { log: (m) => logs.push(m), error: () => {} })
+  assert.deepEqual(report.crop, { x: 0, y: 0, width: 40, height: 30 })
+  assert.equal(report.axis, 'vertical'); assert.equal(report.focus, 0)
+  assert.equal(report.out.width, 40); assert.equal(report.out.height, 30)
+  assert.equal(report.out.mimeType, 'image/png')
+  const framedBytes = fs.readFileSync(path.join(tmp, 'framed.png'))
+  assert.equal(report.out.sha256, crypto.createHash('sha256').update(framedBytes).digest('hex'), 'the printed sha256 is the file bind-headshot will hash')
+  const framed = decodePng(framedBytes)
+  assert.equal(framed.height, 30)
+  for (let x = 0; x < 40; x++) for (let y = 0; y < 30; y++) { const i = (y * 40 + x) * 4; assert.equal(framed.rgba[i], 200, 'every kept pixel is from the top half'); assert.equal(framed.rgba[i + 2], y) }
+  assert.match(logs.at(-1), /cropped vertical: 40x60 -> 40x30 \(1\.3333:1\)/)
+  assert.match(report.reviewNote, /^framed to 1\.3333:1; crop 40x30 at 0,0 of 40x60, focus 0$/)
+  assert.equal(report.source.sha256, crypto.createHash('sha256').update(fs.readFileSync(sourceFile)).digest('hex'))
+  assert.ok(fs.existsSync(path.join(tmp, 'frame.json')))
+  // Preview: source and result side by side on white, wider than the source alone.
+  const preview = decodePng(fs.readFileSync(path.join(tmp, 'preview.png')))
+  assert.ok(preview.width > 40 * 2, `preview width ${preview.width}`)
+  assert.equal(preview.rgba[0], 255, 'white margin')
+  // Centre focus moves the window down; a landscape target from the middle of the width.
+  const centred = await frameMain(['--file', sourceFile, '--ratio', '4:3', '--focus', 'center', '--out', path.join(tmp, 'centred.png')], {}, { log: () => {}, error: () => {} })
+  assert.deepEqual(centred.crop, { x: 0, y: 15, width: 40, height: 30 })
+  const centredPixels = decodePng(fs.readFileSync(path.join(tmp, 'centred.png')))
+  assert.equal(centredPixels.rgba[2], 15, 'first row of the crop is source row 15')
+  const narrow = await frameMain(['--file', sourceFile, '--ratio', '1:3', '--out', path.join(tmp, 'narrow.png')], {}, { log: () => {}, error: () => {} })
+  assert.deepEqual(narrow.crop, { x: 10, y: 0, width: 20, height: 60 })
+  // Wrong file types are typed errors before any write.
+  fs.writeFileSync(path.join(tmp, 'text.png'), 'not a png')
+  await assert.rejects(frameMain(['--file', path.join(tmp, 'text.png'), '--ratio', '4:3', '--out', path.join(tmp, 'x.png')], {}, { log: () => {}, error: () => {} }), (e) => e instanceof FrameHeadshotError && e.code === 'UNSUPPORTED_IMAGE')
+  await assert.rejects(frameMain(['--file', sourceFile, '--ratio', '4:3', '--out', path.join(tmp, 'x.gif')], {}, { log: () => {}, error: () => {} }), (e) => e instanceof FrameHeadshotError && e.code === 'UNSUPPORTED_IMAGE')
+  const toolSource = fs.readFileSync(path.join(root, 'agent', 'frame-headshot.mjs'), 'utf8')
+  for (const forbidden of [/ALPHA_WP_/, /APEX_API_TOKEN/, /wp-json/, /staff-asset-binding/]) assert.doesNotMatch(toolSource, forbidden, `framing never reaches ${forbidden}`)
+  assert.match(toolSource, /macOS only/, 'the header says the JPEG and WebP path needs sips')
+})
+
+test('frame-headshot CLI exits 2 on a typed input error without touching the browser or the file system', () => {
+  const run = spawnSync(process.execPath, [path.join(root, 'agent', 'frame-headshot.mjs'), '--file', 'nope.jpg', '--ratio', 'auto', '--out', 'x.png'], { encoding: 'utf8', env: { ...process.env, PLAYWRIGHT_ROOT: '/nonexistent' } })
+  assert.equal(run.status, 2, run.stderr)
+  assert.match(run.stderr, /^MISSING_ARG: --ratio auto needs --page/)
+})
+
+test('section-shot --slide-containing picks the card by its text and is planned without a browser', () => {
+  const plan = planSectionShot(parseSectionArgs(['--url', 'https://alpha.school/san-francisco/', '--selector', '#team_carousel .swiper-slide', '--slide-containing', 'Jason Tan', '--name', 'team carousel: Jason Tan card']))
+  assert.equal(plan.slideContaining, 'Jason Tan')
+  assert.equal(plan.selector, '#team_carousel .swiper-slide')
+  assert.match(plan.files.desktop, /team-carousel-jason-tan-card-desktop\.png$/)
+  assert.equal(planSectionShot({ url: 'https://alpha.school/', selector: '#x', 'scroll-to-text': 'Ruby Holman' }).slideContaining, 'Ruby Holman', 'alias')
+  assert.equal(planSectionShot({ url: 'https://alpha.school/', selector: '#x' }).slideContaining, null)
+  const shotError = (fn, code) => { try { fn() } catch (error) { assert.ok(error instanceof SectionShotError, error.stack); assert.equal(error.code, code); return error } assert.fail(`expected ${code}`) }
+  shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: '#x', 'slide-containing': true }), 'MISSING_ARG')
+  shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: '#x', 'slide-containing': '  ' }), 'MISSING_ARG')
+  const source = fs.readFileSync(path.join(root, 'tests', 'section-shot.mjs'), 'utf8')
+  assert.match(source, /filter\(\{ hasText: plan\.slideContaining \}\)/, 'the match is chosen by its text')
+  assert.match(source, /instance\.slideTo\(index, 0\)/, 'a Swiper slide is brought into view before the capture')
 })

@@ -449,7 +449,8 @@
     "campus.facts.tuition": "observer campus-page-tuition-source-sync plus marketingsupport website:campus-facts-qc (Locations card vs page)",
     "campus.resources.apply": "observer routing rule campus-application-* checks (not emitted as finding() literals in checks.mjs; confirm names) plus page-check cta-links-resolve",
     "campus.team.roster": "no roster source configured; requester is the source until one exists",
-    "campus.events.strip": "observer campus-event-filter and public-event-sync (routing rules) plus HubSpot events source"
+    "campus.events.strip": "observer campus-event-filter and public-event-sync (routing rules) plus HubSpot events source",
+    "site.layout.images": "playbook tests/page-check.mjs team-photo-framing (rendered, desktop and mobile: every team-card image inside its object-fit cover box; tests/photo-framing.mjs, spec/team-card-frame.json); the observer's campus-image-crop-risk stays the dispatching check"
   },
   "checkToElement": {
     "$comment": "observer check -> field-map element for tests/diagnose-field.mjs",

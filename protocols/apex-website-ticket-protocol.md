@@ -100,7 +100,7 @@ All three rings run on the canonical public URL after cache clearing. Screenshot
 - Intro section: heading, status sentence, and intro card slot correct for the campus state.
 - No launch-era words or images on an Open campus; no sister-brand words; no other campus's name in images, alt text, links, or schema.
 - Every CTA and resource link resolves to a reachable, campus-specific destination.
-- Staff cards render without clipped faces; events strip shows only this campus's events.
+- Staff cards render without clipped faces: `tests/page-check.mjs team-photo-framing` measures every team-card image on desktop and mobile against its `object-fit: cover` box and fails when less than 95% of the image height is visible or a side cut passes 30% (a portrait bound at its native ratio into the landscape card box loses its head; Jason Tan, San Francisco, 2026-09-22). The check needs a browser (`--playwright <dir>`); a skipped check is not a pass. Events strip shows only this campus's events.
 - The page's own observer assertions pass (`registry/observer-checks.json`).
 - Screenshot of the top of the page and of the changed section, inspected by the actor. Two pairs go to the ticket in step 7 with `agent/attach-evidence.mjs`: the section pair, a crop of the element "Look for" names taken with `tests/section-shot.mjs --url <page> --selector <css> --name "<section>"` after every image inside it has decoded (`img.decode()`; a lazy image that reports `complete` before it paints is a grey box, Park City events 2026-09-22), and the full-page pair from `tests/rendered-controls.mjs --screenshots <dir>`. If `section-shot.mjs` exits 1 (`IMAGES_NOT_DECODED`) the crop is not evidence yet: scroll or wait again, and if an image never loads for a visitor either, that is a finding.
 
@@ -127,7 +127,7 @@ Recommend: Complete | Complete after <one question for the reviewer>   (a ticket
 Page: <canonical URL> (object <id>)
 Change: "<before>" -> "<after>" in <section / field>
 Evidence: before hash, after hash, snapshot ref; section capture of <the element Look for names> attached with agent/attach-evidence.mjs --section (desktop, mobile) plus the full-page pair; the Look for line names what the section capture shows
-Tests: ring 1 pass; ring 2 pass (desktop, mobile); ring 3 pass (<two pages>)
+Tests: ring 1 pass; ring 2 pass (desktop, mobile); ring 3 pass (<two pages>)   (staff changes add: team-photo-framing pass (desktop, mobile))
 Observer: <check ids> cleared on run <id>   (observer tickets only)
 ```
 
@@ -143,6 +143,8 @@ The Evidence line is satisfied by attaching, not by linking, and it requires two
 APEX stores both pairs on the ticket and shows them in the panel's Evidence section under the URL field: the section crops first at a legible size, then the full page, each thumbnail with its section name or "full page", viewport, and capture time, and the run's page, run id, and who attached it; the reviewer sees the element without leaving APEX, and the tool prints the served URLs for the run report. A ticket that names several pages gets the two pairs per page with the same run id. If the tool refuses (typed error: missing file, not a PNG or JPEG, over 6 MB, or an APEX 4xx with its body), fix the cause and rerun; it is idempotent on the file bytes, so a rerun never duplicates a screenshot and the section pair never collides with the full-page pair.
 
 The Look for line and the section capture must agree: a note whose Look for names something the attached section capture does not show (a card the crop cut off, an event strip captured before its images painted, a different section) is not finished, and the reviewer sends it back.
+
+Staff changes (classes staff-add, staff-update, staff-photo, staff-bulk; decision 2026-09-22, Matt Barge, after the Jason Tan card on San Francisco showed the middle 57% of a portrait with the top of the head cut off): the required section capture is the card itself, not the team section, taken with `tests/section-shot.mjs --selector "#team_carousel .swiper-slide" --slide-containing "<person>"` (the tool moves the carousel to that slide, so a card past the visible slides is captured on screen; a leadership card uses its container selector), and the Look for line names the framing: "<person> card, <where in the team section>: full head visible, headroom like the neighbouring cards". The Tests line names `team-photo-framing pass (desktop, mobile)` from `tests/page-check.mjs`. A staff ticket whose card capture shows a cut head, or whose framing check is failing or skipped for that card, is not For Review; it goes back to the operator to frame and rebind the headshot (`docs/headshot-binding.md`).
 
 Missing Info template:
 

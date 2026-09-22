@@ -121,7 +121,8 @@ for (const [id, spec] of Object.entries(classesSpec.classes)) {
     executes: routing.executes || null,
     missingInfoGoesTo: registry?.missingInfoGoesTo || missingInfoRouting?.ticketClassMap?.[id] || null,
     adapter,
-    evidenceProfile: EVIDENCE[spec.scope] || ['owner-handoff-record'],
+    // The scope profile plus what the class itself requires (staff classes: the framing check and the card capture, 2026-09-22).
+    evidenceProfile: [...new Set([...(EVIDENCE[spec.scope] || ['owner-handoff-record']), ...(spec.evidence || [])])],
     stopConditions: [
       'contract fails (tests/validate-ticket.mjs --contract)',
       'required inputs missing',
