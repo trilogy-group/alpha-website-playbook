@@ -1,7 +1,7 @@
 {
   "$comment": "Missing-info class routing by ROLE. People hold roles in registry/people.json; never put people in these rules. Twin: registry/missing-info-routing.md",
-  "version": "0.1.0",
-  "asOf": "2026-09-15",
+  "version": "0.2.0",
+  "asOf": "2026-09-23",
   "architecture": {
     "peopleNeverInRules": true,
     "campusRoles": "LIVE via Admissions Hub resolver (tests/resolve-campus-roles.mjs)",
@@ -74,12 +74,14 @@
       "confidence": "high"
     },
     "events_public_sync": {
-      "when": "Public=Yes missing or wrong on site, or canceled event still live",
+      "when": "Public=Yes missing or wrong on site, canceled event still live, or event routing names a Program/site that may not exist",
       "supplies": [
         "events",
-        "hubspot-admin"
+        "hubspot-admin",
+        "hubspot-program-admin",
+        "expansion-new-programs"
       ],
-      "resolutionNote": "events (content / Public flag) then events sync partners (hubspot-admin / events holders who own HubSpot to site reliability). Channel #admin-websites. Do not file Website APEX.",
+      "resolutionNote": "events owns content/Public and selects an existing approved Program and public destination; sync partners own HubSpot-to-site reliability. When the requested Program does not exist, hubspot-program-admin reviews it and expansion-new-programs must approve the separate Organization before creation. Never invent a High School Program or substitute K-8 routing. Channel #admin-websites.",
       "channel": "admin_websites",
       "doNot": [
         "Website APEX"
@@ -170,7 +172,7 @@
   },
   "operatorChecklist": [
     "Classify Missing Info using the classes above.",
-    "Prefer requester for one-off assets; HubSpot Program for campus facts; events then sync partners for Public=Yes; n8n-sync-owner for overwrite exceptions.",
+    "Prefer requester for one-off assets; HubSpot Program for campus facts; events then sync partners for Public=Yes; route nonexistent Program/Organization identity to hubspot-program-admin and expansion-new-programs; n8n-sync-owner for overwrite exceptions.",
     "Resolve people from registry/people.json (department) or the live campus resolver (campus roles).",
     "Comment APEX with who was asked and what is still needed.",
     "Never invent emails or Slack IDs."

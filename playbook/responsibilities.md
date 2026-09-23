@@ -23,8 +23,8 @@ A snapshot older than seven days is stale: the validator should re-resolve befor
 | --- | --- | --- |
 | Campus leadership (one per campus) | Who is on the campus page, their bios, photos, titles; the campus's admissions facts and links | Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide, Campus Coordinator |
 | Marketing | Website changes, approved media, packets, events, PR, brand | website operations (Yash), website agent operator (Matt), packet owner, events, PR and comms, brand authority (MacKenzie) |
-| HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email; HubSpot to WordPress n8n sync | HubSpot owner (Hailey McSpadden); HubSpot admin; n8n sync owner (Cristi Constantin primary, Dmitry Bakaev partner) |
-| Expansion | Pre-announcement and announced campuses, launch dates, community destinations | new programs (Ashley Rahr), founding (rachel@alpha.school) |
+| HubSpot | The Organization-backed Programs records that are the source of truth for campus state, identity, and facts; marketing events; email; HubSpot to WordPress n8n sync. Program creation follows an approved Organization and is not a website operation. | HubSpot owner (Hailey McSpadden); HubSpot program admin (Farhan Raja); HubSpot admin; n8n sync owner (Cristi Constantin primary, Dmitry Bakaev partner) |
+| Expansion | Pre-announcement and announced campuses, launch dates, community destinations, and approval of a new or separate Organization before a HubSpot Program is created | new programs (Ashley Rahr), founding (rachel@alpha.school) |
 | Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin, the events plugin stack, Community app program routing | Elementor owner (not yet named), events plugin owner (Garbhit), WordPress admin, GitHub admin (Fernando), Community app owner (not yet named) |
 | Operations | The National Growth Map sheet and the map API | not yet named |
 | QC | The production observer and its tickets | observer owner (Matt) |
@@ -47,7 +47,7 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | copy, observer-brand-leak | Brand rules; the brand authority for new wording; campus sign-off | marketing workspace brand rules and the branding skill; MacKenzie Price from `registry/people.json`; Dean of Parents, live | requester; brand authority for held items |
 | observer-launch-copy, media, observer-media-identity | Campus state; the approved card asset; the card producer | growth map API; `registry/campus-open-media.json`; website operations (Yash) | website operations; photography or videography when new footage is needed |
 | link-cta, observer-link-cta, observer-packet | The destination; the calendar owner for calendar links; packet path roles | the ticket or HubSpot admission_link; calendars (Zara Raheem); marketing-collateral + brand-authority + website-operations (packet-owner person is an open gap) | Director of Admissions, live; calendars; marketing-collateral / brand-authority / website-operations |
-| observer-event, event-sync | The HubSpot marketing event; the event owner | HubSpot; events (Hailey McSpadden, Brittany Goodman) | events |
+| observer-event, event-sync, event-request | The HubSpot marketing event; the event owner; exact existing Program ID and intended site/feed; approved Organization when a requested Program does not exist | HubSpot; events; HubSpot program admin; expansion new programs for Organization approval | events for content; HubSpot program admin with expansion new programs for missing Program/Organization identity; events plugin owner for delivery |
 | observer-layout, layout | The template owner | Elementor owner, not yet named | Elementor owner, else website operations |
 | observer-map-community | The HubSpot program row, Operations sheet row, verified Community identity, requested surface, and expansion owner | HubSpot Programs via the map API; the sheet; `registry/campus-identities.json`; the ticket; expansion new programs (Ashley Rahr) | expansion for campus facts; Operations or growth-map owner for map rows; Community app owner for Community records or routing, currently unnamed |
 | other-workflow | The owning workflow's assignee | APEX request-type routing: photography (Gaby Guajardo), videography (Chris Mass, Alfred Gomez), video editing (Haven Mass, Nick Stich), collateral (Chris Davidson), calendars (Zara Raheem) | the owning workflow |
@@ -66,11 +66,11 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Brittany Goodman | Events; Head of Experiences and Engagement | brittany.goodman@alpha.school | APEX event editors, HubSpot Marketing team |
 | MacKenzie Price | Brand authority | mackenzie@alpha.school | HubSpot Marketing team record |
 | Zara Raheem | Calendars | zara.raheem@alpha.school | APEX routing |
-| Ashley Rahr | Expansion new programs; Senior Admissions Specialist (Tampa, Orlando, Scottsdale) | ashley.rahr@alpha.school | Admissions Hub, APEX requester history |
+| Ashley Rahr | Expansion new programs; approves new or separate Organization identity before a HubSpot Program is created; Senior Admissions Specialist (Tampa, Orlando, Scottsdale) | ashley.rahr@alpha.school | Admissions Hub, APEX requester history; Program/Organization decision 2026-09-23 |
 | Rachel Goodlad | Head of Expansion | rachel.goodlad@alpha.school | Admissions Hub, HubSpot owner record |
 | Jeremy Williams | Dean of Parents for Expansion (fallback DoP) | jeremy.williams@2hourlearning.com | Admissions Hub, HubSpot DoPs team |
 | Garbhit Sharma | Events plugin owner; WordPress and Elementor finishing; HubSpot push rights | garbhit.sharma@alpha.school | #admin-websites, APEX topology doc, observer routing |
-| Farhan Raja | HubSpot program admin: Program records, Finalsite and form routing; HubSpot push rights | farhan.raja@trilogy.com | APEX topology doc, #admin-websites |
+| Farhan Raja | HubSpot program admin: Organization-backed Program records, Finalsite and form routing, SIS/downstream mapping; HubSpot push rights | farhan.raja@trilogy.com | APEX topology doc, #admin-websites; Program/Organization decision 2026-09-23 |
 | Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions) | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation |
 | Dmitry Bakaev | HubSpot admin; n8n sync owner partner; events HubSpot to site sync reliability (with Garbhit). Not info-packet Canva owner | dmitry.bakaev@trilogy.com | APEX HubSpot push; Cristi GDM; Matt #admin-websites Aug 2026 |
 

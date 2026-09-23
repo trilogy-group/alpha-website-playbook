@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22.",
-  "version": "0.10",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22. 0.11: event requests cannot invent a campus High School Program; Program identity follows an approved Organization through SIS, TimeBack, and downstream systems, decision 2026-09-23.",
+  "version": "0.11",
   "classes": {
     "other-workflow": {
       "match": {
@@ -50,10 +50,10 @@
       ],
       "recipe": null,
       "scope": "event-owner",
-      "note": "Events reach the site from HubSpot Marketing Events through the WordPress plugin. A request about events on a campus page is triaged by the website operators: campus missing from the events drop-down, wrong time zone display, or a campus strip not showing events is plugin configuration (events-plugin-owner, Garbhit Sharma); an event missing because it is not public or has the wrong program interest is the HubSpot owner, asked per event, never by reassigning the ticket. Hailey McSpadden, 2026-09-17: event tickets are not hers by default.",
+      "note": "Events reach the site from HubSpot Marketing Events through the WordPress plugin. A request about events on a campus page is triaged by the website operators: campus missing from the events drop-down, wrong time zone display, or a campus strip not showing events is plugin configuration (events-plugin-owner); an event missing because it is not public or has the wrong program interest is the HubSpot owner, asked per event. Program identity is not a website label: Programs are defined one-to-one by Organizations through SIS, TimeBack, and downstream systems. A request for a separate campus High School Program requires internal review by hubspot-program-admin and approval of the separate Organization by expansion-new-programs; never invent or silently substitute a K-8 Program. Hailey McSpadden, 2026-09-17: event tickets are not hers by default.",
       "observerChecks": [],
       "routingLabel": "events_public_sync",
-      "doneWhen": "the requested events show on the campus strip and /upcoming-events/ after the next 30-minute sync, verified by the website agent",
+      "doneWhen": "the exact approved Program and destination are recorded; the requested events show on the intended aggregate site and campus strip after the next 30-minute sync; the website agent verifies the registration route",
       "assignTo": "website-agent-operator"
     },
     "map-community-request": {

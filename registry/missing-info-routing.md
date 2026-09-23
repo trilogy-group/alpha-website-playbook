@@ -2,7 +2,7 @@
 
 **Purpose:** When an Alpha website APEX ticket is Missing Info or blocked on facts or assets, which **role** to ask. People hold roles in `registry/people.json`. Campus DoA/DoP are live via the Admissions Hub resolver. Machine twin: `registry/missing-info-routing.json`.
 
-**As of:** 2026-09-15. Responsibility layer: `spec/responsibilities.json` v0.2.1.
+**As of:** 2026-09-23. Responsibility layer: `spec/responsibilities.json` v0.4.
 
 ## Quick routing table
 
@@ -11,7 +11,7 @@
 | `staff_photo_title_bio` | requester, then dean-of-parents (live) | `#support-websites` / APEX Provide Info | events, n8n-sync-owner inventing bios |
 | `launch_copy_coming_soon` | website-operations / requester | `#support-websites` | inventing open/closed |
 | `hubspot_campus_facts` | director-of-admissions (confirm) → hubspot-owner (edit) → n8n-sync-owner (sync) | HubSpot/n8n GDM; `#admin-websites` for Locations List | hand-edit synced WP facts |
-| `events_public_sync` | events (content) then hubspot-admin / events sync partners | `#admin-websites` | Website APEX |
+| `events_public_sync` | events (content and existing Program choice), then hubspot-admin / events sync partners; hubspot-program-admin + expansion-new-programs if the Program/Organization does not exist | `#admin-websites` | inventing a High School Program or silently using K-8 routing |
 | `info_packet` | campus + marketing-collateral + brand-authority + expansion-founding + website-operations host | APEX / `#support-websites` | publishing unapproved Flipsnack |
 | `apply_link_admission` | hubspot-owner (`admission_link`) then website-agent-operator | APEX Website once SoT URL exists | inventing `submission_campus` |
 | `brand_copy_voice_ux` | brand-authority (+ brand-authority-liaison) | existing brand GDM / APEX for UX impl | campus DoA for national brand voice |
@@ -24,7 +24,7 @@
 1. **staff_photo_title_bio** : Requester first (usually campus DoA/DoP). Fall back to live dean-of-parents. Need exportable image files.
 2. **launch_copy_coming_soon** : Campus requester confirms; website-operations executes.
 3. **hubspot_campus_facts** : Confirm with director-of-admissions, edit HubSpot, then n8n-sync-owner. Not hand WP for synced fields.
-4. **events_public_sync** : events owns content/Public flag; sync reliability partners own HubSpot→site. Route in `#admin-websites`. Do not file Website APEX.
+4. **events_public_sync** : events owns content/Public and chooses an existing approved Program and public destination; sync reliability partners own HubSpot→site. If the requested Program does not exist, `hubspot-program-admin` reviews it and `expansion-new-programs` approves any separate Organization before creation. Never invent a campus High School Program or silently substitute its K-8 Program. Route in `#admin-websites`.
 5. **info_packet** : Campus facts + marketing-collateral (Canva) + brand-authority signoff + expansion-founding language QA + website-operations host. **packet-owner person is an open gap** (Dmitry was incorrectly sole holder).
 6. **apply_link_admission** : hubspot-owner for `admission_link` / email; website-agent-operator for WP map.
 7. **brand_copy_voice_ux** : brand-authority SoT; brand-authority-liaison for UX feedback.
