@@ -11,4 +11,5 @@
 - `source-authority.json`: authoritative system, delivery path, owner and verification method by website field family.
 - `actor-capabilities.json`: what each human or agent actor can actually execute, separate from the Alpha MCP tool inventory.
 - `page-family-requirements.json`: coverage and readiness status for campus and non-campus page families.
-- `schemas/`: JSON Schemas enforced by `tests/validate-playbook.mjs` for the new authority, capability and page-family specs.
+- `brand-visual.json`: the official Alpha visual brand for the website (palette with roles, gradients, contrast table with verdicts, Montserrat type scale, logo rules and canonical file hashes, approved claims cross-referenced to MacKenzie's copy rules, provenance: canon vs skill extension) and the configuration of the `page-check brand-visual` check (severities, enforcement mode, font allowlist). Schema-validated; the logo files in `playbook/brand/assets/` must match the recorded hashes.
+- `schemas/`: JSON Schemas enforced by `tests/validate-playbook.mjs` for the authority, capability, page-family and brand-visual specs.

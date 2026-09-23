@@ -39,6 +39,7 @@ import { AttachEvidenceError, MAX_BYTES, MAX_SECTION_LENGTH, apexBases, attachEv
 import { DEVICE_SCALE_FACTOR, PADDING_PX, SectionShotError, VIEWPORTS as SECTION_VIEWPORTS, clipWithPadding, outputFile, parseArgs as parseSectionArgs, planSectionShot, slugify } from './section-shot.mjs'
 import { VERTICAL_MIN_COVERAGE, frameCoverage, frameForFit, judgeFraming, parseObjectPosition, scoreCards, teamPhotoFramingCheck } from './photo-framing.mjs'
 import { FrameHeadshotError, cropWindow, decodePng, encodePng, main as frameMain, parseFocus, parseRatio, planFrame } from '../agent/frame-headshot.mjs'
+import { BrandVisualError, backgroundVerdict, brandVisualCheck, contrastRatio, contrastVerdict, evaluateBrandVisual, fontVerdict, isLargeText, isNearWhite, loadBrandVisual, logoVerdict, normalizeHex, primaryFamily, relativeLuminance } from './brand-visual.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'policy-bundle.generated.json'), 'utf8'))
@@ -1010,4 +1011,187 @@ test('section-shot --slide-containing picks the card by its text and is planned 
   const source = fs.readFileSync(path.join(root, 'tests', 'section-shot.mjs'), 'utf8')
   assert.match(source, /filter\(\{ hasText: plan\.slideContaining \}\)/, 'the match is chosen by its text')
   assert.match(source, /instance\.slideTo\(index, 0\)/, 'a Swiper slide is brought into view before the capture')
+})
+
+test('brand-visual spec loads, matches the brand guide values, and a malformed file is a typed error', () => {
+  const spec = loadBrandVisual()
+  assert.equal(spec.typography.family, 'Montserrat')
+  assert.deepEqual(spec.palette.map((p) => p.hex), ['#110068', '#0D4AD1', '#418BE9', '#00BCFF', '#FFFFFF', '#000000'])
+  assert.deepEqual(spec.tints.map((t) => t.hex), ['#C8DBF4', '#47C4E6'])
+  assert.equal(spec.gradients.find((g) => g.id === 'primary').css, 'linear-gradient(160deg, #110068 0%, #0D4AD1 100%)')
+  // Every ratio in the table is the computed WCAG ratio, to one decimal, and the verdict follows the thresholds.
+  for (const row of spec.contrast.table) {
+    assert.equal(contrastRatio(row.foreground, row.background), row.ratio, `${row.foreground} on ${row.background}`)
+    const expected = row.ratio >= spec.contrast.bodyMinRatio ? 'any' : (row.ratio >= spec.contrast.largeMinRatio ? 'large-only' : 'never')
+    assert.equal(row.verdict, expected, `verdict for ${row.foreground} on ${row.background}`)
+  }
+  assert.deepEqual(spec.contrast.table.filter((r) => r.verdict === 'never').map((r) => `${r.foreground} on ${r.background}`), ['#110068 on #0D4AD1', '#00BCFF on #FFFFFF', '#FFFFFF on #00BCFF'])
+  assert.equal(spec.typography.scale[0].weight, 900); assert.equal(spec.typography.scale[0].case, 'ALL CAPS'); assert.equal(spec.typography.scale[0].sizePt, 40)
+  assert.match(spec.typography.scaleCalibration, /Letter/)
+  assert.deepEqual(spec.logo.colourways.map((c) => c.hex), ['#110068', '#1C1CFF', '#FFFFFF'])
+  assert.match(spec.logo.inconsistency, /#1C1CFF/)
+  assert.equal(spec.logo.lockups.liveSite, 'ALPHA (logowhite-2.svg)')
+  // The canonical files are the ones the spec hashes.
+  for (const asset of spec.logo.assets) assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root, spec.logo.assetsDir, asset.file))).digest('hex'), asset.sha256, asset.file)
+  // Claims are verbatim and cross-referenced, never restated as word rules.
+  const claims = Object.fromEntries(spec.approvedClaims.claims.map((c) => [c.id, c]))
+  assert.equal(claims.positioning.text, 'FINALLY, A SCHOOL THAT WORKS AS HARD AS YOUR KID DOES.')
+  assert.equal(claims['stat-love-school'].text, '95% of Alpha students say they love school.')
+  assert.match(claims['stat-love-school'].copyRule, /most recent survey number/)
+  assert.match(claims['what-is-alpha'].copyRule, /Classes rank in the top 1%, never students/)
+  assert.match(spec.approvedClaims.copyRulesFile, /alpha-brand-copy-rules\.md/)
+  assert.ok(spec.notCanon.some((n) => /#FFC72C/.test(n.item)), 'the kid accent is listed as not canon')
+  assert.equal(spec.check.enforcement.mode, 'advisory')
+  assert.deepEqual(spec.check.severities, { font: 'fail', contrast: 'fail', background: 'info', headline: 'info', logo: 'info' })
+  // Malformed files fail closed.
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'brand-visual-'))
+  const bad = (mutate) => { const copy = JSON.parse(JSON.stringify(spec)); mutate(copy); const file = path.join(tmp, 'spec.json'); fs.writeFileSync(file, JSON.stringify(copy)); try { loadBrandVisual(file) } catch (error) { assert.ok(error instanceof BrandVisualError, error.stack); return error.code } assert.fail('expected SPEC_INVALID') }
+  assert.equal(bad((c) => { c.palette[0].hex = '#11006' }), 'SPEC_INVALID')
+  assert.equal(bad((c) => { c.contrast.table[0].verdict = 'fine' }), 'SPEC_INVALID')
+  assert.equal(bad((c) => { c.typography.family = 'Poppins' }), 'SPEC_INVALID')
+  assert.equal(bad((c) => { c.check.severities.font = 'loud' }), 'SPEC_INVALID')
+  assert.equal(bad((c) => { c.check.enforcement.mode = 'maybe' }), 'SPEC_INVALID')
+  fs.writeFileSync(path.join(tmp, 'broken.json'), '{ not json')
+  assert.throws(() => loadBrandVisual(path.join(tmp, 'broken.json')), (e) => e instanceof BrandVisualError && e.code === 'SPEC_INVALID')
+  assert.throws(() => loadBrandVisual(path.join(tmp, 'missing.json')), (e) => e instanceof BrandVisualError && e.code === 'SPEC_MISSING')
+  // The validator rejects a hash that no longer matches its file.
+  const validatorSource = fs.readFileSync(path.join(root, 'tests', 'validate-playbook.mjs'), 'utf8')
+  assert.match(validatorSource, /spec\/schemas\/brand-visual\.schema\.json/)
+  assert.match(validatorSource, /brand-visual asset .* sha256/)
+})
+
+test('brand-visual colour maths: luminance, contrast, near-white, large text, palette membership', () => {
+  assert.equal(normalizeHex('rgb(13, 74, 209)'), '#0D4AD1')
+  assert.equal(normalizeHex('rgba(0, 188, 255, 1)'), '#00BCFF')
+  assert.equal(normalizeHex('#fff'), '#FFFFFF')
+  assert.equal(normalizeHex('transparent'), '#000000', 'transparent parses to black at alpha 0; callers read the alpha')
+  assert.equal(normalizeHex('inherit'), null)
+  assert.equal(Math.round(relativeLuminance('#FFFFFF') * 1000) / 1000, 1)
+  assert.equal(relativeLuminance('#000000'), 0)
+  assert.equal(contrastRatio('#FFFFFF', '#110068'), 17.2)
+  assert.equal(contrastRatio('#00BCFF', '#FFFFFF'), 2.2)
+  assert.equal(contrastRatio('#FFFFFF', '#418BE9'), 3.4)
+  assert.equal(contrastRatio('#110068', '#0D4AD1'), 2.4)
+  assert.equal(contrastRatio('#FFC72C', '#110068'), 11.0, 'the skill extension figure, computed the same way')
+  assert.equal(contrastRatio('nope', '#FFFFFF'), null)
+  const spec = loadBrandVisual()
+  assert.equal(isNearWhite('#F8F8F8', spec), true, 'the kit 8 page ground')
+  assert.equal(isNearWhite('#F1F2F6', spec), true)
+  assert.equal(isNearWhite('#C8DBF4', spec), false, 'the pale panel is a tint, not white')
+  assert.equal(isNearWhite('#00BCFF', spec), false)
+  assert.equal(isLargeText(24, 400, spec), true)
+  assert.equal(isLargeText(23, 400, spec), false)
+  assert.equal(isLargeText(19, 700, spec), true)
+  assert.equal(isLargeText(19, 600, spec), false)
+  assert.equal(isLargeText('x', 700, spec), false)
+  assert.deepEqual(backgroundVerdict('rgb(17, 0, 104)', spec), { verdict: 'in-palette', hex: '#110068' })
+  assert.deepEqual(backgroundVerdict('rgb(200, 219, 244)', spec), { verdict: 'in-palette', hex: '#C8DBF4' })
+  assert.deepEqual(backgroundVerdict('rgb(0, 0, 239)', spec), { verdict: 'off-palette', hex: '#0000EF' }, 'the kit 8 primary is not in the guide')
+  assert.deepEqual(backgroundVerdict('rgba(0, 0, 239, 0.5)', spec), { verdict: 'not-solid', hex: null })
+  assert.equal(primaryFamily('"Montserrat", sans-serif'), 'Montserrat')
+  assert.equal(primaryFamily('Poppins, sans-serif'), 'Poppins')
+  assert.equal(primaryFamily('-apple-system, "system-ui", "Segoe UI"'), '-apple-system')
+})
+
+test('brand-visual verdicts: fonts, never-row contrast, logos; the allowlist is reported, not hidden', () => {
+  const spec = loadBrandVisual()
+  assert.equal(fontVerdict('Montserrat, sans-serif', {}, spec).verdict, 'ok')
+  assert.equal(fontVerdict('"montserrat"', {}, spec).verdict, 'ok')
+  assert.equal(fontVerdict('eicons', {}, spec).verdict, 'icon')
+  assert.equal(fontVerdict('"Font Awesome 5 Free"', {}, spec).verdict, 'icon')
+  assert.equal(fontVerdict('Poppins, sans-serif', {}, spec).verdict, 'off-brand')
+  const allowed = fontVerdict('-apple-system, "system-ui", Roboto', { allowlistIds: ['alpha-hubspot-events-cards'] }, spec)
+  assert.equal(allowed.verdict, 'allowed'); assert.equal(allowed.entry.thirdParty, false)
+  assert.equal(fontVerdict('Poppins', { allowlistIds: ['no-such-entry'] }, spec).verdict, 'off-brand', 'an unknown allowlist id allows nothing')
+  // contrast: the guide's never rows, with near-white standing in for white as a background.
+  assert.equal(contrastVerdict({ color: '#00BCFF', background: '#FFFFFF', fontSizePx: 16, fontWeight: 400 }, spec).verdict, 'never')
+  assert.equal(contrastVerdict({ color: '#00BCFF', background: '#F8F8F8', fontSizePx: 48, fontWeight: 900 }, spec).verdict, 'never', 'sky on the near-white page ground, any size')
+  assert.equal(contrastVerdict({ color: '#FFFFFF', background: '#00BCFF', fontSizePx: 16, fontWeight: 400 }, spec).verdict, 'never')
+  assert.equal(contrastVerdict({ color: '#110068', background: '#0D4AD1', fontSizePx: 40, fontWeight: 900 }, spec).verdict, 'never')
+  assert.equal(contrastVerdict({ color: '#FFFFFF', background: '#418BE9', fontSizePx: 16, fontWeight: 400 }, spec).verdict, 'large-only-at-body-size')
+  assert.equal(contrastVerdict({ color: '#FFFFFF', background: '#418BE9', fontSizePx: 32, fontWeight: 700 }, spec).verdict, 'ok', 'white on light blue is a headline move')
+  assert.equal(contrastVerdict({ color: '#00BCFF', background: '#110068', fontSizePx: 12, fontWeight: 400 }, spec).verdict, 'ok', 'the kicker line')
+  assert.equal(contrastVerdict({ color: '#0000EF', background: '#FFFFFF', fontSizePx: 16, fontWeight: 400 }, spec).verdict, 'ok', 'off-palette is not a contrast failure; the palette check reports it')
+  assert.equal(contrastVerdict({ color: '#00BCFF', background: null, fontSizePx: 16, fontWeight: 400 }, spec).verdict, 'unknown-background')
+  // logos: canonical by hash or name, the known live file, and strangers.
+  const navy = spec.logo.assets.find((a) => a.file === 'alpha-school-logo-navy.svg')
+  assert.deepEqual(logoVerdict({ src: 'https://alpha.school/wp-content/uploads/2026/09/x.svg', sha256: navy.sha256 }, spec).verdict, 'canonical')
+  assert.equal(logoVerdict({ src: 'https://alpha.school/wp-content/uploads/2026/09/alpha-school-logo-navy.svg', sha256: 'ff'.repeat(32) }, spec).matchedBy, 'name (hash differs)')
+  const live = logoVerdict({ src: 'https://alpha.school/wp-content/uploads/2024/03/logowhite-2.svg?v=3', sha256: '97413b301a210a17e0944869d890325b295b9e142fcfdc8e2c6ac8047f50bd13' }, spec)
+  assert.equal(live.verdict, 'known-live'); assert.equal(live.file, 'logowhite-2.svg'); assert.equal(live.asset.lockup, 'ALPHA')
+  assert.equal(logoVerdict({ src: 'https://alpha.school/wp-content/uploads/2025/01/logo-final-v2.png', sha256: null }, spec).verdict, 'unknown')
+})
+
+test('brand-visual check row: findings carry selector, value and rule; advisory mode warns, enforced fails, INFO never fails', () => {
+  const spec = loadBrandVisual()
+  const text = (over) => ({ selector: 'p in #intro', container: '#intro', region: 'main', sample: 'Join us for an info session', fontFamily: 'Montserrat, sans-serif', fontSizePx: 16, fontWeight: 400, color: '#2D2D2D', colorAlpha: 1, background: '#FFFFFF', backgroundKind: 'solid', allowlistIds: [], isHeadline: false, ...over })
+  const measured = {
+    url: 'https://alpha.school/austin/', viewport: { width: 1440, height: 1000 },
+    text: [
+      text({}),
+      text({ selector: 'h2.elementor-heading-title in #FoundingFamilies', container: '#FoundingFamilies', sample: 'See How Alpha Transforms Kids', fontFamily: 'Poppins, sans-serif', isHeadline: true, color: '#0000EF' }),
+      text({ selector: 'span in .elementor-element-50ceda9e', container: '.elementor-element-50ceda9e', sample: 'Looking for more stories', fontFamily: 'Slack-Lato, Slack-Fractions, appleLogo, sans-serif' }),
+      text({ selector: 'div.ahse-event-type in #hubspot_events', container: '.ahse-event-card', sample: 'Info Session', fontFamily: '-apple-system, "system-ui", "Segoe UI", Roboto, sans-serif', allowlistIds: ['alpha-hubspot-events-cards'] }),
+      text({ selector: 'span.ahse-time in #hubspot_events', container: '.ahse-event-card', sample: 'at 12:30 PM', fontFamily: '-apple-system, "system-ui", "Segoe UI", Roboto, sans-serif', allowlistIds: ['alpha-hubspot-events-cards'] }),
+      text({ selector: 'span.kicker in #hero', container: '#hero', sample: 'IS HERE.', color: '#00BCFF', background: '#F8F8F8', fontSizePx: 48, fontWeight: 900, isHeadline: true }),
+      text({ selector: 'p in .elementor-element-photo', container: '.elementor-element-photo', sample: 'over a photo', color: '#00BCFF', background: null, backgroundKind: 'image' }),
+      text({ selector: 'i.eicon-chevron-right', container: '#carousel', sample: '', fontFamily: 'eicons' }),
+      text({ selector: 'h1 in #title', container: '#title', sample: 'Alpha Austin', fontFamily: 'Montserrat', color: '#F8F8F8', background: '#0000EF', fontSizePx: 80, fontWeight: 700, isHeadline: true }),
+    ],
+    fields: [
+      { selector: 'section.hero', region: 'main', backgroundColor: '#0000EF', width: 1440, height: 405 },
+      { selector: 'div.overlay', region: 'main', backgroundColor: '#0000EF', width: 1440, height: 405 },
+      { selector: 'footer', region: 'footer', backgroundColor: '#110068', width: 1440, height: 300 },
+    ],
+    logos: [
+      { selector: 'img.wp-image-81 in .elementor-element-e4f7c0f', region: 'header', src: 'https://alpha.school/wp-content/uploads/2024/03/logowhite-2.svg', alt: 'Alpha School', width: 181, height: 80, visible: true, sha256: '97413b301a210a17e0944869d890325b295b9e142fcfdc8e2c6ac8047f50bd13' },
+      { selector: 'img.wp-image-81 in .elementor-element-1b9d9d97', region: 'footer', src: 'https://alpha.school/wp-content/uploads/2024/03/logowhite-2.svg', alt: 'Alpha School', width: 60, height: 26, visible: true, sha256: '97413b301a210a17e0944869d890325b295b9e142fcfdc8e2c6ac8047f50bd13' },
+    ],
+  }
+  const findings = evaluateBrandVisual(measured, spec)
+  const by = (kind, sev) => findings.filter((f) => f.kind === kind && (!sev || f.severity === sev))
+  assert.equal(by('font', 'fail').length, 2, 'Poppins and Slack-Lato, once each')
+  assert.equal(by('font', 'info').length, 1, 'the events cards are one allowed line, not one per element')
+  assert.match(by('font', 'info')[0].detail, /2 elements in -apple-system allowed by alpha-hubspot-events-cards \(in-house/)
+  assert.match(by('font', 'info')[0].reason, /events plugin owner/)
+  const poppins = by('font', 'fail').find((f) => f.value === 'Poppins')
+  assert.equal(poppins.selector, 'h2.elementor-heading-title in #FoundingFamilies')
+  assert.match(poppins.rule, /Montserrat, and only Montserrat/)
+  assert.match(poppins.detail, /See How Alpha Transforms Kids/)
+  assert.equal(by('contrast').length, 1, 'the kicker on the near-white ground; the element over the photo is skipped')
+  assert.equal(by('contrast')[0].severity, 'fail')
+  assert.match(by('contrast')[0].value, /#00BCFF on #F8F8F8 \(2\.1:1, 48px\/900\)/)
+  assert.match(by('contrast')[0].rule, /#00BCFF on #FFFFFF: never/)
+  assert.equal(by('background').length, 1, 'off-palette fields once per colour; navy is in the palette')
+  assert.equal(by('background')[0].value, '#0000EF'); assert.match(by('background')[0].detail, /2 large fields/); assert.equal(by('background')[0].severity, 'info')
+  assert.deepEqual(by('headline').map((f) => f.value).sort(), ['#0000EF', '#F8F8F8'])
+  assert.equal(by('logo').length, 2, 'one per file and region')
+  assert.match(by('logo')[0].detail, /known live file matched by hash \(ALPHA lockup, white\)/)
+  assert.match(by('logo')[1].detail, /rendered 60px wide, below the 72px minimum/)
+  // The row: advisory warns and lists everything; enforced fails; a clean page passes.
+  const row = brandVisualCheck(measured, spec)
+  assert.equal(row.id, 'brand-visual'); assert.equal(row.result, 'warn'); assert.equal(row.mode, 'advisory')
+  assert.match(row.detail, /3 FAIL-severity findings \(advisory mode/)
+  assert.match(row.detail, /font h2\.elementor-heading-title in #FoundingFamilies: Poppins \[typography\.family/)
+  assert.match(row.detail, /INFO: /)
+  assert.equal(row.findings.length, findings.length)
+  const enforced = JSON.parse(JSON.stringify(spec)); enforced.check.enforcement.mode = 'enforced'
+  assert.equal(brandVisualCheck(measured, enforced).result, 'fail')
+  const softened = JSON.parse(JSON.stringify(spec)); softened.check.severities.font = 'info'; softened.check.severities.contrast = 'warn'
+  const softRow = brandVisualCheck(measured, softened)
+  assert.equal(softRow.result, 'warn'); assert.doesNotMatch(softRow.detail, /FAIL-severity/); assert.match(softRow.detail, /1 WARN: contrast/)
+  const clean = { ...measured, text: [text({}), text({ selector: 'h1', color: '#110068', fontSizePx: 64, fontWeight: 900, isHeadline: true })], fields: [measured.fields[2]], logos: [{ ...measured.logos[0], src: 'https://alpha.school/wp-content/uploads/2026/09/alpha-school-logo-white.svg', sha256: spec.logo.assets.find((a) => a.file === 'alpha-school-logo-white.svg').sha256 }] }
+  const cleanRow = brandVisualCheck(clean, spec)
+  assert.equal(cleanRow.result, 'pass', cleanRow.detail)
+  assert.match(cleanRow.detail, /1 INFO: logo .* canonical white svg, matched by hash/)
+  assert.equal(brandVisualCheck({ error: 'net::ERR_FAILED', text: [], fields: [], logos: [] }, spec).result, 'fail', 'a page that did not load is a failure, not a pass')
+  // Registration: advisory in the check map, INFO-only in the copy and launch-copy doneWhen, its own found-defect class.
+  const checkMap = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'observer-check-map.json'), 'utf8'))
+  assert.equal(checkMap.checks['brand-visual'].status, 'advisory'); assert.equal(checkMap.checks['brand-visual'].requirement, 'site.brand.visual')
+  for (const id of ['copy', 'launch-copy-request', 'observer-launch-copy', 'observer-brand-leak']) assert.match(bundle.classes[id].doneWhen, /brand-visual .* as INFO, not blocking/, `${id} doneWhen`)
+  assert.equal(bundle.classes['observer-brand-visual'].intake.ownerRole, 'website-agent-operator'); assert.equal(bundle.classes['observer-brand-visual'].approves, 'website-operations')
+  assert.match(bundle.classes['observer-brand-visual'].doneWhen, /brand-visual no longer lists the finding/)
+  const pageCheckSource = fs.readFileSync(path.join(root, 'tests', 'page-check.mjs'), 'utf8')
+  assert.match(pageCheckSource, /checks\.push\(\{ id: BRAND_CHECK_ID, result: 'skipped', detail: renderedSkipReason \}\)/, 'without a browser the check is skipped, never passed')
+  assert.match(pageCheckSource, /c\.result === 'warn'/, 'warn rows are printed and do not touch the exit code')
 })

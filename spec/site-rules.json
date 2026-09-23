@@ -1,12 +1,19 @@
 {
   "$comment": "Site-wide rule ids and one-line statements; prose in playbook/site/site-rules.md.",
-  "version": "0.3",
+  "version": "0.4",
   "rules": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
     "site.layout.images": "Visible images render; staff photos do not clip faces.",
     "site.layout.console": "Under 20 console errors on critical routes.",
     "site.brand.copy": "MacKenzie's recorded copy rules; four held items untouched.",
+    "site.brand.visual": {
+      "id": "site.brand.visual",
+      "statement": "Montserrat on every text element; backgrounds, headlines and large fields from the four blues, white, black or the two tints; no never-row contrast pair (sky blue on white, white on sky or light blue at body size, navy on medium blue); the logo an unmodified canonical file. Word-level copy rules are MacKenzie's and win on any overlap.",
+      "source": "Alpha School Brand Guidelines (47pp) via the alpha-brand-guide skill 2026-09-22; decision 2026-09-22",
+      "check": "page-check brand-visual (advisory; tests/brand-visual.mjs)",
+      "spec": "spec/brand-visual.json"
+    },
     "site.identity.sister-brand": "No sister-brand names in page-owned content except the Brownsville/Nova exception.",
     "site.identity.other-campus": "No other campus referenced in image names, alt text, links, packets, calendars, schema.",
     "site.seasonal.window": "Seasonal CTAs only inside the approved window; launch statements name month/season and year.",

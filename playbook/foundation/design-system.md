@@ -1,6 +1,6 @@
 # Design System (as observed and as declared)
 
-Status: the "Observed" column is what alpha.school serves today (Elementor kit 8, read from the live homepage CSS on September 17, 2026, `spec/inventory/design-tokens-observed-2026-09-17.json`). The "Declared" column is what brand documents say. Where they disagree, nobody has ruled (Q-27). There is no tokens file, component library, or written visual standard for the site; this file is the first one. Owner of the visual system: not named (Elementor owner gap, Q-12).
+Status (2026-09-22): the declared visual standard is now `spec/brand-visual.json` (the official Alpha School Brand Guidelines; prose in `playbook/site/visual-brand.md`), checked by `page-check brand-visual`. The tables below remain the observed-versus-declared record. Earlier status: the "Observed" column is what alpha.school serves today (Elementor kit 8, read from the live homepage CSS on September 17, 2026, `spec/inventory/design-tokens-observed-2026-09-17.json`). The "Declared" column is what brand documents say. Where they disagree, nobody has ruled (Q-27). There is no tokens file, component library, or written visual standard for the site; this file is the first one. Owner of the visual system: not named (Elementor owner gap, Q-12).
 
 ## 1. Color
 

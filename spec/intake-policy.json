@@ -116,6 +116,7 @@
     "observer-launch-copy": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-fact-sync": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-brand-leak": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-brand-visual": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-media-identity": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-link-cta": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-packet": { "policy": "allowed", "ownerRole": "packet-owner", "queue": "owner" },

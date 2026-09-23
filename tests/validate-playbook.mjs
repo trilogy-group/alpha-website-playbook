@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from 'node:crypto'
 import fs from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import path from 'node:path'
@@ -214,11 +215,31 @@ export function runValidation() {
     ['spec/source-authority.json', 'spec/schemas/source-authority.schema.json'],
     ['spec/actor-capabilities.json', 'spec/schemas/actor-capabilities.schema.json'],
     ['spec/page-family-requirements.json', 'spec/schemas/page-family-requirements.schema.json'],
+    ['spec/brand-visual.json', 'spec/schemas/brand-visual.schema.json'],
   ]
   for (const [targetFile, schemaFile] of schemaTargets) {
     const target = readJson(targetFile, errors)
     const schema = readJson(schemaFile, errors)
     if (target && schema) validateSchemaValue(target, schema, targetFile, errors)
+  }
+
+  // Visual brand: the canonical logo files must be the ones the spec hashes, every colourway file must be listed, and
+  // the palette must carry the four blues the guide names (a typo in a hex would silently loosen the check).
+  const brand = readJson('spec/brand-visual.json', errors)
+  if (brand) {
+    const assetsDir = path.join(root, brand.logo?.assetsDir || 'playbook/brand/assets')
+    for (const asset of brand.logo?.assets || []) {
+      const file = path.join(assetsDir, asset.file)
+      if (!fs.existsSync(file)) { errors.push(`brand-visual asset missing: ${asset.file}`); continue }
+      const actual = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')
+      if (actual !== asset.sha256) errors.push(`brand-visual asset ${asset.file}: sha256 ${actual.slice(0, 12)} does not match the spec (${String(asset.sha256).slice(0, 12)})`)
+    }
+    const listed = new Set((brand.logo?.assets || []).map((a) => a.file))
+    for (const colourway of brand.logo?.colourways || []) for (const file of colourway.files || []) if (!listed.has(file)) errors.push(`brand-visual colourway ${colourway.id} names unlisted file ${file}`)
+    for (const hex of ['#110068', '#0D4AD1', '#418BE9', '#00BCFF', '#FFFFFF', '#000000']) if (!(brand.palette || []).some((p) => p.hex === hex)) errors.push(`brand-visual palette is missing ${hex}`)
+    for (const id of ['positioning', 'commitment-1', 'commitment-2', 'commitment-3', 'stat-love-school', 'stat-vacation']) if (!(brand.approvedClaims?.claims || []).some((c) => c.id === id)) errors.push(`brand-visual approved claims missing ${id}`)
+    if (!fs.existsSync(path.join(root, 'playbook/brand/README.md'))) errors.push('required file missing: playbook/brand/README.md')
+    if (!fs.existsSync(path.join(root, 'playbook/site/visual-brand.md'))) errors.push('required file missing: playbook/site/visual-brand.md')
   }
 
   const staleMarkers = [

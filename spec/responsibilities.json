@@ -212,7 +212,8 @@
         "media",
         "observer-media-identity",
         "observer-launch-copy (media part)",
-        "observer-brand-leak"
+        "observer-brand-leak",
+        "observer-brand-visual"
       ],
       "resolution": {
         "mode": "registry",
@@ -796,6 +797,11 @@
       "approves": "website-operations",
       "executes": "website-agent-operator"
     },
+    "observer-brand-visual": {
+      "supplies": "website-operations (ruling on kit 8 typography, colours, and the logo lockup; docs/decisions.md 2026-09-22)",
+      "approves": "website-operations",
+      "executes": "website-agent-operator"
+    },
     "observer-link-cta": {
       "supplies": "director-of-admissions or packet-owner or hubspot-owner (admission_link)",
       "approves": "director-of-admissions",
@@ -1013,6 +1019,14 @@
         "replacement copy": "dean-of-parents (live)"
       },
       "missingInfoGoesTo": "dean-of-parents"
+    },
+    "observer-brand-visual": {
+      "needs": {
+        "brand values": "spec/brand-visual.json",
+        "canonical logo files": "playbook/brand/assets (sha256 in the spec)",
+        "allowlist": "spec/brand-visual.json check.font.allowlist"
+      },
+      "missingInfoGoesTo": "website-operations"
     },
     "link-cta": {
       "needs": {
