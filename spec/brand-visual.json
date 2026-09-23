@@ -1,0 +1,185 @@
+{
+  "$comment": "The official Alpha visual brand for the website: palette, gradients, contrast verdicts, Montserrat type scale, logo rules, and the approved claims, as the Alpha School Brand Guidelines (47 pages) state them. Derived from the alpha-brand-guide skill (marketingsupport .claude/skills/alpha-brand-guide, 2026-09-22), which cites page numbers into the guide. Word-level copy rules are NOT here: MacKenzie's rules (marketingsupport docs/rules/alpha-brand-copy-rules.md, playbook/site/site-rules.md Brand copy, the brand detector) win on any overlap and are linked from the claims, never restated. Machine consumer: tests/brand-visual.mjs (the page-check brand-visual check). Prose: playbook/site/visual-brand.md, playbook/brand/README.md. Schema: spec/schemas/brand-visual.schema.json.",
+  "version": "0.1",
+  "asOf": "2026-09-22",
+  "provenance": {
+    "sourceDocument": "Alpha School Brand Guidelines, 47-page official deck (palette p14, type p8-9, logo p5-6, graphic elements p22-25, sample layouts p11, p15, p29)",
+    "derivedFrom": "marketingsupport/.claude/skills/alpha-brand-guide (SKILL.md, references/brand-core.md, references/parent-facing.md, references/kid-facing.md, assets/alpha-brand.css, assets/alpha-school-logo-*.svg|png)",
+    "skillVersion": "2026-09-22",
+    "canon": "Everything in palette, tints, gradients, contrast, typography, logo, and approvedClaims is canon: taken from the guide or sampled from its own sample layouts. The two tints (#C8DBF4, #47C4E6) are sampled from the guide's one-sided flyer (p11), not named in the palette page.",
+    "extensions": "The skill's kid-facing house rules are NOT canon and are NOT adopted for the website: the warm accent #FFC72C, sentence-case headlines for ages 4-5, and the age-band word counts. They exist only so classroom materials for pre-readers work; nothing a parent or visitor sees may use them. Listed under notCanon so nobody reads them back in.",
+    "precedence": "Word-level copy: MacKenzie's rules (marketingsupport docs/rules/alpha-brand-copy-rules.md; playbook/site/site-rules.md Brand copy) win over this file and over the guide. Visual values: this file, until a named leadership decision changes it (docs/decisions.md 2026-09-22). Where the live site disagrees (kit 8 primary #0000EF, the 2024 ALPHA lockup logo), nobody has ruled yet (design-system.md Q-27); the check reports, the decision is Matt's."
+  },
+  "notCanon": [
+    { "item": "kid-facing warm accent #FFC72C", "status": "skill extension, kid-facing only, never on the website" },
+    { "item": "sentence-case H1 for ages 4-5", "status": "skill extension, never on the website" },
+    { "item": "age-band word counts", "status": "skill extension, classroom materials only" },
+    { "item": "green, orange, cream backgrounds on the guide's iconography pages", "status": "labeled style exploration in the guide itself; not an approved palette" }
+  ],
+  "palette": [
+    { "id": "navy", "name": "Dark navy", "hex": "#110068", "rgb": [17, 0, 104], "role": "Primary background, footers, headline text on white, logo colourway", "canon": "p14" },
+    { "id": "medium", "name": "Medium blue", "hex": "#0D4AD1", "rgb": [13, 74, 209], "role": "Gradient partner, panels, icon badges, secondary fields", "canon": "p14" },
+    { "id": "light", "name": "Light blue", "hex": "#418BE9", "rgb": [65, 139, 233], "role": "Supporting fields, large shapes, chart fills; white text on it only at headline size", "canon": "p14" },
+    { "id": "sky", "name": "Sky blue", "hex": "#00BCFF", "rgb": [0, 188, 255], "role": "The accent: kicker line in headlines, highlights, arrows; lives on navy, never on white", "canon": "p14" },
+    { "id": "white", "name": "White", "hex": "#FFFFFF", "rgb": [255, 255, 255], "role": "Body surfaces, text on navy, logo colourway", "canon": "p14" },
+    { "id": "black", "name": "Black", "hex": "#000000", "rgb": [0, 0, 0], "role": "Body text on white, single-colour logo", "canon": "p14" }
+  ],
+  "tints": [
+    { "id": "pale", "name": "Pale blue panel", "hex": "#C8DBF4", "role": "Callout panels and info boxes on white, with navy text", "canon": "sampled from the guide's one-sided flyer, p11" },
+    { "id": "stat", "name": "Stat cyan", "hex": "#47C4E6", "role": "Big statistic numerals only (the 95% treatment)", "canon": "sampled from the guide's one-sided flyer, p11" }
+  ],
+  "gradients": [
+    { "id": "primary", "css": "linear-gradient(160deg, #110068 0%, #0D4AD1 100%)", "from": "#110068", "to": "#0D4AD1", "role": "The signature field: navy to medium, white text on it", "canon": "p14, p25" },
+    { "id": "bright", "css": "linear-gradient(160deg, #0D4AD1 0%, #00BCFF 100%)", "from": "#0D4AD1", "to": "#00BCFF", "role": "Medium to sky; the energetic variant", "canon": "p14, p25" },
+    { "id": "deep", "css": "linear-gradient(160deg, #110068 0%, #418BE9 100%)", "from": "#110068", "to": "#418BE9", "role": "Navy to light", "canon": "p14, p25" }
+  ],
+  "gradientRule": "Diagonal, roughly top-left dark to bottom-right light (160deg). Never vertical bands.",
+  "contrast": {
+    "$comment": "Computed WCAG 2 contrast ratios, not eyeballed. verdict: any = passes for body and headline text; large-only = >= 3:1 but < 4.5:1, headline size only (largeText below), never body; never = fails both. The check treats a text element whose computed colour and effective solid background match a never row as FAIL, and a large-only row at body size as FAIL. white as a background also matches near-white page grounds (nearWhite).",
+    "bodyMinRatio": 4.5,
+    "largeMinRatio": 3,
+    "largeText": { "$comment": "WCAG large text: 24px, or 18.66px at weight >= 700. The guide's print figure is 24pt bold (about 32px); the web threshold is the stricter reading for body copy.", "minPx": 24, "minPxBold": 18.66, "boldWeight": 700 },
+    "nearWhite": { "$comment": "A background counts as white when its contrast against #FFFFFF is at most this ratio (#F8F8F8 is 1.06, #F1F2F6 is 1.12, #C8DBF4 is 1.42 and is not near-white).", "maxContrastToWhite": 1.25 },
+    "table": [
+      { "foreground": "#FFFFFF", "background": "#110068", "ratio": 17.2, "verdict": "any", "note": "white on navy" },
+      { "foreground": "#110068", "background": "#FFFFFF", "ratio": 17.2, "verdict": "any", "note": "navy on white" },
+      { "foreground": "#110068", "background": "#C8DBF4", "ratio": 12.2, "verdict": "any", "note": "navy on the pale panel" },
+      { "foreground": "#47C4E6", "background": "#110068", "ratio": 8.4, "verdict": "any", "note": "the big-stat treatment" },
+      { "foreground": "#00BCFF", "background": "#110068", "ratio": 7.9, "verdict": "any", "note": "the kicker-line move" },
+      { "foreground": "#1C1CFF", "background": "#FFFFFF", "ratio": 7.9, "verdict": "any", "note": "the released electric-blue logo on white" },
+      { "foreground": "#FFFFFF", "background": "#0D4AD1", "ratio": 7.2, "verdict": "any", "note": "white on medium blue" },
+      { "foreground": "#FFFFFF", "background": "#418BE9", "ratio": 3.4, "verdict": "large-only", "note": "white on light blue: large headlines only (>= 24pt bold in print), never body" },
+      { "foreground": "#110068", "background": "#0D4AD1", "ratio": 2.4, "verdict": "never", "note": "navy on medium blue is invisible" },
+      { "foreground": "#00BCFF", "background": "#FFFFFF", "ratio": 2.2, "verdict": "never", "note": "sky blue lives on navy, not on white" },
+      { "foreground": "#FFFFFF", "background": "#00BCFF", "ratio": 2.2, "verdict": "never", "note": "white on sky blue" }
+    ]
+  },
+  "typography": {
+    "family": "Montserrat",
+    "rule": "Montserrat, and only Montserrat (canon, p8). Never a substitute display font, not even for kids; playfulness comes from size, colour, and shape.",
+    "source": "https://fonts.google.com/specimen/Montserrat",
+    "webfontLink": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400&display=swap",
+    "allowedWeights": [400, 500, 700, 800, 900],
+    "forbiddenWeights": { "values": [100, 200, 300], "note": "Never Montserrat Thin, ExtraLight, or Light for anything" },
+    "scaleCalibration": "Sizes are the guide's own specs for a US Letter handout (p9). On the website they are a ratio ladder, not pixel values: scale the whole ladder together, keep the weights, keep the case. The website's observed sizes (playbook/foundation/design-system.md) are not checked against these numbers.",
+    "scale": [
+      { "level": "H1", "weight": 900, "weightName": "Black", "sizePt": 40, "case": "ALL CAPS", "tracking": "normal", "leading": "0.9-1.0" },
+      { "level": "H2", "weight": 800, "weightName": "ExtraBold", "sizePt": 30, "case": "ALL CAPS", "tracking": "normal", "leading": "1.0" },
+      { "level": "H3", "weight": 700, "weightName": "Bold", "sizePt": 22, "case": "Sentence case", "tracking": "normal", "leading": "1.2" },
+      { "level": "H4", "weight": 700, "weightName": "Bold", "sizePt": 16, "case": "Sentence case", "tracking": "normal", "leading": "1.3" },
+      { "level": "Body", "weight": 400, "weightName": "Regular", "sizePt": 10, "case": "Sentence case", "tracking": "-10 (about -0.01em)", "leading": "1.5" },
+      { "level": "Pull quote", "weight": 500, "weightName": "Medium", "sizePt": 18, "case": "Sentence case", "tracking": "-10 (about -0.01em)", "leading": "1.35" },
+      { "level": "Attribution", "weight": 700, "weightName": "Bold + Regular (700/400)", "sizePt": 12, "case": "Sentence case", "tracking": "normal", "leading": "1.4" },
+      { "level": "Caption", "weight": 400, "weightName": "Regular", "sizePt": 8, "case": "Sentence case", "tracking": "normal", "leading": "1.4" }
+    ],
+    "rules": [
+      "Headlines: ALL CAPS, Black weight, leading 0.9-1.0x; they stack in 2-4 short lines and do not run wide.",
+      "Body: never below 10pt in print, never all-caps, never justified.",
+      "Never letterspace the Black weight.",
+      "Never italicize a headline.",
+      "The signature move: the last line of a headline in sky blue #00BCFF, on a navy or gradient field."
+    ]
+  },
+  "logo": {
+    "colourways": [
+      { "id": "navy", "hex": "#110068", "use": "White or pale-blue backgrounds; the default on white", "files": ["alpha-school-logo-navy.svg", "alpha-school-logo-navy.png"] },
+      { "id": "electric-blue", "hex": "#1C1CFF", "use": "White backgrounds when a brighter mark is wanted", "files": ["alpha-school-logo-blue.svg", "alpha-school-logo-blue.png"] },
+      { "id": "white", "hex": "#FFFFFF", "use": "Navy, blue, gradient, or photo backgrounds", "files": ["alpha-school-logo-white.svg", "alpha-school-logo-white.png"] }
+    ],
+    "rules": [
+      "Never redrawn, recoloured outside the three colourways, stretched, rotated, outlined, given a drop shadow or glow, placed on a busy photo area, or separated (bird from wordmark). Use a file from playbook/brand/assets/ unmodified.",
+      "Clear space on all four sides >= the cap height of the A in ALPHA (about 9% of the mark's width; the mark is 2.74:1).",
+      "Minimum size 0.75in / 72px wide. Below that the pixel-dissolve on the wing muddies; the guide provides a simplified small-scale mark for that case (ask for it; do not shrink this one).",
+      "Placement top-left or top-right; bottom-centre is acceptable on a certificate.",
+      "On photos: the white logo over a calm, darker region, or over the colour side of the composition, not the photo side."
+    ],
+    "minWidthPx": 72,
+    "clearSpace": "cap height of the A in ALPHA on all sides",
+    "lockups": {
+      "note": "Two lockups exist. ALPHA (the corporate mark shown in the brand guide itself) and ALPHA SCHOOL (the released logo files). The guide's own materials for families use ALPHA SCHOOL and that is what ships in playbook/brand/assets/. The live site header and footer serve the ALPHA lockup (wp-content/uploads/2024/03/logowhite-2.svg, white, 153x52 viewBox, dated 2024). Which lockup the website should carry is not ruled; see docs/decisions.md 2026-09-22 and design-system.md Q-27.",
+      "guide": "ALPHA",
+      "releasedFiles": "ALPHA SCHOOL",
+      "liveSite": "ALPHA (logowhite-2.svg)"
+    },
+    "inconsistency": "The released logo files are electric blue #1C1CFF, which is not one of the four palette blues (#110068, #0D4AD1, #418BE9, #00BCFF). That is a real inconsistency in the source material, not an error in this file. On white either the blue or the navy logo is defensible; navy sits better with the rest of the palette and is the default.",
+    "vendorNote": "The original vendor SVG set the word SCHOOL as live text in the Neuropolitical font, so it renders in a wrong fallback on any machine without it. The files in playbook/brand/assets/ are outlined and font-independent. Use these, not the originals from Drive.",
+    "assetsDir": "playbook/brand/assets",
+    "assets": [
+      { "file": "alpha-school-logo-navy.svg", "colourway": "navy", "sha256": "6e720214d891ff22a28f6e3765e6e266d6d4484badf1f74ed1601eda29997389", "format": "svg", "viewBox": "0 0 1113.71 406.067" },
+      { "file": "alpha-school-logo-navy.png", "colourway": "navy", "sha256": "05abb307b78087d577ae8e9fcc3e6c68a7192fa8ea95043df1a0ce9f55d14040", "format": "png", "pixels": "2398x875, transparent" },
+      { "file": "alpha-school-logo-blue.svg", "colourway": "electric-blue", "sha256": "600bd8c295173a4d785bff37ee88eb6e733e8bee00648ae46db169fbf299b814", "format": "svg", "viewBox": "0 0 1113.71 406.067" },
+      { "file": "alpha-school-logo-blue.png", "colourway": "electric-blue", "sha256": "66834c4c26429823a34393154fb2c4d5b5b86ca1dc51c0c43dd17c10db71bcc2", "format": "png", "pixels": "2398x875, transparent" },
+      { "file": "alpha-school-logo-white.svg", "colourway": "white", "sha256": "00ebcdb328fe0ac6763037469c1ec66a0825d577feea92e9d15523a37fc13b1e", "format": "svg", "viewBox": "0 0 1113.71 406.067" },
+      { "file": "alpha-school-logo-white.png", "colourway": "white", "sha256": "7287b5fd56b631a6b73846920a3674a753eccc80964445894091c2ffad6aff1d", "format": "png", "pixels": "2398x875, transparent" }
+    ],
+    "knownLiveFiles": [
+      { "file": "logowhite-2.svg", "sha256": "97413b301a210a17e0944869d890325b295b9e142fcfdc8e2c6ac8047f50bd13", "lockup": "ALPHA", "colourway": "white", "where": "header template 76 and footer template 77, every page (wp-content/uploads/2024/03/logowhite-2.svg)", "status": "not canonical; the corporate ALPHA lockup, white, unmodified as far as the outline shows; awaiting the lockup decision" }
+    ]
+  },
+  "graphicElements": {
+    "wingEdge": "One long diagonal or gentle curve derived from the bird's wing splits photo from flat colour or gradient, sweeping from an upper corner down across. Never a straight horizontal split, never symmetrical. (canon, p22-25)",
+    "facets": "Thin low-poly lines echoing the bird's polygon structure, white at 8-15% opacity over a gradient. If it reads as lines, it is too strong. (canon, p22-25)",
+    "never": ["rounded blobs", "soft glows", "gradients on gradients", "drop shadows on type", "stock swooshes", "emoji as a graphic system"]
+  },
+  "approvedClaims": {
+    "$comment": "Verbatim from the guide's market-facing layouts (p11), as parent-facing.md lists them. Use verbatim or not at all; never invent or round a statistic; never restate a claim in stronger terms; never promise an individual outcome; never compare to a named competitor; always replace [City]. copyRule cross-references MacKenzie's word-level rules (marketingsupport docs/rules/alpha-brand-copy-rules.md) where the same claim already has a rule; those rules win on the wording and are not restated here. Pricing, admissions terms, and deadlines are not in this list.",
+    "copyRulesFile": "marketingsupport docs/rules/alpha-brand-copy-rules.md (playbook prose: playbook/site/site-rules.md Brand copy; detector: npm run website:brand-qc)",
+    "claims": [
+      { "id": "positioning", "group": "The positioning line", "text": "FINALLY, A SCHOOL THAT WORKS AS HARD AS YOUR KID DOES." },
+      { "id": "support-line", "group": "The support line", "text": "At Alpha [City], kids learn twice as much in half the time, and actually look forward to Mondays.", "copyRule": "Twice as much, never twice as fast; Alpha [City] campus naming" },
+      { "id": "what-is-alpha", "group": "What is Alpha", "text": "Alpha blends world-class academics with life-changing mentorship. In just two hours a day, students complete personalized, AI-powered learning, and every Alpha class ranks in the top 1% nationwide.", "copyRule": "Classes rank in the top 1%, never students; 99th percentile only in formal data contexts" },
+      { "id": "what-is-alpha-2", "group": "What is Alpha", "text": "The rest of the day is for team-driven workshops that build life skills like leadership, financial literacy & entrepreneurship and grit.", "copyRule": "life skills workshops (plural skills, no hyphen)" },
+      { "id": "commitment-1", "group": "The 3 commitments (always all three, always in this order)", "text": "Kids will love school", "copyRule": "Love School, never love learning" },
+      { "id": "commitment-2", "group": "The 3 commitments (always all three, always in this order)", "text": "Kids will learn 2x in 2 hours", "copyRule": "Write 2x with a lowercase x; 2x is the general growth figure; only 2 Hour Learning or 2-Hour Learning" },
+      { "id": "commitment-3", "group": "The 3 commitments (always all three, always in this order)", "text": "Kids will learn life skills", "copyRule": "life skills workshops (plural skills, no hyphen)" },
+      { "id": "guides-headline", "group": "Guides", "text": "GUIDES UNLOCK POTENTIAL" },
+      { "id": "guides-body", "group": "Guides", "text": "Guides are mentors. They help kids set goals, stay motivated, and believe in their limitless potential." },
+      { "id": "stat-love-school", "group": "The statistics", "text": "95% of Alpha students say they love school.", "copyRule": "Love-school stat uses the most recent survey number (MacKenzie: confirm the current number, 96% at the quiz); Love School, never love learning. The guide's 95% is the brand-guide figure; the copy rule decides which number the website shows." },
+      { "id": "stat-vacation", "group": "The statistics", "text": "60% say they'd rather go to school than go on vacation.", "copyRule": "Vacation stat is a 40-60% range; the guide's 60% is the top of that range" },
+      { "id": "headline-1", "group": "Approved headlines (from the guide's own poster set)", "text": "THE FUTURE OF EDUCATION IS HERE.", "copyRule": "The word \"education\" is on MacKenzie's advisory list, held for her decision" },
+      { "id": "headline-2", "group": "Approved headlines (from the guide's own poster set)", "text": "WHERE LEARNING TRANSFORMS LIVES." },
+      { "id": "headline-3", "group": "Approved headlines (from the guide's own poster set)", "text": "KIDS LEARN LIFE SKILLS THAT MATTER.", "copyRule": "life skills workshops (plural skills, no hyphen)" },
+      { "id": "headline-4", "group": "Approved headlines (from the guide's own poster set)", "text": "LEARNING THAT MIRRORS REAL LIFE" },
+      { "id": "headline-5", "group": "Approved headlines (from the guide's own poster set)", "text": "A school where kids crush academics in 2 hours, build life skills through workshops, and thrive beyond the classroom.", "copyRule": "life skills workshops (plural skills, no hyphen); Always use the Oxford comma (advisory)" },
+      { "id": "headline-6", "group": "Approved headlines (from the guide's own poster set)", "text": "Academics at the right level and pace." },
+      { "id": "cta-1", "group": "Calls to action", "text": "Visit Alpha.School" },
+      { "id": "cta-2", "group": "Calls to action", "text": "Scan to learn why families are switching to Alpha." },
+      { "id": "cta-3", "group": "Calls to action", "text": "Discover the future of education today.", "copyRule": "The word \"education\" is on MacKenzie's advisory list, held for her decision; No manufactured urgency (\"today\" is the guide's own wording; a human reads it)" }
+    ],
+    "hardRules": [
+      "Never invent a statistic: not a rounded one, not an approximately, not one half-remembered from a deck. A number not above needs the marketing team and a clearly marked [STAT TBD] placeholder.",
+      "Do not restate a claim in stronger terms: top 1% nationwide does not become the best school in the country.",
+      "Never make individual-outcome promises; the commitments are about the model, not a guarantee about one kid.",
+      "Never compare Alpha to a named competitor school.",
+      "Always replace [City] / [INSERT CITY]; a surface that ships with the placeholder visible is the most common failure.",
+      "Pricing, admissions terms, and enrollment deadlines are not in this list; they come from HubSpot and the admissions owners, never from memory."
+    ]
+  },
+  "check": {
+    "$comment": "Configuration for tests/page-check.mjs brand-visual (tests/brand-visual.mjs). severities: fail | warn | info per finding kind. enforcement.mode: advisory means fail-severity findings make the check row 'warn' (listed, exit code untouched, ring 2 still passes); enforced makes them 'fail'. First version is advisory (decision 2026-09-22): the check is registered INFO-only in the copy and launch-copy doneWhen until Matt rules on the live-site conflicts (kit 8 primary #0000EF, the Poppins video H2 on the campus template, the ALPHA lockup logo).",
+    "id": "brand-visual",
+    "enforcement": { "mode": "advisory", "since": "2026-09-22", "note": "Flip to enforced once the conflicts named in docs/decisions.md 2026-09-22 are ruled and the campus template is clean; then a fail-severity finding fails ring 2." },
+    "severities": { "font": "fail", "contrast": "fail", "background": "info", "headline": "info", "logo": "info" },
+    "viewports": { "desktop": { "width": 1440, "height": 1000 } },
+    "font": {
+      "$comment": "Every visible element with its own text whose computed font-family does not start with Montserrat is a finding, unless an allowlist entry matches. An allowed match is still listed (INFO) with the entry's reason, once per family and container, so the report says what was allowed. Icon fonts render glyphs, not copy.",
+      "iconFamilies": ["eicons", "Font Awesome", "FontAwesome", "fontawesome", "elementor-icons", "dashicons", "Material Icons", "Material Symbols", "icomoon", "Ionicons"],
+      "allowlist": [
+        { "id": "hubspot-embeds", "selector": ".hs-form, .hbspt-form, [class*=\"hs-form\"], [id^=\"hs-form\"], [class*=\"hbspt\"], .hs-cta-wrapper, [class*=\"hs-cta\"]", "thirdParty": true, "reason": "HubSpot forms and CTAs render with HubSpot's own stylesheet inside the page; the font is HubSpot's to fix in the form theme, not a WordPress edit." },
+        { "id": "alpha-hubspot-events-cards", "selector": "[class*=\"ahse-\"]", "thirdParty": false, "reason": "Alpha HubSpot Events plugin (in-house, events plugin owner) styles its cards with the system font stack (-apple-system, system-ui, Segoe UI, Roboto). Allowed so one plugin defect does not repeat per event card on every campus page; it is a plugin fix, not a page edit. Remove this entry when the plugin ships Montserrat." },
+        { "id": "chat-widget", "selector": "[class*=\"voiceflow\"], [id*=\"voiceflow\"], #vfrc-widget, [class*=\"vfrc-\"]", "thirdParty": true, "reason": "Voiceflow chat widget, third-party." },
+        { "id": "cookie-and-consent", "selector": "[class*=\"cookie\"], [id*=\"cookie\"], [class*=\"consent\"], [class*=\"cmplz\"]", "thirdParty": true, "reason": "Consent banners are vendor-styled." }
+      ]
+    },
+    "background": {
+      "$comment": "Large solid-colour fields (at least minWidthPx by minHeightPx) whose computed background-color is not in the palette or tints. Photos, gradients, and third-party embeds are legitimate and are skipped (background-image present, alpha < 1, or inside an iframe). Reported once per colour with a count and the first selector. INFO on the first version.",
+      "minWidthPx": 300,
+      "minHeightPx": 120,
+      "headlineSelector": "h1, h2, h3"
+    },
+    "logo": {
+      "$comment": "Every <img> whose src, alt, class, or enclosing home link says logo, plus images in the header and footer templates that link to the site root. Reported with the file name, the fetched file's sha256, and whether it matches a canonical asset by name or hash, or a known live file. INFO.",
+      "selector": "img[src*=\"logo\" i], img[alt*=\"logo\" i], img[class*=\"logo\" i], .elementor-location-header a[href=\"https://alpha.school/\"] img, .elementor-location-header a[href=\"/\"] img, .elementor-location-footer a[href=\"https://alpha.school/\"] img, .elementor-location-footer a[href=\"/\"] img"
+    }
+  }
+}

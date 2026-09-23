@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alpha.school/playbook/brand-visual.schema.json",
+  "type": "object",
+  "required": ["version", "asOf", "provenance", "notCanon", "palette", "tints", "gradients", "contrast", "typography", "logo", "approvedClaims", "check"],
+  "properties": {
+    "version": { "type": "string" },
+    "asOf": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+    "provenance": {
+      "type": "object",
+      "required": ["sourceDocument", "derivedFrom", "skillVersion", "canon", "extensions", "precedence"],
+      "properties": {
+        "sourceDocument": { "type": "string" },
+        "derivedFrom": { "type": "string" },
+        "skillVersion": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+        "canon": { "type": "string" },
+        "extensions": { "type": "string" },
+        "precedence": { "type": "string" }
+      }
+    },
+    "notCanon": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["item", "status"], "properties": { "item": { "type": "string" }, "status": { "type": "string" } } } },
+    "palette": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "hex", "rgb", "role", "canon"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "hex": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+          "rgb": { "type": "array", "minItems": 3, "items": { "type": "number" } },
+          "role": { "type": "string" },
+          "canon": { "type": "string" }
+        }
+      }
+    },
+    "tints": { "type": "array", "minItems": 2, "items": { "type": "object", "required": ["id", "name", "hex", "role", "canon"], "properties": { "hex": { "type": "string", "pattern": "^#[0-9A-F]{6}$" } } } },
+    "gradients": { "type": "array", "minItems": 3, "items": { "type": "object", "required": ["id", "css", "from", "to", "role", "canon"], "properties": { "from": { "type": "string", "pattern": "^#[0-9A-F]{6}$" }, "to": { "type": "string", "pattern": "^#[0-9A-F]{6}$" }, "css": { "type": "string", "pattern": "^linear-gradient\\(" } } } },
+    "contrast": {
+      "type": "object",
+      "required": ["bodyMinRatio", "largeMinRatio", "largeText", "nearWhite", "table"],
+      "properties": {
+        "bodyMinRatio": { "type": "number" },
+        "largeMinRatio": { "type": "number" },
+        "largeText": { "type": "object", "required": ["minPx", "minPxBold", "boldWeight"], "properties": { "minPx": { "type": "number" }, "minPxBold": { "type": "number" }, "boldWeight": { "type": "number" } } },
+        "nearWhite": { "type": "object", "required": ["maxContrastToWhite"], "properties": { "maxContrastToWhite": { "type": "number" } } },
+        "table": {
+          "type": "array",
+          "minItems": 11,
+          "items": {
+            "type": "object",
+            "required": ["foreground", "background", "ratio", "verdict"],
+            "properties": {
+              "foreground": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+              "background": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+              "ratio": { "type": "number" },
+              "verdict": { "type": "string", "enum": ["any", "large-only", "never"] },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": ["family", "rule", "allowedWeights", "forbiddenWeights", "scaleCalibration", "scale", "rules"],
+      "properties": {
+        "family": { "type": "string", "enum": ["Montserrat"] },
+        "allowedWeights": { "type": "array", "minItems": 1, "items": { "type": "number" } },
+        "scaleCalibration": { "type": "string" },
+        "scale": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["level", "weight", "weightName", "sizePt", "case", "tracking"],
+            "properties": { "level": { "type": "string" }, "weight": { "type": "number" }, "sizePt": { "type": "number" }, "case": { "type": "string", "enum": ["ALL CAPS", "Sentence case"] }, "tracking": { "type": "string" } }
+          }
+        },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "logo": {
+      "type": "object",
+      "required": ["colourways", "rules", "minWidthPx", "clearSpace", "lockups", "inconsistency", "assetsDir", "assets", "knownLiveFiles"],
+      "properties": {
+        "colourways": { "type": "array", "minItems": 3, "items": { "type": "object", "required": ["id", "hex", "use", "files"], "properties": { "hex": { "type": "string", "pattern": "^#[0-9A-F]{6}$" }, "files": { "type": "array", "minItems": 1, "items": { "type": "string" } } } } },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "minWidthPx": { "type": "number" },
+        "lockups": { "type": "object", "required": ["note", "guide", "releasedFiles", "liveSite"] },
+        "inconsistency": { "type": "string" },
+        "assetsDir": { "type": "string" },
+        "assets": { "type": "array", "minItems": 6, "items": { "type": "object", "required": ["file", "colourway", "sha256", "format"], "properties": { "file": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }, "format": { "type": "string", "enum": ["svg", "png"] } } } },
+        "knownLiveFiles": { "type": "array", "items": { "type": "object", "required": ["file", "sha256", "lockup", "colourway", "where", "status"], "properties": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } } } }
+      }
+    },
+    "approvedClaims": {
+      "type": "object",
+      "required": ["copyRulesFile", "claims", "hardRules"],
+      "properties": {
+        "copyRulesFile": { "type": "string" },
+        "claims": { "type": "array", "minItems": 20, "items": { "type": "object", "required": ["id", "group", "text"], "properties": { "id": { "type": "string" }, "group": { "type": "string" }, "text": { "type": "string" }, "copyRule": { "type": "string" } } } },
+        "hardRules": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": ["id", "enforcement", "severities", "viewports", "font", "background", "logo"],
+      "properties": {
+        "id": { "type": "string", "enum": ["brand-visual"] },
+        "enforcement": { "type": "object", "required": ["mode", "since"], "properties": { "mode": { "type": "string", "enum": ["advisory", "enforced"] }, "since": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" } } },
+        "severities": {
+          "type": "object",
+          "required": ["font", "contrast", "background", "headline", "logo"],
+          "properties": {
+            "font": { "type": "string", "enum": ["fail", "warn", "info"] },
+            "contrast": { "type": "string", "enum": ["fail", "warn", "info"] },
+            "background": { "type": "string", "enum": ["fail", "warn", "info"] },
+            "headline": { "type": "string", "enum": ["fail", "warn", "info"] },
+            "logo": { "type": "string", "enum": ["fail", "warn", "info"] }
+          }
+        },
+        "font": { "type": "object", "required": ["iconFamilies", "allowlist"], "properties": { "iconFamilies": { "type": "array", "items": { "type": "string" } }, "allowlist": { "type": "array", "items": { "type": "object", "required": ["id", "selector", "thirdParty", "reason"], "properties": { "id": { "type": "string" }, "selector": { "type": "string" }, "thirdParty": { "type": "boolean" }, "reason": { "type": "string" } } } } } },
+        "background": { "type": "object", "required": ["minWidthPx", "minHeightPx", "headlineSelector"], "properties": { "minWidthPx": { "type": "number" }, "minHeightPx": { "type": "number" }, "headlineSelector": { "type": "string" } } },
+        "logo": { "type": "object", "required": ["selector"], "properties": { "selector": { "type": "string" } } }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet).",
-  "version": "0.2",
+  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet). 0.3: the playbook brand-visual check (tests/page-check.mjs, not a production observer check) is listed under checks with status advisory and under coverageOutsideObserver site.brand.visual.",
+  "version": "0.3",
   "requirements": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
@@ -30,7 +30,8 @@
     "campus.resources.apply": "Apply CTA present for Open/Announced with HubSpot admission_link, reachable and campus-specific.",
     "campus.team.roster": "Staff cards match the roster: names, titles, bios, headshots; faces not clipped.",
     "campus.events.strip": "Only this campus's events (plus approved national events) render; canceled/private accept no registration.",
-    "campus.page.reachable": "Canonical URL loads 200, in sitemap, canonical tag matches, no redirect to another campus."
+    "campus.page.reachable": "Canonical URL loads 200, in sitemap, canonical tag matches, no redirect to another campus.",
+    "site.brand.visual": "Official Alpha visual brand (spec/brand-visual.json): Montserrat on every text element, no never-row contrast pair, backgrounds and headlines from the palette, an unmodified canonical logo file; word rules stay MacKenzie's."
   },
   "checks": {
     "community-destination": {
@@ -56,6 +57,11 @@
       "requirement": "site.brand.copy",
       "status": "advisory",
       "note": "brand typography telemetry"
+    },
+    "brand-visual": {
+      "requirement": "site.brand.visual",
+      "status": "advisory",
+      "note": "playbook tests/page-check.mjs (tests/brand-visual.mjs), not a production observer check; fail-severity findings are warn while spec/brand-visual.json check.enforcement.mode is advisory; INFO-only in the copy and launch-copy doneWhen; files as observer-brand-visual"
     },
     "visual-baseline": {
       "requirement": "site.layout.viewport",
@@ -450,7 +456,8 @@
     "campus.resources.apply": "observer routing rule campus-application-* checks (not emitted as finding() literals in checks.mjs; confirm names) plus page-check cta-links-resolve",
     "campus.team.roster": "no roster source configured; requester is the source until one exists",
     "campus.events.strip": "observer campus-event-filter and public-event-sync (routing rules) plus HubSpot events source",
-    "site.layout.images": "playbook tests/page-check.mjs team-photo-framing (rendered, desktop and mobile: every team-card image inside its object-fit cover box; tests/photo-framing.mjs, spec/team-card-frame.json); the observer's campus-image-crop-risk stays the dispatching check"
+    "site.layout.images": "playbook tests/page-check.mjs team-photo-framing (rendered, desktop and mobile: every team-card image inside its object-fit cover box; tests/photo-framing.mjs, spec/team-card-frame.json); the observer's campus-image-crop-risk stays the dispatching check",
+    "site.brand.visual": "playbook tests/page-check.mjs brand-visual (rendered, desktop: computed font-family, never-row contrast pairs, off-palette fields and headlines, logo file hash against playbook/brand/assets; tests/brand-visual.mjs, spec/brand-visual.json); the observer font-family check stays advisory telemetry"
   },
   "checkToElement": {
     "$comment": "observer check -> field-map element for tests/diagnose-field.mjs",

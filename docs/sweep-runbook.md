@@ -47,6 +47,8 @@ An Open campus page showing launch copy ("is launching in Fall 2026", "Coming Fa
 
 The agent files them itself (decision 2026-09-19): `node agent/file-found-ticket.mjs <payload.json>` deduplicates against open tickets by idempotency key, title, and page plus check, creates the APEX Request, and assigns the class owner from the policy bundle (website operations when the role has no person). The payload shape is the one the batches produced: title, description (page, expected, observed, evidence, recommended path, done when), url, program, customFields with `source: agent-found`, `checkId`, `foundWhileWorking`, `idempotencyKey`, `ownerRole`. Tooling defects (Alpha MCP, playbook scripts) are not APEX website tickets; they go to the repo as issues or PRs and are named in the run report.
 
+Visual brand findings from `tests/page-check.mjs brand-visual` (an element not in Montserrat, a never-row contrast pair, an off-palette field or headline colour, a non-canonical logo file; `spec/brand-visual.json`, `playbook/site/visual-brand.md`) file as class `observer-brand-visual`, owner website-operations, with the selector, value and rule from the finding in the observed and expected lines; one ticket per shared template or plugin, never one per page, and INFO findings are noted, not filed, while the check is advisory.
+
 ## Status means one thing
 
 Decided 2026-09-22 after Matt's first review pass found plan-only and waiting tickets parked in For Review:

@@ -19,6 +19,12 @@
  *              Playwright is borrowed like rendered-controls.mjs does (--playwright <dir>, PLAYWRIGHT_ROOT, or the
  *              sibling aeo checkout); without it the check is reported as skipped, never as passed. --skip-rendered
  *              skips it on purpose (ring 3 header and footer checks on untouched pages do not need a browser).
+ *   brand      brand-visual: computed font-family is Montserrat on every text element (icon fonts and the allowlisted
+ *              embeds in spec/brand-visual.json listed as allowed), no "never" contrast pair from the brand guide's
+ *              table (sky blue on white, white on sky or light blue at body size), off-palette large fields and
+ *              headline colours (INFO), and every logo image classified against playbook/brand/assets (INFO).
+ *              Maths in tests/brand-visual.mjs. Advisory on the first version: fail-severity findings make the row
+ *              `warn`, listed and not counted in the exit code, until spec check.enforcement.mode is enforced.
  * Screenshots are still required by the protocol; this script covers the text, structure, and framing part.
  * Exit code 1 when any check fails.
  */
@@ -26,8 +32,10 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { loadChromium, SectionShotError } from './section-shot.mjs'
 import { measureTeamCards, teamPhotoFramingCheck } from './photo-framing.mjs'
+import { CHECK_ID as BRAND_CHECK_ID, brandVisualCheck, loadBrandVisual, measureBrandVisual } from './brand-visual.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
+const brandVisual = loadBrandVisual()
 const lifecycle = JSON.parse(fs.readFileSync(path.join(here, '../spec/campus-lifecycle.json'), 'utf8'))
 const media = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-open-media.json'), 'utf8'))
 const campusPages = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-pages.json'), 'utf8')).campuses
@@ -53,9 +61,11 @@ for (const url of urls) results.push(await checkPage(url, args.state))
 if (args.json) fs.writeFileSync(args.json, `${JSON.stringify(results, null, 2)}\n`)
 for (const r of results) {
   const fails = r.checks.filter((c) => c.result === 'fail')
+  const warns = r.checks.filter((c) => c.result === 'warn')
   const skips = r.checks.filter((c) => c.result === 'skipped')
-  console.log(`${fails.length ? 'FAIL' : 'PASS'}  ${r.url}  state=${r.state}  ${r.checks.length} checks, ${fails.length} failing${fails.length ? ': ' + fails.map((c) => c.id).join(', ') : ''}${skips.length ? `, ${skips.length} skipped: ${skips.map((c) => c.id).join(', ')}` : ''}`)
+  console.log(`${fails.length ? 'FAIL' : 'PASS'}  ${r.url}  state=${r.state}  ${r.checks.length} checks, ${fails.length} failing${fails.length ? ': ' + fails.map((c) => c.id).join(', ') : ''}${warns.length ? `, ${warns.length} warning: ${warns.map((c) => c.id).join(', ')}` : ''}${skips.length ? `, ${skips.length} skipped: ${skips.map((c) => c.id).join(', ')}` : ''}`)
   for (const c of fails) console.log(`      ${c.id}: ${c.detail}`)
+  for (const c of warns) console.log(`      ${c.id}: warn, ${c.detail}`)
   for (const c of skips) console.log(`      ${c.id}: skipped, ${c.detail}`)
 }
 process.exitCode = results.some((r) => r.checks.some((c) => c.result === 'fail')) ? 1 : 0
@@ -230,6 +240,14 @@ async function checkPage(url, stateOverride) {
     try { checks.push(teamPhotoFramingCheck(await measureTeamCards(chromium, url))) } catch (e) { add('team-photo-framing', false, `browser measurement failed: ${e.message.split('\n')[0]}`) }
   } else {
     checks.push({ id: 'team-photo-framing', result: 'skipped', detail: renderedSkipReason })
+  }
+
+  // rendered: brand-visual (desktop). Computed font-family, colour and background need a browser; a page without one
+  // is skipped, never passed. The "never" contrast rows and the palette come from spec/brand-visual.json.
+  if (chromium) {
+    try { checks.push(brandVisualCheck(await measureBrandVisual(chromium, url, brandVisual), brandVisual)) } catch (e) { add(BRAND_CHECK_ID, false, `browser measurement failed: ${e.message.split('\n')[0]}`) }
+  } else {
+    checks.push({ id: BRAND_CHECK_ID, result: 'skipped', detail: renderedSkipReason })
   }
 
   return { url, slug, state, cache: { cfCacheStatus: headers['cf-cache-status'] || null, age: headers.age || null }, checks }

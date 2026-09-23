@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22.",
-  "version": "0.9",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22.",
+  "version": "0.10",
   "classes": {
     "other-workflow": {
       "match": {
@@ -99,7 +99,7 @@
       "note": "Same pathway as observer-launch-copy: the sentence is n8n-written from website_campus_intro; the card is WordPress-direct. Run step 1b; the sentence part becomes hubspot-data.",
       "observerChecks": [],
       "routingLabel": "launch_copy_coming_soon",
-      "doneWhen": "the page shows the open sentence after the next 00:15 CT n8n run and the approved card"
+      "doneWhen": "the page shows the open sentence after the next 00:15 CT n8n run and the approved card; tests/page-check.mjs brand-visual is run on the page and its findings (font, contrast, off-palette fields and headlines, logo file) are recorded in the ticket note as INFO, not blocking, until spec/brand-visual.json check.enforcement.mode is enforced"
     },
     "sync-mapping": {
       "match": {
@@ -316,7 +316,7 @@
         "websiteRequestType": [
           "other"
         ],
-        "titlePattern": "Website \\(Other\\)|Website \u2014 Alpha",
+        "titlePattern": "Website \\(Other\\)|Website — Alpha",
         "detailPattern": "\\bFAQ\\b|questions/answers|typo|wording|rename|reword"
       },
       "required": [
@@ -328,7 +328,7 @@
       "scope": "website",
       "observerChecks": [],
       "routingLabel": "brand_copy_voice_ux",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply; tests/page-check.mjs brand-visual is run on the page and its findings (font, contrast, off-palette fields and headlines, logo file) are recorded in the ticket note as INFO, not blocking, until spec/brand-visual.json check.enforcement.mode is enforced"
     },
     "link-cta": {
       "match": {
@@ -387,7 +387,7 @@
         "campus-page-status-sentence (to build)"
       ],
       "routingLabel": "launch_copy_coming_soon",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply; tests/page-check.mjs brand-visual is run on the page and its findings (font, contrast, off-palette fields and headlines, logo file) are recorded in the ticket note as INFO, not blocking, until spec/brand-visual.json check.enforcement.mode is enforced"
     },
     "observer-fact-sync": {
       "match": {
@@ -430,7 +430,26 @@
         "campus-heading-identity"
       ],
       "routingLabel": "brand_copy_voice_ux",
-      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
+      "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply; tests/page-check.mjs brand-visual is run on the page and its findings (font, contrast, off-palette fields and headlines, logo file) are recorded in the ticket note as INFO, not blocking, until spec/brand-visual.json check.enforcement.mode is enforced"
+    },
+    "observer-brand-visual": {
+      "match": {
+        "titlePattern": "off-brand font|not Montserrat|brand-visual|off-palette|sky blue on white|logo file"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "expected",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "website",
+      "note": "Agent-found visual brand findings from tests/page-check.mjs brand-visual (spec/brand-visual.json): a text element not in Montserrat, a never-row contrast pair, an off-palette large field or headline colour, or a logo image that is not a canonical file from playbook/brand/assets. The observed and expected lines carry the selector, the value, and the rule. A finding inside a shared template (header, footer, the campus template section) is one ticket for the template, not one per page; a plugin-styled element (Alpha HubSpot Events cards) goes to the plugin owner. Word-level copy findings are never this class (they are copy / observer-brand-leak).",
+      "observerChecks": [
+        "brand-visual (playbook tests/page-check.mjs, advisory)"
+      ],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "the public page renders the expected value on the canonical URL after cache clear (Montserrat on the element, a palette pair from the contrast table, a canonical logo file), ring 2 passes, and tests/page-check.mjs brand-visual no longer lists the finding; a change to kit 8 typography or colours, or to the header or footer logo, is a decision for website operations first (docs/decisions.md 2026-09-22) and is never made under a campus ticket"
     },
     "observer-media-identity": {
       "match": {
@@ -670,7 +689,7 @@
         "originalSubmission.webTmName",
         "customFields.webTmName",
         "customFields.requesterResponses.teamMemberName",
-        "title:(?:Add|Update) (?:a )?team member(?: to| on)?(?: program page)? \u2014 ([^\u2014]+?) \u2014",
+        "title:(?:Add|Update) (?:a )?team member(?: to| on)?(?: program page)? — ([^—]+?) —",
         "title:^Alpha [^:]+: ([^|]+?) \\|"
       ],
       "missingText": "the team member's full name"

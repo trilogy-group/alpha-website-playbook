@@ -190,6 +190,7 @@
     "observer-link-cta": "apply_link_admission",
     "copy": "brand_copy_voice_ux",
     "observer-brand-leak": "brand_copy_voice_ux",
+    "observer-brand-visual": "brand_copy_voice_ux",
     "observer-media-identity": "launch_copy_coming_soon",
     "observer-layout": null,
     "observer-health": null,
