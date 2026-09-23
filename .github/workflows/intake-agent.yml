@@ -14,6 +14,9 @@ on:
         description: 'write to APEX (true/false); overrides INTAKE_APPLY for this run'
         required: false
         default: 'false'
+      task_id:
+        description: 'exact APEX task id; required for a manual apply canary'
+        required: false
 concurrency:
   group: apex-intake
   cancel-in-progress: false
@@ -36,6 +39,7 @@ jobs:
           ALPHA_WP_APPLICATION_PASSWORD: ${{ secrets.ALPHA_WP_APPLICATION_PASSWORD }}
           INPUT_SINCE: ${{ github.event.inputs.since }}
           INPUT_APPLY: ${{ github.event.inputs.apply }}
+          INPUT_TASK_ID: ${{ github.event.inputs.task_id }}
           CONFIG_INTAKE_APPLY: ${{ vars.INTAKE_APPLY }}
           TRIGGER_EVENT: ${{ github.event_name }}
         run: |
@@ -43,8 +47,14 @@ jobs:
           if [ -z "$SINCE" ]; then SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ); fi
           APPLY="$INPUT_APPLY"
           if [ "$APPLY" != "true" ] && [ "$CONFIG_INTAKE_APPLY" = "true" ] && [ "$TRIGGER_EVENT" = "schedule" ]; then APPLY=true; fi
+          if [ "$TRIGGER_EVENT" = "workflow_dispatch" ] && [ "$APPLY" = "true" ] && [ -z "$INPUT_TASK_ID" ]; then
+            echo 'Manual apply requires one exact task_id.' >&2
+            exit 2
+          fi
+          TASK_ARGS=()
+          if [ -n "$INPUT_TASK_ID" ]; then TASK_ARGS=(--ticket "$INPUT_TASK_ID"); fi
           mkdir -p out
-          if [ "$APPLY" = "true" ]; then node agent/intake.mjs --since "$SINCE" --apply --report out/intake.json; else node agent/intake.mjs --since "$SINCE" --report out/intake.json; fi
+          if [ "$APPLY" = "true" ]; then node agent/intake.mjs --since "$SINCE" "${TASK_ARGS[@]}" --apply --report out/intake.json; else node agent/intake.mjs --since "$SINCE" "${TASK_ARGS[@]}" --report out/intake.json; fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
