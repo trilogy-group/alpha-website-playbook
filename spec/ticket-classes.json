@@ -1,6 +1,6 @@
 {
   "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22. 0.11 (2026-09-24, QC loop redesign workstream 3): every class's observerChecks list is also its intake match rule for customFields.check (the observer's own check name, glob * allowed; one class per check, tests/build-policy.mjs refuses an overlap); match.urlPattern gates every rule of a class on the ticket URL; observer-page-transient receives rendered-page timeouts, 5xx pages and all-images-failed findings on a page URL, observer-health keeps loop health on the workflow or sheet URL only, and the application-route (Finalsite redirect) findings are observer-link-cta, not observer-event.",
-  "version": "0.11",
+  "version": "0.12",
   "classes": {
     "other-workflow": {
       "match": {
@@ -543,7 +543,7 @@
     },
     "observer-layout": {
       "match": {
-        "titlePattern": "header overlaps|overflows horizontally|outside the mobile viewport|clipped text"
+        "titlePattern": "header overlaps|overflows horizontally|outside the mobile viewport|clipped text|cut heads?|cut off on (?:desktop|mobile)|carousel has no arrows|no (?:previous\\/next|prev\\/next) arrows"
       },
       "required": [
         "pageUrl",
@@ -556,7 +556,9 @@
         "campus-layout-horizontal-overflow",
         "campus-layout-header-overlap",
         "campus-layout-clipped-text",
-        "campus-layout-offscreen-content"
+        "campus-layout-offscreen-content",
+        "team-photo-framing",
+        "team-carousel-arrows"
       ],
       "routingLabel": null,
       "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"

@@ -1,0 +1,40 @@
+{
+  "expected": {
+    "outcome": "policy-review",
+    "class": "observer-layout",
+    "ownerRole": "elementor-owner",
+    "why": "agent-found carousel-arrows ticket (checkId team-carousel-arrows) classifies to observer-layout instead of needs-rule; internal review by elementor-owner because the agent-found payload lacks observerId"
+  },
+  "task": {
+    "id": "agent-found-team-carousel-arrows",
+    "title": "Alpha San Francisco: team carousel has no arrows (setting off), sixth guide reachable only by bullets",
+    "status": "NOT_STARTED",
+    "requestType": "Website QC",
+    "program": [
+      "Alpha San Francisco"
+    ],
+    "url": "https://alpha.school/san-francisco/",
+    "requesterEmail": "matthew.barge@superbuilders.school",
+    "description": "Reported by Matt Barge on review of cmsqffot3000004kyj9iw230o (2026-09-22): the Meet our Team carousel shows no previous/next arrows, so Jason Tan on slide 6 is reachable only by the small bullets.\nPage: https://alpha.school/san-francisco/ (object 6544)\n\nElement: nested-carousel widget f4f2bbf (#team_carousel)\nObserved: stored setting arrows = \"\" (off); rendered wrapper lacks elementor-arrows-position-inside. Pre-existing: the 2026-09-22 add touched only the new slide and carousel_items (receipts 11930, 11931); the reframe touched only the image widget (11967, 11968).\nExpected: arrows on, as on Miami and Santa Barbara (both render elementor-arrows-position-inside). Arrow size (20px) and colour are already configured on this widget.\nWhy the agent did not fix it: prepare_elementor_content_patch refuses the field (alpha_mcp_field_not_editable: arrows); the MCP has no widget display-setting allowlist yet (MCP issue filed for 0.5.8).\nRecommended path: Elementor edit by website operations: open the San Francisco page, select the Meet our Team carousel widget, Content tab, Arrows: on, update. Five seconds. The website agent verifies the rendered arrows afterwards with a section capture.\nDone when: the rendered carousel shows previous/next arrows on desktop and mobile and the wrapper carries elementor-arrows-position-inside.",
+    "customFields": {
+      "source": "agent-found",
+      "foundWhileWorking": "cmsqffot3000004kyj9iw230o",
+      "checkId": "team-carousel-arrows",
+      "pageUrl": "https://alpha.school/san-francisco/",
+      "ticketClass": "observer-layout",
+      "severity": "normal",
+      "ownerRole": "website-operations",
+      "owners": [
+        "website-operations"
+      ],
+      "relatedTicketIds": [
+        "cmsqffot3000004kyj9iw230o"
+      ],
+      "idempotencyKey": "agent-found:cmsqffot3000004kyj9iw230o:san-francisco:team_carousel.arrows"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-23T15:05:00.000Z",
+    "updatedAt": "2026-09-23T15:05:00.000Z"
+  }
+}

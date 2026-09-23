@@ -149,6 +149,24 @@
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "sweep-2026-09-21 partition A"
+    },
+    "chicago": {
+      "openMedia": "video",
+      "attachmentId": null,
+      "status": "placed",
+      "current": "intro slot plays the campus video (content_video widget); no launch-era card; verified by tests/page-check.mjs and section capture 2026-09-23 (morning-verify-2026-09-23)",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "loose-ends-2026-09-23"
+    },
+    "jamaica-plain": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "current": "intro slot holds a generic campus photo (Website-Alpha-School-0016), not a launch card and not an Open and Enrolling card; campus moved Announced -> Open 2026-09-22",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "loose-ends-2026-09-23"
     }
   }
 }
