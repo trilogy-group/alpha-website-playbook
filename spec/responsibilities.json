@@ -1,6 +1,6 @@
 {
   "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
-  "version": "0.3",
+  "version": "0.4",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
@@ -340,7 +340,9 @@
       "owns": [
         "pre-announcement program records and community destinations"
       ],
-      "approves": [],
+      "approves": [
+        "new or separate Organization identity before a HubSpot Program is created"
+      ],
       "supplies": [
         "new program details, launch dates"
       ],
@@ -691,12 +693,12 @@
     "hubspot-program-admin": {
       "department": "hubspot",
       "owns": [
-        "HubSpot Program record creation and properties",
+        "HubSpot Program record creation and properties after the corresponding Organization is approved",
         "Finalsite routing and HubSpot redirect-form configuration",
         "SIS and enrollment overwrite issues"
       ],
       "approves": [
-        "new Program records; submission_campus routing"
+        "new Program records after Organization approval; submission_campus routing"
       ],
       "supplies": [
         "Program property values when a campus fact is blank"
@@ -874,8 +876,8 @@
     },
     "event-request": {
       "supplies": "requester (event id or registration link)",
-      "approves": "events",
-      "executes": "website-agent-operator triages; events-plugin-owner for filter, sync, and display; hubspot-owner asked per event only for the public flag or program interest"
+      "approves": "events for event facts; expansion-new-programs for any new or separate Organization",
+      "executes": "website-agent-operator triages; events-plugin-owner handles filter, sync, and display; hubspot-owner is asked per event for the public flag or existing program interest; hubspot-program-admin reviews any request for a Program that does not exist and does not create it until the Organization is approved"
     },
     "map-community-request": {
       "supplies": "requester",
@@ -1143,10 +1145,12 @@
       "needs": {
         "event identity or registration link": "the ticket",
         "HubSpot Marketing Event": "source",
+        "exact existing Program ID and intended public site/feed": "HubSpot plus the event owner",
+        "approved separate Organization when the requested Program does not exist": "expansion-new-programs",
         "plugin and campus-label evidence": "events-plugin-owner",
         "event content owner": "events"
       },
-      "missingInfoGoesTo": "website-agent-operator for triage, then the owner of the failing event layer"
+      "missingInfoGoesTo": "website-agent-operator for triage; hubspot-program-admin with expansion-new-programs when the Program/Organization does not exist; otherwise the owner of the failing event layer"
     },
     "map-community-request": {
       "needs": {

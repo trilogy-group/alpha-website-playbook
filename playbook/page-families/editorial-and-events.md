@@ -1,6 +1,6 @@
 # Editorial, Press, Podcast, and Event Requirements
 
-Last verified: September 17, 2026.
+Last verified: September 23, 2026.
 
 ## Observed inventory (2026-09-17)
 
@@ -48,9 +48,21 @@ Requirements:
 - Sister-brand events do not leak into Alpha feeds.
 - Campus shortcodes remain scoped to the approved program-interest label.
 
+### Program and site routing
+
+The event's Program is not a free website taxonomy. HubSpot Programs are defined by Organizations and map one-to-one through SIS, TimeBack, and downstream systems. The event pipeline may use only an existing, approved Program identity.
+
+For a campus-specific High School event:
+
+1. Read the live HubSpot Program records and identify the exact Program ID and visibility.
+2. If a dedicated High School Program exists, use it only when the event owner confirms that Program and the intended public destination.
+3. If no dedicated High School Program exists, do not create one, infer one, or silently route the event to the campus's K-8 Program.
+4. Route the Program/Organization decision to `hubspot-program-admin`, with `expansion-new-programs` approving any new Organization. Keep the event request in review until an existing Program or approved new Organization is named.
+5. After the source decision, the website agent verifies the chosen site/feed and registration path; it does not make the source-of-truth decision.
+
 ## Diagnosis
 
-Inspect HubSpot, plugin import log, imported post and taxonomies, aggregate page, campus shortcode, and cache in that order. Do not fix a campus feed by changing an unrelated event's public state.
+Inspect the Program/Organization identity, HubSpot event, plugin import log, imported post and taxonomies, aggregate page, campus shortcode, and cache in that order. Do not fix a campus feed by changing an unrelated event's public state.
 
 ## Completion
 

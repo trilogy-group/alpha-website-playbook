@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/source-authority.schema.json",
   "$comment": "Authoritative source and delivery path for public alpha.school field families. Unknown items fail closed. Human form: docs/website-architecture.md and playbook/00-how-to-use.md.",
-  "version": "1.0",
-  "asOf": "2026-09-17",
+  "version": "1.1",
+  "asOf": "2026-09-23",
   "scope": "alpha.school",
   "precedence": [
     "approved named decision",
@@ -113,14 +113,14 @@
       "id": "campus.events",
       "surface": ["upcoming-events page", "campus event strip"],
       "authority": "HubSpot Marketing Events",
-      "sourceLocator": "public flag, program interest, event type, title, time, timezone, registration link",
+      "sourceLocator": "public flag, exact approved Program ID and program interest, event type, title, time, timezone, registration link",
       "delivery": ["WordPress HubSpot event importer"],
       "destination": ["hubspot_event post type", "event taxonomies", "campus shortcode"],
-      "allowedEditors": ["authorized event and HubSpot operators"],
+      "allowedEditors": ["authorized event and HubSpot operators; Program creation only after Organization approval"],
       "refresh": "about every 30 minutes; observer allows up to two hours",
-      "conflictRule": "Do not hand-edit imported posts or hide events by changing an unrelated source flag",
+      "conflictRule": "Programs are defined one-to-one by Organizations through SIS, TimeBack, and downstream systems. Do not create or infer a Program for website routing, hand-edit imported posts, route a High School event to K-8 by assumption, or hide events by changing an unrelated source flag.",
       "ownerRole": "events-plugin-owner",
-      "verify": "plugin log, imported post, aggregate page, campus strip, registration destination",
+      "verify": "approved Organization and exact Program ID, plugin log, imported post, intended aggregate site, campus strip, registration destination",
       "status": "verified"
     },
     {

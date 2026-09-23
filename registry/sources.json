@@ -62,6 +62,8 @@
       "n8n": "sub-workflow 6HvmvgkzPkFikc40 reads Programs and marketing events for the campus-page workflow"
     },
     "writePath": "APEX campus Program editor (human approval; HUBSPOT_PROGRAM_WRITE_TOKEN); never direct",
+    "identityRule": "Programs are defined by Organizations and map one-to-one through SIS, TimeBack, and downstream applications. A website or event ticket cannot create, split, rename, or infer a Program. New campus High School Programs require an approved separate Organization and hubspot-program-admin mapping first (Farhan Afzal Raja, 2026-09-23).",
+    "datedHighSchoolExample": "2026-09-23 live check: Alpha High School was Visible; Alpha High Santa Barbara was Hidden; Santa Monica had only Alpha Santa Monica and no Alpha High Santa Monica. This is point-in-time evidence and must be re-read live.",
     "note": "Agents read HubSpot live when they can; the field map tells them which property to read. A cached value is never the basis for a ticket without the read timestamp."
   },
   "operationsSheet": {

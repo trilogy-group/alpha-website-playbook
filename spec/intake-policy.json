@@ -1,7 +1,7 @@
 {
   "$comment": "Deterministic policy for the scheduled APEX website intake administrator. Ticket requirements remain in ticket-classes.json; this file says who must supply each input, what administrative queue receives a complete ticket, and which requests require review or are refused. The agent never edits the website.",
-  "version": "1.0",
-  "asOf": "2026-09-17",
+  "version": "1.1",
+  "asOf": "2026-09-23",
   "siteScope": {
     "publicHosts": ["alpha.school", "www.alpha.school"],
     "excludedPattern": "\\b(?:Waypoint(?: Academy)?|Texas Sports Academy|Alpha High(?: School)?|Nova(?: Academy)?|NextGen)\\b",
@@ -50,6 +50,14 @@
       "policy": "allowed",
       "ownerRole": "events-plugin-owner",
       "queue": "owner",
+      "guards": [
+        {
+          "pattern": "(?:separate|new|dedicated).{0,40}(?:high school|Alpha High).{0,40}(?:program|organization)|(?:high school|Alpha High).{0,40}(?:program|organization).{0,40}(?:create|add|need|route|site)",
+          "ownerRole": "hubspot-program-admin",
+          "policy": "internal-review",
+          "reason": "A campus High School Program cannot be created or inferred for website/event routing. Programs follow approved Organizations one-to-one through SIS, TimeBack, and downstream systems; hubspot-program-admin owns the review and expansion-new-programs must approve any separate Organization."
+        }
+      ],
       "ownerRules": [
         { "pattern": "public (?:flag|state)|program interest|HubSpot Marketing Event|make (?:this |the )?event public", "ownerRole": "hubspot-owner", "reason": "The HubSpot event record is the failing source." },
         { "pattern": "drop ?down|time ?zone|campus strip|event feed|not showing|missing from (?:the )?(?:site|page)", "ownerRole": "events-plugin-owner", "reason": "The WordPress event import or display layer is the failing surface." }

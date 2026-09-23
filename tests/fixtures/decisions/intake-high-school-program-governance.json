@@ -1,0 +1,21 @@
+{
+  "expected": {
+    "outcome": "policy-review",
+    "class": "event-request",
+    "ownerRole": "hubspot-program-admin",
+    "why": "a website event request cannot create a separate High School Program without an approved Organization and downstream mapping"
+  },
+  "task": {
+    "id": "intake-high-school-program-governance",
+    "title": "Website Events — Alpha Santa Monica",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": ["Alpha Santa Monica"],
+    "requesterEmail": "requester@alpha.school",
+    "customFields": {
+      "requestFamily": "website",
+      "websiteRequestType": "events",
+      "requestDetail": "Should we create a separate high school program for Santa Monica so high school events can be pushed to a separate site?"
+    }
+  }
+}

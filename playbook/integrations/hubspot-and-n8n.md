@@ -1,6 +1,6 @@
 # HubSpot and n8n Runbook
 
-Last verified: September 17, 2026  
+Last verified: September 23, 2026
 Primary campus workflow: `ORgdHC71YJ5RawBy` on `trilogyinc.app.n8n.cloud`
 
 ## Boundary
@@ -8,6 +8,18 @@ Primary campus workflow: `ORgdHC71YJ5RawBy` on `trilogyinc.app.n8n.cloud`
 HubSpot Programs is authoritative for campus lifecycle and website-driven campus facts. n8n delivers those values to specific Elementor targets. APEX owns the request, approval, and evidence. WordPress is downstream for synchronized values.
 
 Website operators may update approved website-driven Program values through the APEX campus editor or as an authorized person in HubSpot. The September 17 instruction from Yash says the Program names at the top are the exception and cannot be changed by website operators. The broader permission question with Rachel remains open, so unusual or high-impact Program changes still require owner confirmation.
+
+## Program and Organization identity boundary
+
+A HubSpot Program is not a website-only routing label. Farhan Afzal Raja confirmed on September 23, 2026 that Programs are defined by Organizations and map one-to-one through SIS, TimeBack, and downstream applications. A website or event request therefore cannot create, rename, split, or infer a Program.
+
+- Create a separate campus High School Program only after the organization owner has approved a separate Organization and the HubSpot Program administrator has created and mapped it through the downstream systems.
+- Do not create a Program merely so an event can be pushed to `alpha.school`, `alphahigh.school`, or a separate event feed.
+- Do not reuse a similarly named Program, manufacture a program-interest value, or map an event to a K-8 Program as a substitute for the missing decision.
+- When an event request names a High School audience but no exact approved Program exists, hold the routing decision and send it to `hubspot-program-admin`, with `expansion-new-programs` as the new-organization approver. The events owner may select an existing Program and destination only when that choice is explicit.
+- Read the live Program and Organization records before acting. A dated inventory is evidence, not authority.
+
+Point-in-time example, not a permanent inventory: on September 23, 2026 HubSpot had `Alpha High School` (Visible) and `Alpha High Santa Barbara` (Hidden); Santa Monica had only `Alpha Santa Monica`, with no separate `Alpha High Santa Monica` Program.
 
 ## Website-driven Program fields
 
