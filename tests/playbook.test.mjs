@@ -40,6 +40,10 @@ import { DEVICE_SCALE_FACTOR, PADDING_PX, SectionShotError, VIEWPORTS as SECTION
 import { VERTICAL_MIN_COVERAGE, frameCoverage, frameForFit, judgeFraming, parseObjectPosition, scoreCards, teamPhotoFramingCheck } from './photo-framing.mjs'
 import { FrameHeadshotError, cropWindow, decodePng, encodePng, main as frameMain, parseFocus, parseRatio, planFrame } from '../agent/frame-headshot.mjs'
 import { BrandVisualError, backgroundVerdict, brandVisualCheck, contrastRatio, contrastVerdict, evaluateBrandVisual, fontVerdict, isLargeText, isNearWhite, loadBrandVisual, logoVerdict, normalizeHex, primaryFamily, relativeLuminance } from './brand-visual.mjs'
+import { DESCRIPTION_HEADING, LEDGER_FIELD, MAX_WORDS as NOTICE_MAX_WORDS, RequesterNoticeError, appendNoticeToDescription, askHash, checkMessage, composeBlocked, composeMissingInfo, composeShared, firstName, noticeDecision, plainTitle, requesterNoticesPatch, screenItems, unresolvedNotices } from '../agent/requester-notice-policy.mjs'
+import { NotifyRequesterError, digestRows, main as notifyMain, ownerForRole, parseArgs as parseNotifyArgs, runDigest, runNotice } from '../agent/notify-requester.mjs'
+import { composeChannelNote, planSharedBlocker, runSharedBlocker } from '../agent/notify-shared-blocker.mjs'
+import { requesterNoticeItems } from '../agent/intake-policy.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'policy-bundle.generated.json'), 'utf8'))
@@ -413,7 +417,8 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
   const childArgs = [path.join(root, 'agent', 'intake.mjs'), '--file', input, '--apply', '--report', reportPath, '--force']
   if (skipReleaseCheck) childArgs.push('--skip-release-check')
   // Real WordPress credentials in the developer's shell would let the child attest for real; the mock decides attestation.
-  const isolated = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith('ALPHA_WP_') && k !== 'ALPHA_MCP_HEALTH_JSON'))
+  // A Slack token would let the requester-notice preview look the mock requester up for real; the child gets none.
+  const isolated = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith('ALPHA_WP_') && k !== 'ALPHA_MCP_HEALTH_JSON' && k !== 'SLACK_BOT_TOKEN'))
   const run = await runChild(process.execPath, childArgs, {
     ...isolated,
     APEX_API_TOKEN: 'test-token',
@@ -1194,4 +1199,343 @@ test('brand-visual check row: findings carry selector, value and rule; advisory 
   const pageCheckSource = fs.readFileSync(path.join(root, 'tests', 'page-check.mjs'), 'utf8')
   assert.match(pageCheckSource, /checks\.push\(\{ id: BRAND_CHECK_ID, result: 'skipped', detail: renderedSkipReason \}\)/, 'without a browser the check is skipped, never passed')
   assert.match(pageCheckSource, /c\.result === 'warn'/, 'warn rows are printed and do not touch the exit code')
+})
+
+// Requester notices, 2026-09-23: APEX will not tell requesters when their ticket goes to Missing Info or Blocked, so the
+// website system does, by Slack DM, once per ask, in plain words (agent/requester-notice-policy.mjs, agent/notify-requester.mjs).
+function noticeError(fn, code) {
+  try { fn() } catch (error) { assert.ok(error instanceof RequesterNoticeError || error instanceof NotifyRequesterError, error.stack); assert.equal(error.code, code); return error }
+  assert.fail(`expected ${code}`)
+}
+async function noticeErrorAsync(promise, code) {
+  try { await promise } catch (error) { assert.ok(error instanceof RequesterNoticeError || error instanceof NotifyRequesterError, error.stack); assert.equal(error.code, code); return error }
+  assert.fail(`expected ${code}`)
+}
+function noticeTicket(overrides = {}) {
+  return {
+    id: 'cmnotice1', title: 'Website — Add team member — Alpha Austin', status: 'MISSING_INFO', requesterEmail: 'dawn.crichton-adams@alpha.school',
+    description: '<p><strong>REQUEST</strong><br>Add team member</p><p><strong>DETAIL</strong><br>Please add Avery Example.</p>',
+    customFields: { checkId: 'SITE-1', ownerRole: 'packet-owner', requestFamily: 'website' }, ...overrides,
+  }
+}
+/** A fetch double for Slack and APEX together: records every call, answers by method or route. */
+function mockSlackApex({ slackUser = { id: 'U0B7GTFBE3C', real_name: 'Dawn Adams', profile: { first_name: 'Dawn' } }, ticket = noticeTicket(), lookupError = null } = {}) {
+  const calls = []
+  const state = { ticket: structuredClone(ticket) }
+  const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
+  const fetchImpl = async (url, init = {}) => {
+    const form = /x-www-form-urlencoded/.test(init.headers?.['Content-Type'] || '')
+    const body = init.body ? (form ? Object.fromEntries(new URLSearchParams(init.body)) : JSON.parse(init.body)) : null
+    calls.push({ url, method: init.method, authorization: init.headers?.Authorization, body, form })
+    if (url.startsWith('https://slack.com/api/')) {
+      const method = url.slice('https://slack.com/api/'.length)
+      if (method === 'users.lookupByEmail') return lookupError ? json({ ok: false, error: lookupError }) : slackUser ? json({ ok: true, user: slackUser }) : json({ ok: false, error: 'users_not_found' })
+      if (method === 'conversations.open') return json({ ok: true, channel: { id: 'D0DM1' } })
+      if (method === 'chat.postMessage') return json({ ok: true, channel: body.channel, ts: `17000.${calls.length}` })
+      if (method === 'chat.getPermalink') return json({ ok: true, permalink: `https://alpha.slack.com/archives/${body.channel}/p${body.message_ts.replace('.', '')}` })
+      return json({ ok: false, error: `not mocked ${method}` })
+    }
+    if (/\/api\/agent\/tasks\/[^/]+$/.test(url) && init.method === 'GET') return url.endsWith(`/${state.ticket.id}`) ? json(state.ticket) : json({ error: 'Task not found' }, 404)
+    if (/\/api\/v1\/tasks\?status=/.test(url) && init.method === 'GET') return json({ items: url.includes('MISSING_INFO') ? [state.ticket] : [] })
+    if (/\/api\/v1\/tasks\/[^/]+$/.test(url) && init.method === 'PATCH') {
+      for (const key of Object.keys(body)) state.ticket[key] = body[key]
+      return json({ task: state.ticket })
+    }
+    return json({ error: `not mocked ${init.method} ${url}` }, 404)
+  }
+  return { calls, fetchImpl, state, patches: () => calls.filter((c) => c.method === 'PATCH').map((c) => c.body), slack: (method) => calls.filter((c) => c.url === `https://slack.com/api/${method}`) }
+}
+const noticeEnv = { SLACK_BOT_TOKEN: 'xoxb-test', APEX_API_TOKEN: 'apex-test', APEX_API_BASE: 'http://127.0.0.1:4010/api/v1' }
+const quiet = () => ({ lines: [], io: { log() {}, error() {} } })
+
+test('requester notice text: first-name greeting, title, APEX link, numbered items, how to provide, signature; refuses dashes, exclamation, jargon, shouting, length', () => {
+  const notice = composeMissingInfo({ name: 'Dawn', title: 'Website — Alpha Scottsdale', ticketId: 'cmsgak1mu000304ky2v3av9st', items: ['Dawn Adams: headshot and bio', 'jessica gile: whether the public title is Guide or Guide, Learning Lab'], alreadyDone: 'five cards updated on the page' })
+  const lines = notice.text.split('\n')
+  assert.equal(lines[0], 'Hi Dawn, this is the website team.')
+  assert.equal(lines[2], 'Your request "Website: Alpha Scottsdale" is waiting on the following from you: https://apex.2hourlearning.com/intake?open=cmsgak1mu000304ky2v3av9st', 'the em dash APEX puts in the title never reaches the requester')
+  assert.equal(lines[4], '1. Dawn Adams: headshot and bio')
+  assert.equal(lines[5], '2. Jessica gile: whether the public title is Guide or Guide, Learning Lab', 'sentence case at the start of each item')
+  assert.equal(lines[7], 'Already done: five cards updated on the page.')
+  assert.match(lines[8], /^To send them: attach the files on the ticket, one file per person named for the person, or reply on the ticket\.$/)
+  assert.equal(lines.at(-1), 'Website team (Matt Barge)')
+  assert.ok(notice.words < NOTICE_MAX_WORDS && notice.words === notice.text.split(/\s+/).length, `${notice.words} words`)
+  assert.equal(plainTitle('Website (Other) — Alpha Chicago'), 'Website: Alpha Chicago', 'the form-type parenthetical means nothing to the requester')
+  assert.equal(plainTitle('Website (Update program info (address, phone, grade levels, etc.)) — Alpha High Santa Barbara, Alpha Santa Barbara'), 'Website: Alpha High Santa Barbara, Alpha Santa Barbara')
+  assert.equal(plainTitle('Website — Add team member — Alpha Austin'), 'Website: Add team member: Alpha Austin')
+  assert.equal(firstName({ email: 'dawn.crichton-adams@alpha.school' }), 'Dawn', 'without Slack the email gives the first name')
+  assert.equal(firstName({ slackRealName: 'Michael Marino', email: 'mike@alpha.school' }), 'Michael')
+  assert.equal(firstName({ slackFirstName: 'Andy', slackRealName: 'Andrew Gibson' }), 'Andy', 'the Slack profile first name wins')
+  noticeError(() => composeMissingInfo({ name: '', title: 't', ticketId: 'x', items: ['a bio'] }), 'NO_REQUESTER')
+  // The rules, one typed error each. The dash rule is what the brand copy rules say: an em dash never, an en dash only inside a range.
+  assert.equal(noticeError(() => checkMessage('Hi Dawn — this is the website team.'), 'DASH').message, 'no em or en dash between words in a requester notice; found "—"')
+  noticeError(() => checkMessage('the bio – and the photo'), 'DASH')
+  noticeError(() => checkMessage('the bio–and the photo'), 'DASH')
+  assert.equal(checkMessage('Grades K–12 stay as they are.').words, 6, 'an en dash inside a range is a range, not a dash between words')
+  noticeError(() => checkMessage('Thanks so much!'), 'EXCLAMATION')
+  for (const word of ['intake', 'class', 'ring', 'receipt', 'hash', 'n8n', 'HubSpot', 'Elementor']) assert.equal(noticeError(() => checkMessage(`The ${word} says so.`), 'JARGON').word, word.toLowerCase())
+  assert.equal(checkMessage('Open https://apex.2hourlearning.com/intake?open=x and reply. Classes start Monday.').words, 7, 'the APEX link is a link, not the word; "classes" is not "class"')
+  assert.equal(noticeError(() => checkMessage('PLEASE REPLY on the ticket.'), 'NOT_SENTENCE_CASE').token, 'PLEASE')
+  assert.equal(checkMessage('Open the PDF in APEX; grades PREK-8 stay.').words, 8, 'known upper-case tokens are not shouting')
+  const long = composeMissingInfo.bind(null, { name: 'Dawn', title: 't', ticketId: 'x', items: Array.from({ length: 12 }, (_, i) => `Item ${i}: the approved biography text and the public title for this person as it should read`) })
+  assert.ok(noticeError(long, 'TOO_LONG').words >= NOTICE_MAX_WORDS)
+})
+
+test('requester notice items: what an internal source can supply is refused and logged, never asked', () => {
+  const screened = screenItems([
+    'Dawn Adams: headshot and bio',
+    'the page URL to edit',
+    'The exact public URL of the single page to edit',
+    'the HubSpot grade value',
+    'the exact filename if it already exists in the media library',
+    'Alpha-Chicago-Info-Packet-2026-2027.pdf replacement',
+    'confirm whether K-12 should remain',
+    'the approved packet URL',
+    '   ',
+  ])
+  assert.deepEqual(screened.accepted, ['Dawn Adams: headshot and bio'])
+  assert.deepEqual(screened.refused.map((r) => r.reason.split(' (')[0]), ['page URL', 'page URL', 'HubSpot value', 'filename', 'filename', '"confirm" ask', 'approved packet URL'])
+  const notice = composeMissingInfo({ name: 'Dawn', title: 't', ticketId: 'x', items: ['Dawn Adams: headshot and bio', 'confirm the spelling'] })
+  assert.equal(notice.refused.length, 1)
+  assert.doesNotMatch(notice.text, /confirm/)
+  assert.deepEqual(notice.ask, ['Dawn Adams: headshot and bio'], 'the hash covers only what was asked')
+  const nothing = noticeError(() => composeMissingInfo({ name: 'Dawn', title: 't', ticketId: 'x', items: ['the page URL', 'confirm the plan'] }), 'NO_ITEMS')
+  assert.equal(nothing.refused.length, 2)
+  // Intake's items for the notice are the requirement labels with the person named, not the system prompts.
+  const decision = evaluateTicket(bundle, { id: 't1', title: 'Website — Add team member — Alpha Austin', requesterEmail: 'r@alpha.school', customFields: { requestFamily: 'website', websiteRequestType: 'add_team_member', webTmName: 'Avery Example' }, program: ['Alpha Austin'] })
+  assert.equal(decision.outcome, 'missing-info')
+  const items = requesterNoticeItems(bundle, decision)
+  assert.ok(items.length >= 3 && items.every((item) => / for Avery Example$/.test(item)), JSON.stringify(items))
+  assert.ok(items.every((item) => !screenItems([item]).refused.length), 'the labels pass the denylist')
+  assert.equal(composeMissingInfo({ name: 'Rae', title: 't', ticketId: 't1', items }).refused.length, 0)
+})
+
+test('blocked notice names what it waits on and a person, never a role; shared-blocker DM is two lines at the thread', () => {
+  const blocked = composeBlocked({ name: 'Lindsay', title: 'Website (Other) — Alpha Chicago', ticketId: 'cmu4hqkdg00000agmcjcawem0', waitingOn: 'the 2026-27 info packet batch, none approved yet', owner: 'Matt Barge', when: 'the day a packet is approved', alreadyDone: 'nothing on the page changes for this', roleIds: Object.keys(bundle.roleOwners) })
+  const lines = blocked.text.split('\n')
+  assert.equal(lines[0], 'Hi Lindsay, this is the website team.')
+  assert.equal(lines[2], 'Your request "Website: Alpha Chicago" is on hold: https://apex.2hourlearning.com/intake?open=cmu4hqkdg00000agmcjcawem0')
+  assert.deepEqual(lines.slice(4, 9), ['Waiting on: the 2026-27 info packet batch, none approved yet.', 'Owner: Matt Barge.', 'Expected: the day a packet is approved.', 'Already done: nothing on the page changes for this.', 'We will update you when it moves; no action needed from you.'])
+  assert.equal(lines.at(-1), 'Website team (Matt Barge)')
+  assert.equal(composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: 'a decision', owner: 'Matt Barge' }).text.split('\n').length, 9, 'no Expected or Already done line when not given')
+  assert.equal(noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: 'a decision', owner: 'packet-owner', roleIds: Object.keys(bundle.roleOwners) }), 'OWNER_IS_ROLE').owner, 'packet-owner')
+  noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: 'a decision', owner: 'n8n-sync-owner' }), 'OWNER_IS_ROLE')
+  noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: 'a decision', owner: '' }), 'NO_OWNER')
+  noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: '', owner: 'Matt Barge' }), 'MISSING_ARG')
+  assert.equal(ownerForRole('packet-owner', bundle.roleOwners), 'Matt Barge')
+  assert.equal(ownerForRole('ticket-requester', bundle.roleOwners), null, 'many registered people is no answer')
+  assert.equal(ownerForRole('no-such-role', bundle.roleOwners), null)
+  const shared = composeShared({ name: 'Lindsay', title: 'Website (Other) — Alpha Chicago', ticketId: 'cmu4', permalink: 'https://alpha.slack.com/archives/C09GRQ8L533/p1700000000000001' })
+  const sharedLines = shared.text.split('\n')
+  assert.equal(sharedLines.length, 2)
+  assert.equal(sharedLines[0], 'Hi Lindsay, this is the website team. Your request "Website: Alpha Chicago" (https://apex.2hourlearning.com/intake?open=cmu4) is on hold with others for the same reason; the note here says what it waits on and who owns it: https://alpha.slack.com/archives/C09GRQ8L533/p1700000000000001')
+  assert.equal(sharedLines[1], 'We will update you when it moves; no action needed from you. Website team (Matt Barge)')
+  noticeError(() => composeShared({ name: 'L', title: 't', ticketId: 'x', permalink: 'https://alpha.school/chicago/' }), 'BAD_PERMALINK')
+  noticeError(() => composeShared({ name: 'L', title: 't', ticketId: 'x', permalink: 'not a url' }), 'BAD_PERMALINK')
+})
+
+test('requester notice ledger: same ask never twice, a changed ask once more, one blocked then blocked-update only on change', () => {
+  const ask = askHash(['Dawn Adams: headshot and bio', 'Jenn Lopes: title'])
+  assert.equal(ask, askHash(['dawn adams:  headshot and bio ', 'JENN LOPES: title']), 'whitespace and case do not make a new ask')
+  assert.notEqual(ask, askHash(['Dawn Adams: headshot and bio']), 'a changed ask is a new ask')
+  assert.equal(noticeDecision([], 'missing-info', ask).send, true)
+  const sent = [{ kind: 'missing-info', askHash: ask, sentAt: '2026-09-23T10:00:00Z', slackChannel: 'D1', slackTs: '1.1', recipient: 'U1' }]
+  const again = noticeDecision(sent, 'missing-info', ask)
+  assert.equal(again.send, false); assert.match(again.reason, /already sent 2026-09-23T10:00:00Z for the same ask/)
+  const changed = noticeDecision(sent, 'missing-info', askHash(['Dawn Adams: headshot and bio']))
+  assert.equal(changed.send, true); assert.match(changed.reason, /the ask changed/)
+  assert.equal(noticeDecision([{ kind: 'missing-info', askHash: ask, sentAt: null, unresolved: true }], 'missing-info', ask).send, true, 'an unresolved entry is not a sent notice')
+  const blockerA = askHash(['packet batch', 'Matt Barge'])
+  const blockerB = askHash(['packet approved, link swap pending', 'Matt Barge'])
+  const first = noticeDecision([], 'blocked', blockerA)
+  assert.deepEqual([first.send, first.kind], [true, 'blocked'])
+  assert.deepEqual([noticeDecision([], 'blocked-update', blockerA).send, noticeDecision([], 'blocked-update', blockerA).kind], [true, 'blocked'], 'the first blocked notice is "blocked" whatever the caller asked')
+  const afterFirst = [{ kind: 'blocked', askHash: blockerA, sentAt: '2026-09-23T10:00:00Z' }]
+  assert.equal(noticeDecision(afterFirst, 'blocked', blockerA).send, false, 'the same blocker never resends')
+  const update = noticeDecision(afterFirst, 'blocked', blockerB)
+  assert.deepEqual([update.send, update.kind], [true, 'blocked-update'])
+  const afterUpdate = [...afterFirst, { kind: 'blocked-update', askHash: blockerB, sentAt: '2026-09-24T10:00:00Z' }]
+  assert.equal(noticeDecision(afterUpdate, 'blocked-update', blockerB).send, false)
+  assert.equal(noticeDecision(afterUpdate, 'blocked', blockerA).send, false, 'going back to an earlier blocker text is not a change')
+  noticeError(() => noticeDecision([], 'nudge', ask), 'BAD_KIND')
+  // The ledger patch merges and never drops another key; the description append keeps the requester's text first.
+  const patched = requesterNoticesPatch({ checkId: 'SITE-1', ownerRole: 'packet-owner', [LEDGER_FIELD]: sent }, { kind: 'blocked', askHash: blockerA, sentAt: 't' })
+  assert.deepEqual(Object.keys(patched).sort(), ['checkId', 'ownerRole', LEDGER_FIELD].sort())
+  assert.equal(patched[LEDGER_FIELD].length, 2)
+  assert.equal(patched[LEDGER_FIELD][0], sent[0])
+  assert.deepEqual(requesterNoticesPatch(undefined, { kind: 'blocked' })[LEDGER_FIELD], [{ kind: 'blocked' }])
+  const html = appendNoticeToDescription('<p>Please add Avery.</p>', 'Hi Dawn, this is the website team.\n\n1. A bio <b>', '2026-09-23')
+  assert.ok(html.startsWith('<p>Please add Avery.</p>'), 'original first')
+  assert.equal(html, `<p>Please add Avery.</p><p><strong>${DESCRIPTION_HEADING}, 2026-09-23</strong><br>Hi Dawn, this is the website team.<br><br>1. A bio &lt;b&gt;</p>`)
+  const plain = appendNoticeToDescription('Please add Avery.\n', 'Hi Dawn.', '2026-09-23')
+  assert.equal(plain, `Please add Avery.\n\n${DESCRIPTION_HEADING}, 2026-09-23\nHi Dawn.\n`)
+})
+
+test('notify-requester dry run resolves the recipient, prints the message, and writes nothing; --send DMs then records with customFields-only and description-only patches', async () => {
+  const dry = mockSlackApex()
+  const { io, lines } = quiet(); io.log = (line) => lines.push(line)
+  const preview = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio', 'the page URL'], alreadyDone: 'the title is on the page' }, { env: noticeEnv, fetchImpl: dry.fetchImpl, io })
+  assert.equal(preview.dryRun, true)
+  assert.deepEqual(preview.recipient, { email: 'dawn.crichton-adams@alpha.school', slackUserId: 'U0B7GTFBE3C', name: 'Dawn Adams' })
+  assert.match(preview.message, /^Hi Dawn, this is the website team\./)
+  assert.match(preview.message, /1\. Avery Example: headshot and bio/)
+  assert.equal(preview.refused.length, 1)
+  assert.deepEqual(dry.calls.map((c) => [c.method, c.url.replace(/^https?:\/\/[^/]+/, '')]), [['GET', '/api/agent/tasks/cmnotice1'], ['POST', '/api/users.lookupByEmail']], 'read the ticket, looked the requester up, nothing else')
+  assert.equal(dry.patches().length, 0)
+  assert.ok(lines.some((line) => /^recipient: Dawn Adams <dawn.crichton-adams@alpha.school> \(Slack U0B7GTFBE3C\)/.test(line)))
+  assert.ok(lines.some((line) => /^dry run: nothing sent, nothing written/.test(line)))
+  assert.ok(!lines.join('\n').includes('xoxb-test') && !lines.join('\n').includes('apex-test'), 'no secret is printed')
+
+  const live = mockSlackApex()
+  const sent = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io, now: () => new Date('2026-09-23T15:00:00Z') })
+  assert.deepEqual(sent.sent, { channel: 'D0DM1', ts: '17000.4' })
+  assert.deepEqual(live.slack('conversations.open')[0].body, { users: 'U0B7GTFBE3C' })
+  assert.equal(live.slack('chat.postMessage')[0].body.text, sent.message)
+  assert.equal(live.slack('chat.postMessage')[0].authorization, 'Bearer xoxb-test')
+  assert.ok(live.slack('users.lookupByEmail').every((c) => c.form && c.body.email === 'dawn.crichton-adams@alpha.school'), 'Slack calls are form-encoded (users.lookupByEmail refuses JSON)')
+  const patches = live.patches()
+  assert.equal(patches.length, 2)
+  assert.deepEqual(Object.keys(patches[0]), ['customFields'], 'the ledger patch carries only customFields')
+  assert.deepEqual(Object.keys(patches[0].customFields).sort(), ['checkId', 'ownerRole', 'requestFamily', LEDGER_FIELD].sort(), 'no other custom field is dropped')
+  assert.deepEqual(patches[0].customFields[LEDGER_FIELD], [{ kind: 'missing-info', askHash: askHash(['Avery Example: headshot and bio']), sentAt: '2026-09-23T15:00:00.000Z', slackChannel: 'D0DM1', slackTs: '17000.4', recipient: 'U0B7GTFBE3C' }])
+  assert.deepEqual(Object.keys(patches[1]), ['description'], 'the description patch carries only the description')
+  assert.ok(patches[1].description.startsWith('<p><strong>REQUEST</strong><br>Add team member</p>'), 'the requester text stays first')
+  assert.match(patches[1].description, /<p><strong>REQUESTER NOTICE \(Slack DM\), 2026-09-23<\/strong><br>Hi Dawn, this is the website team\./)
+  assert.ok(patches.every((patch) => !('agentEligible' in patch) && !('status' in patch) && !('assignees' in patch)), 'never a status, assignee or eligibility write')
+  assert.deepEqual(sent.wrote, ['customFields.requesterNotices', 'description'])
+
+  // The once-only rule against the ledger the send just wrote: the same ask is not sent again; a changed ask is.
+  const repeat = await runNotice({ ticket: live.state.ticket, kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  assert.equal(repeat.decision.send, false); assert.equal(repeat.message, null)
+  assert.equal(live.slack('chat.postMessage').length, 1, 'no second DM for the same ask')
+  const changed = await runNotice({ ticket: live.state.ticket, kind: 'missing-info', items: ['Avery Example: headshot only, the bio arrived'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  assert.equal(changed.decision.send, true); assert.match(changed.decision.reason, /the ask changed/)
+  assert.equal(live.slack('chat.postMessage').length, 2)
+  assert.equal(live.state.ticket.customFields[LEDGER_FIELD].length, 2)
+
+  // Blocked: the owner comes from the ticket's ownerRole when one person is registered; the second send is an update only on change.
+  const blocked = mockSlackApex({ ticket: noticeTicket({ status: 'BLOCKED' }) })
+  const b1 = await runNotice({ ticketId: 'cmnotice1', kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  assert.equal(b1.kind, 'blocked'); assert.match(b1.message, /Owner: Matt Barge\./)
+  const b2 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  assert.equal(b2.decision.send, false)
+  const b3 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the approved packet, link swap pending', send: true }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  assert.equal(b3.kind, 'blocked-update'); assert.equal(b3.decision.send, true)
+  assert.equal(blocked.slack('chat.postMessage').length, 2)
+  assert.deepEqual(blocked.state.ticket.customFields[LEDGER_FIELD].map((e) => e.kind), ['blocked', 'blocked-update'])
+  // A role with no single registered person is refused, never guessed.
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket({ customFields: { ownerRole: 'ticket-requester' } }), kind: 'blocked', blocker: 'x' }, { env: noticeEnv, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'NO_OWNER')
+  // Typed failures: no ticket, no requester, no token for --send, a Slack error that is not "not found", the sender never reaching APEX.
+  await noticeErrorAsync(runNotice({ kind: 'missing-info', items: ['x'] }, { env: noticeEnv, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'MISSING_ARG')
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket({ requesterEmail: '' }), kind: 'missing-info', items: ['x'] }, { env: noticeEnv, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'NO_REQUESTER')
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket(), kind: 'missing-info', items: ['a bio'], send: true }, { env: { ...noticeEnv, SLACK_BOT_TOKEN: '' }, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'MISSING_TOKEN')
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket(), kind: 'missing-info', items: ['a bio'] }, { env: noticeEnv, fetchImpl: mockSlackApex({ lookupError: 'missing_scope' }).fetchImpl, io: quiet().io }), 'SLACK_ERROR')
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket(), kind: 'nudge', items: ['a bio'] }, { env: noticeEnv, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'BAD_KIND')
+  const untokened = await runNotice({ ticket: noticeTicket(), kind: 'missing-info', items: ['a bio'] }, { env: { APEX_API_TOKEN: 'x' }, fetchImpl: async () => { throw new Error('must not be called') }, io: quiet().io })
+  assert.equal(untokened.recipient, null); assert.match(untokened.recipientNote, /SLACK_BOT_TOKEN not set/); assert.match(untokened.message, /^Hi Dawn,/, 'the email still gives the greeting')
+  const source = fs.readFileSync(path.join(root, 'agent', 'notify-requester.mjs'), 'utf8')
+  for (const forbidden of [/ALPHA_WP_/, /wp-json/, /\/status'/, /\/reconcile/, /agentEligible/, /assignees/]) assert.doesNotMatch(source, forbidden, `the notifier must not reach ${forbidden}`)
+  assert.deepEqual(parseNotifyArgs(['--ticket', 'x', '--item', 'a', '--item', 'b', '--send']), { ticket: 'x', item: ['a', 'b'], send: true })
+})
+
+test('a requester with no Slack user gets no DM: the ledger says so, the note stays on the ticket, the digest lists the ticket', async () => {
+  const none = mockSlackApex({ slackUser: null })
+  const { io, lines } = quiet(); io.log = (line) => lines.push(line)
+  const result = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: none.fetchImpl, io, now: () => new Date('2026-09-23T15:00:00Z') })
+  assert.equal(result.sent, null)
+  assert.equal(result.recipient, null)
+  assert.equal(result.recipientNote, 'no Slack user for dawn.crichton-adams@alpha.school; note on the ticket only; add to the coordinator digest')
+  assert.ok(lines.some((line) => line === 'not sent: no Slack user for dawn.crichton-adams@alpha.school; note on the ticket only; add to the coordinator digest'))
+  assert.equal(none.slack('chat.postMessage').length, 0)
+  assert.equal(none.slack('conversations.open').length, 0)
+  const patches = none.patches()
+  assert.equal(patches.length, 2)
+  const entry = patches[0].customFields[LEDGER_FIELD][0]
+  assert.deepEqual(entry, { kind: 'missing-info', askHash: askHash(['Avery Example: headshot and bio']), sentAt: null, slackChannel: null, slackTs: null, recipient: null, unresolved: true, email: 'dawn.crichton-adams@alpha.school', at: '2026-09-23T15:00:00.000Z', reason: 'no Slack user for dawn.crichton-adams@alpha.school; note on the ticket only; add to the coordinator digest' })
+  assert.match(patches[1].description, /REQUESTER NOTICE \(Slack DM\), 2026-09-23/, 'the requester still finds the ask on the ticket')
+  assert.deepEqual(unresolvedNotices(none.state.ticket).map((e) => e.kind), ['missing-info'])
+  const rows = digestRows([none.state.ticket, noticeTicket({ id: 'other' })])
+  assert.deepEqual(rows.map((r) => [r.id, r.requesterEmail, r.kind, r.at]), [['cmnotice1', 'dawn.crichton-adams@alpha.school', 'missing-info', '2026-09-23T15:00:00.000Z']])
+  const digestLines = []
+  const digest = await runDigest({}, { env: noticeEnv, fetchImpl: none.fetchImpl, io: { log: (line) => digestLines.push(line), error() {} } })
+  assert.equal(digest.length, 1)
+  assert.match(digestLines[0], /^coordinator digest: 1 notice\(s\) with no Slack user; relay by hand/)
+  assert.match(digestLines[1], /^cmnotice1 \| MISSING_INFO \| dawn.crichton-adams@alpha.school \| missing-info \| 2026-09-23T15:00:00.000Z \|/)
+  // Once recorded, the same ask is still not resent when the person later joins Slack: a changed ask is.
+  const joined = mockSlackApex({ ticket: none.state.ticket })
+  const same = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: joined.fetchImpl, io: quiet().io })
+  assert.equal(same.decision.send, true, 'an unresolved entry never counted as sent, so the first reachable send goes')
+  assert.equal(joined.slack('chat.postMessage').length, 1)
+})
+
+test('notify-shared-blocker posts one channel note and a two-line DM per ticket; dry run carries a placeholder permalink and sends nothing', async () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-shared-blocker-'))
+  const bodyFile = path.join(tmp, 'note.md')
+  fs.writeFileSync(bodyFile, 'The 2026-27 info packets are produced in one batch by MacKenzie Price\'s team; none is approved yet.\nThe website part is a link swap the day a packet is approved. Matt Barge owns the timeline.\n')
+  const note = composeChannelNote({ title: 'Info packets 2026-27: what the packet tickets wait on', body: fs.readFileSync(bodyFile, 'utf8') })
+  assert.match(note.text, /^Info packets 2026-27: what the packet tickets wait on\n\nThe 2026-27 info packets/)
+  noticeError(() => composeChannelNote({ title: 'Packets', body: 'Approved — soon' }), 'DASH')
+  noticeError(() => composeChannelNote({ title: 'Packets', body: 'The HubSpot value is wrong.' }), 'JARGON')
+  noticeError(() => composeChannelNote({ title: '', body: 'x' }), 'MISSING_ARG')
+  noticeError(() => planSharedBlocker({ channel: 'support-websites', title: 'x', 'body-file': bodyFile }), 'MISSING_ARG')
+  noticeError(() => planSharedBlocker({ channel: 'C09GRQ8L533', title: 'x', 'body-file': path.join(tmp, 'missing.md') }), 'MISSING_ARG')
+  noticeError(() => planSharedBlocker({ channel: 'C09GRQ8L533', title: 'x', 'body-file': bodyFile, send: true, 'dry-run': true }), 'MISSING_ARG')
+  const plan = planSharedBlocker({ channel: 'C09GRQ8L533', title: 'Info packets 2026-27', 'body-file': bodyFile, tickets: 'cmnotice1, cmnotice1' })
+  assert.deepEqual(plan.tickets, ['cmnotice1', 'cmnotice1'])
+  assert.equal(plan.placeholderPermalink, 'https://slack.com/archives/C09GRQ8L533/p0')
+
+  const dry = mockSlackApex({ slackUser: { id: 'U0BJBTXPDLG', real_name: 'Lindsay Dudley', profile: { first_name: 'Lindsay' } }, ticket: noticeTicket({ status: 'BLOCKED', title: 'Website (Other) — Alpha Chicago', requesterEmail: 'lindsay.dudley@alpha.school' }) })
+  const preview = await runSharedBlocker({ ...plan, tickets: ['cmnotice1'] }, { env: noticeEnv, fetchImpl: dry.fetchImpl, io: quiet().io })
+  assert.equal(preview.dryRun, true); assert.equal(preview.posted, null)
+  assert.equal(dry.slack('chat.postMessage').length, 0); assert.equal(dry.patches().length, 0)
+  assert.equal(preview.dms.length, 1); assert.equal(preview.dms[0].recipient.slackUserId, 'U0BJBTXPDLG')
+
+  const live = mockSlackApex({ slackUser: { id: 'U0BJBTXPDLG', real_name: 'Lindsay Dudley', profile: { first_name: 'Lindsay' } }, ticket: noticeTicket({ status: 'BLOCKED', title: 'Website (Other) — Alpha Chicago', requesterEmail: 'lindsay.dudley@alpha.school' }) })
+  const sent = await runSharedBlocker({ ...plan, tickets: ['cmnotice1'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  const posts = live.slack('chat.postMessage')
+  assert.equal(posts.length, 2, 'one channel note, one DM')
+  assert.equal(posts[0].body.channel, 'C09GRQ8L533'); assert.equal(posts[0].body.text, plan.note.text)
+  assert.equal(sent.permalink, `https://alpha.slack.com/archives/C09GRQ8L533/p${posts[0].body.channel === 'C09GRQ8L533' ? live.slack('chat.getPermalink')[0].body.message_ts.replace('.', '') : ''}`)
+  const dm = posts[1].body.text.split('\n')
+  assert.equal(dm.length, 2)
+  assert.equal(dm[0], `Hi Lindsay, this is the website team. Your request "Website: Alpha Chicago" (https://apex.2hourlearning.com/intake?open=cmnotice1) is on hold with others for the same reason; the note here says what it waits on and who owns it: ${sent.permalink}`)
+  assert.equal(dm[1], 'We will update you when it moves; no action needed from you. Website team (Matt Barge)')
+  assert.deepEqual(live.state.ticket.customFields[LEDGER_FIELD].map((e) => [e.kind, e.askHash]), [['blocked', askHash([sent.permalink])]])
+  // The same thread again sends nothing; a DM failure on one ticket is reported and does not stop the others.
+  const again = await runNotice({ ticket: live.state.ticket, kind: 'blocked', shared: sent.permalink, send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  assert.equal(again.decision.send, false); assert.equal(live.slack('chat.postMessage').length, 2)
+  const partial = await runSharedBlocker({ ...plan, tickets: ['missing-ticket', 'cmnotice1'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  assert.equal(partial.dms[0].ok, false); assert.equal(partial.dms[0].code, 'APEX_ERROR')
+  assert.equal(partial.dms[1].ok, true, 'the second ticket still got its DM')
+})
+
+test('intake carries the requester notice preview for Missing Info decisions and sends only with --apply --notify-send', async () => {
+  const applied = await runMockApply({ failStatus: false })
+  const notice = applied.report.results[0].requesterNotice
+  assert.ok(notice, 'a request-clarification decision carries the notice')
+  assert.equal(notice.mode, 'preview', 'no --notify-send, so a preview even under --apply')
+  assert.equal(notice.kind, 'missing-info')
+  assert.match(notice.recipientNote, /SLACK_BOT_TOKEN not set/, 'the child never had a Slack token')
+  assert.match(notice.message, /^Hi Requester, this is the website team\./)
+  assert.match(notice.message, /https:\/\/apex\.2hourlearning\.com\/intake\?open=mock-apply-success/)
+  assert.ok(notice.words < NOTICE_MAX_WORDS)
+  assert.equal(applied.report.summary.requesterNotices.previews, 1)
+  assert.equal(applied.report.summary.requesterNotices.sent, 0)
+  assert.ok(applied.patches.every((patch) => !patch.customFields?.[LEDGER_FIELD]), 'a preview writes no ledger')
+  const source = fs.readFileSync(path.join(root, 'agent', 'intake.mjs'), 'utf8')
+  assert.match(source, /Boolean\(args\['notify-send'\] && result\.applied\?\.ok\)/, 'the DM goes only after the APEX action succeeded')
+})
+
+test('notify-requester CLI exits 1 on a typed input error without contacting Slack or APEX', () => {
+  const run = spawnSync(process.execPath, [path.join(root, 'agent', 'notify-requester.mjs'), '--ticket', 'cmnotice1', '--kind', 'nudge', '--item', 'a bio'], { encoding: 'utf8', env: { ...process.env, SLACK_BOT_TOKEN: 'xoxb-never', APEX_API_TOKEN: 'never-used', APEX_API_BASE: 'http://127.0.0.1:1' } })
+  assert.equal(run.status, 1, run.stderr)
+  assert.match(run.stderr, /^BAD_KIND: --kind must be one of missing-info, blocked, blocked-update, got nudge/)
+  assert.ok(!run.stderr.includes('never') && !run.stdout.includes('never'), 'no token is printed')
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-notify-cli-'))
+  const file = path.join(tmp, 'ticket.json'); fs.writeFileSync(file, JSON.stringify(noticeTicket()))
+  const dry = spawnSync(process.execPath, [path.join(root, 'agent', 'notify-requester.mjs'), '--file', file, '--kind', 'missing-info', '--item', 'Avery Example: headshot and bio', '--item', 'the page URL'], { encoding: 'utf8', env: { ...process.env, SLACK_BOT_TOKEN: '', APEX_API_TOKEN: '', APEX_API_BASE: 'http://127.0.0.1:1' } })
+  assert.equal(dry.status, 0, dry.stderr)
+  assert.match(dry.stdout, /recipient: SLACK_BOT_TOKEN not set/)
+  assert.match(dry.stdout, /--- message \(\d+ words\) ---\nHi Dawn, this is the website team\./)
+  assert.match(dry.stderr, /^refused item \(page URL/)
+  assert.match(dry.stdout, /dry run: nothing sent, nothing written/)
 })

@@ -81,6 +81,17 @@ node agent/attach-evidence.mjs --ticket <id> --run <runId> --page https://alpha.
   --desktop ./evidence/park-city-desktop.png --mobile ./evidence/park-city-mobile.png [--label "..."] [--captured-at <ISO>] [--dry-run]
 ```
 
+## agent/notify-requester.mjs and agent/notify-shared-blocker.mjs (requester notices)
+
+APEX does not tell a requester when their ticket goes to Missing Info or Blocked, so the website system does, by Slack DM from the `marketing_support` bot (decision 2026-09-23, Matt Barge). `agent/requester-notice-policy.mjs` is pure: it composes the two messages (Missing Info; Blocked, with a shared-blocker two-liner), screens the items against the denylist of what an internal source can supply (page URL, HubSpot value, filename, "confirm", packet URL), checks every rule as a typed error (`DASH`, `EXCLAMATION`, `JARGON`, `TOO_LONG`, `NOT_SENTENCE_CASE`, `OWNER_IS_ROLE`, `NO_ITEMS`, `BAD_PERMALINK`), hashes the ask, and decides against the ticket's ledger (`customFields.requesterNotices`: same ask never twice, changed ask once more, one `blocked` then `blocked-update` only on change). `agent/notify-requester.mjs` reads the ticket (APEX or `--file`), resolves the recipient with `users.lookupByEmail`, prints the preview (dry run, the default) and with `--send` posts the DM, records the ledger with a v1 PATCH that carries only `customFields` (merged), and appends the text to the description under a dated "REQUESTER NOTICE (Slack DM)" heading with the requester's text first. A requester with no Slack user gets no DM; the ledger and stdout say so, the note still goes on the ticket, and `--digest` lists those tickets. `agent/notify-shared-blocker.mjs` posts one channel note and sends each requester the two-line DM through the same path. `agent/intake.mjs` carries the preview in its report for Missing Info and blocked decisions and sends only with `--apply --notify-send`. Tests mock Slack and APEX with one fetch double; the intake child never receives `SLACK_BOT_TOKEN`.
+
+```bash
+node agent/notify-requester.mjs --ticket <id> --kind missing-info --item "Dawn Adams: headshot and bio" --item "..." [--already-done "..."]   # dry run
+node agent/notify-requester.mjs --ticket <id> --kind blocked --blocker "..." [--owner "<person>"] [--when "..."] [--already-done "..."] --send
+node agent/notify-shared-blocker.mjs --channel C09GRQ8L533 --title "..." --body-file note.md --tickets id,id [--send]
+node agent/notify-requester.mjs --digest
+```
+
 ## photo-framing.mjs and agent/frame-headshot.mjs (headshot framing)
 
 `tests/photo-framing.mjs` holds the framing math (`frameCoverage`, `judgeFraming`, `frameForFit`) and the in-page measurement (`measureTeamCardsInPage`) behind `page-check.mjs team-photo-framing`. Coverage is `min(imageRatio, boxRatio) / max(imageRatio, boxRatio)`; the cropped axis is vertical when the image is taller than the box (the head-cutting case) and horizontal when wider; the cut edges follow `object-position`. `object-fit: contain` never crops; `fill` fails when it stretches by more than 5%. The measured card boxes per page are in `spec/team-card-frame.json` (the ratio is per page and viewport, not one site value).

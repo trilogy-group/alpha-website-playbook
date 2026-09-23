@@ -15,4 +15,6 @@ Rules:
 
 `agent/intake.mjs` is the scheduled APEX intake administrator (see `tests/README.md`). It reads only the compiled policy bundle, then classifies, checks policy and input ownership, requests typed requester clarification, and routes to one exact owner. It re-evaluates the same ticket after a requester revision. It never edits WordPress, HubSpot, n8n, or another delivery system.
 
+When a ticket goes to Missing Info or Blocked, the requester is told by Slack DM through `agent/notify-requester.mjs` (dry run first; rules and once-only ledger in `agent/requester-notice-policy.mjs`; protocol section 7, "Requester notices"). APEX does not send that notice.
+
 Any agent taking an APEX website ticket by hand follows the same steps: protocol step 0 (contract), step 1 (class and inputs), and step 1b (pathway and owner). Ask requesters only for requester-owned facts. Derive canonical URLs and source-owned values from the registries and authoritative systems. An unregistered or ambiguous owner fails closed; never fall back to Matt or Yash merely because no rule matched. Only ticket classes in the release manifest's scheduled Alpha MCP allowlist may enter the execution queue.
