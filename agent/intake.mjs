@@ -9,8 +9,10 @@
  *   node agent/intake.mjs --file tickets.json --replay --report replay.json
  *
  * Requester notices (decision 2026-09-23): for a Missing Info or blocked decision the report carries the Slack DM
- * preview from agent/notify-requester.mjs (dry run); the DM is sent only with --apply --notify-send after the
- * APEX action succeeded; --no-notify skips the preview.
+ * preview from agent/notify-requester.mjs (dry run); the DM goes only with --apply --notify-send after the
+ * APEX action succeeded, and then as spec/requester-notices.json says: to the reviewer first (reviewMode "all",
+ * or a flagged message in "flagged" mode; the report says mode "review") or straight to the requester (mode
+ * "sent"); --no-notify skips the preview.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -316,7 +318,8 @@ async function requesterNotice(ticket, result, send) {
     : { ticket, kind: 'blocked', blocker: requesterBlocker(result), owner: result.owner || null, roleOwners: bundle.roleOwners, send }
   try {
     const notice = await runNotice(options, { io })
-    return { mode: send ? 'sent' : 'preview', kind: notice.kind, decision: notice.decision.reason, recipient: notice.recipient, recipientNote: notice.recipientNote, words: notice.words, refused: notice.refused, message: notice.message, sent: notice.sent, ledgerEntry: notice.ledgerEntry, output: lines }
+    const mode = notice.route === 'review' ? 'review' : notice.route === 'send' ? 'sent' : 'preview'
+    return { mode, route: notice.route, gate: notice.gate, kind: notice.kind, decision: notice.decision.reason, recipient: notice.recipient, recipientNote: notice.recipientNote, words: notice.words, refused: notice.refused, message: notice.message, sent: notice.sent, review: notice.review, ledgerEntry: notice.ledgerEntry, output: lines }
   } catch (error) {
     if (!(error instanceof RequesterNoticeError) && !(error instanceof NotifyRequesterError)) throw error
     return { mode: send ? 'sent' : 'preview', error: error.code, message: error.message, output: lines }
@@ -439,6 +442,7 @@ function summarize(results) {
     requesterNotices: {
       previews: results.filter((result) => result.requesterNotice?.mode === 'preview' && result.requesterNotice.message && !result.requesterNotice.error).length,
       sent: results.filter((result) => result.requesterNotice?.sent).length,
+      reviewRequested: results.filter((result) => result.requesterNotice?.mode === 'review' && result.requesterNotice.review && !result.requesterNotice.review.duplicate).length,
       unreachable: results.filter((result) => result.requesterNotice?.recipientNote && !result.requesterNotice.error).length,
       refused: results.filter((result) => result.requesterNotice?.error).map((result) => ({ id: result.id, error: result.requesterNotice.error, message: result.requesterNotice.message })),
     },

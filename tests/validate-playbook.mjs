@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { validateReviewSpec } from '../agent/notice-review.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -254,6 +255,10 @@ export function runValidation() {
     ...(readJson('registry/templates.json', errors)?.gaps || []),
   ]
   if (unresolved.length) warnings.push(`${unresolved.length} explicit owner or inventory gaps remain and must stay fail-closed`)
+
+  // Requester notice review gate (decision 2026-09-23): mode, reviewer, reactions, flag rules, ledger location.
+  const reviewSpec = readJson('spec/requester-notices.json', errors)
+  if (reviewSpec) for (const problem of validateReviewSpec(reviewSpec)) errors.push(`spec/requester-notices.json: ${problem}`)
 
   // Policy bundle, adapters, and release manifest (improvement plan workstreams 3, 5, 10).
   const bundle = readJson('spec/policy-bundle.generated.json', errors)

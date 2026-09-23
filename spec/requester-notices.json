@@ -1,0 +1,39 @@
+{
+  "$comment": "Review gate for requester notices (agent/notify-requester.mjs, agent/notify-shared-blocker.mjs; rules in agent/notice-review.mjs). Before a notice reaches a requester, the bot DMs the reviewer the exact text and the reviewer reacts: the send reaction sends it through the normal notifier path, the hold reaction holds it, no reaction for expiryDays expires it. reviewMode \"all\" sends every notice through review (now); \"flagged\" sends unflagged notices directly with --send and only the flagRules matches through review (later, once the wording has settled). Reactions are read through conversations.history's reactions field on the reviewer message (im:history), because the marketing_support bot has no reactions:read (checked 2026-09-23); only the reviewer's own reaction counts, and hold wins when both are present. The pending items live in a local JSON-lines ledger (env NOTICE_REVIEW_LEDGER, else ledger.defaultPath, else work/notice-review.jsonl in this checkout), polled by agent/notice-review-poll.mjs.",
+  "version": "0.1",
+  "asOf": "2026-09-23",
+  "reviewMode": "all",
+  "reviewer": {
+    "email": "matthew.barge@superbuilders.school",
+    "name": "Matt Barge",
+    "timeZone": "America/Los_Angeles"
+  },
+  "reactions": {
+    "send": "white_check_mark",
+    "hold": "x"
+  },
+  "expiryDays": 7,
+  "internalDomains": ["alpha.school", "2hourlearning.com", "superbuilders.school"],
+  "flagRules": [
+    {
+      "id": "question",
+      "reason": "an item is a question rather than an attach-a-file ask",
+      "detail": "A Missing Info item is an attach-a-file ask when it names a file the requester attaches (headshot, photo, bio, logo, file, PDF) and asks nothing else; an item with a question mark, an either-or choice, or an interrogative word (who, what, which, whether, when, where, why, how, does, should) is a question. Blocked notices and shared-blocker DMs tell, they do not ask, so this rule does not flag them."
+    },
+    {
+      "id": "external-recipient",
+      "reason": "the recipient is outside the internal domains",
+      "detail": "The requester email's domain is not one of internalDomains."
+    },
+    {
+      "id": "channel-note",
+      "reason": "a shared-blocker channel note is read by everyone in the channel",
+      "detail": "Every channel note goes through review in both modes; the DMs that point at it depend on the note being sent and wait for their own reaction."
+    }
+  ],
+  "ledger": {
+    "env": "NOTICE_REVIEW_LEDGER",
+    "defaultPath": "/Users/matthewbarge/DevProjects/marketingsupport/work-assets/apex-website-tickets/notice-review.jsonl",
+    "fallbackPath": "work/notice-review.jsonl"
+  }
+}
