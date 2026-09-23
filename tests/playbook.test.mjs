@@ -41,8 +41,10 @@ import { VERTICAL_MIN_COVERAGE, frameCoverage, frameForFit, judgeFraming, parseO
 import { FrameHeadshotError, cropWindow, decodePng, encodePng, main as frameMain, parseFocus, parseRatio, planFrame } from '../agent/frame-headshot.mjs'
 import { BrandVisualError, backgroundVerdict, brandVisualCheck, contrastRatio, contrastVerdict, evaluateBrandVisual, fontVerdict, isLargeText, isNearWhite, loadBrandVisual, logoVerdict, normalizeHex, primaryFamily, relativeLuminance } from './brand-visual.mjs'
 import { DESCRIPTION_HEADING, LEDGER_FIELD, MAX_WORDS as NOTICE_MAX_WORDS, RequesterNoticeError, appendNoticeToDescription, askHash, checkMessage, composeBlocked, composeMissingInfo, composeShared, firstName, noticeDecision, plainTitle, requesterNoticesPatch, screenItems, unresolvedNotices } from '../agent/requester-notice-policy.mjs'
-import { NotifyRequesterError, digestRows, main as notifyMain, ownerForRole, parseArgs as parseNotifyArgs, runDigest, runNotice } from '../agent/notify-requester.mjs'
+import { NotifyRequesterError, digestRows, main as notifyMain, noticeRoute, ownerForRole, parseArgs as parseNotifyArgs, runDigest, runNotice } from '../agent/notify-requester.mjs'
 import { composeChannelNote, planSharedBlocker, runSharedBlocker } from '../agent/notify-shared-blocker.mjs'
+import { CHANNEL_NOTE_KIND, NoticeReviewError, REVIEW_INSTRUCTION, appendLedger, composeReviewMessage, findLiveItem, isExpired, isInternalEmail, isQuestionItem, ledgerPath, loadReviewSpec, needsReview, reactionVerdict, readLedger, reviewerTime, validateReviewSpec } from '../agent/notice-review.mjs'
+import { runPoll } from '../agent/notice-review-poll.mjs'
 import { requesterNoticeItems } from '../agent/intake-policy.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -1219,9 +1221,11 @@ function noticeTicket(overrides = {}) {
   }
 }
 /** A fetch double for Slack and APEX together: records every call, answers by method or route. */
-function mockSlackApex({ slackUser = { id: 'U0B7GTFBE3C', real_name: 'Dawn Adams', profile: { first_name: 'Dawn' } }, ticket = noticeTicket(), lookupError = null } = {}) {
+const REVIEWER = { id: 'U0B4W7Z23EX', real_name: 'Matt Barge', profile: { first_name: 'Matt' } }
+function mockSlackApex({ slackUser = { id: 'U0B7GTFBE3C', real_name: 'Dawn Adams', profile: { first_name: 'Dawn' } }, ticket = noticeTicket(), lookupError = null, reviewer = REVIEWER } = {}) {
   const calls = []
-  const state = { ticket: structuredClone(ticket) }
+  // Messages the mock posted, by ts, with the reactions a test adds (state.react(ts, name, userId)); history answers from them.
+  const state = { ticket: structuredClone(ticket), messages: new Map(), react(ts, name, user) { const m = this.messages.get(ts); (m.reactions ||= []); let r = m.reactions.find((x) => x.name === name); if (!r) m.reactions.push(r = { name, users: [], count: 0 }); r.users.push(user); r.count++ } }
   const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
   const fetchImpl = async (url, init = {}) => {
     const form = /x-www-form-urlencoded/.test(init.headers?.['Content-Type'] || '')
@@ -1229,9 +1233,14 @@ function mockSlackApex({ slackUser = { id: 'U0B7GTFBE3C', real_name: 'Dawn Adams
     calls.push({ url, method: init.method, authorization: init.headers?.Authorization, body, form })
     if (url.startsWith('https://slack.com/api/')) {
       const method = url.slice('https://slack.com/api/'.length)
-      if (method === 'users.lookupByEmail') return lookupError ? json({ ok: false, error: lookupError }) : slackUser ? json({ ok: true, user: slackUser }) : json({ ok: false, error: 'users_not_found' })
-      if (method === 'conversations.open') return json({ ok: true, channel: { id: 'D0DM1' } })
-      if (method === 'chat.postMessage') return json({ ok: true, channel: body.channel, ts: `17000.${calls.length}` })
+      if (method === 'users.lookupByEmail') {
+        if (lookupError) return json({ ok: false, error: lookupError })
+        if (body.email === 'matthew.barge@superbuilders.school' || body.email === 'reviewer@superbuilders.school') return reviewer ? json({ ok: true, user: reviewer }) : json({ ok: false, error: 'users_not_found' })
+        return slackUser ? json({ ok: true, user: slackUser }) : json({ ok: false, error: 'users_not_found' })
+      }
+      if (method === 'conversations.open') return json({ ok: true, channel: { id: body.users === reviewer?.id ? 'D0REVIEW' : 'D0DM1' } })
+      if (method === 'chat.postMessage') { const ts = `17000.${calls.length}`; state.messages.set(ts, { ts, channel: body.channel, text: body.text, thread_ts: body.thread_ts || null, reactions: [] }); return json({ ok: true, channel: body.channel, ts }) }
+      if (method === 'conversations.history') { const m = state.messages.get(body.latest); return json({ ok: true, messages: m && m.channel === body.channel ? [m] : [] }) }
       if (method === 'chat.getPermalink') return json({ ok: true, permalink: `https://alpha.slack.com/archives/${body.channel}/p${body.message_ts.replace('.', '')}` })
       return json({ ok: false, error: `not mocked ${method}` })
     }
@@ -1243,9 +1252,15 @@ function mockSlackApex({ slackUser = { id: 'U0B7GTFBE3C', real_name: 'Dawn Adams
     }
     return json({ error: `not mocked ${init.method} ${url}` }, 404)
   }
-  return { calls, fetchImpl, state, patches: () => calls.filter((c) => c.method === 'PATCH').map((c) => c.body), slack: (method) => calls.filter((c) => c.url === `https://slack.com/api/${method}`) }
+  return { calls, fetchImpl, state, patches: () => calls.filter((c) => c.method === 'PATCH').map((c) => c.body), slack: (method) => calls.filter((c) => c.url === `https://slack.com/api/${method}`), posts: (channel) => calls.filter((c) => c.url === 'https://slack.com/api/chat.postMessage' && c.body.channel === channel).map((c) => c.body) }
 }
-const noticeEnv = { SLACK_BOT_TOKEN: 'xoxb-test', APEX_API_TOKEN: 'apex-test', APEX_API_BASE: 'http://127.0.0.1:4010/api/v1' }
+/** Each notice test gets its own review ledger file; no test touches the default one under marketingsupport. */
+function noticeEnvWith(extra = {}) { return { SLACK_BOT_TOKEN: 'xoxb-test', APEX_API_TOKEN: 'apex-test', APEX_API_BASE: 'http://127.0.0.1:4010/api/v1', NOTICE_REVIEW_LEDGER: path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-notice-review-')), 'notice-review.jsonl'), ...extra } }
+const noticeEnv = noticeEnvWith()
+const reviewSpec = loadReviewSpec()
+const flaggedSpec = { ...reviewSpec, reviewMode: 'flagged' }
+// The direct-send path is what the poll invokes after the reviewer's reaction; these tests pass `reviewed` as the poll does.
+const REVIEWED = 'reviewed-in-test'
 const quiet = () => ({ lines: [], io: { log() {}, error() {} } })
 
 test('requester notice text: first-name greeting, title, APEX link, numbered items, how to provide, signature; refuses dashes, exclamation, jargon, shouting, length', () => {
@@ -1386,7 +1401,7 @@ test('notify-requester dry run resolves the recipient, prints the message, and w
   assert.ok(!lines.join('\n').includes('xoxb-test') && !lines.join('\n').includes('apex-test'), 'no secret is printed')
 
   const live = mockSlackApex()
-  const sent = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io, now: () => new Date('2026-09-23T15:00:00Z') })
+  const sent = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io, now: () => new Date('2026-09-23T15:00:00Z') })
   assert.deepEqual(sent.sent, { channel: 'D0DM1', ts: '17000.4' })
   assert.deepEqual(live.slack('conversations.open')[0].body, { users: 'U0B7GTFBE3C' })
   assert.equal(live.slack('chat.postMessage')[0].body.text, sent.message)
@@ -1404,21 +1419,21 @@ test('notify-requester dry run resolves the recipient, prints the message, and w
   assert.deepEqual(sent.wrote, ['customFields.requesterNotices', 'description'])
 
   // The once-only rule against the ledger the send just wrote: the same ask is not sent again; a changed ask is.
-  const repeat = await runNotice({ ticket: live.state.ticket, kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  const repeat = await runNotice({ ticket: live.state.ticket, kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
   assert.equal(repeat.decision.send, false); assert.equal(repeat.message, null)
   assert.equal(live.slack('chat.postMessage').length, 1, 'no second DM for the same ask')
-  const changed = await runNotice({ ticket: live.state.ticket, kind: 'missing-info', items: ['Avery Example: headshot only, the bio arrived'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  const changed = await runNotice({ ticket: live.state.ticket, kind: 'missing-info', items: ['Avery Example: headshot only, the bio arrived'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
   assert.equal(changed.decision.send, true); assert.match(changed.decision.reason, /the ask changed/)
   assert.equal(live.slack('chat.postMessage').length, 2)
   assert.equal(live.state.ticket.customFields[LEDGER_FIELD].length, 2)
 
   // Blocked: the owner comes from the ticket's ownerRole when one person is registered; the second send is an update only on change.
   const blocked = mockSlackApex({ ticket: noticeTicket({ status: 'BLOCKED' }) })
-  const b1 = await runNotice({ ticketId: 'cmnotice1', kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  const b1 = await runNotice({ ticketId: 'cmnotice1', kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
   assert.equal(b1.kind, 'blocked'); assert.match(b1.message, /Owner: Matt Barge\./)
-  const b2 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  const b2 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
   assert.equal(b2.decision.send, false)
-  const b3 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the approved packet, link swap pending', send: true }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  const b3 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the approved packet, link swap pending', send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
   assert.equal(b3.kind, 'blocked-update'); assert.equal(b3.decision.send, true)
   assert.equal(blocked.slack('chat.postMessage').length, 2)
   assert.deepEqual(blocked.state.ticket.customFields[LEDGER_FIELD].map((e) => e.kind), ['blocked', 'blocked-update'])
@@ -1440,7 +1455,7 @@ test('notify-requester dry run resolves the recipient, prints the message, and w
 test('a requester with no Slack user gets no DM: the ledger says so, the note stays on the ticket, the digest lists the ticket', async () => {
   const none = mockSlackApex({ slackUser: null })
   const { io, lines } = quiet(); io.log = (line) => lines.push(line)
-  const result = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: none.fetchImpl, io, now: () => new Date('2026-09-23T15:00:00Z') })
+  const result = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: none.fetchImpl, io, now: () => new Date('2026-09-23T15:00:00Z') })
   assert.equal(result.sent, null)
   assert.equal(result.recipient, null)
   assert.equal(result.recipientNote, 'no Slack user for dawn.crichton-adams@alpha.school; note on the ticket only; add to the coordinator digest')
@@ -1462,7 +1477,7 @@ test('a requester with no Slack user gets no DM: the ledger says so, the note st
   assert.match(digestLines[1], /^cmnotice1 \| MISSING_INFO \| dawn.crichton-adams@alpha.school \| missing-info \| 2026-09-23T15:00:00.000Z \|/)
   // Once recorded, the same ask is still not resent when the person later joins Slack: a changed ask is.
   const joined = mockSlackApex({ ticket: none.state.ticket })
-  const same = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true }, { env: noticeEnv, fetchImpl: joined.fetchImpl, io: quiet().io })
+  const same = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: joined.fetchImpl, io: quiet().io })
   assert.equal(same.decision.send, true, 'an unresolved entry never counted as sent, so the first reachable send goes')
   assert.equal(joined.slack('chat.postMessage').length, 1)
 })
@@ -1490,7 +1505,7 @@ test('notify-shared-blocker posts one channel note and a two-line DM per ticket;
   assert.equal(preview.dms.length, 1); assert.equal(preview.dms[0].recipient.slackUserId, 'U0BJBTXPDLG')
 
   const live = mockSlackApex({ slackUser: { id: 'U0BJBTXPDLG', real_name: 'Lindsay Dudley', profile: { first_name: 'Lindsay' } }, ticket: noticeTicket({ status: 'BLOCKED', title: 'Website (Other) — Alpha Chicago', requesterEmail: 'lindsay.dudley@alpha.school' }) })
-  const sent = await runSharedBlocker({ ...plan, tickets: ['cmnotice1'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  const sent = await runSharedBlocker({ ...plan, tickets: ['cmnotice1'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
   const posts = live.slack('chat.postMessage')
   assert.equal(posts.length, 2, 'one channel note, one DM')
   assert.equal(posts[0].body.channel, 'C09GRQ8L533'); assert.equal(posts[0].body.text, plan.note.text)
@@ -1501,9 +1516,9 @@ test('notify-shared-blocker posts one channel note and a two-line DM per ticket;
   assert.equal(dm[1], 'We will update you when it moves; no action needed from you. Website team (Matt Barge)')
   assert.deepEqual(live.state.ticket.customFields[LEDGER_FIELD].map((e) => [e.kind, e.askHash]), [['blocked', askHash([sent.permalink])]])
   // The same thread again sends nothing; a DM failure on one ticket is reported and does not stop the others.
-  const again = await runNotice({ ticket: live.state.ticket, kind: 'blocked', shared: sent.permalink, send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  const again = await runNotice({ ticket: live.state.ticket, kind: 'blocked', shared: sent.permalink, send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
   assert.equal(again.decision.send, false); assert.equal(live.slack('chat.postMessage').length, 2)
-  const partial = await runSharedBlocker({ ...plan, tickets: ['missing-ticket', 'cmnotice1'], send: true }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
+  const partial = await runSharedBlocker({ ...plan, tickets: ['missing-ticket', 'cmnotice1'], send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: live.fetchImpl, io: quiet().io })
   assert.equal(partial.dms[0].ok, false); assert.equal(partial.dms[0].code, 'APEX_ERROR')
   assert.equal(partial.dms[1].ok, true, 'the second ticket still got its DM')
 })
@@ -1523,6 +1538,332 @@ test('intake carries the requester notice preview for Missing Info decisions and
   assert.ok(applied.patches.every((patch) => !patch.customFields?.[LEDGER_FIELD]), 'a preview writes no ledger')
   const source = fs.readFileSync(path.join(root, 'agent', 'intake.mjs'), 'utf8')
   assert.match(source, /Boolean\(args\['notify-send'\] && result\.applied\?\.ok\)/, 'the DM goes only after the APEX action succeeded')
+})
+
+// Review gate, 2026-09-23: before a notice reaches a requester the reviewer (Matt) sees the exact text in a DM and reacts;
+// the poll sends on the send reaction, holds on the hold reaction, expires after seven days (spec/requester-notices.json,
+// agent/notice-review.mjs, agent/notice-review-poll.mjs).
+test('review spec: mode, reviewer, reactions, flag rules; a question item, an external recipient and a channel note are flagged; "all" reviews everything', () => {
+  assert.deepEqual(validateReviewSpec(reviewSpec), [])
+  assert.equal(reviewSpec.reviewMode, 'all', 'every notice goes through review now; "flagged" comes later')
+  assert.deepEqual(reviewSpec.reactions, { send: 'white_check_mark', hold: 'x' })
+  assert.equal(reviewSpec.reviewer.email, 'matthew.barge@superbuilders.school')
+  assert.ok(validateReviewSpec({ ...reviewSpec, reviewMode: 'none' }).some((e) => /reviewMode/.test(e)))
+  assert.ok(validateReviewSpec({ ...reviewSpec, reactions: { send: 'x', hold: 'x' } }).some((e) => /differ/.test(e)))
+  assert.ok(validateReviewSpec({ ...reviewSpec, flagRules: reviewSpec.flagRules.slice(1) }).some((e) => /missing question/.test(e)))
+  assert.ok(validateReviewSpec({ ...reviewSpec, expiryDays: 0 }).some((e) => /expiryDays/.test(e)))
+  assert.ok(validateReviewSpec({ ...reviewSpec, internalDomains: [] }).some((e) => /internalDomains/.test(e)))
+  // What is a question and what is an attach-a-file ask.
+  assert.equal(isQuestionItem('Avery Example: headshot and bio'), false)
+  assert.equal(isQuestionItem('headshot for Avery Example'), false)
+  assert.equal(isQuestionItem('Dawn Adams: headshot, bio, and Dean of Parents or Assoc. Dean of Parents'), true, 'an either-or is a question')
+  assert.equal(isQuestionItem('Patricio: Rosas or Rojas'), true)
+  assert.equal(isQuestionItem('Tetiana Vozniuk Pierson and Alyssa Duncan: add them? Does Alyssa replace Angela Allen'), true)
+  assert.equal(isQuestionItem('Remi Ho and Tasha Arnold: stay on the page, or come off and from when'), true)
+  assert.equal(isQuestionItem('Title for Avery Example'), true, 'not a file: the requester has to write something')
+  assert.equal(isInternalEmail('dawn@alpha.school', reviewSpec), true)
+  assert.equal(isInternalEmail('someone@mail.alpha.school', reviewSpec), true)
+  assert.equal(isInternalEmail('parent@gmail.com', reviewSpec), false)
+  assert.equal(isInternalEmail('x@notalpha.school', reviewSpec), false)
+  // Routing in both modes.
+  const fileAsk = { kind: 'missing-info', items: ['Avery Example: headshot and bio'], recipientEmail: 'dawn@alpha.school' }
+  assert.deepEqual(needsReview(fileAsk, reviewSpec), { needsReview: true, mode: 'all', flagged: false, reasons: ['review mode is "all"'] })
+  assert.deepEqual(needsReview(fileAsk, flaggedSpec), { needsReview: false, mode: 'flagged', flagged: false, reasons: [] })
+  const question = needsReview({ ...fileAsk, items: ['Patricio: Rosas or Rojas'] }, flaggedSpec)
+  assert.equal(question.needsReview, true); assert.match(question.reasons[0], /question/)
+  const external = needsReview({ ...fileAsk, recipientEmail: 'parent@gmail.com' }, flaggedSpec)
+  assert.equal(external.needsReview, true); assert.match(external.reasons[0], /outside the internal domains/)
+  assert.equal(needsReview({ kind: 'blocked', recipientEmail: 'l@alpha.school' }, flaggedSpec).needsReview, false, 'a blocked notice tells, it does not ask')
+  assert.equal(needsReview({ kind: CHANNEL_NOTE_KIND }, flaggedSpec).needsReview, true, 'a channel note is always reviewed')
+  assert.equal(needsReview({ kind: CHANNEL_NOTE_KIND }, reviewSpec).flagged, true)
+  // The route a notice takes once composed.
+  const gateOn = { needsReview: true }; const gateOff = { needsReview: false }
+  assert.equal(noticeRoute({ send: false, review: false, recipient: {} }, gateOn), 'dry-run')
+  assert.equal(noticeRoute({ send: false, review: true, recipient: {} }, gateOff), 'review', '--review is explicit whatever the gate says')
+  assert.equal(noticeRoute({ send: false, review: true, recipient: null }, gateOn), 'nothing-to-review')
+  assert.equal(noticeRoute({ send: true, recipient: {} }, gateOn), 'review')
+  assert.equal(noticeRoute({ send: true, recipient: {} }, gateOff), 'send')
+  assert.equal(noticeRoute({ send: true, reviewed: 'abc', recipient: {} }, gateOn), 'send', 'the poll sends what the reviewer approved')
+  assert.equal(noticeRoute({ send: true, recipient: null }, gateOn), 'send', 'no Slack user: nothing to review, the note goes on the ticket')
+  // Reactions: only the reviewer's, hold wins.
+  const message = { reactions: [{ name: 'white_check_mark', users: ['U0OTHER'], count: 1 }] }
+  assert.equal(reactionVerdict(message, 'U0B4W7Z23EX', reviewSpec), null, 'someone else\'s reaction does not count')
+  assert.equal(reactionVerdict({ reactions: [{ name: 'white_check_mark', users: ['U0OTHER', 'U0B4W7Z23EX'] }] }, 'U0B4W7Z23EX', reviewSpec), 'send')
+  assert.equal(reactionVerdict({ reactions: [{ name: 'x', users: ['U0B4W7Z23EX'] }, { name: 'white_check_mark', users: ['U0B4W7Z23EX'] }] }, 'U0B4W7Z23EX', reviewSpec), 'hold')
+  assert.equal(reactionVerdict({}, 'U0B4W7Z23EX', reviewSpec), null)
+  assert.equal(isExpired({ createdAt: '2026-09-16T00:00:00Z' }, reviewSpec, new Date('2026-09-23T00:00:01Z')), true)
+  assert.equal(isExpired({ createdAt: '2026-09-20T00:00:00Z' }, reviewSpec, new Date('2026-09-23T00:00:00Z')), false)
+  assert.equal(reviewerTime('2026-09-23T17:15:03Z', 'America/Los_Angeles'), '10:15 PDT on 2026-09-23')
+  // The reviewer DM: header line, the exact text quoted, the instruction.
+  const dm = composeReviewMessage({ kind: 'missing-info', subject: 'Dawn Adams', title: 'Website: Alpha Scottsdale', link: 'https://apex.2hourlearning.com/intake?open=cmsg', text: 'Hi Dawn, this is the website team.\n\n1. A bio' })
+  assert.deepEqual(dm.split('\n'), ['Review: missing-info notice for Dawn Adams (Website: Alpha Scottsdale) https://apex.2hourlearning.com/intake?open=cmsg', '> Hi Dawn, this is the website team.', '> ', '> 1. A bio', REVIEW_INSTRUCTION])
+  assert.equal(REVIEW_INSTRUCTION, 'React ✅ to send, ❌ to hold.')
+  const note = composeReviewMessage({ kind: CHANNEL_NOTE_KIND, subject: '<#C09GRQ8L533>', title: 'Info packets 2026-27', text: 'x', reasons: ['a shared-blocker channel note is read by everyone in the channel'] })
+  assert.match(note, /^Review: channel note for <#C09GRQ8L533> \(Info packets 2026-27\)\nWhy: a shared-blocker channel note is read by everyone in the channel\.\n> x\n/)
+  assert.match(composeReviewMessage({ kind: 'blocked', subject: 'L', text: 'x', dependsOnNote: true, placeholder: 'https://slack.com/archives/C1/p0' }), /Goes after the channel note above is sent; https:\/\/slack\.com\/archives\/C1\/p0 in the text becomes the note's link\./)
+  assert.throws(() => composeReviewMessage({ kind: 'blocked', subject: '', text: 'x' }), (e) => e instanceof NoticeReviewError && e.code === 'BAD_ITEM')
+  // Ledger: append only, last line wins, a bad line is refused.
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-review-ledger-'))
+  const file = path.join(tmp, 'nested', 'notice-review.jsonl')
+  assert.deepEqual(readLedger(file), [])
+  appendLedger(file, { id: 'a', status: 'pending', ticketId: 't', kind: 'missing-info', askHash: 'h' })
+  appendLedger(file, { id: 'b', status: 'pending', ticketId: 't2', kind: 'blocked', askHash: 'h2' })
+  appendLedger(file, { id: 'a', status: 'sent', sentAt: 'now' })
+  assert.deepEqual(readLedger(file).map((i) => [i.id, i.status, i.ticketId]), [['a', 'sent', 't'], ['b', 'pending', 't2']])
+  assert.equal(findLiveItem(readLedger(file), { ticketId: 't', kind: 'missing-info', askHash: 'h' }).status, 'sent')
+  assert.equal(findLiveItem(readLedger(file), { ticketId: 't', kind: 'missing-info', askHash: 'other' }), null)
+  assert.throws(() => appendLedger(file, { id: 'c', status: 'maybe' }), (e) => e.code === 'BAD_ITEM')
+  fs.appendFileSync(file, 'not json\n')
+  assert.throws(() => readLedger(file), (e) => e instanceof NoticeReviewError && e.code === 'BAD_LEDGER')
+  assert.equal(ledgerPath(reviewSpec, { NOTICE_REVIEW_LEDGER: file }), file)
+  assert.ok(/notice-review\.jsonl$/.test(ledgerPath(reviewSpec, {})))
+})
+
+test('notify-requester --review DMs the reviewer the exact text, records a pending item, writes nothing to APEX; --send under mode "all" does the same; a live duplicate is not re-requested', async () => {
+  const env = noticeEnvWith()
+  const live = mockSlackApex()
+  const { io, lines } = quiet(); io.log = (line) => lines.push(line)
+  const items = ['Avery Example: headshot and bio', 'Avery Example: a short bio']
+  const result = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items, review: true }, { env, fetchImpl: live.fetchImpl, io, now: () => new Date('2026-09-23T15:00:00Z') })
+  assert.equal(result.route, 'review'); assert.equal(result.dryRun, false); assert.equal(result.sent, null)
+  assert.equal(live.posts('D0DM1').length, 0, 'nothing to the requester')
+  assert.equal(live.patches().length, 0, 'nothing on the ticket')
+  const reviewPosts = live.posts('D0REVIEW')
+  assert.equal(reviewPosts.length, 1)
+  assert.deepEqual(live.slack('conversations.open').map((c) => c.body.users), ['U0B4W7Z23EX'], 'the DM is opened with the reviewer only')
+  const reviewLines = reviewPosts[0].text.split('\n')
+  assert.equal(reviewLines[0], 'Review: missing-info notice for Dawn Adams (Website: Add team member: Alpha Austin) https://apex.2hourlearning.com/intake?open=cmnotice1')
+  assert.equal(reviewLines.at(-1), REVIEW_INSTRUCTION)
+  assert.deepEqual(reviewLines.slice(1, -1), result.message.split('\n').map((l) => `> ${l}`), 'the exact message, quoted')
+  assert.ok(!reviewPosts[0].text.includes('Why:'), 'mode "all" is not a flag; the unflagged file ask needs no Why line')
+  assert.deepEqual(result.review, { duplicate: false, itemId: result.review.itemId, status: 'pending', channel: 'D0REVIEW', ts: [...live.state.messages.keys()][0] })
+  const ledger = readLedger(env.NOTICE_REVIEW_LEDGER)
+  assert.equal(ledger.length, 1)
+  const item = ledger[0]
+  assert.equal(item.id, result.review.itemId)
+  assert.deepEqual([item.status, item.createdAt, item.mode, item.ticketId, item.kind, item.askHash, item.reviewChannel, item.reviewTs], ['pending', '2026-09-23T15:00:00.000Z', 'all', 'cmnotice1', 'missing-info', askHash(items), 'D0REVIEW', result.review.ts])
+  assert.deepEqual(item.reviewer, { email: 'matthew.barge@superbuilders.school', slackUserId: 'U0B4W7Z23EX', name: 'Matt Barge' })
+  assert.deepEqual(item.recipient, { email: 'dawn.crichton-adams@alpha.school', slackUserId: 'U0B7GTFBE3C', name: 'Dawn Adams' })
+  assert.equal(item.text, result.message)
+  assert.deepEqual(item.notice, { kind: 'missing-info', items, alreadyDone: null, blocker: null, owner: null, when: null, shared: null, title: null })
+  assert.ok(lines.some((l) => /^review requested: DM to Matt Barge D0REVIEW ts /.test(l)))
+  assert.ok(!lines.join('\n').includes('xoxb-test'), 'no secret is printed')
+  // The same ask again while the item is pending: no second reviewer DM.
+  const again = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items, review: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io })
+  assert.equal(again.review.duplicate, true); assert.equal(again.review.itemId, item.id)
+  assert.equal(live.posts('D0REVIEW').length, 1)
+  assert.equal(readLedger(env.NOTICE_REVIEW_LEDGER).length, 1)
+  // --send in mode "all" goes to review too (a changed ask is a new item); --reviewer overrides the address.
+  const viaSend = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio', 'Patricio: Rosas or Rojas'], send: true, reviewer: 'reviewer@superbuilders.school' }, { env, fetchImpl: live.fetchImpl, io: quiet().io })
+  assert.equal(viaSend.route, 'review'); assert.equal(viaSend.sent, null)
+  assert.match(live.posts('D0REVIEW')[1].text, /\nWhy: an item is a question rather than an attach-a-file ask\.\n/, 'a flagged item says why even in mode "all"')
+  assert.equal(live.posts('D0REVIEW').length, 2); assert.equal(live.posts('D0DM1').length, 0); assert.equal(live.patches().length, 0)
+  assert.equal(readLedger(env.NOTICE_REVIEW_LEDGER)[1].reviewer.email, 'reviewer@superbuilders.school')
+  // A dry run says which way --send would go.
+  const { io: dryIo, lines: dryLines } = quiet(); dryIo.log = (l) => dryLines.push(l)
+  const dry = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'] }, { env, fetchImpl: mockSlackApex().fetchImpl, io: dryIo })
+  assert.equal(dry.route, 'dry-run'); assert.equal(dry.dryRun, true)
+  assert.ok(dryLines.some((l) => /^dry run: nothing sent, nothing written\. --send would go to review first \(review mode is "all"\), then DM the recipient/.test(l)), dryLines.join('\n'))
+  // No Slack user: nothing to review, nothing written; with --send the note still goes on the ticket without a DM.
+  const none = mockSlackApex({ slackUser: null })
+  const nothing = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['a bio'], review: true }, { env, fetchImpl: none.fetchImpl, io: quiet().io })
+  assert.equal(nothing.route, 'nothing-to-review'); assert.equal(none.slack('chat.postMessage').length, 0); assert.equal(none.patches().length, 0)
+  const onTicket = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['a bio'], send: true }, { env, fetchImpl: none.fetchImpl, io: quiet().io })
+  assert.equal(onTicket.route, 'send'); assert.equal(none.slack('chat.postMessage').length, 0); assert.equal(none.patches().length, 2)
+  // Typed failures: no token, no Slack user for the reviewer, --send with --review.
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket(), kind: 'missing-info', items: ['a bio'], review: true }, { env: { ...env, SLACK_BOT_TOKEN: '' }, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'MISSING_TOKEN')
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket(), kind: 'missing-info', items: ['a bio'], review: true }, { env, fetchImpl: mockSlackApex({ reviewer: null }).fetchImpl, io: quiet().io }), 'SLACK_ERROR')
+  await noticeErrorAsync(runNotice({ ticket: noticeTicket(), kind: 'missing-info', items: ['a bio'], review: true, send: true }, { env, fetchImpl: mockSlackApex().fetchImpl, io: quiet().io }), 'MISSING_ARG')
+  assert.deepEqual(parseNotifyArgs(['--ticket', 'x', '--item', 'a', '--review', '--reviewer', 'r@superbuilders.school']), { ticket: 'x', item: ['a'], review: true, reviewer: 'r@superbuilders.school' })
+})
+
+test('notice-review-poll: only the reviewer\'s reaction counts; send reaction sends once through the notifier and replies in the thread; hold holds; expiry expires; without --send it only reports', async () => {
+  const env = noticeEnvWith()
+  const live = mockSlackApex()
+  const now = () => new Date('2026-09-23T17:15:03Z')
+  const requested = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], review: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now: () => new Date('2026-09-23T15:00:00Z') })
+  const reviewTs = requested.review.ts
+  const poll = (opts = {}, clock = now) => runPoll({ send: true, ...opts }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now: clock })
+  const replies = () => live.posts('D0REVIEW').filter((p) => p.thread_ts === reviewTs).map((p) => p.text)
+
+  // No reaction: pending stays; nothing written.
+  let report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['wait', 'no reaction from the reviewer yet']])
+  assert.equal(live.slack('conversations.history')[0].body.channel, 'D0REVIEW')
+  assert.deepEqual([live.slack('conversations.history')[0].body.latest, live.slack('conversations.history')[0].body.oldest, live.slack('conversations.history')[0].body.inclusive, live.slack('conversations.history')[0].body.limit], [reviewTs, reviewTs, 'true', '1'], 'the message is read by ts through conversations.history (im:history), not reactions.get')
+  assert.equal(readLedger(env.NOTICE_REVIEW_LEDGER)[0].status, 'pending')
+  // Someone else's send reaction, and the bot's own, do not count.
+  live.state.react(reviewTs, 'white_check_mark', 'U0OTHER')
+  live.state.react(reviewTs, 'white_check_mark', 'U0BDYJ6341Y')
+  report = await poll()
+  assert.equal(report.actions[0].verdict, 'wait')
+  assert.equal(live.posts('D0DM1').length, 0)
+  // The reviewer's send reaction, without --send: reports only.
+  live.state.react(reviewTs, 'white_check_mark', 'U0B4W7Z23EX')
+  report = await poll({ send: false })
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['send', 'would send']])
+  assert.equal(live.posts('D0DM1').length, 0); assert.equal(live.patches().length, 0); assert.equal(replies().length, 0)
+  assert.equal(readLedger(env.NOTICE_REVIEW_LEDGER)[0].status, 'pending')
+  // With --send: the requester DM goes through the notifier path, the ticket is written, the item is sent, the thread says so.
+  report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['send', 'sent']])
+  const dms = live.posts('D0DM1')
+  assert.equal(dms.length, 1); assert.equal(dms[0].text, requested.message)
+  const patches = live.patches()
+  assert.equal(patches.length, 2)
+  assert.deepEqual(Object.keys(patches[0]), ['customFields']); assert.deepEqual(Object.keys(patches[1]), ['description'])
+  const ticketLedger = live.state.ticket.customFields[LEDGER_FIELD]
+  assert.equal(ticketLedger.length, 1); assert.equal(ticketLedger[0].askHash, askHash(['Avery Example: headshot and bio']))
+  const item = readLedger(env.NOTICE_REVIEW_LEDGER)[0]
+  assert.equal(item.status, 'sent'); assert.equal(item.sentAt, '2026-09-23T17:15:03.000Z')
+  assert.deepEqual(item.sent, { channel: 'D0DM1', ts: ticketLedger[0].slackTs })
+  assert.deepEqual(item.wrote, ['customFields.requesterNotices', 'description'])
+  assert.deepEqual(replies(), ['Sent to Dawn Adams at 10:15 PDT on 2026-09-23'])
+  assert.deepEqual(readLedger(env.NOTICE_REVIEW_LEDGER).length, 1, 'the ledger folds to one item')
+  // Never twice: the next pass has nothing pending; the reaction is still there.
+  report = await poll()
+  assert.deepEqual(report.actions, [])
+  assert.equal(live.posts('D0DM1').length, 1); assert.equal(live.patches().length, 2); assert.equal(replies().length, 1)
+
+  // Hold: the hold reaction marks held and replies; hold wins over send.
+  const held = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: the bio only'], review: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  live.state.react(held.review.ts, 'white_check_mark', 'U0B4W7Z23EX')
+  live.state.react(held.review.ts, 'x', 'U0B4W7Z23EX')
+  report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['hold', 'held']])
+  assert.equal(readLedger(env.NOTICE_REVIEW_LEDGER)[1].status, 'held')
+  assert.deepEqual(live.posts('D0REVIEW').filter((p) => p.thread_ts === held.review.ts).map((p) => p.text), ['Held. Nothing sent.'])
+  assert.equal(live.posts('D0DM1').length, 1)
+  // A held ask may be requested again (a new item), a sent one may not.
+  const reHeld = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: the bio only'], review: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  assert.equal(reHeld.review.duplicate, false)
+  // Expiry: no reaction in seven days.
+  report = await poll({}, () => new Date('2026-10-01T00:00:00Z'))
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['expire', 'expired']])
+  const expired = readLedger(env.NOTICE_REVIEW_LEDGER).find((i) => i.id === reHeld.review.itemId)
+  assert.equal(expired.status, 'expired')
+  assert.deepEqual(live.posts('D0REVIEW').filter((p) => p.thread_ts === reHeld.review.ts).map((p) => p.text), ['Expired: no reaction from the reviewer in 7 days; nothing sent. Run the notice again to request review.'])
+  // Stale: the ticket changed between review and reaction, so the recomposed text differs; held, not sent.
+  const stale = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: a photo'], review: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  live.state.ticket.title = 'Website — Add team member — Alpha Austin (renamed)'
+  live.state.react(stale.review.ts, 'white_check_mark', 'U0B4W7Z23EX')
+  report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['send', 'stale']])
+  assert.equal(live.posts('D0DM1').length, 1, 'nothing sent')
+  assert.match(live.posts('D0REVIEW').filter((p) => p.thread_ts === stale.review.ts)[0].text, /^Held: the text no longer reads as reviewed/)
+  live.state.ticket.title = 'Website — Add team member — Alpha Austin'
+  // Superseded: the ticket already records the ask (sent by another route); nothing goes twice.
+  const dup = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: a logo'], review: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  live.state.ticket.customFields[LEDGER_FIELD].push({ kind: 'missing-info', askHash: askHash(['Avery Example: a logo']), sentAt: '2026-09-23T18:00:00Z', slackChannel: 'D0DM1', slackTs: '1.1', recipient: 'U0B7GTFBE3C' })
+  live.state.react(dup.review.ts, 'white_check_mark', 'U0B4W7Z23EX')
+  report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.verdict, a.did]), [['send', 'superseded']])
+  assert.equal(live.posts('D0DM1').length, 1)
+  assert.match(live.posts('D0REVIEW').filter((p) => p.thread_ts === dup.review.ts)[0].text, /^Not sent: the ticket already records this notice/)
+  // Missing tokens are typed.
+  await noticeErrorAsync(runPoll({ send: true }, { env: { ...env, SLACK_BOT_TOKEN: '' }, fetchImpl: live.fetchImpl, io: quiet().io }), 'MISSING_TOKEN')
+  const source = fs.readFileSync(path.join(root, 'agent', 'notice-review-poll.mjs'), 'utf8')
+  assert.doesNotMatch(source, /reactions\.get/, 'the bot has no reactions:read; reactions come from conversations.history')
+  for (const forbidden of [/ALPHA_WP_/, /wp-json/, /\/status'/, /agentEligible/, /assignees/]) assert.doesNotMatch(source, forbidden)
+})
+
+test('shared blocker under review: one reviewer DM for the note and one per requester DM; the DM waits for the note, then carries its real permalink', async () => {
+  const env = noticeEnvWith()
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-shared-review-'))
+  const bodyFile = path.join(tmp, 'note.md')
+  fs.writeFileSync(bodyFile, 'The 2026-27 info packets are produced in one batch; none is approved yet.\nMatt Barge owns the timeline.\n')
+  const lindsay = { id: 'U0BJBTXPDLG', real_name: 'Lindsay Dudley', profile: { first_name: 'Lindsay' } }
+  const live = mockSlackApex({ slackUser: lindsay, ticket: noticeTicket({ status: 'BLOCKED', title: 'Website (Other) — Alpha Chicago', requesterEmail: 'lindsay.dudley@alpha.school' }) })
+  const now = () => new Date('2026-09-23T17:15:03Z')
+  noticeError(() => planSharedBlocker({ channel: 'C09GRQ8L533', title: 'x', 'body-file': bodyFile, send: true, review: true }), 'MISSING_ARG')
+  const plan = planSharedBlocker({ channel: 'C09GRQ8L533', title: 'Info packets 2026-27', 'body-file': bodyFile, tickets: 'cmnotice1', review: true })
+  assert.equal(plan.review, true)
+  const result = await runSharedBlocker(plan, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  assert.equal(result.route, 'review'); assert.equal(result.posted, null)
+  assert.equal(live.posts('C09GRQ8L533').length, 0, 'nothing in the channel'); assert.equal(live.posts('D0DM1').length, 0, 'nothing to the requester'); assert.equal(live.patches().length, 0)
+  const reviewPosts = live.posts('D0REVIEW')
+  assert.equal(reviewPosts.length, 2)
+  assert.match(reviewPosts[0].text, /^Review: channel note for <#C09GRQ8L533> \(Info packets 2026-27\) tickets cmnotice1\nWhy: a shared-blocker channel note is read by everyone in the channel\.\n> Info packets 2026-27\n> \n> The 2026-27 info packets/)
+  assert.match(reviewPosts[1].text, /^Review: blocked notice for Lindsay Dudley \(Website: Alpha Chicago\) https:\/\/apex\.2hourlearning\.com\/intake\?open=cmnotice1\nGoes after the channel note above is sent; https:\/\/slack\.com\/archives\/C09GRQ8L533\/p0 in the text becomes the note's link\.\n> Hi Lindsay/)
+  const [noteItem, dmItem] = readLedger(env.NOTICE_REVIEW_LEDGER)
+  assert.deepEqual([noteItem.kind, noteItem.channel, noteItem.tickets, noteItem.status], [CHANNEL_NOTE_KIND, 'C09GRQ8L533', ['cmnotice1'], 'pending'])
+  assert.deepEqual([dmItem.kind, dmItem.dependsOn, dmItem.placeholder, dmItem.notice.shared], ['blocked', noteItem.id, 'https://slack.com/archives/C09GRQ8L533/p0', 'https://slack.com/archives/C09GRQ8L533/p0'])
+  // --send is the same as --review for a channel note (always flagged), and the same items are not re-requested.
+  const viaSend = await runSharedBlocker({ ...plan, review: false, send: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  assert.equal(viaSend.route, 'review'); assert.equal(viaSend.review.duplicate, true); assert.equal(live.posts('D0REVIEW').length, 2)
+
+  const poll = () => runPoll({ send: true }, { env, fetchImpl: live.fetchImpl, io: quiet().io, now })
+  // The DM approved before the note: it waits.
+  live.state.react(dmItem.reviewTs, 'white_check_mark', 'U0B4W7Z23EX')
+  let report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.kind, a.verdict, a.did]), [[CHANNEL_NOTE_KIND, 'wait', 'no reaction from the reviewer yet'], ['blocked', 'wait', 'approved, waiting for the channel note (pending)']])
+  assert.equal(live.posts('C09GRQ8L533').length, 0); assert.equal(live.posts('D0DM1').length, 0)
+  // The note approved: posted to the channel, then the DM goes in the same pass with the real permalink.
+  live.state.react(noteItem.reviewTs, 'white_check_mark', 'U0B4W7Z23EX')
+  report = await poll()
+  assert.deepEqual(report.actions.map((a) => [a.kind, a.verdict, a.did]), [[CHANNEL_NOTE_KIND, 'send', 'sent'], ['blocked', 'send', 'sent']])
+  const channelPosts = live.posts('C09GRQ8L533')
+  assert.equal(channelPosts.length, 1); assert.equal(channelPosts[0].text, plan.note.text)
+  const [sentNote, sentDm] = readLedger(env.NOTICE_REVIEW_LEDGER)
+  assert.equal(sentNote.status, 'sent'); assert.match(sentNote.sent.permalink, /^https:\/\/alpha\.slack\.com\/archives\/C09GRQ8L533\/p/)
+  const dms = live.posts('D0DM1')
+  assert.equal(dms.length, 1)
+  assert.ok(dms[0].text.includes(sentNote.sent.permalink) && !dms[0].text.includes('/p0'), 'the placeholder became the note link')
+  assert.equal(dms[0].text, dmItem.text.split('https://slack.com/archives/C09GRQ8L533/p0').join(sentNote.sent.permalink))
+  assert.equal(sentDm.status, 'sent')
+  assert.deepEqual(live.state.ticket.customFields[LEDGER_FIELD].map((e) => [e.kind, e.askHash]), [['blocked', askHash([sentNote.sent.permalink])]])
+  const threadReplies = live.posts('D0REVIEW').filter((p) => p.thread_ts).map((p) => p.text)
+  assert.match(threadReplies[0], /^Sent to <#C09GRQ8L533> at 10:15 PDT on 2026-09-23: https:\/\/alpha\.slack\.com/)
+  assert.equal(threadReplies[1], 'Sent to Lindsay Dudley at 10:15 PDT on 2026-09-23')
+  assert.deepEqual((await poll()).actions, [], 'nothing pending afterwards')
+  // A DM whose note was held is held too.
+  const live2 = mockSlackApex({ slackUser: lindsay, ticket: noticeTicket({ id: 'cmnotice2', status: 'BLOCKED', requesterEmail: 'lindsay.dudley@alpha.school' }) })
+  const env2 = noticeEnvWith()
+  await runSharedBlocker({ ...plan, tickets: ['cmnotice2'] }, { env: env2, fetchImpl: live2.fetchImpl, io: quiet().io, now })
+  const [note2, dm2] = readLedger(env2.NOTICE_REVIEW_LEDGER)
+  live2.state.react(note2.reviewTs, 'x', 'U0B4W7Z23EX'); live2.state.react(dm2.reviewTs, 'white_check_mark', 'U0B4W7Z23EX')
+  const held = await runPoll({ send: true }, { env: env2, fetchImpl: live2.fetchImpl, io: quiet().io, now })
+  assert.deepEqual(held.actions.map((a) => a.did), ['held', 'held'])
+  assert.equal(live2.posts('C09GRQ8L533').length, 0); assert.equal(live2.posts('D0DM1').length, 0)
+})
+
+test('flagged mode: an unflagged file ask sends directly with --send, a question or an external recipient goes to review; intake --notify-send takes the same route', async () => {
+  const env = noticeEnvWith()
+  const direct = mockSlackApex()
+  const sent = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true, reviewSpec: flaggedSpec }, { env, fetchImpl: direct.fetchImpl, io: quiet().io })
+  assert.equal(sent.route, 'send'); assert.deepEqual(sent.gate, { needsReview: false, mode: 'flagged', flagged: false, reasons: [] })
+  assert.equal(direct.posts('D0DM1').length, 1); assert.equal(direct.posts('D0REVIEW').length, 0); assert.equal(direct.patches().length, 2)
+  assert.deepEqual(readLedger(env.NOTICE_REVIEW_LEDGER), [], 'a direct send leaves no review item')
+  const question = mockSlackApex()
+  const reviewed = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio', 'Patricio: Rosas or Rojas'], send: true, reviewSpec: flaggedSpec }, { env, fetchImpl: question.fetchImpl, io: quiet().io })
+  assert.equal(reviewed.route, 'review'); assert.match(reviewed.gate.reasons[0], /question/)
+  assert.equal(question.posts('D0DM1').length, 0); assert.equal(question.posts('D0REVIEW').length, 1); assert.equal(question.patches().length, 0)
+  assert.match(question.posts('D0REVIEW')[0].text, /\nWhy: an item is a question rather than an attach-a-file ask\.\n/, 'a flagged item says why')
+  const external = mockSlackApex({ ticket: noticeTicket({ requesterEmail: 'parent@gmail.com' }) })
+  const ext = await runNotice({ ticketId: 'cmnotice1', kind: 'missing-info', items: ['Avery Example: headshot and bio'], send: true, reviewSpec: flaggedSpec }, { env, fetchImpl: external.fetchImpl, io: quiet().io })
+  assert.equal(ext.route, 'review'); assert.match(ext.gate.reasons[0], /outside the internal domains/)
+  assert.equal(external.posts('D0DM1').length, 0); assert.equal(external.posts('D0REVIEW').length, 1)
+  const blocked = mockSlackApex({ ticket: noticeTicket({ status: 'BLOCKED' }) })
+  const b = await runNotice({ ticketId: 'cmnotice1', kind: 'blocked', blocker: 'the packet batch', send: true, reviewSpec: flaggedSpec }, { env, fetchImpl: blocked.fetchImpl, io: quiet().io })
+  assert.equal(b.route, 'send'); assert.equal(blocked.posts('D0DM1').length, 1)
+  // Intake sends through runNotice with send: true and nothing else, so the spec decides there too; the report carries the route.
+  const source = fs.readFileSync(path.join(root, 'agent', 'intake.mjs'), 'utf8')
+  assert.match(source, /const mode = notice\.route === 'review' \? 'review' : notice\.route === 'send' \? 'sent' : 'preview'/)
+  assert.doesNotMatch(source, /reviewed:/, 'intake never bypasses the gate')
+  assert.match(source, /reviewRequested:/)
+})
+
+test('notice-review-poll CLI: an empty ledger is a clean no-op; a missing token is a typed exit 1', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-poll-cli-'))
+  const ledger = path.join(tmp, 'notice-review.jsonl')
+  const run = spawnSync(process.execPath, [path.join(root, 'agent', 'notice-review-poll.mjs'), '--once', '--send', '--ledger', ledger], { encoding: 'utf8', env: { ...process.env, SLACK_BOT_TOKEN: 'xoxb-never', APEX_API_TOKEN: 'never-used', APEX_API_BASE: 'http://127.0.0.1:1', NOTICE_REVIEW_LEDGER: '' } })
+  assert.equal(run.status, 0, run.stderr)
+  assert.match(run.stdout, /^no pending review item in /)
+  assert.ok(!run.stdout.includes('never') && !run.stderr.includes('never'), 'no token is printed')
+  const untokened = spawnSync(process.execPath, [path.join(root, 'agent', 'notice-review-poll.mjs'), '--once', '--ledger', ledger], { encoding: 'utf8', env: { ...process.env, SLACK_BOT_TOKEN: '', APEX_API_TOKEN: '' } })
+  assert.equal(untokened.status, 1)
+  assert.match(untokened.stderr, /^MISSING_TOKEN: SLACK_BOT_TOKEN required to read the reviewer reactions/)
+  assert.ok(!fs.existsSync(ledger), 'nothing written')
 })
 
 test('notify-requester CLI exits 1 on a typed input error without contacting Slack or APEX', () => {

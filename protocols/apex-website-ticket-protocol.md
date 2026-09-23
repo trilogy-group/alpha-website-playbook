@@ -172,6 +172,8 @@ APEX does not tell a requester when their ticket goes to Missing Info or Blocked
 
 Shared blocker: when several tickets wait on the same thing, `node agent/notify-shared-blocker.mjs --channel <id> --title "..." --body-file <md> --tickets id,id` posts one note in `#support-websites` and DMs each requester two lines pointing at that thread. A requester with no Slack user gets no DM: the ledger and the ticket note say so and `node agent/notify-requester.mjs --digest` lists the ticket for the coordinator to relay. First sends only after Matt has reviewed the previews (`docs/sweep-runbook.md`, "Requester notices").
 
+Review gate: a notice reaches the requester only after the reviewer (Matt) has seen the exact text in a Slack DM and reacted ✅; ❌ holds it, seven days of silence expires it (`spec/requester-notices.json`; `--review` on both tools, and `--send` under `reviewMode: "all"`; `node agent/notice-review-poll.mjs --once --send` performs the approved sends). The agent requests review; it never reacts on its own behalf (`docs/sweep-runbook.md`, "Requester notices").
+
 Slack otherwise: post only to close the loop with the original requester, or when a ring failure affects visitors. Use the requester's channel or `#support-websites`. No em dashes, owner first, one sentence on what happened, one on what is needed.
 
 ### Ticket templates for source-side classes

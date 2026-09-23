@@ -9,6 +9,7 @@
  *     --item "Dawn Adams: headshot and bio" --item "..." [--already-done "..."] [--dry-run | --send]
  *   node agent/notify-requester.mjs --ticket <id> --kind blocked --blocker "..." [--owner "<person>"] [--when "..."] [--already-done "..."]
  *   node agent/notify-requester.mjs --ticket <id> --kind blocked --shared <Slack thread permalink>
+ *   node agent/notify-requester.mjs --ticket <id> --kind missing-info --item "..." --review [--reviewer <email>]
  *   node agent/notify-requester.mjs --digest [--file tickets.json]      # tickets whose requester Slack could not reach
  *
  * Dry run is the default: it prints the resolved recipient and the message and sends nothing, writes nothing.
@@ -20,8 +21,15 @@
  * Owner for a blocked notice defaults to the registered person for the ticket's ownerRole (policy bundle);
  * a role id is refused. Nothing here writes to WordPress, HubSpot, or Slack channels.
  *
- * Env: SLACK_BOT_TOKEN (bot marketing_support; users:read.email, im:write, chat:write), APEX_API_TOKEN,
- * APEX_API_BASE and APEX_AGENT_API_BASE as agent/intake.mjs derives them.
+ * Review gate (spec/requester-notices.json, agent/notice-review.mjs): --review DMs the reviewer (Matt by
+ * default, --reviewer <email>) the exact text instead of the requester and records a pending item in the
+ * local review ledger; `agent/notice-review-poll.mjs --send` performs the real send when the reviewer reacts
+ * with the send reaction. --send honours the spec: in reviewMode "all" it behaves as --review; in "flagged"
+ * only a flagged message (a question item, an external recipient) goes to review and the rest send directly.
+ * The poll passes `reviewed` (the ledger item id) to send a reviewed message through this same path.
+ *
+ * Env: SLACK_BOT_TOKEN (bot marketing_support; users:read.email, im:write, im:history, chat:write),
+ * APEX_API_TOKEN, APEX_API_BASE and APEX_AGENT_API_BASE as agent/intake.mjs derives them, NOTICE_REVIEW_LEDGER.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -30,6 +38,7 @@ import { apexBases } from './attach-evidence.mjs'
 import {
   NOTICE_KINDS,
   RequesterNoticeError,
+  apexLink,
   appendNoticeToDescription,
   askHash,
   composeBlocked,
@@ -38,11 +47,22 @@ import {
   firstName,
   ledgerOf,
   noticeDecision,
+  plainTitle,
   requesterNoticesPatch,
   sentEntry,
   unresolvedEntry,
   unresolvedNotices,
 } from './requester-notice-policy.mjs'
+import {
+  appendLedger,
+  composeReviewMessage,
+  findLiveItem,
+  ledgerPath,
+  loadReviewSpec,
+  needsReview,
+  newItemId,
+  readLedger,
+} from './notice-review.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
@@ -106,6 +126,24 @@ export async function postChannelNote(channel, text, { token, fetchImpl = global
   return { channel, ts: posted.ts, permalink: link.ok ? link.permalink : null }
 }
 
+/**
+ * One message by channel and ts, with its `reactions`, through conversations.history (im:history). The bot has
+ * no reactions:read, so reactions.get is not an option (missing_scope, checked 2026-09-23); history carries the
+ * same `reactions: [{ name, users, count }]` on the message. Null when the message is gone.
+ */
+export async function readMessage(channel, ts, { token, fetchImpl = globalThis.fetch } = {}) {
+  const data = await slackCall('conversations.history', token, { channel, latest: ts, oldest: ts, inclusive: true, limit: 1 }, fetchImpl)
+  if (!data.ok) throw new NotifyRequesterError('SLACK_ERROR', `Slack conversations.history: ${data.error || 'unknown error'}`, { method: 'conversations.history', error: data.error })
+  return (data.messages || []).find((message) => message.ts === ts) || null
+}
+
+/** A reply in the thread under one message (the reviewer's DM). */
+export async function replyInThread(channel, threadTs, text, { token, fetchImpl = globalThis.fetch } = {}) {
+  const posted = await slackCall('chat.postMessage', token, { channel, thread_ts: threadTs, text, unfurl_links: false, unfurl_media: false }, fetchImpl)
+  if (!posted.ok) throw new NotifyRequesterError('SLACK_ERROR', `Slack chat.postMessage (thread): ${posted.error || 'unknown error'}`, { method: 'chat.postMessage', error: posted.error })
+  return { channel, ts: posted.ts }
+}
+
 async function apexRequest(url, token, method, body, fetchImpl) {
   let response
   try {
@@ -152,13 +190,52 @@ export function digestRows(tickets) {
 }
 
 /**
+ * Which way a notice goes once composed: dry run, review (the reviewer DM), or send (the requester DM).
+ * `review` is explicit; `send` is gated by the spec unless `reviewed` says the reviewer already approved it;
+ * a requester with no Slack user has nothing to review, so that record goes straight through.
+ */
+export function noticeRoute({ send, review, reviewed, recipient }, gate) {
+  if (review) return recipient ? 'review' : 'nothing-to-review'
+  if (!send) return 'dry-run'
+  if (reviewed || !recipient) return 'send'
+  return gate.needsReview ? 'review' : 'send'
+}
+
+/**
+ * Post the reviewer DM for one composed notice and record the pending item. Returns the review record, or
+ * the live duplicate when the same ticket, kind and ask is already pending or sent.
+ */
+export async function requestReview({ spec, item, reviewText, reviewerEmail, ledgerFile, slackToken, fetchImpl, io, now }) {
+  const existing = findLiveItem(readLedger(ledgerFile), item)
+  if (existing) {
+    io.log(`already under review: item ${existing.id} is ${existing.status} (reviewer message ${existing.reviewChannel} ts ${existing.reviewTs}); nothing posted`)
+    return { duplicate: true, itemId: existing.id, status: existing.status, channel: existing.reviewChannel, ts: existing.reviewTs }
+  }
+  const reviewer = await lookupSlackUser(reviewerEmail, { token: slackToken, fetchImpl })
+  if (!reviewer) throw new NotifyRequesterError('SLACK_ERROR', `no Slack user for the reviewer ${reviewerEmail}`, { method: 'users.lookupByEmail', error: 'users_not_found' })
+  const posted = await sendDm(reviewer.id, reviewText, { token: slackToken, fetchImpl })
+  const entry = {
+    id: newItemId(), status: 'pending', createdAt: now().toISOString(), mode: spec.reviewMode,
+    reviewer: { email: reviewerEmail, slackUserId: reviewer.id, name: reviewer.name }, reviewChannel: posted.channel, reviewTs: posted.ts,
+    ...item,
+  }
+  appendLedger(ledgerFile, entry)
+  io.log(`review requested: DM to ${reviewer.name || reviewerEmail} ${posted.channel} ts ${posted.ts}; ledger item ${entry.id} pending in ${ledgerFile}`)
+  return { duplicate: false, itemId: entry.id, status: 'pending', channel: posted.channel, ts: posted.ts }
+}
+
+/**
  * The whole notice: read, decide, screen, resolve, compose, and (with send) post and record.
  * Pure inputs in `options`; every side effect goes through `fetchImpl` so tests mock Slack and APEX.
  */
 export async function runNotice(options, { env = process.env, fetchImpl = globalThis.fetch, io = { log: console.log, error: console.error }, now = () => new Date() } = {}) {
   const { kind } = options
   if (!NOTICE_KINDS.includes(kind)) throw new RequesterNoticeError('BAD_KIND', `--kind must be one of ${NOTICE_KINDS.join(', ')}, got ${kind}`)
-  const send = Boolean(options.send)
+  if (options.send && options.review) throw new NotifyRequesterError('MISSING_ARG', '--send and --review exclude each other')
+  const spec = options.reviewSpec || loadReviewSpec()
+  const reviewerEmail = String(options.reviewer || spec.reviewer.email).trim().toLowerCase()
+  const ledgerFile = ledgerPath(spec, env)
+  let send = Boolean(options.send)
   const { v1Base, agentBase } = apexBases(env)
   const apexToken = env.APEX_API_TOKEN
   const slackToken = env.SLACK_BOT_TOKEN
@@ -183,30 +260,34 @@ export async function runNotice(options, { env = process.env, fetchImpl = global
     if (!recipient) recipientNote = `no Slack user for ${email}; note on the ticket only; add to the coordinator digest`
   } else {
     recipientNote = 'SLACK_BOT_TOKEN not set; recipient not resolved (dry run only)'
-    if (send) throw new NotifyRequesterError('MISSING_TOKEN', 'SLACK_BOT_TOKEN required for --send')
+    if (send || options.review) throw new NotifyRequesterError('MISSING_TOKEN', `SLACK_BOT_TOKEN required for --${send ? 'send' : 'review'}`)
   }
   const name = firstName({ slackFirstName: recipient?.firstName, slackRealName: recipient?.name, email })
   const title = options.title || ticket.title
 
   // Compose. Refused items are reported, never sent.
   let composed
+  let owner = null
   if (options.shared) {
     composed = composeShared({ name, title, ticketId: ticket.id, permalink: options.shared })
   } else if (kind === 'missing-info') {
     composed = composeMissingInfo({ name, title, ticketId: ticket.id, items: options.items || [], alreadyDone: options.alreadyDone })
   } else {
     const roleOwners = options.roleOwners || loadRoleOwners()
-    const owner = options.owner || ownerForRole(ticket.customFields?.ownerRole, roleOwners)
+    owner = options.owner || ownerForRole(ticket.customFields?.ownerRole, roleOwners)
     composed = composeBlocked({ name, title, ticketId: ticket.id, waitingOn: options.blocker, owner, when: options.when, alreadyDone: options.alreadyDone, roleIds: Object.keys(roleOwners) })
   }
   for (const refused of composed.refused || []) io.error(`refused item (${refused.reason}): ${refused.item}`)
 
   const hash = askHash(composed.ask)
   const decision = noticeDecision(ledgerOf(ticket), kind, hash)
+  const gate = needsReview({ kind: decision.kind, items: composed.accepted || [], recipientEmail: email }, spec)
+  const route = noticeRoute({ send, review: options.review, reviewed: options.reviewed, recipient }, gate)
+  send = route === 'send'
   const result = {
     ticketId: ticket.id, title: String(ticket.title || ''), status: ticket.status || null, requesterEmail: email,
     kind: decision.kind, decision, recipient: recipient ? { email, slackUserId: recipient.id, name: recipient.name } : null, recipientNote,
-    askHash: hash, message: composed.text, words: composed.words, refused: composed.refused || [], dryRun: !send, sent: null, ledgerEntry: null, wrote: [],
+    askHash: hash, message: composed.text, words: composed.words, refused: composed.refused || [], route, gate, dryRun: route === 'dry-run', review: null, sent: null, ledgerEntry: null, wrote: [],
   }
 
   const headline = `${ticket.id} "${result.title}" (${result.status || 'status unknown'})`
@@ -222,9 +303,26 @@ export async function runNotice(options, { env = process.env, fetchImpl = global
 
   const at = now().toISOString()
   const date = at.slice(0, 10)
-  if (!send) {
+  const gateNote = gate.needsReview ? `go to review first (${gate.reasons.join('; ')})` : `send directly (review mode "${gate.mode}", not flagged)`
+  if (route === 'dry-run') {
     result.ledgerEntry = recipient ? sentEntry({ kind: decision.kind, hash, sentAt: '<send time>', slackChannel: '<dm channel>', slackTs: '<message ts>', recipient: recipient.id }) : unresolvedEntry({ kind: decision.kind, hash, at, email })
-    io.log(`dry run: nothing sent, nothing written. --send would ${recipient ? 'DM the recipient, then' : 'skip the DM and'} record ${JSON.stringify(result.ledgerEntry)} and append the text to the description under "REQUESTER NOTICE (Slack DM), ${date}".`)
+    io.log(`dry run: nothing sent, nothing written. --send would ${recipient ? `${gateNote}, then DM the recipient, then` : 'skip the DM and'} record ${JSON.stringify(result.ledgerEntry)} and append the text to the description under "REQUESTER NOTICE (Slack DM), ${date}".`)
+    return result
+  }
+  if (route === 'nothing-to-review') {
+    io.log(`nothing to review: ${recipientNote}; --send records the note on the ticket without a DM`)
+    return result
+  }
+  if (route === 'review') {
+    io.log(`review: ${gateNote}`)
+    const reviewText = composeReviewMessage({ kind: decision.kind, subject: recipient.name || email, title: plainTitle(title), link: apexLink(ticket.id), text: composed.text, reasons: gate.flagged ? gate.reasons : [], dependsOnNote: Boolean(options.dependsOn), placeholder: options.placeholder || null })
+    const item = {
+      ticketId: ticket.id, ticketTitle: result.title, kind: decision.kind, askHash: hash, recipient: result.recipient, text: composed.text, words: composed.words, reasons: gate.reasons, flagged: gate.flagged,
+      notice: { kind, items: composed.accepted || [], alreadyDone: options.alreadyDone || null, blocker: options.blocker || null, owner: owner || null, when: options.when || null, shared: options.shared || null, title: options.title || null },
+      dependsOn: options.dependsOn || null, placeholder: options.placeholder || null,
+    }
+    result.review = await requestReview({ spec, item, reviewText, reviewerEmail, ledgerFile, slackToken, fetchImpl, io, now })
+    result.reviewMessage = reviewText
     return result
   }
 
@@ -284,7 +382,10 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
   const args = parseArgs(argv)
   if (args.digest) return runDigest({ file: args.file && args.file !== true ? args.file : null }, { env, io })
   if (args.send && args['dry-run']) throw new NotifyRequesterError('MISSING_ARG', '--send and --dry-run exclude each other')
+  if (args.review && args['dry-run']) throw new NotifyRequesterError('MISSING_ARG', '--review and --dry-run exclude each other')
   const options = {
+    review: Boolean(args.review),
+    reviewer: args.reviewer && args.reviewer !== true ? String(args.reviewer) : null,
     ticketId: args.ticket && args.ticket !== true ? String(args.ticket) : null,
     file: args.file && args.file !== true ? String(args.file) : null,
     kind: args.kind || (args.shared ? 'blocked' : undefined),
