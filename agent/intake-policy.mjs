@@ -310,6 +310,17 @@ export function clarificationNote(bundle, result) {
   ].filter(Boolean).join('\n')
 }
 
+/**
+ * The requester notice items for a missing-info decision: one plain label per typed requirement, with the
+ * person named when the ticket names one ("Headshot for Avery Example"). Labels, not prompts: the prompts
+ * carry system wording, and the notice's own "how to provide" line says where the file goes.
+ */
+export function requesterNoticeItems(bundle, result) {
+  const requirements = clarificationRequirements(bundle, result)?.requirements || []
+  const person = result.found?.staffName ? ` for ${result.found.staffName}` : ''
+  return requirements.map((item) => `${item.label}${person}`)
+}
+
 export function ticketInputSha256(ticket) {
   const agentCommentIds = new Set((ticket.activityLog || []).flatMap(({ meta }) => {
     if (!meta || typeof meta !== 'object' || typeof meta.commentId !== 'string') return []

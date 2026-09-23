@@ -40,6 +40,7 @@ Run the validator. If any required input is missing:
 
 - set the ticket to Missing Info,
 - write the Missing Info note using the template in step 7, naming every missing item and the owner who can supply it,
+- tell the requester: `node agent/notify-requester.mjs --ticket <id> --kind missing-info --item "..." [--already-done "..."]` (dry run first; `--send` once the preview reads right, see step 7),
 - do not guess at the missing parts. Parts of the ticket whose inputs are complete are still executed (see the rule below).
 
 If the ticket is out of scope for a website edit, write a triage note naming the owner and leave the status unchanged.
@@ -64,6 +65,8 @@ The website ticket that triggered the diagnosis is not closed by a WordPress edi
 ### 1d. A ticket is never left without a person
 
 Fail closed on execution, never on ownership. When the ticket's owner role has no registered person (registry/people.json), the agent does not leave it unassigned: it sets Blocked, assigns the website agent operator (Matt Barge, role `website-agent-operator` in registry/people.json; Yash Chitneni holds `website-operations`), and writes a note that names the role, the system the work lives in, and the exact change requested, so a human can name the owner in one step. The first such case, Waypoint Academy (cmu73k0jw002i04l5exxhv2jb, a HighLevel site), sat unassigned for a day. (Decision 2026-09-19, Matt Barge.)
+
+Whenever a ticket is set to Blocked, for this or any other reason, the requester is told once by Slack DM after the status is set: `node agent/notify-requester.mjs --ticket <id> --kind blocked --blocker "<what it waits on>" --owner "<person>" [--when "..."] [--already-done "..."]`, or, when several tickets wait on the same thing, one channel note plus a two-line DM each through `agent/notify-shared-blocker.mjs` (step 7, "Requester notices"; `docs/sweep-runbook.md`). APEX does not notify requesters (decision 2026-09-23, Matt Barge).
 
 ### 1c. Operator instructions outrank classification
 
@@ -158,7 +161,18 @@ What is already correct on the page: <list or "nothing checked yet">
 The agent will execute and verify as soon as the items above are on the ticket.
 ```
 
-Slack: post only to close the loop with the original requester, or when a ring failure affects visitors. Use the requester's channel or `#support-websites`. No em dashes, owner first, one sentence on what happened, one on what is needed.
+Then, after the status is set, the agent runs `node agent/notify-requester.mjs --ticket <id> --kind missing-info --item "<item 1>" --item "<item 2>" [--already-done "<the 'already correct' line>"]`: dry run by default, which prints the resolved Slack recipient and the message; `--send` posts the DM once the preview reads right. The items are only what the requester alone can supply (the tool refuses page URLs, HubSpot values, filenames, "confirm" asks and packet URLs); the tool records the notice in `customFields.requesterNotices` so the same ask is never sent twice, and appends the same text to the ticket description under a dated "REQUESTER NOTICE (Slack DM)" heading, the requester's text first.
+
+### Requester notices
+
+APEX does not tell a requester when their ticket goes to Missing Info or Blocked; the website system does, by Slack DM from the `marketing_support` bot, in plain words, once per ask (decision 2026-09-23, Matt Barge). The text rules and the once-only ledger are `agent/requester-notice-policy.mjs`, tested; the sender is `agent/notify-requester.mjs`. Two messages exist:
+
+- Missing Info: first-name greeting and "this is the website team"; the ticket title and its APEX link; the numbered items the requester alone can supply; one "Already done:" line when something on the page is already met; exactly how to provide it (attach files on the ticket, one file per person named for the person, or reply on the ticket); signed "Website team (Matt Barge)". Under 120 words, sentence case, no exclamation marks, no em dashes, no internal words (intake, class, ring, receipt, hash, n8n, HubSpot, Elementor).
+- Blocked: what the ticket waits on, who owns it (a person's name, never a role), roughly when if known, one line on what is already done, and "we will update you when it moves; no action needed from you". Sent once; a `blocked-update` goes only when the blocker text changed.
+
+Shared blocker: when several tickets wait on the same thing, `node agent/notify-shared-blocker.mjs --channel <id> --title "..." --body-file <md> --tickets id,id` posts one note in `#support-websites` and DMs each requester two lines pointing at that thread. A requester with no Slack user gets no DM: the ledger and the ticket note say so and `node agent/notify-requester.mjs --digest` lists the ticket for the coordinator to relay. First sends only after Matt has reviewed the previews (`docs/sweep-runbook.md`, "Requester notices").
+
+Slack otherwise: post only to close the loop with the original requester, or when a ring failure affects visitors. Use the requester's channel or `#support-websites`. No em dashes, owner first, one sentence on what happened, one on what is needed.
 
 ### Ticket templates for source-side classes
 

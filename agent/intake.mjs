@@ -7,6 +7,10 @@
  *
  *   node agent/intake.mjs --since 2026-09-17T00:00:00Z [--apply] [--report out.json] [--ticket id,id] [--page https://alpha.school/<slug>/]
  *   node agent/intake.mjs --file tickets.json --replay --report replay.json
+ *
+ * Requester notices (decision 2026-09-23): for a Missing Info or blocked decision the report carries the Slack DM
+ * preview from agent/notify-requester.mjs (dry run); the DM is sent only with --apply --notify-send after the
+ * APEX action succeeded; --no-notify skips the preview.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -22,9 +26,12 @@ import {
   executionRevision,
   pendingClarificationReviews,
   normalizePersonName,
+  requesterNoticeItems,
   resolveDecisionOwner,
   ticketInputSha256,
 } from './intake-policy.mjs'
+import { NotifyRequesterError, runNotice } from './notify-requester.mjs'
+import { RequesterNoticeError } from './requester-notice-policy.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const root = path.join(here, '..')
@@ -149,9 +156,14 @@ for (const result of decisions) {
     result.skipped = 'same ticket input revision and policy decision'
     continue
   }
+  // Requester notice (decision 2026-09-23): Missing Info and blocked routes tell the requester by Slack DM.
+  // Preview (dry run) on every run; the DM goes only with --apply --notify-send, after the APEX action succeeded.
+  const notifies = !args['no-notify'] && ['request-clarification', 'blocked-review'].includes(result.action.kind)
+  if (notifies && !args.apply) result.requesterNotice = await requesterNotice(ticket, result, false)
   if (!args.apply) continue
   try { result.applied = await applyDecision(ticket, result) }
   catch (error) { result.applied = { ok: false, error: error.message, status: error.status || null, code: error.code || null } }
+  if (notifies) result.requesterNotice = await requesterNotice(ticket, result, Boolean(args['notify-send'] && result.applied?.ok))
 }
 
 const summary = summarize(decisions)
@@ -290,6 +302,41 @@ async function applyDecision(ticket, result) {
   return { ok: true, ...actionResult, finalized: true }
 }
 
+/**
+ * Compose (and with send, post) the requester notice for a missing-info or blocked decision. The preview goes
+ * in the report so Matt reviews the wording before the first sends. Intake's own reasons are internal
+ * wording; when the policy module refuses them (jargon, no person named) the report says so and the sweep
+ * agent writes the requester-facing text by hand with agent/notify-requester.mjs.
+ */
+async function requesterNotice(ticket, result, send) {
+  const lines = []
+  const io = { log: (line) => lines.push(String(line)), error: (line) => lines.push(String(line)) }
+  const options = result.action.kind === 'request-clarification'
+    ? { ticket, kind: 'missing-info', items: requesterNoticeItems(bundle, result), send }
+    : { ticket, kind: 'blocked', blocker: requesterBlocker(result), owner: result.owner || null, roleOwners: bundle.roleOwners, send }
+  try {
+    const notice = await runNotice(options, { io })
+    return { mode: send ? 'sent' : 'preview', kind: notice.kind, decision: notice.decision.reason, recipient: notice.recipient, recipientNote: notice.recipientNote, words: notice.words, refused: notice.refused, message: notice.message, sent: notice.sent, ledgerEntry: notice.ledgerEntry, output: lines }
+  } catch (error) {
+    if (!(error instanceof RequesterNoticeError) && !(error instanceof NotifyRequesterError)) throw error
+    return { mode: send ? 'sent' : 'preview', error: error.code, message: error.message, output: lines }
+  }
+}
+
+/** What the requester is told the ticket waits on, per intake outcome, in their words; intake's own reason is internal. */
+function requesterBlocker(result) {
+  const plain = {
+    'policy-review': 'an internal review of this request before any page change',
+    'policy-denied': 'an internal decision on this request, which the website team cannot make on its own',
+    'owner-unresolved': 'the website team naming the person who owns this change',
+    'needs-rule': 'the website team deciding how requests like this one are handled',
+    'needs-derivation': 'the website team working out which page and values this applies to',
+    'intake-defect': 'the website team repairing how this request was recorded',
+    'duplicate-candidate': 'the website team checking this against another open request for the same change',
+  }
+  return plain[result.outcome] || result.reason || null
+}
+
 function assertExecutionRelease() {
   if (args['skip-release-check']) return
   if (!executionReleaseCheck) {
@@ -389,6 +436,12 @@ function summarize(results) {
       .filter((field) => bundle.intakeFieldSources?.[field]?.kind === 'derivable'))),
     skipped: results.filter((result) => result.skipped).length,
     applied: results.filter((result) => result.applied?.ok).length,
+    requesterNotices: {
+      previews: results.filter((result) => result.requesterNotice?.mode === 'preview' && result.requesterNotice.message && !result.requesterNotice.error).length,
+      sent: results.filter((result) => result.requesterNotice?.sent).length,
+      unreachable: results.filter((result) => result.requesterNotice?.recipientNote && !result.requesterNotice.error).length,
+      refused: results.filter((result) => result.requesterNotice?.error).map((result) => ({ id: result.id, error: result.requesterNotice.error, message: result.requesterNotice.message })),
+    },
     errors: results.filter((result) => result.error || result.applied?.error).map((result) => ({ id: result.id, error: result.error || result.applied.error })),
   }
 }
