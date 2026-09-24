@@ -99,7 +99,9 @@ export function contractCheck(ticket) {
     observed: section('Page shows[^:]*') || section('Observed'),
     expected: section('Expected'),
     source: section('Source') || (cf.source && cf.source !== 'alpha-site-qc' && cf.source !== 'agent-found' ? cf.source : null),
-    class: cf.checkId && spec.classes[cf.checkId] ? cf.checkId : (section('Defect class') ? null : null),
+    // customFields.checkId carries the class on agent tickets and the observer SITE-* id on observer and filer tickets
+    // (APEX PR 409); the class then lives in triagedClass (tests/triage-ticket.mjs) or the body's Class line.
+    class: [cf.checkId, cf.triagedClass, section('Class')].find((v) => v && spec.classes[v]) || null,
     defectClass: cf.defectClass || (section('Defect class') || '').split('.')[0] || null,
     owner: (ticket.assignees && ticket.assignees.length === 1 && ticket.assignees[0].name) || (cf.ownerRole ? `${cf.ownerRole}` : null),
     fixPath: section('Fix path'),

@@ -1,0 +1,204 @@
+{
+ "schemaVersion": 1,
+ "system": "alpha-site-observer",
+ "runId": "site-full-2026-09-24T14-28-40-974Z",
+ "mode": "full",
+ "startedAt": "2026-09-24T14:28:40.974Z",
+ "completedAt": "2026-09-24T14:39:45.674Z",
+ "authority": "read-only-observer",
+ "publicationAuthorized": false,
+ "loopsExecuted": [
+  "campus-truth",
+  "event-truth",
+  "loop-health",
+  "functional",
+  "technical-search",
+  "brand-visual",
+  "claims-messaging",
+  "audience-funnel"
+ ],
+ "loopEvidenceVersions": {
+  "campus-truth": 7,
+  "functional": 2
+ },
+ "providers": {
+  "campus-directory": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:42.564Z",
+   "completedAt": "2026-09-24T14:28:42.950Z",
+   "httpStatus": 200,
+   "navigationLinks": 93,
+   "mapEmbeds": 1
+  },
+  "public-events-page": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:42.563Z",
+   "completedAt": "2026-09-24T14:28:43.201Z",
+   "httpStatus": 200,
+   "cards": 121,
+   "schemaEvents": 121
+  },
+  "map": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:42.547Z",
+   "completedAt": "2026-09-24T14:28:43.202Z",
+   "records": 90
+  },
+  "wordpress-pages": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:42.560Z",
+   "completedAt": "2026-09-24T14:28:43.850Z",
+   "records": 100
+  },
+  "wordpress-events": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:42.561Z",
+   "completedAt": "2026-09-24T14:28:44.867Z",
+   "records": 122
+  },
+  "campus-operations": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:44.867Z",
+   "completedAt": "2026-09-24T14:28:45.844Z",
+   "sourceMode": "live-google-sheets",
+   "records": 71,
+   "sheetName": "September 14th 2026",
+   "required": true
+  },
+  "hubspot-events": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:28:45.844Z",
+   "completedAt": "2026-09-24T14:29:04.629Z",
+   "records": 1889,
+   "required": true
+  },
+  "campus-pages": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:04.629Z",
+   "completedAt": "2026-09-24T14:29:09.847Z",
+   "records": 45,
+   "failures": 0
+  },
+  "event-pages": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:09.847Z",
+   "completedAt": "2026-09-24T14:29:17.920Z",
+   "records": 100,
+   "failures": 0
+  },
+  "campus-staff": {
+   "status": "disabled",
+   "startedAt": "2026-09-24T14:29:17.926Z",
+   "completedAt": "2026-09-24T14:29:17.927Z",
+   "disabled": true,
+   "required": true,
+   "reason": "CAMPUS_STAFF_ROSTER_PATH is not configured"
+  },
+  "google-search-console": {
+   "status": "disabled",
+   "startedAt": "2026-09-24T14:29:17.927Z",
+   "completedAt": "2026-09-24T14:29:17.927Z",
+   "disabled": true,
+   "reason": "Google Search Console OAuth is not configured"
+  },
+  "robots": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:17.920Z",
+   "completedAt": "2026-09-24T14:29:18.102Z",
+   "httpStatus": 200
+  },
+  "route-html": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:17.920Z",
+   "completedAt": "2026-09-24T14:29:19.080Z",
+   "records": 7,
+   "failures": 0
+  },
+  "llm-files": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:17.924Z",
+   "completedAt": "2026-09-24T14:29:19.104Z",
+   "records": 2
+  },
+  "hubspot-programs": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:17.925Z",
+   "completedAt": "2026-09-24T14:29:19.449Z",
+   "records": 113
+  },
+  "sitemaps": {
+   "status": "healthy",
+   "startedAt": "2026-09-24T14:29:17.920Z",
+   "completedAt": "2026-09-24T14:29:21.544Z",
+   "documents": 5,
+   "urls": 347
+  },
+  "browser": {
+   "status": "degraded",
+   "records": 104,
+   "incompleteRecords": 51,
+   "completedAt": "2026-09-24T14:38:54.593Z",
+   "error": "51 of 104 browser records have incomplete DOM, font, or screenshot evidence."
+  }
+ },
+ "browserCoverage": [
+  {
+   "entity": "home-desktop",
+   "route": "home",
+   "viewport": "desktop",
+   "url": "https://alpha.school/",
+   "status": 200,
+   "domInspected": true,
+   "fontsSettled": true,
+   "screenshotCaptured": true,
+   "visualCompared": false,
+   "mapScrollInspected": false,
+   "campusMapInspected": false,
+   "requiredEmbedInspected": true,
+   "error": null,
+   "screenshotError": null,
+   "fontError": null
+  },
+  {
+   "entity": "home-mobile",
+   "route": "home",
+   "viewport": "mobile",
+   "url": "https://alpha.school/",
+   "status": 200,
+   "domInspected": true,
+   "fontsSettled": true,
+   "screenshotCaptured": true,
+   "visualCompared": false,
+   "mapScrollInspected": false,
+   "campusMapInspected": false,
+   "requiredEmbedInspected": true,
+   "error": null,
+   "screenshotError": null,
+   "fontError": null
+  }
+ ],
+ "changes": {
+  "map": "unchanged",
+  "pages": "changed",
+  "campuses": "changed",
+  "campusOperations": "changed",
+  "events": "changed",
+  "sitemaps": "changed",
+  "routes": "unchanged"
+ },
+ "findingsObserved": 224,
+ "activeIncidents": 347,
+ "actionableIncidents": 173,
+ "counts": {
+  "advisory": 174,
+  "critical": 3,
+  "high": 150,
+  "medium": 20
+ },
+ "evidence": {
+  "kind": "site-observation",
+  "sha256": "bb4c7bddff3eac82bbd0e326028e0887614cfb10d4b8ed94c77b6bbe80db9b4f",
+  "path": "evidence/bb4c7bddff3eac82bbd0e326028e0887614cfb10d4b8ed94c77b6bbe80db9b4f.json",
+  "bytes": 396898
+ }
+}
