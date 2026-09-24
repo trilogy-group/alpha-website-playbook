@@ -2077,6 +2077,9 @@
       },
       "ticketClass": "observer-layout",
       "dedupeScope": "template",
+      "sourceHealthDependency": [
+        "browser"
+      ],
       "evidenceExtra": [
         "observer-screenshot-desktop"
       ],
@@ -2109,6 +2112,9 @@
       "ticketClass": "observer-layout",
       "dedupeScope": "template",
       "decisionPending": "cmtnl00rs000404l1ihl5ucij",
+      "sourceHealthDependency": [
+        "browser"
+      ],
       "evidenceExtra": [
         "observer-screenshot-mobile"
       ],
@@ -2137,6 +2143,9 @@
         "detectUnit": "px"
       },
       "ticketClass": "observer-layout",
+      "sourceHealthDependency": [
+        "browser"
+      ],
       "evidenceExtra": [
         "observer-screenshot-desktop-mobile"
       ],
@@ -2164,6 +2173,9 @@
         "gate": "files only when site.layout.horizontal-overflow is above 160 px on the same page and viewport; otherwise telemetry"
       },
       "ticketClass": "observer-layout",
+      "sourceHealthDependency": [
+        "browser"
+      ],
       "evidenceExtra": [
         "observer-screenshot-desktop-mobile"
       ],
@@ -2192,6 +2204,9 @@
       "status": "advisory",
       "severity": "low",
       "ticketClass": "observer-layout",
+      "sourceHealthDependency": [
+        "browser"
+      ],
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.viewport"
@@ -2251,7 +2266,11 @@
       },
       "severity": "medium",
       "ticketClass": "observer-media-identity",
+      "sourceHealthDependency": [
+        "browser"
+      ],
       "evidenceExtra": [
+        "observer-screenshot-desktop-mobile",
         "page-check-team-photo-framing",
         "section-shot-team-card"
       ],

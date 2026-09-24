@@ -15,13 +15,13 @@ import {
   FILER_OWNED_CODE,
   FILER_VERSION,
   ObserverFilerError,
-  RESOLUTION_KIND,
   applyPlan,
   buildContract,
   downloadPacket,
   findingConditions,
   formatFact,
   idempotencyKeyFor,
+  isFilerOwnedTask,
   loadCheckBundle,
   loadPolicyBundle,
   loadQueue,
@@ -42,7 +42,6 @@ import {
   unhealthyDependencies,
 } from '../agent/file-observer-findings.mjs'
 import { contractCheck } from './validate-ticket.mjs'
-import { assertNoteShape } from '../agent/ticket-templates.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const fixtures = path.join(root, 'tests', 'fixtures', 'observer-filer')
@@ -97,7 +96,7 @@ function syntheticRun({ pages = 12, viewports = ['desktop', 'mobile'], occurrenc
   return { dir, findings, incidents, manifest }
 }
 
-test('observer filer: replay of the 2026-09-24 packet auto-resolves the map-row tickets whose check ids cleared and files nothing twice', () => {
+test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy observer tickets and files nothing twice', () => {
   const run = loadRunFolder(path.join(fixtures, 'run-2026-09-24'))
   const queue = loadQueue(path.join(fixtures, 'queue-2026-09-24.json'))
   assert.equal(queue.length, 181, 'the 180 open observer tickets the sweep worked, plus the open grade decision ticket the bundle names')
@@ -106,7 +105,7 @@ test('observer filer: replay of the 2026-09-24 packet auto-resolves the map-row 
   assert.match(checks.sha256, /^[0-9a-f]{64}$/)
   const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
 
-  assert.deepEqual(plan.counts, { findings: 224, dropped: 102, loopHealth: 5, advisory: 14, suppressed: 0, held: 0, groups: 51, decisionPending: 25, files: 11, existing: 15, invalid: 0, resolves: 93, unresolved: 87, evidencePairs: 0 })
+  assert.deepEqual(plan.counts, { findings: 224, dropped: 102, loopHealth: 5, advisory: 14, suppressed: 35, held: 0, groups: 49, decisionPending: 24, files: 10, existing: 15, invalid: 0, resolves: 0, unresolved: 180, evidencePairs: 0 })
 
   // Loop health from the manifest until the observer writes health.json; loop-health rows never file.
   assert.equal(plan.health.source, 'manifest.providers')
@@ -115,52 +114,20 @@ test('observer filer: replay of the 2026-09-24 packet auto-resolves the map-row 
   assert.ok(plan.dropped.filter((d) => d.check === 'primary-cta-count').every((d) => d.reason.startsWith('retired: ')), 'a retired check is dropped with the retirement reason')
   assert.ok(plan.dropped.filter((d) => d.check === 'route-screenshot-capture').every((d) => d.reason === 'no row in the check bundle (telemetry)'))
   assert.deepEqual(plan.advisory.reduce((a, s) => ({ ...a, [s.check]: (a[s.check] || 0) + 1 }), {}), { 'operations-campus-missing-facts': 5, 'community-destination': 2, 'claim-evidence': 7 })
+  assert.deepEqual(plan.suppressed.reduce((a, s) => ({ ...a, [s.check]: (a[s.check] || 0) + 1 }), {}), { 'campus-layout-header-overlap': 34, 'campus-image-crop-risk': 1 }, 'a degraded browser suppresses every browser-derived layout/crop finding')
 
-  // Auto-resolve: the 16 map-row tickets whose incidents resolved after 31+ clean runs, none of the 12 still-active ones.
-  const resolved = new Set(plan.resolves.map((r) => r.id))
-  for (const id of MAP_ROW_TICKETS_CLEARED) assert.ok(resolved.has(id), `${id} should auto-resolve`)
-  for (const id of MAP_ROW_TICKETS_STILL_ACTIVE) assert.ok(!resolved.has(id), `${id} is still observed and must stay open`)
-  const stillObserved = plan.unresolved.filter((u) => u.reason === 'still observed in this run').map((u) => u.id)
-  for (const id of MAP_ROW_TICKETS_STILL_ACTIVE) assert.ok(stillObserved.includes(id))
-  assert.deepEqual(plan.resolves.reduce((a, r) => ({ ...a, [r.cleared.checks.join('+')]: (a[r.cleared.checks.join('+')] || 0) + 1 }), {}), {
-    'provider-health': 3, 'public-event-sync': 23, 'event-page-reachable': 4, 'campus-layout-header-overlap': 9, 'event-registration-reachable': 2, 'route-reachable': 9, 'preannouncement-community-url': 12,
-    'campus-layout-offscreen-content': 1, 'images-render': 3, 'map-campus-missing-from-operations': 16, 'campus-operations-snapshot-fresh': 1, 'campus-info-packet-present': 2, 'campus-image-identity-conflict': 4, 'campus-event-filter': 2, 'campus-info-packet-link-reachable': 2,
-  })
-  const lead = plan.resolves.find((r) => r.id === 'cmtmn1ras000004i2asbfpd1j')
-  assert.deepEqual(lead.cleared.observerIds, ['SITE-7B2F6597C8'])
-  assert.deepEqual(lead.cleared.rows, ['site.map.integrity.operations-row'])
-  assert.equal(lead.cleared.cleanRuns, 118)
-  assert.deepEqual(lead.cleared.clearingRunIds, [RUN_ID])
-  assert.deepEqual(Object.keys(lead.patch).sort(), ['customFields', 'description', 'resolutionKind', 'status'], 'one v1 PATCH: no agentStatus, never agentEligible (APEX PR 409)')
-  assert.equal(lead.patch.status, 'COMPLETED')
-  assert.equal(lead.patch.resolutionKind, RESOLUTION_KIND)
-  assert.equal(lead.patch.customFields.resolutionKind, RESOLUTION_KIND)
-  assert.equal(lead.patch.customFields.checkId, 'SITE-7B2F6597C8', 'the observer check id stays on the ticket')
-  assert.equal(lead.patch.customFields.filerRunId, RUN_ID)
-  assert.equal(lead.patch.customFields.requirementId, 'site.map.integrity')
-  assert.equal(lead.patch.customFields.checkBundleVersion, '1.0')
-  assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
-  const original = queue.find((t) => t.id === lead.id).description
-  assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
-  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.2, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/docs\.google\.com\/spreadsheets\/d\/[^\n]+\/edit\nLook for: [^\n]*map-campus-missing-from-operations \(site\.map\.integrity\) is clear\n/)
-  // The note is the protocol's `verified` template (spec/ticket-templates.json): closing lines first, review line last.
-  assert.match(lead.patch.description, /\nObserver: SITE-7B2F6597C8 cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared\nPlease review\.$/)
-  assertNoteShape(lead.patch.description.slice(lead.patch.description.indexOf('\n\nRESOLUTION (') + 2))
-  assert.match(lead.patch.description, /after 118 clean runs \(row requires 2\)/)
-
-  // A ticket the observer resolved without clean runs (a decision or an evidence-version bump) is not closed by the filer; a person decides.
-  const overflow = plan.unresolved.find((u) => u.id === 'cmty8wm7e000004laa25df799')
-  assert.match(overflow.reason, /^resolved by the observer without 2 clean runs \(SITE-[A-Z0-9]+ 0 clean, (no reason|superseded-evidence-version)\); needs a person$/)
-  assert.deepEqual(plan.unresolved.reduce((a, u) => ({ ...a, [u.reason.split(' (')[0]]: (a[u.reason.split(' (')[0]] || 0) + 1 }), {}), { 'still observed in this run': 50, 'incident not in this packet': 35, 'incident still open in the observer': 1, 'resolved by the observer without 2 clean runs': 1 })
+  // Provenance, not a SITE id, grants close authority. All 180 historical observer tickets predate this filer.
+  assert.deepEqual(plan.resolves, [])
+  assert.equal(plan.unresolved.filter((u) => u.reason === 'not filer-owned; auto-resolution refused').length, 180)
+  assert.ok(queue.filter((task) => observerIdsForTask(task).length).every((task) => !isFilerOwnedTask(task)))
+  for (const id of [...MAP_ROW_TICKETS_CLEARED, ...MAP_ROW_TICKETS_STILL_ACTIVE]) {
+    assert.equal(plan.unresolved.find((u) => u.id === id)?.reason, 'not filer-owned; auto-resolution refused')
+  }
 
   // Decisions: the 12 active map rows and 11 community hosts wait on the Columbus and Short Hills leads, the 34 header overlaps
   // (34 mobile findings, one template scope) on the Atlanta lead, the Alpha High grade finding on the grade decision; nothing files twice.
   const decisions = plan.decisionPending.reduce((a, d) => ({ ...a, [`${d.check} -> ${d.decisionTicket}`]: (a[`${d.check} -> ${d.decisionTicket}`] || 0) + 1 }), {})
-  assert.deepEqual(decisions, { 'map-campus-missing-from-operations -> cmtyu32gf00000agm0vltkx4s': 12, 'preannouncement-community-host -> cmu4g45fg00020agm20nd7kc8': 11, 'campus-layout-header-overlap -> cmtnl00rs000404l1ihl5ucij': 1, 'campus-page-grade-source-sync -> cmu4g13kc00000agmdogkxihp': 1 })
-  const overlap = plan.decisionPending.find((d) => d.check === 'campus-layout-header-overlap')
-  assert.equal(overlap.key, 'observer:site.layout.viewport:template:campus')
-  assert.equal(overlap.findings, 34)
-  assert.deepEqual(overlap.rows, ['site.layout.header-overlap.mobile'])
+  assert.deepEqual(decisions, { 'map-campus-missing-from-operations -> cmtyu32gf00000agm0vltkx4s': 12, 'preannouncement-community-host -> cmu4g45fg00020agm20nd7kc8': 11, 'campus-page-grade-source-sync -> cmu4g13kc00000agmdogkxihp': 1 })
   assert.equal(plan.decisionPending.find((d) => d.check === 'campus-page-grade-source-sync').scopeKey, 'page:alphahigh.school', 'a sister-site page never collapses onto the public home slug')
   assert.equal(plan.counts.invalid, 0, 'a filed ticket never fails the contract')
   assert.ok(plan.existing.every((e) => queue.some((t) => t.id === e.existing.id)), 'every dedupe points at an open ticket')
@@ -169,17 +136,16 @@ test('observer filer: replay of the 2026-09-24 packet auto-resolves the map-row 
   assert.deepEqual(plan.files.map((f) => [f.check, f.scope, f.findings, f.owner.via, f.payload.status]).sort(), [
     ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
     ['campus-expired-seasonal-cta', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-expired-seasonal-cta', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
-    ['campus-image-crop-risk', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
-    ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-image-identity-conflict', 'page', 9, 'website-agent-operator', 'NOT_STARTED'],
+    ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
     ['operations-map-address-conflict', 'program', 1, 'internal-triage -> website-agent-operator', 'BLOCKED'], ['operations-map-address-conflict', 'program', 1, 'internal-triage -> website-agent-operator', 'BLOCKED'],
   ])
   const raleigh = plan.files.find((f) => f.title.startsWith('Alpha Raleigh'))
-  assert.equal(raleigh.title, 'Alpha Raleigh: fails "No other campus in image file names, alt text or nearby text" (9 findings)')
+  assert.equal(raleigh.title, 'Alpha Raleigh: fails "No other campus in image file names, alt text or nearby text"')
   assert.equal(raleigh.key, 'observer:site.identity.other-campus:page:raleigh')
   assert.deepEqual(raleigh.rows, ['site.identity.other-campus.images'])
   assert.match(raleigh.payload.customFields.checkId, /^SITE-[A-Z0-9]{10}$/, 'checkId is the lead observer id (APEX PR 409)')
   assert.equal(raleigh.payload.customFields.triagedClass, 'observer-media-identity')
-  assert.equal(raleigh.payload.customFields.observerIds.length, 9)
+  assert.equal(raleigh.payload.customFields.observerIds.length, 1)
   assert.equal(raleigh.payload.customFields.observerIds[0], raleigh.payload.customFields.checkId)
   assert.equal(raleigh.payload.customFields.source, 'agent-found')
   assert.equal(raleigh.payload.customFields.idempotencyKey, raleigh.key)
@@ -187,7 +153,7 @@ test('observer filer: replay of the 2026-09-24 packet auto-resolves the map-row 
   assert.equal(raleigh.payload.customFields.checkBundleVersion, '1.0')
   assert.equal(raleigh.payload.customFields.checkBundleSha256, checks.sha256)
   assert.equal(raleigh.payload.customFields.filerRunId, RUN_ID)
-  assert.deepEqual(raleigh.evidence.map((e) => e.complete), [false], 'the trimmed fixture carries no screenshots, so the pair is planned but incomplete')
+  assert.deepEqual(raleigh.evidence, [], 'the static Raleigh finding has no browser screenshot claim')
   assert.equal(contractCheck({ ...raleigh.payload, id: 'x', assignees: [{ name: 'Matt Barge' }] }).valid, true)
   assert.match(raleigh.payload.description, /^Matt Barge: /)
   assert.match(raleigh.payload.description, /\nSource: [^\n]*\(read 2026-09-24T/)
@@ -236,6 +202,12 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.equal(ticket.evidence.length, 12, 'one pair per route')
   assert.ok(ticket.evidence.every((e) => e.complete))
   assert.equal(plan.counts.evidencePairs, 12)
+
+  // A browser row with no complete desktop/mobile evidence pair is suppressed even if health.json incorrectly says healthy.
+  const missingScreenshots = syntheticRun({ pages: 2, screenshots: false, browser: 'healthy' })
+  const withoutEvidence = planObserverFindings({ run: loadRunFolder(missingScreenshots.dir), bundle: bundle(), queue: [], now: NOW })
+  assert.equal(withoutEvidence.counts.files, 0)
+  assert.equal(withoutEvidence.suppressed.filter((item) => item.reason === 'required browser evidence missing').length, 4)
 
   // An open ticket carrying any one of the 24 observer ids makes the whole scope a duplicate; an open decision ticket holds it.
   const deduped = planObserverFindings({ run, bundle: bundle(), queue: [{ id: 'cmopen1', status: 'BLOCKED', title: 'Alpha Atlanta: the header overlaps on mobile', url: 'https://alpha.school/atlanta/', customFields: { source: 'alpha-site-qc', check: 'campus-layout-header-overlap', checkId: 'SITE-HO03M000000' } }], now: NOW })
@@ -300,6 +272,9 @@ test('observer filer: advisory rows count, unhealthy sources suppress, condition
   assert.equal(rowForCheck(checks, 'nope'), null)
   assert.equal(rowForFinding(checks, headerOverlapFinding(0, 'mobile')).id, 'site.layout.header-overlap.mobile')
   assert.equal(rowForFinding(checks, headerOverlapFinding(0, 'desktop')).id, 'site.layout.header-overlap.desktop')
+  for (const check of ['campus-layout-header-overlap', 'campus-layout-horizontal-overflow', 'campus-layout-offscreen-content', 'campus-layout-clipped-text', 'campus-image-crop-risk']) {
+    assert.ok(rowForCheck(checks, check).sourceHealthDependency.includes('browser'), `${check} declares browser health`)
+  }
   assert.equal(rowForFinding(checks, imagesFinding).id, 'site.layout.images.render')
   assert.equal(rowForFinding(checks, { ...imagesFinding, conditions: ['every-image-failed-in-run'] }).id, 'site.loop.health.images-all-failed')
   const grades = rowForCheck(checks, 'campus-page-grade-source-sync')
@@ -349,11 +324,12 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
   const synthetic = syntheticRun({ pages: 2, extraIncidents: [cleared, clearedByFiler] })
   const queue = [
     { id: 'cmold1', title: 'Alpha Old: overflows on mobile', status: 'NOT_STARTED', url: 'https://alpha.school/old/', agentStatus: 'BLOCKED', description: 'Requester text first.\nPage: https://alpha.school/old/', customFields: { source: 'alpha-site-qc', check: 'campus-layout-horizontal-overflow', checkId: 'SITE-OLDCLEAR01', history: ['filed'] } },
-    { id: 'cmfiler1', title: 'Alpha Older: fails "No horizontal overflow"', status: 'BLOCKED', url: 'https://alpha.school/older/', agentStatus: null, description: 'Matt Barge: fix it', customFields: { source: 'agent-found', checkId: 'SITE-OLDCLEAR02', triagedClass: 'observer-layout', idempotencyKey: 'observer:site.layout.viewport:page:older', observerIds: ['SITE-OLDCLEAR02'] } },
+    { id: 'cmfiler1', title: 'Alpha Older: fails "No horizontal overflow"', status: 'BLOCKED', url: 'https://alpha.school/older/', agentStatus: null, description: 'Matt Barge: fix it', customFields: { source: 'agent-found', filedBy: 'agent/file-observer-findings.mjs', filerRunId: 'site-full-2026-09-20T00-00-00-000Z', checkId: 'SITE-OLDCLEAR02', triagedClass: 'observer-layout', idempotencyKey: 'observer:site.layout.viewport:page:older', observerIds: ['SITE-OLDCLEAR02'], history: ['filed'] } },
   ]
   const plan = planObserverFindings({ run: loadRunFolder(synthetic.dir), bundle: bundle(), queue, now: NOW })
   assert.equal(plan.counts.files, 1)
-  assert.deepEqual(plan.resolves.map((r) => r.id), ['cmold1', 'cmfiler1'])
+  assert.deepEqual(plan.resolves.map((r) => r.id), ['cmfiler1'])
+  assert.equal(plan.unresolved.find((r) => r.id === 'cmold1')?.reason, 'not filer-owned; auto-resolution refused')
   for (const r of plan.resolves) assert.deepEqual(Object.keys(r.patch).sort(), ['customFields', 'description', 'resolutionKind', 'status'], 'no agentStatus, no agentEligible')
   assert.deepEqual(plan.resolves[0].cleared.clearingRunIds, ['site-full-2026-09-22T00-00-00-000Z', RUN_ID])
   assert.equal(plan.resolves[0].patch.customFields.requirementId, 'site.layout.viewport')
@@ -376,8 +352,8 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
   assert.deepEqual(result.errors, [])
   assert.deepEqual(result.skipped, [])
   assert.deepEqual(result.filed, [{ id: 'cmnew1', key: 'observer:site.layout.viewport:template:campus', title: plan.files[0].title }])
-  assert.deepEqual(result.resolved, [{ id: 'cmold1', status: 'COMPLETED' }, { id: 'cmfiler1', status: 'COMPLETED' }])
-  assert.deepEqual(calls.map((c) => c[0]), ['create', 'patch', 'evidence', 'evidence', 'evidence', 'evidence', 'patch', 'patch'])
+  assert.deepEqual(result.resolved, [{ id: 'cmfiler1', status: 'COMPLETED' }])
+  assert.deepEqual(calls.map((c) => c[0]), ['create', 'patch', 'evidence', 'evidence', 'evidence', 'evidence', 'patch'])
   const [, created] = calls[0]
   assert.equal(created.status, 'BLOCKED')
   assert.ok(!('assignees' in created), 'assignment is a second write, like file-found-ticket.mjs')
@@ -387,32 +363,31 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
   assert.deepEqual(calls[2].slice(1), ['http://127.0.0.1:4010/api/agent/tasks/cmnew1/evidence/screenshots', 'desktop', 'header', RUN_ID, 'https://alpha.school/campus-0/'])
   assert.deepEqual(calls[3].slice(1, 3), ['http://127.0.0.1:4010/api/agent/tasks/cmnew1/evidence/screenshots', 'mobile'])
   const [, resolvedId, resolvePatch] = calls[6]
-  assert.equal(resolvedId, 'cmold1')
+  assert.equal(resolvedId, 'cmfiler1')
   assert.deepEqual(Object.keys(resolvePatch).sort(), ['customFields', 'description', 'resolutionKind', 'status'])
   assert.equal(resolvePatch.status, 'COMPLETED')
   assert.equal(resolvePatch.resolutionKind, 'check-cleared')
   assert.equal(resolvePatch.customFields.resolutionKind, 'check-cleared')
-  assert.ok(resolvePatch.description.startsWith('Requester text first.\nPage: https://alpha.school/old/\n\nRESOLUTION ('))
+  assert.ok(resolvePatch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION ('))
   for (const call of calls) if (call[0] === 'patch') { assert.ok(!('agentEligible' in call[2]), 'no PATCH ever carries agentEligible'); assert.ok(!('agentStatus' in call[2]), 'APEX clears agentStatus on completion') }
 
   const writes = fs.readFileSync(writesFile, 'utf8').trim().split('\n').map((l) => JSON.parse(l))
-  assert.deepEqual(writes.map((w) => w.write), ['create', 'assign', 'evidence', 'evidence', 'resolve', 'resolve'])
+  assert.deepEqual(writes.map((w) => w.write), ['create', 'assign', 'evidence', 'evidence', 'resolve'])
   assert.ok(writes.every((w) => w.runId === RUN_ID && /^\d{4}-\d{2}-\d{2}T/.test(w.at)))
   assert.deepEqual(writes[2].shots.map((s) => s.viewport), ['desktop', 'mobile'])
-  assert.deepEqual(writes[4], { ...writes[4], write: 'resolve', ticket: 'cmold1', status: 'COMPLETED', resolutionKind: 'check-cleared', clearingRunIds: ['site-full-2026-09-22T00-00-00-000Z', RUN_ID], observerIds: ['SITE-OLDCLEAR01'] })
-  assert.equal(result.writes.length, 6)
-  assert.ok(logs.some((l) => /^filed cmnew1 /.test(l)) && logs.some((l) => /^completed cmold1 /.test(l)))
+  assert.deepEqual(writes[4], { ...writes[4], write: 'resolve', ticket: 'cmfiler1', status: 'COMPLETED', resolutionKind: 'check-cleared', clearingRunIds: ['site-full-2026-09-22T00-00-00-000Z', RUN_ID], observerIds: ['SITE-OLDCLEAR02'] })
+  assert.equal(result.writes.length, 5)
+  assert.ok(logs.some((l) => /^filed cmnew1 /.test(l)) && logs.some((l) => /^completed cmfiler1 /.test(l)))
 
   // A 409 OBSERVER_FILER_OWNED (APEX PR 409) is a logged skip; any other APEX failure is logged and does not stop the rest.
-  const conflict = Object.assign(new ObserverFilerError('APEX_ERROR', 'APEX PATCH /tasks/cmold1 409: {"code":"OBSERVER_FILER_OWNED"}'), { status: 409, body: { code: FILER_OWNED_CODE } })
-  const failing = { ...apex, patch: async (id, body) => { if (id === 'cmold1') throw conflict; if (id === 'cmfiler1') throw new Error('APEX PATCH 500'); calls.push(['patch', id, body]); return { id, status: body.status } } }
+  const conflict = Object.assign(new ObserverFilerError('APEX_ERROR', 'APEX PATCH /tasks/cmfiler1 409: {"code":"OBSERVER_FILER_OWNED"}'), { status: 409, body: { code: FILER_OWNED_CODE } })
+  const failing = { ...apex, patch: async (id, body) => { if (id === 'cmfiler1') throw conflict; calls.push(['patch', id, body]); return { id, status: body.status } } }
   const second = await applyPlan(plan, { apex: failing, fetchImpl, writesFile: path.join(synthetic.dir, 'second.jsonl') })
-  assert.deepEqual(second.skipped, [{ id: 'cmold1', step: 'resolve', reason: FILER_OWNED_CODE }])
-  assert.deepEqual(second.errors, [{ id: 'cmfiler1', step: 'resolve', error: 'APEX PATCH 500' }])
+  assert.deepEqual(second.skipped, [{ id: 'cmfiler1', step: 'resolve', reason: FILER_OWNED_CODE }])
+  assert.deepEqual(second.errors, [])
   assert.deepEqual(second.resolved, [])
   const secondWrites = fs.readFileSync(path.join(synthetic.dir, 'second.jsonl'), 'utf8')
-  assert.match(secondWrites, /"write":"resolve","ticket":"cmold1","skipped":"OBSERVER_FILER_OWNED"/)
-  assert.match(secondWrites, /"write":"resolve","ticket":"cmfiler1","error":"APEX PATCH 500"/)
+  assert.match(secondWrites, /"write":"resolve","ticket":"cmfiler1","skipped":"OBSERVER_FILER_OWNED"/)
 })
 
 test('observer filer: the CLI is a dry run by default, writes the report, never touches APEX without a token, and refuses --apply without one', () => {
@@ -424,19 +399,19 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   assert.equal(summary.mode, 'dry-run')
   assert.equal(summary.runId, RUN_ID)
   assert.equal(summary.bundleVersion, '1.0')
-  assert.equal(summary.counts.resolves, 93)
-  assert.equal(summary.counts.files, 11)
-  assert.equal(summary.counts.decisionPending, 25)
+  assert.equal(summary.counts.resolves, 0)
+  assert.equal(summary.counts.files, 10)
+  assert.equal(summary.counts.decisionPending, 24)
   assert.equal(summary.counts.loopHealth, 5)
   assert.deepEqual(summary.unhealthySources, ['campus-staff', 'google-search-console', 'browser'])
-  assert.equal(summary.files.length, 11)
-  assert.ok(summary.files.some((line) => /^Alpha Raleigh: fails "No other campus in image file names, alt text or nearby text" \(9 findings\) -> Matt Barge \(website-agent-operator\); 9 finding\(s\), 0 evidence pair\(s\)$/.test(line)), summary.files.join('\n'))
-  assert.ok(summary.decisionPending.some((line) => /^campus-layout-header-overlap template:campus: 34 finding\(s\) wait on cmtnl00rs000404l1ihl5ucij$/.test(line)))
-  assert.equal(summary.resolves.length, 93)
+  assert.equal(summary.files.length, 10)
+  assert.ok(summary.files.some((line) => /^Alpha Raleigh: fails "No other campus in image file names, alt text or nearby text" -> Matt Barge \(website-agent-operator\); 1 finding\(s\), 0 evidence pair\(s\)$/.test(line)), summary.files.join('\n'))
+  assert.equal(summary.decisionPending.some((line) => /^campus-layout-header-overlap /.test(line)), false)
+  assert.equal(summary.resolves.length, 0)
   assert.ok(!('applied' in summary))
   const written = JSON.parse(fs.readFileSync(report, 'utf8'))
   assert.equal(written.mode, 'dry-run')
-  assert.equal(written.resolves.length, 93)
+  assert.equal(written.resolves.length, 0)
   assert.ok(!fs.existsSync(path.join(fixtures, 'run-2026-09-24', 'filer-writes.jsonl')), 'a dry run writes no jsonl')
   assert.ok(!fs.existsSync(path.join(fixtures, 'run-2026-09-24', 'filer-report.json')), '--report kept the fixture folder clean')
 
