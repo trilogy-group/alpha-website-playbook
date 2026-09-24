@@ -1,0 +1,9 @@
+{
+  "count": 4,
+  "receipts": [
+    { "receiptId": 1, "operation": "prepare-elementor-content-patch", "result": "applied", "apexTicketId": "t-site-change", "runId": "run-a", "objectId": 8545, "canonicalUrl": "https://alpha.school/atlanta/", "timestamp": "2026-09-14T09:58:00+00:00" },
+    { "receiptId": 2, "operation": "apply-elementor-content-patch", "result": "applied", "apexTicketId": "t-site-change", "runId": "run-a", "objectId": 8545, "canonicalUrl": "https://alpha.school/atlanta/", "timestamp": "2026-09-14T09:59:00+00:00" },
+    { "receiptId": 3, "operation": "flush-wp-engine-cache", "result": "applied", "apexTicketId": "t-false-positive", "runId": "run-b", "objectId": 9310, "canonicalUrl": "https://alpha.school/raleigh/", "timestamp": "2026-09-24T09:59:00+00:00" },
+    { "receiptId": 4, "operation": "apply-post-fields-patch", "result": "rejected", "apexTicketId": "t-fixed-elsewhere", "runId": "run-c", "objectId": 9669, "canonicalUrl": "https://alpha.school/upcoming-events/", "timestamp": "2026-09-24T09:59:00+00:00" }
+  ]
+}

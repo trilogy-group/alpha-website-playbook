@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "validate": "node tests/validate-playbook.mjs",
-    "test": "node --test tests/playbook.test.mjs",
+    "test": "node --test tests/playbook.test.mjs tests/telemetry.test.mjs",
     "build:policy": "node tests/build-policy.mjs",
     "build:checks": "node tests/build-checks.mjs"
   },
