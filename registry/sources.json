@@ -69,7 +69,14 @@
     "spreadsheetId": "1t0fhwHz5Y2FvDvj2chRJGDrdcIco1ZADmkhAtRZTduM",
     "columns": "A:D (name, status, address, ...)",
     "owner": "Operations",
-    "access": "Google Sheets API via the observer service account"
+    "access": "Google Sheets API via the observer service account",
+    "observerPacketArtifact": {
+      "command": "gh run download -R superbuilders/aeo -n alpha-site-packet-<run>",
+      "use": "Sweep read path for the Operations sheet rows and for per-check-id resolution: the observer packet carries the sheet snapshot (with extractedAt), the growth map read and every finding of the run, so an agent verifies a map-row or snapshot ticket from the artifact instead of re-reading the sheet.",
+      "staleAfterHours": 168,
+      "staleIsLoopHealth": true,
+      "since": "2026-09-24"
+    }
   },
   "wordpress": {
     "restApi": "https://alpha.school/wp-json/wp/v2",
@@ -92,8 +99,10 @@
   },
   "hubspotEvents": {
     "api": "https://api.hubapi.com/marketing/marketing-events (portal 40051392)",
-    "rule": "Public Event = Yes must appear on /upcoming-events/ and the campus strip after a 2 hour grace",
-    "sitePipeline": "spec/content-pipelines.json pipelines.hubspot-events-plugin"
+    "rule": "Public Event = Yes must appear on /upcoming-events/ and the campus strip after a 4 hour grace (the plugin imports about every 30 minutes; the observer read of the published inventory lagged the import by 1 to 4 hours in the 2026-09-24 sweep). Past events never file.",
+    "sitePipeline": "spec/content-pipelines.json pipelines.hubspot-events-plugin",
+    "gracePeriodHours": 4,
+    "pastEventsNeverFile": true
   },
   "campusRoles": {
     "sourceOfTruth": "Admissions Hub org chart, https://alpha-admissions-hub.vercel.app/admissions-hub.html (tables currentDoARows, approvedAssignmentRows, expansionRows, marketingRows, admissionsRows embedded in the page script)",

@@ -1,7 +1,7 @@
 {
-  "$comment": "Named exceptions to site.identity.sister-brand (spec/observer-check-map.json). A sister-brand word on an Alpha campus page is a defect unless it matches an allowed phrase here, appears in the shared header/footer/navigation, is a proper noun that merely contains the word (universities, venues), or is rendered by a HubSpot-fed event card. tests/page-check.mjs reads this file; the observer should too. Add an exception only with the campus owner's decision recorded in docs/decisions.md.",
-  "version": "1.0",
-  "asOf": "2026-09-18",
+  "$comment": "Named exceptions to site.identity.sister-brand (spec/observer-check-map.json). A sister-brand word on an Alpha campus page is a defect unless it matches an allowed phrase here, appears in the shared header/footer/navigation, is a proper noun that merely contains the word (universities, venues), or is rendered by a HubSpot-fed event card. tests/page-check.mjs reads this file; the observer should too. Add an exception only with the campus owner's decision recorded in docs/decisions.md. brands[] is the word list the check applies (moved here from the observer config 2026-09-24 so the words and their exceptions live in one file); the observer reads both lists from this file and keeps none of its own.",
+  "version": "1.1",
+  "asOf": "2026-09-24",
   "properNouns": [
     "Nova Southeastern University"
   ],
@@ -14,5 +14,32 @@
         "Alpha-Brownsville-Nova-Academy"
       ]
     }
-  }
+  },
+  "brands": [
+    {
+      "id": "nova",
+      "label": "Nova",
+      "pattern": "\\bNova\\b"
+    },
+    {
+      "id": "nextgen-academy",
+      "label": "NextGen Academy",
+      "pattern": "\\bNextGen(?:\\s+Academy)?\\b"
+    },
+    {
+      "id": "waypoint-academy",
+      "label": "Waypoint Academy",
+      "pattern": "\\bWaypoint(?:\\s+Academy)?\\b"
+    },
+    {
+      "id": "texas-sports-academy",
+      "label": "Texas Sports Academy",
+      "pattern": "\\b(?:Texas\\s+Sports\\s+Academy|TSA)\\b"
+    },
+    {
+      "id": "gt-school",
+      "label": "GT School",
+      "pattern": "\\bGT School\\b"
+    }
+  ]
 }

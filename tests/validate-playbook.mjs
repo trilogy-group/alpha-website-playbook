@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { validateReviewSpec } from '../agent/notice-review.mjs'
+import { OUTPUT as CHECK_BUNDLE, buildBundle, observerCheckNames } from './build-checks.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -44,28 +45,43 @@ function requireFields(object, fields, label, errors) {
   }
 }
 
-function validateSchemaValue(value, schema, label, errors) {
+export function validateSchemaValue(value, schema, label, errors, root = schema) {
   if (!schema || typeof schema !== 'object') return
+  if (schema.$ref) {
+    const target = schema.$ref.startsWith('#/') ? schema.$ref.slice(2).split('/').reduce((cursor, part) => cursor?.[part], root) : null
+    if (!target) { errors.push(`${label}: unresolvable $ref ${schema.$ref}`); return }
+    return validateSchemaValue(value, target, label, errors, root)
+  }
   if (schema.enum && !schema.enum.includes(value)) errors.push(`${label}: value is not in schema enum`)
+  if (Array.isArray(schema.type)) {
+    const actual = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value
+    if (!schema.type.includes(actual)) errors.push(`${label}: expected one of ${schema.type.join('|')}`)
+    return
+  }
   if (schema.type === 'object') {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
       errors.push(`${label}: expected object`)
       return
     }
     for (const key of schema.required || []) if (value[key] === undefined) errors.push(`${label}: schema requires ${key}`)
-    for (const [key, child] of Object.entries(schema.properties || {})) if (value[key] !== undefined) validateSchemaValue(value[key], child, `${label}.${key}`, errors)
+    for (const [key, child] of Object.entries(schema.properties || {})) if (value[key] !== undefined) validateSchemaValue(value[key], child, `${label}.${key}`, errors, root)
+    if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
+      for (const [key, child] of Object.entries(value)) if (!schema.properties?.[key] && !key.startsWith('$')) validateSchemaValue(child, schema.additionalProperties, `${label}.${key}`, errors, root)
+    }
   } else if (schema.type === 'array') {
     if (!Array.isArray(value)) {
       errors.push(`${label}: expected array`)
       return
     }
     if (schema.minItems !== undefined && value.length < schema.minItems) errors.push(`${label}: expected at least ${schema.minItems} items`)
-    value.forEach((item, index) => validateSchemaValue(item, schema.items, `${label}[${index}]`, errors))
+    value.forEach((item, index) => validateSchemaValue(item, schema.items, `${label}[${index}]`, errors, root))
   } else if (schema.type === 'string') {
     if (typeof value !== 'string') errors.push(`${label}: expected string`)
     else if (schema.pattern && !new RegExp(schema.pattern).test(value)) errors.push(`${label}: does not match ${schema.pattern}`)
-  } else if (schema.type === 'number' && typeof value !== 'number') errors.push(`${label}: expected number`)
-  else if (schema.type === 'boolean' && typeof value !== 'boolean') errors.push(`${label}: expected boolean`)
+  } else if (schema.type === 'number') {
+    if (typeof value !== 'number') errors.push(`${label}: expected number`)
+    else if (schema.minimum !== undefined && value < schema.minimum) errors.push(`${label}: below minimum ${schema.minimum}`)
+  } else if (schema.type === 'boolean' && typeof value !== 'boolean') errors.push(`${label}: expected boolean`)
 }
 
 export function runValidation() {
@@ -206,7 +222,7 @@ export function runValidation() {
   if (!protocolVersion) errors.push('protocol: version not found')
   else if (!protocolIndex.includes(`v${protocolVersion}`)) errors.push(`protocol README does not reference v${protocolVersion}`)
 
-  const registryFiles = ['registry/environments.json', 'registry/plugins.json', 'registry/templates.json', 'registry/forms.json', 'registry/redirects.json', 'registry/owners.json', 'registry/global-runtime.json', 'registry/navigation.json']
+  const registryFiles = ['registry/environments.json', 'registry/plugins.json', 'registry/templates.json', 'registry/forms.json', 'registry/redirects.json', 'registry/owners.json', 'registry/global-runtime.json', 'registry/navigation.json', 'registry/observer-checks.json']
   for (const relative of registryFiles) {
     const data = readJson(relative, errors)
     if (data) requireFields(data, ['version', 'asOf'], relative, errors)
@@ -217,6 +233,7 @@ export function runValidation() {
     ['spec/actor-capabilities.json', 'spec/schemas/actor-capabilities.schema.json'],
     ['spec/page-family-requirements.json', 'spec/schemas/page-family-requirements.schema.json'],
     ['spec/brand-visual.json', 'spec/schemas/brand-visual.schema.json'],
+    ['spec/check-bundle.generated.json', 'spec/schemas/check-bundle.schema.json'],
   ]
   for (const [targetFile, schemaFile] of schemaTargets) {
     const target = readJson(targetFile, errors)
@@ -279,6 +296,19 @@ export function runValidation() {
       }
       for (const id of scheduled) if (intakePolicy.classes?.[id]?.queue !== 'execution') errors.push(`scheduled Alpha MCP operation ${id}: intake policy does not route it to execution`)
     }
+  }
+
+  // Check bundle (QC loop redesign 2026-09-24, workstream 1): every observer check has a row or a retirement, the
+  // committed bundle matches the rows, and the release manifest carries its hash.
+  const checkBundle = readJson(CHECK_BUNDLE, errors)
+  if (checkBundle) {
+    const built = buildBundle()
+    for (const problem of built.errors) errors.push(`check bundle: ${problem}`)
+    if (!built.errors.length && built.bundle.sha256 !== checkBundle.sha256) errors.push('check bundle is stale: run node tests/build-checks.mjs')
+    if (bundle && checkBundle.policySha256 !== bundle.policySha256) errors.push('check bundle was compiled against a different policy bundle: run node tests/build-checks.mjs')
+    const covered = new Set([...(checkBundle.rows || []).map((r) => r.observerCheck), ...(checkBundle.retired || []).map((r) => r.observerCheck)])
+    for (const name of observerCheckNames()) if (!covered.has(name)) errors.push(`observer check ${name} has no row and no retirement in ${CHECK_BUNDLE}`)
+    if (manifest && manifest.checkBundleSha256 !== checkBundle.sha256) errors.push('spec/release-manifest.json checkBundleSha256 does not match the check bundle')
   }
 
   return { errors, warnings, jsonFiles: jsonFiles.length, requiredFiles: requiredFiles.length }

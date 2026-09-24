@@ -1880,3 +1880,154 @@ test('notify-requester CLI exits 1 on a typed input error without contacting Sla
   assert.match(dry.stderr, /^refused item \(page URL/)
   assert.match(dry.stdout, /dry run: nothing sent, nothing written/)
 })
+
+// Check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2).
+import { buildBundle, extractObserverCheckNames, observerCheckNames } from './build-checks.mjs'
+import { validateSchemaValue } from './validate-playbook.mjs'
+
+const checkBundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'check-bundle.generated.json'), 'utf8'))
+const checkRow = (id) => { const row = checkBundle.rows.find((r) => r.id === id); assert.ok(row, `row ${id} missing`); return row }
+
+test('check bundle builds without errors, is current, validates against its schema, and covers every observer check', () => {
+  const built = buildBundle()
+  assert.deepEqual(built.errors, [])
+  assert.equal(built.bundle.sha256, checkBundle.sha256, 'committed bundle is stale: run node tests/build-checks.mjs')
+  assert.equal(built.bundle.rowsSha256, crypto.createHash('sha256').update(JSON.stringify(built.bundle.rows)).digest('hex'))
+  assert.equal(checkBundle.policySha256, bundle.policySha256)
+  const schema = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'schemas', 'check-bundle.schema.json'), 'utf8'))
+  const errors = []
+  validateSchemaValue(checkBundle, schema, 'check-bundle', errors)
+  assert.deepEqual(errors, [])
+  const names = observerCheckNames()
+  const rows = new Set(checkBundle.rows.map((r) => r.observerCheck))
+  const retired = new Set(checkBundle.retired.map((r) => r.observerCheck))
+  for (const name of names) assert.ok(rows.has(name) || retired.has(name), `${name} has no row and no retirement`)
+  for (const name of [...rows, ...retired]) assert.ok(names.includes(name), `${name} is not an observer check`)
+  for (const name of retired) assert.ok(!rows.has(name), `${name} is both a row and retired`)
+  assert.ok(names.length >= 109)
+  // the release manifest carries the hash
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'release-manifest.json'), 'utf8'))
+  assert.equal(manifest.checkBundleSha256, checkBundle.sha256)
+  assert.equal(manifest.checkBundleVersion, checkBundle.version)
+  // every row carries the shared contract fields with the exact names
+  for (const row of checkBundle.rows) {
+    for (const field of ['id', 'observerCheck', 'title', 'pageFamily', 'lifecycleStates', 'element', 'expected', 'comparator', 'severity', 'status', 'ticketClass', 'ownerRole', 'dedupeScope', 'clearAfterRuns', 'gracePeriodHours', 'evidenceProfile', 'sourceHealthDependency', 'requirementRef']) assert.ok(field in row, `${row.id} lacks ${field}`)
+    assert.ok(('literal' in row.expected) !== ('derive' in row.expected), `${row.id} expected must be literal xor derive`)
+    assert.ok(checkBundle.pageFamilies[row.pageFamily], `${row.id} pageFamily ${row.pageFamily}`)
+  }
+  for (const entry of checkBundle.retired) for (const field of ['observerCheck', 'reason', 'replacedBy', 'decidedBy', 'date']) assert.ok(field in entry, `retired ${entry.observerCheck} lacks ${field}`)
+})
+
+test('check bundle: a missing row or a check that is both a row and retired fails the build', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'check-bundle-'))
+  const source = fs.readFileSync(path.join(root, 'tests', 'build-checks.mjs'), 'utf8')
+  // The builder reads relative to its own location; copy the repo files it needs into a scratch tree and drop one row.
+  for (const rel of ['spec', 'registry', 'tests']) fs.cpSync(path.join(root, rel), path.join(dir, rel), { recursive: true })
+  const rows = JSON.parse(fs.readFileSync(path.join(dir, 'spec', 'check-rows.json'), 'utf8'))
+  rows.rows = rows.rows.filter((r) => r.id !== 'site.layout.header-overlap.desktop' && r.id !== 'site.layout.header-overlap.mobile')
+  rows.retired.push({ observerCheck: 'campus-sister-brand-leak', reason: 'x', replacedBy: null, decidedBy: 'test', date: '2026-09-24' })
+  fs.writeFileSync(path.join(dir, 'spec', 'check-rows.json'), JSON.stringify(rows))
+  const result = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-checks.mjs'), '--check'], { encoding: 'utf8' })
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /campus-layout-header-overlap has neither a row nor a retirement/)
+  assert.match(result.stderr, /campus-sister-brand-leak: also has a row/)
+  assert.ok(source.includes('has neither a row nor a retirement'))
+  fs.rmSync(dir, { recursive: true, force: true })
+})
+
+test('check bundle: the observer inventory extractor reads finding literals and the resource tables', () => {
+  const names = extractObserverCheckNames(`
+    findings.push(finding("campus-truth", "campus-heading-identity", entity, "heading", "medium", "t", "d", {}));
+    findings.push(finding(
+      "event-truth",
+      "hubspot-event-required-facts",
+      id, "startTime", "high", "t", "d", {}));
+    { presentCheck: "campus-info-packet-present", destinationCheck: "campus-info-packet-destination-campus" }
+    { links: x, label: "calendar", check: "campus-calendar-link-reachable" }
+  `)
+  assert.deepEqual(names, ['campus-calendar-link-reachable', 'campus-heading-identity', 'campus-info-packet-destination-campus', 'campus-info-packet-present', 'hubspot-event-required-facts'])
+})
+
+test('check bundle: workstream 2 corrections are rows, not prose', () => {
+  // Header overlap: template scope, mobile and desktop separate, thresholds stated, mobile decision pending on the Atlanta lead.
+  const desktop = checkRow('site.layout.header-overlap.desktop')
+  const mobile = checkRow('site.layout.header-overlap.mobile')
+  for (const row of [desktop, mobile]) {
+    assert.equal(row.observerCheck, 'campus-layout-header-overlap')
+    assert.equal(row.dedupeScope, 'template')
+    assert.equal(row.ticketClass, 'observer-layout')
+    assert.equal(row.ownerRole, 'elementor-owner')
+    assert.deepEqual([row.comparator.threshold, row.comparator.unit, row.comparator.orThreshold, row.comparator.detectAbove], [48, 'px', 0.25, 0.08])
+  }
+  assert.deepEqual(desktop.viewports, ['desktop'])
+  assert.deepEqual(mobile.viewports, ['mobile'])
+  assert.equal(mobile.decisionPending, 'cmtnl00rs000404l1ihl5ucij')
+  assert.match(mobile.comparator.note, /12\.5 to 16\.4 px/)
+
+  // Community host: canonical www host, apex redirect, URL form left as a decision flag.
+  const routing = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'community-routing.json'), 'utf8'))
+  assert.equal(routing.communityHosts.canonical, 'www.community.alpha.school')
+  assert.deepEqual(routing.communityHosts.redirects, ['community.alpha.school'])
+  assert.equal(routing.urlContract.urlForm.decided, false)
+  assert.equal(routing.urlContract.urlForm.decisionTicket, 'cmu4g45fg00020agm20nd7kc8')
+  assert.equal(checkRow('site.community.routing.host').decisionPending, 'cmu4g45fg00020agm20nd7kc8')
+  assert.equal(checkRow('site.community.routing.pre-announcement-url').decisionPending, 'cmu4g45fg00020agm20nd7kc8')
+  assert.ok(checkBundle.retired.some((r) => r.observerCheck === 'community-campus-parameter' && r.replacedBy === 'site.community.routing.pre-announcement-url'))
+
+  // Grades: start and end grade only; grade_levels never.
+  const grades = checkRow('campus.facts.grades')
+  assert.deepEqual(grades.expected.derive.field, ['start_grade_level', 'end_grade_level'])
+  assert.ok(grades.expected.derive.neverFields.includes('grade_levels'))
+  assert.match(grades.expected.derive.neverFieldsReason, /HubSpot no longer defines/)
+
+  // Brand leak reads the exceptions registry, which now also carries the word list.
+  const leak = checkRow('site.identity.sister-brand')
+  assert.equal(leak.exemptionsRef, 'registry/sister-brand-exceptions.json')
+  const exceptions = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'sister-brand-exceptions.json'), 'utf8'))
+  assert.ok(exceptions.brands.some((b) => b.label === 'Nova') && exceptions.campuses.brownsville)
+
+  // Events: four-hour grace after public, past events never file.
+  for (const id of ['site.events.sync.public', 'campus.events.strip.filter']) {
+    const row = checkRow(id)
+    assert.equal(row.gracePeriodHours, 4)
+    assert.ok(row.suppressWhen.includes('event-ended'))
+  }
+  for (const row of checkBundle.rows.filter((r) => r.observerCheck.startsWith('event-'))) assert.ok(row.suppressWhen?.includes('event-ended'), `${row.id} must never file a past event`)
+  assert.equal(checkRow('site.events.sync.public').dedupeScope, 'event')
+
+  // Packets: hidden 2026-27 button is the approved interim state.
+  const packets = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'campus-packets.json'), 'utf8'))
+  assert.equal(packets.interimPolicy.hidden2026_27Button, 'approved-interim')
+  const packet = checkRow('campus.resources.packet.present')
+  assert.equal(packet.decisionPending, 'cmtlz33vo000504ju2itpi7d9')
+  assert.ok(packet.exemptions.some((x) => x.startsWith('hidden-2026-27-packet-button')))
+
+  // Operations sheet: 168 h snapshot is loop health; the observer packet artifact is the sweep read path.
+  const snapshot = checkRow('site.loop.health.operations-snapshot')
+  assert.equal(snapshot.channel, 'loop-health')
+  assert.deepEqual([snapshot.comparator.type, snapshot.comparator.threshold, snapshot.comparator.unit], ['age-max', 168, 'hours'])
+  assert.equal(snapshot.decisionPending, 'cmtnxta3p000104l2mg9p9kvf')
+  const sources = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'sources.json'), 'utf8'))
+  assert.equal(sources.operationsSheet.observerPacketArtifact.command, 'gh run download -R superbuilders/aeo -n alpha-site-packet-<run>')
+  assert.equal(checkRow('site.map.integrity.operations-row').decisionPending, 'cmtyu32gf00000agm0vltkx4s')
+  assert.deepEqual(checkRow('site.map.integrity.operations-row').lifecycleStates, ['Open', 'Announced'])
+
+  // Images: every image failing in one run is loop health, and the ticket row is suppressed by it.
+  assert.equal(checkRow('site.loop.health.images-all-failed').channel, 'loop-health')
+  assert.ok(checkRow('site.layout.images.render').suppressWhen.includes('every-image-failed-in-run'))
+
+  // Timeouts: rendered 2xx needs two consecutive runs.
+  const route = checkRow('site.header.rendered.route-reachable')
+  assert.equal(route.expected.literal, 'rendered HTTP 2xx page')
+  assert.equal(route.requireConsecutiveRuns, 2)
+  assert.equal(route.clearAfterRuns, 2)
+  assert.equal(checkRow('campus.page.reachable.program-page').requireConsecutiveRuns, 2)
+
+  // Health lead: loop health never enters the website queue.
+  for (const row of checkBundle.rows.filter((r) => r.channel === 'loop-health')) {
+    assert.equal(row.ticketClass, 'observer-health')
+    assert.equal(row.ownerRole, 'observer-owner')
+    assert.ok(row.suppresses)
+  }
+  assert.equal(checkRow('site.loop.health.provider').decisionPending, 'cmtneqjw4000404jslko6zim1')
+})

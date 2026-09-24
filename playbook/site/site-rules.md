@@ -41,7 +41,7 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 
 ## Events (`site.events.*`)
 
-- A HubSpot marketing event marked public appears on `/upcoming-events/` and on its campus strip within two hours; registration links resolve; weekday and time match the source; canceled or private events accept no public registration; sister-brand events are excluded from Alpha pages. Checks: `public-event-sync`, `campus-event-filter`, `event-registration-url`, `event-registration-reachable`, `event-time-valid`, `event-weekday-sync`, `event-required-facts`, `event-page-reachable`, `event-source-readable`.
+- A HubSpot marketing event marked public appears on `/upcoming-events/` and on its campus strip within four hours of becoming public (past events never file); registration links resolve; weekday and time match the source; canceled or private events accept no public registration; sister-brand events are excluded from Alpha pages. Checks: `public-event-sync`, `campus-event-filter`, `event-registration-url`, `event-registration-reachable`, `event-time-valid`, `event-weekday-sync`, `event-required-facts`, `event-page-reachable`, `event-source-readable`.
 
 ## Maps and locations (`site.map.*`)
 
