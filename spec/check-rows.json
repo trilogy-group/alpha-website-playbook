@@ -1,0 +1,2981 @@
+{
+  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json.",
+  "version": "1.0",
+  "asOf": "2026-09-24",
+  "defaults": {
+    "pageFamily": "campus",
+    "lifecycleStates": [
+      "Open",
+      "Announced"
+    ],
+    "status": "enforced",
+    "channel": "ticket",
+    "dedupeScope": "page",
+    "clearAfterRuns": 2,
+    "gracePeriodHours": 0,
+    "requireConsecutiveRuns": 1,
+    "severity": "high",
+    "sourceHealthDependency": [],
+    "evidenceExtra": []
+  },
+  "pageFamilies": {
+    "$comment": "Row pageFamily values. Real families come from spec/page-family-requirements.json; the pseudo-families below group them for rows that run on more than one.",
+    "campus": [
+      "campus-open",
+      "campus-announced"
+    ],
+    "map-routes": [
+      "homepage",
+      "locations"
+    ],
+    "critical-routes": [
+      "homepage",
+      "program",
+      "locations",
+      "admissions-forms-applications",
+      "events"
+    ],
+    "map-source": "growth map API records (the HubSpot Programs mirror) and Operations sheet rows; not a page",
+    "site": "every public route"
+  },
+  "sourceHealth": {
+    "$comment": "Source ids a row may depend on. providerEntity is the entity name the observer's provider-health finding carries; registryKey is the registry/sources.json entry. A finding whose row depends on a source that is failed, degraded, disabled or stale is suppressed and counted, never filed.",
+    "hubspot-programs": {
+      "providerEntity": "hubspot-programs",
+      "registryKey": "hubspotPrograms"
+    },
+    "growth-map-api": {
+      "providerEntity": "map-api",
+      "registryKey": "growthMapApi"
+    },
+    "operations-sheet": {
+      "providerEntity": "campus-operations",
+      "registryKey": "operationsSheet",
+      "staleAfterHours": 168
+    },
+    "hubspot-events": {
+      "providerEntity": "hubspot-events",
+      "registryKey": "hubspotEvents"
+    },
+    "wordpress-rest": {
+      "providerEntity": "wordpress-pages",
+      "registryKey": "wordpress"
+    },
+    "wordpress-events": {
+      "providerEntity": "wordpress-events",
+      "registryKey": "hubspotEvents"
+    },
+    "campus-staff-roster": {
+      "providerEntity": "campus-staff",
+      "registryKey": "staffRoster"
+    },
+    "campus-packets-registry": {
+      "providerEntity": null,
+      "registryKey": "infoPackets"
+    },
+    "community-app": {
+      "providerEntity": null,
+      "registryKey": "communityApp"
+    },
+    "browser": {
+      "providerEntity": null,
+      "registryKey": null,
+      "note": "a degraded browser session is reported by the loop-health rows below (route inspection, embed inspection, map inspection, every image failed)"
+    }
+  },
+  "rows": [
+    {
+      "id": "campus.hero.identity.heading",
+      "observerCheck": "campus-heading-identity",
+      "title": "Page title or main headings name this campus",
+      "element": "hero.title",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "school_without_school_keyword",
+          "transform": "campus-name-appears-in-title-or-h1-h2"
+        }
+      },
+      "comparator": {
+        "type": "contains",
+        "threshold": 1,
+        "unit": "match"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-brand-leak",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.hero.identity"
+      }
+    },
+    {
+      "id": "site.identity.sister-brand",
+      "observerCheck": "campus-sister-brand-leak",
+      "title": "No sister-brand name in page-owned content",
+      "element": "page.text",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "registry/sister-brand-exceptions.json brands[].pattern",
+          "transform": "none-of-the-patterns-match-page-owned-text"
+        }
+      },
+      "comparator": {
+        "type": "not-contains",
+        "threshold": 0,
+        "unit": "matches"
+      },
+      "ticketClass": "observer-brand-leak",
+      "exemptionsRef": "registry/sister-brand-exceptions.json",
+      "exemptions": [
+        "allowed phrases per campus",
+        "properNouns",
+        "shared header, footer and navigation",
+        "HubSpot-fed event cards (venue names)"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.identity.sister-brand"
+      }
+    },
+    {
+      "id": "site.identity.other-campus.images",
+      "observerCheck": "campus-image-identity-conflict",
+      "title": "No other campus in image file names, alt text or nearby text",
+      "element": "gallery.images",
+      "expected": {
+        "literal": "no other known Alpha campus named in src, alt or nearby text of a visible image"
+      },
+      "comparator": {
+        "type": "not-contains",
+        "threshold": 0,
+        "unit": "matches"
+      },
+      "ticketClass": "observer-media-identity",
+      "suppressWhen": [
+        "hidden-on-all-viewports"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.identity.other-campus"
+      }
+    },
+    {
+      "id": "site.seasonal.window",
+      "observerCheck": "campus-expired-seasonal-cta",
+      "title": "No seasonal CTA or copy after its window closes",
+      "element": "page.text",
+      "expected": {
+        "literal": {
+          "rules": [
+            {
+              "id": "summer-2026",
+              "label": "Summer 2026 CTA",
+              "expiresAfter": "2026-08-15T00:00:00.000-05:00",
+              "patterns": [
+                "\\bsummer\\s+registration\\b",
+                "\\bsummer\\s+programs?\\b",
+                "\\bsummer\\s+camps?\\b"
+              ]
+            }
+          ]
+        }
+      },
+      "comparator": {
+        "type": "absent-after-date",
+        "threshold": 0,
+        "unit": "matches"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-launch-copy",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.seasonal.window"
+      }
+    },
+    {
+      "id": "campus.intro.media.current",
+      "observerCheck": "campus-page-stale-launch-media",
+      "title": "Open campus intro slot shows the approved open-state media, never launch-era media",
+      "lifecycleStates": [
+        "Open"
+      ],
+      "element": "intro.media",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "registry/campus-open-media.json campuses[slug].openMedia",
+          "transform": "approved-card-or-video; null means ask the owner"
+        }
+      },
+      "comparator": {
+        "type": "equals-approved-media",
+        "threshold": 0,
+        "unit": "stale-signals"
+      },
+      "ticketClass": "observer-media-identity",
+      "suppressWhen": [
+        "hidden-on-all-viewports"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.intro.media"
+      }
+    },
+    {
+      "id": "campus.facts.grades",
+      "observerCheck": "campus-page-grade-source-sync",
+      "title": "Grade range on the page matches HubSpot start and end grade",
+      "element": "hero.title",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "start_grade_level",
+            "end_grade_level"
+          ],
+          "transform": "grade-range (start-end, PreK and K spelled as the page spells them)",
+          "neverFields": [
+            "grade_levels",
+            "grades_served",
+            "grades",
+            "school_grades"
+          ],
+          "neverFieldsReason": "grade_levels is an orphaned property HubSpot no longer defines (sweep D2, 2026-09-24); grades_served disagrees with start/end grade on 14 campuses (2026-09-16); only start_grade_level and end_grade_level are live"
+        }
+      },
+      "comparator": {
+        "type": "intersects",
+        "threshold": 1,
+        "unit": "normalized-range"
+      },
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "decisionPending": "cmu4g13kc00000agmdogkxihp",
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/hero.title"
+      }
+    },
+    {
+      "id": "campus.facts.phone",
+      "observerCheck": "campus-page-phone-source-sync",
+      "title": "Phone on the page matches HubSpot contact_number",
+      "element": "contact.phone",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "contact_number",
+          "transform": "digits-only",
+          "neverFields": [
+            "phone",
+            "phone_number",
+            "school_phone",
+            "admissions_phone"
+          ],
+          "neverFieldsReason": "n8n writes contact_number; the observer's fallback list names properties the page never reads"
+        }
+      },
+      "comparator": {
+        "type": "intersects",
+        "threshold": 1,
+        "unit": "normalized-phone"
+      },
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/contact.phone"
+      }
+    },
+    {
+      "id": "campus.facts.tuition",
+      "observerCheck": "campus-page-tuition-source-sync",
+      "title": "Tuition on the page matches HubSpot tuition_usd_yearly",
+      "element": "contact.tuition",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "tuition_usd_yearly",
+          "transform": "usd-integer",
+          "neverFields": [
+            "tuition",
+            "annual_tuition",
+            "tuition_amount",
+            "annual_cost"
+          ],
+          "neverFieldsReason": "n8n writes tuition_usd_yearly"
+        }
+      },
+      "comparator": {
+        "type": "intersects",
+        "threshold": 1,
+        "unit": "usd"
+      },
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/contact.tuition"
+      }
+    },
+    {
+      "id": "campus.facts.present",
+      "observerCheck": "campus-page-source-fact-missing",
+      "title": "A fact HubSpot holds (grades, phone, tuition) is visible on the page",
+      "element": "page.facts",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "start_grade_level",
+            "end_grade_level",
+            "contact_number",
+            "tuition_usd_yearly"
+          ],
+          "transform": "visible-when-source-value-set (n8n hides phone and tuition when the property is empty, so a missing element with a set property is a delivery defect)"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "element"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.facts"
+      }
+    },
+    {
+      "id": "site.search.schema.present",
+      "observerCheck": "campus-school-schema",
+      "title": "School JSON-LD present on the campus page",
+      "element": "schema.school",
+      "expected": {
+        "literal": "School JSON-LD graph"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "schema"
+      },
+      "ticketClass": "observer-fact-sync",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.schema"
+      }
+    },
+    {
+      "id": "site.search.schema.name",
+      "observerCheck": "campus-schema-name",
+      "title": "School schema name matches the Program name",
+      "element": "schema.school",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "school_without_school_keyword",
+          "transform": "trim"
+        }
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.schema"
+      }
+    },
+    {
+      "id": "site.search.schema.url",
+      "observerCheck": "campus-schema-url",
+      "title": "School schema url is the canonical campus URL",
+      "element": "schema.school",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "registry/campus-pages.json campuses[slug].url",
+          "transform": "normalize-url"
+        }
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-fact-sync",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.schema"
+      }
+    },
+    {
+      "id": "site.search.schema.address",
+      "observerCheck": "campus-schema-address",
+      "title": "School schema address matches HubSpot",
+      "element": "schema.school",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "street_address",
+            "city",
+            "state",
+            "zip_code"
+          ],
+          "transform": "normalize-address"
+        }
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.schema"
+      }
+    },
+    {
+      "id": "site.search.schema.coordinates",
+      "observerCheck": "campus-schema-coordinates",
+      "title": "School schema coordinates within one mile of HubSpot",
+      "element": "schema.school",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "school_latitude",
+            "school_longitude"
+          ],
+          "transform": "geo-point"
+        }
+      },
+      "comparator": {
+        "type": "distance-max",
+        "threshold": 1,
+        "unit": "miles"
+      },
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.schema"
+      }
+    },
+    {
+      "id": "site.search.schema.required-facts",
+      "observerCheck": "campus-schema-required-facts",
+      "title": "School schema carries name, url, address and geo",
+      "element": "schema.school",
+      "expected": {
+        "literal": [
+          "name",
+          "url",
+          "address",
+          "geo"
+        ]
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 4,
+        "unit": "properties"
+      },
+      "ticketClass": "observer-fact-sync",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.schema"
+      }
+    },
+    {
+      "id": "campus.page.reachable.sitemap",
+      "observerCheck": "campus-sitemap-missing",
+      "title": "Canonical campus URL is in the sitemap",
+      "element": "page.sitemap-entry",
+      "expected": {
+        "derive": {
+          "source": "wordpress-rest",
+          "field": "sitemap_index.xml",
+          "transform": "contains-canonical-url"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "entry"
+      },
+      "ticketClass": "seo-redirect",
+      "sourceHealthDependency": [
+        "wordpress-rest"
+      ],
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.page.reachable"
+      }
+    },
+    {
+      "id": "site.map.integrity.directory-entry",
+      "observerCheck": "campus-navigation-missing",
+      "title": "Locations campus directory lists every public campus page",
+      "pageFamily": "locations",
+      "element": "locations.directory",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": "url",
+          "transform": "Open and Announced program URLs"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "entry"
+      },
+      "ticketClass": "sync-delivery",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.locations-embed",
+      "observerCheck": "campus-directory-map",
+      "title": "Locations page embeds the campus map",
+      "pageFamily": "locations",
+      "lifecycleStates": [],
+      "element": "map.embed",
+      "expected": {
+        "literal": "map.app.alpha.school/map?type=program"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "embed"
+      },
+      "severity": "critical",
+      "ticketClass": "observer-map-community",
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "campus.resources.packet.present",
+      "observerCheck": "campus-info-packet-present",
+      "title": "Info packet CTA visible when an approved current packet exists",
+      "element": "resources.packet",
+      "expected": {
+        "derive": {
+          "source": "campus-packets-registry",
+          "field": "registry/campus-packets.json campuses[slug].packets[approved=true, schoolYear=current]",
+          "transform": "visible-cta-when-an-approved-packet-exists; otherwise the button stays hidden and no finding is filed"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "visible-link"
+      },
+      "ticketClass": "observer-packet",
+      "sourceHealthDependency": [
+        "campus-packets-registry"
+      ],
+      "exemptionsRef": "registry/campus-packets.json interimPolicy",
+      "exemptions": [
+        "hidden-2026-27-packet-button: a responsive-hidden 2026/27 INFO PACKET button is the approved interim state while no 2026-27 packet is approved; it is not cta-hidden-everywhere and files nothing"
+      ],
+      "decisionPending": "cmtlz33vo000504ju2itpi7d9",
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.resources.packet"
+      }
+    },
+    {
+      "id": "campus.resources.packet.reachable",
+      "observerCheck": "campus-info-packet-link-reachable",
+      "title": "Visible info packet destination answers 2xx logged out",
+      "element": "resources.packet",
+      "expected": {
+        "literal": "HTTP 2xx packet destination, logged out"
+      },
+      "comparator": {
+        "type": "http-2xx",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "ticketClass": "observer-packet",
+      "suppressWhen": [
+        "hidden-on-all-viewports"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.resources.packet"
+      }
+    },
+    {
+      "id": "campus.resources.packet.destination-campus",
+      "observerCheck": "campus-info-packet-destination-campus",
+      "title": "Info packet destination is this campus's packet",
+      "element": "resources.packet",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "school_without_school_keyword",
+          "transform": "no other known campus named in the destination"
+        }
+      },
+      "comparator": {
+        "type": "campus-identity-match",
+        "threshold": 0,
+        "unit": "other-campus-matches"
+      },
+      "ticketClass": "observer-packet",
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.resources.packet"
+      },
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ]
+    },
+    {
+      "id": "campus.resources.calendar.present",
+      "observerCheck": "campus-calendar-present",
+      "title": "Calendar CTA present when a calendar is required",
+      "element": "resources.calendar",
+      "expected": {
+        "literal": "no lifecycle state requires a calendar CTA today; measured, not filed"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "visible-link"
+      },
+      "status": "advisory",
+      "severity": "medium",
+      "ticketClass": "link-cta",
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.resources.calendar"
+      }
+    },
+    {
+      "id": "campus.resources.calendar.reachable",
+      "observerCheck": "campus-calendar-link-reachable",
+      "title": "Visible calendar destination answers 2xx logged out",
+      "element": "resources.calendar",
+      "expected": {
+        "literal": "HTTP 2xx calendar destination"
+      },
+      "comparator": {
+        "type": "http-2xx",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "severity": "medium",
+      "ticketClass": "link-cta",
+      "suppressWhen": [
+        "hidden-on-all-viewports"
+      ],
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.resources.calendar"
+      }
+    },
+    {
+      "id": "campus.resources.calendar.destination-campus",
+      "observerCheck": "campus-calendar-destination-campus",
+      "title": "Calendar destination is this campus's calendar",
+      "element": "resources.calendar",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "school_without_school_keyword",
+          "transform": "no other known campus named in the destination"
+        }
+      },
+      "comparator": {
+        "type": "campus-identity-match",
+        "threshold": 0,
+        "unit": "other-campus-matches"
+      },
+      "ticketClass": "link-cta",
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.resources.calendar"
+      },
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ]
+    },
+    {
+      "id": "campus.resources.booking.present",
+      "observerCheck": "campus-book-call-present",
+      "title": "Book a Call CTA present on Open campus pages",
+      "lifecycleStates": [
+        "Open"
+      ],
+      "element": "hero.ctas",
+      "expected": {
+        "literal": "visible Book a Call or Book a Tour link"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "visible-link"
+      },
+      "ticketClass": "link-cta",
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.hero.ctas"
+      }
+    },
+    {
+      "id": "campus.resources.booking.reachable",
+      "observerCheck": "campus-book-call-link-reachable",
+      "title": "Booking destination answers 2xx logged out",
+      "element": "hero.ctas",
+      "expected": {
+        "literal": "HTTP 2xx booking destination"
+      },
+      "comparator": {
+        "type": "http-2xx",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "ticketClass": "link-cta",
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.resources.booking"
+      }
+    },
+    {
+      "id": "campus.resources.booking.destination-campus",
+      "observerCheck": "campus-book-call-destination-campus",
+      "title": "Booking destination is campus-specific",
+      "element": "hero.ctas",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "call_scheduling_link",
+          "transform": "no other known campus named in the destination"
+        }
+      },
+      "comparator": {
+        "type": "campus-identity-match",
+        "threshold": 0,
+        "unit": "other-campus-matches"
+      },
+      "ticketClass": "link-cta",
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.booking-link"
+      },
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ]
+    },
+    {
+      "id": "campus.resources.apply.source",
+      "observerCheck": "campus-application-source-missing",
+      "title": "HubSpot admission_link set and an Apply button carries it",
+      "element": "resources.apply",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "admission_link",
+          "transform": "set-and-rendered"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "link"
+      },
+      "ticketClass": "observer-link-cta",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.application-link"
+      }
+    },
+    {
+      "id": "campus.resources.apply.path",
+      "observerCheck": "campus-application-path",
+      "title": "Apply CTA resolves to the approved application route",
+      "element": "resources.apply",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "admission_link",
+          "transform": "normalize-url"
+        }
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-link-cta",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.application-link"
+      }
+    },
+    {
+      "id": "campus.resources.apply.source-sync",
+      "observerCheck": "campus-page-application-source-sync",
+      "title": "Apply button href equals HubSpot admission_link",
+      "element": "resources.apply",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "admission_link",
+          "transform": "normalize-url"
+        }
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-link-cta",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/resources.apply"
+      }
+    },
+    {
+      "id": "campus.resources.apply.placeholder",
+      "observerCheck": "campus-application-placeholder",
+      "title": "Apply button is not a placeholder",
+      "element": "resources.apply",
+      "expected": {
+        "literal": "campus-specific application URL from HubSpot or application/?submission_campus=<campus>"
+      },
+      "comparator": {
+        "type": "not-placeholder",
+        "threshold": 0,
+        "unit": "placeholders"
+      },
+      "ticketClass": "observer-link-cta",
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/resources.apply"
+      }
+    },
+    {
+      "id": "campus.resources.apply.destination-campus",
+      "observerCheck": "campus-application-destination",
+      "title": "Apply destination is this campus",
+      "element": "resources.apply",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "school_without_school_keyword",
+          "transform": "no other known campus named in the destination"
+        }
+      },
+      "comparator": {
+        "type": "campus-identity-match",
+        "threshold": 0,
+        "unit": "other-campus-matches"
+      },
+      "ticketClass": "observer-link-cta",
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.application-link"
+      },
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ]
+    },
+    {
+      "id": "campus.team.roster.present",
+      "observerCheck": "campus-staff-missing",
+      "title": "Every roster person has a team card",
+      "element": "team.cards",
+      "expected": {
+        "derive": {
+          "source": "campus-staff-roster",
+          "field": "registry/staff-source-decks.json decks[campus] slides",
+          "transform": "roster-names"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "card"
+      },
+      "status": "advisory",
+      "ticketClass": "staff-add",
+      "sourceHealthDependency": [
+        "campus-staff-roster"
+      ],
+      "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "note": "Advisory until the roster source is configured for the observer (health lead cmtneqjw4): the Meet the Guides decks are a reviewable source for agent/roster-diff.mjs; the requester ticket still decides membership.",
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.team"
+      }
+    },
+    {
+      "id": "campus.team.roster.title-present",
+      "observerCheck": "campus-staff-title-missing",
+      "title": "Team card carries the public title",
+      "element": "team.cards",
+      "expected": {
+        "derive": {
+          "source": "campus-staff-roster",
+          "field": "title",
+          "transform": "trim"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "title"
+      },
+      "status": "advisory",
+      "severity": "medium",
+      "ticketClass": "staff-update",
+      "sourceHealthDependency": [
+        "campus-staff-roster"
+      ],
+      "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.team"
+      }
+    },
+    {
+      "id": "campus.team.roster.title-sync",
+      "observerCheck": "campus-staff-title-sync",
+      "title": "Team card title matches the roster",
+      "element": "team.cards",
+      "expected": {
+        "derive": {
+          "source": "campus-staff-roster",
+          "field": "title",
+          "transform": "trim"
+        }
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "status": "advisory",
+      "ticketClass": "staff-update",
+      "sourceHealthDependency": [
+        "campus-staff-roster"
+      ],
+      "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.team"
+      }
+    },
+    {
+      "id": "campus.events.strip.filter",
+      "observerCheck": "campus-event-filter",
+      "title": "Campus event strip shows only this campus's events plus approved national events",
+      "element": "events.strip",
+      "expected": {
+        "derive": {
+          "source": "hubspot-events",
+          "field": "form_program_interest",
+          "transform": "equals the campus form_program_interest_label"
+        }
+      },
+      "comparator": {
+        "type": "only-this-campus",
+        "threshold": 0,
+        "unit": "other-campus-events"
+      },
+      "ticketClass": "observer-event",
+      "gracePeriodHours": 4,
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "sourceHealthDependency": [
+        "hubspot-events",
+        "wordpress-events"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.events"
+      }
+    },
+    {
+      "id": "site.events.sync.public",
+      "observerCheck": "public-event-sync",
+      "title": "A public HubSpot event appears on /upcoming-events/ and its campus strip within four hours",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "events.listing",
+      "expected": {
+        "derive": {
+          "source": "hubspot-events",
+          "field": "simpleevents_public_event",
+          "transform": "visible on /upcoming-events/ or the related campus strip once public for gracePeriodHours"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "listing"
+      },
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "gracePeriodHours": 4,
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "sourceHealthDependency": [
+        "hubspot-events",
+        "wordpress-events"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.source-facts",
+      "observerCheck": "hubspot-event-required-facts",
+      "title": "A public HubSpot event has valid start and end times",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.record",
+      "expected": {
+        "derive": {
+          "source": "hubspot-events",
+          "field": [
+            "startTime",
+            "endTime"
+          ],
+          "transform": "valid-iso-dates"
+        }
+      },
+      "comparator": {
+        "type": "valid-dates",
+        "threshold": 2,
+        "unit": "dates"
+      },
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "gracePeriodHours": 4,
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "sourceHealthDependency": [
+        "hubspot-events"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.page-reachable",
+      "observerCheck": "event-page-reachable",
+      "title": "Event permalink resolves 2xx after redirects",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.permalink",
+      "expected": {
+        "literal": "HTTP 2xx after following redirects (alpha.school/events/<slug>/ 301s to events.alpha.school/register/<uuid>/ by design; a 301 to the same event's new slug passes)"
+      },
+      "comparator": {
+        "type": "http-2xx-after-redirects",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "severity": "critical",
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "requireConsecutiveRuns": 2,
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "sourceHealthDependency": [
+        "wordpress-events"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.registration-url",
+      "observerCheck": "event-registration-url",
+      "title": "Event carries a registration URL",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.registration",
+      "expected": {
+        "literal": "registration URL present on the event"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "url"
+      },
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "sourceHealthDependency": [
+        "wordpress-events"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.registration-reachable",
+      "observerCheck": "event-registration-reachable",
+      "title": "Registration destination answers 2xx",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.registration",
+      "expected": {
+        "literal": "HTTP 2xx registration destination"
+      },
+      "comparator": {
+        "type": "http-2xx",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "severity": "critical",
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "requireConsecutiveRuns": 2,
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.time-valid",
+      "observerCheck": "event-time-valid",
+      "title": "Event start is before its end",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.time",
+      "expected": {
+        "literal": "start before end"
+      },
+      "comparator": {
+        "type": "start-before-end",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.weekday",
+      "observerCheck": "event-weekday-sync",
+      "title": "Weekday named in the event matches its start time",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.time",
+      "expected": {
+        "derive": {
+          "source": "hubspot-events",
+          "field": "startTime",
+          "transform": "weekday-in-event-timezone"
+        }
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      },
+      "sourceHealthDependency": [
+        "hubspot-events"
+      ]
+    },
+    {
+      "id": "site.events.sync.required-facts",
+      "observerCheck": "event-required-facts",
+      "title": "Event post carries timezone and a physical or virtual location",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.facts",
+      "expected": {
+        "literal": [
+          "timezone",
+          "location"
+        ]
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 2,
+        "unit": "facts"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.events.sync.source-readable",
+      "observerCheck": "event-source-readable",
+      "title": "Event post exposes machine-readable event facts",
+      "pageFamily": "events",
+      "lifecycleStates": [],
+      "element": "event.facts",
+      "expected": {
+        "literal": "machine-readable event facts (plugin structured data)"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "record"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-event",
+      "dedupeScope": "event",
+      "suppressWhen": [
+        "event-ended"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.events.sync"
+      }
+    },
+    {
+      "id": "site.map.integrity.rendered",
+      "observerCheck": "campus-map-rendered",
+      "title": "Campus map iframe renders with pins on the homepage and Locations",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "element": "map.embed",
+      "expected": {
+        "literal": "rendered campus map iframe with pins"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "pin"
+      },
+      "severity": "critical",
+      "ticketClass": "observer-map-community",
+      "viewports": [
+        "desktop"
+      ],
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.pin-count",
+      "observerCheck": "campus-map-pin-count",
+      "title": "Rendered pin count equals geocoded programs",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "element": "map.pins",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": [
+            "latitude",
+            "longitude"
+          ],
+          "transform": "count of programs with valid coordinates"
+        }
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-map-community",
+      "viewports": [
+        "desktop"
+      ],
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.pin-identity",
+      "observerCheck": "campus-map-pin-identity",
+      "title": "Each program renders exactly one popup under its name",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "element": "map.pins",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": "name",
+          "transform": "campus-key"
+        }
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "popup"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "viewports": [
+        "desktop"
+      ],
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.pin-destination",
+      "observerCheck": "campus-map-pin-destination",
+      "title": "Learn More on a public program's pin opens its campus page",
+      "pageFamily": "map-routes",
+      "element": "map.pins",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": "url",
+          "transform": "normalize-url"
+        }
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "viewports": [
+        "desktop"
+      ],
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.community.routing.map-destination",
+      "observerCheck": "campus-map-community-destination",
+      "title": "Community link on a pin is the campus's canonical Community URL",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [
+        "Open",
+        "Announced",
+        "Pre-Announcement"
+      ],
+      "element": "map.pins",
+      "expected": {
+        "derive": {
+          "source": "community-app",
+          "field": "registry/campus-identities.json campuses[slug].canonicalCommunityUrl (join by hubspotProgramId); growth-map communityUrl until the crosswalk covers the campus",
+          "transform": "normalize-url"
+        }
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "viewports": [
+        "desktop"
+      ],
+      "decisionPending": "cmu4g45fg00020agm20nd7kc8",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "community-app",
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/community-routing.json",
+        "key": "urlContract"
+      }
+    },
+    {
+      "id": "site.map.integrity.program-id-unique",
+      "observerCheck": "duplicate-program-id",
+      "title": "One growth map record per HubSpot program id",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "literal": "unique program id"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "record"
+      },
+      "ticketClass": "hubspot-data",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.program-url-unique",
+      "observerCheck": "duplicate-program-url",
+      "title": "One program per public route",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "literal": "one program per route"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "program"
+      },
+      "severity": "medium",
+      "ticketClass": "hubspot-data",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.lifecycle-valid",
+      "observerCheck": "program-lifecycle-valid",
+      "title": "Program type is one of the lifecycle states",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "spec/campus-lifecycle.json states",
+          "transform": "keys"
+        }
+      },
+      "comparator": {
+        "type": "in-set",
+        "threshold": 1,
+        "unit": "match"
+      },
+      "ticketClass": "hubspot-data",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "states"
+      }
+    },
+    {
+      "id": "site.map.integrity.program-facts",
+      "observerCheck": "program-map-facts",
+      "title": "Every map program carries a name, an address label and valid coordinates",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "school_without_school_keyword",
+            "school_address",
+            "school_latitude",
+            "school_longitude"
+          ],
+          "transform": "present-and-valid (latitude within 90, longitude within 180)"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 4,
+        "unit": "facts"
+      },
+      "ticketClass": "hubspot-data",
+      "dedupeScope": "program",
+      "note": "Severity high for Open and Announced, medium for Pre-Announcement (the observer grades by programType).",
+      "sourceHealthDependency": [
+        "hubspot-programs",
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.public-url",
+      "observerCheck": "public-program-url",
+      "title": "Open and Announced programs carry an alpha.school URL",
+      "pageFamily": "map-source",
+      "element": "map.source",
+      "expected": {
+        "literal": "alpha.school URL"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "url"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.public-host",
+      "observerCheck": "public-program-host",
+      "title": "Program URL host is a public site host",
+      "pageFamily": "map-source",
+      "element": "map.source",
+      "expected": {
+        "literal": [
+          "alpha.school",
+          "www.alpha.school",
+          "alphahigh.school",
+          "www.alphahigh.school"
+        ]
+      },
+      "comparator": {
+        "type": "host-in-set",
+        "threshold": 1,
+        "unit": "match"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "campus.page.reachable.program-page",
+      "observerCheck": "program-page-reachable",
+      "title": "Public campus destination answers 2xx on two consecutive runs",
+      "element": "page.url",
+      "expected": {
+        "literal": "HTTP 2xx after redirects"
+      },
+      "comparator": {
+        "type": "http-2xx-after-redirects",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "severity": "critical",
+      "ticketClass": "page-status",
+      "requireConsecutiveRuns": 2,
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.page.reachable"
+      }
+    },
+    {
+      "id": "campus.page.reachable.no-redirect",
+      "observerCheck": "program-route-redirect",
+      "title": "Campus URL does not redirect to another route",
+      "element": "page.url",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": "url",
+          "transform": "normalize-url"
+        }
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "seo-redirect",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/observer-check-map.json",
+        "key": "requirements/campus.page.reachable"
+      }
+    },
+    {
+      "id": "campus.page.reachable.published",
+      "observerCheck": "program-page-sync",
+      "title": "A public program's URL is a published WordPress page",
+      "element": "page.existence",
+      "expected": {
+        "literal": "published WordPress page"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "page"
+      },
+      "ticketClass": "page-status",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "wordpress-rest"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/page.existence"
+      }
+    },
+    {
+      "id": "site.map.integrity.wordpress-page-has-program",
+      "observerCheck": "wordpress-campus-missing-from-map",
+      "title": "Every published campus page matches an Open or Announced program",
+      "element": "page.existence",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": "url",
+          "transform": "Open or Announced record with this URL"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "record"
+      },
+      "ticketClass": "observer-map-community",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "wordpress-rest"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/page.existence"
+      }
+    },
+    {
+      "id": "site.map.integrity.hubspot-map-sync",
+      "observerCheck": "hubspot-map-sync",
+      "title": "Growth map record agrees with HubSpot",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "school_without_school_keyword",
+            "type",
+            "website",
+            "launch_date",
+            "school_address",
+            "school_latitude",
+            "school_longitude"
+          ],
+          "transform": "normalize-per-field"
+        }
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "hubspot-programs",
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.lifecycle"
+      }
+    },
+    {
+      "id": "site.community.routing.pre-announcement-url",
+      "observerCheck": "preannouncement-community-url",
+      "title": "Pre-Announcement pin routes to the campus's canonical Community URL",
+      "pageFamily": "campus-pre-announcement",
+      "lifecycleStates": [
+        "Pre-Announcement"
+      ],
+      "element": "map.pins",
+      "expected": {
+        "derive": {
+          "source": "community-app",
+          "field": "registry/campus-identities.json campuses[slug].canonicalCommunityUrl (join by hubspotProgramId)",
+          "transform": "normalize-url; URL form per spec/community-routing.json urlContract (decision flag urlForm)"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "url"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "decisionPending": "cmu4g45fg00020agm20nd7kc8",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "community-app"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Pre-Announcement/campus.map-community"
+      }
+    },
+    {
+      "id": "site.community.routing.host",
+      "observerCheck": "preannouncement-community-host",
+      "title": "Community destination host is the canonical Community host or its redirecting apex",
+      "pageFamily": "campus-pre-announcement",
+      "lifecycleStates": [
+        "Pre-Announcement"
+      ],
+      "element": "map.pins",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "spec/community-routing.json communityHosts",
+          "transform": "canonical host plus redirect hosts"
+        }
+      },
+      "comparator": {
+        "type": "host-in-set",
+        "threshold": 1,
+        "unit": "match"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "decisionPending": "cmu4g45fg00020agm20nd7kc8",
+      "sourceHealthDependency": [
+        "growth-map-api"
+      ],
+      "requirementRef": {
+        "file": "spec/community-routing.json",
+        "key": "communityHosts"
+      }
+    },
+    {
+      "id": "site.map.integrity.operations-row",
+      "observerCheck": "map-campus-missing-from-operations",
+      "title": "Open and Announced map programs have an Operations sheet row",
+      "pageFamily": "map-source",
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "operations-sheet",
+          "field": "name",
+          "transform": "campus-key with aliases"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "row"
+      },
+      "ticketClass": "sheet-data",
+      "dedupeScope": "program",
+      "decisionPending": "cmtyu32gf00000agm0vltkx4s",
+      "note": "Recommended scope Open and Announced only: twelve Pre-Announcement programs have no sheet row (Columbus lead cmtyu32gf).",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "operationsSheetStatuses"
+      }
+    },
+    {
+      "id": "site.map.integrity.operations-on-map",
+      "observerCheck": "operations-campus-missing-from-map",
+      "title": "Every Operations sheet campus has one map record",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "growth-map-api",
+          "field": "name",
+          "transform": "campus-key with aliases"
+        }
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "record"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "operationsSheetStatuses"
+      }
+    },
+    {
+      "id": "site.map.integrity.operations-unique",
+      "observerCheck": "operations-campus-duplicate",
+      "title": "One Operations sheet row per campus",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "literal": "one row per campus"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "row"
+      },
+      "severity": "medium",
+      "ticketClass": "sheet-data",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "operationsSheetStatuses"
+      }
+    },
+    {
+      "id": "site.map.integrity.operations-address",
+      "observerCheck": "operations-campus-missing-facts",
+      "title": "Operations sheet row carries at least a city-level address",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "literal": "city or street-level address"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "address"
+      },
+      "status": "advisory",
+      "severity": "medium",
+      "ticketClass": "sheet-data",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "operationsSheetStatuses"
+      }
+    },
+    {
+      "id": "site.map.integrity.operations-one-map-record",
+      "observerCheck": "operations-map-duplicate",
+      "title": "An Operations campus resolves to exactly one map record",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "literal": "exactly one map record"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "record"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "operationsSheetStatuses"
+      }
+    },
+    {
+      "id": "site.map.integrity.lifecycle-agreement",
+      "observerCheck": "operations-map-lifecycle-conflict",
+      "title": "Operations status is compatible with the HubSpot program type",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "spec/campus-lifecycle.json operationsSheetStatuses.compatibilityWithMapProgramType",
+          "transform": "compatible set for the sheet status; HubSpot wins on conflict"
+        }
+      },
+      "comparator": {
+        "type": "in-set",
+        "threshold": 1,
+        "unit": "match"
+      },
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/campus-lifecycle.json",
+        "key": "operationsSheetStatuses"
+      }
+    },
+    {
+      "id": "site.map.integrity.address-agreement",
+      "observerCheck": "operations-map-address-conflict",
+      "title": "Operations address and map address agree",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "element": "map.source",
+      "expected": {
+        "derive": {
+          "source": "operations-sheet",
+          "field": "address",
+          "transform": "normalize-address; city-only before opening is intentional"
+        }
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-map-community",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "growth-map-api",
+        "operations-sheet"
+      ],
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.facts"
+      }
+    },
+    {
+      "id": "site.layout.header-overlap.desktop",
+      "observerCheck": "campus-layout-header-overlap",
+      "title": "Header does not overlap the H1 or hero copy on desktop",
+      "element": "header",
+      "viewports": [
+        "desktop"
+      ],
+      "expected": {
+        "literal": "header separated from headings on desktop 1440x1000"
+      },
+      "comparator": {
+        "type": "box-overlap-max",
+        "threshold": 48,
+        "unit": "px",
+        "orThreshold": 0.25,
+        "orUnit": "ratio-of-heading-box",
+        "detectAbove": 0.08,
+        "detectUnit": "ratio-of-heading-box",
+        "note": "The observer records any overlap above 8% of the H1 box as telemetry and files only at 48 px or 25%."
+      },
+      "ticketClass": "observer-layout",
+      "dedupeScope": "template",
+      "evidenceExtra": [
+        "observer-screenshot-desktop"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.viewport"
+      }
+    },
+    {
+      "id": "site.layout.header-overlap.mobile",
+      "observerCheck": "campus-layout-header-overlap",
+      "title": "Header does not overlap the H1 or hero copy on mobile",
+      "element": "header",
+      "viewports": [
+        "mobile"
+      ],
+      "expected": {
+        "literal": "header separated from headings on mobile 390x844"
+      },
+      "comparator": {
+        "type": "box-overlap-max",
+        "threshold": 48,
+        "unit": "px",
+        "orThreshold": 0.25,
+        "orUnit": "ratio-of-heading-box",
+        "detectAbove": 0.08,
+        "detectUnit": "ratio-of-heading-box",
+        "note": "The observer records any overlap above 8% of the H1 box as telemetry and files only at 48 px or 25%. Sweep A1 and A2 (2026-09-24) measured 12.5 to 16.4 px box overlap with visible clearance on every campus page: below the filing threshold, telemetry only."
+      },
+      "ticketClass": "observer-layout",
+      "dedupeScope": "template",
+      "decisionPending": "cmtnl00rs000404l1ihl5ucij",
+      "evidenceExtra": [
+        "observer-screenshot-mobile"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.viewport"
+      }
+    },
+    {
+      "id": "site.layout.horizontal-overflow",
+      "observerCheck": "campus-layout-horizontal-overflow",
+      "title": "No horizontal overflow beyond 160 px",
+      "element": "page.layout",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "no horizontal overflow"
+      },
+      "comparator": {
+        "type": "max",
+        "threshold": 160,
+        "unit": "px",
+        "detectAbove": 24,
+        "detectUnit": "px"
+      },
+      "ticketClass": "observer-layout",
+      "evidenceExtra": [
+        "observer-screenshot-desktop-mobile"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.viewport"
+      }
+    },
+    {
+      "id": "site.layout.offscreen-content",
+      "observerCheck": "campus-layout-offscreen-content",
+      "title": "Visible text and CTAs stay inside the viewport",
+      "element": "page.layout",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "all visible text and CTAs inside the viewport"
+      },
+      "comparator": {
+        "type": "count-max",
+        "threshold": 0,
+        "unit": "elements",
+        "gate": "files only when site.layout.horizontal-overflow is above 160 px on the same page and viewport; otherwise telemetry"
+      },
+      "ticketClass": "observer-layout",
+      "evidenceExtra": [
+        "observer-screenshot-desktop-mobile"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.viewport"
+      }
+    },
+    {
+      "id": "site.layout.clipped-text",
+      "observerCheck": "campus-layout-clipped-text",
+      "title": "Visible text is not truncated by container overflow",
+      "element": "page.layout",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "visible text not clipped"
+      },
+      "comparator": {
+        "type": "count-max",
+        "threshold": 0,
+        "unit": "elements"
+      },
+      "status": "advisory",
+      "severity": "low",
+      "ticketClass": "observer-layout",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.viewport"
+      }
+    },
+    {
+      "id": "site.layout.images.render",
+      "observerCheck": "images-render",
+      "title": "Visible images render",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "page.images",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "every visible image renders with a natural width"
+      },
+      "comparator": {
+        "type": "count-max",
+        "threshold": 0,
+        "unit": "broken-images"
+      },
+      "ticketClass": "observer-layout",
+      "suppressWhen": [
+        "every-image-failed-in-run"
+      ],
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "evidenceExtra": [
+        "observer-screenshot-desktop-mobile"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.images"
+      }
+    },
+    {
+      "id": "site.layout.images.crop",
+      "observerCheck": "campus-image-crop-risk",
+      "title": "Team portraits fit their cards without cutting faces",
+      "element": "team.cards",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "at least 95% of the image height visible inside the object-fit cover box and no more than 30% cut from either side (tests/photo-framing.mjs)"
+      },
+      "comparator": {
+        "type": "coverage-min",
+        "threshold": 0.95,
+        "unit": "ratio",
+        "maxSideCut": 0.3
+      },
+      "severity": "medium",
+      "ticketClass": "observer-media-identity",
+      "evidenceExtra": [
+        "page-check-team-photo-framing",
+        "section-shot-team-card"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.images"
+      }
+    },
+    {
+      "id": "site.layout.console",
+      "observerCheck": "browser-errors",
+      "title": "Under 20 console errors on critical routes",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "page.console",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "fewer than 20 page or console errors"
+      },
+      "comparator": {
+        "type": "count-max",
+        "threshold": 20,
+        "unit": "errors"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.layout.console"
+      }
+    },
+    {
+      "id": "site.map.integrity.scroll-trap",
+      "observerCheck": "embedded-map-scroll-trap",
+      "title": "Mouse wheel scrolls the page away from the embedded map",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "element": "map.embed",
+      "viewports": [
+        "desktop"
+      ],
+      "expected": {
+        "literal": "mouse wheel scrolls the page away from the map"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "scroll-escape"
+      },
+      "ticketClass": "observer-layout",
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.map.integrity.embed-rendered",
+      "observerCheck": "required-embed-rendered",
+      "title": "Required map embed renders on the homepage and Locations",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "element": "map.embed",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "map.app.alpha.school iframe rendered"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "embed"
+      },
+      "severity": "critical",
+      "ticketClass": "observer-map-community",
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.map.integrity"
+      }
+    },
+    {
+      "id": "site.header.rendered.route-reachable",
+      "observerCheck": "route-reachable",
+      "title": "Critical route renders 2xx on two consecutive runs",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "page.url",
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "expected": {
+        "literal": "rendered HTTP 2xx page"
+      },
+      "comparator": {
+        "type": "http-2xx-rendered",
+        "threshold": 2,
+        "unit": "status-class"
+      },
+      "severity": "critical",
+      "ticketClass": "page-status",
+      "requireConsecutiveRuns": 2,
+      "note": "Render timeouts (page.goto 20 s) file only after two consecutive runs; the 2026-09-14 run filed five pages that answer in 0.3 to 3.6 s.",
+      "sourceHealthDependency": [
+        "browser"
+      ],
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.header.rendered"
+      }
+    },
+    {
+      "id": "site.search.indexable.robots",
+      "observerCheck": "robots-reachable",
+      "title": "robots.txt answers 200",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "robots.txt",
+      "expected": {
+        "literal": 200
+      },
+      "comparator": {
+        "type": "http-status",
+        "threshold": 200,
+        "unit": "status"
+      },
+      "severity": "critical",
+      "ticketClass": "seo-redirect",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.indexable.sitemap",
+      "observerCheck": "sitemap-populated",
+      "title": "Sitemap index lists one or more URLs",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "sitemap",
+      "expected": {
+        "literal": "one or more URLs"
+      },
+      "comparator": {
+        "type": "count-min",
+        "threshold": 1,
+        "unit": "urls"
+      },
+      "severity": "critical",
+      "ticketClass": "seo-redirect",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.ai-files",
+      "observerCheck": "llm-file-reachable",
+      "title": "AI discovery files answer 200 and are not empty",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "llms.txt",
+      "expected": {
+        "literal": "HTTP 200 non-empty file for each configured AI discovery file"
+      },
+      "comparator": {
+        "type": "http-status",
+        "threshold": 200,
+        "unit": "status",
+        "minBytes": 1
+      },
+      "ticketClass": "seo-redirect",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.ai-files"
+      }
+    },
+    {
+      "id": "site.search.indexable.duplicate-title",
+      "observerCheck": "duplicate-title",
+      "title": "No two critical routes share a page title",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "head.title",
+      "expected": {
+        "literal": "unique page title"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "route-per-title"
+      },
+      "severity": "medium",
+      "ticketClass": "seo-redirect",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.indexable.duplicate-canonical",
+      "observerCheck": "duplicate-canonical",
+      "title": "No two critical routes share a canonical",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "head.canonical",
+      "expected": {
+        "literal": "one route per canonical"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 1,
+        "unit": "route-per-canonical"
+      },
+      "ticketClass": "seo-redirect",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.indexable.canonical",
+      "observerCheck": "canonical-present",
+      "title": "Critical route carries a canonical tag pointing at itself",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "head.canonical",
+      "expected": {
+        "literal": "canonical equals the route URL"
+      },
+      "comparator": {
+        "type": "equals-url",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "seo-redirect",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.indexable.json-ld",
+      "observerCheck": "json-ld-valid",
+      "title": "JSON-LD on critical routes parses",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "head.json-ld",
+      "expected": {
+        "literal": "valid JSON"
+      },
+      "comparator": {
+        "type": "valid-json",
+        "threshold": 0,
+        "unit": "parse-errors"
+      },
+      "ticketClass": "seo-redirect",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.indexable.critical-route",
+      "observerCheck": "critical-route-indexable",
+      "title": "Critical route is not noindex",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "head.robots",
+      "expected": {
+        "literal": "index"
+      },
+      "comparator": {
+        "type": "not-contains",
+        "threshold": 0,
+        "unit": "noindex"
+      },
+      "severity": "critical",
+      "ticketClass": "seo-redirect",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.search.indexable.googlebot-parity",
+      "observerCheck": "googlebot-parity",
+      "title": "Googlebot receives the same status as a browser",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "page.url",
+      "expected": {
+        "literal": "same HTTP status for the Googlebot user agent"
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "seo-redirect",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.search.indexable"
+      }
+    },
+    {
+      "id": "site.brand.visual.font",
+      "observerCheck": "font-family",
+      "title": "Text renders in Montserrat",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "element": "page.text",
+      "viewports": [
+        "desktop"
+      ],
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "spec/brand-visual.json typography.families plus check.font.allowlist",
+          "transform": "computed font-family starts with Montserrat unless allowlisted"
+        }
+      },
+      "comparator": {
+        "type": "starts-with",
+        "threshold": 0,
+        "unit": "off-brand-elements"
+      },
+      "status": "advisory",
+      "severity": "low",
+      "ticketClass": "observer-brand-visual",
+      "note": "Telemetry only; the playbook page-check brand-visual is the measuring check (spec/brand-visual.json check.enforcement).",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.brand.visual"
+      }
+    },
+    {
+      "id": "site.claims.evidence.claim",
+      "observerCheck": "claim-evidence",
+      "title": "Statistic claims exist in the claim registry with evidence",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "page.text",
+      "expected": {
+        "literal": "approved claim and source evidence (claim registry to be created; spec/brand-visual.json approvedClaims until then)"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "registry-entry"
+      },
+      "status": "advisory",
+      "severity": "low",
+      "ticketClass": "copy",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.claims.evidence"
+      }
+    },
+    {
+      "id": "site.claims.evidence.named-entity",
+      "observerCheck": "named-entity-evidence",
+      "title": "Named-entity claims exist in the claim registry with evidence",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "page.text",
+      "expected": {
+        "literal": "approved named entity and source"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "registry-entry"
+      },
+      "status": "advisory",
+      "severity": "low",
+      "ticketClass": "copy",
+      "dedupeScope": "site",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.claims.evidence"
+      }
+    },
+    {
+      "id": "site.community.routing.cta",
+      "observerCheck": "community-destination",
+      "title": "Join the Community CTAs route to the Community host",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "element": "hero.ctas",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "spec/community-routing.json communityHosts",
+          "transform": "canonical host plus redirect hosts"
+        }
+      },
+      "comparator": {
+        "type": "host-in-set",
+        "threshold": 1,
+        "unit": "match"
+      },
+      "status": "advisory",
+      "severity": "low",
+      "ticketClass": "link-cta",
+      "requirementRef": {
+        "file": "spec/community-routing.json",
+        "key": "communityHosts"
+      }
+    },
+    {
+      "id": "site.loop.health.provider",
+      "observerCheck": "provider-health",
+      "title": "A source collection failed, degraded or is not configured",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.provider",
+      "expected": {
+        "literal": "healthy"
+      },
+      "comparator": {
+        "type": "equals",
+        "threshold": 0,
+        "unit": "difference"
+      },
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "every row whose sourceHealthDependency names the failed provider's source id (sourceHealth[].providerEntity)",
+      "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.operations-snapshot",
+      "observerCheck": "campus-operations-snapshot-fresh",
+      "title": "Operations sheet snapshot is older than 168 hours",
+      "pageFamily": "map-source",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.snapshot",
+      "expected": {
+        "derive": {
+          "source": "operations-sheet",
+          "field": "extractedAt",
+          "transform": "age in hours; the observer packet artifact (registry/sources.json operationsSheet.observerPacketArtifact) is the sweep read path"
+        }
+      },
+      "comparator": {
+        "type": "age-max",
+        "threshold": 168,
+        "unit": "hours"
+      },
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "every row whose sourceHealthDependency includes operations-sheet",
+      "decisionPending": "cmtnxta3p000104l2mg9p9kvf",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.map-inspection-timeout",
+      "observerCheck": "campus-map-inspection-timeout",
+      "title": "Map inspection timed out",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "rendered map pins inspected within the timeout"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "inspection"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.map.integrity.* rows on the same run and route",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.map-inspection-incomplete",
+      "observerCheck": "campus-map-inspection-incomplete",
+      "title": "Map evidence could not be classified",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "rendered map pins"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "classification"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.map.integrity.* rows on the same run and route",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.map-popups",
+      "observerCheck": "campus-map-inspection-complete",
+      "title": "Not every rendered pin opened a readable popup",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "every rendered pin opens a readable popup"
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 0,
+        "unit": "uninspected-pins"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.map.integrity.pin-identity, site.map.integrity.pin-destination, site.community.routing.map-destination on the same run and route",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.embed-inspection-timeout",
+      "observerCheck": "required-embed-inspection-timeout",
+      "title": "Required embed inspection timed out",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "embed inspected within the timeout"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "inspection"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.map.integrity.embed-rendered on the same run and route",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.embed-partial-render",
+      "observerCheck": "required-embed-partial-render",
+      "title": "Required embed rendered only partially during inspection",
+      "pageFamily": "map-routes",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "embed fully rendered"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "render"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.map.integrity.embed-rendered on the same run and route",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.route-inspection",
+      "observerCheck": "route-browser-inspection",
+      "title": "Browser inspection of a route did not complete",
+      "pageFamily": "critical-routes",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "HTTP 2xx page with a screenshot and DOM inspection"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "inspection"
+      },
+      "severity": "medium",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.layout.* and site.header.rendered.route-reachable on the same run, route and viewport",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.images-all-failed",
+      "observerCheck": "images-render",
+      "title": "Every visible image on a page failed in one run (degraded browser session)",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "when": "every visible image on the page rendered with zero natural width in the same run",
+      "expected": {
+        "literal": "a page never loses every image at once; treat as a degraded session"
+      },
+      "comparator": {
+        "type": "ratio-max",
+        "threshold": 1,
+        "unit": "broken-over-visible"
+      },
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.layout.images.render on the same run and page",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    }
+  ],
+  "retired": [
+    {
+      "observerCheck": "community-campus-parameter",
+      "reason": "Describes the legacy preferred_campus parameter and detects only the misspelled preferref_campus; the Community URL contract is campus=<verified slug> (spec/community-routing.json urlContract). The destination row compares the whole URL.",
+      "replacedBy": "site.community.routing.pre-announcement-url",
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "campus-page-youtube-video",
+      "reason": "A campus video is not required: campus.intro.media accepts the approved Open and Enrolling card or an approved video (registry/campus-open-media.json). The observer config already had requireOpenCampusYouTube false, so the check was inert.",
+      "replacedBy": "campus.intro.media.current",
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "approved-baseline",
+      "reason": "Observer-internal bookkeeping (is there an approved visual baseline); no playbook requirement. Excluded from dispatch in the observer config since the start.",
+      "replacedBy": null,
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "visual-baseline",
+      "reason": "Observer-internal bookkeeping (are baseline screenshots present); no playbook requirement. Excluded from dispatch in the observer config since the start.",
+      "replacedBy": null,
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "visual-regression",
+      "reason": "A pixel diff against an observer-held screenshot baseline (visualDiffThreshold 0.02) is not a playbook requirement; the layout rows cover the viewport rules and page-check brand-visual covers the visual brand.",
+      "replacedBy": null,
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "claim-registry",
+      "reason": "Checks that the observer's own claims configuration exists; not a site requirement. The claim rows (site.claims.evidence.*) stay advisory until the claim registry is created.",
+      "replacedBy": null,
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "primary-cta-count",
+      "reason": "'At most N primary CTAs' is an observer page policy, not a playbook requirement: campus.hero.ctas fixes the CTA row at four (page-check cta-*). Excluded from dispatch in the observer config since the start.",
+      "replacedBy": null,
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    },
+    {
+      "observerCheck": "current-family-destination",
+      "reason": "An audience heuristic from the observer's page policies (does a CTA lead to a prospective-family destination) with no playbook requirement behind it.",
+      "replacedBy": null,
+      "decidedBy": "QC loop redesign plan 2026-09-24 (Matt Barge)",
+      "date": "2026-09-24"
+    }
+  ]
+}

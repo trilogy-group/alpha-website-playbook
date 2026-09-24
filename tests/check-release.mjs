@@ -3,7 +3,7 @@
  * Release attestation (improvement plan workstream 3). Compares spec/release-manifest.json with what
  * production actually reports (Alpha MCP health: plugin version, ability count, abilitySchemaSha256,
  * operator mode, production writes, synced CSS ids, campus template) and with the committed policy
- * bundle hash. Any mismatch exits 1 with a typed reason; the intake agent refuses to release an
+ * bundle hash and the check bundle hash (spec/check-bundle.generated.json). Any mismatch exits 1 with a typed reason; the intake agent refuses to release an
  * execution-ready ticket while allowing unrelated clarification and human routing to continue.
  *
  * Usage: node tests/check-release.mjs [--json out.json] [--allow-stale-bundle]
@@ -19,11 +19,13 @@ const read = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'))
 const args = parse(process.argv.slice(2))
 const manifest = read('spec/release-manifest.json')
 const bundle = read('spec/policy-bundle.generated.json')
+const checkBundle = read('spec/check-bundle.generated.json')
 
 const failures = []
 const notes = []
 
 if (manifest.policySha256 !== bundle.policySha256) failures.push({ type: 'policy_bundle_mismatch', manifest: manifest.policySha256, actual: bundle.policySha256, fix: 'rebuild the bundle (node tests/build-policy.mjs) and update spec/release-manifest.json policySha256' })
+if (manifest.checkBundleSha256 !== checkBundle.sha256) failures.push({ type: 'check_bundle_mismatch', manifest: manifest.checkBundleSha256, actual: checkBundle.sha256, fix: 'rebuild the check bundle (node tests/build-checks.mjs) and update spec/release-manifest.json checkBundleSha256' })
 
 let health = null
 if (process.env.ALPHA_MCP_HEALTH_JSON) {

@@ -1,26 +1,49 @@
 {
   "$comment": "Machine-readable Community routing rules for the Alpha public website. No rule authorizes a Community, HubSpot, map, or WordPress mutation.",
-  "version": "0.1",
+  "version": "0.2",
   "asOf": "2026-09-16",
   "scope": {
-    "brands": ["Alpha School"],
+    "brands": [
+      "Alpha School"
+    ],
     "websiteHost": "alpha.school",
     "communityHost": "www.community.alpha.school",
-    "excludedBrands": ["Nova", "NextGen Academy", "Waypoint Academy"]
+    "excludedBrands": [
+      "Nova",
+      "NextGen Academy",
+      "Waypoint Academy"
+    ]
   },
   "authority": {
     "hubspotPrograms": {
-      "owns": ["campus facts", "business lifecycle", "HubSpot program id"],
+      "owns": [
+        "campus facts",
+        "business lifecycle",
+        "HubSpot program id"
+      ],
       "readableMirror": "growthMapApi"
     },
     "communityProgramRegistry": {
-      "owns": ["Community program id", "Community slug", "Community visibility", "Community routing behavior"]
+      "owns": [
+        "Community program id",
+        "Community slug",
+        "Community visibility",
+        "Community routing behavior"
+      ]
     },
     "wordpress": {
-      "owns": ["published campus page object", "page CTA placement"]
+      "owns": [
+        "published campus page object",
+        "page CTA placement"
+      ]
     },
     "apex": {
-      "owns": ["ticket state", "approval", "lease", "audit evidence"]
+      "owns": [
+        "ticket state",
+        "approval",
+        "lease",
+        "audit evidence"
+      ]
     }
   },
   "publicFactRestrictions": {
@@ -36,13 +59,34 @@
   "urlContract": {
     "canonicalTemplate": "https://www.community.alpha.school/?campus={communitySlug}",
     "requiredCampusParameter": "campus",
-    "recognizedReferralParameters": ["invite", "ref"],
-    "legacyParametersNotForNewLinks": ["preferred_campus"],
-    "slugSource": "registry/campus-identities.json"
+    "recognizedReferralParameters": [
+      "invite",
+      "ref"
+    ],
+    "legacyParametersNotForNewLinks": [
+      "preferred_campus"
+    ],
+    "slugSource": "registry/campus-identities.json",
+    "urlForm": {
+      "$comment": "Decision flag: which URL form is canonical for a campus Community destination. recommended is what rows compare against until the decision lands.",
+      "decided": false,
+      "recommended": "https://www.community.alpha.school/?campus={communitySlug}",
+      "alternatives": [
+        "https://www.community.alpha.school/campuses/prog-{hubspotProgramId}"
+      ],
+      "decisionTicket": "cmu4g45fg00020agm20nd7kc8",
+      "decisionOwner": "Matt Barge"
+    }
   },
   "identityJoin": {
     "key": "hubspotProgramId",
-    "required": ["mapProgramId", "communityProgramId", "hubspotProgramId", "communitySlug", "visibleInCommunityApp"],
+    "required": [
+      "mapProgramId",
+      "communityProgramId",
+      "hubspotProgramId",
+      "communitySlug",
+      "visibleInCommunityApp"
+    ],
     "rules": [
       "Join the map record and Community program record only by exact HubSpot program id.",
       "Never infer a Community slug from a campus name.",
@@ -66,5 +110,13 @@
     "offline": "node tests/validate-community-routing.mjs",
     "optionalReadOnlyLiveMap": "node tests/validate-community-routing.mjs --live-map",
     "mutatesExternalSystems": false
+  },
+  "communityHosts": {
+    "$comment": "Hosts a Community destination may use. canonical is what new links carry; redirects answer 301 to it and pass the host check. The observer reads this list; its config keeps no host list (decision 2026-09-24, sweep C3/C4: twelve host tickets filed because www.community.alpha.school was not in the observer config).",
+    "canonical": "www.community.alpha.school",
+    "redirects": [
+      "community.alpha.school"
+    ],
+    "decisionPending": "cmu4g45fg00020agm20nd7kc8"
   }
 }

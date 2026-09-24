@@ -28,7 +28,7 @@
           "city",
           "state"
         ],
-        "note": "HubSpot holds more than one grade property. n8n publishes grade_levels and grade_levels_suffixed, which follow start and end grade (growth map gradeRange). The observer reads grades_served first. Decision pending (APEX cmu4g13kc00000agmdogkxihp) on which is the website source; until then the page is judged against start and end grade."
+        "note": "HubSpot holds more than one grade property. n8n publishes grade_levels and grade_levels_suffixed, which follow start and end grade (growth map gradeRange). The website is judged against start_grade_level and end_grade_level only (check bundle row campus.facts.grades): grade_levels is an orphaned property HubSpot no longer defines (sweep D2, 2026-09-24) and grades_served disagrees with start/end grade on 14 campuses. Decision pending (APEX cmu4g13kc00000agmdogkxihp) confirms which property is the website source."
       },
       "derivation": "'<name><br><span>' + grade_levels + ' Private School in ' + city + ', ' + state (New York: 'Serving <grades> Grade in New York City')",
       "expectedFrom": "Program fields",
@@ -270,7 +270,7 @@
         "filter": "form_program_interest matches the campus label; simpleevents_public_event true"
       },
       "derivation": "shortcode [hubspot_events school=\"<form_program_interest_label>\" show_filters=\"false\" limit=\"3\"] written by n8n; cards rendered by the plugin from hubspot_event posts",
-      "expectedFrom": "public HubSpot events for the campus, within the 2-hour grace",
+      "expectedFrom": "public HubSpot events for the campus, within the 4-hour grace (spec/check-bundle.generated.json campus.events.strip.filter); past events never file",
       "onMismatch": {
         "ifShortcodeWrong": "sync-mapping (form_program_interest_label in HubSpot) or website (shortcode unscoped)",
         "ifEventWrong": "event-data (hubspot-owner)",

@@ -1,6 +1,14 @@
 {
   "$comment": "Info packet and calendar links on every campus page, read from the live pages 2026-09-16 with logged-out HTTP status. hidden=true means the button is responsive-hidden on all devices (the template placeholder \"INFO PACKET - update link\" is meant to stay hidden until an approved packet exists). approved is unknown until the APEX CampusPacketProfile status is exposed; as of 2026-09-16 Matt Barge states no 2026-27 packet is approved yet.",
   "asOf": "2026-09-16",
+  "interimPolicy": {
+    "$comment": "Read by the check bundle row campus.resources.packet.present. While no 2026-27 packet is approved, a responsive-hidden 2026/27 INFO PACKET button is the approved interim state: it is not cta-hidden-everywhere and files no ticket. A visible placeholder (INFO PACKET - update link) is still a defect.",
+    "hidden2026_27Button": "approved-interim",
+    "visiblePlaceholder": "defect",
+    "since": "2026-09-24",
+    "decidedBy": "Matt Barge (QC loop redesign plan 2026-09-24)",
+    "decisionPending": "cmtlz33vo000504ju2itpi7d9"
+  },
   "campuses": {
     "atlanta": {
       "state": "Open",

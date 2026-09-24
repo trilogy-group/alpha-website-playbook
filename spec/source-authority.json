@@ -13,12 +13,25 @@
   "fields": [
     {
       "id": "campus.lifecycle",
-      "surface": ["campus page", "homepage map", "Locations map"],
+      "surface": [
+        "campus page",
+        "homepage map",
+        "Locations map"
+      ],
       "authority": "HubSpot Programs",
       "sourceLocator": "Program.type",
-      "delivery": ["n8n campus-page workflow", "growth-map API"],
-      "destination": ["Elementor campus status content", "map lifecycle"],
-      "allowedEditors": ["website-operations through APEX campus editor", "authorized HubSpot person"],
+      "delivery": [
+        "n8n campus-page workflow",
+        "growth-map API"
+      ],
+      "destination": [
+        "Elementor campus status content",
+        "map lifecycle"
+      ],
+      "allowedEditors": [
+        "website-operations through APEX campus editor",
+        "authorized HubSpot person"
+      ],
       "refresh": "n8n campus flow daily at 00:15 Central; map schedule documented in content-pipelines",
       "conflictRule": "HubSpot wins over Operations and the map mirror",
       "ownerRole": "hubspot-program-admin",
@@ -27,12 +40,28 @@
     },
     {
       "id": "campus.identity",
-      "surface": ["campus page", "Locations", "maps", "SEO", "schema"],
+      "surface": [
+        "campus page",
+        "Locations",
+        "maps",
+        "SEO",
+        "schema"
+      ],
       "authority": "HubSpot Programs",
       "sourceLocator": "Program name and location identity fields",
-      "delivery": ["n8n", "growth-map API"],
-      "destination": ["Elementor", "map applications", "SEO metadata", "School schema"],
-      "allowedEditors": ["hubspot-program-admin"],
+      "delivery": [
+        "n8n",
+        "growth-map API"
+      ],
+      "destination": [
+        "Elementor",
+        "map applications",
+        "SEO metadata",
+        "School schema"
+      ],
+      "allowedEditors": [
+        "hubspot-program-admin"
+      ],
       "refresh": "workflow dependent",
       "conflictRule": "Program names at the top are not editable by website operators",
       "ownerRole": "hubspot-program-admin",
@@ -41,12 +70,27 @@
     },
     {
       "id": "campus.facts",
-      "surface": ["campus page", "Locations", "maps", "schema"],
+      "surface": [
+        "campus page",
+        "Locations",
+        "maps",
+        "schema"
+      ],
       "authority": "HubSpot Programs",
       "sourceLocator": "school_address, grade fields, tuition_usd_yearly, contact_number, email",
-      "delivery": ["n8n campus-page workflow", "growth-map API"],
-      "destination": ["Elementor CSS-ID targets", "School schema", "map output"],
-      "allowedEditors": ["website-operations through APEX campus editor", "authorized HubSpot person"],
+      "delivery": [
+        "n8n campus-page workflow",
+        "growth-map API"
+      ],
+      "destination": [
+        "Elementor CSS-ID targets",
+        "School schema",
+        "map output"
+      ],
+      "allowedEditors": [
+        "website-operations through APEX campus editor",
+        "authorized HubSpot person"
+      ],
       "refresh": "n8n campus flow daily at 00:15 Central; APEX HubSpot readback about every 30 minutes",
       "conflictRule": "Correct HubSpot, not Elementor; grade-property choice remains a recorded decision",
       "ownerRole": "hubspot-program-admin",
@@ -55,12 +99,21 @@
     },
     {
       "id": "campus.intro-copy",
-      "surface": ["campus page intro"],
+      "surface": [
+        "campus page intro"
+      ],
       "authority": "HubSpot Programs",
       "sourceLocator": "website_campus_intro and website copy fields",
-      "delivery": ["n8n workflow ORgdHC71YJ5RawBy"],
-      "destination": ["Elementor content_body targets"],
-      "allowedEditors": ["website-operations through APEX campus editor", "authorized HubSpot person"],
+      "delivery": [
+        "n8n workflow ORgdHC71YJ5RawBy"
+      ],
+      "destination": [
+        "Elementor content_body targets"
+      ],
+      "allowedEditors": [
+        "website-operations through APEX campus editor",
+        "authorized HubSpot person"
+      ],
       "refresh": "daily at 00:15 Central unless the owner runs it manually",
       "conflictRule": "Do not make a durable direct Elementor fix; derivation from Program.type remains proposed",
       "ownerRole": "hubspot-owner",
@@ -69,12 +122,21 @@
     },
     {
       "id": "campus.application-link",
-      "surface": ["campus Apply CTA"],
+      "surface": [
+        "campus Apply CTA"
+      ],
       "authority": "HubSpot Programs",
       "sourceLocator": "admission_link and application routing fields",
-      "delivery": ["n8n to Elementor resource_4"],
-      "destination": ["campus CTA", "Finalsite or approved application route"],
-      "allowedEditors": ["hubspot-program-admin"],
+      "delivery": [
+        "n8n to Elementor resource_4"
+      ],
+      "destination": [
+        "campus CTA",
+        "Finalsite or approved application route"
+      ],
+      "allowedEditors": [
+        "hubspot-program-admin"
+      ],
       "refresh": "workflow dependent",
       "conflictRule": "Application routing is not inferred from a campus name",
       "ownerRole": "hubspot-program-admin",
@@ -83,12 +145,22 @@
     },
     {
       "id": "campus.booking-link",
-      "surface": ["Book a Call or calendar CTA"],
+      "surface": [
+        "Book a Call or calendar CTA"
+      ],
       "authority": "HubSpot Programs or named calendar owner, depending on the field",
       "sourceLocator": "call_scheduling_link or approved calendar URL",
-      "delivery": ["n8n or WordPress-direct CTA"],
-      "destination": ["campus CTA"],
-      "allowedEditors": ["website-operations through APEX campus editor", "hubspot-program-admin", "calendar-owner"],
+      "delivery": [
+        "n8n or WordPress-direct CTA"
+      ],
+      "destination": [
+        "campus CTA"
+      ],
+      "allowedEditors": [
+        "website-operations through APEX campus editor",
+        "hubspot-program-admin",
+        "calendar-owner"
+      ],
       "refresh": "workflow dependent",
       "conflictRule": "Use the field map for the exact CTA; do not strip valid analytics query parameters during verification",
       "ownerRole": "calendar-owner",
@@ -97,12 +169,21 @@
     },
     {
       "id": "campus.staff",
-      "surface": ["campus Team section"],
+      "surface": [
+        "campus Team section"
+      ],
       "authority": "approved APEX ticket plus campus role owner",
       "sourceLocator": "ticket name, title, biography, explicit person-to-asset mapping, effective date",
-      "delivery": ["Alpha MCP for recognized existing staff structures"],
-      "destination": ["Elementor staff component"],
-      "allowedEditors": ["scheduled APEX agent for supported operations", "authorized human Alpha MCP operator"],
+      "delivery": [
+        "Alpha MCP for recognized existing staff structures"
+      ],
+      "destination": [
+        "Elementor staff component"
+      ],
+      "allowedEditors": [
+        "scheduled APEX agent for supported operations",
+        "authorized human Alpha MCP operator"
+      ],
       "refresh": "on approved ticket execution",
       "conflictRule": "Never infer identity from a photo and never create or clone a carousel",
       "ownerRole": "dean-of-parents",
@@ -111,13 +192,24 @@
     },
     {
       "id": "campus.events",
-      "surface": ["upcoming-events page", "campus event strip"],
+      "surface": [
+        "upcoming-events page",
+        "campus event strip"
+      ],
       "authority": "HubSpot Marketing Events",
       "sourceLocator": "public flag, program interest, event type, title, time, timezone, registration link",
-      "delivery": ["WordPress HubSpot event importer"],
-      "destination": ["hubspot_event post type", "event taxonomies", "campus shortcode"],
-      "allowedEditors": ["authorized event and HubSpot operators"],
-      "refresh": "about every 30 minutes; observer allows up to two hours",
+      "delivery": [
+        "WordPress HubSpot event importer"
+      ],
+      "destination": [
+        "hubspot_event post type",
+        "event taxonomies",
+        "campus shortcode"
+      ],
+      "allowedEditors": [
+        "authorized event and HubSpot operators"
+      ],
+      "refresh": "about every 30 minutes; the check bundle allows four hours after an event becomes public and never files a past event",
       "conflictRule": "Do not hand-edit imported posts or hide events by changing an unrelated source flag",
       "ownerRole": "events-plugin-owner",
       "verify": "plugin log, imported post, aggregate page, campus strip, registration destination",
@@ -125,12 +217,21 @@
     },
     {
       "id": "campus.intro-media",
-      "surface": ["campus intro media slot"],
+      "surface": [
+        "campus intro media slot"
+      ],
       "authority": "approved media registry or exact APEX attachment",
       "sourceLocator": "registry/campus-open-media.json or ticket attachment",
-      "delivery": ["Alpha MCP media and content tools when supported"],
-      "destination": ["WordPress attachment", "Elementor image or video widget"],
-      "allowedEditors": ["authorized website operator"],
+      "delivery": [
+        "Alpha MCP media and content tools when supported"
+      ],
+      "destination": [
+        "WordPress attachment",
+        "Elementor image or video widget"
+      ],
+      "allowedEditors": [
+        "authorized website operator"
+      ],
       "refresh": "on approved ticket",
       "conflictRule": "Exact campus and person mapping; Slack or Drive is not fetched directly by the version 1 agent",
       "ownerRole": "website-operations",
@@ -139,12 +240,21 @@
     },
     {
       "id": "campus.info-packet",
-      "surface": ["campus info-packet CTA"],
+      "surface": [
+        "campus info-packet CTA"
+      ],
       "authority": "approved packet production workflow",
       "sourceLocator": "Canva master, campus facts, Flipsnack publication and registry/campus-packets.json",
-      "delivery": ["WordPress-direct CTA after approval"],
-      "destination": ["campus resource link"],
-      "allowedEditors": ["packet workflow owners", "website-operations for the final link"],
+      "delivery": [
+        "WordPress-direct CTA after approval"
+      ],
+      "destination": [
+        "campus resource link"
+      ],
+      "allowedEditors": [
+        "packet workflow owners",
+        "website-operations for the final link"
+      ],
       "refresh": "per approved packet release",
       "conflictRule": "Do not link an unapproved packet; interim visibility policy is still proposed",
       "ownerRole": "packet-owner",
@@ -153,12 +263,23 @@
     },
     {
       "id": "community.destination",
-      "surface": ["Join the Community CTA", "Pre-Announcement map destination"],
+      "surface": [
+        "Join the Community CTA",
+        "Pre-Announcement map destination"
+      ],
       "authority": "visible Community program identity",
       "sourceLocator": "exact HubSpot Program ID join to Community record and slug",
-      "delivery": ["WordPress CTA or growth-map destination"],
-      "destination": ["https://www.community.alpha.school/?campus=<slug>"],
-      "allowedEditors": ["website-operations for CTA", "growth-map-owner for map", "community-app-owner for Community records"],
+      "delivery": [
+        "WordPress CTA or growth-map destination"
+      ],
+      "destination": [
+        "https://www.community.alpha.school/?campus=<slug>"
+      ],
+      "allowedEditors": [
+        "website-operations for CTA",
+        "growth-map-owner for map",
+        "community-app-owner for Community records"
+      ],
       "refresh": "surface dependent",
       "conflictRule": "Never infer the slug from the campus name and never change another surface as a side effect",
       "ownerRole": "community-app-owner",
@@ -167,12 +288,20 @@
     },
     {
       "id": "alpha-answers.content",
-      "surface": ["Alpha Answers index and detail experience"],
+      "surface": [
+        "Alpha Answers index and detail experience"
+      ],
       "authority": "approved Airtable records",
       "sourceLocator": "Airtable Answers tables",
-      "delivery": ["Alpha Answers import endpoint or workflow"],
-      "destination": ["WordPress Alpha Answers resource content"],
-      "allowedEditors": ["website-operations through the approved import"],
+      "delivery": [
+        "Alpha Answers import endpoint or workflow"
+      ],
+      "destination": [
+        "WordPress Alpha Answers resource content"
+      ],
+      "allowedEditors": [
+        "website-operations through the approved import"
+      ],
       "refresh": "on import",
       "conflictRule": "Canonical grouping and schema validation must be confirmed before unattended writes",
       "ownerRole": "website-operations",
@@ -181,12 +310,22 @@
     },
     {
       "id": "page.static-content",
-      "surface": ["page-owned copy, links and media not listed as synchronized"],
+      "surface": [
+        "page-owned copy, links and media not listed as synchronized"
+      ],
       "authority": "approved APEX ticket and named content owner",
       "sourceLocator": "ticket replacement, approved source or registry entry",
-      "delivery": ["Alpha MCP content or post-field tools when actor support exists"],
-      "destination": ["Elementor widget", "WordPress post fields"],
-      "allowedEditors": ["authorized human Alpha MCP operator", "scheduled agent only when capability matrix says integrated"],
+      "delivery": [
+        "Alpha MCP content or post-field tools when actor support exists"
+      ],
+      "destination": [
+        "Elementor widget",
+        "WordPress post fields"
+      ],
+      "allowedEditors": [
+        "authorized human Alpha MCP operator",
+        "scheduled agent only when capability matrix says integrated"
+      ],
       "refresh": "on approved ticket",
       "conflictRule": "Check the campus field map and source registry before classifying content as direct",
       "ownerRole": "website-operations",
@@ -195,12 +334,26 @@
     },
     {
       "id": "page.seo",
-      "surface": ["title", "meta description", "canonical", "schema", "social metadata", "sitemap"],
+      "surface": [
+        "title",
+        "meta description",
+        "canonical",
+        "schema",
+        "social metadata",
+        "sitemap"
+      ],
       "authority": "approved page-family requirement and the field-specific source",
       "sourceLocator": "Yoast fields, WordPress status, template or n8n campus metadata mapping",
-      "delivery": ["WordPress, Yoast, Elementor template or n8n"],
-      "destination": ["rendered head, schema and sitemap"],
-      "allowedEditors": ["website-operations", "n8n-sync-owner for synchronized campus metadata"],
+      "delivery": [
+        "WordPress, Yoast, Elementor template or n8n"
+      ],
+      "destination": [
+        "rendered head, schema and sitemap"
+      ],
+      "allowedEditors": [
+        "website-operations",
+        "n8n-sync-owner for synchronized campus metadata"
+      ],
       "refresh": "change dependent",
       "conflictRule": "Identify whether Yoast, a template, WordPress, or n8n owns the exact field before editing",
       "ownerRole": "website-operations",
@@ -209,12 +362,26 @@
     },
     {
       "id": "site.global-output",
-      "surface": ["header", "footer", "navigation", "global scripts", "popups", "analytics", "consent"],
+      "surface": [
+        "header",
+        "footer",
+        "navigation",
+        "global scripts",
+        "popups",
+        "analytics",
+        "consent"
+      ],
       "authority": "named global component or platform owner",
       "sourceLocator": "Elementor theme templates, menus, plugin configuration and custom code",
-      "delivery": ["WordPress global rendering"],
-      "destination": ["multiple or all public pages"],
-      "allowedEditors": ["named platform owner"],
+      "delivery": [
+        "WordPress global rendering"
+      ],
+      "destination": [
+        "multiple or all public pages"
+      ],
+      "allowedEditors": [
+        "named platform owner"
+      ],
       "refresh": "change dependent",
       "conflictRule": "Never edit under a campus-content ticket; use staging and ring-3 verification",
       "ownerRole": "elementor-owner",

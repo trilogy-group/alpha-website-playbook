@@ -1,5 +1,20 @@
 {
-  "$comment": "Check names the production observer (superbuilders/aeo, alpha-site-system/src/checks.mjs) can emit, grouped by family. Each will be mapped to a spec row; checks without a row become advisory or get a row. Captured 2026-09-15.",
+  "$comment": "Every check name the production observer (superbuilders/aeo alpha-site-system/src/checks.mjs) can emit, grouped by the loop that emits it. This is the coverage list for spec/check-bundle.generated.json: tests/build-checks.mjs fails when a name here has neither a row in spec/check-rows.json nor a retirement entry, and when a row or retirement names a check that is not here. Refresh by re-reading checks.mjs (the finding(loop, check, ...) calls plus the presentCheck/destinationCheck table and the resource-link probe table); node tests/build-checks.mjs --observer-source <path to checks.mjs> re-extracts the names and fails when this file is stale. Captured 2026-09-15; re-captured 2026-09-24 from aeo commit cca5ac6 working tree (109 names: 103 literal, 6 from the resource-requirement table).",
+  "version": "2026-09-24",
+  "asOf": "2026-09-24",
+  "capturedFrom": {
+    "repository": "superbuilders/aeo",
+    "path": "alpha-site-system/src/checks.mjs",
+    "commit": "cca5ac6718ab7e2306cf5e821f8cf51a5fa33bd5",
+    "readAt": "2026-09-24"
+  },
+  "notInChecksMjs": {
+    "$comment": "Names other parts of the observer or the playbook use that checks.mjs never emits; listed so nobody maps them by mistake.",
+    "operations-map-public-campus-missing": "named in src/dispatch.mjs CAMPUS_SOURCE_CHECKS only; never emitted",
+    "campus-page-email-source-sync": "named in spec/ticket-classes.json and the check map; the observer has no email comparison today (would be campus.facts.contact)",
+    "campus-page-status-sentence": "to build (docs/observer-requirements.md item 2); playbook page-check open-status-sentence covers it",
+    "brand-visual": "playbook tests/page-check.mjs check, not an observer check"
+  },
   "families": {
     "audience-funnel": [
       "community-destination",
@@ -13,6 +28,10 @@
       "visual-regression"
     ],
     "campus-truth": [
+      "campus-application-destination",
+      "campus-application-path",
+      "campus-application-placeholder",
+      "campus-application-source-missing",
       "campus-book-call-destination-campus",
       "campus-book-call-link-reachable",
       "campus-book-call-present",
@@ -35,8 +54,10 @@
       "campus-map-pin-identity",
       "campus-map-rendered",
       "campus-navigation-missing",
+      "campus-page-application-source-sync",
       "campus-page-grade-source-sync",
       "campus-page-phone-source-sync",
+      "campus-page-source-fact-missing",
       "campus-page-stale-launch-media",
       "campus-page-tuition-source-sync",
       "campus-page-youtube-video",
@@ -48,6 +69,9 @@
       "campus-school-schema",
       "campus-sister-brand-leak",
       "campus-sitemap-missing",
+      "campus-staff-missing",
+      "campus-staff-title-missing",
+      "campus-staff-title-sync",
       "community-campus-parameter",
       "duplicate-program-id",
       "duplicate-program-url",
@@ -76,13 +100,16 @@
       "named-entity-evidence"
     ],
     "event-truth": [
+      "campus-event-filter",
       "event-page-reachable",
       "event-registration-reachable",
       "event-registration-url",
       "event-required-facts",
       "event-source-readable",
       "event-time-valid",
-      "event-weekday-sync"
+      "event-weekday-sync",
+      "hubspot-event-required-facts",
+      "public-event-sync"
     ],
     "functional": [
       "browser-errors",

@@ -54,7 +54,7 @@ HubSpot Marketing Event, Public = Yes, with a form program interest, event type,
 Where events go wrong, in diagnosis order:
 
 1. Not in the plugin debug log: the internal form program interest does not match the plugin setting or the WordPress term slug. Display-name renames do not propagate. Orange County versus Lake Forest is the standing example.
-2. In the log but not imported: public flag, metadata, connection, or sync range. Public = Yes edits inside the last two hours are within the grace period.
+2. In the log but not imported: public flag, metadata, connection, or sync range. Public = Yes edits inside the last four hours are within the grace period; a past event never files.
 3. Imported but missing from a campus page: the campus shortcode is absent, unscoped (`data-has-school="false"`), or points at the wrong label. Park City and La Jolla were found unscoped on 2026-07-13.
 4. Wrong campus's events on a page: same shortcode problem. Never hide the events by privatizing them in HubSpot.
 
@@ -70,7 +70,7 @@ Besides the Alpha WordPress MCP, the APEX hosted agent writes to alpha.school on
 2. Hailey pushes the event to Goldcast, which creates the registration page and stores the registration URL on the APEX event.
 3. An allowlisted user pushes the event to HubSpot. APEX writes the registration link, location, display date and time, event type, and the form program interest that the website plugin filters on. Later edits re-push automatically.
 4. Hailey sets Public = Yes on the HubSpot marketing event by hand. Nothing in APEX does this.
-5. Within about 30 minutes the WordPress plugin imports the event; within two hours the observer expects it on `/upcoming-events/` and on the campus strip.
+5. Within about 30 minutes the WordPress plugin imports the event; within four hours the observer expects it on `/upcoming-events/` and on the campus strip (spec/check-bundle.generated.json site.events.sync.public).
 6. Canceling in APEX sets Public = No in HubSpot and the card drops on the next sync.
 
 ## Who to ask
