@@ -113,7 +113,7 @@
         "sourceHealthDependency": { "type": "array", "items": { "type": "string" }, "description": "sourceHealth ids; an unhealthy source suppresses the row's findings." },
         "suppressWhen": { "type": "array", "items": { "type": "string", "enum": ["event-ended", "hidden-on-all-viewports", "every-image-failed-in-run"] } },
         "suppresses": { "type": "string", "description": "loop-health rows: which rows are suppressed while this finding is open." },
-        "exemptionsRef": { "type": "string", "description": "Registry file the observer must read for named exceptions." },
+        "exemptionsRef": { "anyOf": [{ "type": "string" }, { "type": "array", "minItems": 1, "items": { "type": "string" } }], "description": "Registry file (or files, since bundle 1.1) the observer and the filer must read for named exceptions; each is a repository path, optionally followed by a space and the key inside the file (registry/campus-packets.json interimPolicy, registry/campus-leadership.json groups)." },
         "exemptions": { "type": "array", "items": { "type": "string" } },
         "decisionPending": { "type": "string", "description": "APEX ticket id of the decision that can change this row; the row carries the recommended value until then." },
         "note": { "type": "string" },

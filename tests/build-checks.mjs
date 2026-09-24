@@ -12,7 +12,8 @@
  * spec/campus-lifecycle.json, spec/page-family-requirements.json, spec/observer-check-map.json, spec/site-rules.json,
  * spec/campus-page-requirements.json, spec/source-authority.json, spec/community-routing.json, spec/brand-visual.json,
  * registry/sources.json, registry/sister-brand-exceptions.json, registry/campus-packets.json, registry/campus-open-media.json,
- * registry/campus-identities.json, registry/people.json, spec/responsibilities.json.
+ * registry/campus-identities.json, registry/campus-cta-exceptions.json, registry/campus-leadership.json, registry/campus-pages.json,
+ * registry/people.json, spec/responsibilities.json.
  *
  * Usage: node tests/build-checks.mjs [--check] [--observer-source <path to aeo src/checks.mjs>]
  *   --check            exit 1 when the committed bundle is stale (no write)
@@ -87,6 +88,9 @@ export function buildBundle({ observerSource = null } = {}) {
   const communityRouting = read('spec/community-routing.json')
   const sisterBrand = read('registry/sister-brand-exceptions.json')
   const packets = read('registry/campus-packets.json')
+  const ctaExceptions = read('registry/campus-cta-exceptions.json')
+  const leadership = read('registry/campus-leadership.json')
+  const campusPages = read('registry/campus-pages.json').campuses || {}
 
   const inventory = observerCheckNames(observerRegistry)
   if (observerSource) {
@@ -130,6 +134,34 @@ export function buildBundle({ observerSource = null } = {}) {
   if (!Array.isArray(sisterBrand.brands) || !sisterBrand.brands.length) errors.push('registry/sister-brand-exceptions.json brands[] missing')
   if (!packets.interimPolicy?.hidden2026_27Button) errors.push('registry/campus-packets.json interimPolicy.hidden2026_27Button missing')
   if (!sources.operationsSheet?.observerPacketArtifact?.command) errors.push('registry/sources.json operationsSheet.observerPacketArtifact.command missing')
+  // CTA exceptions and shared leadership (2026-09-24): the rows cite them through exemptionsRef, so their shape is checked here too.
+  for (const cta of ['book-a-call', 'calendar', 'packet', 'apply', 'community']) if (!ctaExceptions.ctas?.[cta]?.rows?.length) errors.push(`registry/campus-cta-exceptions.json ctas.${cta}.rows missing`)
+  for (const rule of ['hidden', 'present', 'destination']) if (!ctaExceptions.rules?.[rule]?.exemptsRowSuffixes?.length) errors.push(`registry/campus-cta-exceptions.json rules.${rule} missing`)
+  for (const [slug, entries] of Object.entries(ctaExceptions.campuses || {})) {
+    if (!campusPages[slug]) errors.push(`registry/campus-cta-exceptions.json campuses.${slug}: not a registry/campus-pages.json slug`)
+    for (const [cta, entry] of Object.entries(entries || {})) {
+      if (!ctaExceptions.ctas?.[cta]) errors.push(`registry/campus-cta-exceptions.json campuses.${slug}.${cta}: unknown CTA`)
+      if (!ctaExceptions.rules?.[entry?.rule]) errors.push(`registry/campus-cta-exceptions.json campuses.${slug}.${cta}: unknown rule ${entry?.rule}`)
+      if (entry?.rule === 'destination' && !entry.destination) errors.push(`registry/campus-cta-exceptions.json campuses.${slug}.${cta}: rule destination needs a destination`)
+      if (entry?.expires !== null && !/^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(String(entry?.expires)) && entry?.expires !== 'lifecycle:Open') errors.push(`registry/campus-cta-exceptions.json campuses.${slug}.${cta}: expires must be an ISO date, lifecycle:Open or null`)
+    }
+  }
+  for (const [id, group] of Object.entries(leadership.groups || {})) {
+    if (id.startsWith('$')) continue
+    for (const slug of group.campuses || []) if (!campusPages[slug]) errors.push(`registry/campus-leadership.json groups.${id}: ${slug} is not a registry/campus-pages.json slug`)
+    if (!(group.campuses || []).length || !(group.sharedLeadership || []).length) errors.push(`registry/campus-leadership.json groups.${id}: campuses and sharedLeadership must be non-empty`)
+    for (const person of group.sharedLeadership || []) if (!person?.name || !person?.source) errors.push(`registry/campus-leadership.json groups.${id}: every shared leader needs name and source`)
+  }
+  // Dedupe aliases (spec/observer-check-map.json 0.6) name observer checks that exist, and every pattern compiles.
+  for (const [check, alias] of Object.entries(checkMap.dedupeAliases || {})) {
+    if (check.startsWith('$')) continue
+    if (!inventory.includes(check)) errors.push(`spec/observer-check-map.json dedupeAliases.${check}: not an observer check`)
+    if (!Array.isArray(alias?.checkIds) || !Array.isArray(alias?.titlePatterns)) errors.push(`spec/observer-check-map.json dedupeAliases.${check}: checkIds and titlePatterns must be arrays`)
+    for (const pattern of alias?.titlePatterns || []) {
+      if (typeof pattern !== 'string' || !pattern || pattern.length > 120) { errors.push(`spec/observer-check-map.json dedupeAliases.${check}: a title pattern must be a string of at most 120 characters`); continue }
+      try { new RegExp(pattern, 'i') } catch (error) { errors.push(`spec/observer-check-map.json dedupeAliases.${check}: bad pattern ${pattern} (${error.message})`) }
+    }
+  }
 
   const defaults = rowsSpec.defaults || {}
   const rows = []
@@ -206,7 +238,11 @@ export function buildBundle({ observerSource = null } = {}) {
       if (row.ticketClass !== 'observer-health') errors.push(`${label}: loop-health rows use ticketClass observer-health`)
       if (!row.suppresses) errors.push(`${label}: loop-health rows must say what they suppress`)
     }
-    if (row.exemptionsRef && !fs.existsSync(path.join(root, row.exemptionsRef.split(' ')[0]))) errors.push(`${label}: exemptionsRef file missing ${row.exemptionsRef}`)
+    for (const ref of [].concat(row.exemptionsRef || [])) {
+      if (typeof ref !== 'string' || !ref) errors.push(`${label}: exemptionsRef entries must be non-empty strings`)
+      else if (!fs.existsSync(path.join(root, ref.split(' ')[0]))) errors.push(`${label}: exemptionsRef file missing ${ref}`)
+      else if (ref.split(' ')[1] && resolveKey(read(ref.split(' ')[0]), ref.split(' ')[1]) === undefined) errors.push(`${label}: exemptionsRef key ${ref.split(' ')[1]} not found in ${ref.split(' ')[0]}`)
+    }
     if (row.decisionPending && !/^c[a-z0-9]{20,30}$/.test(row.decisionPending)) errors.push(`${label}: decisionPending is not an APEX id`)
     if (!row.requirementRef?.file || !row.requirementRef?.key) errors.push(`${label}: requirementRef needs file and key`)
     else if (!fs.existsSync(path.join(root, row.requirementRef.file))) errors.push(`${label}: requirementRef file missing ${row.requirementRef.file}`)

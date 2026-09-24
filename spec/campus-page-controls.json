@@ -1,5 +1,5 @@
 {
-  "$comment": "Every control (button or link a family can click) on a campus page, from a crawl of 44 live pages on 2026-09-16: where its destination comes from, who writes it, who owns it, and which check watches it. Human form: playbook/campus-page/controls.md. Element ownership for the same controls: spec/campus-page-field-map.json.",
+  "$comment": "Every control (button or link a family can click) on a campus page, from a crawl of 44 live pages on 2026-09-16: where its destination comes from, who writes it, who owns it, and which check watches it. Human form: playbook/campus-page/controls.md. Element ownership for the same controls: spec/campus-page-field-map.json. Per-campus CTA exceptions (a CTA hidden, present or pointed elsewhere by decision) live in registry/campus-cta-exceptions.json, not here (2026-09-24).",
   "asOf": "2026-09-16",
   "pagesCrawled": 44,
   "controls": {
@@ -30,7 +30,7 @@
     "hero.book-a-call": {
       "label": "Book a Call",
       "section": "hero CTA row (and lower CTA rows)",
-      "destination": "https://go.alpha.school/<meetings path>[?uuid=<id>] (HubSpot meetings page for the campus); Dorado points at the events page instead",
+      "destination": "https://go.alpha.school/<meetings path>[?uuid=<id>] (HubSpot meetings page for the campus); per-campus exceptions (Dorado points at its events page) are entries in registry/campus-cta-exceptions.json",
       "urlSource": "WordPress widget link (book_a_call_1, book_a_call_2), edited through the Alpha WordPress MCP. HubSpot Program call_scheduling_link is the intended source of truth for the URL but nothing writes it to the page: the nightly n8n workflow \"alpha.school website: Update school pages\" (ORgdHC71YJ5RawBy) writes exactly the 24 ids in spec/synced-targets.json and no book_a_call id (workflow read through the n8n API on 2026-09-18; execution 247078). Verified writer: wordpress-direct.",
       "writer": "wordpress-direct",
       "ownerRole": "website-agent-operator (widget); hubspot-program-admin keeps call_scheduling_link in step as the record",
@@ -40,9 +40,7 @@
         "cta-hidden-everywhere",
         "cta-links-resolve"
       ],
-      "exceptions": {
-        "dorado": "links to /upcoming-events/?event_school=alpha-dorado"
-      },
+      "exceptions": "registry/campus-cta-exceptions.json campuses.<slug>.book-a-call (Dorado moved there 2026-09-24; add or change an entry with agent/record-decision.mjs)",
       "visibility": "Elementor hide_desktop / hide_tablet / hide_mobile on widgets book_a_call_1 (hero) and book_a_call_2 (CTA row). Scan 2026-09-17 of 44 campus pages: 15 visible, 7 hidden with no link (correct), 3 hidden with a link (Oklahoma City, Tulsa, South Bay LA: defects), 19 older-template pages use unnamed widgets."
     },
     "hero.apply-now": {

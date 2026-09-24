@@ -1,0 +1,94 @@
+{
+  "$comment": "Named exceptions to the campus CTA rows of the check bundle (campus.resources.booking.*, campus.resources.calendar.*, campus.resources.packet.*, campus.resources.apply.*, and the Join the Community CTA row), keyed by campus slug (registry/campus-pages.json) and CTA. An entry records a decision a person made about one CTA on one campus page: who decided, where it was said (channel and date), when it ends, and why. agent/file-observer-findings.mjs reads this file through each row's exemptionsRef: a finding whose campus and CTA carry an unexpired entry is reported as exempted and never filed. Rules: hidden (the CTA is intentionally not shown; every row of that CTA is exempt), present (the CTA is intentionally shown although the requirement would not call for it; only the CTA's present rows are exempt, reachability and destination still apply), destination (the CTA points at a decided non-standard destination; only the destination rows named under rules.destination are exempt, presence and reachability still apply). expires is an ISO date (the exception ends at the start of that day, UTC), lifecycle:Open (it ends when the HubSpot Program type becomes Open, read from the finding, else spec/campus-lifecycle.json), or null (standing until a recorded decision revokes it). Add or change an entry with agent/record-decision.mjs, which also writes the docs/decisions.md row; never by hand without the decision row. Schema: spec/schemas/campus-cta-exceptions.schema.json; validated by npm run validate.",
+  "version": "1.0",
+  "asOf": "2026-09-24",
+  "ctas": {
+    "book-a-call": {
+      "label": "Book a Call",
+      "control": "hero.book-a-call",
+      "rows": [
+        "campus.resources.booking"
+      ]
+    },
+    "calendar": {
+      "label": "Calendar",
+      "control": "resources.calendar",
+      "rows": [
+        "campus.resources.calendar"
+      ]
+    },
+    "packet": {
+      "label": "Info packet",
+      "control": "resources.info-packet",
+      "rows": [
+        "campus.resources.packet"
+      ]
+    },
+    "apply": {
+      "label": "Apply",
+      "control": "resources.apply-today",
+      "rows": [
+        "campus.resources.apply"
+      ]
+    },
+    "community": {
+      "label": "Join the Community",
+      "control": "preopen.join-community",
+      "rows": [
+        "site.community.routing.cta"
+      ]
+    }
+  },
+  "rules": {
+    "hidden": {
+      "meaning": "The CTA is intentionally not shown on this campus page. Every row of the CTA is exempt: a missing button is the decided state, and nothing can be reachable or campus-specific when nothing is shown.",
+      "exemptsRowSuffixes": [
+        "*"
+      ]
+    },
+    "present": {
+      "meaning": "The CTA is intentionally shown although the lifecycle requirement would not call for it. Only the CTA's present rows are exempt; the destination must still be reachable and campus-specific.",
+      "exemptsRowSuffixes": [
+        "present"
+      ]
+    },
+    "destination": {
+      "meaning": "The CTA points at a decided non-standard destination (recorded in the entry's destination field). The destination comparison rows are exempt; the button must still be present where required and must still answer 2xx logged out. (cta is the Join the Community row, whose whole comparison is the destination host).",
+      "exemptsRowSuffixes": [
+        "destination-campus",
+        "path",
+        "source",
+        "source-sync",
+        "placeholder",
+        "finalsite-redirect",
+        "cta"
+      ]
+    }
+  },
+  "campuses": {
+    "dorado": {
+      "book-a-call": {
+        "rule": "destination",
+        "destination": "https://alpha.school/upcoming-events/?event_school=alpha-dorado",
+        "reason": "Dorado's Book a Call links to the campus's events page instead of a HubSpot meetings page",
+        "decidedBy": "unrecorded (observed on the live page; recorded by Matt Barge as the one-off exception in spec/campus-page-controls.json hero.book-a-call on 2026-09-16)",
+        "source": "crawl of 44 live campus pages 2026-09-16 (spec/campus-page-controls.json); moved to this registry 2026-09-24",
+        "decidedOn": "2026-09-16",
+        "expires": null,
+        "note": "Moved from spec/campus-page-controls.json controls.hero.book-a-call.exceptions.dorado on 2026-09-24; that file now points here. The original decider is not recorded; the first person to confirm or revoke it records the decision with agent/record-decision.mjs."
+      }
+    },
+    "boston-suburbs": {
+      "book-a-call": {
+        "rule": "hidden",
+        "reason": "campus is opening soon; no Book a Call CTA while Announced",
+        "decidedBy": "Matt Barge",
+        "source": "email relayed 2026-09-24",
+        "decidedOn": "2026-09-24",
+        "expires": "lifecycle:Open",
+        "note": "Lexington (Alpha Boston Suburbs Program) is Announced; the observer's campus.resources.booking.present row applies to Open pages only, and the reachable and destination rows stay exempt while the button is hidden by decision.",
+        "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-24-boston-suburbs-book-a-call.json"
+      }
+    }
+  }
+}
