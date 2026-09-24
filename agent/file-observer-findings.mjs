@@ -488,12 +488,15 @@ export function sharedLeadershipExemption({ row, finding, registry = loadRegistr
   if (!slug) return null
   const text = findingText(finding)
   if (!text) return null
-  const actual = finding.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
+  // The observer aggregates every conflict on a page into one finding (aeo PR 26), so `actual` may be an array of
+  // { campus, src, alt, ... } entries; the referenced campus comes from any entry's `campus`, else from the text.
+  const entries = Array.isArray(finding.actual) ? finding.actual : (finding.actual && typeof finding.actual === 'object' ? [finding.actual] : [])
+  const referencedFromActual = entries.map((e) => campusSlugForName(e?.campus)).find(Boolean)
   for (const [groupId, group] of Object.entries(registry.groups || {})) {
     if (groupId.startsWith('$') || !(group.campuses || []).includes(slug)) continue
     const person = (group.sharedLeadership || []).find((p) => p?.name && text.toLowerCase().includes(String(p.name).toLowerCase()))
     if (!person) continue
-    const referenced = campusSlugForName(actual.campus) || (group.campuses || []).find((sibling) => sibling !== slug && (campusPages()[sibling]?.names || []).some((n) => text.toLowerCase().includes(n.toLowerCase())))
+    const referenced = referencedFromActual || (group.campuses || []).find((sibling) => sibling !== slug && (campusPages()[sibling]?.names || []).some((n) => text.toLowerCase().includes(n.toLowerCase())))
     if (!referenced || !(group.campuses || []).includes(referenced)) continue
     return { group: groupId, groupLabel: group.label || groupId, person: person.name, role: person.role || null, campus: slug, sibling: referenced, row: row.id, reason: `${person.name} is shared leadership for ${group.label || groupId} (${(group.campuses || []).join(', ')}); a card naming ${campusPages()[referenced]?.names?.[0] || referenced} on ${campusPages()[slug]?.names?.[0] || slug} is the decided state` }
   }

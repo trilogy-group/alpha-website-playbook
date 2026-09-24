@@ -925,3 +925,15 @@ test('observer filer: CTA exceptions, the sister-site guard, shared leadership, 
   for (const check of ['campus-calendar-link-reachable', 'campus-info-packet-link-reachable', 'campus-book-call-present', 'campus-sister-brand-leak', 'campus-image-identity-conflict', 'campus-application-path']) assert.ok(aliases[check]?.checkIds?.length && aliases[check]?.titlePatterns?.length, `${check} has aliases`)
   assert.ok(aliases['campus-calendar-link-reachable'].checkIds.includes('cta-links-resolve') && aliases['campus-calendar-link-reachable'].checkIds.includes('cta-hidden-everywhere'))
 })
+
+test('shared-leadership exemption reads the aggregated conflict array the observer emits since aeo PR 26', () => {
+  const bundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'check-bundle.generated.json'), 'utf8'))
+  const row = bundle.rows.find((r) => r.id === 'site.identity.other-campus.images')
+  const finding = { id: 'SITE-172A936ED4', url: 'https://alpha.school/jamaica-plain/', entity: 'program-57622127456', actual: [{ campus: 'Alpha Boston', src: 'https://alpha.school/wp-content/uploads/2026/09/brandon-maddox-headshot.jpg', alt: 'Brandon Maddox, Director of Admissions - Boston/Lexington', nearbyText: '', source: 'page-html', hiddenOnAllViewports: false }] }
+  const exemption = sharedLeadershipExemption({ row, finding })
+  assert.ok(exemption, 'array-shaped actual must still resolve the sibling campus')
+  assert.equal(exemption.person, 'Brandon Maddox')
+  assert.equal(exemption.sibling, 'boston')
+  const stranger = { ...finding, actual: [{ ...finding.actual[0], alt: 'Someone Else, Guide - Boston' }] }
+  assert.equal(sharedLeadershipExemption({ row, finding: stranger }), null)
+})
