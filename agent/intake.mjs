@@ -8,6 +8,12 @@
  *   node agent/intake.mjs --since 2026-09-17T00:00:00Z [--apply] [--report out.json] [--ticket id,id] [--page https://alpha.school/<slug>/]
  *   node agent/intake.mjs --file tickets.json --replay --report replay.json
  *
+ * --ticket never drops an id silently: the summary's requestedTickets.dropped names every requested id that was not
+ * administered and why (not in the queue, status outside --status, outside the family, --page, --since, --limit).
+ * Protocol 1d runs here: an owner role with no registered person is Blocked on the website agent operator with a
+ * note naming the role, the system, and the change. Protocol 1c: a ticket carrying an OPERATOR INSTRUCTION or
+ * CORRECTION note is reported and never re-routed, re-blocked, or re-assigned.
+ *
  * Requester notices (decision 2026-09-23): for a Missing Info or blocked decision the report carries the Slack DM
  * preview from agent/notify-requester.mjs (dry run); the DM goes only with --apply --notify-send after the
  * APEX action succeeded, and then as spec/requester-notices.json says: to the reviewer first (reviewMode "all",
@@ -28,6 +34,7 @@ import {
   executionRevision,
   pendingClarificationReviews,
   normalizePersonName,
+  operatorInstruction,
   requesterNoticeItems,
   resolveDecisionOwner,
   ticketInputSha256,
@@ -48,7 +55,11 @@ const token = process.env.APEX_API_TOKEN
 const statuses = String(args.status || 'NOT_STARTED,MISSING_INFO,BLOCKED,IN_PROGRESS').split(',').filter(Boolean)
 // --ticket id[,id...] restricts administration to those tickets (sweep partitions must not administer each other's
 // tickets, 2026-09-21); --page <canonical url> restricts to tickets whose derived or declared page matches.
+// A requested id is never dropped silently: every id that is not administered is named in the summary with the
+// reason (2026-09-24, partition E2 lost four NOT_STARTED ids to the family filter with no line in the log).
 const onlyTickets = new Set(String(args.ticket || '').split(',').map((v) => v.trim()).filter(Boolean))
+const requestedDrops = new Map()
+const dropRequested = (id, reason) => { if (onlyTickets.has(id) && !requestedDrops.has(id)) requestedDrops.set(id, reason) }
 const onlyPage = args.page ? String(args.page).replace(/\/+$/, '').toLowerCase() : null
 const duplicateStatuses = [...new Set([...statuses, 'FOR_REVIEW', 'TESTING', 'APPROVED'])]
 let executionReleaseCheck = null
@@ -72,16 +83,43 @@ if (args.file) {
   tickets = await listTickets(duplicateStatuses)
 }
 
-if (onlyTickets.size) tickets = tickets.filter((t) => onlyTickets.has(t.id))
-if (onlyPage) tickets = tickets.filter((t) => [t.url, (t.customFields || {}).pageUrl, (t.customFields || {}).targetPageUrl].some((u) => typeof u === 'string' && u.replace(/\/+$/, '').toLowerCase() === onlyPage))
+if (onlyTickets.size) {
+  const listed = new Set(tickets.map((t) => t.id))
+  for (const id of onlyTickets) {
+    if (listed.has(id)) continue
+    if (args.file || !token) { dropRequested(id, `not in the ${args.file ? '--file input' : 'queue listing'}`); continue }
+    // Read the ticket itself so the reason is its real state, not a guess; a queue-status ticket the paged listing
+    // missed is administered from that read.
+    try {
+      const ticket = await agent(`/tasks/${id}`)
+      if (duplicateStatuses.includes(ticket.status)) tickets.push(ticket)
+      else dropRequested(id, `status ${ticket.status} is outside the queue statuses (${duplicateStatuses.join(', ')})`)
+    } catch (error) {
+      dropRequested(id, error.status === 404 ? 'not found in APEX' : `APEX read failed: ${error.message}`)
+    }
+  }
+  tickets = tickets.filter((t) => onlyTickets.has(t.id))
+}
+if (onlyPage) {
+  tickets = tickets.filter((t) => {
+    const keep = [t.url, (t.customFields || {}).pageUrl, (t.customFields || {}).targetPageUrl].some((u) => typeof u === 'string' && u.replace(/\/+$/, '').toLowerCase() === onlyPage)
+    if (!keep) dropRequested(t.id, `page is not --page ${onlyPage}`)
+    return keep
+  })
+}
 
 const since = args.since ? new Date(args.since) : null
 if (since && Number.isNaN(since.getTime())) fail(`invalid --since value: ${args.since}`)
-const candidates = tickets
-  .filter(isWebsiteFamily)
-  .filter((ticket) => statuses.includes(ticket.status))
-  .filter((ticket) => !since || new Date(ticket.updatedAt || ticket.createdAt) >= since)
-  .slice(0, Number(args.limit || 500))
+const limit = Number(args.limit || 500)
+const eligible = tickets.filter((ticket) => {
+  if (!isWebsiteFamily(ticket)) { dropRequested(ticket.id, 'outside the website family filter (no website request family, request type, source, observer check id, or title shape)'); return false }
+  if (!statuses.includes(ticket.status)) { dropRequested(ticket.id, `status ${ticket.status} is outside --status (${statuses.join(', ')})`); return false }
+  if (since && new Date(ticket.updatedAt || ticket.createdAt) < since) { dropRequested(ticket.id, `updated ${ticket.updatedAt || ticket.createdAt} is before --since ${args.since}`); return false }
+  return true
+})
+for (const ticket of eligible.slice(limit)) dropRequested(ticket.id, `beyond --limit ${limit}`)
+const candidates = eligible.slice(0, limit)
+for (const [id, reason] of requestedDrops) console.error(`--ticket ${id}: not administered: ${reason}`)
 
 const hydrationErrors = new Map()
 let hydrated = candidates
@@ -151,6 +189,15 @@ for (const result of decisions) {
   result.action = administrativeAction(result)
   if (result.action.kind === 'no-action') {
     result.skipped = 'outside the Alpha public WordPress v1 scope; no APEX mutation planned'
+    continue
+  }
+  // Protocol 1c: an OPERATOR INSTRUCTION or CORRECTION note outranks the policy bundle; intake reports and never
+  // re-routes, re-blocks, or re-assigns such a ticket.
+  const instruction = operatorInstruction(ticket)
+  if (instruction) {
+    result.operatorInstruction = instruction
+    result.action = { kind: 'no-action', api: null, assign: null, reason: instruction.kind }
+    result.skipped = `carries an ${instruction.kind === 'correction' ? 'CORRECTION' : 'OPERATOR INSTRUCTION'} note ("${instruction.heading}"); intake never re-routes, re-blocks, or re-assigns it (protocol 1c)`
     continue
   }
   const previousHash = ticket.customFields?.intakeHash
@@ -268,9 +315,13 @@ async function applyDecision(ticket, result) {
     const hasRequesterResponses = (current.clarifications || []).some((item) => item.respondedAt || item.responseData)
     if (pending.length && hasRequesterResponses) throw new Error('Cannot safely retire pending clarification after a prior requester response')
     const disposition = pending.length ? 'blocked_internal' : 'blocked'
+    // Protocol 1d: an unowned role's note names the role, the system, and the change (agent/intake-policy.mjs escalationNote).
+    const note = result.escalation?.note
+      ? [result.reason, result.escalation.note].filter(Boolean).join('\n')
+      : result.reason || `Intake ${VERSION}: ${result.outcome}; owner role ${result.ownerRole}.`
     const response = await agent(`/tasks/${ticket.id}/reconcile`, 'POST', {
       disposition,
-      note: result.reason || `Intake ${VERSION}: ${result.outcome}; owner role ${result.ownerRole}.`,
+      note,
       expectedUpdatedAt: current.updatedAt,
       expectedRevision: executionRevision(current),
       ...(pending.length ? { requireNoPendingRequesterScope: true, retireUnansweredClarifications: pending } : {}),
@@ -354,12 +405,24 @@ function assertExecutionRelease() {
   }
 }
 
+/**
+ * The website family (bundle.familyFilter): the APEX website request family, the "Website" title prefix, the Website
+ * and Website QC request types, a ticket filed by the observer or an agent (customFields.source), an observer check id,
+ * or the observer's title shape. The ticket URL is not a family test: an observer finding's URL is its surface (a
+ * HubSpot event record, the observer workflow, events.alpha.school, the Operations sheet, a sister site) and the page,
+ * when there is one, is derived by the policy (customFields.pageUrl, the program's registry page, the ticket URL, the
+ * title). Before 2026-09-24 an alpha-site-qc ticket was in the family only with an alpha.school URL, and the sweep
+ * hand-administered 40 of its 180 observer tickets.
+ */
 function isWebsiteFamily(ticket) {
   const fields = ticket.customFields || {}
   const filter = bundle.familyFilter
+  const requestType = String(ticket.requestType || '').trim().toLowerCase()
   return fields.requestFamily === filter.requestFamily
     || filter.titlePrefixes.some((prefix) => String(ticket.title || '').startsWith(prefix))
-    || (filter.sources.includes(fields.source) && (fields.source !== 'alpha-site-qc' || /^https:\/\/alpha\.school\//.test(ticket.url || '')))
+    || (filter.requestTypes || []).some((type) => String(type).toLowerCase() === requestType)
+    || filter.sources.includes(fields.source)
+    || (Boolean(filter.observerCheckIdPattern) && new RegExp(filter.observerCheckIdPattern).test(String(fields.checkId || '')))
     || new RegExp(filter.observerTitlePattern).test(ticket.title || '')
 }
 
@@ -425,6 +488,13 @@ function summarize(results) {
   }, {})
   return {
     tickets: results.length,
+    ...(onlyTickets.size ? {
+      requestedTickets: {
+        requested: onlyTickets.size,
+        administered: results.length,
+        dropped: [...requestedDrops].map(([id, reason]) => ({ id, reason })),
+      },
+    } : {}),
     outcomes: countBy('outcome'),
     actions: results.reduce((counts, result) => {
       const kind = result.action?.kind || 'none'
@@ -438,6 +508,8 @@ function summarize(results) {
     derivableFieldsResolved: countItems(results.flatMap((result) => Object.keys(result.found || {})
       .filter((field) => bundle.intakeFieldSources?.[field]?.kind === 'derivable'))),
     skipped: results.filter((result) => result.skipped).length,
+    operatorInstructions: results.filter((result) => result.operatorInstruction).map((result) => result.id),
+    escalated: results.filter((result) => result.escalation?.assignedTo && !result.skipped).length,
     applied: results.filter((result) => result.applied?.ok).length,
     requesterNotices: {
       previews: results.filter((result) => result.requesterNotice?.mode === 'preview' && result.requesterNotice.message && !result.requesterNotice.error).length,

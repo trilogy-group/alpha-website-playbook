@@ -1,9 +1,9 @@
 {
   "expected": {
     "outcome": "routed",
-    "class": "observer-health",
-    "ownerRole": "observer-owner",
-    "why": "render timeout from the observer"
+    "class": "observer-page-transient",
+    "ownerRole": "website-agent-operator",
+    "why": "render timeout on a campus page from the observer: transient until it reproduces, verified by the website agent (2026-09-24)"
   },
   "task": {
     "id": "cmu1thmi800020agmsg6c02f3",

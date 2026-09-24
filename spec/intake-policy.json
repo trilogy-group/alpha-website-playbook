@@ -1,7 +1,7 @@
 {
-  "$comment": "Deterministic policy for the scheduled APEX website intake administrator. Ticket requirements remain in ticket-classes.json; this file says who must supply each input, what administrative queue receives a complete ticket, and which requests require review or are refused. The agent never edits the website.",
-  "version": "1.0",
-  "asOf": "2026-09-17",
+  "$comment": "Deterministic policy for the scheduled APEX website intake administrator. 1.1 (2026-09-24): observer-page-transient (rendered-page timeouts, page 5xx, images failed to render) goes to the website agent operator to verify; observer-link-cta routes application-route findings to hubspot-program-admin; protocol 1d runs inside intake (an unregistered or ambiguous owner role is Blocked on the website agent operator with the role named), see agent/intake-policy.mjs resolveDecisionOwner. Ticket requirements remain in ticket-classes.json; this file says who must supply each input, what administrative queue receives a complete ticket, and which requests require review or are refused. The agent never edits the website.",
+  "version": "1.1",
+  "asOf": "2026-09-24",
   "siteScope": {
     "publicHosts": ["alpha.school", "www.alpha.school"],
     "excludedPattern": "\\b(?:Waypoint(?: Academy)?|Texas Sports Academy|Alpha High(?: School)?|Nova(?: Academy)?|NextGen)\\b",
@@ -118,7 +118,14 @@
     "observer-brand-leak": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-brand-visual": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-media-identity": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
-    "observer-link-cta": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
+    "observer-link-cta": {
+      "policy": "allowed",
+      "ownerRole": "website-agent-operator",
+      "queue": "owner",
+      "ownerRules": [
+        { "pattern": "submission_campus|Apply stays on the HubSpot form|application route", "ownerRole": "hubspot-program-admin", "reason": "The application route (submission_campus, the Program admission_link, the Finalsite redirect) is admissions territory; the page CTA follows the Program (B1 and E2 partitions, 2026-09-24)." }
+      ]
+    },
     "observer-packet": { "policy": "allowed", "ownerRole": "packet-owner", "queue": "owner" },
     "observer-event": {
       "policy": "allowed",
@@ -129,6 +136,7 @@
       ]
     },
     "observer-layout": { "policy": "internal-review", "ownerRole": "elementor-owner", "queue": "owner" },
+    "observer-page-transient": { "policy": "allowed", "ownerRole": "website-agent-operator", "queue": "owner" },
     "observer-map-community": { "policy": "internal-review", "ownerRole": "internal-triage", "queue": "owner" },
     "observer-health": { "policy": "allowed", "ownerRole": "observer-owner", "queue": "owner" },
     "page-status": { "policy": "internal-review", "ownerRole": "website-operations", "queue": "owner" },

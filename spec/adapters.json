@@ -305,7 +305,8 @@
       },
       "ticketClasses": [
         "observer-health",
-        "observer-layout"
+        "observer-layout",
+        "observer-page-transient"
       ],
       "status": "handoff-with-verification"
     },

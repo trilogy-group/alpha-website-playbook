@@ -832,6 +832,11 @@
       "approves": "",
       "executes": "observer-owner"
     },
+    "observer-page-transient": {
+      "supplies": "",
+      "approves": "",
+      "executes": "website-agent-operator verifies by re-rendering; website-operations when the timeout reproduces"
+    },
     "other-workflow": {
       "supplies": "",
       "approves": "",
@@ -1092,6 +1097,13 @@
         "observer owner": "observer-owner (registry: Matt Barge)"
       },
       "missingInfoGoesTo": "observer-owner"
+    },
+    "observer-page-transient": {
+      "needs": {
+        "two agent renders": "tests/rendered-controls.mjs desktop and mobile, timings on the note",
+        "website operations when it reproduces": "website-operations (registry: Yash Chitneni)"
+      },
+      "missingInfoGoesTo": "website-agent-operator"
     },
     "other-workflow": {
       "needs": {
