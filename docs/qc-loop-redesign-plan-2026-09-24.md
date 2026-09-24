@@ -56,3 +56,19 @@ Sizes: S a day, M a few days, L a week or more. Tranche 1 uses only what exists;
 ## Exit criteria
 
 Every observer check maps to a playbook requirement row or is retired; the observer contains no rule of its own; every finding cites a requirement id and bundle version; one ticket per root cause; a ticket closes on its own when the check clears; loop health never reaches the website queue; precision is measured every run and the first three post-switch runs stay at or above 80%; intake administers every observer ticket.
+
+## Build status (2026-09-24, end of day)
+
+| Workstream | Where | State |
+| --- | --- | --- |
+| 1 Check bundle builder (`tests/build-checks.mjs`, `spec/check-bundle.generated.json`, schema, validator coverage rule) | playbook PR 23 | open; 103 rows, 8 retired, all 109 observer checks covered |
+| 2 Correction rows (header overlap template scope and thresholds, community host, grades start/end only with `grade_levels` never read, sister-brand registry now carries the brand word list, 4 h event grace, packet interim exemption, sheet freshness as loop health, images-all-failed as loop health, timeouts two consecutive runs) | playbook PR 23 | open; rows marked `decisionPending` on Matt's six tickets and the grade ticket |
+| 3 Intake administers every observer ticket; 1c and 1d in code; `observer-page-transient` class; filer-owned 409 skip | playbook PR 21 | open; 180 of 180 sweep tickets selected and classified (was 126) |
+| 4 Disposition backfill (`resolutionKind` on the 180 sweep tickets) | marketingsupport `sweep-2026-09-24-observer/coordinator/` | done; 79 blocked-decision, 49 fixed-elsewhere, 46 false-positive, 6 aged-out |
+| 5 Observer loads the bundle, thresholds removed from config, findings and incidents contract, `health.json`, `OBSERVER_FILES_TICKETS` flag | aeo PR 24 | open; 147 tests; production needs `CHECK_BUNDLE_URL` or `CHECK_BUNDLE_TOKEN` before enforced checks run |
+| 6 Filer (`agent/file-observer-findings.mjs`): bundle-gated, dedupe scopes, grace, evidence, auto-resolve, filer-owned fields | playbook PR 24 | open; dry replay of run 36012695049 files 11, resolves 93, holds 25 on open decisions |
+| 7 APEX `resolutionKind`, completion clears `agentStatus`, filer-owned skip, requirement id in the panel, OpenAPI | APEX PR 409 | open, needs Hailey |
+| 8 Precision telemetry (`tests/telemetry-report.mjs`, `docs/telemetry/2026-09-24-observer-precision.md`) | playbook PR 22 | open; pre-redesign precision 34.2% on 269 observer tickets |
+| 9 Decision cadence | Matt Barge | six decisions on the Blocked queue feed the `decisionPending` rows |
+
+Merge order: PR 23 (bundle), then 21, 22, 24 (they read the bundle), then aeo PR 24 with the production bundle URL set, then APEX PR 409; switch the filer on (`OBSERVER_FILES_TICKETS=false`, filer `--apply` on a schedule) after three shadow runs at or above 80% precision.
