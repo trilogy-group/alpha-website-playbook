@@ -43,6 +43,7 @@ import {
   ticketInputSha256,
 } from './intake-policy.mjs'
 import { NotifyRequesterError, runNotice } from './notify-requester.mjs'
+import { isFilerOwnedConflict } from './apex-errors.mjs'
 import { RequesterNoticeError } from './requester-notice-policy.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
@@ -377,11 +378,11 @@ function observerFilerOwned(ticket) {
     && Boolean(ticket.status) && ticket.status !== 'NOT_STARTED'
 }
 
-/** POST reconcile; a 409 OBSERVER_FILER_OWNED comes back as { observerFilerOwned: true } instead of throwing. */
+/** POST reconcile; a 409 OBSERVER_FILER_OWNED (agent/apex-errors.mjs isFilerOwnedConflict, shared with the filer) comes back as { observerFilerOwned: true } instead of throwing. */
 async function reconcile(ticket, body) {
   try { return await agent(`/tasks/${ticket.id}/reconcile`, 'POST', body) }
   catch (error) {
-    if (error.status === 409 && error.code === 'OBSERVER_FILER_OWNED') return { observerFilerOwned: true }
+    if (isFilerOwnedConflict(error)) return { observerFilerOwned: true }
     throw error
   }
 }
@@ -501,7 +502,8 @@ async function request(base, route, method, body) {
   if (!response.ok) {
     const error = new Error(`APEX ${method} ${route} ${response.status}: ${typeof data.error === 'string' ? data.error : JSON.stringify(data.error || data).slice(0, 500)}`)
     error.status = response.status
-    error.code = data.code || null
+    error.code = data.code || data.error?.code || null
+    error.body = data
     throw error
   }
   return data

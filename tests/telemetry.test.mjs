@@ -4,7 +4,7 @@ import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { classifyOutcome, main as telemetryMain, median, precisionReport, receiptsByTicket, receiptsFrom, renderPrecisionSection, summarize } from './telemetry-report.mjs'
+import { classifyOutcome, isObserverTicket, main as telemetryMain, median, precisionReport, receiptsByTicket, receiptsFrom, renderPrecisionSection, summarize } from './telemetry-report.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const fixtures = path.join(root, 'tests', 'fixtures', 'telemetry')
@@ -110,4 +110,22 @@ test('telemetry CLI: writes the report from files without a token or a network c
     globalThis.fetch = originalFetch
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+test('telemetry: the filer\'s tickets (agent-found with a filerRunId) are observer tickets and group by observerCheck when check is absent', () => {
+  const filerTicket = { id: 't-filer', title: 'Alpha Raleigh: fails "No other campus in image file names"', status: 'COMPLETED', createdAt: '2026-09-24T15:00:00.000Z', completedAt: '2026-09-25T09:00:00.000Z', description: 'Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.3, 2026-09-25, playbook check bundle)', customFields: { source: 'agent-found', filerRunId: 'site-full-2026-09-24T14-28-40-974Z', observerCheck: 'campus-image-identity-conflict', resolutionKind: 'check-cleared' } }
+  const sweepFind = { id: 't-sweep', title: 'Sync mapping: grade title derivation', status: 'NOT_STARTED', createdAt: '2026-09-24T15:00:00.000Z', description: 'Element: hero.title', customFields: { source: 'agent-found', checkId: 'sync-mapping' } }
+  assert.equal(isObserverTicket(filerTicket), true, 'agent-found with a filerRunId is the filer\'s')
+  assert.equal(isObserverTicket(sweepFind), false, 'agent-found without a filerRunId is a sweep agent\'s find, not an observer ticket')
+  assert.equal(isObserverTicket({ ...filerTicket, customFields: { ...filerTicket.customFields, filerRunId: '  ' } }), false, 'a blank filerRunId does not count')
+  assert.equal(isObserverTicket(tickets.find((t) => t.id === 't-site-change')), true, 'the observer\'s own tickets still count')
+  const report = precisionReport([...tickets, filerTicket, sweepFind], receipts, { since, until, now })
+  assert.equal(report.period.filed, 9, 'the fixture\'s 8 plus the filer ticket; the sweep find is excluded')
+  const outcome = report.outcomes.find((o) => o.id === 't-filer')
+  assert.equal(outcome.check, 'campus-image-identity-conflict', 'observerCheck stands in for check')
+  assert.equal(outcome.runId, 'site-full-2026-09-24T14-28-40-974Z', 'filerRunId stands in for runId')
+  assert.equal(outcome.kind, 'check-cleared')
+  assert.equal(report.byCheck.find((c) => c.key === 'campus-image-identity-conflict').filed, 2, 'grouped with the observer\'s own ticket on the same check')
+  assert.ok(report.byRun.some((r) => r.key === 'site-full-2026-09-24T14-28-40-974Z'))
+  assert.equal(classifyOutcome({ ...filerTicket, customFields: { ...filerTicket.customFields, check: 'explicit-check' } }, receiptsByTicket(receipts), now).check, 'explicit-check', 'check wins when both are present')
 })

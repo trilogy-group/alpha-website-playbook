@@ -8,20 +8,23 @@
  *          [--receipts-file receipts.json] [--tickets-file tickets.json] [--out docs/telemetry/<date>.md]
  * Env: ALPHA_WP_BASE_URL, ALPHA_WP_USERNAME, ALPHA_WP_APPLICATION_PASSWORD (receipts); APEX_API_TOKEN (queue).
  *
- * Precision section (read only): observer tickets (customFields.source alpha-site-qc) filed in [since, until].
+ * Precision section (read only): observer tickets filed in [since, until]: customFields.source alpha-site-qc (the observer's
+ * own tickets) or agent-found with a filerRunId (tickets agent/file-observer-findings.mjs filed from a packet).
  *   precision            = tickets that ended in a site change (an applied mutation receipt carrying the ticket id),
  *                          a source change (an audit line on the ticket), or a recorded decision (Blocked with
  *                          DECISION NEEDED, or customFields.resolutionKind blocked-decision), divided by tickets filed
  *   false-positive rate  = resolutionKind false-positive / filed
  *   fixed-elsewhere rate = resolutionKind fixed-elsewhere / filed
  *   median days open     = closed tickets to completedAt, open tickets to the report time
- * per observer run (customFields.runId), per observer check (customFields.check), and for the whole period.
+ * per observer run (customFields.runId), per observer check (customFields.check, else the filer's customFields.observerCheck),
+ * and for the whole period.
  */
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 export const OBSERVER_SOURCE = 'alpha-site-qc'
+export const FILER_SOURCE = 'agent-found'
 export const RESOLUTION_KINDS = ['fixed-elsewhere', 'false-positive', 'aged-out', 'blocked-decision', 'check-retired', 'check-cleared']
 export const CLOSED_STATUSES = new Set(['COMPLETED', 'CANCELLED'])
 /** Mutation receipts: a write to the site. Prepare, regenerate, flush and purge are not changes on their own. */
@@ -35,7 +38,12 @@ export function isWebsiteTicket(t) {
   const cf = t.customFields || {}
   return t.requestType === 'website' || cf.requestFamily === 'website' || /^Website/.test(t.title || '') || ['website-agent', 'agent-found', OBSERVER_SOURCE].includes(cf.source)
 }
-export function isObserverTicket(t) { return (t.customFields || {}).source === OBSERVER_SOURCE }
+/** The observer's own tickets, and the filer's (agent-found with a non-empty filerRunId; agent-found without one is a sweep agent's find). */
+export function isObserverTicket(t) {
+  const cf = t.customFields || {}
+  if (cf.source === OBSERVER_SOURCE) return true
+  return cf.source === FILER_SOURCE && typeof cf.filerRunId === 'string' && cf.filerRunId.trim() !== ''
+}
 
 export function receiptsByTicket(receipts) {
   const out = new Map()
@@ -66,7 +74,7 @@ export function classifyOutcome(ticket, byTicket, now = new Date()) {
   const closed = CLOSED_STATUSES.has(ticket.status)
   const end = closed ? new Date(ticket.completedAt || ticket.updatedAt || now) : now
   const daysOpen = Number.isFinite(created.getTime()) ? Math.max(0, (end - created) / 86400e3) : null
-  return { id: ticket.id, status: ticket.status, closed, kind, ended, siteChange, sourceChange, decision, daysOpen, runId: cf.runId || null, check: cf.check || null }
+  return { id: ticket.id, status: ticket.status, closed, kind, ended, siteChange, sourceChange, decision, daysOpen, runId: cf.runId || cf.filerRunId || null, check: cf.check || cf.observerCheck || null }
 }
 
 export function median(values) {
@@ -156,7 +164,7 @@ Per observer run (\`customFields.runId\`):
 
 ${groupTable(report.byRun, 'Observer run')}
 
-Per observer check (\`customFields.check\`):
+Per observer check (\`customFields.check\`, or the filer's \`customFields.observerCheck\`):
 
 ${groupTable(report.byCheck, 'Check')}
 `

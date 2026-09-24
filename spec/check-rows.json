@@ -263,6 +263,38 @@
       }
     },
     {
+      "id": "campus.facts.grades.source-complete",
+      "observerCheck": "campus-grade-source-incomplete",
+      "title": "HubSpot start and end grade are both set, valid and ordered",
+      "element": "hero.title",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "start_grade_level",
+            "end_grade_level"
+          ],
+          "transform": "both present, each PreK, K or a grade number, start not after end"
+        }
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 2,
+        "unit": "valid-grade-fields"
+      },
+      "status": "advisory",
+      "ticketClass": "observer-fact-sync",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "decisionPending": "cmu4g13kc00000agmdogkxihp",
+      "note": "Telemetry only: a source defect the grade-source decision (cmu4g13kc00000agmdogkxihp) will route; the observer measures it so the decision has counts.",
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/hero.title"
+      }
+    },
+    {
       "id": "campus.facts.phone",
       "observerCheck": "campus-page-phone-source-sync",
       "title": "Phone on the page matches HubSpot contact_number",
@@ -293,6 +325,33 @@
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/contact.phone"
+      }
+    },
+    {
+      "id": "campus.facts.email",
+      "observerCheck": "campus-page-email-source-sync",
+      "title": "Email on the page matches HubSpot email",
+      "element": "contact.email",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": "email",
+          "transform": "lower-case address; the mailto link, the visible admissions email and the School schema email"
+        }
+      },
+      "comparator": {
+        "type": "intersects",
+        "threshold": 1,
+        "unit": "normalized-email"
+      },
+      "ticketClass": "sync-delivery",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "note": "spec/campus-page-field-map.json contact.email: writer n8n-hubspot from the Program email field, so a page that disagrees with a correct source is a delivery defect (n8n-sync-owner); when the source is wrong the executor re-classes to hubspot-data (onMismatch.ifSourceWrong).",
+      "requirementRef": {
+        "file": "spec/campus-page-field-map.json",
+        "key": "elements/contact.email"
       }
     },
     {
@@ -854,6 +913,40 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "requirementRef": {
+        "file": "spec/source-authority.json",
+        "key": "fields/campus.application-link"
+      }
+    },
+    {
+      "id": "campus.resources.apply.finalsite-redirect",
+      "observerCheck": "campus-application-finalsite-redirect",
+      "title": "Finalsite campuses send /application/?submission_campus= to the Finalsite application",
+      "element": "resources.apply",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "admissions_handled_in_finalsite",
+            "finalsite_base_url",
+            "admission_link"
+          ],
+          "transform": "when admissions_handled_in_finalsite is true: HTTP 301 or 302 from /application/?submission_campus=<slug> to /application-fs/?submission_campus=<slug> or a Finalsite host (fsenrollment.com); otherwise the row does not apply"
+        }
+      },
+      "comparator": {
+        "type": "http-status",
+        "threshold": 302,
+        "unit": "redirect-status",
+        "note": "301 or 302 whose Location is the Finalsite application for the same submission_campus slug; a 200 on the HubSpot form, a redirect to another slug, or an unverifiable probe fails"
+      },
+      "ticketClass": "observer-link-cta",
+      "ownerRole": "hubspot-program-admin",
+      "dedupeScope": "program",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "note": "Owner per spec/ticket-classes.json observer-link-cta ownerRules (the application route is admissions territory). The finding URL is the /application/ route, so the scope is the program, never the page.",
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
@@ -2907,6 +3000,58 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.layout.* and site.header.rendered.route-reachable on the same run, route and viewport",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.route-screenshot-capture",
+      "observerCheck": "route-screenshot-capture",
+      "title": "Screenshot capture of a route failed",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "a saved screenshot per route and viewport"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "screenshot"
+      },
+      "severity": "low",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "nothing that files: the DOM measurement stands, only the evidence screenshot pair for that route and viewport is missing from the artifact",
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.loop.health"
+      }
+    },
+    {
+      "id": "site.loop.health.route-font-readiness",
+      "observerCheck": "route-font-readiness",
+      "title": "Fonts did not settle before the DOM inspection of a route",
+      "pageFamily": "site",
+      "lifecycleStates": [],
+      "channel": "loop-health",
+      "element": "observer.browser",
+      "expected": {
+        "literal": "fonts settled before layout inspection"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "inspection"
+      },
+      "severity": "low",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "site.layout.* on the same run, route and viewport (a layout measured before the fonts settled is not evidence)",
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
