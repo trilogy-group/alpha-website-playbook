@@ -1,0 +1,1085 @@
+{
+  "$comment": "Expected intake decision per sweep ticket from spec/policy-bundle.generated.json at the time of the fixture (class from customFields.check via each class observerChecks, outcome, owner role). Regenerate deliberately when the policy changes: node tests/build-decision-fixtures.mjs is for single fixtures; for this set run agent/intake.mjs --file tests/fixtures/observer-sweep-2026-09-24/tickets.json --replay and copy class, outcome, ownerRole per id.",
+  "expected": {
+    "cmtlynywi00010agm8sd1a1zt": {
+      "class": "hubspot-data",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-stale-launch-media"
+    },
+    "cmtlz33vo000504ju2itpi7d9": {
+      "class": "observer-packet",
+      "outcome": "routed",
+      "ownerRole": "packet-owner",
+      "check": "campus-info-packet-link-reachable"
+    },
+    "cmtm176io000204lflmrd88j6": {
+      "class": "observer-packet",
+      "outcome": "routed",
+      "ownerRole": "packet-owner",
+      "check": "campus-info-packet-link-reachable"
+    },
+    "cmtm8v0pl000404kzexubc1lz": {
+      "class": "observer-media-identity",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "campus-image-identity-conflict"
+    },
+    "cmtma2laz000104ldh32o9p3i": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "events-plugin-owner",
+      "check": "campus-event-filter"
+    },
+    "cmtma2lx3000204ldfmqby6x0": {
+      "class": "observer-media-identity",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "campus-image-identity-conflict"
+    },
+    "cmtma2mjq000304ldbirwtjc9": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmcirer000204i2dm1uh3hl": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmcis13000304i2yod9biqz": {
+      "class": "observer-media-identity",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "campus-image-identity-conflict"
+    },
+    "cmtmecsk3000204jvjzq668tt": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-coordinates"
+    },
+    "cmtmecu1b000504jvw3s2g79k": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-address"
+    },
+    "cmtmgiklb000204jykkovsoy6": {
+      "class": "hubspot-data",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "operations-map-address-conflict"
+    },
+    "cmtmgil2e000304jy2xijb5q0": {
+      "class": "hubspot-data",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-stale-launch-media"
+    },
+    "cmtmgiljc000404jys87e41aa": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmijriw000004l4udxriqxw": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "events-plugin-owner",
+      "check": "campus-event-filter"
+    },
+    "cmtmijs8b000104l4l3hscyud": {
+      "class": "observer-packet",
+      "outcome": "routed",
+      "ownerRole": "packet-owner",
+      "check": "campus-info-packet-present"
+    },
+    "cmtmijtjz000304l4rntdehar": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    },
+    "cmtmn1ras000004i2asbfpd1j": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtmn1ruo000104i23vxtvu2w": {
+      "class": "observer-packet",
+      "outcome": "routed",
+      "ownerRole": "packet-owner",
+      "check": "campus-info-packet-link-reachable"
+    },
+    "cmtmn1scy000204i2zif8thpl": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmn1tdm000404i2tdnufdyk": {
+      "class": "observer-media-identity",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "campus-image-identity-conflict"
+    },
+    "cmtmp92li000104jv69k570o0": {
+      "class": "observer-media-identity",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "campus-image-identity-conflict"
+    },
+    "cmtmp9484000404jv2w43jq36": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "operations-map-address-conflict"
+    },
+    "cmtmrbh1p000104jo4xy3tlzn": {
+      "class": "observer-media-identity",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "campus-image-identity-conflict"
+    },
+    "cmtmrbhxo000304joy793zilx": {
+      "class": "observer-brand-leak",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "campus-sister-brand-leak"
+    },
+    "cmtmrbidd000404johl4maun2": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmtfd4p000004l73hzbl1sl": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtmvfbsm002504l4iehi2tsh": {
+      "class": "observer-packet",
+      "outcome": "out-of-scope",
+      "ownerRole": "internal-triage",
+      "check": "campus-info-packet-present"
+    },
+    "cmtmvfc8q002604l4bamtjkvc": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmxt0cp000204ktspxjlquz": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    },
+    "cmtmxt1iv000404ktfhofrbwm": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtmxt2le000604ktqvzco2ka": {
+      "class": "hubspot-data",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-stale-launch-media"
+    },
+    "cmtn1ykc5000504jrpi0a0h9u": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtn1ylyl000804jr1flk6hqp": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtn1ymni000904jr7hnqinuh": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtn1ynam000a04jr5wigfsxp": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtn3v3uz000004ldcw698ve8": {
+      "class": "hubspot-data",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "operations-map-address-conflict"
+    },
+    "cmtnao4a2000804l6kundtjks": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtnao4xn000904l6brg5a3eh": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtnao5jz000a04l67blwly43": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtnao65q000b04l63y7w5x95": {
+      "class": "observer-fact-sync",
+      "outcome": "out-of-scope",
+      "ownerRole": "internal-triage",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtnao6s0000c04l6h1bi9gvj": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtnc9xz500020agmzxbykybk": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-name"
+    },
+    "cmtncngy2000004l2id0nngjl": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtncnhf9000104l20ahh10kk": {
+      "class": "observer-link-cta",
+      "outcome": "routed",
+      "ownerRole": "hubspot-program-admin",
+      "check": "campus-application-source-missing"
+    },
+    "cmtncnhvx000204l2jqun7elr": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtncnisk000404l29ptwdfs6": {
+      "class": "observer-link-cta",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "campus-application-source-missing"
+    },
+    "cmtneqijc000104js4cdb2nv2": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtneqiz8000204jsmr13d87s": {
+      "class": "observer-link-cta",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "campus-application-source-missing"
+    },
+    "cmtneqjf4000304jso401ow98": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-grade-source-sync"
+    },
+    "cmtneqjw4000404jslko6zim1": {
+      "class": "observer-health",
+      "outcome": "routed",
+      "ownerRole": "observer-owner",
+      "check": "provider-health"
+    },
+    "cmtnga92w000304kz4i3qrbwc": {
+      "class": "observer-link-cta",
+      "outcome": "out-of-scope",
+      "ownerRole": "internal-triage",
+      "check": "campus-application-path"
+    },
+    "cmtnkzysl000004l12kvx75r1": {
+      "class": "observer-fact-sync",
+      "outcome": "out-of-scope",
+      "ownerRole": "internal-triage",
+      "check": "campus-school-schema"
+    },
+    "cmtnkzzo3000204l1fqq1v0ec": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtnl00rs000404l1ihl5ucij": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtnl4t1x00000agmtf2di9l1": {
+      "class": "observer-link-cta",
+      "outcome": "routed",
+      "ownerRole": "hubspot-program-admin",
+      "check": "campus-application-source-missing"
+    },
+    "cmtnxt9ei000004l2fmgsfv6e": {
+      "class": "observer-health",
+      "outcome": "routed",
+      "ownerRole": "observer-owner",
+      "check": "provider-health"
+    },
+    "cmtnxta3p000104l2mg9p9kvf": {
+      "class": "observer-health",
+      "outcome": "routed",
+      "ownerRole": "observer-owner",
+      "check": "campus-operations-snapshot-fresh"
+    },
+    "cmtq0v4yr000004l20lidnzza": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "events-plugin-owner",
+      "check": "event-registration-reachable"
+    },
+    "cmtrtfkzq000004ldwbneyxue": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtrtflic000104ld3vx65ivk": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtrtflyl000204ldla336zys": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtrtfmgk000304lddxh7be8e": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtrtfmwg000404ldyhtgi5hr": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtsj79vc001204lbvhxamvlo": {
+      "class": "observer-page-transient",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "route-reachable"
+    },
+    "cmtt22wgc000004ld0dvjplmy": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt22x4g000104ldujn5wlv9": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt22yu800000agm4lvnnhfk": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt22zix00010agmy6hu0k2o": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt23080000204ldg5u546b7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt3k8vr000104i9tz2a6hf7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt3k9p3000304i9zbaza7l7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt3kaer000404i9jjrnbcyj": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt3kb42000504i9ia2t1n44": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt3kbuh000604i9qm2dbbgp": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt4bqcu000004jmkv8v0hx2": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt4br5v000104jmp4fa157a": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt4bs7c000204jmapf1m4p6": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt4bt0z000304jmili2he8a": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt4btqq000404jm07ddyr64": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtt6c2ub000009gmnni87kwn": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    },
+    "cmttapkpk00020bgmurpoo7jy": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmttaplkg00020agmjj5l6kvs": {
+      "class": "observer-brand-leak",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "campus-sister-brand-leak"
+    },
+    "cmttapmbl00030bgmf4f5qixk": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmttapn1x00010agmasrx124a": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtu4su3g00000agmfw1enojf": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "operations-map-address-conflict"
+    },
+    "cmtuda46a00000agmc2hdbu7c": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    },
+    "cmtuoc40s00030bgmujiqfn3p": {
+      "class": "observer-health",
+      "outcome": "routed",
+      "ownerRole": "observer-owner",
+      "check": "provider-health"
+    },
+    "cmtuoc4yt00010agmuw8g0clu": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmtvvcamd00000agmn2rhekl2": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmtvz6lbr000004lakyoue9dx": {
+      "class": "observer-brand-leak",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "campus-sister-brand-leak"
+    },
+    "cmtxaucwp000104ijvl0dexr2": {
+      "class": "observer-link-cta",
+      "outcome": "routed",
+      "ownerRole": "hubspot-program-admin",
+      "check": "campus-application-finalsite-redirect"
+    },
+    "cmtxaudtn000204iju8prg65a": {
+      "class": "observer-link-cta",
+      "outcome": "out-of-scope",
+      "ownerRole": "internal-triage",
+      "check": "campus-application-finalsite-redirect"
+    },
+    "cmtxj7lpu00000agmiltn9jfo": {
+      "class": "sync-delivery",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-page-email-source-sync"
+    },
+    "cmtxs5o86000204ig79e5xvjy": {
+      "class": "observer-health",
+      "outcome": "routed",
+      "ownerRole": "observer-owner",
+      "check": "provider-health"
+    },
+    "cmty8wknh00000agmiv9t4g2g": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "images-render"
+    },
+    "cmty8wlfm00000agmm1ij963p": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "images-render"
+    },
+    "cmty8wm7e000004laa25df799": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-horizontal-overflow"
+    },
+    "cmty8wn6a00000bgmvl2vv97t": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "images-render"
+    },
+    "cmty8wnv400010bgmqxtk4twz": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-offscreen-content"
+    },
+    "cmtyu32gf00000agm0vltkx4s": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtyu338x00010agmfp53tbuz": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtyw6qpg00000agm1palhpw7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtyw6rpu00000agmk5tzhkkh": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtyw6so700010agm6x3u8ih7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtyw6tm600020agm17yaxlkh": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtyw6uk300010agmu7e8spoh": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtyyn64x00000agmactc1y3w": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtyyn6uv000009gmtceijcba": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtyyn7mt000004kt3b39uayi": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtyyn8e8000104ktofm803sr": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtyyn92y000204kt2541qynr": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtz0g6h800000agm2tb4book": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtz0g7av000k04l525uzc8ka": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtz0g7y500010agmiztfixgx": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtz0g98m00020agmtsgndxc0": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtz0g9xs00030agmskrtj7b2": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtz4491r00000agm1p5wdrji": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtz449z400000agm5y3rhsbc": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtz44awe00010agmf8g8k9ne": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmtz44bsl00000agma3ads887": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmtz44cp900010agmvoimxf84": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmu00zt7p000l0agms5xofjby": {
+      "class": "observer-fact-sync",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-coordinates"
+    },
+    "cmu0301c8000b04lj9dgkppfi": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "map-campus-missing-from-operations"
+    },
+    "cmu03029w000c04ljnwl505fw": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-url"
+    },
+    "cmu0e6txm000004jst7yfvur5": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu0n8wwk00000agmllxmfbn7": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "event-page-reachable"
+    },
+    "cmu0n8xoj000404jjejkxdc1r": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu0n8zer000009gmwqyzouoe": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu1ck6vc00030agmdmpuckeh": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu1ck7vu00040agmnzjqg8j6": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu1ck8rg00050agm2adlyg1z": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu1ck9na00060agmgdrfta4p": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu1ckai200070agmutjrzwxm": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu1edf8600010agme5dwotdy": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-required-facts"
+    },
+    "cmu1edfzj00020agmcc5xfhha": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-required-facts"
+    },
+    "cmu1edgni00000agmeiohqoun": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-address"
+    },
+    "cmu1l82ty000004iadbtldoyt": {
+      "class": "hubspot-data",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "operations-map-address-conflict"
+    },
+    "cmu1thkqy00000agmqc2wvwuz": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu1thlom00010agmg2svcpeu": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu1thmi800020agmsg6c02f3": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu2xxunk00000agmg70skizl": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmu36j9z100000agmbv3o8nz0": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "event-page-reachable"
+    },
+    "cmu3fiqsu000004jsft5h051r": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmu3firjj000104jsjwlbwnfk": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    },
+    "cmu3fis9t000204jsp4m64pwk": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmu3nsstn000004jpgbj90jml": {
+      "class": "sync-mapping",
+      "outcome": "intake-defect",
+      "ownerRole": "observer-owner",
+      "check": "campus-schema-coordinates"
+    },
+    "cmu4ddrtw00000agm8j4c0liq": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmu4g45fg00020agm20nd7kc8": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu4g467e00030agmwg90xl2c": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu4g47i200020agmli5eqjy6": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5imdr5000004joh8f6awhm": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "event-page-reachable"
+    },
+    "cmu5onpr1000d04l0d2u3libr": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5onqk8000e04l0t3ans901": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5qwa30000004ijsxk3lpxg": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5qwayj000104ijw0ymfpjn": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5qwbr2000204ij0gg3keo7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5qwcjz000304ijg7b5bine": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5qwdc5000404ijc3uc8iuw": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5su7ts00000agmvghnoti7": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmu5vme1w000004jy5ypo6fj0": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu5vmg7a00000agmv287n5uh": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu5vmgyy00010agma1ejqd0w": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "route-reachable"
+    },
+    "cmu63y6ql00000agmw1nroc6t": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "events-plugin-owner",
+      "check": "event-registration-reachable"
+    },
+    "cmu695bdy00000agmun86or4m": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "operations-campus-missing-from-map"
+    },
+    "cmu6lnbae00000bgmcv418m88": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu6lnc4800010bgmprzvga91": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmu78882b00000agmd02nlu1c": {
+      "class": "observer-page-transient",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
+      "check": "event-page-reachable"
+    },
+    "cmuaweac6000104l38fm0wpdi": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "events-plugin-owner",
+      "check": "event-registration-reachable"
+    },
+    "cmubgotfo00040agmxkackkj2": {
+      "class": "observer-map-community",
+      "outcome": "policy-review",
+      "ownerRole": "internal-triage",
+      "check": "preannouncement-community-host"
+    },
+    "cmublelu2000004jn74nfjaay": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmublemp9000104jn1pht0oe6": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmublenh2000204jn0xrysjvv": {
+      "class": "observer-layout",
+      "outcome": "policy-review",
+      "ownerRole": "elementor-owner",
+      "check": "campus-layout-header-overlap"
+    },
+    "cmuc06w3u000004jvlw2ing6k": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    },
+    "cmuc4bqn0000304jvlgatx1gg": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "events-plugin-owner",
+      "check": "event-registration-reachable"
+    },
+    "cmudnwoj500000agm5pltjjux": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmudnwpcm00000bgmlsroioby": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmueoly2f00000agmfny42761": {
+      "class": "observer-event",
+      "outcome": "routed",
+      "ownerRole": "hubspot-owner",
+      "check": "public-event-sync"
+    },
+    "cmuexgh0600000agmh3lrxi3t": {
+      "class": "observer-health",
+      "outcome": "routed",
+      "ownerRole": "observer-owner",
+      "check": "provider-health"
+    },
+    "cmuf1dfof00000agmkubu06ia": {
+      "class": "observer-event",
+      "outcome": "needs-derivation",
+      "ownerRole": "internal-triage",
+      "check": "public-event-sync"
+    }
+  }
+}

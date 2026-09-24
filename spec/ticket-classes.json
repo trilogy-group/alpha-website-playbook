@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22.",
-  "version": "0.10",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22. 0.11 (2026-09-24, QC loop redesign workstream 3): every class's observerChecks list is also its intake match rule for customFields.check (the observer's own check name, glob * allowed; one class per check, tests/build-policy.mjs refuses an overlap); match.urlPattern gates every rule of a class on the ticket URL; observer-page-transient receives rendered-page timeouts, 5xx pages and all-images-failed findings on a page URL, observer-health keeps loop health on the workflow or sheet URL only, and the application-route (Finalsite redirect) findings are observer-link-cta, not observer-event.",
+  "version": "0.11",
   "classes": {
     "other-workflow": {
       "match": {
@@ -384,6 +384,7 @@
       "scope": "website",
       "observerChecks": [
         "campus-expired-seasonal-cta",
+        "campus-page-stale-launch-media",
         "campus-page-status-sentence (to build)"
       ],
       "routingLabel": "launch_copy_coming_soon",
@@ -391,7 +392,7 @@
     },
     "observer-fact-sync": {
       "match": {
-        "titlePattern": "HubSpot says|Operations says|source address|source name|source coordinates|HubSpot email"
+        "titlePattern": "HubSpot says|Operations says|source address|source name|source coordinates|HubSpot email|Search and QC cannot read"
       },
       "required": [
         "pageUrl",
@@ -409,7 +410,11 @@
         "campus-page-email-source-sync",
         "campus-page-source-fact-missing",
         "campus-schema-address",
-        "campus-schema-required-facts"
+        "campus-schema-required-facts",
+        "campus-schema-coordinates",
+        "campus-schema-name",
+        "campus-schema-url",
+        "campus-school-schema"
       ],
       "routingLabel": "hubspot_campus_facts",
       "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
@@ -472,7 +477,7 @@
     },
     "observer-link-cta": {
       "match": {
-        "titlePattern": "missing an info-packet CTA|missing an APPLY TODAY|admission_link|calendar|Book a Call"
+        "titlePattern": "missing an APPLY TODAY|admission_link|calendar|Book a Call|Apply stays on the HubSpot form|submission_campus"
       },
       "required": [
         "pageUrl",
@@ -486,14 +491,17 @@
         "campus-application-source-missing",
         "campus-application-placeholder",
         "campus-page-application-source-sync",
-        "campus-application-path"
+        "campus-application-path",
+        "campus-application-finalsite-redirect",
+        "campus-book-call-*",
+        "campus-calendar-*"
       ],
       "routingLabel": "apply_link_admission",
       "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-packet": {
       "match": {
-        "titlePattern": "info packet is not publicly accessible|packet link returns"
+        "titlePattern": "info packet is not publicly accessible|packet link returns|missing an info-packet CTA"
       },
       "required": [
         "pageUrl",
@@ -503,14 +511,15 @@
       "recipe": null,
       "scope": "packet-owner",
       "observerChecks": [
-        "campus-packet-*"
+        "campus-packet-*",
+        "campus-info-packet-*"
       ],
       "routingLabel": "info_packet",
       "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
     "observer-event": {
       "match": {
-        "titlePattern": "public in HubSpot, but missing|event feed shows other-campus|registration link returns|Apply stays on the HubSpot form"
+        "titlePattern": "public in HubSpot, but missing|event feed shows other-campus|registration link returns"
       },
       "required": [
         "pageUrl",
@@ -534,7 +543,7 @@
     },
     "observer-layout": {
       "match": {
-        "titlePattern": "header overlaps|overflows horizontally|outside the mobile viewport|image failed to render|fails on mobile"
+        "titlePattern": "header overlaps|overflows horizontally|outside the mobile viewport|clipped text"
       },
       "required": [
         "pageUrl",
@@ -552,6 +561,33 @@
       "routingLabel": null,
       "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
     },
+    "observer-page-transient": {
+      "match": {
+        "titlePattern": "expected rendered HTTP 2xx page, found|expected HTTP 2xx, found (?:5\\d\\d|timeout)|visible image failed to render|images? failed to render",
+        "urlPattern": "^https?://(?!github\\.com/|docs\\.google\\.com/)"
+      },
+      "required": [
+        "pageUrl",
+        "observed",
+        "observerId"
+      ],
+      "recipe": null,
+      "scope": "rendered-verification",
+      "note": "A rendered-page timeout (page.goto 20 s), a 5xx on a page, or a page where visible images failed to render in one observer run, on a page URL. Transient until it reproduces: the website agent re-renders the page on desktop and mobile (tests/rendered-controls.mjs), closes on verification with the pair attached when it does not reproduce, and routes to website-operations with the timings when it does (F partition, 2026-09-24; docs/observer-requirements.md asks the observer for a second attempt before filing). Never loop health (observer-health is the workflow or sheet URL only) and never a template defect (observer-layout).",
+      "observerChecks": [
+        "route-reachable",
+        "images-render",
+        "event-page-reachable",
+        "program-page-reachable",
+        "required-embed-*",
+        "route-browser-inspection"
+      ],
+      "routingLabel": null,
+      "doneWhen": "the page renders HTTP 2xx with its images on desktop and mobile in two agent renders (rendered-controls.mjs, pair attached), or the timeout reproduces and website-operations holds the ticket with the timings; the observer rerun clears the check",
+      "evidence": [
+        "rendered-controls-json-or-screenshots-desktop-mobile"
+      ]
+    },
     "observer-map-community": {
       "match": {
         "titlePattern": "National Growth Map|community\\.alpha\\.school|Operations says .* Map says|Community (?:slug|program|visibility|routing)"
@@ -566,13 +602,20 @@
         "campus-map-*",
         "operations-map-*",
         "map-campus-missing-from-operations",
+        "operations-campus-missing-from-map",
+        "operations-campus-*",
         "wordpress-campus-missing-from-map",
         "preannouncement-community-*",
         "community-campus-parameter",
+        "community-destination",
         "public-program-url",
         "public-program-host",
         "program-page-sync",
-        "program-route-redirect"
+        "program-route-redirect",
+        "hubspot-map-sync",
+        "duplicate-program-*",
+        "program-map-facts",
+        "program-lifecycle-valid"
       ],
       "routingLabel": "hubspot_campus_facts",
       "doneWhen": "the owning workflow reports completion and the observer rerun clears the check",
@@ -580,7 +623,9 @@
     },
     "observer-health": {
       "match": {
-        "titlePattern": "source collection|snapshot no older|Search and QC cannot read|expected rendered HTTP 2xx|expected HTTP 2xx"
+        "customFields.loop": "loop-health",
+        "titlePattern": "source collection|snapshot no older|expected rendered HTTP 2xx|expected HTTP 2xx|failed to render",
+        "urlPattern": "^https://(?:github\\.com/superbuilders/aeo/|docs\\.google\\.com/)"
       },
       "required": [
         "observed",
@@ -591,10 +636,13 @@
       "observerChecks": [
         "provider-health",
         "*-source-collection-*",
-        "browser-errors"
+        "browser-errors",
+        "campus-operations-snapshot-fresh",
+        "event-source-readable"
       ],
       "routingLabel": null,
-      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check"
+      "doneWhen": "the owning workflow reports completion and the observer rerun clears the check",
+      "note": "Loop health: a failed or degraded source collection, a stale sheet snapshot, a browser error budget, or a timeout or render failure the observer could only attribute to its own run (the ticket URL is the workflow or the sheet, not a page). The observer owner fixes the loop; no website change. The same finding with a page URL is observer-page-transient, never this class."
     },
     "page-status": {
       "match": {
@@ -674,10 +722,11 @@
   "fields": {
     "pageUrl": {
       "from": [
+        "customFields.pageUrl",
         "program:campus-pages",
-        "title:campus-pages",
         "targetUrl",
         "url",
+        "title:campus-pages",
         "description:Page: (https?://[^\\s]+)",
         "customFields.details:(https?://alpha\\.school/[^\\s]+)",
         "customFields.requestDetail:(https?://alpha\\.school/[^\\s]+)"

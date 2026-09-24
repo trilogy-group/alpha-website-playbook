@@ -55,6 +55,8 @@ const EVIDENCE = {
   'event-owner': ['hubspot-event-reference', 'public-event-listing-check'],
   'elementor-owner': ['operator-note', 'rendered-controls-json-or-screenshots-desktop-mobile'],
   'observer-owner': ['observer-rerun-reference'],
+  // A rendered-page timeout, page 5xx, or images-failed finding: two agent renders decide whether it reproduces (2026-09-24).
+  'rendered-verification': ['rendered-controls-json-or-screenshots-desktop-mobile', 'observer-rerun-reference'],
   'multi-system-routing': ['owner-handoff-record'],
   'web-platform': ['owner-handoff-record'],
   'other-workflow': ['owner-handoff-record'],
@@ -90,9 +92,21 @@ const STEPS = {
   ],
 }
 
+// One class per observer check (spec/ticket-classes.json 0.11): every class's observerChecks list is also its intake
+// match rule for customFields.check, so two classes claiming the same check name would make classification depend on
+// class order. Checked against every check name the observer can emit (registry/observer-checks.json).
+const observerCheckNames = [...new Set(Object.values(read('registry/observer-checks.json').families || {}).flat())]
+for (const name of observerCheckNames) {
+  const claimants = Object.entries(classesSpec.classes)
+    .filter(([id, spec]) => !id.startsWith('$') && (spec.observerChecks || []).some((pattern) => observerCheckMatches(pattern, name)))
+    .map(([id]) => id)
+  if (claimants.length > 1) throw new Error(`observer check ${name} is claimed by more than one ticket class: ${claimants.join(', ')}`)
+}
+
 const classes = {}
 for (const [id, spec] of Object.entries(classesSpec.classes)) {
   if (id.startsWith('$')) continue
+  if (spec.match?.urlPattern) new RegExp(spec.match.urlPattern) // throws on an invalid gate before the bundle is written
   const intake = intakeSpec.classes[id]
   const requiredByKind = { requester: [], derivable: [], system: [] }
   const possibleRequired = [...new Set([
@@ -168,7 +182,19 @@ const bundle = {
   intakeFieldSources: intakeSpec.fieldSources,
   siteScope: intakeSpec.siteScope,
   duplicatePolicy: intakeSpec.duplicates,
-  familyFilter: { requestFamily: 'website', titlePrefixes: ['Website'], sources: ['website-agent', 'agent-found', 'alpha-site-qc'], observerTitlePattern: '^Alpha [A-Z][A-Za-z .]+: ' },
+  // Website family (agent/intake.mjs isWebsiteFamily): the APEX website request family, the "Website" title prefix, the
+  // Website and Website QC request types, tickets filed by the observer or an agent (customFields.source) whatever URL
+  // they carry (a HubSpot record, the observer workflow, events.alpha.school, a Google sheet, a sister site: the URL is
+  // the finding's surface, not a family test; 2026-09-24, the sweep hand-administered 40 observer tickets intake dropped),
+  // an observer check id, and the observer's title shape.
+  familyFilter: {
+    requestFamily: 'website',
+    titlePrefixes: ['Website'],
+    requestTypes: ['Website', 'Website QC'],
+    sources: ['website-agent', 'agent-found', 'alpha-site-qc'],
+    observerCheckIdPattern: '^SITE-[A-Z0-9]+$',
+    observerTitlePattern: '^Alpha [A-Z][A-Za-z .]+: ',
+  },
   sourceAuthority: { precedence: sourceAuthority.precedence, fields: sourceAuthority.fields },
   actors: actors.actors,
   toolInventory: actors.alphaMcpToolInventory,
@@ -197,5 +223,11 @@ if (check) {
 if (existing && existing.policySha256 === bundle.policySha256) { bundle.generatedAt = existing.generatedAt; bundle.playbookCommit = existing.playbookCommit }
 fs.writeFileSync(out, JSON.stringify(bundle, null, 2) + '\n')
 console.log(`wrote spec/policy-bundle.generated.json: ${Object.keys(classes).length} classes, ${Object.keys(bundle.adapters || {}).length} adapters, policySha256 ${bundle.policySha256.slice(0, 12)}`)
+
+function observerCheckMatches(pattern, name) {
+  if (typeof pattern !== 'string' || /\s/.test(pattern)) return false // "campus-page-status-sentence (to build)" is a note, not a name
+  const source = `^${pattern.split('*').map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`
+  return new RegExp(source).test(name)
+}
 
 function gitCommit() { try { return execSync('git rev-parse HEAD', { cwd: root, encoding: 'utf8' }).trim() } catch { return null } }

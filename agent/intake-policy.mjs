@@ -30,7 +30,8 @@ export function assigneePatch(existingAssignees, ownerUserId) {
 export function evaluateTicket(bundle, ticket, context = {}) {
   const scopeReason = outOfScopeReason(bundle, ticket)
   if (scopeReason) return decision(ticket, {
-    class: null,
+    // The class is recorded for telemetry and the sweep partitions even though nothing is administered (2026-09-24).
+    class: classifyTicket(bundle, ticket),
     scope: 'outside-alpha-public-wordpress',
     policy: 'internal-review',
     outcome: 'out-of-scope',
@@ -167,12 +168,10 @@ export function resolveDecisionOwner(bundle, result, ticket, usersByEmail = new 
     // An unresolved owner goes to the explicit unresolved-owner queue, never to an empty string.
     // Cause: 2026-09-17, Boston resolved ownerRole to '' so no assignee was set and the body said "Owner: see class".
     result.ownerRole = UNRESOLVED_OWNER_ROLE
-    result.owner = null
-    result.ownerUser = null
     result.ownerResolution = 'unresolved-owner-role'
     if (['ready-for-execution', 'routed'].includes(result.outcome)) result.outcome = 'owner-unresolved'
     result.reason = result.reason || 'No owner role resolved for this ticket; routed to the unresolved-owner queue for internal triage.'
-    return refreshDecisionHash(result)
+    return escalateUnownedTicket(bundle, result, ticket)
   }
   if (result.ownerRole === 'requester') {
     result.owner = ticket.requesterEmail || null
@@ -189,16 +188,86 @@ export function resolveDecisionOwner(bundle, result, ticket, usersByEmail = new 
     return refreshDecisionHash(result)
   }
 
-  result.owner = null
-  result.ownerUser = null
   result.ownerResolution = candidates.length ? 'ambiguous-role-owner' : 'unregistered-role-owner'
   if (['ready-for-execution', 'routed'].includes(result.outcome)) {
     result.outcome = 'owner-unresolved'
     result.reason = candidates.length
       ? `${result.ownerRole} has multiple registered APEX users and no primary owner; intake will not choose one arbitrarily.`
-      : `${result.ownerRole} has no registered APEX user; intake will not fall back to Matt or Yash.`
+      : `${result.ownerRole} has no registered APEX user; intake will not route the work to anyone else.`
+  }
+  return escalateUnownedTicket(bundle, result, ticket)
+}
+
+/**
+ * Protocol 1d (decision 2026-09-19, Matt Barge): a ticket is never left without a person. Intake fails closed on
+ * execution, never on ownership: when the owner role has no registered person (or several and no primary), the
+ * ticket is Blocked and assigned to the website agent operator with a note naming the role, the system the work
+ * lives in, and the change, so a human can name the owner in one step. Before 2026-09-24 intake left such tickets
+ * Blocked and unassigned and every sweep partition had to add the assignment as a second PATCH (C1, C2, F reports).
+ * The route itself does not change: the owner role, outcome, and review hold stay as the policy decided them.
+ */
+function escalateUnownedTicket(bundle, result, ticket) {
+  result.owner = null
+  result.ownerUser = null
+  const operator = escalationOperator(bundle)
+  if (operator) {
+    result.owner = operator.name
+    result.ownerUser = { id: operator.apexUserId, name: operator.name }
+    result.escalation = {
+      rule: 'protocol-1d',
+      role: result.ownerRole,
+      ownerResolution: result.ownerResolution,
+      assignedTo: operator.name,
+      note: escalationNote(bundle, result, ticket, operator),
+    }
+  } else {
+    result.escalation = { rule: 'protocol-1d', role: result.ownerRole, ownerResolution: result.ownerResolution, assignedTo: null, note: null, error: 'no single website-agent-operator is registered with an APEX user in registry/people.json' }
   }
   return refreshDecisionHash(result)
+}
+
+export function escalationOperator(bundle) {
+  const candidates = (bundle.roleOwners?.['website-agent-operator'] || []).filter((person) => person.apexUserId)
+  return candidates.length === 1 ? candidates[0] : null
+}
+
+/** The 1d note: the role with no person, the system the work lives in, and the exact change, in that order. */
+export function escalationNote(bundle, result, ticket, operator) {
+  const spec = result.class ? bundle.classes?.[result.class] : null
+  const adapter = spec?.adapter ? bundle.adapters?.[spec.adapter] : null
+  const system = adapter?.system || (spec ? `${spec.scope} (class ${result.class})` : 'not determined: no compiled ticket class matched')
+  const why = result.ownerResolution === 'ambiguous-role-owner'
+    ? `role ${result.ownerRole} has several registered APEX users and no primary owner`
+    : `role ${result.ownerRole} has no registered person in registry/people.json`
+  const page = result.found?.pageUrl || ticket.url || null
+  const title = String(ticket.title || '').split(/\r?\n/)[0].trim().slice(0, 200)
+  return [
+    `Protocol 1d: ${why}, so intake set Blocked and assigned ${operator.name} (website-agent-operator) until the owner is named. No website change was made.`,
+    `Role: ${result.ownerRole}.`,
+    `System: ${system}.`,
+    `Change: ${title || '(untitled)'}${page ? ` (${page})` : ''}.`,
+    `Intake decision: ${result.outcome}${result.class ? ` for class ${result.class}` : ''}${result.reason ? `; ${result.reason}` : ''}`,
+  ].join('\n')
+}
+
+/**
+ * Protocol 1c (decision 2026-09-18, Matt Barge): a note headed OPERATOR INSTRUCTION (website operations) or CORRECTION
+ * outranks the policy bundle's class, owner, and review hold. Intake never re-routes, re-blocks, or re-assigns such a
+ * ticket; it reports its evaluation only. Headings are matched at the start of a line, upper case, in the description,
+ * the human comments, and the APEX agent instructions.
+ */
+export function operatorInstruction(ticket) {
+  const texts = [
+    ticket.description,
+    ...(ticket.comments || []).map((item) => item?.body),
+    ...(ticket.agentInstructions || []).filter((item) => !item?.status || ['PENDING', 'ACKNOWLEDGED'].includes(item.status)).map((item) => item?.body),
+  ]
+  for (const text of texts) {
+    const line = String(text || '').replace(/<br\s*\/?>|<\/p>|<\/div>|<\/li>/gi, '\n').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ')
+      .split(/\r?\n/).map((item) => item.trim()).find((item) => /^(?:OPERATOR INSTRUCTION|CORRECTION)\b/.test(item))
+    if (line) return { kind: line.startsWith('OPERATOR') ? 'operator-instruction' : 'correction', heading: line.slice(0, 200) }
+  }
+  return null
 }
 
 export function administrativeAction(result) {
@@ -217,22 +286,58 @@ export function classifyTicket(bundle, ticket) {
       || '',
   )
   const detail = requestDetail(ticket)
-  for (const [id, spec] of Object.entries(bundle.classes || {})) {
+  const classes = Object.entries(bundle.classes || {}).filter(([, spec]) => urlGateOpen(spec, ticket))
+  // 1. A class id recorded in customFields.checkId (a triage or an agent filing) is a decision already made.
+  for (const [id, spec] of classes) {
     if (spec.match?.['customFields.checkId'] && ticket.customFields?.checkId === spec.match['customFields.checkId']) return id
   }
-  for (const [id, spec] of Object.entries(bundle.classes || {})) {
+  // 2. The observer's own check name (customFields.check, or an agent-found checkId) against each class's observerChecks
+  //    taxonomy: one class per check (tests/build-policy.mjs refuses an overlap), so titles cannot mislead it
+  //    (2026-09-24: "Edit:" titles, HubSpot-URL event tickets, and timeouts swallowed by observer-health).
+  for (const check of observerCheckNames(ticket)) {
+    for (const [id, spec] of classes) {
+      if ((spec.observerChecks || []).some((pattern) => observerCheckMatches(pattern, check))) return id
+    }
+  }
+  // 3. The observer's loop designation (loop-health is never a website change).
+  for (const [id, spec] of classes) {
+    if (spec.match?.['customFields.loop'] && ticket.customFields?.loop === spec.match['customFields.loop']) return id
+  }
+  for (const [id, spec] of classes) {
     if (id !== 'copy' && spec.match?.titlePattern && trustedPolicyRegex(spec.match.titlePattern).test(title)) return id
   }
-  for (const [id, spec] of Object.entries(bundle.classes || {})) {
+  for (const [id, spec] of classes) {
     if (id !== 'copy' && (spec.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return id
   }
-  for (const [id, spec] of Object.entries(bundle.classes || {})) {
+  for (const [id, spec] of classes) {
     if (spec.match?.detailPattern && trustedPolicyRegex(spec.match.detailPattern).test(detail)) return id
   }
   const copy = bundle.classes?.copy
-  if (copy?.match?.titlePattern && trustedPolicyRegex(copy.match.titlePattern).test(title)) return 'copy'
-  if ((copy?.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return 'copy'
+  if (copy && urlGateOpen(copy, ticket)) {
+    if (copy.match?.titlePattern && trustedPolicyRegex(copy.match.titlePattern).test(title)) return 'copy'
+    if ((copy.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return 'copy'
+  }
   return null
+}
+
+/** match.urlPattern, when a class declares one, gates every rule of that class on the ticket's own URL. */
+function urlGateOpen(spec, ticket) {
+  const pattern = spec?.match?.urlPattern
+  if (!pattern) return true
+  return trustedPolicyRegex(pattern).test(String(ticket.url || ''))
+}
+
+function observerCheckNames(ticket) {
+  const fields = ticket.customFields || {}
+  return [fields.check, fields.checkId]
+    .filter((value) => typeof value === 'string' && value.trim() && !/^SITE-/.test(value))
+    .map((value) => value.trim())
+}
+
+export function observerCheckMatches(pattern, name) {
+  if (typeof pattern !== 'string' || !pattern || /\s/.test(pattern)) return false // "campus-page-status-sentence (to build)" is a note, not a name
+  const source = `^${pattern.split('*').map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`
+  return new RegExp(source).test(name) // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
 }
 
 export function extractField(bundle, ticket, fieldName, context = {}) {

@@ -20,6 +20,8 @@ import {
   resolveDecisionOwner,
   normalizePersonName,
   ticketInputSha256,
+  observerCheckMatches,
+  operatorInstruction,
 } from '../agent/intake-policy.mjs'
 import {
   RosterDiffError,
@@ -322,39 +324,12 @@ function actionKindForOutcome(outcome) {
   return 'blocked-review'
 }
 
-async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false }) {
+async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null, reconcileRefusal = null }) {
   const operatorRoute = mode === 'operator-route'
   const executionReady = mode === 'execution-ready'
-  const task = {
-    id: `mock-apply-${operatorRoute ? 'operator-route' : executionReady ? 'execution-ready' : failStatus ? 'failure' : 'success'}`,
-    title: operatorRoute ? 'Website (Other) — Alpha Austin' : 'Website — Add team member — Alpha Austin',
-    status: 'NOT_STARTED',
-    updatedAt: '2026-09-17T18:00:00.000Z',
-    requestType: 'Website',
-    program: ['Alpha Austin'],
-    requesterEmail: 'requester@alpha.school',
-    customFields: operatorRoute
-      ? { requestFamily: 'website', websiteRequestType: 'links', requestDetail: 'Update Book a Call to https://go.alpha.school/meetings/alpha-school/austin.' }
-      : executionReady
-        ? {
-            requestFamily: 'website',
-            websiteRequestType: 'add_team_member',
-            webTmName: 'Avery Example',
-            webTmEmail: 'avery.example@alpha.school',
-            webTmTitle: 'Guide',
-            webTmBio: 'A complete approved biography for the release-attestation test.',
-            webTmHeadshotAssetId: 'asset-1',
-          }
-        : { requestFamily: 'website', websiteRequestType: 'add_team_member' },
-    assets: executionReady ? [{ id: 'asset-1', status: 'VERIFIED', mimeType: 'image/jpeg', sizeBytes: 1024 }] : [],
-    revisions: [],
-    clarifications: [],
-    comments: [],
-    activityLog: [],
-    agentInstructions: [],
-    assignees: [],
-  }
+  const task = taskOverride ? { ...baseMockTask(operatorRoute, executionReady, failStatus), ...taskOverride } : baseMockTask(operatorRoute, executionReady, failStatus)
   const patches = []
+  const reconciles = []
   const server = http.createServer(async (request, response) => {
     const body = await readRequestJson(request)
     const send = (status, value) => {
@@ -387,9 +362,17 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
       return send(200, { ...task, clarificationDelivery: { status: 'sent' } })
     }
     if (request.method === 'POST' && request.url === `/api/agent/tasks/${task.id}/reconcile`) {
-      task.status = 'APPROVED'
-      task.agentStatus = 'READY'
-      task.agentEligible = true
+      reconciles.push(structuredClone(body))
+      if (reconcileRefusal) return send(reconcileRefusal.status, reconcileRefusal.body)
+      if (body.disposition === 'blocked' || body.disposition === 'blocked_internal') {
+        task.status = 'BLOCKED'
+        task.agentStatus = 'BLOCKED'
+        task.agentEligible = false
+      } else {
+        task.status = 'APPROVED'
+        task.agentStatus = 'READY'
+        task.agentEligible = true
+      }
       task.updatedAt = new Date(new Date(task.updatedAt).getTime() + 1000).toISOString()
       return send(200, { task })
     }
@@ -397,9 +380,9 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
   })
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
   const address = server.address()
-  const input = path.join(os.tmpdir(), `alpha-mock-input-${process.pid}-${failStatus}.json`)
-  const reportPath = path.join(os.tmpdir(), `alpha-mock-report-${process.pid}-${failStatus}.json`)
-  const healthPath = path.join(os.tmpdir(), `alpha-mock-health-${process.pid}-${failStatus}.json`)
+  const input = path.join(os.tmpdir(), `alpha-mock-input-${process.pid}-${task.id}.json`)
+  const reportPath = path.join(os.tmpdir(), `alpha-mock-report-${process.pid}-${task.id}.json`)
+  const healthPath = path.join(os.tmpdir(), `alpha-mock-health-${process.pid}-${task.id}.json`)
   fs.writeFileSync(input, JSON.stringify([task]))
   if (releaseAttested) {
     const manifest = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'release-manifest.json'), 'utf8'))
@@ -429,7 +412,39 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
     ...(releaseAttested ? { ALPHA_MCP_HEALTH_JSON: healthPath } : {}),
   })
   await new Promise((resolve) => server.close(resolve))
-  return { run, patches, task, report: JSON.parse(fs.readFileSync(reportPath, 'utf8')) }
+  return { run, patches, reconciles, task, report: JSON.parse(fs.readFileSync(reportPath, 'utf8')) }
+}
+
+function baseMockTask(operatorRoute, executionReady, failStatus) {
+  return {
+    id: `mock-apply-${operatorRoute ? 'operator-route' : executionReady ? 'execution-ready' : failStatus ? 'failure' : 'success'}`,
+    title: operatorRoute ? 'Website (Other) — Alpha Austin' : 'Website — Add team member — Alpha Austin',
+    status: 'NOT_STARTED',
+    updatedAt: '2026-09-17T18:00:00.000Z',
+    requestType: 'Website',
+    program: ['Alpha Austin'],
+    requesterEmail: 'requester@alpha.school',
+    customFields: operatorRoute
+      ? { requestFamily: 'website', websiteRequestType: 'links', requestDetail: 'Update Book a Call to https://go.alpha.school/meetings/alpha-school/austin.' }
+      : executionReady
+        ? {
+            requestFamily: 'website',
+            websiteRequestType: 'add_team_member',
+            webTmName: 'Avery Example',
+            webTmEmail: 'avery.example@alpha.school',
+            webTmTitle: 'Guide',
+            webTmBio: 'A complete approved biography for the release-attestation test.',
+            webTmHeadshotAssetId: 'asset-1',
+          }
+        : { requestFamily: 'website', websiteRequestType: 'add_team_member' },
+    assets: executionReady ? [{ id: 'asset-1', status: 'VERIFIED', mimeType: 'image/jpeg', sizeBytes: 1024 }] : [],
+    revisions: [],
+    clarifications: [],
+    comments: [],
+    activityLog: [],
+    agentInstructions: [],
+    assignees: [],
+  }
 }
 
 function readRequestJson(request) {
@@ -471,18 +486,285 @@ test('intake adds the resolved owner to assignees without removing existing assi
   assert.deepEqual(assigneePatch(undefined, 'user-owner').assignees.set, [{ id: 'user-owner' }])
 })
 
-test('an empty owner role routes to the unresolved-owner queue, never to an empty string', () => {
+test('an empty owner role routes to the unresolved-owner queue, never to an empty string, and protocol 1d names the operator', () => {
+  const operator = bundle.roleOwners['website-agent-operator'][0]
   for (const emptyRole of ['', '   ', null, undefined]) {
     const result = { id: 'boston-empty-owner', outcome: 'routed', ownerRole: emptyRole, policySha256: bundle.policySha256, inputSha256: 'x' }
-    resolveDecisionOwner(bundle, result, { id: 'boston-empty-owner', requesterEmail: 'someone@alpha.school' })
+    resolveDecisionOwner(bundle, result, { id: 'boston-empty-owner', title: 'Website — Alpha Boston', requesterEmail: 'someone@alpha.school' })
     assert.equal(result.ownerRole, UNRESOLVED_OWNER_ROLE)
     assert.equal(result.outcome, 'owner-unresolved')
     assert.equal(result.ownerResolution, 'unresolved-owner-role')
-    assert.equal(result.ownerUser, null)
+    // Protocol 1d (2026-09-24, inside intake): the ticket is never left without a person; the queue stays internal-triage.
+    assert.deepEqual(result.ownerUser, { id: operator.apexUserId, name: operator.name })
+    assert.equal(result.escalation.rule, 'protocol-1d')
     assert.match(result.reason, /unresolved-owner queue/)
     assert.equal(administrativeAction(result).kind, 'blocked-review')
   }
 })
+
+// QC loop redesign workstream 3 (docs/qc-loop-redesign-plan-2026-09-24.md): intake administers every observer ticket.
+test('observer sweep 2026-09-24: intake selects all 180 observer tickets and classifies each to a class', () => {
+  const dir = path.join(root, 'tests', 'fixtures', 'observer-sweep-2026-09-24')
+  const fixture = JSON.parse(fs.readFileSync(path.join(dir, 'tickets.json'), 'utf8'))
+  const expected = JSON.parse(fs.readFileSync(path.join(dir, 'expected.json'), 'utf8')).expected
+  assert.equal(fixture.tasks.length, 180)
+  const ids = fixture.tasks.map((task) => task.id)
+  const report = path.join(os.tmpdir(), `alpha-observer-sweep-report-${process.pid}.json`)
+  const run = spawnSync(process.execPath, [
+    path.join(root, 'agent', 'intake.mjs'), '--file', path.join(dir, 'tickets.json'), '--replay', '--report', report, '--force',
+    '--status', 'NOT_STARTED,MISSING_INFO,BLOCKED,IN_PROGRESS,FOR_REVIEW', '--ticket', ids.join(','),
+  ], { encoding: 'utf8', env: { ...process.env, APEX_API_TOKEN: '' } })
+  assert.equal(run.status, 0, run.stderr)
+  const { summary, results } = JSON.parse(fs.readFileSync(report, 'utf8'))
+  assert.equal(summary.tickets, 180, 'every sweep ticket is selected')
+  assert.deepEqual(summary.requestedTickets, { requested: 180, administered: 180, dropped: [] })
+  const byId = new Map(results.map((result) => [result.id, result]))
+  const problems = []
+  for (const id of ids) {
+    const result = byId.get(id)
+    if (!result) { problems.push(`${id}: not decided`); continue }
+    if (!result.class) problems.push(`${id}: no class (${result.outcome}) ${result.title}`)
+    if (!result.owner) problems.push(`${id}: no person (protocol 1d) ${result.ownerRole}`)
+    for (const key of ['class', 'outcome', 'ownerRole']) if (result[key] !== expected[id][key]) problems.push(`${id} ${key}: got ${result[key]}, expected ${expected[id][key]}`)
+  }
+  assert.deepEqual(problems, [])
+  assert.equal(summary.classes.none, undefined)
+  // The check-row taxonomy the sweep proved: timeouts and image renders are transient page findings, loop health is
+  // the workflow or sheet URL, sheet-row and Community findings are map/community, HubSpot-URL events are events.
+  const classOf = (check) => new Set(fixture.tasks.filter((task) => task.customFields.check === check).map((task) => byId.get(task.id).class))
+  assert.deepEqual([...classOf('route-reachable')], ['observer-page-transient'])
+  assert.deepEqual([...classOf('images-render')], ['observer-page-transient'])
+  assert.deepEqual([...classOf('provider-health')], ['observer-health'])
+  assert.deepEqual([...classOf('campus-operations-snapshot-fresh')], ['observer-health'])
+  assert.deepEqual([...classOf('map-campus-missing-from-operations')], ['observer-map-community'])
+  assert.deepEqual([...classOf('preannouncement-community-url')], ['observer-map-community'])
+  assert.deepEqual([...classOf('public-event-sync')], ['observer-event'])
+  assert.deepEqual([...classOf('campus-layout-header-overlap')], ['observer-layout'])
+})
+
+test('the website family accepts observer tickets whatever URL they carry, and --ticket names every id it does not administer', () => {
+  const observer = (id, title, url, check, extra = {}) => ({
+    id,
+    title,
+    status: 'NOT_STARTED',
+    requestType: 'Website QC',
+    program: ['Alpha School'],
+    url,
+    requesterEmail: 'requester@superbuilders.school',
+    description: `${title}\nExpected: the finding clears\nObserved: ${title}\nObserver ID: SITE-${id.toUpperCase()}\n`,
+    customFields: { source: 'alpha-site-qc', checkId: `SITE-${id.toUpperCase()}`, check, loop: 'campus-truth', ...extra },
+    updatedAt: '2026-09-24T12:00:00.000Z',
+  })
+  const tasks = [
+    observer('hub1', 'Coffee & Conversations with Alpha Malibu is public in HubSpot, but missing from the website.', 'https://app.hubspot.com/contacts/40051392/record/0-54/590672597781', 'public-event-sync', { loop: 'event-truth' }),
+    observer('gh1', 'hubspot-programs source collection failed: expected healthy, found failed.', 'https://github.com/superbuilders/aeo/actions/workflows/site-observe.yml', 'provider-health', { loop: 'loop-health' }),
+    observer('ev1', 'Pickleball & Pour with Alpha Charlotte registration link returns HTTP 502: https://events.alpha.school/register/abc', 'https://events.alpha.school/register/abc', 'event-registration-reachable', { loop: 'event-truth' }),
+    observer('sh1', 'Edit: expected matching row in Alpha & Specialty Schools National Growth Map, found none for Alpha Charleston (SC).', 'https://docs.google.com/spreadsheets/d/1t0fhwHz5Y2FvDvj2chRJGDrdcIco1ZADmkhAtRZTduM/edit', 'map-campus-missing-from-operations'),
+    observer('ss1', 'campus-program-26445615147 fails on mobile: expected rendered HTTP 2xx page, found page.goto: Timeout 20000ms exceeded.', 'https://alphahigh.school/', 'route-reachable', { loop: 'functional' }),
+    observer('pg1', 'Alpha Boston: a visible image failed to render.', 'https://alpha.school/boston/', 'images-render', { loop: 'functional', pageUrl: 'https://alpha.school/boston/' }),
+    { id: 'qc-no-source', title: 'Observer-shaped ticket without a source', status: 'NOT_STARTED', requestType: 'Website QC', program: ['Alpha School'], url: 'https://alpha.school/austin/', requesterEmail: 'requester@superbuilders.school', description: 'x', customFields: {}, updatedAt: '2026-09-24T12:00:00.000Z' },
+    { id: 'not-family', title: 'Campus photo shoot', status: 'NOT_STARTED', requestType: 'Photography', program: ['Alpha Austin'], url: null, requesterEmail: 'requester@alpha.school', description: 'x', customFields: {}, updatedAt: '2026-09-24T12:00:00.000Z' },
+    { ...observer('done1', 'Alpha Austin: the header overlaps the H1 on mobile.', 'https://alpha.school/austin/', 'campus-layout-header-overlap', { loop: 'functional' }), status: 'COMPLETED' },
+  ]
+  const input = path.join(os.tmpdir(), `alpha-family-input-${process.pid}.json`)
+  const report = path.join(os.tmpdir(), `alpha-family-report-${process.pid}.json`)
+  fs.writeFileSync(input, JSON.stringify(tasks))
+  const requested = [...tasks.map((task) => task.id), 'missing-id']
+  const run = spawnSync(process.execPath, [path.join(root, 'agent', 'intake.mjs'), '--file', input, '--replay', '--report', report, '--force', '--ticket', requested.join(',')], { encoding: 'utf8', env: { ...process.env, APEX_API_TOKEN: '' } })
+  assert.equal(run.status, 0, run.stderr)
+  const { summary, results } = JSON.parse(fs.readFileSync(report, 'utf8'))
+  const byId = Object.fromEntries(results.map((result) => [result.id, result]))
+  assert.deepEqual(Object.keys(byId).sort(), ['ev1', 'gh1', 'hub1', 'pg1', 'qc-no-source', 'sh1', 'ss1'])
+  assert.equal(summary.requestedTickets.requested, 10)
+  assert.equal(summary.requestedTickets.administered, 7)
+  const dropped = Object.fromEntries(summary.requestedTickets.dropped.map((item) => [item.id, item.reason]))
+  assert.equal(dropped['missing-id'], 'not in the --file input')
+  assert.match(dropped['not-family'], /outside the website family filter/)
+  assert.match(dropped['done1'], /status COMPLETED is outside --status/)
+  assert.match(run.stderr, /--ticket done1: not administered: status COMPLETED/)
+  // The derived page: customFields.pageUrl, then the program's registry page, then the ticket URL, then the title; else null.
+  assert.equal(byId.pg1.found.pageUrl, 'https://alpha.school/boston/')
+  assert.equal(byId.hub1.found.pageUrl, 'https://alpha.school/malibu/', 'the campus in the event name, never the HubSpot record URL')
+  assert.equal(byId.gh1.found.pageUrl, undefined)
+  assert.equal(byId.gh1.class, 'observer-health')
+  assert.equal(byId.gh1.ownerRole, 'observer-owner')
+  assert.equal(byId.gh1.outcome, 'routed')
+  assert.equal(byId.hub1.class, 'observer-event')
+  assert.equal(byId.hub1.ownerRole, 'hubspot-owner')
+  assert.equal(byId.ev1.class, 'observer-event')
+  assert.equal(byId.ev1.ownerRole, 'events-plugin-owner')
+  assert.equal(byId.sh1.class, 'observer-map-community', 'an "Edit:" title leak does not hide the check name')
+  assert.equal(byId.sh1.owner, 'Matt Barge', 'protocol 1d: the unnamed sheet owner does not leave the ticket without a person')
+  assert.equal(byId.ss1.class, 'observer-page-transient')
+  assert.equal(byId.pg1.class, 'observer-page-transient')
+  assert.equal(byId.pg1.ownerRole, 'website-agent-operator')
+  assert.equal(byId['qc-no-source'].currentStatus, 'NOT_STARTED', 'a Website QC request type is in the family on its own')
+})
+
+test('timeouts and image renders are transient page findings; loop health stays on the workflow or sheet URL', () => {
+  const finding = (title, url, customFields, expected = 'rendered') => evaluateTicket(bundle, {
+    id: `finding-${customFields.check}`,
+    title,
+    status: 'NOT_STARTED',
+    requestType: 'Website QC',
+    program: ['Alpha School'],
+    url,
+    requesterEmail: 'requester@superbuilders.school',
+    description: `${title}\nPage: ${url}\nExpected: ${expected}\nObserved: ${title}\nObserver ID: SITE-ABC123\n`,
+    customFields: { source: 'alpha-site-qc', checkId: 'SITE-ABC123', ...customFields },
+  })
+  const timeout = 'Atlanta: expected rendered HTTP 2xx page, found page.goto: Timeout 20000ms exceeded.'
+  const onPage = finding(timeout, 'https://alpha.school/atlanta/', { check: 'route-reachable', loop: 'functional' })
+  assert.equal(onPage.class, 'observer-page-transient')
+  assert.equal(onPage.ownerRole, 'website-agent-operator')
+  assert.equal(onPage.outcome, 'routed')
+  const onWorkflow = finding(timeout, 'https://github.com/superbuilders/aeo/actions/workflows/site-observe.yml', { check: 'route-reachable', loop: 'functional' })
+  assert.equal(onWorkflow.class, 'observer-health', 'a timeout the observer could only pin on its own run is loop health')
+  assert.equal(onWorkflow.ownerRole, 'observer-owner')
+  const images = finding('Palo Alto: a visible image failed to render.', 'https://alpha.school/palo-alto/', { check: 'images-render', loop: 'functional' })
+  assert.equal(images.class, 'observer-page-transient')
+  const event522 = finding('Alpha Palo Alto Open House: expected HTTP 2xx, found 522.', 'https://alpha.school/events/alpha-palo-alto-open-house/', { check: 'event-page-reachable', loop: 'event-truth' })
+  assert.equal(event522.class, 'observer-page-transient')
+  const overlap = finding('Alpha Oklahoma City: the header overlaps “Alpha Oklahoma City K-10 Private School” on mobile.', 'https://alpha.school/oklahoma-city/', { check: 'campus-layout-header-overlap', loop: 'functional' })
+  assert.equal(overlap.class, 'observer-layout')
+  const health = finding('browser source collection degraded: expected healthy, found degraded.', 'https://github.com/superbuilders/aeo/actions/workflows/site-observe.yml', { check: 'provider-health', loop: 'loop-health' })
+  assert.equal(health.class, 'observer-health')
+  const snapshot = finding('Edit: expected snapshot no older than 168 hours, found 2026-08-25T18:50:00.000Z.', 'https://docs.google.com/spreadsheets/d/1t0fhwHz5Y2F/edit', { check: 'campus-operations-snapshot-fresh', loop: 'loop-health' })
+  assert.equal(snapshot.class, 'observer-health')
+  const healthOnPage = finding('browser source collection degraded: expected healthy, found degraded.', 'https://alpha.school/atlanta/', { check: 'provider-health', loop: 'loop-health' })
+  assert.equal(healthOnPage.class, null, 'loop health never enters the website queue under a page URL; it fails closed')
+  const apply = finding('Alpha New York: Apply stays on the HubSpot form (HTTP 301 /application/?submission_campus=new_york) instead of Finalsite.', 'https://alpha.school/application/?submission_campus=new_york', { check: 'campus-application-finalsite-redirect', loop: 'campus-truth' }, 'redirect to https://apply.alpha.school/new-york-city/')
+  assert.equal(apply.class, 'observer-link-cta')
+  assert.equal(apply.ownerRole, 'hubspot-program-admin')
+  const packet = finding('Alpha Highland Park is missing an info-packet CTA.', 'https://alpha.school/highland-park/', { check: 'campus-info-packet-present', loop: 'campus-truth' })
+  assert.equal(packet.class, 'observer-packet')
+  // The glob taxonomy: one class per observer check name, spaces mark notes rather than names.
+  assert.ok(observerCheckMatches('campus-map-*', 'campus-map-pin-count'))
+  assert.ok(!observerCheckMatches('campus-map-*', 'campus-mapping'))
+  assert.ok(!observerCheckMatches('campus-page-status-sentence (to build)', 'campus-page-status-sentence'))
+})
+
+test('protocol 1d inside intake: an unowned role is Blocked on the website agent operator with the role, system, and change in the note', async () => {
+  const operator = bundle.roleOwners['website-agent-operator'][0]
+  const layout = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: observerLayoutTask('mock-apply-1d') })
+  assert.equal(layout.run.code, 0, layout.run.stderr)
+  const result = layout.report.results[0]
+  assert.equal(result.class, 'observer-layout')
+  assert.equal(result.ownerRole, 'elementor-owner', 'the route does not change; only the person does')
+  assert.equal(result.ownerResolution, 'unregistered-role-owner')
+  assert.equal(result.escalation.rule, 'protocol-1d')
+  assert.equal(result.owner, operator.name)
+  assert.equal(result.action.kind, 'blocked-review')
+  assert.equal(result.applied.ok, true)
+  assert.equal(result.applied.disposition, 'blocked')
+  assert.equal(layout.task.status, 'BLOCKED')
+  assert.equal(layout.task.agentEligible, false)
+  assert.ok(layout.task.assignees.some((item) => item.id === operator.apexUserId), 'assigned to the operator')
+  assert.equal(layout.reconciles.length, 1)
+  const note = layout.reconciles[0].note
+  assert.match(note, /Protocol 1d: role elementor-owner has no registered person/)
+  assert.match(note, /Role: elementor-owner\./)
+  assert.match(note, /System: /)
+  assert.match(note, /Change: Alpha Oklahoma City: the header overlaps .* \(https:\/\/alpha\.school\/oklahoma-city\/\)\./)
+  assert.match(note, /Intake decision: policy-review for class observer-layout/)
+  assert.equal(layout.report.summary.escalated, 1)
+})
+
+test('protocol 1c: an OPERATOR INSTRUCTION or CORRECTION note stops intake from re-routing, re-blocking, or re-assigning', async () => {
+  const task = observerLayoutTask('mock-apply-1c')
+  task.description += '\n\nOPERATOR INSTRUCTION (Matt Barge, 2026-09-24): leave this on the template lead; fix the hero template once for every page.\n'
+  const held = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: task })
+  assert.equal(held.run.code, 0, held.run.stderr)
+  const result = held.report.results[0]
+  assert.equal(result.class, 'observer-layout', 'the evaluation is still reported')
+  assert.equal(result.operatorInstruction.kind, 'operator-instruction')
+  assert.equal(result.action.kind, 'no-action')
+  assert.match(result.skipped, /OPERATOR INSTRUCTION .*protocol 1c/)
+  assert.equal(held.patches.length, 0)
+  assert.equal(held.reconciles.length, 0)
+  assert.deepEqual(held.report.summary.operatorInstructions, ['mock-apply-1c'])
+  assert.equal(held.task.status, 'NOT_STARTED')
+  assert.deepEqual(held.task.assignees, [])
+  // The heading is matched at the start of a line, upper case, in the description, human comments, and agent instructions.
+  assert.equal(operatorInstruction({ description: 'A correction was made to the bio.' }), null)
+  assert.equal(operatorInstruction({ description: 'x', comments: [{ id: 'c1', body: '<p>CORRECTION: the page is Boston Suburbs, not Boston.</p>' }] }).kind, 'correction')
+  assert.equal(operatorInstruction({ description: 'x', agentInstructions: [{ status: 'PENDING', body: 'OPERATOR INSTRUCTION: execute the swap.' }] }).kind, 'operator-instruction')
+  assert.equal(operatorInstruction({ description: 'x', agentInstructions: [{ status: 'RETIRED', body: 'OPERATOR INSTRUCTION: old.' }] }), null)
+})
+
+test('a ticket the observer filer owns is skipped with reason observer_filer_owned: no write, no error, no retry, no v1 fallback', async () => {
+  // APEX PR 409: checkId SITE-*, a filerRunId, past NOT_STARTED. Known client-side, so intake skips before any write.
+  const owned = observerLayoutTask('mock-apply-filer-owned')
+  owned.status = 'BLOCKED'
+  owned.customFields.filerRunId = 'site-full-2026-09-24T14-28-40-974Z'
+  const held = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: owned })
+  assert.equal(held.run.code, 0, held.run.stderr)
+  const result = held.report.results[0]
+  assert.equal(result.applied.ok, false)
+  assert.equal(result.applied.skipped, 'observer_filer_owned')
+  assert.equal(result.applied.error, undefined)
+  assert.match(result.skipped, /^observer_filer_owned: /)
+  assert.equal(held.patches.length, 0)
+  assert.equal(held.reconciles.length, 0)
+  assert.deepEqual(held.report.summary.observerFilerOwned, ['mock-apply-filer-owned'])
+  assert.deepEqual(held.report.summary.errors, [])
+  assert.equal(held.report.summary.skipped, 1)
+  assert.equal(held.report.summary.applied, 0)
+  assert.equal(held.task.status, 'BLOCKED')
+  assert.deepEqual(held.task.assignees, [])
+
+  // When APEX decides it first (409 OBSERVER_FILER_OWNED on reconcile) the answer is the same skip: the pending
+  // marker is left as it is, nothing is retried, and no v1 PATCH stands in for the refused reconcile.
+  const refused = await runMockApply({
+    failStatus: false,
+    mode: 'operator-route',
+    taskOverride: { ...observerLayoutTask('mock-apply-filer-409'), customFields: { ...observerLayoutTask('x').customFields, filerRunId: 'site-full-2026-09-24T14-28-40-974Z' } },
+    reconcileRefusal: { status: 409, body: { error: 'Ticket is owned by the observer filer', code: 'OBSERVER_FILER_OWNED' } },
+  })
+  assert.equal(refused.run.code, 0, refused.run.stderr)
+  const late = refused.report.results[0]
+  assert.equal(late.applied.ok, false)
+  assert.equal(late.applied.skipped, 'observer_filer_owned')
+  assert.equal(late.applied.apexCode, 'OBSERVER_FILER_OWNED')
+  assert.equal(late.applied.error, undefined)
+  assert.match(late.skipped, /^observer_filer_owned: /)
+  assert.equal(refused.reconciles.length, 1, 'one reconcile, no retry')
+  assert.equal(refused.patches.length, 1, 'the pending-hash PATCH only; no v1 fallback and no finalization')
+  assert.equal(refused.patches[0].customFields.intakePendingHash, late.decisionSha256)
+  assert.equal(refused.task.customFields.intakeHash, undefined)
+  assert.deepEqual(refused.report.summary.observerFilerOwned, ['mock-apply-filer-409'])
+  assert.deepEqual(refused.report.summary.errors, [])
+  assert.equal(refused.task.status, 'NOT_STARTED')
+
+  // Any other 409 is still an error, as before.
+  const conflict = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: observerLayoutTask('mock-apply-other-409'), reconcileRefusal: { status: 409, body: { error: 'lease conflict', code: 'NOT_CLAIMED' } } })
+  assert.equal(conflict.report.results[0].applied.ok, false)
+  assert.match(conflict.report.results[0].applied.error, /NOT_CLAIMED|lease conflict/)
+  assert.equal(conflict.report.summary.errors.length, 1)
+})
+
+function observerLayoutTask(id) {
+  const title = 'Alpha Oklahoma City: the header overlaps “Alpha Oklahoma City K-10 Private School in Oklahoma City, Oklahoma” on mobile.'
+  return {
+    id,
+    title,
+    status: 'NOT_STARTED',
+    updatedAt: '2026-09-24T12:00:00.000Z',
+    requestType: 'Website QC',
+    program: ['Alpha School'],
+    url: 'https://alpha.school/oklahoma-city/',
+    requesterEmail: 'requester@superbuilders.school',
+    description: `${title}\nPage: https://alpha.school/oklahoma-city/\nExpected: header clear of the H1 on mobile\nObserved: 14 px overlap\nObserver ID: SITE-B13C863ED3\n`,
+    customFields: { source: 'alpha-site-qc', checkId: 'SITE-B13C863ED3', check: 'campus-layout-header-overlap', loop: 'functional' },
+    assets: [],
+    revisions: [],
+    clarifications: [],
+    comments: [],
+    activityLog: [],
+    agentInstructions: [],
+    assignees: [],
+  }
+}
 
 test('triage keeps the requester description first and regenerates only the rendered body', () => {
   const original = 'Please update the Santa Barbara page.\nPage: https://alpha.school/santa-barbara/'

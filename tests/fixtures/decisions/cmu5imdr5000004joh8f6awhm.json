@@ -1,9 +1,9 @@
 {
   "expected": {
     "outcome": "routed",
-    "class": "observer-health",
-    "ownerRole": "observer-owner",
-    "why": "event page 522 from the observer"
+    "class": "observer-page-transient",
+    "ownerRole": "website-agent-operator",
+    "why": "event page 522 from the observer: a rendered-page 5xx is transient until it reproduces, verified by the website agent (2026-09-24)"
   },
   "task": {
     "id": "cmu5imdr5000004joh8f6awhm",
