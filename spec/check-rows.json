@@ -143,7 +143,8 @@
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.identity.sister-brand"
-      }
+      },
+      "ownerRole": "website-operations"
     },
     {
       "id": "site.identity.other-campus.images",
@@ -169,7 +170,8 @@
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.identity.other-campus"
-      }
+      },
+      "ownerRole": "website-agent-operator"
     },
     {
       "id": "site.seasonal.window",

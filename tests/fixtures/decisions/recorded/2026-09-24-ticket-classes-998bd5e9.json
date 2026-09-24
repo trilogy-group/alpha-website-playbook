@@ -1,0 +1,16 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-24T21:49:37.118Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code coordinator session 2026-09-24",
+  "date": "2026-09-24",
+  "specRefs": [
+    "spec/ticket-classes.json",
+    "spec/check-rows.json"
+  ],
+  "summary": "Image-identity findings (observer-media-identity, row site.identity.other-campus.images) are owned by the website agent operator, Matt Barge: ownerRole website-agent-operator on the class and the row.",
+  "decisionRow": "| 2026-09-24 | Decided (Matt Barge, Claude Code coordinator session 2026-09-24): Image-identity findings (observer-media-identity, row site.identity.other-campus.images) are owned by the website agent operator, Matt Barge: ownerRole website-agent-operator on the class and the row. | Matt Barge | spec/ticket-classes.json; spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-24-ticket-classes-998bd5e9.json |",
+  "appliedIn": "spec/ticket-classes.json; spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-24-ticket-classes-998bd5e9.json",
+  "textSha256": "998bd5e98494fc91b0fc17cc1d6af30d5b11639a86d5b33f65303682da4d4046",
+  "text": "Matt Barge, 2026-09-24, in the Claude Code coordinator session: we should own image findings, assign to me.\n"
+}

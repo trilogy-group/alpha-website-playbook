@@ -1,0 +1,16 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-24T21:49:37.172Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code coordinator session 2026-09-24",
+  "date": "2026-09-24",
+  "specRefs": [
+    "spec/ticket-classes.json",
+    "spec/check-rows.json"
+  ],
+  "summary": "Sister-brand findings (observer-brand-leak, row site.identity.sister-brand) are owned by website operations, Yash Chitneni: ownerRole website-operations on the class and the row; the filer and intake assign him.",
+  "decisionRow": "| 2026-09-24 | Decided (Matt Barge, Claude Code coordinator session 2026-09-24): Sister-brand findings (observer-brand-leak, row site.identity.sister-brand) are owned by website operations, Yash Chitneni: ownerRole website-operations on the class and the row; the filer and intake assign him. | Matt Barge | spec/ticket-classes.json; spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-24-ticket-classes-a677ae1a.json |",
+  "appliedIn": "spec/ticket-classes.json; spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-24-ticket-classes-a677ae1a.json",
+  "textSha256": "a677ae1a70aa504a9d05789191a834cdf552c24ea000c742898660174670042a",
+  "text": "Matt Barge, 2026-09-24, in the Claude Code coordinator session: sister-brand findings go to Yash Chitneni.\n"
+}

@@ -420,6 +420,7 @@
       "doneWhen": "the public page shows the expected value on the canonical URL after cache clear, ring 2 passes, and the observer rerun clears the check; if the element is automation-written per spec/campus-page-field-map.json, the ticket is re-classed and this default does not apply"
     },
     "observer-brand-leak": {
+      "ownerRole": "website-operations",
       "match": {
         "titlePattern": "expected Alpha-only campus copy"
       },
@@ -457,6 +458,7 @@
       "doneWhen": "the public page renders the expected value on the canonical URL after cache clear (Montserrat on the element, a palette pair from the contrast table, a canonical logo file), ring 2 passes, and tests/page-check.mjs brand-visual no longer lists the finding; a change to kit 8 typography or colours, or to the header or footer logo, is a decision for website operations first (docs/decisions.md 2026-09-22) and is never made under a campus ticket"
     },
     "observer-media-identity": {
+      "ownerRole": "website-agent-operator",
       "match": {
         "titlePattern": "image metadata references"
       },
