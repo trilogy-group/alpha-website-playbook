@@ -666,12 +666,15 @@ test('protocol 1d inside intake: an unowned role is Blocked on the website agent
   assert.equal(layout.task.agentEligible, false)
   assert.ok(layout.task.assignees.some((item) => item.id === operator.apexUserId), 'assigned to the operator')
   assert.equal(layout.reconciles.length, 1)
+  // The note is the `blocked` template (spec/ticket-templates.json): DECISION NEEDED, role, system, change, person, decision.
   const note = layout.reconciles[0].note
-  assert.match(note, /Protocol 1d: role elementor-owner has no registered person/)
-  assert.match(note, /Role: elementor-owner\./)
-  assert.match(note, /System: /)
-  assert.match(note, /Change: Alpha Oklahoma City: the header overlaps .* \(https:\/\/alpha\.school\/oklahoma-city\/\)\./)
-  assert.match(note, /Intake decision: policy-review for class observer-layout/)
+  assert.match(note, /^BLOCKED \(intake [0-9.]+, \d{4}-\d{2}-\d{2}\)\n/)
+  assert.match(note, /^DECISION NEEDED: elementor-owner has no registered APEX user; intake will not fall back to Matt or Yash\.$/m)
+  assert.match(note, /^Role: elementor-owner$/m)
+  assert.match(note, /^System: elementor-owner$/m, 'the observer adapter only finds the defect, so the system is the executing role')
+  assert.match(note, /^Change: Alpha Oklahoma City: the header overlaps .* \(https:\/\/alpha\.school\/oklahoma-city\/\)$/m)
+  assert.match(note, new RegExp(`^Assigned to: ${operator.name}$`, 'm'))
+  assert.match(note, /^Intake decision: policy-review for class observer-layout$/m)
   assert.equal(layout.report.summary.escalated, 1)
 })
 
@@ -879,9 +882,14 @@ test('the renderers produce the same text as before through the templates: triag
   const note1d = escalationNote(bundle, unresolved, { title: 'Alpha Austin: header overlaps the hero on mobile' }, { actor: 'intake 0.2', date: '2026-09-24' })
   assert.equal(note1d, [
     'BLOCKED (intake 0.2, 2026-09-24)', 'DECISION NEEDED: elementor-owner has no registered APEX user; intake will not fall back to Matt or Yash.', 'Role: elementor-owner',
-    'System: elementor-owner', 'Change: Alpha Austin: header overlaps the hero on mobile',
+    'System: elementor-owner', 'Change: Alpha Austin: header overlaps the hero on mobile', `Assigned to: ${bundle.roleOwners['website-agent-operator'][0].name}`,
+    'Intake decision: owner-unresolved for class observer-layout',
   ].join('\n'))
-  assert.equal(bundle.classes['observer-layout'].executes, 'elementor-owner', 'the System line is the class\'s executing system from the bundle')
+  assert.equal(bundle.classes['observer-layout'].executes, 'elementor-owner', 'the System line is the class\'s executing system from the bundle (its adapter, the observer, only finds the defect)')
+  // A class whose adapter executes the work names that system; the page URL joins the change line.
+  const wp = resolveDecisionOwner(bundle, { outcome: 'routed', ownerRole: 'nobody-registered', class: 'observer-brand-leak', policySha256: 'p', inputSha256: 'i' }, { title: 'Alpha Austin: brand leak', url: 'https://alpha.school/austin/' })
+  assert.match(escalationNote(bundle, wp, { title: 'Alpha Austin: brand leak', url: 'https://alpha.school/austin/' }, { actor: 'intake 0.2', date: '2026-09-24' }),
+    /^System: alpha\.school WordPress and Elementor\nChange: Alpha Austin: brand leak \(https:\/\/alpha\.school\/austin\/\)$/m)
   assert.equal(renderTemplate('escalation', { role: 'elementor-owner', escalatedTo: 'Matt Barge', operatorRole: 'website-agent-operator', system: 'Elementor' }), 'role elementor-owner has no registered APEX user; escalated to Matt Barge (website-agent-operator) per protocol 1d; the work lives in Elementor')
 })
 

@@ -71,6 +71,7 @@ Role: <owner role from spec/responsibilities.json>
 System: <the system the work lives in: WordPress page, HubSpot Program, n8n workflow, events plugin, HighLevel site>
 Change: <the exact change requested, from the ticket>
 Assigned to: <person, never a role>
+Intake decision: <when intake wrote the note: its outcome and class, e.g. policy-review for class observer-layout>
 ```
 
 A ticket that duplicates an open one (same class, canonical page and subject) gets the duplicate note with the other id and stays open until a person links or closes it:

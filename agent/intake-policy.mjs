@@ -226,10 +226,6 @@ function escalateUnownedTicket(bundle, result, ticket) {
   return refreshDecisionHash(result)
 }
 
-  }
-  return refreshDecisionHash(result)
-}
-
 export function escalationOperator(bundle) {
   const candidates = (bundle.roleOwners?.['website-agent-operator'] || []).filter((person) => person.apexUserId)
   return candidates.length === 1 ? candidates[0] : null
@@ -240,12 +236,14 @@ export function escalationOperator(bundle) {
  * with intake's reason, then the role with no person, the system the work lives in, and the exact change requested
  * (title and page), in that order, so a human can name the owner in one step; then the person it is assigned to and
  * intake's decision (outcome and class). `actor` and `date` name who wrote it (agent/intake.mjs passes its version);
- * `system` is the class adapter's system from the bundle, then the class's executing role, then its scope;
- * `assignedTo` defaults to the resolved owner (the website agent operator).
+ * `system` is the class adapter's system from the bundle (the observer adapter only finds the defect, so its classes
+ * name the executing role instead), then the class's executing role, then its scope; `assignedTo` defaults to the
+ * resolved owner (the website agent operator).
  */
 export function escalationNote(bundle, result, ticket, { actor, date, assignedTo } = {}) {
   const spec = result.class ? bundle.classes?.[result.class] : null
   const adapter = spec?.adapter ? bundle.adapters?.[spec.adapter] : null
+  const executingSystem = adapter && spec.adapter !== 'observer' ? adapter.system : null
   const role = result.ownerRole || UNRESOLVED_OWNER_ROLE
   const page = result.found?.pageUrl || ticket?.url || null
   const title = String(ticket?.title || '').split(/\r?\n/)[0].trim().slice(0, 200)
@@ -254,7 +252,7 @@ export function escalationNote(bundle, result, ticket, { actor, date, assignedTo
     date: date || new Date().toISOString().slice(0, 10),
     decision: result.reason || renderTemplate('ownerUnregistered', { role }),
     role,
-    system: adapter?.system || spec?.executes || spec?.scope || 'not determined: no compiled ticket class matched',
+    system: executingSystem || spec?.executes || spec?.scope || 'not determined: no compiled ticket class matched',
     change: `${title || 'see the ticket'}${page ? ` (${page})` : ''}`,
     assignedTo: assignedTo || result.owner || null,
     intakeDecision: result.outcome ? `${result.outcome}${result.class ? ` for class ${result.class}` : ''}` : null,
