@@ -32,11 +32,12 @@
  *      operator as Blocked (protocol 1d) with the role named in the body.
  *   9. Evidence: the artifact's desktop and mobile screenshot pair for the finding's route goes onto the ticket with
  *      agent/attach-evidence.mjs when both files exist.
- *  10. Auto-resolve: every open ticket carrying an observer check id (customFields.checkId `SITE-*`, observerIds,
- *      externalId, or the filer's idempotency key) whose incidents are all resolved for at least the row's clearAfterRuns
- *      clean runs gets a section-7 RESOLUTION note citing the clearing run ids, `resolutionKind: check-cleared` (first
- *      class and in customFields), and status COMPLETED through one v1 PATCH: never a PATCH whose only key is
- *      agentEligible, no agentStatus (APEX clears it on completion), the existing description first (APEX PR 409).
+ *  10. Auto-resolve: only tickets this filer created, proven by both the exact `customFields.filedBy` marker and a
+ *      non-empty `customFields.filerRunId`, are eligible. A legacy observer ticket is never completed merely because it
+ *      carries a SITE id. An eligible ticket whose incidents are all resolved for at least the row's clearAfterRuns clean
+ *      runs gets a section-7 RESOLUTION note citing the clearing run ids, `resolutionKind: check-cleared` (first class
+ *      and in customFields), and status COMPLETED through one v1 PATCH: never a PATCH whose only key is agentEligible,
+ *      no agentStatus (APEX clears it on completion), the existing description first (APEX PR 409).
  *
  * APEX PR 409 marks a ticket filer-owned by customFields.checkId (SITE-*), filerRunId, requirementId and
  * checkBundleVersion; the filer sets them on every create and resolve, and treats 409 OBSERVER_FILER_OWNED as a skip.
@@ -519,6 +520,12 @@ export function observerIdsForTask(task) {
   return [...ids]
 }
 
+/** Auto-resolution authority is opt-in and provenance-based. SITE ids identify incidents, not the actor that filed a ticket. */
+export function isFilerOwnedTask(task) {
+  const cf = task?.customFields || {}
+  return cf.filedBy === 'agent/file-observer-findings.mjs' && typeof cf.filerRunId === 'string' && cf.filerRunId.trim().length > 0
+}
+
 function taskPages(task) {
   const cf = task.customFields || {}
   return [task.url, cf.pageUrl, cf.targetPageUrl, ...String(task.description || '').match(/https:\/\/alpha\.school\/[^\s,)]*/g) || []].map(normalizePageUrl).filter(Boolean)
@@ -545,6 +552,10 @@ function evidencePairs(run, group) {
     }
   }
   return pairs
+}
+
+function requiresObserverScreenshot(row) {
+  return (row.evidenceProfile || []).some((profile) => String(profile).startsWith('observer-screenshot-'))
 }
 
 /**
@@ -583,6 +594,13 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (unhealthy.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'source health', sources: unhealthy }); continue }
     const byLoopHealth = loopHealthSuppression(row, finding, loopHealth, bundle)
     if (byLoopHealth.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'loop-health finding', loopHealth: byLoopHealth }); continue }
+    if (requiresObserverScreenshot(row)) {
+      const evidence = evidencePairs(run, { findings: [finding] })
+      if (!evidence.some((pair) => pair.complete)) {
+        plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'required browser evidence missing', evidence })
+        continue
+      }
+    }
     const conditions = findingConditions(finding, now)
     const matched = (row.suppressWhen || []).filter((c) => conditions.includes(c))
     if (matched.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'condition', conditions: matched }); continue }
@@ -597,7 +615,9 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (!groups.has(key)) groups.set(key, { key, row, rows: [row], scopeKey: scopeKeyFor(row, finding), findings: [], pages: [] })
     const group = groups.get(key)
     if (!group.rows.includes(row)) group.rows.push(row)
-    group.findings.push({ ...finding, firstSeenAt: firstSeen, occurrences: observations })
+    if (!group.findings.some((current) => current.id === finding.id)) {
+      group.findings.push({ ...finding, firstSeenAt: firstSeen, occurrences: observations })
+    }
     const page = isPublicPage(finding.url) ? normalizePageUrl(finding.url) : null
     if (page && !group.pages.includes(page)) group.pages.push(page)
   }
@@ -665,6 +685,10 @@ function planResolves(plan, { run, bundle, queue, now, observedThisRun }) {
     const cf = task.customFields || {}
     const isObserverTicket = ids.length > 0 || String(cf.idempotencyKey || '').startsWith(IDEMPOTENCY_PREFIX)
     if (!isObserverTicket) continue
+    if (!isFilerOwnedTask(task)) {
+      plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'not filer-owned; auto-resolution refused' })
+      continue
+    }
     if (!ids.length) { plan.unresolved.push({ id: task.id, title: task.title, reason: 'filer ticket without observer ids' }); continue }
     const stillObserved = ids.filter((id) => observedThisRun.has(id))
     if (stillObserved.length) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'still observed in this run', stillObserved }); continue }
