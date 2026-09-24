@@ -324,7 +324,7 @@ function actionKindForOutcome(outcome) {
   return 'blocked-review'
 }
 
-async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null }) {
+async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null, reconcileRefusal = null }) {
   const operatorRoute = mode === 'operator-route'
   const executionReady = mode === 'execution-ready'
   const task = taskOverride ? { ...baseMockTask(operatorRoute, executionReady, failStatus), ...taskOverride } : baseMockTask(operatorRoute, executionReady, failStatus)
@@ -363,6 +363,7 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
     }
     if (request.method === 'POST' && request.url === `/api/agent/tasks/${task.id}/reconcile`) {
       reconciles.push(structuredClone(body))
+      if (reconcileRefusal) return send(reconcileRefusal.status, reconcileRefusal.body)
       if (body.disposition === 'blocked' || body.disposition === 'blocked_internal') {
         task.status = 'BLOCKED'
         task.agentStatus = 'BLOCKED'
@@ -689,6 +690,57 @@ test('protocol 1c: an OPERATOR INSTRUCTION or CORRECTION note stops intake from 
   assert.equal(operatorInstruction({ description: 'x', comments: [{ id: 'c1', body: '<p>CORRECTION: the page is Boston Suburbs, not Boston.</p>' }] }).kind, 'correction')
   assert.equal(operatorInstruction({ description: 'x', agentInstructions: [{ status: 'PENDING', body: 'OPERATOR INSTRUCTION: execute the swap.' }] }).kind, 'operator-instruction')
   assert.equal(operatorInstruction({ description: 'x', agentInstructions: [{ status: 'RETIRED', body: 'OPERATOR INSTRUCTION: old.' }] }), null)
+})
+
+test('a ticket the observer filer owns is skipped with reason observer_filer_owned: no write, no error, no retry, no v1 fallback', async () => {
+  // APEX PR 409: checkId SITE-*, a filerRunId, past NOT_STARTED. Known client-side, so intake skips before any write.
+  const owned = observerLayoutTask('mock-apply-filer-owned')
+  owned.status = 'BLOCKED'
+  owned.customFields.filerRunId = 'site-full-2026-09-24T14-28-40-974Z'
+  const held = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: owned })
+  assert.equal(held.run.code, 0, held.run.stderr)
+  const result = held.report.results[0]
+  assert.equal(result.applied.ok, false)
+  assert.equal(result.applied.skipped, 'observer_filer_owned')
+  assert.equal(result.applied.error, undefined)
+  assert.match(result.skipped, /^observer_filer_owned: /)
+  assert.equal(held.patches.length, 0)
+  assert.equal(held.reconciles.length, 0)
+  assert.deepEqual(held.report.summary.observerFilerOwned, ['mock-apply-filer-owned'])
+  assert.deepEqual(held.report.summary.errors, [])
+  assert.equal(held.report.summary.skipped, 1)
+  assert.equal(held.report.summary.applied, 0)
+  assert.equal(held.task.status, 'BLOCKED')
+  assert.deepEqual(held.task.assignees, [])
+
+  // When APEX decides it first (409 OBSERVER_FILER_OWNED on reconcile) the answer is the same skip: the pending
+  // marker is left as it is, nothing is retried, and no v1 PATCH stands in for the refused reconcile.
+  const refused = await runMockApply({
+    failStatus: false,
+    mode: 'operator-route',
+    taskOverride: { ...observerLayoutTask('mock-apply-filer-409'), customFields: { ...observerLayoutTask('x').customFields, filerRunId: 'site-full-2026-09-24T14-28-40-974Z' } },
+    reconcileRefusal: { status: 409, body: { error: 'Ticket is owned by the observer filer', code: 'OBSERVER_FILER_OWNED' } },
+  })
+  assert.equal(refused.run.code, 0, refused.run.stderr)
+  const late = refused.report.results[0]
+  assert.equal(late.applied.ok, false)
+  assert.equal(late.applied.skipped, 'observer_filer_owned')
+  assert.equal(late.applied.apexCode, 'OBSERVER_FILER_OWNED')
+  assert.equal(late.applied.error, undefined)
+  assert.match(late.skipped, /^observer_filer_owned: /)
+  assert.equal(refused.reconciles.length, 1, 'one reconcile, no retry')
+  assert.equal(refused.patches.length, 1, 'the pending-hash PATCH only; no v1 fallback and no finalization')
+  assert.equal(refused.patches[0].customFields.intakePendingHash, late.decisionSha256)
+  assert.equal(refused.task.customFields.intakeHash, undefined)
+  assert.deepEqual(refused.report.summary.observerFilerOwned, ['mock-apply-filer-409'])
+  assert.deepEqual(refused.report.summary.errors, [])
+  assert.equal(refused.task.status, 'NOT_STARTED')
+
+  // Any other 409 is still an error, as before.
+  const conflict = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: observerLayoutTask('mock-apply-other-409'), reconcileRefusal: { status: 409, body: { error: 'lease conflict', code: 'NOT_CLAIMED' } } })
+  assert.equal(conflict.report.results[0].applied.ok, false)
+  assert.match(conflict.report.results[0].applied.error, /NOT_CLAIMED|lease conflict/)
+  assert.equal(conflict.report.summary.errors.length, 1)
 })
 
 function observerLayoutTask(id) {

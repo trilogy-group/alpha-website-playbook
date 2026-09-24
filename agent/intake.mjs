@@ -12,7 +12,9 @@
  * administered and why (not in the queue, status outside --status, outside the family, --page, --since, --limit).
  * Protocol 1d runs here: an owner role with no registered person is Blocked on the website agent operator with a
  * note naming the role, the system, and the change. Protocol 1c: a ticket carrying an OPERATOR INSTRUCTION or
- * CORRECTION note is reported and never re-routed, re-blocked, or re-assigned.
+ * CORRECTION note is reported and never re-routed, re-blocked, or re-assigned. A ticket the observer filer owns
+ * (APEX PR 409: checkId SITE-*, filerRunId, past NOT_STARTED; reconcile answers 409 OBSERVER_FILER_OWNED) is skipped
+ * with reason observer_filer_owned: no error, no retry, no v1 fallback.
  *
  * Requester notices (decision 2026-09-23): for a Missing Info or blocked decision the report carries the Slack DM
  * preview from agent/notify-requester.mjs (dry run); the DM goes only with --apply --notify-send after the
@@ -48,6 +50,7 @@ const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')
 const bundle = read('spec/policy-bundle.generated.json')
 const args = parse(process.argv.slice(2))
 const VERSION = '0.2'
+const OBSERVER_FILER_OWNED = 'observer_filer_owned' // skip reason for tickets the observer filer owns (APEX PR 409)
 const configuredApexBase = (process.env.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1').replace(/\/+$/, '')
 const v1Base = /\/api\/v1$/.test(configuredApexBase) ? configuredApexBase : `${configuredApexBase}/api/v1`
 const agentBase = (process.env.APEX_AGENT_API_BASE || new URL('/api/agent', `${v1Base}/`).toString()).replace(/\/+$/, '')
@@ -212,6 +215,10 @@ for (const result of decisions) {
   if (!args.apply) continue
   try { result.applied = await applyDecision(ticket, result) }
   catch (error) { result.applied = { ok: false, error: error.message, status: error.status || null, code: error.code || null } }
+  if (result.applied?.skipped === OBSERVER_FILER_OWNED) {
+    result.skipped = `${OBSERVER_FILER_OWNED}: the observer filer owns this ticket (checkId ${ticket.customFields?.checkId}, filerRunId set, status ${result.applied.status}); it closes when the check clears, intake leaves it alone`
+    continue
+  }
   if (notifies) result.requesterNotice = await requesterNotice(ticket, result, Boolean(args['notify-send'] && result.applied?.ok))
 }
 
@@ -233,6 +240,10 @@ async function applyDecision(ticket, result) {
   if (ticketInputSha256(preflight) !== result.inputSha256) {
     throw new Error('Ticket received new requester or human input before administration; evaluate the fresh revision instead')
   }
+  // APEX PR 409: a ticket the observer filer owns (customFields.checkId SITE-*, a filerRunId, past NOT_STARTED) is
+  // closed by the filer when its check clears; reconcile answers 409 OBSERVER_FILER_OWNED. Skip before any write,
+  // and treat the 409 the same way when APEX decides it first: no error, no retry, no v1 fallback.
+  if (observerFilerOwned(preflight)) return { ok: false, skipped: OBSERVER_FILER_OWNED, api: null, status: preflight.status, filerRunId: preflight.customFields.filerRunId }
   if (result.action.kind === 'execution-ready') assertExecutionRelease()
   const pendingCustomFields = intakeCustomFieldsPatch(preflight.customFields, {
     ownerRole: result.ownerRole,
@@ -285,7 +296,7 @@ async function applyDecision(ticket, result) {
     if (pending.length && hasRequesterResponses) {
       throw new Error('Pending clarification coexists with an earlier requester response; internal review is required before reopening')
     }
-    const response = await agent(`/tasks/${ticket.id}/reconcile`, 'POST', {
+    const response = await reconcile(ticket, {
       disposition: 'still_actionable',
       note: `Intake ${VERSION}: complete for class ${result.class}; routed to ${result.ownerRole}. No website change was made by intake.`,
       expectedUpdatedAt: current.updatedAt,
@@ -293,6 +304,7 @@ async function applyDecision(ticket, result) {
       ...(pending.length ? { requireNoPendingRequesterScope: true, retireUnansweredClarifications: pending } : {}),
       agentRunId: `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`,
     })
+    if (response.observerFilerOwned) return { ok: false, skipped: OBSERVER_FILER_OWNED, api: 'agent-reconcile', status: current.status, apexCode: 'OBSERVER_FILER_OWNED' }
     actionResult = { api: 'agent-reconcile', status: response.task?.status, agentStatus: response.task?.agentStatus, retiredClarifications: pending.length }
   } else if (result.action.kind === 'owner-route') {
     if (result.ownerUser?.id && !agentOperatorIds.has(result.ownerUser.id)) {
@@ -319,7 +331,7 @@ async function applyDecision(ticket, result) {
     const note = result.escalation?.note
       ? [result.reason, result.escalation.note].filter(Boolean).join('\n')
       : result.reason || `Intake ${VERSION}: ${result.outcome}; owner role ${result.ownerRole}.`
-    const response = await agent(`/tasks/${ticket.id}/reconcile`, 'POST', {
+    const response = await reconcile(ticket, {
       disposition,
       note,
       expectedUpdatedAt: current.updatedAt,
@@ -327,6 +339,7 @@ async function applyDecision(ticket, result) {
       ...(pending.length ? { requireNoPendingRequesterScope: true, retireUnansweredClarifications: pending } : {}),
       agentRunId: `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`,
     })
+    if (response.observerFilerOwned) return { ok: false, skipped: OBSERVER_FILER_OWNED, api: 'agent-reconcile', status: current.status, apexCode: 'OBSERVER_FILER_OWNED' }
     if (pending.length) {
       // A PATCH whose only keys are agentEligible:false is APEX's "revoke hosted Alpha MCP authorization" shape
       // (src/app/api/v1/tasks/[id]/route.ts isAlphaMcpRevocationOnly); carry agentStatus so it is a plain field write.
@@ -353,6 +366,23 @@ async function applyDecision(ticket, result) {
     }),
   })
   return { ok: true, ...actionResult, finalized: true }
+}
+
+/** APEX PR 409's ownership test, evaluated client-side so the skip costs no write. */
+function observerFilerOwned(ticket) {
+  const fields = ticket.customFields || {}
+  return /^SITE-/.test(String(fields.checkId || ''))
+    && typeof fields.filerRunId === 'string' && fields.filerRunId.trim() !== ''
+    && Boolean(ticket.status) && ticket.status !== 'NOT_STARTED'
+}
+
+/** POST reconcile; a 409 OBSERVER_FILER_OWNED comes back as { observerFilerOwned: true } instead of throwing. */
+async function reconcile(ticket, body) {
+  try { return await agent(`/tasks/${ticket.id}/reconcile`, 'POST', body) }
+  catch (error) {
+    if (error.status === 409 && error.code === 'OBSERVER_FILER_OWNED') return { observerFilerOwned: true }
+    throw error
+  }
 }
 
 /**
@@ -509,6 +539,7 @@ function summarize(results) {
       .filter((field) => bundle.intakeFieldSources?.[field]?.kind === 'derivable'))),
     skipped: results.filter((result) => result.skipped).length,
     operatorInstructions: results.filter((result) => result.operatorInstruction).map((result) => result.id),
+    observerFilerOwned: results.filter((result) => result.applied?.skipped === OBSERVER_FILER_OWNED).map((result) => result.id),
     escalated: results.filter((result) => result.escalation?.assignedTo && !result.skipped).length,
     applied: results.filter((result) => result.applied?.ok).length,
     requesterNotices: {
