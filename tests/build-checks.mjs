@@ -157,7 +157,10 @@ export function buildBundle({ observerSource = null } = {}) {
     if (check.startsWith('$')) continue
     if (!inventory.includes(check)) errors.push(`spec/observer-check-map.json dedupeAliases.${check}: not an observer check`)
     if (!Array.isArray(alias?.checkIds) || !Array.isArray(alias?.titlePatterns)) errors.push(`spec/observer-check-map.json dedupeAliases.${check}: checkIds and titlePatterns must be arrays`)
-    for (const pattern of alias?.titlePatterns || []) { try { new RegExp(pattern, 'i') } catch (error) { errors.push(`spec/observer-check-map.json dedupeAliases.${check}: bad pattern ${pattern} (${error.message})`) } }
+    for (const pattern of alias?.titlePatterns || []) {
+      if (typeof pattern !== 'string' || !pattern || pattern.length > 120) { errors.push(`spec/observer-check-map.json dedupeAliases.${check}: a title pattern must be a string of at most 120 characters`); continue }
+      try { new RegExp(pattern, 'i') } catch (error) { errors.push(`spec/observer-check-map.json dedupeAliases.${check}: bad pattern ${pattern} (${error.message})`) }
+    }
   }
 
   const defaults = rowsSpec.defaults || {}

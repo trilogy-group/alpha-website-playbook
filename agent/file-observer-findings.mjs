@@ -961,6 +961,24 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
  * agent's campus.resources.calendar-reachable, ...) or whose title matches one of the check's title patterns. Returns
  * { task, via } or null.
  */
+/** Longest title pattern the alias table may carry; tests/build-checks.mjs compiles every pattern, so a bad one fails the build, never a run. */
+export const ALIAS_PATTERN_MAX_LENGTH = 120
+const aliasPatternCache = new Map()
+/** The alias table's title patterns as RegExp objects: committed playbook data (spec/observer-check-map.json), length-bounded, compiled once per pattern; never a value from a ticket or a packet. */
+function aliasTitlePatterns(alias) {
+  const out = []
+  for (const source of alias?.titlePatterns || []) {
+    if (typeof source !== 'string' || !source || source.length > ALIAS_PATTERN_MAX_LENGTH) continue
+    if (!aliasPatternCache.has(source)) {
+      // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp -- the pattern is a committed spec value validated at build time (tests/build-checks.mjs), bounded above, and tested against ticket titles only
+      try { aliasPatternCache.set(source, new RegExp(source, 'i')) } catch { aliasPatternCache.set(source, null) }
+    }
+    const compiled = aliasPatternCache.get(source)
+    if (compiled) out.push(compiled)
+  }
+  return out
+}
+
 export function findOpenDuplicate(openTasks, { group, row, payload, ids }, aliases = loadRegistry(CHECK_MAP_FILE).dedupeAliases || {}) {
   const cf = (t) => t.customFields || {}
   const onPage = (t) => taskPages(t).some((p) => group.pages.includes(p))
@@ -975,7 +993,7 @@ export function findOpenDuplicate(openTasks, { group, row, payload, ids }, alias
   const alias = aliases[row.observerCheck]
   if (!alias) return null
   const aliasIds = new Set((alias.checkIds || []).map((id) => String(id).toLowerCase()))
-  const patterns = (alias.titlePatterns || []).map((p) => new RegExp(p, 'i'))
+  const patterns = aliasTitlePatterns(alias)
   for (const t of openTasks) {
     if (!onPage(t)) continue
     const carried = [cf(t).checkId, cf(t).check, cf(t).observerCheck].filter(Boolean).map((v) => String(v).toLowerCase()).find((v) => aliasIds.has(v))
