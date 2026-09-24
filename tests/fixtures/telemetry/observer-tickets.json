@@ -1,0 +1,89 @@
+[
+  {
+    "id": "t-site-change",
+    "title": "Alpha Atlanta: intro card names another campus",
+    "status": "COMPLETED",
+    "createdAt": "2026-09-10T10:00:00.000Z",
+    "completedAt": "2026-09-14T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>RESOLUTION 2026-09-14: card replaced, receipt attached.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "campus-image-identity-conflict", "runId": "site-full-2026-09-10T10-00-00-000Z" }
+  },
+  {
+    "id": "t-source-change",
+    "title": "Alpha Dorado: launch words on an Open page",
+    "status": "COMPLETED",
+    "createdAt": "2026-09-10T10:00:00.000Z",
+    "completedAt": "2026-09-12T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>SOURCE FIX 2026-09-12 (website agent): website_campus_intro before \"launching\" after \"is open and enrolling.\", HubSpot Program 1, read 2026-09-12T09:00Z.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "campus-page-stale-launch-media", "runId": "site-full-2026-09-10T10-00-00-000Z" }
+  },
+  {
+    "id": "t-decision-blocked",
+    "title": "Alpha Short Hills: Community URL host",
+    "status": "BLOCKED",
+    "createdAt": "2026-09-16T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>BLOCKED 2026-09-24: DECISION NEEDED, observer communityHosts config.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "preannouncement-community-host", "runId": "site-full-2026-09-16T10-00-00-000Z" }
+  },
+  {
+    "id": "t-decision-kind",
+    "title": "Alpha Jacksonville: Community URL host",
+    "status": "BLOCKED",
+    "createdAt": "2026-09-16T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>Duplicate of t-decision-blocked, tracked there.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "preannouncement-community-host", "runId": "site-full-2026-09-16T10-00-00-000Z", "resolutionKind": "blocked-decision" }
+  },
+  {
+    "id": "t-false-positive",
+    "title": "Alpha Raleigh: header overlaps H1 (mobile)",
+    "status": "COMPLETED",
+    "createdAt": "2026-09-16T10:00:00.000Z",
+    "completedAt": "2026-09-24T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>RESOLUTION 2026-09-24: 12.5 px, under the 8% detection.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "campus-layout-header-overlap", "runId": "site-full-2026-09-16T10-00-00-000Z", "resolutionKind": "false-positive" }
+  },
+  {
+    "id": "t-fixed-elsewhere",
+    "title": "Alpha East Bay Coffee & Conversations is public in HubSpot, but missing from the website.",
+    "status": "COMPLETED",
+    "createdAt": "2026-09-04T10:00:00.000Z",
+    "completedAt": "2026-09-24T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>RESOLUTION 2026-09-24: import landed 2026-09-09.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "public-event-sync", "runId": "site-events-2026-09-04T10-00-00-000Z", "resolutionKind": "fixed-elsewhere" }
+  },
+  {
+    "id": "t-aged-out",
+    "title": "Alpha Plano info session is public in HubSpot, but missing from the website.",
+    "status": "COMPLETED",
+    "createdAt": "2026-09-04T10:00:00.000Z",
+    "completedAt": "2026-09-24T10:00:00.000Z",
+    "description": "<p>observer finding</p><p>RESOLUTION 2026-09-24: event is PAST.</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "public-event-sync", "runId": "site-events-2026-09-04T10-00-00-000Z", "resolutionKind": "aged-out" }
+  },
+  {
+    "id": "t-open-unclassified",
+    "title": "Alpha Miami: campus timeout",
+    "status": "NOT_STARTED",
+    "createdAt": "2026-09-20T10:00:00.000Z",
+    "description": "<p>observer finding</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "route-reachable", "runId": "site-full-2026-09-20T10-00-00-000Z" }
+  },
+  {
+    "id": "t-outside-window",
+    "title": "Alpha Austin: old finding",
+    "status": "COMPLETED",
+    "createdAt": "2026-08-01T10:00:00.000Z",
+    "completedAt": "2026-08-02T10:00:00.000Z",
+    "description": "<p>observer finding</p>",
+    "customFields": { "source": "alpha-site-qc", "check": "route-reachable", "runId": "site-full-2026-08-01T10-00-00-000Z", "resolutionKind": "false-positive" }
+  },
+  {
+    "id": "t-not-observer",
+    "title": "Website (Staff) — Alpha Austin",
+    "status": "COMPLETED",
+    "createdAt": "2026-09-12T10:00:00.000Z",
+    "completedAt": "2026-09-13T10:00:00.000Z",
+    "description": "<p>staff request</p>",
+    "customFields": { "source": "website-agent", "requestFamily": "website" }
+  }
+]

@@ -32,6 +32,15 @@ Enforces `spec/ticket-contract.json` on any ticket set: claim, page, element, ob
 node tests/triage-ticket.mjs --file tickets.json [--element intro.status-sentence] [--class hubspot-data] [--owner-role hubspot-program-admin] [--status BLOCKED] [--related <id>] [--note "..."] [--apply]
 ```
 
+## telemetry-report.mjs (what the agent did, how precise the observer was)
+
+Read-only markdown report from WordPress receipts (`list_receipts`) and APEX website-family Requests. Since the QC loop redesign plan (2026-09-24, workstreams 4 and 8) it also reports observer precision for the tickets filed in the window, for the whole period, per observer run (`customFields.runId`) and per observer check (`customFields.check`): precision is the share of observer tickets (`customFields.source` alpha-site-qc) that ended in a site change (an applied `apply-`, `upload-`, `set-`, `create-`, `delete-`, `restore-` or `update-` receipt carrying the ticket id; prepare, regenerate, flush and purge do not count), a source change (a `SOURCE FIX` or `AUDIT` line on the ticket), or a recorded decision (Blocked with `DECISION NEEDED`, or `customFields.resolutionKind` blocked-decision). The false-positive, fixed-elsewhere, aged-out and retired-or-cleared counts read `customFields.resolutionKind` (backfilled on the 180 sweep tickets on 2026-09-24; written by the filer from workstream 6 on). Median days open counts closed tickets to `completedAt` and open tickets to the report time. `--tickets-file` and `--receipts-file` replace the APEX and WordPress reads for an offline run; tests use `tests/fixtures/telemetry/`.
+
+```bash
+node tests/telemetry-report.mjs --since 2026-08-25 --until 2026-09-24T23:59:59Z --label pre-redesign --out docs/telemetry/2026-09-24-observer-precision.md
+node tests/telemetry-report.mjs --since 2026-09-15 --tickets-file tickets.json --receipts-file receipts.json --out /tmp/report.md
+```
+
 ## diagnose-field.mjs
 
 Pathway diagnosis (protocol step 1b). Given a campus URL and an element from `spec/campus-page-field-map.json`, it reads the rendered page, the growth map API (HubSpot mirror), HubSpot Programs directly when the token has the scopes, and the requirement for the campus state; then prints the defect class (data, mapping, delivery, presentation, none), the owner role and person, and a ready ticket.
