@@ -806,7 +806,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   const body = renderObserverBody(contract)
   for (const label of ['Claim:', 'Page:', 'Element:', 'Observed:', 'Expected:', 'Source:', 'Defect class:', 'Class:', 'Owner:', 'Fix path:', 'Done when:', 'Evidence:', 'Exemptions:', 'Playbook:', 'History:']) assert.ok(body.includes(`\n${label} `) || body.includes(`\n${label}\n`), `body carries ${label}`)
   assert.match(body, /\nExemptions: registry\/sister-brand-exceptions\.json, registry\/campus-leadership\.json groups \(allowed phrases per campus; /)
-  assert.match(body, /^Matt Barge: /)
+  assert.match(body, /^Yash Chitneni: /)
 })
 
 test('observer filer: CTA exceptions, the sister-site guard, shared leadership, campus names in titles and dedupe aliases', () => {
