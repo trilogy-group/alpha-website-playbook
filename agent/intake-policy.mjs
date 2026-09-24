@@ -1,4 +1,5 @@
 import crypto from 'node:crypto'
+import { renderTemplate } from './ticket-templates.mjs'
 
 const INTAKE_OWNED_FIELDS = new Set(['intakeHash', 'intakePendingHash', 'intakeVersion', 'intakeDecision', 'ownerRole'])
 export const UNRESOLVED_OWNER_ROLE = 'internal-triage'
@@ -191,9 +192,8 @@ export function resolveDecisionOwner(bundle, result, ticket, usersByEmail = new 
   result.ownerResolution = candidates.length ? 'ambiguous-role-owner' : 'unregistered-role-owner'
   if (['ready-for-execution', 'routed'].includes(result.outcome)) {
     result.outcome = 'owner-unresolved'
-    result.reason = candidates.length
-      ? `${result.ownerRole} has multiple registered APEX users and no primary owner; intake will not choose one arbitrarily.`
-      : `${result.ownerRole} has no registered APEX user; intake will not route the work to anyone else.`
+    // Protocol 1d wording: spec/ticket-templates.json templates ownerAmbiguous and ownerUnregistered.
+    result.reason = renderTemplate(candidates.length ? 'ownerAmbiguous' : 'ownerUnregistered', { role: result.ownerRole })
   }
   return escalateUnownedTicket(bundle, result, ticket)
 }
@@ -218,7 +218,7 @@ function escalateUnownedTicket(bundle, result, ticket) {
       role: result.ownerRole,
       ownerResolution: result.ownerResolution,
       assignedTo: operator.name,
-      note: escalationNote(bundle, result, ticket, operator),
+      note: escalationNote(bundle, result, ticket, { assignedTo: operator.name }),
     }
   } else {
     result.escalation = { rule: 'protocol-1d', role: result.ownerRole, ownerResolution: result.ownerResolution, assignedTo: null, note: null, error: 'no single website-agent-operator is registered with an APEX user in registry/people.json' }
@@ -231,23 +231,32 @@ export function escalationOperator(bundle) {
   return candidates.length === 1 ? candidates[0] : null
 }
 
-/** The 1d note: the role with no person, the system the work lives in, and the exact change, in that order. */
-export function escalationNote(bundle, result, ticket, operator) {
+/**
+ * The protocol 1d note for a ticket whose owner role has no registered person (template `blocked`): DECISION NEEDED
+ * with intake's reason, then the role with no person, the system the work lives in, and the exact change requested
+ * (title and page), in that order, so a human can name the owner in one step; then the person it is assigned to and
+ * intake's decision (outcome and class). `actor` and `date` name who wrote it (agent/intake.mjs passes its version);
+ * `system` is the class adapter's system from the bundle (the observer adapter only finds the defect, so its classes
+ * name the executing role instead), then the class's executing role, then its scope; `assignedTo` defaults to the
+ * resolved owner (the website agent operator).
+ */
+export function escalationNote(bundle, result, ticket, { actor, date, assignedTo } = {}) {
   const spec = result.class ? bundle.classes?.[result.class] : null
   const adapter = spec?.adapter ? bundle.adapters?.[spec.adapter] : null
-  const system = adapter?.system || (spec ? `${spec.scope} (class ${result.class})` : 'not determined: no compiled ticket class matched')
-  const why = result.ownerResolution === 'ambiguous-role-owner'
-    ? `role ${result.ownerRole} has several registered APEX users and no primary owner`
-    : `role ${result.ownerRole} has no registered person in registry/people.json`
-  const page = result.found?.pageUrl || ticket.url || null
-  const title = String(ticket.title || '').split(/\r?\n/)[0].trim().slice(0, 200)
-  return [
-    `Protocol 1d: ${why}, so intake set Blocked and assigned ${operator.name} (website-agent-operator) until the owner is named. No website change was made.`,
-    `Role: ${result.ownerRole}.`,
-    `System: ${system}.`,
-    `Change: ${title || '(untitled)'}${page ? ` (${page})` : ''}.`,
-    `Intake decision: ${result.outcome}${result.class ? ` for class ${result.class}` : ''}${result.reason ? `; ${result.reason}` : ''}`,
-  ].join('\n')
+  const executingSystem = adapter && spec.adapter !== 'observer' ? adapter.system : null
+  const role = result.ownerRole || UNRESOLVED_OWNER_ROLE
+  const page = result.found?.pageUrl || ticket?.url || null
+  const title = String(ticket?.title || '').split(/\r?\n/)[0].trim().slice(0, 200)
+  return renderTemplate('blocked', {
+    actor: actor || 'intake',
+    date: date || new Date().toISOString().slice(0, 10),
+    decision: result.reason || renderTemplate('ownerUnregistered', { role }),
+    role,
+    system: executingSystem || spec?.executes || spec?.scope || 'not determined: no compiled ticket class matched',
+    change: `${title || 'see the ticket'}${page ? ` (${page})` : ''}`,
+    assignedTo: assignedTo || result.owner || null,
+    intakeDecision: result.outcome ? `${result.outcome}${result.class ? ` for class ${result.class}` : ''}` : null,
+  })
 }
 
 /**
@@ -404,15 +413,12 @@ export function clarificationRequirements(bundle, result) {
 }
 
 export function clarificationNote(bundle, result) {
+  // Wording: spec/ticket-templates.json template intakeClarification.
   const requirements = clarificationRequirements(bundle, result)?.requirements || []
-  return [
-    'APEX intake found requester-owned information that is still needed:',
-    ...requirements.map((item) => `- ${item.label}: ${item.prompt}`),
-    result.derivableMissing?.length
-      ? `APEX will resolve these itself and is not asking you for them: ${result.derivableMissing.join(', ')}.`
-      : null,
-    'Reply through the APEX clarification link. The same ticket will be evaluated again after your response.',
-  ].filter(Boolean).join('\n')
+  return renderTemplate('intakeClarification', {
+    items: requirements.map((item) => ({ label: item.label, prompt: item.prompt })),
+    derivable: result.derivableMissing?.length ? result.derivableMissing : null,
+  })
 }
 
 /**
@@ -515,7 +521,7 @@ export function applyDuplicateCandidates(results) {
         result.outcome = 'duplicate-candidate'
         result.ownerRole = 'internal-triage'
         result.policy = 'internal-review'
-        result.reason = 'Another open ticket has the same class, canonical page, and subject. Link and review them; do not auto-close either ticket.'
+        result.reason = renderTemplate('duplicate', { related: result.relatedTicketIds })
         refreshDecisionHash(result)
       }
     }

@@ -1,0 +1,366 @@
+{
+  "$comment": "The wording and line order of every note and body the APEX website ticket protocol prescribes, in one place. The renderer (tests/render-ticket.mjs), triage (tests/triage-ticket.mjs), intake (agent/intake-policy.mjs), the pathway diagnosis (tests/diagnose-field.mjs), the observer filer (agent/file-observer-findings.mjs) and any sweep agent writing a note by hand render these through agent/ticket-templates.mjs, so a change to the protocol's wording is made here once. Placeholders: {name} is a field the caller must supply (listed in `required`; arrays join with ', '); {?name|text} renders text only when the field is present, {?name|text|else} renders else otherwise, and both may nest placeholders; a line may be an object {text, when} rendered only when that field is present, or {each, text} rendered once per array item with {index} (1-based) and the item's own fields ({item} for a string item). The protocol document quotes each template through tests/render-templates-examples.mjs from the `example` fields, and a test fails when the quoted block drifts from the renderer.",
+  "version": "1.0",
+  "asOf": "2026-09-24",
+  "markers": {
+    "triage": "--- Website agent triage ---"
+  },
+  "rules": {
+    "requesterTextFirst": "The requester's original submission stays first in the description, verbatim, and is never rewritten by an agent. Every rendered body or note is appended after it (the triage body under the triage marker; a note after a blank line). Prior rendered bodies are never appended again.",
+    "closingLines": [
+      "RESOLUTION ({actor}, {date}, {playbookVersion})",
+      "Go here: {goHere}",
+      "Look for: {lookFor}",
+      "Recommend: {recommend}"
+    ],
+    "closingLinesRule": "Every closing note (a template whose protocolSection is 7) starts with these four lines in this order, so the reviewer can work from the APEX For Review queue alone: read them, click the URL, look at one thing, decide.",
+    "reviewLine": "Please review.",
+    "reviewLineRule": "Every closing note ends with the review line; the reviewer's click is the completion.",
+    "noEmDash": "No template and no rendered note contains an em dash (U+2014). Use a colon, a semicolon, or a full stop.",
+    "statusMeansOneThing": "For Review: done and verified, the reviewer's click completes it. Missing Info: waiting on the requester with the exact ask. Blocked: waiting on anyone else, with DECISION NEEDED in the note when it is a decision. In Progress: being executed now, or a published source change waiting for its nightly run (docs/sweep-runbook.md, Status means one thing)."
+  },
+  "templates": {
+    "resolution": {
+      "protocolSection": "7",
+      "description": "The closing note on a ticket whose change the actor made and verified. First four lines are the closing lines; Also open on this page names every other open defect on the URL or 'none'; Observer only on observer tickets.",
+      "required": ["actor", "date", "playbookVersion", "goHere", "lookFor", "recommend", "alsoOpen", "page", "change", "evidence", "tests"],
+      "lines": [
+        "RESOLUTION ({actor}, {date}, {playbookVersion})",
+        "Go here: {goHere}",
+        "Look for: {lookFor}",
+        "Recommend: {recommend}",
+        "Also open on this page: {alsoOpen}",
+        "Page: {page}{?objectId| (object {objectId})}",
+        "Change: {change}",
+        "Evidence: {evidence}",
+        "Tests: {tests}",
+        { "when": "observer", "text": "Observer: {observer}" },
+        "Please review."
+      ],
+      "example": {
+        "actor": "<actor>",
+        "date": "<date>",
+        "playbookVersion": "<playbook version>",
+        "goHere": "<canonical URL>",
+        "lookFor": "<one line: the exact card, sentence, or button the reviewer should see, and where on the page>",
+        "recommend": "Complete | Complete after <one question for the reviewer>",
+        "alsoOpen": "<ticket id, age, one phrase> per open defect page-check or the observer already reports on this URL, or \"none\"",
+        "page": "<canonical URL>",
+        "objectId": "<id>",
+        "change": "\"<before>\" -> \"<after>\" in <section / field>",
+        "evidence": "before hash, after hash, snapshot ref; section capture of <the element Look for names> attached with agent/attach-evidence.mjs --section (desktop, mobile) plus the full-page pair; the Look for line names what the section capture shows",
+        "tests": "ring 1 pass; ring 2 pass (desktop, mobile); ring 3 pass (<two pages>)",
+        "observer": "<check ids> cleared on run <id>"
+      }
+    },
+    "verified": {
+      "protocolSection": "7",
+      "description": "The closing note on a ticket whose done condition was already met on the rendered page (docs/sweep-runbook.md: closes on verification with the actor named from list_revisions) or whose observer check cleared on its own runs (agent/file-observer-findings.mjs). Same first four lines as resolution; the Change line says who did not change anything and why the condition is met.",
+      "required": ["actor", "date", "playbookVersion", "goHere", "lookFor", "recommend", "alsoOpen", "page", "verifiedBy", "alreadyMet", "evidence", "tests"],
+      "lines": [
+        "RESOLUTION ({actor}, {date}, {playbookVersion})",
+        "Go here: {goHere}",
+        "Look for: {lookFor}",
+        "Recommend: {recommend}",
+        "Also open on this page: {alsoOpen}",
+        "Page: {page}",
+        "Change: none by {verifiedBy}; {alreadyMet}",
+        "Evidence: {evidence}",
+        "Tests: {tests}",
+        { "when": "observer", "text": "Observer: {observer}" },
+        { "when": "resolutionKind", "text": "Resolution kind: {resolutionKind}" },
+        "Please review."
+      ],
+      "example": {
+        "actor": "<actor>",
+        "date": "<date>",
+        "playbookVersion": "<playbook version>",
+        "goHere": "<canonical URL>",
+        "lookFor": "<the element that already meets the done condition, and where on the page>",
+        "recommend": "Complete",
+        "alsoOpen": "<ticket id, age, one phrase> or \"none\"",
+        "page": "<canonical URL>",
+        "verifiedBy": "<actor>",
+        "alreadyMet": "<why the done condition is met: the revision and actor from list_revisions, or the observer runs that cleared the check>",
+        "evidence": "<section capture attached with agent/attach-evidence.mjs --section (desktop, mobile), or the observer incidents, runs and packet sha256>",
+        "tests": "ring 2 pass (desktop, mobile) | observer verification only",
+        "observer": "<check ids> cleared on run <id>",
+        "resolutionKind": "check-cleared"
+      }
+    },
+    "missingInfo": {
+      "protocolSection": "7 (Missing Info template)",
+      "description": "The note on a ticket sent back to its requester (protocol step 1): every missing item with the person who can supply it, what is already right, and the promise to execute once the items are on the ticket. The Slack DM to the requester is a separate text (agent/requester-notice-policy.mjs).",
+      "required": ["actor", "date", "items", "alreadyCorrect"],
+      "lines": [
+        "MISSING INFO ({actor}, {date})",
+        "This ticket needs the following before it can be executed:",
+        { "each": "items", "text": "{index}. {item}{?owner| (owner: {owner})}" },
+        "What is already correct on the page: {alreadyCorrect}",
+        "The agent will execute and verify as soon as the items above are on the ticket."
+      ],
+      "example": {
+        "actor": "<actor>",
+        "date": "<date>",
+        "items": [
+          { "item": "<item>", "owner": "<name>" },
+          { "item": "<item>", "owner": "<name>" }
+        ],
+        "alreadyCorrect": "<list or \"nothing checked yet\">"
+      }
+    },
+    "intakeClarification": {
+      "protocolSection": "1",
+      "description": "The APEX clarification note the intake administrator (agent/intake.mjs) writes with the typed requirements when requester-owned inputs are missing.",
+      "required": ["items"],
+      "lines": [
+        "APEX intake found requester-owned information that is still needed:",
+        { "each": "items", "text": "- {label}: {prompt}" },
+        { "when": "derivable", "text": "APEX will resolve these itself and is not asking you for them: {derivable}." },
+        "Reply through the APEX clarification link. The same ticket will be evaluated again after your response."
+      ],
+      "example": {
+        "items": [
+          { "label": "<requirement label>", "prompt": "<requirement prompt>" }
+        ],
+        "derivable": ["<derivable field>"]
+      }
+    },
+    "blocked": {
+      "protocolSection": "1d",
+      "description": "The note on a ticket set to Blocked because a decision is needed: who decides, and for an owner role with no registered person (protocol 1d) the role, the system the work lives in, and the exact change requested, so a human can name the owner in one step; then the person assigned and, when intake wrote it, intake's outcome and class. DECISION NEEDED is the runbook's marker for a decision in the Blocked queue.",
+      "required": ["actor", "date", "decision", "role", "system", "change"],
+      "lines": [
+        "BLOCKED ({actor}, {date})",
+        "DECISION NEEDED: {decision}",
+        "Role: {role}",
+        "System: {system}",
+        "Change: {change}",
+        { "when": "assignedTo", "text": "Assigned to: {assignedTo}" },
+        { "when": "intakeDecision", "text": "Intake decision: {intakeDecision}" }
+      ],
+      "example": {
+        "actor": "<actor>",
+        "date": "<date>",
+        "decision": "<the one question a person must answer, or: <role> has no registered APEX user; intake will not fall back to Matt or Yash.>",
+        "role": "<owner role from spec/responsibilities.json>",
+        "system": "<the system the work lives in: WordPress page, HubSpot Program, n8n workflow, events plugin, HighLevel site>",
+        "change": "<the exact change requested, from the ticket>",
+        "assignedTo": "<person, never a role>",
+        "intakeDecision": "<when intake wrote the note: its outcome and class, e.g. policy-review for class observer-layout>"
+      }
+    },
+    "escalation": {
+      "protocolSection": "1d",
+      "description": "The one-line escalation the observer filer appends to a body's Owner line when the class owner role has no registered APEX user and the ticket goes Blocked on the website agent operator.",
+      "required": ["role", "escalatedTo", "operatorRole", "system"],
+      "lines": [
+        "role {role} has no registered APEX user; escalated to {escalatedTo} ({operatorRole}) per protocol 1d; the work lives in {system}"
+      ],
+      "example": {
+        "role": "<owner role>",
+        "escalatedTo": "<website agent operator>",
+        "operatorRole": "website-agent-operator",
+        "system": "<the system the work lives in>"
+      }
+    },
+    "ownerUnregistered": {
+      "protocolSection": "1d",
+      "description": "Intake's reason when the resolved owner role has no registered APEX user; becomes the DECISION NEEDED line of the blocked note.",
+      "required": ["role"],
+      "lines": ["{role} has no registered APEX user; intake will not fall back to Matt or Yash."],
+      "example": { "role": "<owner role>" }
+    },
+    "ownerAmbiguous": {
+      "protocolSection": "1d",
+      "description": "Intake's reason when the resolved owner role has several registered APEX users and no primary owner.",
+      "required": ["role"],
+      "lines": ["{role} has multiple registered APEX users and no primary owner; intake will not choose one arbitrarily."],
+      "example": { "role": "<owner role>" }
+    },
+    "duplicate": {
+      "protocolSection": "8",
+      "description": "The note on a ticket that duplicates an open one (same class, canonical page and subject): link, review, never auto-close. Used by intake for duplicate candidates and by a sweep agent that finds an open ticket for the same defect (protocol step 8: link the existing one instead of filing).",
+      "required": [],
+      "lines": [
+        "Another open ticket has the same class, canonical page, and subject{?related| ({related})}. Link and review them; do not auto-close either ticket."
+      ],
+      "example": { "related": ["<ticket id>"] }
+    },
+    "filedLine": {
+      "protocolSection": "8",
+      "description": "The one line added to the parent ticket after a defect found while working is filed as its own ticket.",
+      "required": ["id", "defect"],
+      "lines": ["Filed {id} for {defect} found during this work."],
+      "example": { "id": "<new id>", "defect": "<defect>" }
+    },
+    "claimed": {
+      "protocolSection": "2",
+      "description": "The In Progress note when an actor claims a ticket: actor, date, playbook version, and the APEX execution, revision and lease when the claim route returned them.",
+      "required": ["actor", "date", "playbookVersion"],
+      "lines": [
+        "CLAIMED ({actor}, {date}, {playbookVersion})",
+        { "when": "executionId", "text": "Execution {executionId}{?revision|; revision {revision}}{?leaseExpiresAt|; lease expires {leaseExpiresAt}}" }
+      ],
+      "example": {
+        "actor": "<actor>",
+        "date": "<date>",
+        "playbookVersion": "<playbook version>",
+        "executionId": "<execution id>",
+        "revision": "<revision>",
+        "leaseExpiresAt": "<expiry>"
+      }
+    },
+    "triageBody": {
+      "protocolSection": "0",
+      "description": "The rendered contract body that follows the requester's text under the triage marker (tests/render-ticket.mjs, tests/triage-ticket.mjs); regenerated in place on every class or owner change; history is one line per change.",
+      "required": ["fixPath", "observed", "doneWhen", "class", "evidence"],
+      "lines": [
+        "{?ownerName|{ownerName}|{?ownerRole|{ownerRole}|Owner}}: {fixPath}",
+        "",
+        "What was asked: {observed}",
+        { "when": "page", "text": "Page: {page}" },
+        { "when": "expected", "text": "What the playbook expects: {expected}" },
+        { "when": "source", "text": "Source checked: {source}" },
+        "Why it is routed here:{?reason| {reason}}",
+        "Done when: {doneWhen}",
+        { "when": "related", "text": "Related: {related}" },
+        "",
+        "Class {class}{?defectClass| ({defectClass})}; element {?element|{element}|n/a}{?cssId| ({cssId})}; {evidence}; {?playbook|{playbook}|alpha-website-playbook}",
+        "",
+        "History:",
+        { "each": "history", "text": "- {item}" }
+      ],
+      "example": {
+        "ownerName": "<owner person>",
+        "fixPath": "<which system changes, by whom, and what publishes it>",
+        "observed": "<the value on the public page, verbatim, with the page's modified time>",
+        "page": "<canonical URL>",
+        "expected": "<the required value and the rule it comes from>",
+        "source": "<system, field, value and read time>",
+        "reason": "<why this owner>",
+        "doneWhen": "<the observable public condition that closes the ticket>",
+        "related": ["<ticket id>"],
+        "class": "<class>",
+        "defectClass": "<data | mapping | delivery>",
+        "element": "<field-map key>",
+        "cssId": "<CSS ID>",
+        "evidence": "<check name and run id, screenshots, hashes, or the diagnosis file>",
+        "playbook": "<spec path; protocol step>",
+        "history": ["<date> <actor>: <what changed>"]
+      }
+    },
+    "observerBody": {
+      "protocolSection": "0",
+      "description": "The contract body of a ticket the observer filer creates from a check-bundle row and a group of findings (agent/file-observer-findings.mjs); every labelled line validate-ticket.mjs --contract reads.",
+      "required": ["ownerName", "fixPath", "claim", "element", "observed", "expected", "source", "defectClass", "reason", "class", "ownerRole", "doneWhen", "evidence", "playbook", "history"],
+      "lines": [
+        "{ownerName}: {fixPath}",
+        "",
+        "Claim: {claim}",
+        "Page: {?page|{page}|n/a (no public page; see the list below)}",
+        { "when": "pages", "text": "Pages ({pagesCount}): {pages}" },
+        { "when": "events", "text": "Events ({eventsCount}): {events}" },
+        "Element: {element}",
+        "Observed: {observed}",
+        "Expected: {expected}",
+        "Source: {source}",
+        "Defect class: {defectClass}. {reason}",
+        "Class: {class}",
+        "Owner: {ownerRole} ({ownerName}){?escalation|; {escalation}}",
+        "Fix path: {fixPath}",
+        "Done when: {doneWhen}",
+        "Evidence: {evidence}",
+        { "when": "exemptions", "text": "Exemptions: {exemptions}" },
+        { "when": "related", "text": "Related: {related} (decision recorded; this row files again)" },
+        "Playbook: {playbook}",
+        "",
+        "History:",
+        { "each": "history", "text": "- {item}" }
+      ],
+      "example": {
+        "ownerName": "<owner person>",
+        "fixPath": "<fix path from the policy bundle>",
+        "claim": "<scope>: fails \"<row title>\" (<n> findings)",
+        "page": "<canonical URL>",
+        "pages": ["<canonical URL>", "<canonical URL>"],
+        "pagesCount": 2,
+        "element": "<row element>",
+        "observed": "<campus (viewport): actual | ...>",
+        "expected": "<row expected> (<requirement id>; <comparator>; severity <severity>)",
+        "source": "<observer source line with the run id and read time>",
+        "defectClass": "<data | mapping | delivery | presentation>",
+        "reason": "<scope>-scoped <status> check <observer check>; <first summary>",
+        "class": "<ticket class>",
+        "ownerRole": "<owner role>",
+        "escalation": "role <owner role> has no registered APEX user; escalated to <operator> (website-agent-operator) per protocol 1d; the work lives in <system>",
+        "doneWhen": "<class doneWhen>",
+        "evidence": "observer check <check> run <run id> (<completed at>); observer ids <ids>; packet evidence sha256 <sha256>; screenshot pair attached with agent/attach-evidence.mjs where the artifact carries it",
+        "exemptions": "<exemptions ref>",
+        "related": ["<decision ticket id>"],
+        "playbook": "<requirement id> (<requirement ref>); check bundle <version> row <row id>",
+        "history": ["<date> agent/file-observer-findings.mjs <version>: filed from observer run <run id> (<n> findings, scope <scope>)"]
+      }
+    },
+    "hubspotData": {
+      "protocolSection": "7 (Ticket templates for source-side classes)",
+      "description": "A hubspot-data (or sheet-data, sync-delivery) ticket from the pathway diagnosis (tests/diagnose-field.mjs): the source contradicts the requirement for the campus state; the owner changes the source, n8n publishes, the website agent verifies after the run.",
+      "title": "HubSpot data: {campus} {element} contradicts state {state}",
+      "required": ["campus", "state", "page", "element", "cssId", "writer", "stateSource", "pageModified", "pageValue", "source", "expectedValue", "rule", "derivation", "defectClass", "reason", "fixPath", "doneWhen"],
+      "lines": [
+        "Page: {page}",
+        "Element: {element} (CSS ID {cssId}; writer {writer})",
+        "Campus state: {state} ({stateSource})",
+        "Page shows (modified {pageModified}): \"{pageValue}\"",
+        "Source: {source}",
+        "Expected: \"{expectedValue}\" ({rule})",
+        "Derivation today: {derivation}",
+        "Defect class: {defectClass}. {reason}",
+        "Fix path: {fixPath}",
+        "Done when: {doneWhen}",
+        "Playbook: spec/campus-page-field-map.json {element}; protocols/apex-website-ticket-protocol.md step 1b."
+      ],
+      "example": {
+        "campus": "<Campus>",
+        "state": "<type>",
+        "page": "<url>",
+        "element": "<field-map key>",
+        "cssId": "<id>",
+        "writer": "n8n from HubSpot",
+        "stateSource": "<source and read time>",
+        "pageModified": "<time>",
+        "pageValue": "<page value>",
+        "source": "HubSpot Programs <field> = \"<value>\" (read <time>)   or: not read directly, <reason>",
+        "expectedValue": "<value>",
+        "rule": "<requirement rule>",
+        "derivation": "<from the field map>",
+        "defectClass": "data",
+        "reason": "<reason>",
+        "fixPath": "change <field> for <Campus> through the APEX campus Program editor (approver <role>); n8n publishes at 00:15 CT; the website agent verifies after the run.",
+        "doneWhen": "the public page shows the expected value after the next run (tests/page-check.mjs)."
+      }
+    },
+    "syncMapping": {
+      "protocolSection": "7 (Ticket templates for source-side classes)",
+      "description": "A sync-mapping ticket: the source is right and the n8n derivation onto the page is wrong or missing; owner n8n-sync-owner, decision by Matt Barge, Yash Chitneni and the HubSpot owner.",
+      "title": "Website mapping: derive {element} from {stateField}",
+      "required": ["element", "stateField", "cssId", "currentDerivation", "proposedDerivation", "reason"],
+      "lines": [
+        "Element: {element} (CSS ID {cssId})",
+        "Current derivation: {currentDerivation}",
+        "Proposed derivation: {proposedDerivation}, so the source can no longer contradict the state",
+        "Reason: {reason}",
+        "Owner: n8n-sync-owner; decision: Matt Barge, Yash Chitneni, HubSpot owner; recorded in docs/decisions.md",
+        "Done when: two campuses render correctly after a run with the new rule, and the field map and synced-targets spec are updated."
+      ],
+      "example": {
+        "element": "<element>",
+        "stateField": "<state field>",
+        "cssId": "<id>",
+        "currentDerivation": "<from the field map>",
+        "proposedDerivation": "<rule>",
+        "reason": "<the incident, with pages and dates>"
+      }
+    }
+  }
+}

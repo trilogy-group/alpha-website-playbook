@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alpha.school/playbook/ticket-templates.schema.json",
+  "description": "spec/ticket-templates.json: named ticket note and body templates with ordered lines and {placeholder} fields. A line is a string (always rendered), {text, when} (rendered when the field is present) or {each, text} (rendered once per array item). tests/validate-playbook.mjs also checks that `required` equals the set of unconditional placeholders, that every example renders, that no template carries an em dash, and that every template whose protocolSection is exactly 7 starts with rules.closingLines and ends with rules.reviewLine.",
+  "type": "object",
+  "required": ["version", "asOf", "markers", "rules", "templates"],
+  "properties": {
+    "version": { "type": "string" },
+    "asOf": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+    "markers": {
+      "type": "object",
+      "required": ["triage"],
+      "properties": { "triage": { "type": "string", "pattern": "^--- .+ ---$" } }
+    },
+    "rules": {
+      "type": "object",
+      "required": ["requesterTextFirst", "closingLines", "closingLinesRule", "reviewLine", "reviewLineRule", "noEmDash", "statusMeansOneThing"],
+      "properties": {
+        "requesterTextFirst": { "type": "string" },
+        "closingLines": { "type": "array", "minItems": 4, "items": { "type": "string" } },
+        "closingLinesRule": { "type": "string" },
+        "reviewLine": { "type": "string" },
+        "reviewLineRule": { "type": "string" },
+        "noEmDash": { "type": "string" },
+        "statusMeansOneThing": { "type": "string" }
+      }
+    },
+    "templates": {
+      "type": "object",
+      "required": ["resolution", "verified", "missingInfo", "blocked", "duplicate", "filedLine", "claimed", "triageBody", "hubspotData", "syncMapping"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["protocolSection", "description", "required", "lines", "example"],
+        "properties": {
+          "protocolSection": { "type": "string", "pattern": "^(0|1|1d|2|7|7 \\(.+\\)|8)$" },
+          "description": { "type": "string" },
+          "title": { "type": "string" },
+          "required": { "type": "array", "items": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9]*$" } },
+          "lines": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "anyOf": [
+                { "type": "string" },
+                { "type": "object", "required": ["when", "text"], "properties": { "when": { "type": "string" }, "text": { "type": "string" } } },
+                { "type": "object", "required": ["each", "text"], "properties": { "each": { "type": "string" }, "text": { "type": "string" } } }
+              ]
+            }
+          },
+          "example": { "type": "object" }
+        }
+      }
+    }
+  }
+}

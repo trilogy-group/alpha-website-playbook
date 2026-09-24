@@ -14,8 +14,10 @@ import path from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { renderBody } from './render-ticket.mjs'
 import { assigneePatch } from '../agent/intake-policy.mjs'
+import { templateMarker } from '../agent/ticket-templates.mjs'
 
-export const TRIAGE_BODY_MARKER = '--- Website agent triage ---'
+/** The marker line between the requester's text and the rendered body (spec/ticket-templates.json markers.triage). */
+export const TRIAGE_BODY_MARKER = templateMarker('triage')
 
 /**
  * The requester's own words stay first and verbatim. The rendered contract body follows under a marker; regenerating

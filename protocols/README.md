@@ -1,6 +1,6 @@
 # Protocols
 
-- `apex-website-ticket-protocol.md` (v0.3): validate, claim, reconcile, execute, test in three rings, roll back, document, and file new tickets for anything else found. Includes the partial-completion rule (do every fixable part, never close with a part open).
+- `apex-website-ticket-protocol.md` (v0.4): validate, claim, reconcile, execute, test in three rings, roll back, document, and file new tickets for anything else found. Includes the partial-completion rule (do every fixable part, never close with a part open). The wording of every note and body it prescribes is `spec/ticket-templates.json` (v0.4 moved the literal blocks there; the document quotes generated examples).
 - `production-and-staging.md`: environment choice, claim and lease mechanics, canary evidence, batches, and production completion.
 - `rollback-and-incidents.md`: snapshots, collision recovery, partial saves, exact restoration, and incident containment.
 - `evidence-and-screenshots.md`: required artifacts, viewport set, labels, privacy and APEX evidence upload.

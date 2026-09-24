@@ -7,13 +7,18 @@ import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { runValidation } from './validate-playbook.mjs'
+import { runValidation, validateTicketTemplates } from './validate-playbook.mjs'
 import { composeDescription, triageCustomFields, TRIAGE_BODY_MARKER } from './triage-ticket.mjs'
+import { renderBody } from './render-ticket.mjs'
+import { checkDocExamples, quotedBlocks } from './render-templates-examples.mjs'
+import { TemplateError, assertNoteShape, closingNoteLines, loadTemplates, renderExamples, renderTemplate, renderTitle, reviewLine, templateMarker } from '../agent/ticket-templates.mjs'
 import {
   administrativeAction,
   applyDuplicateCandidates,
   assigneePatch,
+  clarificationNote,
   clarificationRequirements,
+  escalationNote,
   intakeCustomFieldsPatch,
   UNRESOLVED_OWNER_ROLE,
   evaluateTicket,
@@ -661,12 +666,15 @@ test('protocol 1d inside intake: an unowned role is Blocked on the website agent
   assert.equal(layout.task.agentEligible, false)
   assert.ok(layout.task.assignees.some((item) => item.id === operator.apexUserId), 'assigned to the operator')
   assert.equal(layout.reconciles.length, 1)
+  // The note is the `blocked` template (spec/ticket-templates.json): DECISION NEEDED, role, system, change, person, decision.
   const note = layout.reconciles[0].note
-  assert.match(note, /Protocol 1d: role elementor-owner has no registered person/)
-  assert.match(note, /Role: elementor-owner\./)
-  assert.match(note, /System: /)
-  assert.match(note, /Change: Alpha Oklahoma City: the header overlaps .* \(https:\/\/alpha\.school\/oklahoma-city\/\)\./)
-  assert.match(note, /Intake decision: policy-review for class observer-layout/)
+  assert.match(note, /^BLOCKED \(intake [0-9.]+, \d{4}-\d{2}-\d{2}\)\n/)
+  assert.match(note, /^DECISION NEEDED: elementor-owner has no registered APEX user; intake will not fall back to Matt or Yash\.$/m)
+  assert.match(note, /^Role: elementor-owner$/m)
+  assert.match(note, /^System: elementor-owner$/m, 'the observer adapter only finds the defect, so the system is the executing role')
+  assert.match(note, /^Change: Alpha Oklahoma City: the header overlaps .* \(https:\/\/alpha\.school\/oklahoma-city\/\)$/m)
+  assert.match(note, new RegExp(`^Assigned to: ${operator.name}$`, 'm'))
+  assert.match(note, /^Intake decision: policy-review for class observer-layout$/m)
   assert.equal(layout.report.summary.escalated, 1)
 })
 
@@ -776,6 +784,113 @@ test('triage keeps the requester description first and regenerates only the rend
   assert.equal(second.split(TRIAGE_BODY_MARKER).length, 2, 'exactly one rendered body')
   assert.ok(second.includes('v2') && !second.includes('v1'), 'rendered body regenerated in place')
   assert.equal(composeDescription('', 'body'), `${TRIAGE_BODY_MARKER}\nbody`)
+})
+
+// Ticket templates (2026-09-24): the wording of every protocol note and body lives in spec/ticket-templates.json; the
+// renderers read it, the protocol quotes it, and these tests pin the shapes and the outputs the renderers produced before.
+test('ticket templates render with placeholders, optional segments, per-item lines, and arrays joined', () => {
+  assert.equal(renderTemplate('filedLine', { id: 'cmx1', defect: 'a broken packet link' }), 'Filed cmx1 for a broken packet link found during this work.')
+  assert.equal(renderTemplate('claimed', { actor: 'website agent', date: '2026-09-24', playbookVersion: 'playbook 0.4' }), 'CLAIMED (website agent, 2026-09-24, playbook 0.4)')
+  assert.equal(renderTemplate('claimed', { actor: 'a', date: 'd', playbookVersion: 'v', executionId: 'ex1', leaseExpiresAt: 'T' }), 'CLAIMED (a, d, v)\nExecution ex1; lease expires T')
+  assert.equal(renderTemplate('duplicate', {}), 'Another open ticket has the same class, canonical page, and subject. Link and review them; do not auto-close either ticket.')
+  assert.equal(renderTemplate('duplicate', { related: ['cma', 'cmb'] }), 'Another open ticket has the same class, canonical page, and subject (cma, cmb). Link and review them; do not auto-close either ticket.')
+  assert.equal(renderTemplate('missingInfo', { actor: 'validator', date: '2026-09-24', items: ['the exact page URL', { item: 'the bio', owner: 'Dawn Adams' }], alreadyCorrect: 'nothing checked yet' }),
+    'MISSING INFO (validator, 2026-09-24)\nThis ticket needs the following before it can be executed:\n1. the exact page URL\n2. the bio (owner: Dawn Adams)\nWhat is already correct on the page: nothing checked yet\nThe agent will execute and verify as soon as the items above are on the ticket.')
+  assert.equal(renderTitle('hubspotData', { campus: 'Alpha Atlanta', element: 'intro.status-sentence', state: 'Open' }), 'HubSpot data: Alpha Atlanta intro.status-sentence contradicts state Open')
+  assert.equal(templateMarker('triage'), '--- Website agent triage ---')
+  assert.equal(TRIAGE_BODY_MARKER, templateMarker('triage'))
+})
+
+test('ticket templates fail closed: a missing required field, an unknown template, and a note without the closing shape are typed errors', () => {
+  assert.throws(() => renderTemplate('filedLine', { id: 'cmx1' }), (e) => e instanceof TemplateError && e.code === 'MISSING_FIELD' && e.field === 'defect' && e.template === 'filedLine')
+  assert.throws(() => renderTemplate('resolution', { actor: 'a' }), (e) => e.code === 'MISSING_FIELD' && e.field === 'date')
+  assert.throws(() => renderTemplate('nope', {}), (e) => e.code === 'UNKNOWN_TEMPLATE')
+  assert.throws(() => renderTitle('resolution', {}), (e) => e.code === 'NO_TITLE')
+  const note = renderTemplate('resolution', { actor: 'website agent', date: '2026-09-24', playbookVersion: 'playbook 0.4', goHere: 'https://alpha.school/austin/', lookFor: 'the events strip', recommend: 'Complete', alsoOpen: 'none', page: 'https://alpha.school/austin/', objectId: 123, change: '"a" -> "b" in the strip', evidence: 'hashes; section capture attached', tests: 'ring 1 pass; ring 2 pass (desktop, mobile); ring 3 pass (Tulsa, Miami)' })
+  assert.equal(note.split('\n')[5], 'Page: https://alpha.school/austin/ (object 123)')
+  assert.deepEqual(assertNoteShape(note).slice(0, 4), ['RESOLUTION (website agent, 2026-09-24, playbook 0.4)', 'Go here: https://alpha.school/austin/', 'Look for: the events strip', 'Recommend: Complete'])
+  assert.throws(() => assertNoteShape(note.replace('Go here:', 'Page:')), (e) => e.code === 'NOTE_SHAPE' && e.line === 2)
+  assert.throws(() => assertNoteShape(note.replace(/\nPlease review\.$/, '')), (e) => e.code === 'NOTE_SHAPE')
+  assert.throws(() => assertNoteShape(note.replace('the events strip', 'the events strip — top of page')), (e) => e.code === 'NOTE_SHAPE' && e.line === 3)
+})
+
+test('ticket template invariants: closing lines on every section 7 template, the review line last, no em dash, required equals the unconditional placeholders, the doc examples match', () => {
+  const spec = loadTemplates()
+  assert.deepEqual(closingNoteLines(), ['RESOLUTION ({actor}, {date}, {playbookVersion})', 'Go here: {goHere}', 'Look for: {lookFor}', 'Recommend: {recommend}'])
+  assert.equal(reviewLine(), 'Please review.')
+  assert.deepEqual(Object.keys(spec.templates), ['resolution', 'verified', 'missingInfo', 'intakeClarification', 'blocked', 'escalation', 'ownerUnregistered', 'ownerAmbiguous', 'duplicate', 'filedLine', 'claimed', 'triageBody', 'observerBody', 'hubspotData', 'syncMapping'])
+  assert.deepEqual(validateTicketTemplates(spec), [])
+  for (const name of ['resolution', 'verified']) assertNoteShape(renderExamples()[name])
+  // A section 7 template that drops a closing line, ends elsewhere, or carries an em dash fails the validator.
+  const broken = structuredClone(spec)
+  broken.templates.resolution.lines.splice(1, 1)
+  broken.templates.verified.lines.push('Thanks.')
+  broken.templates.missingInfo.lines[0] = 'MISSING INFO — ({actor}, {date})'
+  broken.templates.filedLine.required = []
+  broken.templates.claimed.required.push('ghost')
+  broken.templates.duplicate.example = { related: [] }
+  const problems = validateTicketTemplates(broken)
+  assert.ok(problems.some((p) => p.startsWith('ticket template resolution: a section 7 closing note must start with the closing lines')), problems.join('\n'))
+  assert.ok(problems.some((p) => p === 'ticket template verified: a section 7 closing note must end with "Please review."'))
+  assert.ok(problems.some((p) => p === 'ticket template missingInfo: carries an em dash'))
+  assert.ok(problems.some((p) => p === 'ticket template filedLine: placeholder {id} is always rendered but not in required'))
+  assert.ok(problems.some((p) => p === 'ticket template claimed: required field ghost appears in no line'))
+  // The protocol and runbook quote every template through the generator; a hand edit to a quoted block is caught.
+  assert.deepEqual(checkDocExamples(spec), [])
+  const protocol = fs.readFileSync(path.join(root, 'protocols', 'apex-website-ticket-protocol.md'), 'utf8')
+  const quoted = Object.fromEntries(quotedBlocks(protocol).map((b) => [b.name, b.quoted]))
+  assert.equal(quoted.resolution, renderExamples()[name_('resolution')])
+  const tampered = structuredClone(spec)
+  tampered.templates.resolution.lines[2] = 'Look for: {lookFor} (changed)'
+  assert.ok(checkDocExamples(tampered).some((p) => /quoted block for template resolution differs/.test(p)))
+  function name_(n) { return n }
+})
+
+test('the renderers produce the same text as before through the templates: triage body, intake clarification, 1d reasons and note, observer escalation', () => {
+  const body = renderBody({
+    ownerName: 'Farhan Raja', ownerRole: 'hubspot-program-admin', fixPath: 'change type in HubSpot', observed: 'Coming Fall 2026 (modified 2026-09-01)',
+    page: 'https://alpha.school/atlanta/', expected: 'Alpha Atlanta is open and enrolling.', source: 'HubSpot Programs type = "Open" (read 2026-09-24T10:00:00Z)',
+    reason: 'source contradicts the state', doneWhen: 'the page shows the sentence after the next run', related: ['cmx2'], class: 'hubspot-data', defectClass: 'data',
+    element: 'intro.status-sentence', cssId: 'campus-intro', evidence: 'diagnose-field intro.status-sentence 2026-09-24', playbook: 'spec/campus-page-field-map.json intro.status-sentence; protocol step 0 and 1b',
+    history: ['2026-09-24 website agent: triaged to hubspot-data (data); owner hubspot-program-admin (Farhan Raja)'],
+  })
+  assert.equal(body, [
+    'Farhan Raja: change type in HubSpot', '', 'What was asked: Coming Fall 2026 (modified 2026-09-01)', 'Page: https://alpha.school/atlanta/',
+    'What the playbook expects: Alpha Atlanta is open and enrolling.', 'Source checked: HubSpot Programs type = "Open" (read 2026-09-24T10:00:00Z)',
+    'Why it is routed here: source contradicts the state', 'Done when: the page shows the sentence after the next run', 'Related: cmx2', '',
+    'Class hubspot-data (data); element intro.status-sentence (campus-intro); diagnose-field intro.status-sentence 2026-09-24; spec/campus-page-field-map.json intro.status-sentence; protocol step 0 and 1b',
+    '', 'History:', '- 2026-09-24 website agent: triaged to hubspot-data (data); owner hubspot-program-admin (Farhan Raja)',
+  ].join('\n'))
+  // The sentinel values render-ticket.mjs treated as unknown still hide their lines; presentation hides the defect class; no owner falls back to "Owner".
+  const sparse = renderBody({ fixPath: 'see class', observed: 'x', page: 'unknown', expected: 'per the class recipe', source: 'request as filed', doneWhen: 'd', class: 'copy', defectClass: 'presentation', evidence: 'e' })
+  assert.equal(sparse, 'Owner: see class\n\nWhat was asked: x\nWhy it is routed here:\nDone when: d\n\nClass copy; element n/a; e; alpha-website-playbook\n\nHistory:')
+
+  const fixture = decisionFixture('intake-derivable-campus-url.json')
+  const missing = evaluateTicket(bundle, { ...fixture.task, description: 'Please add a team member.', originalSubmission: {} })
+  if (missing.outcome === 'missing-info') {
+    const note = clarificationNote(bundle, missing)
+    const lines = note.split('\n')
+    assert.equal(lines[0], 'APEX intake found requester-owned information that is still needed:')
+    assert.equal(lines.at(-1), 'Reply through the APEX clarification link. The same ticket will be evaluated again after your response.')
+    for (const item of clarificationRequirements(bundle, missing).requirements) assert.ok(lines.includes(`- ${item.label}: ${item.prompt}`))
+    if (missing.derivableMissing.length) assert.ok(lines.includes(`APEX will resolve these itself and is not asking you for them: ${missing.derivableMissing.join(', ')}.`))
+  }
+  assert.equal(renderTemplate('ownerUnregistered', { role: 'elementor-owner' }), 'elementor-owner has no registered APEX user; intake will not fall back to Matt or Yash.')
+  assert.equal(renderTemplate('ownerAmbiguous', { role: 'packet-owner' }), 'packet-owner has multiple registered APEX users and no primary owner; intake will not choose one arbitrarily.')
+  const unresolved = resolveDecisionOwner(bundle, { outcome: 'routed', ownerRole: 'elementor-owner', class: 'observer-layout', policySha256: 'p', inputSha256: 'i' }, { title: 'Alpha Austin: header overlaps the hero on mobile' })
+  assert.equal(unresolved.outcome, 'owner-unresolved')
+  const note1d = escalationNote(bundle, unresolved, { title: 'Alpha Austin: header overlaps the hero on mobile' }, { actor: 'intake 0.2', date: '2026-09-24' })
+  assert.equal(note1d, [
+    'BLOCKED (intake 0.2, 2026-09-24)', 'DECISION NEEDED: elementor-owner has no registered APEX user; intake will not fall back to Matt or Yash.', 'Role: elementor-owner',
+    'System: elementor-owner', 'Change: Alpha Austin: header overlaps the hero on mobile', `Assigned to: ${bundle.roleOwners['website-agent-operator'][0].name}`,
+    'Intake decision: owner-unresolved for class observer-layout',
+  ].join('\n'))
+  assert.equal(bundle.classes['observer-layout'].executes, 'elementor-owner', 'the System line is the class\'s executing system from the bundle (its adapter, the observer, only finds the defect)')
+  // A class whose adapter executes the work names that system; the page URL joins the change line.
+  const wp = resolveDecisionOwner(bundle, { outcome: 'routed', ownerRole: 'nobody-registered', class: 'observer-brand-leak', policySha256: 'p', inputSha256: 'i' }, { title: 'Alpha Austin: brand leak', url: 'https://alpha.school/austin/' })
+  assert.match(escalationNote(bundle, wp, { title: 'Alpha Austin: brand leak', url: 'https://alpha.school/austin/' }, { actor: 'intake 0.2', date: '2026-09-24' }),
+    /^System: alpha\.school WordPress and Elementor\nChange: Alpha Austin: brand leak \(https:\/\/alpha\.school\/austin\/\)$/m)
+  assert.equal(renderTemplate('escalation', { role: 'elementor-owner', escalatedTo: 'Matt Barge', operatorRole: 'website-agent-operator', system: 'Elementor' }), 'role elementor-owner has no registered APEX user; escalated to Matt Barge (website-agent-operator) per protocol 1d; the work lives in Elementor')
 })
 
 test('triage keeps an existing checkId and records the class separately', () => {
