@@ -970,8 +970,9 @@ function aliasTitlePatterns(alias) {
   for (const source of alias?.titlePatterns || []) {
     if (typeof source !== 'string' || !source || source.length > ALIAS_PATTERN_MAX_LENGTH) continue
     if (!aliasPatternCache.has(source)) {
-      // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp -- the pattern is a committed spec value validated at build time (tests/build-checks.mjs), bounded above, and tested against ticket titles only
-      try { aliasPatternCache.set(source, new RegExp(source, 'i')) } catch { aliasPatternCache.set(source, null) }
+      // The pattern is a committed spec value (spec/observer-check-map.json), validated and compiled at build time by tests/build-checks.mjs,
+      // bounded to ALIAS_PATTERN_MAX_LENGTH above, and tested against ticket titles only; never a value from a ticket or a packet.
+      try { aliasPatternCache.set(source, new RegExp(source, 'i')) } catch { aliasPatternCache.set(source, null) } // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
     }
     const compiled = aliasPatternCache.get(source)
     if (compiled) out.push(compiled)
