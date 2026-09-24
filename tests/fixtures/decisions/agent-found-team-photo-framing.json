@@ -1,0 +1,40 @@
+{
+  "expected": {
+    "outcome": "policy-review",
+    "class": "observer-layout",
+    "ownerRole": "elementor-owner",
+    "why": "agent-found framing ticket (checkId team-photo-framing) classifies to observer-layout instead of needs-rule (photo-framing-2026-09-23); internal review by elementor-owner because the agent-found payload lacks observed, observerId"
+  },
+  "task": {
+    "id": "agent-found-team-photo-framing",
+    "title": "Alpha Kirkland: 1 team-card photo cut heads on desktop (Olivia Toman 82%)",
+    "status": "NOT_STARTED",
+    "requestType": "Website QC",
+    "program": [
+      "Alpha Kirkland"
+    ],
+    "url": "https://alpha.school/kirkland/",
+    "requesterEmail": "matthew.barge@superbuilders.school",
+    "description": "Found by tests/page-check.mjs team-photo-framing on 2026-09-23 (morning verification after the nightly run, ticket cmtrg7au8000004jxxl4i36zh) and re-measured by run photo-framing-2026-09-23.\nPage: https://alpha.school/kirkland/ (object 9216)\n\nElement: the #team_carousel slide image widget for Olivia Toman (63ac3a36), which lives in the library template \"Kirkland Carousel Base\" (elementor_library 9850) embedded in the page, object-fit: cover, height 280px.\nObserved (desktop 1440x1000, carousel slide box 315x280 css px, 11 cards measured, 1 fail the 95% vertical rule):\n- Kris Ponder: fill at native size, no crop\n- Sanura Njaka: fill at native size, no crop\n- Erin McIntosh: fill at native size, no crop\n- Olivia Toman: 82% of the 938x1024 file visible, 50% 50%, top and bottom cut\n- Esther Kim (passes): 75% of the 1024x683 file visible, 50% 50%, side cut only, head kept\n- Tylor Grayson: fill at native size, no crop\n- Dave Jackson: fill at native size, no crop\n- Amy Ubungen: fill at native size, no crop\n- Dr. Tasha Arnold (passes): 100% of the 1280x1920 file visible, 50% 0%, side cut only, head kept\n- Qiuhong Tang (passes): 100% of the 1024x1052 file visible, 50% 0%, top cut\n- Ashley Storms (passes): 100% of the 576x576 file visible, 50% 0%, side cut only, head kept\nMobile (390x844):\n- Erin McIntosh: fill at native size, no crop\n- Olivia Toman (passes): 100% of the 390x426 file visible, 50% 50%, side cut only, head kept\n- Esther Kim (passes): 61% of the 390x260 file visible, 50% 50%, side cut only, head kept\n- Tylor Grayson: fill at native size, no crop\n- Dave Jackson: fill at native size, no crop\n- Amy Ubungen: fill at native size, no crop\n- Kris Ponder: fill at native size, no crop\n- Sanura Njaka: fill at native size, no crop\n- Dr. Tasha Arnold (passes): 100% of the 390x584 file visible, 50% 0%, side cut only, head kept\n- Qiuhong Tang (passes): 100% of the 390x400 file visible, 50% 0%, side cut only, head kept\n- Ashley Storms (passes): 100% of the 390x390 file visible, 50% 0%, side cut only, head kept\nExpected: the full head visible in every card with headroom like the neighbouring cards (protocols/recipes/staff-card.md, 2026-09-22 rule).\nPath approved by Matt Barge 2026-09-22: plugin 0.5.8 display-setting edits (object-position top center on the centered cards whose preview keeps the full head, object-fit cover kept, height unchanged) so the crop keeps the head instead of splitting the cut between top and bottom; that changes which edge is cut, not the visible fraction, so the check still reports the ratio mismatch until each photo is framed to the card ratio at the source (agent/frame-headshot.mjs, operator bind). Cards already top-anchored cannot be improved by object-position.\nEvidence: work-assets/apex-website-tickets/photo-framing-2026-09-23/kirkland/ (page-check-before.json and measure-before.json with every card's coverage).\nDone when: every card shows the full head at desktop and mobile width, and team-photo-framing passes for the card.",
+    "customFields": {
+      "source": "agent-found",
+      "foundWhileWorking": "cmtrg7au8000004jxxl4i36zh",
+      "checkId": "team-photo-framing",
+      "pageUrl": "https://alpha.school/kirkland/",
+      "ticketClass": "observer-layout",
+      "severity": "normal",
+      "ownerRole": "website-operations",
+      "owners": [
+        "website-operations"
+      ],
+      "relatedTicketIds": [
+        "cmtrg7au8000004jxxl4i36zh"
+      ],
+      "idempotencyKey": "agent-found:cmtrg7au8000004jxxl4i36zh:kirkland:team.photo-framing"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-23T15:05:00.000Z",
+    "updatedAt": "2026-09-23T15:05:00.000Z"
+  }
+}
