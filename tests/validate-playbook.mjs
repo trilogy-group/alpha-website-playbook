@@ -272,6 +272,7 @@ export function runValidation() {
     ['spec/brand-visual.json', 'spec/schemas/brand-visual.schema.json'],
     ['spec/check-bundle.generated.json', 'spec/schemas/check-bundle.schema.json'],
     ['spec/ticket-templates.json', 'spec/schemas/ticket-templates.schema.json'],
+    ['registry/campus-cta-exceptions.json', 'spec/schemas/campus-cta-exceptions.schema.json'],
   ]
   for (const [targetFile, schemaFile] of schemaTargets) {
     const target = readJson(targetFile, errors)
@@ -359,7 +360,36 @@ export function runValidation() {
     if (manifest && manifest.checkBundleSha256 !== checkBundle.sha256) errors.push('spec/release-manifest.json checkBundleSha256 does not match the check bundle')
   }
 
+  // Decision record (2026-09-24): every row dated 2026-09-24 or later whose Decision column starts with "Decided" cites at
+  // least one spec/ or registry/ path in its Applied column, so a decision that arrived by email or Slack is a playbook
+  // change the same day (agent/record-decision.mjs writes such rows).
+  for (const problem of validateDecisionRows(fs.readFileSync(path.join(root, 'docs', 'decisions.md'), 'utf8'))) errors.push(problem)
+
   return { errors, warnings, jsonFiles: jsonFiles.length, requiredFiles: requiredFiles.length }
+}
+
+export const DECISION_RULE_SINCE = '2026-09-24'
+const PLAYBOOK_PATH = /\b(?:spec|registry)\/[A-Za-z0-9_.\/-]+/
+
+/** docs/decisions.md rows: [date, decision, by, applied] per table row (header and separator skipped). */
+export function parseDecisionRows(markdown) {
+  const rows = []
+  for (const line of markdown.split(/\r?\n/)) {
+    if (!line.startsWith('|')) continue
+    const cells = line.split('|').slice(1, -1).map((c) => c.trim())
+    if (cells.length < 4 || !/^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(cells[0])) continue
+    rows.push({ date: cells[0], decision: cells[1], by: cells[2], applied: cells[3], line })
+  }
+  return rows
+}
+
+export function validateDecisionRows(markdown, since = DECISION_RULE_SINCE) {
+  const problems = []
+  for (const row of parseDecisionRows(markdown)) {
+    if (row.date < since || !/^Decided\b/.test(row.decision)) continue
+    if (!PLAYBOOK_PATH.test(row.applied)) problems.push(`docs/decisions.md ${row.date} "${row.decision.slice(0, 60)}...": a Decided row dated ${since} or later must cite a spec/ or registry/ path in its Applied column (agent/record-decision.mjs writes one)`)
+  }
+  return problems
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

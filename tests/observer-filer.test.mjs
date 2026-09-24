@@ -3,6 +3,9 @@
 // (GitHub run 36012695049; findings and incidents with long `actual` arrays trimmed, no screenshots); queue-2026-09-24.json is the
 // open observer queue exported before the 2026-09-24 sweep plus the decision tickets the bundle names; check-bundle.generated.json is
 // a byte copy of the committed spec/check-bundle.generated.json (tests/build-checks.mjs) and the first test fails when the two drift.
+// The queue also carries the 18 open agent-found tickets read from the live queue on 2026-09-24 that sit on campus pages under
+// pre-redesign check ids (cta-links-resolve, campus.resources.calendar-reachable, ...): the dedupe aliases in
+// spec/observer-check-map.json match the observer's findings to them instead of filing again.
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -16,6 +19,7 @@ import {
   FILED_BY,
   FILER_VERSION,
   LIST_MAX_PAGES,
+  OUT_OF_SCOPE_SITE,
   NOT_FILER_OWNED,
   OBSERVER_ID,
   OPEN_STATUSES,
@@ -24,7 +28,17 @@ import {
   applyPlan,
   buildContract,
   buildResolvePatch,
+  campusSlugFor,
   cleanText,
+  ctaExceptionFor,
+  ctaForRow,
+  exemptionsRefsFor,
+  findOpenDuplicate,
+  isCampusPageRow,
+  lifecycleFor,
+  loadRegistry,
+  outOfScopeSite,
+  sharedLeadershipExemption,
   consecutiveFailingRuns,
   createApexClient,
   downloadPacket,
@@ -136,14 +150,14 @@ const asFilerOwned = (task) => ({ ...task, customFields: { ...task.customFields,
 test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy observer tickets, closes only the filer\'s own cleared NOT_STARTED tickets, reports the rest as needing a person, and files nothing twice', () => {
   const run = loadRunFolder(path.join(fixtures, 'run-2026-09-24'))
   const queue = loadQueue(path.join(fixtures, 'queue-2026-09-24.json'))
-  assert.equal(queue.length, 181, 'the 180 open observer tickets the sweep worked, plus the open grade decision ticket the bundle names')
+  assert.equal(queue.length, 199, 'the 180 open observer tickets the sweep worked, the open grade decision ticket the bundle names, and the 18 agent-found tickets under pre-redesign check ids')
   const checks = bundle()
-  assert.equal(checks.version, '1.0')
+  assert.equal(checks.version, '1.1')
   assert.match(checks.sha256, /^[0-9a-f]{64}$/)
   assert.equal(checks.sha256, loadCheckBundle(path.join(root, 'spec', 'check-bundle.generated.json')).sha256, 'the fixture bundle is a copy of the committed one; rebuild and copy after a row change')
   const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
 
-  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, suppressedByObserver: 0, advisory: 14, suppressed: 35, held: 0, groups: 51, decisionPending: 24, files: 10, existing: 17, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0 })
+  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, suppressedByObserver: 0, advisory: 14, outOfScope: 3, exempted: 2, suppressed: 35, held: 0, groups: 47, decisionPending: 23, files: 6, existing: 18, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0 })
   assert.match(plan.holds, /^filer \(no verified check bundle in the manifest\)/, 'this packet predates the observer\'s bundle verification, so the filer applies its own holds')
 
   // Every check name the packet carries is a row or a retirement (finding 3): nothing is dropped for want of a row.
@@ -170,7 +184,10 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   for (const id of [...MAP_ROW_TICKETS_CLEARED, ...MAP_ROW_TICKETS_STILL_ACTIVE, ...DECISION_TICKETS_CLEARED]) assert.equal(plan.unresolved.find((u) => u.id === id)?.reason, NOT_FILER_OWNED)
 
   // The same tickets as if this filer had created them: the guard (finding 1), the clean-run rule (finding 6) and the resolve PATCH on real data.
-  const owned = queue.map(asFilerOwned)
+  // The 18 agent-found tickets under pre-redesign check ids stay as they are (they carry no observer id and are a person's); the rest replay as the filer's own.
+  const preRedesign = (t) => t.customFields?.source === 'agent-found' && t.id !== 'cmu4g13kc00000agmdogkxihp'
+  assert.equal(queue.filter(preRedesign).length, 18)
+  const owned = queue.map((t) => (preRedesign(t) ? t : asFilerOwned(t)))
   const ownedPlan = planObserverFindings({ run, bundle: checks, queue: owned, now: NOW })
   assert.deepEqual({ resolves: ownedPlan.counts.resolves, needsPerson: ownedPlan.counts.needsPerson, unresolved: ownedPlan.counts.unresolved }, { resolves: 62, needsPerson: 32, unresolved: 87 })
   const resolved = new Set(ownedPlan.resolves.map((r) => r.id))
@@ -213,11 +230,11 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lead.patch.customFields.checkId, 'SITE-4E2ADC7F5B', 'the observer check id stays on the ticket')
   assert.equal(lead.patch.customFields.filerRunId, RUN_ID)
   assert.equal(lead.patch.customFields.requirementId, 'site.layout.header-overlap', 'the row key (row id minus viewport), never the coarse requirement')
-  assert.equal(lead.patch.customFields.checkBundleVersion, '1.0')
+  assert.equal(lead.patch.customFields.checkBundleVersion, '1.1')
   assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
-  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.3, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
+  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.4, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
   assert.match(lead.patch.description, /\nObserver: SITE-4E2ADC7F5B cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared\nPlease review\.$/)
   assertNoteShape(lead.patch.description.slice(lead.patch.description.indexOf('\n\nRESOLUTION (') + 2))
   assert.match(lead.patch.description, /after 20 clean runs \(row requires 2\)/)
@@ -226,8 +243,33 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   // Decisions: the 12 active map rows and 11 community hosts wait on the Columbus and Short Hills leads, the Alpha High grade finding on
   // the grade decision; the 34 header overlaps are suppressed by the degraded browser before any decision applies; nothing files twice.
   const decisions = countBy(plan.decisionPending, (d) => `${d.check} -> ${d.decisionTicket}`)
-  assert.deepEqual(decisions, { 'map-campus-missing-from-operations -> cmtyu32gf00000agm0vltkx4s': 12, 'preannouncement-community-host -> cmu4g45fg00020agm20nd7kc8': 11, 'campus-page-grade-source-sync -> cmu4g13kc00000agmdogkxihp': 1 })
-  assert.equal(plan.decisionPending.find((d) => d.check === 'campus-page-grade-source-sync').scopeKey, 'page:alphahigh.school', 'a sister-site page never collapses onto the public home slug')
+  assert.deepEqual(decisions, { 'map-campus-missing-from-operations -> cmtyu32gf00000agm0vltkx4s': 12, 'preannouncement-community-host -> cmu4g45fg00020agm20nd7kc8': 11 })
+  // Sister-site guard: the three Alpha High findings (campus rows on alphahigh.school) are out of scope for this playbook, so the grade
+  // finding no longer waits on the grade decision and the application-path and schema findings no longer dedupe against Alpha High tickets.
+  assert.deepEqual(plan.outOfScope.map((o) => [o.check, o.host, o.reason]).sort(), [
+    ['campus-application-path', 'alphahigh.school', OUT_OF_SCOPE_SITE], ['campus-page-grade-source-sync', 'alphahigh.school', OUT_OF_SCOPE_SITE], ['campus-school-schema', 'alphahigh.school', OUT_OF_SCOPE_SITE],
+  ])
+  assert.ok(!plan.decisionPending.some((d) => d.check === 'campus-page-grade-source-sync'))
+  assert.ok(!plan.existing.some((e) => e.scopeKey === 'page:alphahigh.school'))
+  // Shared leadership (registry/campus-leadership.json groups, Greater Boston): the Brandon Maddox card ("Director of Admissions - Boston/Lexington")
+  // on Jamaica Plain and Lexington names a sibling campus by decision; the Lexington Miami classroom image under the same incident id is still a conflict.
+  assert.deepEqual(plan.exempted.map((e) => [e.kind, e.check, e.page, e.person, e.sibling]).sort(), [
+    ['shared-leadership', 'campus-image-identity-conflict', 'https://alpha.school/boston-suburbs/', 'Brandon Maddox', 'boston'],
+    ['shared-leadership', 'campus-image-identity-conflict', 'https://alpha.school/jamaica-plain/', 'Brandon Maddox', 'boston'],
+  ])
+  assert.ok(!plan.files.some((f) => f.title.startsWith('Alpha Jamaica Plain')), 'nothing files for the Jamaica Plain card')
+  assert.equal(plan.existing.find((e) => e.scopeKey === 'page:boston-suburbs' && e.check === 'campus-image-identity-conflict').existing.id, 'cmtmp92li000104jv69k570o0')
+  // Dedupe aliases: the calendar findings on Tulsa, South Bay LA and Oklahoma City match the tickets a sweep agent filed on 2026-09-21 under
+  // checkId campus.resources.calendar-reachable; Lexington's calendar has no open ticket and files.
+  assert.deepEqual(plan.existing.filter((e) => e.check === 'campus-calendar-link-reachable').map((e) => [e.scopeKey, e.existing.id, e.existing.via]).sort(), [
+    ['page:oklahoma-city', 'cmubrl7xl00040agm0xm9zb0t', 'alias:checkId campus.resources.calendar-reachable'],
+    ['page:south-bay-la', 'cmubrl9yp00050agmpisu3z6t', 'alias:checkId campus.resources.calendar-reachable'],
+    ['page:tulsa', 'cmubrlbui00060agmr24zjcx9', 'alias:checkId campus.resources.calendar-reachable'],
+  ])
+  assert.ok(queue.filter((t) => t.customFields?.checkId === 'campus.resources.calendar-reachable').every((t) => t.createdAt.startsWith('2026-09-21')))
+  assert.deepEqual(plan.files.filter((f) => f.check === 'campus-calendar-link-reachable').map((f) => f.scopeKey), ['page:boston-suburbs'])
+  assert.ok(plan.existing.every((e) => e.existing.via), 'every dedupe says how it matched')
+  assert.deepEqual(countBy(plan.existing, (e) => e.existing.via.split(' ')[0]), { 'observer-id': 15, 'alias:checkId': 3 })
   assert.equal(plan.counts.invalid, 0, 'a filed ticket never fails the contract')
   assert.ok(plan.existing.every((e) => queue.some((t) => t.id === e.existing.id)), 'every dedupe points at an open ticket')
   assert.deepEqual(plan.existing.filter((e) => e.check === 'campus-sister-brand-leak').map((e) => e.existing.id).sort(), ['cmtmrbhxo000304joy793zilx', 'cmttaplkg00020agmjj5l6kvs', 'cmtvz6lbr000004lakyoue9dx'])
@@ -237,11 +279,12 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
     ['observer:campus.resources.apply.finalsite-redirect:program:program-26445615147', 'cmtxaudtn000204iju8prg65a'],
   ], 'the finalsite redirect row is enforced, program-scoped, and dedupes against the observer\'s open tickets')
   assert.deepEqual(plan.files.map((f) => [f.check, f.scope, f.findings, f.owner.via, f.payload.status]).sort(), [
-    ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
+    ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
     ['campus-expired-seasonal-cta', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-expired-seasonal-cta', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
-    ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'], ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
+    ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
     ['operations-map-address-conflict', 'program', 1, 'internal-triage -> website-agent-operator', 'BLOCKED'], ['operations-map-address-conflict', 'program', 1, 'internal-triage -> website-agent-operator', 'BLOCKED'],
   ])
+  assert.ok(plan.files.every((f) => !/\bprogram-\d+/.test(f.title)), 'a title carries the campus display name, never a bare program id')
   const raleigh = plan.files.find((f) => f.title.startsWith('Alpha Raleigh'))
   assert.equal(raleigh.title, 'Alpha Raleigh: fails "No other campus in image file names, alt text or nearby text"', 'the packet repeats one incident id nine times; a scope counts it once (PR 26)')
   assert.equal(raleigh.key, 'observer:site.identity.other-campus.images:page:raleigh')
@@ -254,7 +297,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(raleigh.payload.customFields.filedBy, FILED_BY)
   assert.equal(raleigh.payload.customFields.idempotencyKey, raleigh.key)
   assert.equal(raleigh.payload.customFields.requirementId, 'site.identity.other-campus.images')
-  assert.equal(raleigh.payload.customFields.checkBundleVersion, '1.0')
+  assert.equal(raleigh.payload.customFields.checkBundleVersion, '1.1')
   assert.equal(raleigh.payload.customFields.checkBundleSha256, checks.sha256)
   assert.equal(raleigh.payload.customFields.filerRunId, RUN_ID)
   assert.ok(isFilerOwnedTask({ customFields: raleigh.payload.customFields }), 'what the filer files, the filer may later close')
@@ -263,7 +306,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.match(raleigh.payload.description, /^Matt Barge: /)
   assert.match(raleigh.payload.description, /\nSource: [^\n]*\(read 2026-09-24T/)
   assert.match(raleigh.payload.description, /\nExpected: no other known Alpha campus named in src, alt or nearby text of a visible image \(site\.identity\.other-campus; not-contains 0 matches; severity high\)\n/)
-  assert.match(raleigh.payload.description, /\nPlaybook: site\.identity\.other-campus\.images \(requirement site\.identity\.other-campus, spec\/site-rules\.json rules\/site\.identity\.other-campus\); check bundle 1\.0 row site\.identity\.other-campus\.images\n/)
+  assert.match(raleigh.payload.description, /\nPlaybook: site\.identity\.other-campus\.images \(requirement site\.identity\.other-campus, spec\/site-rules\.json rules\/site\.identity\.other-campus\); check bundle 1\.1 row site\.identity\.other-campus\.images\n/)
   const address = plan.files.find((f) => f.check === 'operations-map-address-conflict')
   assert.match(address.title, /^Alpha [A-Za-z .()]+: fails "Operations address and map address agree"$/, 'a program scope names the campus through registry mapProgramIds')
   assert.match(address.payload.description, /\nOwner: internal-triage \(Matt Barge\); role internal-triage has no registered APEX user; escalated to Matt Barge \(website-agent-operator\) per protocol 1d/)
@@ -307,7 +350,7 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.match(ticket.payload.description, /\(\+14 more; every observer id is listed under Evidence\)/)
   assert.match(ticket.payload.description, /\nExpected: header separated from headings on desktop 1440x1000 \(site\.layout\.viewport; box-overlap-max 48 px or 0\.25 ratio-of-heading-box; severity high\)\n/)
   assert.match(ticket.payload.description, /\nRelated: cmtnl00rs000404l1ihl5ucij \(decision recorded; this row files again\)\n/)
-  assert.match(ticket.payload.description, /check bundle 1\.0 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
+  assert.match(ticket.payload.description, /check bundle 1\.1 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
   assert.equal(ticket.payload.customFields.triagedClass, 'observer-layout')
   assert.equal(ticket.payload.customFields.checkId, oid('00D0000000'))
   assert.equal(ticket.payload.customFields.requirementId, 'site.layout.header-overlap')
@@ -491,6 +534,8 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   assert.equal(formatFact({ source: 'map', id: 'program-1', name: 'Alpha Richmond', empty: '' }), 'source map, id program-1, name Alpha Richmond')
   assert.equal(formatFact([1, 2, 3, 4, 5]), '1; 2; 3 (+2 more)')
   assert.equal(formatFact(null), 'n/a')
+  assert.equal(formatFact({ href: null }), 'href empty', 'a missing CTA still gets an Observed line')
+  assert.equal(formatFact({}), 'empty')
   assert.equal(formatFact('Alpha Austin — the header overlaps…'), 'Alpha Austin; the header overlaps...', 'an em dash or ellipsis in an observer value never reaches a body')
   assert.equal(cleanText('a—b — c…'), 'a; b; c...')
   assert.deepEqual(normalizeHealth(null, { providers: { map: { status: 'failed', error: 'timeout' }, ok: { status: 'healthy' } } }), { source: 'manifest.providers', unhealthy: { map: { status: 'failed', reason: 'timeout' } }, snapshots: {}, suppressedByLoopHealth: { count: 0, items: null, reported: false } })
@@ -679,7 +724,7 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
 
   // buildResolvePatch checks the note's shape before anything is written, and never rewrites the existing text.
   const patch = buildResolvePatch({ task: live.get('cmfiler2'), cleared: plan.resolves[1].cleared, rows: plan.resolves[1].rows, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', evidenceSha256: 'f'.repeat(64), bundleVersion: '1.0', now: NOW, page: 'https://alpha.school/second/' })
-  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.3, 2026-09-24, playbook check bundle)\n'))
+  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.4, 2026-09-24, playbook check bundle)\n'))
   assert.ok(!patch.description.includes('—'))
 
   // listOpen logs when a status hits the page cap, so an incomplete queue is never silent.
@@ -705,17 +750,22 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   const summary = JSON.parse(stdout)
   assert.equal(summary.mode, 'dry-run')
   assert.equal(summary.runId, RUN_ID)
-  assert.equal(summary.bundleVersion, '1.0')
+  assert.equal(summary.bundleVersion, '1.1')
   assert.equal(summary.counts.resolves, 0, 'legacy observer tickets are never the filer\'s to close (PR 26)')
   assert.equal(summary.counts.needsPerson, 0)
   assert.equal(summary.counts.unresolved, 180)
-  assert.equal(summary.counts.files, 10)
-  assert.equal(summary.counts.decisionPending, 24)
+  assert.equal(summary.counts.files, 6)
+  assert.equal(summary.counts.decisionPending, 23)
+  assert.equal(summary.counts.exempted, 2)
+  assert.equal(summary.counts.outOfScope, 3)
+  assert.equal(summary.exempted.length, 2)
+  assert.equal(summary.outOfScope.length, 3)
+  assert.ok(summary.existing.some((line) => /^campus-calendar-link-reachable page:tulsa: open ticket cmubrlbui00060agmr24zjcx9 \[NOT_STARTED\] via alias:checkId campus\.resources\.calendar-reachable$/.test(line)), summary.existing.join('\n'))
   assert.equal(summary.counts.loopHealth, 56)
   assert.equal(summary.suppressedByObserver, 0)
   assert.match(summary.holds, /^filer/)
   assert.deepEqual(summary.unhealthySources, ['browser'])
-  assert.equal(summary.files.length, 10)
+  assert.equal(summary.files.length, 6)
   assert.ok(summary.files.some((line) => /^Alpha Raleigh: fails "No other campus in image file names, alt text or nearby text" -> Matt Barge \(website-agent-operator\); 1 finding\(s\), 0 evidence pair\(s\)$/.test(line)), summary.files.join('\n'))
   assert.equal(summary.decisionPending.some((line) => /^campus-layout-header-overlap /.test(line)), false, 'suppressed by the degraded browser before any decision applies')
   assert.deepEqual(summary.resolves, [])
@@ -755,6 +805,123 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   const contract = buildContract({ row, group: { key: 'k', row, rows: [row], findings: [finding], pages: [normalizePageUrl(finding.url)] }, run, bundle: checks, owner: ownerFor(policy, row.ownerRole), policy, now: NOW })
   const body = renderObserverBody(contract)
   for (const label of ['Claim:', 'Page:', 'Element:', 'Observed:', 'Expected:', 'Source:', 'Defect class:', 'Class:', 'Owner:', 'Fix path:', 'Done when:', 'Evidence:', 'Exemptions:', 'Playbook:', 'History:']) assert.ok(body.includes(`\n${label} `) || body.includes(`\n${label}\n`), `body carries ${label}`)
-  assert.match(body, /\nExemptions: registry\/sister-brand-exceptions\.json \(allowed phrases per campus; /)
+  assert.match(body, /\nExemptions: registry\/sister-brand-exceptions\.json, registry\/campus-leadership\.json groups \(allowed phrases per campus; /)
   assert.match(body, /^Matt Barge: /)
+})
+
+test('observer filer: CTA exceptions, the sister-site guard, shared leadership, campus names in titles and dedupe aliases', () => {
+  const checks = bundle()
+  const registry = loadRegistry('registry/campus-cta-exceptions.json')
+  assert.deepEqual(Object.keys(registry.ctas), ['book-a-call', 'calendar', 'packet', 'apply', 'community'])
+  const lexington = registry.campuses['boston-suburbs']['book-a-call']
+  assert.deepEqual([lexington.rule, lexington.decidedBy, lexington.source, lexington.decidedOn, lexington.expires], ['hidden', 'Matt Barge', 'email relayed 2026-09-24', '2026-09-24', 'lifecycle:Open'])
+  assert.equal(registry.campuses.dorado['book-a-call'].rule, 'destination', 'the Dorado one-off moved out of spec/campus-page-controls.json')
+  assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'spec', 'campus-page-controls.json'), 'utf8')).controls['hero.book-a-call'].exceptions.split(' ')[0], 'registry/campus-cta-exceptions.json', 'the controls file points at the registry')
+  // Every CTA row reads the registry through exemptionsRef (a string or an array since bundle 1.1); the identity rows read the leadership groups.
+  for (const check of ['campus-book-call-present', 'campus-book-call-link-reachable', 'campus-book-call-destination-campus', 'campus-calendar-present', 'campus-calendar-link-reachable', 'campus-calendar-destination-campus', 'campus-info-packet-present', 'campus-info-packet-link-reachable', 'campus-info-packet-destination-campus', 'campus-application-source-missing', 'campus-application-path', 'campus-application-finalsite-redirect', 'campus-page-application-source-sync', 'campus-application-placeholder', 'campus-application-destination', 'community-destination']) {
+    const row = rowForCheck(checks, check)
+    assert.ok(exemptionsRefsFor(row).includes('registry/campus-cta-exceptions.json'), `${check} reads the CTA exceptions`)
+    assert.ok(ctaForRow(row), `${check} maps to a CTA`)
+  }
+  assert.deepEqual(exemptionsRefsFor(rowForCheck(checks, 'campus-info-packet-present')), ['registry/campus-packets.json interimPolicy', 'registry/campus-cta-exceptions.json'])
+  for (const check of ['campus-image-identity-conflict', 'campus-sister-brand-leak']) assert.ok(exemptionsRefsFor(rowForCheck(checks, check)).includes('registry/campus-leadership.json groups'), `${check} reads the leadership groups`)
+  assert.deepEqual(ctaForRow(rowForCheck(checks, 'campus-book-call-link-reachable')), { cta: 'book-a-call', prefix: 'campus.resources.booking', suffix: 'reachable' })
+  assert.deepEqual(ctaForRow(rowForCheck(checks, 'campus-application-finalsite-redirect')), { cta: 'apply', prefix: 'campus.resources.apply', suffix: 'finalsite-redirect' })
+  assert.deepEqual(ctaForRow(rowForCheck(checks, 'community-destination')), { cta: 'community', prefix: 'site.community.routing.cta', suffix: 'cta' })
+  assert.equal(ctaForRow(rowForCheck(checks, 'campus-sister-brand-leak')), null)
+
+  // Lexington: Book a Call hidden while Announced (lifecycle:Open). The present, reachable and destination rows are all exempt while the
+  // campus is Announced (state from spec/campus-lifecycle.json when the finding carries none); once the finding says Open the exception has ended.
+  const booking = (check, extra = {}) => ({ loop: 'campus-truth', check, entity: 'program-51223157555', field: 'booking', severity: 'high', title: 'Alpha Lexington has no visible booking CTA', actionable: true, url: 'https://alpha.school/boston-suburbs/', expected: 'visible Book a Call', actual: { href: null }, id: oid('B00C000001'), ...extra })
+  const hidden = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present'), now: NOW })
+  assert.equal(hidden.exempt, true)
+  assert.deepEqual([hidden.slug, hidden.campus, hidden.cta, hidden.rule, hidden.expires, hidden.suffix], ['boston-suburbs', 'Alpha Lexington', 'book-a-call', 'hidden', 'lifecycle:Open', 'present'])
+  assert.match(hidden.expiryBasis, /^ends when the Program type becomes Open; state Announced per spec\/campus-lifecycle\.json/)
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-link-reachable'), finding: booking('campus-book-call-link-reachable'), now: NOW }).exempt, true, 'hidden exempts every row of the CTA')
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-destination-campus'), finding: booking('campus-book-call-destination-campus'), now: NOW }).exempt, true)
+  const opened = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present', { actual: { href: null, programType: 'Open' } }), now: NOW })
+  assert.equal(opened.exempt, false)
+  assert.match(opened.expired, /^campus is Open \(finding\); the exception ended/)
+  assert.deepEqual(lifecycleFor(booking('x'), 'boston-suburbs').state, 'Announced')
+  assert.deepEqual(lifecycleFor({ actual: { status: 'Open' } }, 'boston-suburbs'), { state: 'Open', basis: 'finding' })
+  assert.equal(lifecycleFor({}, 'no-such-campus').state, null)
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-calendar-link-reachable'), finding: booking('campus-calendar-link-reachable'), now: NOW }), null, 'no calendar entry for Lexington')
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present', { url: 'https://alpha.school/austin/', entity: 'program-26459919512' }), now: NOW }), null, 'no entry for Austin')
+  // Dorado: destination rule exempts the destination comparison only; presence and reachability still apply.
+  const dorado = (check) => booking(check, { url: 'https://alpha.school/dorado/', entity: 'program-29330581557', title: 'Alpha Dorado booking' })
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-destination-campus'), finding: dorado('campus-book-call-destination-campus'), now: NOW }).exempt, true)
+  const doradoReachable = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-link-reachable'), finding: dorado('campus-book-call-link-reachable'), now: NOW })
+  assert.equal(doradoReachable.exempt, false)
+  assert.match(doradoReachable.notCovered, /^rule destination exempts destination-campus, path, source, source-sync, placeholder, finalsite-redirect, cta rows, not reachable$/)
+  assert.equal(doradoReachable.expiryBasis, 'standing until a recorded decision revokes it')
+  // ISO expiry, evaluated from the start of that UTC day; the program id alone identifies the campus when the finding has no page URL.
+  const dated = { ctas: registry.ctas, rules: registry.rules, campuses: { tulsa: { calendar: { rule: 'present', reason: 'r', decidedBy: 'p', source: 's', decidedOn: '2026-09-01', expires: '2026-09-20', note: '' } } } }
+  const tulsa = booking('campus-calendar-present', { url: null, entity: 'program-51235904680' })
+  assert.equal(campusSlugFor(tulsa), 'tulsa')
+  assert.match(ctaExceptionFor({ row: rowForCheck(checks, 'campus-calendar-present'), finding: tulsa, now: NOW, registry: dated }).expired, /^expired on 2026-09-20$/)
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-calendar-present'), finding: tulsa, now: new Date('2026-09-19T23:59:00Z'), registry: dated }).exempt, true)
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-calendar-link-reachable'), finding: tulsa, now: new Date('2026-09-19T23:59:00Z'), registry: dated }).exempt, false, 'present exempts the present row only')
+
+  // Through the plan: the Lexington booking finding is exempted and files nothing; the same finding on an Open campus files; the report says why.
+  const planned = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [booking('campus-book-call-present'), booking('campus-book-call-present', { id: oid('B00C000002'), entity: 'program-26459919512', url: 'https://alpha.school/austin/', title: 'Alpha Austin has no visible booking CTA' })] }).dir), bundle: checks, queue: [], now: NOW })
+  assert.equal(planned.counts.exempted, 1)
+  assert.deepEqual(planned.exempted.map((e) => [e.kind, e.campus, e.cta, e.rule, e.decidedBy, e.source]), [['cta-exception', 'Alpha Lexington', 'book-a-call', 'hidden', 'Matt Barge', 'email relayed 2026-09-24']])
+  assert.deepEqual(planned.files.map((f) => f.title), ['Alpha Austin: fails "Book a Call CTA present on Open campus pages"'])
+  const ended = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [booking('campus-book-call-present', { actual: { href: null, programType: 'Open' } })] }).dir), bundle: checks, queue: [], now: NOW })
+  assert.equal(ended.counts.exempted, 0)
+  assert.equal(ended.counts.files, 1)
+  assert.match(ended.exceptionsNotApplied[0].expired, /the exception ended when the HubSpot Program type became Open/)
+
+  // Sister-site guard: campus rows on any other host are out-of-scope-site and never filed; site-family rows and public-host routes are unaffected.
+  const tsa = booking('campus-book-call-present', { id: oid('0FF5170001'), entity: 'program-50888725544', url: 'https://sportsacademy.school/lake-travis/', title: 'Texas Sports Academy Lake Travis has no visible booking CTA' })
+  const high = { loop: 'campus-truth', check: 'campus-school-schema', entity: 'program-26445615147', field: 'schema', severity: 'high', title: 'Alpha High has no readable School schema', actionable: true, url: 'https://alphahigh.school/', expected: 'School schema', actual: {}, id: oid('0FF5170002') }
+  const route = { loop: 'functional', check: 'route-reachable', entity: 'sister-home', field: 'status', severity: 'high', title: 'sister timed out', actionable: true, url: 'https://alphahigh.school/', expected: 'HTTP 2xx', actual: { status: 'timeout' }, id: oid('0FF5170003') }
+  assert.ok(isCampusPageRow(rowForCheck(checks, 'campus-book-call-present'), checks))
+  assert.ok(!isCampusPageRow(rowForCheck(checks, 'route-reachable'), checks))
+  assert.deepEqual(outOfScopeSite(rowForCheck(checks, 'campus-book-call-present'), tsa, checks), { reason: OUT_OF_SCOPE_SITE, host: 'sportsacademy.school', url: 'https://sportsacademy.school/lake-travis/' })
+  assert.equal(outOfScopeSite(rowForCheck(checks, 'campus-book-call-present'), booking('campus-book-call-present'), checks), null)
+  assert.equal(outOfScopeSite(rowForCheck(checks, 'route-reachable'), route, checks), null, 'the guard is for campus-page rows only')
+  const guarded = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [tsa, high], extraIncidents: [{ ...tsa, status: 'active', firstSeenAt: '2026-09-01T00:00:00.000Z', occurrences: 3, cleanRuns: 0, consecutiveFailingRuns: 3 }] }).dir), bundle: checks, queue: [{ id: 'cmtsa1', status: 'NOT_STARTED', title: 'Texas Sports Academy Lake Travis has no visible booking CTA', url: 'https://sportsacademy.school/lake-travis/', customFields: { source: 'alpha-site-qc', check: 'campus-book-call-present', checkId: oid('0FF5170001') } }], now: NOW })
+  assert.deepEqual(guarded.outOfScope.map((o) => [o.check, o.host]), [['campus-book-call-present', 'sportsacademy.school'], ['campus-school-schema', 'alphahigh.school']])
+  assert.equal(guarded.counts.files, 0)
+  assert.equal(guarded.counts.existing, 0, 'an out-of-scope finding is not even a duplicate candidate')
+
+  // Titles: the campus display name from the registry for a program id, never the bare id; an unregistered program is named as such.
+  const address = (entity, extra = {}) => ({ loop: 'campus-truth', check: 'operations-map-address-conflict', entity, field: 'address', severity: 'high', title: 'address', actionable: true, url: 'https://docs.google.com/spreadsheets/d/1t0fhwHz5Y2FvDvj2chRJGDrdcIco1ZADmkhAtRZTduM/edit', expected: '1 Main St', actual: { operations: '1 Main St', map: '2 Side St' }, id: oid('ADD0000009'), ...extra })
+  const titled = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [address('program-51223157555'), address('program-99999999999', { id: oid('ADD0000010') })] }).dir), bundle: checks, queue: [], now: NOW })
+  assert.deepEqual(titled.files.map((f) => f.title).sort(), ['Alpha Lexington: fails "Operations address and map address agree"', 'unregistered program program-99999999999: fails "Operations address and map address agree"'])
+
+  // Shared leadership: a shared leader naming a sibling campus is exempt; another person, or a non-sibling campus, is not.
+  const image = (alt, campus, extra = {}) => ({ loop: 'campus-truth', check: 'campus-image-identity-conflict', entity: 'program-57622127456', field: 'images', severity: 'high', title: `Alpha Jamaica Plain image metadata appears to reference ${campus}`, actionable: true, url: 'https://alpha.school/jamaica-plain/', expected: 'no other campus', actual: { campus, src: 'https://alpha.school/wp-content/uploads/2026/09/x.jpg', alt, nearbyText: '' }, id: oid('1DE0000001'), ...extra })
+  const identity = rowForCheck(checks, 'campus-image-identity-conflict')
+  const shared = sharedLeadershipExemption({ row: identity, finding: image('Brandon Maddox, Director of Admissions - Boston/Lexington', 'Alpha Boston') })
+  assert.deepEqual([shared.group, shared.person, shared.campus, shared.sibling], ['greater-boston', 'Brandon Maddox', 'jamaica-plain', 'boston'])
+  assert.equal(sharedLeadershipExemption({ row: identity, finding: image('Samantha Kravitz, Director of Admissions - Lexington', 'Alpha Lexington') }).person, 'Samantha Kravitz')
+  assert.equal(sharedLeadershipExemption({ row: identity, finding: image('Kathy Robinson, Dean of Parents - Boston', 'Alpha Boston') }), null, 'not listed as shared leadership')
+  assert.equal(sharedLeadershipExemption({ row: identity, finding: image('Brandon Maddox, Director of Admissions', 'Alpha Miami') }), null, 'Miami is not a sibling')
+  assert.equal(sharedLeadershipExemption({ row: identity, finding: image('Brandon Maddox, Director of Admissions - Boston/Lexington', 'Alpha Boston', { url: 'https://alpha.school/austin/', entity: 'program-26459919512' }) }), null, 'Austin is in no group')
+  assert.equal(sharedLeadershipExemption({ row: rowForCheck(checks, 'campus-expired-seasonal-cta'), finding: image('Brandon Maddox', 'Alpha Boston') }), null, 'a row without the exemptionsRef never reads the groups')
+  assert.equal(sharedLeadershipExemption({ row: rowForCheck(checks, 'campus-sister-brand-leak'), finding: { ...image('Nova', 'Alpha Boston'), check: 'campus-sister-brand-leak', actual: 'Nova' } }), null, 'the sister-brand row reads the groups but a brand word names no shared leader')
+
+  // Dedupe aliases: older check ids and title shapes on the same page match; a different page or an unrelated title does not; order is key, title, observer id, check, alias.
+  const row = rowForCheck(checks, 'campus-calendar-link-reachable')
+  const group = { key: 'observer:campus.resources.calendar.reachable:page:tulsa', pages: ['https://alpha.school/tulsa/'] }
+  const payload = { title: 'Alpha Tulsa: fails "Visible calendar destination answers 2xx logged out"' }
+  const ids = new Set([oid('CA1E000001')])
+  const byAliasId = { id: 'cmalias1', status: 'NOT_STARTED', title: 'Alpha Tulsa: the visible 2026/27 calendar button opens a Google sign-in wall', url: 'https://alpha.school/tulsa/', customFields: { source: 'agent-found', checkId: 'campus.resources.calendar-reachable' } }
+  const byAliasTitle = { id: 'cmalias2', status: 'BLOCKED', title: 'Alpha Tulsa: calendar link broken', customFields: { source: 'agent-found', pageUrl: 'https://alpha.school/tulsa/' } }
+  const otherPage = { id: 'cmother1', status: 'NOT_STARTED', title: 'Alpha Malibu: the 2026/27 calendar button is hidden on every breakpoint', url: 'https://alpha.school/malibu/', customFields: { source: 'agent-found', checkId: 'cta-hidden-everywhere' } }
+  const unrelated = { id: 'cmother2', status: 'NOT_STARTED', title: 'Alpha Tulsa: header overlaps', url: 'https://alpha.school/tulsa/', customFields: { source: 'agent-found', checkId: 'campus-layout-header-overlap' } }
+  assert.deepEqual(findOpenDuplicate([otherPage, unrelated, byAliasId], { group, row, payload, ids }), { task: byAliasId, via: 'alias:checkId campus.resources.calendar-reachable' })
+  assert.deepEqual(findOpenDuplicate([otherPage, unrelated, byAliasTitle], { group, row, payload, ids }), { task: byAliasTitle, via: 'alias:title \\bcalendar\\b' })
+  assert.equal(findOpenDuplicate([otherPage, unrelated], { group, row, payload, ids }), null)
+  const byKey = { id: 'cmkey1', status: 'NOT_STARTED', title: 'x', customFields: { idempotencyKey: group.key } }
+  const byObserverId = { id: 'cmoid1', status: 'NOT_STARTED', title: 'y', customFields: { checkId: oid('CA1E000001') } }
+  assert.equal(findOpenDuplicate([byAliasId, byObserverId, byKey], { group, row, payload, ids }).via, 'idempotency-key')
+  assert.equal(findOpenDuplicate([byAliasId, byObserverId], { group, row, payload, ids }).via, 'observer-id')
+  assert.equal(findOpenDuplicate([byAliasId, { ...byObserverId, customFields: { check: 'campus-calendar-link-reachable' }, url: 'https://alpha.school/tulsa/' }], { group, row, payload, ids }).via, 'check-on-page')
+  assert.equal(findOpenDuplicate([byAliasId], { group, row: rowForCheck(checks, 'campus-expired-seasonal-cta'), payload, ids }), null, 'a check without aliases matches nothing by alias')
+  const aliases = loadRegistry('spec/observer-check-map.json').dedupeAliases
+  for (const check of ['campus-calendar-link-reachable', 'campus-info-packet-link-reachable', 'campus-book-call-present', 'campus-sister-brand-leak', 'campus-image-identity-conflict', 'campus-application-path']) assert.ok(aliases[check]?.checkIds?.length && aliases[check]?.titlePatterns?.length, `${check} has aliases`)
+  assert.ok(aliases['campus-calendar-link-reachable'].checkIds.includes('cta-links-resolve') && aliases['campus-calendar-link-reachable'].checkIds.includes('cta-hidden-everywhere'))
 })

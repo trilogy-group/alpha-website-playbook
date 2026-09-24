@@ -17,6 +17,13 @@
  * Rules, in order, per finding:
  *   1. A check with no row (or a retired one) is telemetry: dropped and counted. An advisory row is counted and never
  *      filed. A loop-health row (`channel: loop-health`) goes to the observer owner's channel, never the website queue.
+ *   1b. Sister-site guard: a campus-page row (pageFamily campus, campus-open, campus-announced) measures alpha.school campus
+ *      pages only; a finding on any other host (alphahigh.school, sportsacademy.school, ...) is reported as out-of-scope-site
+ *      and never filed. Group titles use the campus display name from registry/campus-pages.json, never a bare program id.
+ *   1c. Named exceptions, read through the row's exemptionsRef: a campus and CTA with an unexpired entry in
+ *      registry/campus-cta-exceptions.json (rule hidden, present or destination; expires an ISO date, lifecycle:Open or
+ *      null) is reported as exempted; so is an other-campus or sister-brand finding whose card names a person listed as
+ *      shared leadership for the page's campus group (registry/campus-leadership.json groups) and a sibling campus.
  *   2. A finding is suppressed and counted when its row depends on a source that `health.json` (else the manifest's
  *      providers) reports degraded, failed or stale (or `suppressFindings: true`; not-collected, optional and disabled
  *      never suppress), or when the finding carries a `suppressWhen` condition. Loop-health suppression is the
@@ -34,7 +41,8 @@
  *      a ticket that fails the contract is a filer defect and is not filed. Em dashes and the ellipsis character never
  *      reach a title, body or note.
  *   7. Dedupe against the open queue the way agent/file-found-ticket.mjs does: idempotency key, exact title, then an
- *      open ticket carrying any of the group's observer ids or the same check on one of its pages.
+ *      open ticket carrying any of the group's observer ids or the same check on one of its pages, then the aliases in
+ *      spec/observer-check-map.json dedupeAliases (older check ids and title shapes for the same defect on the same page).
  *   8. Class and owner come from the policy bundle; a role with no registered APEX user escalates to the website agent
  *      operator as Blocked (protocol 1d) with the role named in the body.
  *   9. Evidence: the artifact's desktop and mobile screenshot pair for the finding's route goes onto the ticket with
@@ -71,7 +79,7 @@ export { FILER_OWNED_CODE, isFilerOwnedConflict }
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
-export const FILER_VERSION = '0.3'
+export const FILER_VERSION = '0.4'
 export const FILED_BY = 'agent/file-observer-findings.mjs'
 export const IDEMPOTENCY_PREFIX = 'observer:'
 export const RESOLUTION_KIND = 'check-cleared'
@@ -91,6 +99,12 @@ export const OPEN_STATUSES = ['NOT_STARTED', 'IN_PROGRESS', 'MISSING_INFO', 'BLO
 export const OPERATOR_ROLE = 'website-agent-operator'
 export const DEFAULT_CLEAR_AFTER_RUNS = 2
 export const PUBLIC_HOSTS = ['alpha.school', 'www.alpha.school']
+/** Reason on a campus-page finding whose URL is on another host (alphahigh.school, sportsacademy.school, ...): reported, never filed. */
+export const OUT_OF_SCOPE_SITE = 'out-of-scope-site'
+export const CTA_EXCEPTIONS_FILE = 'registry/campus-cta-exceptions.json'
+export const LEADERSHIP_FILE = 'registry/campus-leadership.json'
+export const LIFECYCLE_FILE = 'spec/campus-lifecycle.json'
+export const CHECK_MAP_FILE = 'spec/observer-check-map.json'
 /** The observer's incident id shape (aeo util siteIncidentId): SITE- plus exactly ten upper-case hex characters. */
 export const OBSERVER_ID_HEX = 10
 export const OBSERVER_ID = new RegExp(`\\bSITE-[0-9A-F]{${OBSERVER_ID_HEX}}\\b`, 'gi')
@@ -119,6 +133,13 @@ function campusPages() {
   if (!campusCache) campusCache = readJson(path.join(root, 'registry', 'campus-pages.json')).campuses
   return campusCache
 }
+const registryCache = new Map()
+/** A playbook registry or spec by repository path, read once per process (tests reset with resetRegistryCache). */
+export function loadRegistry(relative) {
+  if (!registryCache.has(relative)) registryCache.set(relative, readJson(path.join(root, relative)))
+  return registryCache.get(relative)
+}
+export function resetRegistryCache() { registryCache.clear(); campusCache = null }
 
 // ---------------------------------------------------------------------------------------------------------------
 // Inputs
@@ -348,6 +369,137 @@ export function campusNameFor(url) {
   return entry ? entry.names[0] : null
 }
 
+/** Registry slug for a public campus page URL, or null. */
+export function campusSlugForUrl(url) {
+  const normalized = normalizePageUrl(url)
+  if (!normalized) return null
+  return Object.entries(campusPages()).find(([, page]) => normalizePageUrl(page.url) === normalized)?.[0] || null
+}
+
+/** Registry slug for a growth-map program id (registry/campus-pages.json mapProgramIds), or null. */
+export function campusSlugForProgram(programId) {
+  if (!programId) return null
+  return Object.entries(campusPages()).find(([, page]) => (page.mapProgramIds || []).includes(programId))?.[0] || null
+}
+
+/** Registry slug for a campus display name (any of the registry's names), or null. */
+export function campusSlugForName(name) {
+  const wanted = String(name || '').trim().toLowerCase()
+  if (!wanted) return null
+  return Object.entries(campusPages()).find(([, page]) => (page.names || []).some((n) => n.toLowerCase() === wanted))?.[0] || null
+}
+
+/** The campus a finding is about: its page in the registry, else its program id. */
+export function campusSlugFor(finding) {
+  return campusSlugForUrl(finding.url) || campusSlugForProgram(programIdFor(finding)) || null
+}
+
+/** The row's exemptionsRef entries (a string or an array since bundle 1.1), each `path[ key]`. */
+export const exemptionsRefsFor = (row) => [].concat(row.exemptionsRef || []).filter((r) => typeof r === 'string' && r)
+const readsRegistry = (row, file) => exemptionsRefsFor(row).some((ref) => ref.split(' ')[0] === file)
+
+/** A campus-page row: pageFamily campus or one of the families it groups (campus-open, campus-announced). Such rows measure alpha.school campus pages only. */
+export function isCampusPageRow(row, bundle) {
+  if (row.pageFamily === 'campus') return true
+  const members = bundle?.pageFamilies?.campus
+  return Array.isArray(members) && members.includes(row.pageFamily)
+}
+
+/** Sister-site guard: a campus-page finding whose URL is on a host other than alpha.school is out of scope for this playbook (its own playbook files it). */
+export function outOfScopeSite(row, finding, bundle) {
+  if (!isCampusPageRow(row, bundle) || !finding.url) return null
+  if (isPublicPage(finding.url)) return null
+  let host = null
+  try { host = new URL(finding.url).hostname.toLowerCase() } catch { host = String(finding.url).slice(0, 80) }
+  return { reason: OUT_OF_SCOPE_SITE, host, url: finding.url }
+}
+
+/** The CTA (registry/campus-cta-exceptions.json ctas) a row belongs to, by row-key prefix, with the row's suffix (present, reachable, destination-campus, ...). */
+export function ctaForRow(row, registry = loadRegistry(CTA_EXCEPTIONS_FILE)) {
+  const key = rowKeyFor(row)
+  for (const [cta, spec] of Object.entries(registry.ctas || {})) {
+    for (const prefix of spec.rows || []) {
+      if (key === prefix) return { cta, prefix, suffix: 'cta' }
+      if (key.startsWith(`${prefix}.`)) return { cta, prefix, suffix: key.slice(prefix.length + 1) }
+    }
+  }
+  return null
+}
+
+/** The campus's lifecycle state as the finding reports it (actual.programType, status, type, lifecycle; finding.lifecycle or state), else spec/campus-lifecycle.json, else null. */
+export function lifecycleFor(finding, slug) {
+  const actual = finding.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
+  const states = ['Open', 'Announced', 'Pre-Announcement']
+  for (const value of [actual.programType, actual.lifecycle, actual.type, actual.status, finding.programType, finding.lifecycle, finding.state]) {
+    if (states.includes(value)) return { state: value, basis: 'finding' }
+  }
+  const entry = slug ? loadRegistry(LIFECYCLE_FILE).campuses?.[slug] : null
+  const state = entry?.lifecycle || (entry?.mapPrograms || []).map((p) => p.programType).find((t) => states.includes(t)) || null
+  return state ? { state, basis: `${LIFECYCLE_FILE} (generated ${loadRegistry(LIFECYCLE_FILE).generatedAt || 'n/a'})` } : { state: null, basis: 'unknown' }
+}
+
+/**
+ * The CTA exception that applies to this finding, if any: the row reads registry/campus-cta-exceptions.json through its
+ * exemptionsRef, the finding's campus and the row's CTA carry an entry, the entry's rule covers the row's suffix, and the
+ * entry has not expired (ISO date: ends at the start of that UTC day; lifecycle:Open: ends when the campus is Open, read from
+ * the finding, else spec/campus-lifecycle.json; unknown state keeps the exception and says so; null: standing). Returns
+ * { exempt: true, ... } when it applies, { exempt: false, expired | notCovered, ... } when an entry exists but does not, null otherwise.
+ */
+export function ctaExceptionFor({ row, finding, now = new Date(), registry = loadRegistry(CTA_EXCEPTIONS_FILE) }) {
+  if (!readsRegistry(row, CTA_EXCEPTIONS_FILE)) return null
+  const cta = ctaForRow(row, registry)
+  if (!cta) return null
+  const slug = campusSlugFor(finding)
+  const entry = slug ? registry.campuses?.[slug]?.[cta.cta] : null
+  if (!entry) return null
+  const base = { slug, campus: campusPages()[slug]?.names?.[0] || slug, cta: cta.cta, rule: entry.rule, reason: entry.reason, decidedBy: entry.decidedBy, source: entry.source, decidedOn: entry.decidedOn, expires: entry.expires ?? null, row: row.id, suffix: cta.suffix }
+  let expired = null
+  if (typeof entry.expires === 'string' && /^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(entry.expires)) {
+    if (now.getTime() >= new Date(`${entry.expires}T00:00:00Z`).getTime()) expired = `expired on ${entry.expires}`
+    base.expiryBasis = `ends ${entry.expires}`
+  } else if (entry.expires === 'lifecycle:Open') {
+    const lifecycle = lifecycleFor(finding, slug)
+    if (lifecycle.state === 'Open') expired = `campus is Open (${lifecycle.basis}); the exception ended when the HubSpot Program type became Open`
+    base.expiryBasis = lifecycle.state ? `ends when the Program type becomes Open; state ${lifecycle.state} per ${lifecycle.basis}` : 'ends when the Program type becomes Open; state unknown to the filer, exception kept'
+  } else base.expiryBasis = 'standing until a recorded decision revokes it'
+  if (expired) return { ...base, exempt: false, expired }
+  const suffixes = registry.rules?.[entry.rule]?.exemptsRowSuffixes || []
+  if (!suffixes.includes('*') && !suffixes.includes(cta.suffix)) return { ...base, exempt: false, notCovered: `rule ${entry.rule} exempts ${suffixes.join(', ')} rows, not ${cta.suffix}` }
+  return { ...base, exempt: true }
+}
+
+/** Text a finding carries about the image or copy it flagged (alt, src, nearby text, name), for the shared-leadership exemption. */
+function findingText(finding) {
+  const actual = finding.actual
+  if (typeof actual === 'string') return actual
+  if (!actual || typeof actual !== 'object') return ''
+  const values = Array.isArray(actual) ? actual : [actual]
+  return values.flatMap((v) => (v && typeof v === 'object' ? [v.alt, v.src, v.nearbyText, v.name, v.text, v.title] : [v])).filter((v) => typeof v === 'string').join(' ')
+}
+
+/**
+ * Shared-leadership exemption (registry/campus-leadership.json groups): the finding's page belongs to a campus group, the
+ * text of the flagged image or copy names a person listed as the group's shared leadership, and the campus it references
+ * (actual.campus, or a group campus named in the text) is a sibling in the same group. Rows opt in through exemptionsRef.
+ */
+export function sharedLeadershipExemption({ row, finding, registry = loadRegistry(LEADERSHIP_FILE) }) {
+  if (!readsRegistry(row, LEADERSHIP_FILE)) return null
+  const slug = campusSlugFor(finding)
+  if (!slug) return null
+  const text = findingText(finding)
+  if (!text) return null
+  const actual = finding.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
+  for (const [groupId, group] of Object.entries(registry.groups || {})) {
+    if (groupId.startsWith('$') || !(group.campuses || []).includes(slug)) continue
+    const person = (group.sharedLeadership || []).find((p) => p?.name && text.toLowerCase().includes(String(p.name).toLowerCase()))
+    if (!person) continue
+    const referenced = campusSlugForName(actual.campus) || (group.campuses || []).find((sibling) => sibling !== slug && (campusPages()[sibling]?.names || []).some((n) => text.toLowerCase().includes(n.toLowerCase())))
+    if (!referenced || !(group.campuses || []).includes(referenced)) continue
+    return { group: groupId, groupLabel: group.label || groupId, person: person.name, role: person.role || null, campus: slug, sibling: referenced, row: row.id, reason: `${person.name} is shared leadership for ${group.label || groupId} (${(group.campuses || []).join(', ')}); a card naming ${campusPages()[referenced]?.names?.[0] || referenced} on ${campusPages()[slug]?.names?.[0] || slug} is the decided state` }
+  }
+  return null
+}
+
 /** Campus name for a growth-map program id through registry/campus-pages.json mapProgramIds. */
 export function campusNameForProgram(programId) {
   if (!programId) return null
@@ -421,6 +573,8 @@ export function formatFact(value, depth = 0) {
   }
   if (typeof value === 'object') {
     const entries = Object.entries(value).filter(([, v]) => v !== null && v !== undefined && v !== '')
+    // An object whose every value is null or empty (a missing CTA: { href: null }) still needs a word on the Observed line.
+    if (!entries.length) return Object.keys(value).length ? `${Object.keys(value).join(', ')} empty` : 'empty'
     if (depth >= 2) return entries.map(([k]) => k).join(', ')
     return entries.slice(0, 8).map(([k, v]) => `${k} ${formatFact(v, depth + 1)}`).join(', ')
   }
@@ -459,12 +613,18 @@ function sourceLine(group, run) {
   return `${names.join(' vs ')} (read ${readAt}, observer run ${run.manifest.runId})`
 }
 
+/** The campus display name for a finding's page or program id, else null; a bare program id is never a title. */
+function campusDisplayName(finding, pages = []) {
+  return campusNameFor(pages[0]) || campusNameFor(finding.url) || campusNameForProgram(programIdFor(finding)) || null
+}
+
 function scopeLabel(row, group) {
   const pages = group.pages
+  const first = group.findings[0]
   switch (row.dedupeScope) {
-    case 'page': return campusNameFor(pages[0]) || (pages[0] ? pageSlug(pages[0]) : group.findings[0].entity)
+    case 'page': return campusDisplayName(first, pages) || (pages[0] ? pageSlug(pages[0]) : (first.url ? pageSlug(first.url) : null)) || (programIdFor(first) ? `unregistered program ${programIdFor(first)}` : first.entity)
     case 'template': return `Shared ${row.pageFamily || 'site'} template (${pages.length} page${pages.length === 1 ? '' : 's'})`
-    case 'program': return group.findings[0].actual?.name || campusNameFor(pages[0]) || campusNameForProgram(programIdFor(group.findings[0])) || programIdFor(group.findings[0]) || group.findings[0].entity
+    case 'program': return campusDisplayName(first, pages) || first.actual?.name || (programIdFor(first) ? `unregistered program ${programIdFor(first)}` : first.entity)
     case 'event': return `${group.findings.length} event${group.findings.length === 1 ? '' : 's'}`
     case 'site': return `Site (${group.findings.length} finding${group.findings.length === 1 ? '' : 's'})`
     default: return group.findings[0].entity
@@ -512,7 +672,7 @@ export function buildContract({ row, group, run, bundle, owner, policy, now, rel
     fixPath: fixPathFor(policy, row),
     doneWhen: doneWhenFor(policy, row),
     evidence: `observer check ${row.observerCheck} run ${run.manifest.runId} (${run.manifest.completedAt}); observer ids ${group.findings.map((f) => f.id).join(', ')}; packet evidence sha256 ${run.manifest.evidence?.sha256 || 'n/a'}; screenshot pair attached with agent/attach-evidence.mjs where the artifact carries it`,
-    exemptions: row.exemptionsRef ? `${row.exemptionsRef}${row.exemptions?.length ? ` (${row.exemptions.join('; ')})` : ''}` : null,
+    exemptions: exemptionsRefsFor(row).length ? `${exemptionsRefsFor(row).join(', ')}${row.exemptions?.length ? ` (${row.exemptions.join('; ')})` : ''}` : null,
     related,
     playbook: `${rowKeyFor(row)} (requirement ${requirementIdFor(row)}, ${renderRequirementRef(row)}); check bundle ${bundle.version || 'unversioned'} row${rowIds.length === 1 ? '' : 's'} ${rowIds.join(', ')}`,
     severity: row.severity,
@@ -681,7 +841,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     holds: holdsByObserver ? 'observer (manifest.checkBundle verified; grace and consecutive-run holds not re-applied)' : 'filer (no verified check bundle in the manifest)',
     suppressedByObserver: run.health.suppressedByLoopHealth || { count: 0, items: null, reported: false },
     decisionTickets: [...new Set(bundle.rows.map((r) => r.decisionPending).filter(Boolean))],
-    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], loopHealth: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [] }
+    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [] }
 
   // Pass 1: rows. A loop-health finding that still arrives is counted for the observer owner and never files; the
   // observer applies its own `suppresses` before the packet is written (health.json suppressedByLoopHealth).
@@ -700,10 +860,18 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     assessed.push({ finding, row })
   }
 
-  // Pass 2: advisory, suppression, holds (unless the observer's verified bundle already applied them), then grouping by key.
+  // Pass 2: advisory, the sister-site guard, named exceptions (CTA decisions, shared leadership), suppression, holds (unless
+  // the observer's verified bundle already applied them), then grouping by key.
   const groups = new Map()
   for (const { finding, row } of assessed) {
     if (row.status === 'advisory') { plan.advisory.push({ id: finding.id, check: finding.check, row: row.id }); continue }
+    const offSite = outOfScopeSite(row, finding, bundle)
+    if (offSite) { plan.outOfScope.push({ id: finding.id, check: finding.check, row: row.id, ...offSite }); continue }
+    const ctaException = ctaExceptionFor({ row, finding, now })
+    if (ctaException?.exempt) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'cta-exception', ...ctaException }); continue }
+    if (ctaException) plan.exceptionsNotApplied.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'cta-exception', ...ctaException })
+    const leadership = sharedLeadershipExemption({ row, finding })
+    if (leadership) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'shared-leadership', ...leadership }); continue }
     const unhealthy = unhealthyDependencies(row, bundle, run.health, now)
     if (unhealthy.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'source health', sources: unhealthy }); continue }
     if (requiresObserverScreenshot(row)) {
@@ -775,17 +943,47 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     }
     const check = contractCheck({ ...payload, id: 'planned', assignees: [{ name: owner.name }] })
     if (!check.valid) { plan.invalid.push({ key: group.key, title: payload.title, missing: check.missing }); continue }
-    const dup = openTasks.find((t) => (t.customFields || {}).idempotencyKey === group.key)
-      || openTasks.find((t) => t.title === payload.title)
-      || openTasks.find((t) => observerIdsForTask(t).some((id) => ids.has(id)))
-      || openTasks.find((t) => [(t.customFields || {}).check, (t.customFields || {}).observerCheck].includes(row.observerCheck) && taskPages(t).some((p) => group.pages.includes(p)))
+    const dup = findOpenDuplicate(openTasks, { group, row, payload, ids })
     const entry = { key: group.key, rows: group.rows.map((r) => r.id), check: row.observerCheck, scope: row.dedupeScope, scopeKey: group.scopeKey, title: payload.title, findings: group.findings.length, observerIds: [...ids], pages: group.pages, owner, evidence: evidencePairs(run, group), payload }
-    if (dup) { plan.existing.push({ ...entry, existing: { id: dup.id, status: dup.status, title: dup.title }, payload: undefined }); continue }
+    if (dup) { plan.existing.push({ ...entry, existing: { id: dup.task.id, status: dup.task.status, title: dup.task.title, via: dup.via }, payload: undefined }); continue }
     plan.files.push(entry)
   }
 
-  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
+  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
   return plan
+}
+
+/**
+ * Dedupe against the open queue (rule 7), in order: the group's idempotency key, the exact title, any open ticket carrying
+ * one of the group's observer ids, the same observer check on one of the group's pages, and then the aliases in
+ * spec/observer-check-map.json dedupeAliases: an open ticket on one of the group's pages whose checkId, check or
+ * observerCheck is an older id for the same defect (tests/page-check.mjs cta-links-resolve, cta-hidden-everywhere, a sweep
+ * agent's campus.resources.calendar-reachable, ...) or whose title matches one of the check's title patterns. Returns
+ * { task, via } or null.
+ */
+export function findOpenDuplicate(openTasks, { group, row, payload, ids }, aliases = loadRegistry(CHECK_MAP_FILE).dedupeAliases || {}) {
+  const cf = (t) => t.customFields || {}
+  const onPage = (t) => taskPages(t).some((p) => group.pages.includes(p))
+  const byKey = openTasks.find((t) => cf(t).idempotencyKey === group.key)
+  if (byKey) return { task: byKey, via: 'idempotency-key' }
+  const byTitle = openTasks.find((t) => t.title === payload.title)
+  if (byTitle) return { task: byTitle, via: 'title' }
+  const byId = openTasks.find((t) => observerIdsForTask(t).some((id) => ids.has(id)))
+  if (byId) return { task: byId, via: 'observer-id' }
+  const byCheck = openTasks.find((t) => [cf(t).check, cf(t).observerCheck].includes(row.observerCheck) && onPage(t))
+  if (byCheck) return { task: byCheck, via: 'check-on-page' }
+  const alias = aliases[row.observerCheck]
+  if (!alias) return null
+  const aliasIds = new Set((alias.checkIds || []).map((id) => String(id).toLowerCase()))
+  const patterns = (alias.titlePatterns || []).map((p) => new RegExp(p, 'i'))
+  for (const t of openTasks) {
+    if (!onPage(t)) continue
+    const carried = [cf(t).checkId, cf(t).check, cf(t).observerCheck].filter(Boolean).map((v) => String(v).toLowerCase()).find((v) => aliasIds.has(v))
+    if (carried) return { task: t, via: `alias:checkId ${carried}` }
+    const pattern = patterns.find((re) => re.test(String(t.title || '')))
+    if (pattern) return { task: t, via: `alias:title ${pattern.source}` }
+  }
+  return null
 }
 
 /**
@@ -1069,6 +1267,9 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
   const summary = { mode: plan.mode, runId: plan.runId, bundleVersion: plan.bundleVersion, bundleSha256: plan.bundleSha256, healthSource: plan.health.source, unhealthySources: Object.keys(plan.health.unhealthy), holds: plan.holds, suppressedByObserver: plan.suppressedByObserver.count, counts: plan.counts, report: reportFile,
     ...(plan.queueWarnings.length ? { queueWarnings: plan.queueWarnings } : {}),
     files: plan.files.map((f) => `${f.title} -> ${f.owner.name} (${f.owner.via})${f.owner.escalated ? ' [BLOCKED, protocol 1d]' : ''}; ${f.findings} finding(s), ${f.evidence.filter((e) => e.complete).length} evidence pair(s)`),
+    existing: plan.existing.map((e) => `${e.check} ${e.scopeKey}: open ticket ${e.existing.id} [${e.existing.status}] via ${e.existing.via}`),
+    exempted: plan.exempted.map((e) => `${e.check} ${e.page || e.id}: ${e.kind === 'cta-exception' ? `${e.cta} ${e.rule} (${e.decidedBy}, ${e.source}; ${e.expiryBasis})` : e.reason}`),
+    outOfScope: plan.outOfScope.map((o) => `${o.check} ${o.url}: ${o.reason} (${o.host})`),
     decisionPending: plan.decisionPending.map((d) => `${d.check} ${d.scopeKey}: ${d.findings} finding(s) wait on ${d.decisionTicket}`),
     resolves: plan.resolves.map((r) => `${r.id} ${r.title.slice(0, 70)} (cleared on ${r.cleared.clearingRunIds.join(', ')})`),
     needsPerson: plan.needsPerson.map((n) => `${n.id} [${n.status}] ${n.title.slice(0, 60)}: ${n.reason}`),

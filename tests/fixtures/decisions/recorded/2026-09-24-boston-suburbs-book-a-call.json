@@ -1,0 +1,27 @@
+{
+  "kind": "cta-exception",
+  "recordedAt": "2026-09-24T21:27:03.296Z",
+  "decidedBy": "Matt Barge",
+  "source": "email relayed 2026-09-24",
+  "date": "2026-09-24",
+  "campus": "boston-suburbs",
+  "campusName": "Alpha Lexington",
+  "cta": "book-a-call",
+  "rule": "hidden",
+  "expires": "lifecycle:Open",
+  "registryEntry": {
+    "rule": "hidden",
+    "reason": "campus is opening soon; no Book a Call CTA while Announced",
+    "decidedBy": "Matt Barge",
+    "source": "email relayed 2026-09-24",
+    "decidedOn": "2026-09-24",
+    "expires": "lifecycle:Open",
+    "note": "Lexington (Alpha Boston Suburbs Program) is Announced; the observer's campus.resources.booking.present row applies to Open pages only, and the reachable and destination rows stay exempt while the button is hidden by decision.",
+    "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-24-boston-suburbs-book-a-call.json"
+  },
+  "superseded": null,
+  "decisionRow": "| 2026-09-24 | Decided (Matt Barge, email relayed 2026-09-24): Alpha Lexington (https://alpha.school/boston-suburbs/): Book a Call CTA hidden; campus is opening soon; no Book a Call CTA while Announced; ends when the HubSpot Program type becomes Open | Matt Barge | registry/campus-cta-exceptions.json campuses.boston-suburbs.book-a-call; tests/fixtures/decisions/recorded/2026-09-24-boston-suburbs-book-a-call.json |",
+  "appliedIn": "registry/campus-cta-exceptions.json campuses.boston-suburbs.book-a-call; tests/fixtures/decisions/recorded/2026-09-24-boston-suburbs-book-a-call.json",
+  "textSha256": "71dbbd6de916c783be659726338f19293106662e3e62acff0c95829a526fd25a",
+  "text": "Relayed by Matt Barge on 2026-09-24 from an email about the Alpha Lexington page (https://alpha.school/boston-suburbs/):\n\nLexington is opening soon. While the campus is Announced there should be no Book a Call CTA on the page. The exception ends when the HubSpot Program type becomes Open.\n"
+}

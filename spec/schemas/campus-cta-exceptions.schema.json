@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alpha.school/playbook/campus-cta-exceptions.schema.json",
+  "title": "Alpha Website Playbook campus CTA exceptions",
+  "description": "registry/campus-cta-exceptions.json: named, dated, expiring exceptions to the campus CTA check rows, keyed by campus slug and CTA. Read by agent/file-observer-findings.mjs through the rows' exemptionsRef and written by agent/record-decision.mjs.",
+  "type": "object",
+  "required": ["version", "asOf", "ctas", "rules", "campuses"],
+  "properties": {
+    "$comment": { "type": "string" },
+    "version": { "type": "string" },
+    "asOf": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+    "ctas": {
+      "type": "object",
+      "description": "The five CTAs an entry may name, each with the control it is in spec/campus-page-controls.json and the check-bundle row keys (row id minus the last segment) it governs.",
+      "required": ["book-a-call", "calendar", "packet", "apply", "community"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "control", "rows"],
+        "properties": {
+          "label": { "type": "string" },
+          "control": { "type": "string" },
+          "rows": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": ["hidden", "present", "destination"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["meaning", "exemptsRowSuffixes"],
+        "properties": {
+          "meaning": { "type": "string" },
+          "exemptsRowSuffixes": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+        }
+      }
+    },
+    "campuses": {
+      "type": "object",
+      "description": "campus slug (registry/campus-pages.json) -> CTA -> entry",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/$defs/entry" }
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["rule", "reason", "decidedBy", "source", "decidedOn", "expires", "note"],
+      "properties": {
+        "rule": { "type": "string", "enum": ["hidden", "present", "destination"] },
+        "destination": { "type": "string", "description": "rule destination only: the decided destination URL or path." },
+        "reason": { "type": "string", "minLength": 1 },
+        "decidedBy": { "type": "string", "minLength": 1, "description": "The person who decided (a name, never a role)." },
+        "source": { "type": "string", "minLength": 1, "description": "Channel and date the decision arrived by (email relayed 2026-09-24, Slack #support-websites 2026-09-24, ...)." },
+        "decidedOn": { "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" },
+        "expires": { "anyOf": [{ "type": "string", "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$" }, { "type": "string", "enum": ["lifecycle:Open"] }, { "type": "null" }], "description": "ISO date, lifecycle:Open (ends when the HubSpot Program type becomes Open), or null (standing until revoked)." },
+        "note": { "type": "string" },
+        "decisionFixture": { "type": "string", "description": "tests/fixtures/decisions/recorded/<file> written by agent/record-decision.mjs." }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
- "$comment": "Open observer tickets (source alpha-site-qc) as exported before the 2026-09-24 sweep, trimmed to the fields the filer reads; the replay test resolves the map-row tickets whose incidents cleared in run-2026-09-24. Decision tickets the check bundle names (decisionPending) are included when they were open, whatever their source.",
+ "$comment": "Open observer tickets (source alpha-site-qc) as exported before the 2026-09-24 sweep, trimmed to the fields the filer reads; the replay test resolves the map-row tickets whose incidents cleared in run-2026-09-24. Decision tickets the check bundle names (decisionPending) are included when they were open, whatever their source. Plus (2026-09-24, dedupe aliases) the 18 open agent-found tickets read from the live queue on 2026-09-24 that carry pre-redesign check ids on campus pages (customFields.checkId cta-links-resolve, cta-hidden-everywhere, campus.resources.calendar-reachable, campus.resources.packet-reachable, campus.controls.*, book-a-call-consistency, hero.book-a-call, no-other-campus-in-image-names), among them the three calendar tickets filed on 2026-09-21 (Tulsa, South Bay LA, Oklahoma City) that the calendar findings must match instead of filing again.",
  "tasks": [
   {
    "id": "cmuf1dfof00000agmkubu06ia",
@@ -4291,6 +4291,697 @@
     "idempotencyKey": "agent-found:cmtnao4xn000904l6brg5a3eh:plano:field-map hero.title"
    },
    "description": "Element: hero.title (CSS ID title), contact.address title line, page and SEO titles, Locations List card, on every campus page\nCurrent derivation: n8n workflow ORgdHC71YJ5RawBy writes grade_levels and grade_levels_suffixed, which follow the Program start and end grade (the growth map API mirrors the"
+  },
+  {
+   "id": "cmubrlbui00060agmr24zjcx9",
+   "title": "Alpha Tulsa: the visible 2026/27 calendar button opens a Google sign-in wall (Drive link returns 401)",
+   "status": "NOT_STARTED",
+   "url": "https://alpha.school/tulsa/",
+   "createdAt": "2026-09-21T21:35:52.891Z",
+   "updatedAt": "2026-09-21T21:35:52.891Z",
+   "agentStatus": null,
+   "assignees": [
+    {
+     "name": "Zara Raheem"
+    }
+   ],
+   "customFields": {
+    "runId": "sweep-2026-09-21-staff-G",
+    "owners": [
+     "calendars"
+    ],
+    "source": "agent-found",
+    "checkId": "campus.resources.calendar-reachable",
+    "pageUrl": "https://alpha.school/tulsa/",
+    "severity": "high",
+    "ownerRole": "calendars",
+    "idempotencyKey": "agent-found:cmrz0ffc0000404l7z7n1wt6m:tulsa:campus.resources.calendar-reachable",
+    "foundWhileWorking": "cmrz0ffc0000404l7z7n1wt6m"
+   },
+   "description": "Alpha Tulsa: the calendar button a parent can see and click leads to a Google Drive file that is not shared publicly.\nPage: https://alpha.school/tulsa/\n\nElement: resources.calendar (button d4280cd in the resources column next to the map; writer wordpress-direct; owner role calendars)\nExpected: the 2026-27 calendar opens logged out, as an alpha.school PDF under wp-content/uploads/calendars/2026_27/ like the other campuses, or a Drive file shared with anyone who has the link (playbook/site/info-packets.md rule 6: Google Drive calendars must be public)\nObserved (2026-09-21): button \"2026/27 calen"
+  },
+  {
+   "id": "cmubrl9yp00050agmpisu3z6t",
+   "title": "Alpha South Bay LA: the visible 2026/27 calendar button opens a Google sign-in wall (Drive link returns 401)",
+   "status": "NOT_STARTED",
+   "url": "https://alpha.school/south-bay-la/",
+   "createdAt": "2026-09-21T21:35:50.449Z",
+   "updatedAt": "2026-09-21T21:35:50.449Z",
+   "agentStatus": null,
+   "assignees": [
+    {
+     "name": "Zara Raheem"
+    }
+   ],
+   "customFields": {
+    "runId": "sweep-2026-09-21-staff-G",
+    "owners": [
+     "calendars"
+    ],
+    "source": "agent-found",
+    "checkId": "campus.resources.calendar-reachable",
+    "pageUrl": "https://alpha.school/south-bay-la/",
+    "severity": "high",
+    "ownerRole": "calendars",
+    "idempotencyKey": "agent-found:cmrz0ffc0000404l7z7n1wt6m:south-bay-la:campus.resources.calendar-reachable",
+    "foundWhileWorking": "cmrz0ffc0000404l7z7n1wt6m"
+   },
+   "description": "Alpha South Bay LA: the calendar button a parent can see and click leads to a Google Drive file that is not shared publicly.\nPage: https://alpha.school/south-bay-la/\n\nElement: resources.calendar (button d4280cd in the resources column next to the map; writer wordpress-direct; owner role calendars)\nExpected: the 2026-27 calendar opens logged out, as an alpha.school PDF under wp-content/uploads/calendars/2026_27/ like the other campuses, or a Drive file shared with anyone who has the link (playbook/site/info-packets.md rule 6: Google Drive calendars must be public)\nObserved (2026-09-21): button "
+  },
+  {
+   "id": "cmubrl7xl00040agm0xm9zb0t",
+   "title": "Alpha Oklahoma City: the visible 2026/27 calendar button opens a Google sign-in wall (Drive link returns 401)",
+   "status": "NOT_STARTED",
+   "url": "https://alpha.school/oklahoma-city/",
+   "createdAt": "2026-09-21T21:35:47.817Z",
+   "updatedAt": "2026-09-21T21:35:47.817Z",
+   "agentStatus": null,
+   "assignees": [
+    {
+     "name": "Zara Raheem"
+    }
+   ],
+   "customFields": {
+    "runId": "sweep-2026-09-21-staff-G",
+    "owners": [
+     "calendars"
+    ],
+    "source": "agent-found",
+    "checkId": "campus.resources.calendar-reachable",
+    "pageUrl": "https://alpha.school/oklahoma-city/",
+    "severity": "high",
+    "ownerRole": "calendars",
+    "idempotencyKey": "agent-found:cmsuju0kb000804l8puatqpp5:oklahoma-city:campus.resources.calendar-reachable",
+    "foundWhileWorking": "cmsuju0kb000804l8puatqpp5"
+   },
+   "description": "Alpha Oklahoma City: the calendar button a parent can see and click leads to a Google Drive file that is not shared publicly.\nPage: https://alpha.school/oklahoma-city/\n\nElement: resources.calendar (button d4280cd in the resources column next to the map; writer wordpress-direct; owner role calendars)\nExpected: the 2026-27 calendar opens logged out, as an alpha.school PDF under wp-content/uploads/calendars/2026_27/ like the other campuses, or a Drive file shared with anyone who has the link (playbook/site/info-packets.md rule 6: Google Drive calendars must be public)\nObserved (2026-09-21): butto"
+  },
+  {
+   "id": "cmu8taaz5000e04l0rhfycvtw",
+   "title": "Alpha Lexington: info packet link returns 401 and the launch statement names no date",
+   "status": "NOT_STARTED",
+   "url": "https://alpha.school/boston-suburbs/",
+   "createdAt": "2026-09-19T19:59:59.249Z",
+   "updatedAt": "2026-09-19T20:00:01.460Z",
+   "agentStatus": "ELIGIBLE",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": "",
+    "source": "agent-found",
+    "checkId": "campus.resources.packet-reachable",
+    "severity": "high",
+    "idempotencyKey": "agent-found:cmu71vwe3000009gmghe6yvit:boston-suburbs:campus.resources.packet-reachable",
+    "foundWhileWorking": "cmu71vwe3000009gmghe6yvit"
+   },
+   "description": "Alpha Lexington: info packet link returns 401 and the launch statement names no date\nPage: https://alpha.school/boston-suburbs/\n\nExpected: every CTA resolves to a reachable campus-specific destination; an Announced campus names a month or season and a year\nObserved: resource CTA https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view returns 401; the launch statement names no month, season or year\nEvidence: tests/page-check.mjs 2026-09-18 (evidence/boston-suburbs-page-check.json): cta-links-resolve, announced-names-launch-date\nFound while working: cmu71vwe3000009gmghe6yvit\nPlayb"
+  },
+  {
+   "id": "cmufolxfv000w04jgkca2p9kj",
+   "title": "Alpha Atlanta: the 2026/27 INFO PACKET link is hidden on every breakpoint",
+   "status": "MISSING_INFO",
+   "url": "https://alpha.school/atlanta/",
+   "createdAt": "2026-09-24T15:23:26.731Z",
+   "updatedAt": "2026-09-24T18:30:57.266Z",
+   "agentStatus": "MISSING_INFO",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": "Matt Barge",
+    "source": "agent-found",
+    "checkId": "campus.controls.info-packet-visibility",
+    "severity": "medium",
+    "ownerRole": "requester",
+    "intakeHash": "3bbe6f514fe8aaf771839b8e02a830a4d12f8ea45ea5c35251b2231a80f2a062",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmtnl00rs000404l1ihl5ucij:atlanta:campus.controls.info-packet-visibility",
+    "intakeDecision": {
+     "class": "packet",
+     "policy": "allowed",
+     "invalid": [],
+     "outcome": "missing-info",
+     "ownerRole": "requester",
+     "evaluatedAt": "2026-09-24T18:30:48.127Z",
+     "inputSha256": "48aeb803f48be247a4f92b54f9581c7edf1ebc3d90cda5ccf364272af7f185fd",
+     "policySha256": "d933cafdd40d4ee4f01d0ef53b330e68879f85a6179867651bfbf18f7d1a1fcd",
+     "systemMissing": [],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/atlanta/",
+      "requester": "matthew.barge@superbuilders.school"
+     },
+     "ownerResolution": "requester-apex-user",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": [
+      "changeDetail"
+     ]
+    },
+    "foundWhileWorking": "cmtnl00rs000404l1ihl5ucij"
+   },
+   "description": "The Resources row on the Atlanta campus page carries a 2026/27 INFO PACKET widget (CSS id resource_2, Elementor element 6e56b76) linked to https://www.flipsnack.com/BADA559BDC9/alpha-atlanta-info-packet-26-27, but the widget has elementor-hidden-desktop, elementor-hidden-tablet and elementor-hidden-mobile, so no parent can reach the packet from the page.\nPage: https://alpha.school/atlanta/\n\nExpected: a current-year packet with a live link is visible on at least one breakpoint, or the link is removed if the packet is not ready (packet-owner decision)\nObserved: 2026/27 INFO PACKET (6e56b76) hidd"
+  },
+  {
+   "id": "cmuep7qfx00040agm3lwss5zf",
+   "title": "Alpha Bethesda: resources CTA row has no Book a Call slot and its JOIN THE COMMUNITY button links to the application form",
+   "status": "MISSING_INFO",
+   "url": "https://alpha.school/bethesda/",
+   "createdAt": "2026-09-23T22:52:37.917Z",
+   "updatedAt": "2026-09-24T18:33:22.037Z",
+   "agentStatus": "MISSING_INFO",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": [
+     "website-agent-operator"
+    ],
+    "source": "agent-found",
+    "checkId": "cta-links-resolve",
+    "pageUrl": "https://alpha.school/bethesda/",
+    "severity": "normal",
+    "ownerRole": "website-agent-operator",
+    "intakeHash": "e353d30ea31a27f0214a751067cc127397388be83ea945af0faf6ef97887e3f8",
+    "ticketClass": "link-cta",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmsumcta1000004kv1afrhygs:bethesda:cta-row-slots",
+    "intakeDecision": {
+     "class": "observer-link-cta",
+     "policy": "allowed",
+     "invalid": [],
+     "outcome": "intake-defect",
+     "ownerRole": "website-agent-operator",
+     "evaluatedAt": "2026-09-24T18:31:35.784Z",
+     "inputSha256": "dcda66773f8a8e1102aaaae374b644a29ad42e5eb2b1ac8cdd7e7ddadda23a00",
+     "policySha256": "d933cafdd40d4ee4f01d0ef53b330e68879f85a6179867651bfbf18f7d1a1fcd",
+     "systemMissing": [
+      "observerId"
+     ],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/bethesda/",
+      "observed": "the widget tagged book_a_call_2 (/5/elements/2/elements/0/elements/4) reads \"APPLY TODAY!\" and links to https://alpha.school/application/?submission_campus=bethesda; resource_4 (/5/elements/2/elements/0/elements/5) reads \"JOIN THE COMMUNITY\" and also links to https://alpha.school/application/?submission_campus=bethesda; there is no seventh button, so the row has Apply twice in effect and no Community or Book a Call destination. Expected: as on San Juan and Oklahoma City: book_a_call_2 = Book a Call (HubSpot call_scheduling_link), resource_4 = JOIN THE COMMUNITY -> https://community.alpha.school/?preferred_campus=Alpha%20Bethesda (the hero's own Community link), and a separate APPLY TODAY button. Evidence: get_page_inventory links list for object 5743 (work-assets/apex-website-tickets/loose-ends-2026-09-23/book-a-call/). Found while working: cmsumcta1000004kv1afrhygs Playbook: spec/campus-page-controls.json resources row; protocols/recipes/link-cta.md Recommended path: link-cta edits on resource_4 (text kept, link.url -> Community URL) and book_a_call_2 (text and link -> Book a Call), then a structure clone of the Apply button from the San Juan row shape; needs the Apply-CTA decision for the January 2027 campuses first (cmsumcta1 note). Done when: the row shows Book a Call, JOIN THE COMMUNITY and APPLY TODAY each with its own correct destination, rendered on desktop and mobile",
+      "destinationUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Bethesda"
+     },
+     "ownerResolution": "exact-role-owner",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": []
+    },
+    "relatedTicketIds": [
+     "cmsumcta1000004kv1afrhygs"
+    ],
+    "foundWhileWorking": "cmsumcta1000004kv1afrhygs"
+   },
+   "description": "Found while diagnosing the Bethesda Book a Call ticket on 2026-09-23 (run loose-ends-2026-09-23).\nPage: https://alpha.school/bethesda/ (object 5743)\n\nElement: resources CTA row /5/elements/2/elements/0 (6 buttons; the template has 7).\nObserved: the widget tagged book_a_call_2 (/5/elements/2/elements/0/elements/4) reads \"APPLY TODAY!\" and links to https://alpha.school/application/?submission_campus=bethesda; resource_4 (/5/elements/2/elements/0/elements/5) reads \"JOIN THE COMMUNITY\" and also links to https://alpha.school/application/?submission_campus=bethesda; there is no seventh button, so th"
+  },
+  {
+   "id": "cmucto721000404jvqru1wnz0",
+   "title": "Alpha The Woodlands: hero background is Alpha Dorado's beach photo (dorado-beach-min.webp)",
+   "status": "MISSING_INFO",
+   "url": "https://alpha.school/the-woodlands/",
+   "createdAt": "2026-09-22T15:21:52.057Z",
+   "updatedAt": "2026-09-23T01:35:28.100Z",
+   "agentStatus": "MISSING_INFO",
+   "assignees": [
+    {
+     "name": "Yash Chitneni"
+    },
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": [
+     "website-operations"
+    ],
+    "source": "agent-found",
+    "checkId": "no-other-campus-in-image-names",
+    "pageUrl": "https://alpha.school/the-woodlands/",
+    "severity": "normal",
+    "ownerRole": "requester",
+    "intakeHash": "80ae7f182a6faf0a46c9ff0f967d8f208153aa934b6789640a678ed372ea34c0",
+    "ticketClass": "media",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmsulp649000204i9ljor236c:the-woodlands:no-other-campus-in-image-names",
+    "intakeDecision": {
+     "class": "seo-redirect",
+     "policy": "internal-review",
+     "invalid": [],
+     "outcome": "missing-info",
+     "ownerRole": "requester",
+     "evaluatedAt": "2026-09-23T01:35:18.761Z",
+     "inputSha256": "2040b5da7510cfbbad2dcde4e956dc29dc5dc1aec384d6b575840efa82cc6548",
+     "policySha256": "dee5150aa1663b1f910c6c27e071e1a1fcac40fc88e9e02e84aadb4e4659d78f",
+     "systemMissing": [],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/the-woodlands/",
+      "requester": "matthew.barge@superbuilders.school"
+     },
+     "ownerResolution": "requester-apex-user",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": [
+      "changeDetail"
+     ]
+    },
+    "foundWhileWorking": "cmsulp649000204i9ljor236c"
+   },
+   "description": "The Home Hero section of the Alpha The Woodlands page renders Alpha Dorado's beach photo as its background. Visitors see it; it is emitted through the page's generated stylesheet, not the HTML.\nPage: https://alpha.school/the-woodlands/\n\nExpected: a Woodlands campus image, or the shared campus-page hero image, with no other campus named in the file name (site.identity rules)\nObserved: section 57717c2 (Elementor title \"Home Hero\", path /0, object 8782) has background-image https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp in post-8782.css\nEvidence: tests/page-check.mjs no-oth"
+  },
+  {
+   "id": "cmucto4xb000204jvxir0img1",
+   "title": "Alpha Scottsdale: \"Apply for High School\" button is hidden on every breakpoint but still linked",
+   "status": "MISSING_INFO",
+   "url": "https://alpha.school/scottsdale/",
+   "createdAt": "2026-09-22T15:21:49.295Z",
+   "updatedAt": "2026-09-23T01:35:38.294Z",
+   "agentStatus": "MISSING_INFO",
+   "assignees": [
+    {
+     "name": "Yash Chitneni"
+    },
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": [
+     "website-operations"
+    ],
+    "source": "agent-found",
+    "checkId": "cta-hidden-everywhere",
+    "pageUrl": "https://alpha.school/scottsdale/",
+    "severity": "normal",
+    "ownerRole": "requester",
+    "intakeHash": "e589b6fefb24e1f099ef960e8aa4409092d977ccbf0ae080196892abe74bd93b",
+    "ticketClass": "link-cta",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmsgak1mu000304ky2v3av9st:scottsdale:cta-hidden-everywhere",
+    "intakeDecision": {
+     "class": "seo-redirect",
+     "policy": "internal-review",
+     "invalid": [],
+     "outcome": "missing-info",
+     "ownerRole": "requester",
+     "evaluatedAt": "2026-09-23T01:35:29.042Z",
+     "inputSha256": "98fdb2e586351a37eac9d989f34f21779f1582fa72ab3c60054d97291bddd799",
+     "policySha256": "dee5150aa1663b1f910c6c27e071e1a1fcac40fc88e9e02e84aadb4e4659d78f",
+     "systemMissing": [],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/scottsdale/",
+      "requester": "matthew.barge@superbuilders.school"
+     },
+     "ownerResolution": "requester-apex-user",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": [
+      "changeDetail"
+     ]
+    },
+    "foundWhileWorking": "cmsgak1mu000304ky2v3av9st"
+   },
+   "description": "The Scottsdale page carries an \"Apply for High School\" button that is hidden on desktop, tablet, and mobile while still linking to the high-school application with submission_campus=scottsdale. Scottsdale is a K-8 campus (hero H1), so either the widget is dead weight to remove, or it was meant to be visible and is not.\nPage: https://alpha.school/scottsdale/\n\nExpected: no linked CTA hidden on every breakpoint (spec/campus-page-controls.json; check cta-hidden-everywhere)\nObserved: button d2a0957 (path /4/elements/2/elements/1/elements/6, object 6549) text \"Apply for High School\", link https://al"
+  },
+  {
+   "id": "cmubrkmwz00030agm90wwp0kf",
+   "title": "Alpha Fort Worth: \"Apply for High School\" button carries a link but is hidden on every breakpoint",
+   "status": "MISSING_INFO",
+   "url": "https://alpha.school/fort-worth/",
+   "createdAt": "2026-09-21T21:35:20.579Z",
+   "updatedAt": "2026-09-23T01:36:17.214Z",
+   "agentStatus": "MISSING_INFO",
+   "assignees": [
+    {
+     "name": "Yash Chitneni"
+    },
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": "website-operations",
+    "source": "agent-found",
+    "checkId": "cta-hidden-everywhere",
+    "severity": "normal",
+    "ownerRole": "requester",
+    "intakeHash": "585180675c0531e0b8ad1c4babdeb72ab0d0a6b36302454c40517dd38cff1a4f",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmrcjrbtz000004lb2o76jach:fort-worth:cta-hidden-everywhere",
+    "intakeDecision": {
+     "class": "form-admissions",
+     "policy": "internal-review",
+     "invalid": [],
+     "outcome": "missing-info",
+     "ownerRole": "requester",
+     "evaluatedAt": "2026-09-23T01:36:07.576Z",
+     "inputSha256": "4e24e7ef645d96c1386d4a6f3b781a5c829027a3bd4f83d19ded7d1c166e065a",
+     "policySha256": "dee5150aa1663b1f910c6c27e071e1a1fcac40fc88e9e02e84aadb4e4659d78f",
+     "systemMissing": [],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/fort-worth/",
+      "requester": "matthew.barge@superbuilders.school"
+     },
+     "ownerResolution": "requester-apex-user",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": [
+      "changeDetail"
+     ]
+    },
+    "foundWhileWorking": "cmrcjrbtz000004lb2o76jach"
+   },
+   "description": "The Alpha Fort Worth page stores an \"Apply for High School\" button (Elementor widget ab0a5bd) linking to https://alpha.school/high-school-application/?submission_campus=fort_worth, but the widget is hidden on desktop, tablet and mobile, so no visitor can see it. tests/page-check.mjs fails cta-hidden-everywhere on it. Either the campus takes high school applications and the button should show, or it does not and the widget should be removed so the page stops carrying a dead control.\n\nPage: https://alpha.school/fort-worth/\nElement: button widget ab0a5bd, \"Apply for High School\" (writer wordpress"
+  },
+  {
+   "id": "cmuctuu0p00070agm4gf6box1",
+   "title": "HubSpot data: Alpha Houston Heights call_scheduling_link is not set to the Book a Call link the page carries",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/houston/",
+   "createdAt": "2026-09-22T15:27:01.753Z",
+   "updatedAt": "2026-09-23T02:45:27.776Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Farhan Raja"
+    },
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": [
+     "hubspot-program-admin"
+    ],
+    "source": "agent-found",
+    "checkId": "hero.book-a-call",
+    "severity": "normal",
+    "ownerRole": "website-agent-operator",
+    "intakeHash": "0495009229fff7783edefcc5ac5929c04c515714ddc9b573a009de9d3c498e24",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmu4g7ozk00000agmwlkwsdsf:houston:hubspot-call-scheduling-link",
+    "intakeDecision": {
+     "class": "hubspot-data",
+     "policy": "allowed",
+     "invalid": [],
+     "outcome": "intake-defect",
+     "ownerRole": "website-agent-operator",
+     "evaluatedAt": "2026-09-23T01:32:26.447Z",
+     "inputSha256": "873e9364d7c5f35ea48afe4d032e7f54bc6f7c05b30dcea02536368e7371aa43",
+     "policySha256": "dee5150aa1663b1f910c6c27e071e1a1fcac40fc88e9e02e84aadb4e4659d78f",
+     "systemMissing": [
+      "sourceField",
+      "derivation",
+      "owner"
+     ],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/houston/"
+     },
+     "ownerResolution": "exact-role-owner",
+     "derivableMissing": [
+      "sourceValue",
+      "expectedValue"
+     ],
+     "relatedTicketIds": [],
+     "requesterMissing": []
+    },
+    "foundWhileWorking": "cmu4g7ozk00000agmwlkwsdsf"
+   },
+   "description": "The Alpha Houston page shows Book a Call -> https://go.alpha.school/meetings/alpha-school/houston-team (WordPress-direct edit of 2026-09-18 under an operator instruction on cmu4g7ozk00000agmwlkwsdsf); the HubSpot Program field that is meant to hold that link has not been confirmed set.\nPage: https://alpha.school/houston/\n\nElement: hero.book-a-call (CSS IDs book_a_call_1, book_a_call_2; WordPress widget link, intended source HubSpot Program call_scheduling_link)\nCampus state: Announced (growth map API mirror, read 2026-09-22)\nExpected: call_scheduling_link on the Alpha Houston Heights Program ="
+  },
+  {
+   "id": "cmuctsvwv00000agmtd3tltz5",
+   "title": "Alpha Malibu: the 2026/27 calendar button is hidden on every breakpoint although its PDF is live",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/malibu/",
+   "createdAt": "2026-09-22T15:25:30.895Z",
+   "updatedAt": "2026-09-23T01:32:52.744Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    },
+    {
+     "name": "Zara Raheem"
+    }
+   ],
+   "customFields": {
+    "runId": "sweep-2026-09-22-staff-L2",
+    "owners": [
+     "calendars"
+    ],
+    "source": "agent-found",
+    "checkId": "cta-hidden-everywhere",
+    "pageUrl": "https://alpha.school/malibu/",
+    "severity": "normal",
+    "ownerRole": "website-agent-operator",
+    "intakeHash": "8540dd44718329dcc9a228032e53ebed57159f12e7be21def3667ed0f11e7b94",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmtdgh6a9000004jzzeo3fgl2:malibuta-hidden-everywhere",
+    "intakeDecision": {
+     "class": "observer-link-cta",
+     "policy": "allowed",
+     "invalid": [],
+     "outcome": "intake-defect",
+     "ownerRole": "website-agent-operator",
+     "evaluatedAt": "2026-09-23T01:32:44.651Z",
+     "inputSha256": "0703808fd31a8f5c340cb7789daad8adbc08a92619c9350e9a8723884ba6b606",
+     "policySha256": "dee5150aa1663b1f910c6c27e071e1a1fcac40fc88e9e02e84aadb4e4659d78f",
+     "systemMissing": [
+      "observed",
+      "observerId"
+     ],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/malibu/",
+      "destinationUrl": "https://alpha.school/wp-content/uploads/2026/08/2026_-_2027_calendar_-_malibu.pdf"
+     },
+     "ownerResolution": "exact-role-owner",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": []
+    },
+    "foundWhileWorking": "cmtdgh6a9000004jzzeo3fgl2"
+   },
+   "description": "The Alpha Malibu page stores a \"2026/27 CALENDAR\" button (Elementor widget d4280cd, CSS id resource_3, resources column beside the map, directly above Meet Our Team) linking to https://alpha.school/wp-content/uploads/2026/08/2026_-_2027_calendar_-_malibu.pdf, which answers HTTP 200 logged out (a Calendar B file, first day Sept 8), but the widget is hidden on desktop, tablet and mobile, so parents of an Open campus cannot reach the calendar. tests/page-check.mjs fails cta-hidden-everywhere on it. Requesters have asked for the calendar three times (Lorraine Nunez 2026-08-04, Ashley Rolon 2026-08"
+  },
+  {
+   "id": "cmuctstx800020agmdr258pry",
+   "title": "Alpha La Jolla: the 2026/27 calendar button is hidden on every breakpoint although its PDF is live",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/la-jolla/",
+   "createdAt": "2026-09-22T15:25:28.316Z",
+   "updatedAt": "2026-09-23T01:33:02.227Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    },
+    {
+     "name": "Zara Raheem"
+    }
+   ],
+   "customFields": {
+    "runId": "sweep-2026-09-22-staff-L2",
+    "owners": [
+     "calendars"
+    ],
+    "source": "agent-found",
+    "checkId": "cta-hidden-everywhere",
+    "pageUrl": "https://alpha.school/la-jolla/",
+    "severity": "normal",
+    "ownerRole": "website-agent-operator",
+    "intakeHash": "ca9a63f88fbf3f09e94fa81b6f6b92fecf01c2d0260d9f72247fbecd7d3e5979",
+    "intakeVersion": "0.2",
+    "idempotencyKey": "agent-found:cmtdgf75o000204l42k5aq6uk:la-jollata-hidden-everywhere",
+    "intakeDecision": {
+     "class": "observer-link-cta",
+     "policy": "allowed",
+     "invalid": [],
+     "outcome": "intake-defect",
+     "ownerRole": "website-agent-operator",
+     "evaluatedAt": "2026-09-23T01:32:54.189Z",
+     "inputSha256": "d955ef57add0edbb1da93faf94714569628aff395ed878a7d4346ed54e188d11",
+     "policySha256": "dee5150aa1663b1f910c6c27e071e1a1fcac40fc88e9e02e84aadb4e4659d78f",
+     "systemMissing": [
+      "observed",
+      "observerId"
+     ],
+     "resolvedFields": {
+      "pageUrl": "https://alpha.school/la-jolla/",
+      "destinationUrl": "https://alpha.school/wp-content/uploads/2026/08/2026-2027-Alpha-La-Jolla-Calendar-B.pdf"
+     },
+     "ownerResolution": "exact-role-owner",
+     "derivableMissing": [],
+     "relatedTicketIds": [],
+     "requesterMissing": []
+    },
+    "foundWhileWorking": "cmtdgf75o000204l42k5aq6uk"
+   },
+   "description": "The Alpha La Jolla page stores a \"2026/27 CALENDAR\" button (Elementor widget d4280cd, CSS id resource_3, resources column beside the map, directly above Meet Our Team) linking to https://alpha.school/wp-content/uploads/2026/08/2026-2027-Alpha-La-Jolla-Calendar-B.pdf, which answers HTTP 200 logged out (a Calendar B file, first day Sept 8), but the widget is hidden on desktop, tablet and mobile, so parents of an Open campus cannot reach the calendar. tests/page-check.mjs fails cta-hidden-everywhere on it. Requesters have asked for the calendar three times (Lorraine Nunez 2026-08-04, Ashley Rolon"
+  },
+  {
+   "id": "cmubm4db4000504jpqqgk0tq9",
+   "title": "Alpha New York: APPLY FOR 9TH GRADE button hidden on every breakpoint",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/new-york-city/",
+   "createdAt": "2026-09-21T19:02:43.552Z",
+   "updatedAt": "2026-09-21T19:42:15.732Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "runId": "headshots-2026-09-21-nyc",
+    "owners": "",
+    "source": "agent-found",
+    "checkId": "cta-hidden-everywhere",
+    "pageUrl": "https://alpha.school/new-york-city/",
+    "severity": "medium",
+    "ownerRole": "website-agent-operator",
+    "idempotencyKey": "agent-found:cmtabcrh0000o04jg825h5r40:new-york-city:cta-hidden-everywhere",
+    "foundWhileWorking": "cmtabcrh0000o04jg825h5r40"
+   },
+   "description": "The hero-area button APPLY FOR 9TH GRADE on the New York City page carries Elementor's hidden-on-desktop, tablet and mobile flags, so no parent can see it although it holds a campus-specific link.\nPage: https://alpha.school/new-york-city/\n\nExpected: a CTA with a live campus link is either visible on every breakpoint or removed; New York serves K to 12 (H1 and HubSpot end_grade_level 12), so a 9th grade application route should be reachable.\nObserved: widget 1ce99b9 (button, pointer /4/elements/2/elements/1/elements/6, parent container 21b40ac) has text \"APPLY FOR 9TH GRADE\", link https://alpha"
+  },
+  {
+   "id": "cmubc0h9j00000agmteobt3jx",
+   "title": "Alpha Lake Travis: the hero background is Alpha Dorado's beach photo",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/lake-travis/",
+   "createdAt": "2026-09-21T14:19:45.895Z",
+   "updatedAt": "2026-09-21T15:34:31.093Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Yash Chitneni"
+    }
+   ],
+   "customFields": {
+    "owners": "website-operations",
+    "source": "agent-found",
+    "checkId": "no-other-campus-in-image-names",
+    "severity": "medium",
+    "ownerRole": "website-operations",
+    "idempotencyKey": "agent-found:cmt0jo8vo000004julo2h72z1:lake-travis:open-no-other-campus-media",
+    "foundWhileWorking": "cmt0jo8vo000004julo2h72z1"
+   },
+   "description": "The Lake Travis hero renders another campus's photograph. The image is set as an Elementor section background, so it is delivered by the generated stylesheet and never appears in the page HTML, which is why the HTML-only cross-campus image check passes on this page.\n\nPage: https://alpha.school/lake-travis/\n\nExpected: a Lake Travis or Austin-area approved image in the hero background of section /0 (an Announced campus uses approved launch-stage media for this campus; never another campus).\nObserved: attachment 8422, https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp, an aeria"
+  },
+  {
+   "id": "cmu8ta6j7000a04l0v3fkpmoj",
+   "title": "Alpha Franklin: book_a_call widgets relabelled Contact Admissions and hidden on every breakpoint",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/franklin/",
+   "createdAt": "2026-09-19T19:59:53.491Z",
+   "updatedAt": "2026-09-19T20:42:11.974Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": "",
+    "source": "agent-found",
+    "checkId": "campus.controls.book-a-call-visibility",
+    "severity": "medium",
+    "idempotencyKey": "agent-found:cmtm8v0pl000404kzexubc1lz:franklin:campus.controls.book-a-call-visibility",
+    "foundWhileWorking": "cmtm8v0pl000404kzexubc1lz"
+   },
+   "description": "Alpha Franklin: book_a_call widgets relabelled Contact Admissions and hidden on every breakpoint\nPage: https://alpha.school/franklin/\n\nExpected: book_a_call_1 and book_a_call_2 carry the Book a Call label and a campus meetings link, visible on desktop, tablet and mobile\nObserved: both widgets hidden on every breakpoint, label Contact Admissions, link https://alpha.school/admission/\nEvidence: playbook tests/rendered-controls.mjs desktop and mobile, 2026-09-18, run batch-2-2026-09-18\nFound while working: cmtm8v0pl000404kzexubc1lz\nPlaybook: campus.controls.book-a-call-visibility\nRecommended path:"
+  },
+  {
+   "id": "cmu8ta4cd000804l06pgommiz",
+   "title": "Alpha Brownsville: Book a Call is hidden on every breakpoint but carries a link",
+   "status": "BLOCKED",
+   "url": "https://alpha.school/brownsville/",
+   "createdAt": "2026-09-19T19:59:50.653Z",
+   "updatedAt": "2026-09-19T20:42:36.893Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": "",
+    "source": "agent-found",
+    "checkId": "campus.controls.book-a-call-visibility",
+    "severity": "medium",
+    "idempotencyKey": "agent-found:cmtmrbhxo000304joy793zilx:brownsville:campus.controls.book-a-call-visibility",
+    "foundWhileWorking": "cmtmrbhxo000304joy793zilx"
+   },
+   "description": "Alpha Brownsville: Book a Call is hidden on every breakpoint but carries a link\nPage: https://alpha.school/brownsville/\n\nExpected: Book a Call visible on desktop, tablet and mobile, or no link at all\nObserved: hero.book-a-call hidden by elementor-hidden-desktop/tablet/mobile with link https://go.alpha.school/meetings/alpha-school/Brownsville\nEvidence: playbook tests/rendered-controls.mjs desktop and mobile, 2026-09-18, run batch-2-2026-09-18\nFound while working: cmtmrbhxo000304joy793zilx\nPlaybook: campus.controls.book-a-call-visibility\nRecommended path: protocols/recipes/media-copy-links.md se"
+  },
+  {
+   "id": "cmuep7od700020agmdawkb29c",
+   "title": "Alpha Bethesda: Book a Call button hidden on every breakpoint and carrying the Community link instead of the HubSpot call link",
+   "status": "FOR_REVIEW",
+   "url": "https://alpha.school/bethesda/",
+   "createdAt": "2026-09-23T22:52:35.227Z",
+   "updatedAt": "2026-09-23T23:02:01.012Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": [
+     "website-agent-operator"
+    ],
+    "source": "agent-found",
+    "checkId": "book-a-call-consistency",
+    "pageUrl": "https://alpha.school/bethesda/",
+    "severity": "normal",
+    "ownerRole": "website-agent-operator",
+    "ticketClass": "link-cta",
+    "idempotencyKey": "agent-found:cmsumcta1000004kv1afrhygs:bethesda:book-a-call-consistency",
+    "relatedTicketIds": [
+     "cmsumcta1000004kv1afrhygs"
+    ],
+    "foundWhileWorking": "cmsumcta1000004kv1afrhygs"
+   },
+   "description": "Found by tests/page-check.mjs book-a-call-consistency on 2026-09-23 (morning verification after the nightly run, ticket cmsumcta1000004kv1afrhygs) and diagnosed from stored Elementor data with get_element (run loose-ends-2026-09-23).\nPage: https://alpha.school/bethesda/ (object 5743)\n\nElement: button widgets book_a_call_1 (/0/elements/0/elements/1/elements/2, hero CTA row) and book_a_call_2 (/5/elements/2/elements/0/elements/4, resources CTA row); writer wordpress-direct (spec/campus-page-controls.json hero.book-a-call; the nightly n8n workflow writes no book_a_call id).\nObserved: book_a_call_"
+  },
+  {
+   "id": "cmuep7m9i00000agmkn61glab",
+   "title": "Alpha San Juan: Book a Call button hidden on every breakpoint and carrying the Community link instead of the HubSpot call link",
+   "status": "FOR_REVIEW",
+   "url": "https://alpha.school/san-juan/",
+   "createdAt": "2026-09-23T22:52:32.503Z",
+   "updatedAt": "2026-09-23T23:01:58.565Z",
+   "agentStatus": "BLOCKED",
+   "assignees": [
+    {
+     "name": "Matthew Barge"
+    }
+   ],
+   "customFields": {
+    "owners": [
+     "website-agent-operator"
+    ],
+    "source": "agent-found",
+    "checkId": "book-a-call-consistency",
+    "pageUrl": "https://alpha.school/san-juan/",
+    "severity": "normal",
+    "ownerRole": "website-agent-operator",
+    "ticketClass": "link-cta",
+    "idempotencyKey": "agent-found:cmsumcta1000004kv1afrhygs:san-juan:book-a-call-consistency",
+    "relatedTicketIds": [
+     "cmsumcta1000004kv1afrhygs"
+    ],
+    "foundWhileWorking": "cmsumcta1000004kv1afrhygs"
+   },
+   "description": "Found by tests/page-check.mjs book-a-call-consistency on 2026-09-23 (morning verification after the nightly run, ticket cmsumcta1000004kv1afrhygs) and diagnosed from stored Elementor data with get_element (run loose-ends-2026-09-23).\nPage: https://alpha.school/san-juan/ (object 9627)\n\nElement: button widgets book_a_call_1 (/0/elements/0/elements/1/elements/2, hero CTA row) and book_a_call_2 (/5/elements/2/elements/0/elements/4, resources CTA row); writer wordpress-direct (spec/campus-page-controls.json hero.book-a-call; the nightly n8n workflow writes no book_a_call id).\nObserved: book_a_call_"
   }
  ]
 }

@@ -1,6 +1,6 @@
 {
-  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json.",
-  "version": "1.0",
+  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses).",
+  "version": "1.1",
   "asOf": "2026-09-24",
   "defaults": {
     "pageFamily": "campus",
@@ -129,12 +129,16 @@
         "unit": "matches"
       },
       "ticketClass": "observer-brand-leak",
-      "exemptionsRef": "registry/sister-brand-exceptions.json",
+      "exemptionsRef": [
+        "registry/sister-brand-exceptions.json",
+        "registry/campus-leadership.json groups"
+      ],
       "exemptions": [
         "allowed phrases per campus",
         "properNouns",
         "shared header, footer and navigation",
-        "HubSpot-fed event cards (venue names)"
+        "HubSpot-fed event cards (venue names)",
+        "registry/campus-leadership.json groups: a shared leader of a campus group whose card alt text names a sibling campus is not an other-campus conflict"
       ],
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -157,6 +161,10 @@
       "ticketClass": "observer-media-identity",
       "suppressWhen": [
         "hidden-on-all-viewports"
+      ],
+      "exemptionsRef": "registry/campus-leadership.json groups",
+      "exemptions": [
+        "registry/campus-leadership.json groups: a shared leader of a campus group whose card alt text names a sibling campus is not an other-campus conflict"
       ],
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -671,9 +679,13 @@
       "sourceHealthDependency": [
         "campus-packets-registry"
       ],
-      "exemptionsRef": "registry/campus-packets.json interimPolicy",
+      "exemptionsRef": [
+        "registry/campus-packets.json interimPolicy",
+        "registry/campus-cta-exceptions.json"
+      ],
       "exemptions": [
-        "hidden-2026-27-packet-button: a responsive-hidden 2026/27 INFO PACKET button is the approved interim state while no 2026-27 packet is approved; it is not cta-hidden-everywhere and files nothing"
+        "hidden-2026-27-packet-button: a responsive-hidden 2026/27 INFO PACKET button is the approved interim state while no 2026-27 packet is approved; it is not cta-hidden-everywhere and files nothing",
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
       "decisionPending": "cmtlz33vo000504ju2itpi7d9",
       "requirementRef": {
@@ -698,6 +710,10 @@
       "suppressWhen": [
         "hidden-on-all-viewports"
       ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.resources.packet"
@@ -721,13 +737,17 @@
         "unit": "other-campus-matches"
       },
       "ticketClass": "observer-packet",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.resources.packet"
-      },
-      "sourceHealthDependency": [
-        "hubspot-programs"
-      ]
+      }
     },
     {
       "id": "campus.resources.calendar.present",
@@ -745,6 +765,10 @@
       "status": "advisory",
       "severity": "medium",
       "ticketClass": "link-cta",
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.calendar"
@@ -767,6 +791,10 @@
       "ticketClass": "link-cta",
       "suppressWhen": [
         "hidden-on-all-viewports"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
       "requirementRef": {
         "file": "spec/observer-check-map.json",
@@ -791,13 +819,17 @@
         "unit": "other-campus-matches"
       },
       "ticketClass": "link-cta",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.calendar"
-      },
-      "sourceHealthDependency": [
-        "hubspot-programs"
-      ]
+      }
     },
     {
       "id": "campus.resources.booking.present",
@@ -816,6 +848,10 @@
         "unit": "visible-link"
       },
       "ticketClass": "link-cta",
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.hero.ctas"
@@ -835,6 +871,10 @@
         "unit": "status-class"
       },
       "ticketClass": "link-cta",
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.booking"
@@ -858,13 +898,17 @@
         "unit": "other-campus-matches"
       },
       "ticketClass": "link-cta",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.booking-link"
-      },
-      "sourceHealthDependency": [
-        "hubspot-programs"
-      ]
+      }
     },
     {
       "id": "campus.resources.apply.source",
@@ -886,6 +930,10 @@
       "ticketClass": "observer-link-cta",
       "sourceHealthDependency": [
         "hubspot-programs"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
       "requirementRef": {
         "file": "spec/source-authority.json",
@@ -912,6 +960,10 @@
       "ticketClass": "observer-link-cta",
       "sourceHealthDependency": [
         "hubspot-programs"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
       "requirementRef": {
         "file": "spec/source-authority.json",
@@ -947,6 +999,10 @@
         "hubspot-programs"
       ],
       "note": "Owner per spec/ticket-classes.json observer-link-cta ownerRules (the application route is admissions territory). The finding URL is the /application/ route, so the scope is the program, never the page.",
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
@@ -973,6 +1029,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/resources.apply"
@@ -992,6 +1052,10 @@
         "unit": "placeholders"
       },
       "ticketClass": "observer-link-cta",
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/resources.apply"
@@ -1015,13 +1079,17 @@
         "unit": "other-campus-matches"
       },
       "ticketClass": "observer-link-cta",
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
-      },
-      "sourceHealthDependency": [
-        "hubspot-programs"
-      ]
+      }
     },
     {
       "id": "campus.team.roster.present",
@@ -2788,6 +2856,10 @@
       "status": "advisory",
       "severity": "low",
       "ticketClass": "link-cta",
+      "exemptionsRef": "registry/campus-cta-exceptions.json",
+      "exemptions": [
+        "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
+      ],
       "requirementRef": {
         "file": "spec/community-routing.json",
         "key": "communityHosts"

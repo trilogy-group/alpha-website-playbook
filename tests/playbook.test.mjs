@@ -2379,7 +2379,7 @@ test('check bundle: workstream 2 corrections are rows, not prose', () => {
 
   // Brand leak reads the exceptions registry, which now also carries the word list.
   const leak = checkRow('site.identity.sister-brand')
-  assert.equal(leak.exemptionsRef, 'registry/sister-brand-exceptions.json')
+  assert.deepEqual(leak.exemptionsRef, ['registry/sister-brand-exceptions.json', 'registry/campus-leadership.json groups'], 'the brand-leak row also reads the shared-leadership groups (2026-09-24)')
   const exceptions = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'sister-brand-exceptions.json'), 'utf8'))
   assert.ok(exceptions.brands.some((b) => b.label === 'Nova') && exceptions.campuses.brownsville)
 

@@ -19,7 +19,7 @@ Machine form: `spec/campus-page-controls.json`, from a crawl of 44 live campus p
 
 ## How to read a control request
 
-- **Book a Call**: the URL is the HubSpot Program `call_scheduling_link` and n8n writes it. A wrong or missing Book a Call is a HubSpot data ticket (Farhan), and the meetings page itself belongs to the HubSpot owner. Dorado is the known exception (links to events).
+- **Book a Call**: the URL is the HubSpot Program `call_scheduling_link` and n8n writes it. A wrong or missing Book a Call is a HubSpot data ticket (Farhan), and the meetings page itself belongs to the HubSpot owner. Per-campus exceptions (Dorado links to its events page) are entries in `registry/campus-cta-exceptions.json`, added with `agent/record-decision.mjs`.
 - **Apply**: the button is n8n-written from `admission_link`; the route behind it is one of three (legacy WordPress form, Finalsite redirect, HubSpot redirect form) and is owned by the HubSpot program admin. The `submission_campus` slug must match the form's campus configuration. Never change the button without testing the route through to the intended campus.
 - **Admission guide, Contact admissions, See all events, video links**: fixed site routes, WordPress-direct, website operations.
 - **Info packet and calendar**: WordPress-direct links to documents owned elsewhere (`playbook/site/info-packets.md`). The website change is only the link swap after the document is approved.
