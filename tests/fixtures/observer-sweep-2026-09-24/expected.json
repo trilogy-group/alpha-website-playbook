@@ -148,7 +148,7 @@
     "cmtmrbhxo000304joy793zilx": {
       "class": "observer-brand-leak",
       "outcome": "routed",
-      "ownerRole": "website-agent-operator",
+      "ownerRole": "website-operations",
       "check": "campus-sister-brand-leak"
     },
     "cmtmrbidd000404johl4maun2": {
@@ -496,7 +496,7 @@
     "cmttaplkg00020agmjj5l6kvs": {
       "class": "observer-brand-leak",
       "outcome": "routed",
-      "ownerRole": "website-agent-operator",
+      "ownerRole": "website-operations",
       "check": "campus-sister-brand-leak"
     },
     "cmttapmbl00030bgmf4f5qixk": {
@@ -544,7 +544,7 @@
     "cmtvz6lbr000004lakyoue9dx": {
       "class": "observer-brand-leak",
       "outcome": "routed",
-      "ownerRole": "website-agent-operator",
+      "ownerRole": "website-operations",
       "check": "campus-sister-brand-leak"
     },
     "cmtxaucwp000104ijvl0dexr2": {
