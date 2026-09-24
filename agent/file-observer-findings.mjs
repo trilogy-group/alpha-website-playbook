@@ -18,47 +18,72 @@
  *   1. A check with no row (or a retired one) is telemetry: dropped and counted. An advisory row is counted and never
  *      filed. A loop-health row (`channel: loop-health`) goes to the observer owner's channel, never the website queue.
  *   2. A finding is suppressed and counted when its row depends on a source that `health.json` (else the manifest's
- *      providers) reports unhealthy or stale, when an open loop-health finding of this run `suppresses` the row (same
- *      route and viewport where the loop-health row says so), or when the finding carries a `suppressWhen` condition.
- *   3. The grace period runs from the incident's first-seen time; `requireConsecutiveRuns` needs that many observations.
- *   4. One ticket per dedupe scope (page, template, program, event, site), keyed `observer:<requirement>:<scopeKey>`,
- *      with the page or event list in the body; rows sharing a requirement and scope (desktop and mobile) merge.
+ *      providers) reports degraded, failed or stale (or `suppressFindings: true`; not-collected, optional and disabled
+ *      never suppress), or when the finding carries a `suppressWhen` condition. Loop-health suppression is the
+ *      observer's own (`suppresses` on the loop-health rows); the filer reports `health.json.suppressedByLoopHealth`.
+ *   3. Holds: when the manifest says the observer ran a verified check bundle (`manifest.checkBundle.status` verified,
+ *      same sha256 as the bundle in use) its grace-period and consecutive-run holds are trusted and not re-applied.
+ *      Otherwise the grace period runs from the incident's first-seen time and `requireConsecutiveRuns` reads the
+ *      incident's `consecutiveFailingRuns` (aeo PR 24), else the finding in this run plus the previous run id in the
+ *      incident's run history; never the lifetime `occurrences`.
+ *   4. One ticket per dedupe scope (page, template, program, event, site), keyed `observer:<row key>:<scopeKey>` where
+ *      the row key is the row id minus its viewport suffix: the desktop and mobile rows of one requirement merge and
+ *      rows of different classes or owners never do. While a ticket is open on a key, other rows on the page still file.
  *   5. A row with `decisionPending` files nothing new while that ticket is open; the group is reported against it.
  *   6. The body is rendered to the ticket contract and checked with tests/validate-ticket.mjs `contractCheck`;
- *      a ticket that fails the contract is a filer defect and is not filed.
+ *      a ticket that fails the contract is a filer defect and is not filed. Em dashes and the ellipsis character never
+ *      reach a title, body or note.
  *   7. Dedupe against the open queue the way agent/file-found-ticket.mjs does: idempotency key, exact title, then an
  *      open ticket carrying any of the group's observer ids or the same check on one of its pages.
  *   8. Class and owner come from the policy bundle; a role with no registered APEX user escalates to the website agent
  *      operator as Blocked (protocol 1d) with the role named in the body.
  *   9. Evidence: the artifact's desktop and mobile screenshot pair for the finding's route goes onto the ticket with
  *      agent/attach-evidence.mjs when both files exist.
- *  10. Auto-resolve: only tickets this filer created, proven by both the exact `customFields.filedBy` marker and a
- *      non-empty `customFields.filerRunId`, are eligible. A legacy observer ticket is never completed merely because it
- *      carries a SITE id. An eligible ticket whose incidents are all resolved for at least the row's clearAfterRuns clean
- *      runs gets a section-7 RESOLUTION note citing the clearing run ids, `resolutionKind: check-cleared` (first class
- *      and in customFields), and status COMPLETED through one v1 PATCH: never a PATCH whose only key is agentEligible,
- *      no agentStatus (APEX clears it on completion), the existing description first (APEX PR 409).
+ *  10. Auto-resolve: only a ticket this filer created, proven by the exact `customFields.filedBy` marker and a non-empty
+ *      `customFields.filerRunId` (PR 26: a legacy observer ticket is never completed merely because it carries a SITE
+ *      id; those are listed under unresolved), carrying an observer check id whose incidents are all resolved by clean runs (at least the
+ *      row's clearAfterRuns; a resolutionReason such as superseded-evidence-version is never a clear) gets a section-7
+ *      RESOLUTION note (assertNoteShape) citing the clearing run ids, `resolutionKind: check-cleared` (first class and in
+ *      customFields), and status COMPLETED through one v1 PATCH built from the live ticket with `expectedUpdatedAt`:
+ *      never a PATCH whose only key is agentEligible, no agentStatus (APEX clears it on completion), the existing
+ *      description first (APEX PR 409). Only a ticket in NOT_STARTED, or BLOCKED by intake or the filer with no human
+ *      note, closes this way; FOR_REVIEW, MISSING_INFO, IN_PROGRESS, a ticket a row's decisionPending names, and one
+ *      carrying an OPERATOR INSTRUCTION, CORRECTION or DECISION NEEDED line are reported as "cleared but needs a person".
  *
  * APEX PR 409 marks a ticket filer-owned by customFields.checkId (SITE-*), filerRunId, requirementId and
- * checkBundleVersion; the filer sets them on every create and resolve, and treats 409 OBSERVER_FILER_OWNED as a skip.
+ * checkBundleVersion; the filer sets them on every create and resolve, and treats 409 OBSERVER_FILER_OWNED
+ * (agent/apex-errors.mjs, shared with intake) as a skip.
  *
- * Dry run by default: the plan goes to `<run dir>/filer-report.json` and stdout. `--apply` performs the writes and
- * appends every one to `<run dir>/filer-writes.jsonl`. Env: APEX_API_TOKEN (APEX_API_BASE, APEX_AGENT_API_BASE optional).
+ * Dry run by default: the plan goes to `<run dir>/filer-report.json` and stdout. `--apply` performs the writes against the
+ * live queue (never with `--queue`) and appends every one to `<run dir>/filer-writes.jsonl`. Env: APEX_API_TOKEN
+ * (APEX_API_BASE, APEX_AGENT_API_BASE optional).
  */
 import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { apexBases, attachEvidence, planEvidence } from './attach-evidence.mjs'
-import { renderTemplate } from './ticket-templates.mjs'
+import { FILER_OWNED_CODE, isFilerOwnedConflict } from './apex-errors.mjs'
+import { assertNoteShape, renderTemplate } from './ticket-templates.mjs'
 import { contractCheck } from '../tests/validate-ticket.mjs'
+
+export { FILER_OWNED_CODE, isFilerOwnedConflict }
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
-export const FILER_VERSION = '0.2'
+export const FILER_VERSION = '0.3'
+export const FILED_BY = 'agent/file-observer-findings.mjs'
 export const IDEMPOTENCY_PREFIX = 'observer:'
 export const RESOLUTION_KIND = 'check-cleared'
-export const FILER_OWNED_CODE = 'OBSERVER_FILER_OWNED'
+export const OBSERVER_SOURCE = 'alpha-site-qc'
+export const FILER_SOURCE = 'agent-found'
+export const NOT_FILER_OWNED = 'not filer-owned; auto-resolution refused'
+/** Statuses the filer may close on its own (rule 10); every other status belongs to a person. */
+export const RESOLVABLE_STATUSES = ['NOT_STARTED', 'BLOCKED']
+/** A line a person wrote that outranks the filer (protocol 1c and 1d). */
+export const INSTRUCTION_LINE = /^(?:OPERATOR INSTRUCTION|CORRECTION|DECISION NEEDED)\b/
+/** Provider statuses that suppress a dependent row; not-collected, optional and disabled do not. */
+export const UNHEALTHY_STATUSES = ['degraded', 'failed', 'stale']
 export const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site']
 export const CHANNELS = ['ticket', 'loop-health']
 export const ROW_FIELDS = ['id', 'observerCheck', 'title', 'pageFamily', 'lifecycleStates', 'element', 'expected', 'comparator', 'severity', 'status', 'ticketClass', 'ownerRole', 'dedupeScope', 'clearAfterRuns', 'gracePeriodHours', 'evidenceProfile', 'sourceHealthDependency', 'requirementRef']
@@ -66,8 +91,17 @@ export const OPEN_STATUSES = ['NOT_STARTED', 'IN_PROGRESS', 'MISSING_INFO', 'BLO
 export const OPERATOR_ROLE = 'website-agent-operator'
 export const DEFAULT_CLEAR_AFTER_RUNS = 2
 export const PUBLIC_HOSTS = ['alpha.school', 'www.alpha.school']
-const OBSERVER_ID = /\bSITE-[A-Z0-9]{8,}\b/gi
-const ROW_ID_PREFIX = /\b(?:site|campus)\.[a-z0-9-]+(?:\.[a-z0-9-]+)*(?:\.\*|\*)?/g
+/** The observer's incident id shape (aeo util siteIncidentId): SITE- plus exactly ten upper-case hex characters. */
+export const OBSERVER_ID_HEX = 10
+export const OBSERVER_ID = new RegExp(`\\bSITE-[0-9A-F]{${OBSERVER_ID_HEX}}\\b`, 'gi')
+export const isObserverId = (value) => new RegExp(`^SITE-[0-9A-F]{${OBSERVER_ID_HEX}}$`, 'i').test(String(value || ''))
+const EM_DASH = '\u2014'
+const ELLIPSIS = '\u2026'
+
+/** Text bound for a title, body or note: no em dash (protocol rule noEmDash) and no ellipsis character. */
+export function cleanText(value) {
+  return String(value ?? '').replace(new RegExp(`\\s*${EM_DASH}\\s*`, 'g'), '; ').replace(new RegExp(ELLIPSIS, 'g'), '...')
+}
 
 export class ObserverFilerError extends Error {
   /** @param {'MISSING_ARG'|'MISSING_TOKEN'|'BAD_RUN_DIR'|'BAD_BUNDLE'|'BAD_QUEUE'|'DOWNLOAD_FAILED'|'APEX_ERROR'} code */
@@ -106,27 +140,64 @@ export function loadRunFolder(dir) {
   return { dir: resolved, manifest, findings, incidents, incidentsById: new Map(incidents.map((i) => [i.id, i])), health: normalizeHealth(healthJson, manifest) }
 }
 
+/** The status under which a provider entry suppresses dependent rows, or null: degraded, failed, stale, or suppressFindings true. */
+export function suppressingStatus(entry) {
+  const status = typeof entry === 'string' ? entry : entry?.status
+  if (entry && typeof entry === 'object' && entry.suppressFindings === true) return status || 'suppressed'
+  return UNHEALTHY_STATUSES.includes(String(status || '').toLowerCase()) ? status : null
+}
+
 /**
  * Unhealthy sources by name, from health.json when present (keys are sourceHealth ids or provider entities), else from
- * the manifest's provider statuses. Each entry: { status, reason, at } where `at` is the snapshot time when the provider reports one.
+ * the manifest's provider statuses. A source suppresses only when its status is degraded, failed or stale, or the observer
+ * says `suppressFindings: true`; not-collected, optional and disabled sources never suppress (they measured nothing).
+ * `suppressedByLoopHealth` is the observer's own count of findings it withheld under a loop-health row's `suppresses`.
  */
 export function normalizeHealth(healthJson, manifest) {
   const unhealthy = {}
   const snapshots = {}
+  const loopHealth = (value) => {
+    if (Array.isArray(value)) return { count: value.length, items: value }
+    if (Number.isFinite(value)) return { count: value, items: null }
+    if (value && typeof value === 'object') return { count: Number.isFinite(value.count) ? value.count : Array.isArray(value.items) ? value.items.length : 0, items: Array.isArray(value.items) ? value.items : null }
+    return { count: 0, items: null, reported: false }
+  }
   if (healthJson && typeof healthJson === 'object') {
     const sources = healthJson.sources || healthJson.providers || {}
     for (const [name, entry] of Object.entries(sources)) {
-      const status = typeof entry === 'string' ? entry : entry?.status
       if (typeof entry === 'object' && (entry?.extractedAt || entry?.snapshotAt)) snapshots[name] = entry.extractedAt || entry.snapshotAt
-      if (status && status !== 'healthy') unhealthy[name] = { status, reason: (typeof entry === 'object' && (entry.reason || entry.error)) || null }
+      const status = suppressingStatus(entry)
+      if (status) unhealthy[name] = { status, reason: (typeof entry === 'object' && (entry.reason || entry.error)) || null }
     }
-    return { source: 'health.json', unhealthy, snapshots }
+    return { source: 'health.json', unhealthy, snapshots, suppressedByLoopHealth: loopHealth(healthJson.suppressedByLoopHealth) }
   }
   for (const [name, entry] of Object.entries(manifest?.providers || {})) {
     if (entry?.extractedAt || entry?.snapshotAt) snapshots[name] = entry.extractedAt || entry.snapshotAt
-    if (entry?.status && entry.status !== 'healthy') unhealthy[name] = { status: entry.status, reason: entry.reason || entry.error || null }
+    const status = suppressingStatus(entry)
+    if (status) unhealthy[name] = { status, reason: entry.reason || entry.error || null }
   }
-  return { source: 'manifest.providers', unhealthy, snapshots }
+  return { source: 'manifest.providers', unhealthy, snapshots, suppressedByLoopHealth: loopHealth(manifest?.suppressedByLoopHealth) }
+}
+
+/** The observer ran a verified copy of this bundle: its own grace and consecutive-run holds stand and the filer does not re-apply them. */
+export function observerHoldsApply(manifest, bundle) {
+  const record = manifest?.checkBundle
+  if (!record || record.status !== 'verified') return false
+  return !record.sha256 || !bundle?.sha256 || record.sha256 === bundle.sha256
+}
+
+/**
+ * Consecutive failing runs the observer has seen this incident in: the incident's `consecutiveFailingRuns` (aeo PR 24)
+ * when present; otherwise this run plus the previous run when the incident's run history names the manifest's previous
+ * run id; otherwise one. Never the lifetime `occurrences`.
+ */
+export function consecutiveFailingRuns(incident, manifest) {
+  if (!incident) return { runs: 1, basis: 'first seen in this run' }
+  if (Number.isInteger(incident.consecutiveFailingRuns)) return { runs: incident.consecutiveFailingRuns, basis: 'incident consecutiveFailingRuns' }
+  const history = [].concat(incident.runIds || incident.observedRunIds || incident.runHistory || incident.history || []).map((h) => (typeof h === 'string' ? h : h?.runId)).filter(Boolean)
+  const previous = manifest?.previousRunId || manifest?.previousRun?.runId || null
+  if (previous && history.includes(previous)) return { runs: 2, basis: `this run and the previous run ${previous} in the incident history` }
+  return { runs: 1, basis: previous ? `previous run ${previous} not in the incident history` : 'no consecutiveFailingRuns and no previous run id in the manifest' }
 }
 
 /** Read and check the check bundle (`spec/check-bundle.generated.json`; a bare array or `{ rows }` is accepted for fixtures). Fails closed on a malformed row. */
@@ -168,7 +239,10 @@ export function loadQueue(file) {
 // Rows, scopes, owners
 // ---------------------------------------------------------------------------------------------------------------
 
+/** The coarse requirement a row belongs to (spec/observer-check-map.json), for the Playbook line only; never a key. */
 export const requirementIdFor = (row) => row.requirement || (typeof row.requirementRef === 'string' ? row.requirementRef : row.id)
+/** The row id minus its viewport suffix: the group and idempotency key, so desktop and mobile rows of one requirement merge and nothing else does. */
+export const rowKeyFor = (row) => String(row.id).replace(/\.(?:desktop|mobile)$/, '')
 export const channelFor = (row) => row.channel || 'ticket'
 
 /** Conditions the finding declares (workstream 5 `conditions`), plus the ones the filer can derive from the finding itself. */
@@ -265,7 +339,7 @@ export function scopeKeyFor(row, finding) {
   }
 }
 
-export function idempotencyKeyFor(row, finding) { return `${IDEMPOTENCY_PREFIX}${requirementIdFor(row)}:${scopeKeyFor(row, finding)}` }
+export function idempotencyKeyFor(row, finding) { return `${IDEMPOTENCY_PREFIX}${rowKeyFor(row)}:${scopeKeyFor(row, finding)}` }
 
 export function campusNameFor(url) {
   const normalized = normalizePageUrl(url)
@@ -328,40 +402,9 @@ export function unhealthyDependencies(row, bundle, health, now = new Date()) {
   return out
 }
 
-/** Row id prefixes a loop-health row's `suppresses` sentence names (site.layout.*, site.header.rendered.route-reachable, ...). */
-function suppressedPrefixes(row) {
-  return [...String(row.suppresses || '').matchAll(ROW_ID_PREFIX)].map((m) => m[0].replace(/\.?\*$/, ''))
-}
-
-/**
- * Open loop-health findings of this run that suppress the row for this finding: a provider-health finding suppresses
- * every row depending on that provider; an operations snapshot finding suppresses operations-sheet rows; the
- * inspection rows suppress the row ids they name on the same route (and viewport when the finding has one).
- */
-export function loopHealthSuppression(row, finding, loopHealth, bundle) {
-  const hits = []
-  const deps = [].concat(row.sourceHealthDependency || [])
-  const url = normalizePageUrl(finding.url)
-  const viewport = viewportFor(finding)
-  const route = routeFor(finding)
-  for (const lh of loopHealth) {
-    if (lh.row.observerCheck === 'provider-health') {
-      const provider = String(lh.finding.entity || '')
-      if (deps.some((d) => healthNames(bundle, d).includes(provider))) hits.push({ by: lh.finding.id, check: lh.row.observerCheck, provider })
-      continue
-    }
-    if (lh.row.observerCheck === 'campus-operations-snapshot-fresh') {
-      if (deps.includes('operations-sheet')) hits.push({ by: lh.finding.id, check: lh.row.observerCheck })
-      continue
-    }
-    const prefixes = suppressedPrefixes(lh.row)
-    if (!prefixes.some((p) => row.id === p || row.id.startsWith(`${p}.`))) continue
-    const sameRoute = !lh.url || !url || lh.url === url || (lh.route && route && lh.route === route)
-    const sameViewport = !/viewport/.test(String(lh.row.suppresses)) || !lh.viewport || !viewport || lh.viewport === viewport
-    if (sameRoute && sameViewport) hits.push({ by: lh.finding.id, check: lh.row.observerCheck, url: lh.url, viewport: lh.viewport })
-  }
-  return hits
-}
+// Loop-health suppression (a loop-health row's `suppresses`) is the observer's: it withholds the findings itself and
+// reports the count in health.json suppressedByLoopHealth. The filer no longer expects loop-health items in findings.json;
+// any that arrive are counted for the observer owner (never filed) and nothing here is suppressed on their account.
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rendering
@@ -369,7 +412,7 @@ export function loopHealthSuppression(row, finding, loopHealth, bundle) {
 
 export function formatFact(value, depth = 0) {
   if (value === null || value === undefined) return 'n/a'
-  if (typeof value === 'string') return value.trim() || 'empty'
+  if (typeof value === 'string') return cleanText(value).trim() || 'empty'
   if (typeof value === 'number' || typeof value === 'boolean') return String(value)
   if (Array.isArray(value)) {
     if (!value.length) return 'none'
@@ -405,10 +448,10 @@ export function renderRequirementRef(row) {
   return String(r || requirementIdFor(row))
 }
 
-function truncate(value, max) { const s = String(value); return s.length <= max ? s : `${s.slice(0, max - 1).trimEnd()}…` }
+function truncate(value, max) { const s = cleanText(value); return s.length <= max ? s : `${s.slice(0, max - 3).trimEnd()}...` }
 
 function sourceLine(group, run) {
-  const names = [...new Set(group.findings.flatMap((f) => [f.expectedSource, f.actualSource].filter(Boolean)))]
+  const names = [...new Set(group.findings.flatMap((f) => [f.expectedSource, f.actualSource].filter(Boolean).map(cleanText)))]
   const providers = run.manifest.providers || {}
   const reads = [...new Set(group.findings.map((f) => f.sourceReadAt).filter(Boolean))]
   const readAt = reads[0] || Object.values(providers).map((p) => p?.completedAt).filter(Boolean).sort().at(-1) || run.manifest.completedAt
@@ -453,11 +496,11 @@ export function buildContract({ row, group, run, bundle, owner, policy, now, rel
   const date = now.toISOString().slice(0, 10)
   const rowIds = group.rows.map((r) => r.id)
   return {
-    claim: truncate(`${scopeLabel(row, group)}: fails "${row.title}"${n > 1 ? ` (${n} findings)` : ''}`, 180),
+    claim: truncate(`${cleanText(scopeLabel(row, group))}: fails "${cleanText(row.title)}"${n > 1 ? ` (${n} findings)` : ''}`, 180),
     page: group.pages[0] || null,
     pages: group.pages,
-    events: row.dedupeScope === 'event' ? group.findings.map((f) => f.title) : [],
-    element: row.element,
+    events: row.dedupeScope === 'event' ? group.findings.map((f) => cleanText(f.title)) : [],
+    element: cleanText(row.element),
     observed: `${observed.join(' | ')}${more}`,
     expected: `${renderExpected(row)} (${requirementIdFor(row)}; ${renderComparator(row)}; severity ${row.severity})`,
     source: sourceLine(group, run),
@@ -471,7 +514,7 @@ export function buildContract({ row, group, run, bundle, owner, policy, now, rel
     evidence: `observer check ${row.observerCheck} run ${run.manifest.runId} (${run.manifest.completedAt}); observer ids ${group.findings.map((f) => f.id).join(', ')}; packet evidence sha256 ${run.manifest.evidence?.sha256 || 'n/a'}; screenshot pair attached with agent/attach-evidence.mjs where the artifact carries it`,
     exemptions: row.exemptionsRef ? `${row.exemptionsRef}${row.exemptions?.length ? ` (${row.exemptions.join('; ')})` : ''}` : null,
     related,
-    playbook: `${requirementIdFor(row)} (${renderRequirementRef(row)}); check bundle ${bundle.version || 'unversioned'} row${rowIds.length === 1 ? '' : 's'} ${rowIds.join(', ')}`,
+    playbook: `${rowKeyFor(row)} (requirement ${requirementIdFor(row)}, ${renderRequirementRef(row)}); check bundle ${bundle.version || 'unversioned'} row${rowIds.length === 1 ? '' : 's'} ${rowIds.join(', ')}`,
     severity: row.severity,
     history: [`${date} agent/file-observer-findings.mjs ${FILER_VERSION}: filed from observer run ${run.manifest.runId} (${n} finding${n === 1 ? '' : 's'}, scope ${row.dedupeScope})`],
     reason: `${row.dedupeScope}-scoped ${row.status} check ${row.observerCheck}; ${first.summary ? truncate(first.summary, 240) : row.title}`,
@@ -516,14 +559,81 @@ export function observerIdsForTask(task) {
   const cf = task.customFields || {}
   const values = [cf.checkId, ...(Array.isArray(cf.observerIds) ? cf.observerIds : [cf.observerIds]), cf.externalId, cf.idempotencyKey, task.description, task.title]
   const ids = new Set()
-  for (const value of values) if (value) for (const m of String(value).matchAll(OBSERVER_ID)) { const id = m[0].toUpperCase(); if (id !== 'SITE-OBSERVER') ids.add(id) }
+  for (const value of values) if (value) for (const m of String(value).matchAll(OBSERVER_ID)) ids.add(m[0].toUpperCase())
   return [...ids]
 }
 
-/** Auto-resolution authority is opt-in and provenance-based. SITE ids identify incidents, not the actor that filed a ticket. */
+function textLines(text) {
+  return String(text || '').replace(/<br\s*\/?>|<\/p>|<\/div>|<\/li>/gi, '\n').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').split(/\r?\n/).map((l) => l.trim())
+}
+
+/**
+ * Auto-resolution authority is opt-in and provenance-based (PR 26): only a ticket this filer created, proven by the exact
+ * `filedBy` marker and a non-empty `filerRunId`. SITE ids identify incidents, not the actor that filed a ticket, and a
+ * legacy observer ticket (customFields.source alpha-site-qc) is a person's to close.
+ */
 export function isFilerOwnedTask(task) {
   const cf = task?.customFields || {}
-  return cf.filedBy === 'agent/file-observer-findings.mjs' && typeof cf.filerRunId === 'string' && cf.filerRunId.trim().length > 0
+  return cf.filedBy === FILED_BY && typeof cf.filerRunId === 'string' && cf.filerRunId.trim().length > 0
+}
+
+/** The observer's own tickets (source alpha-site-qc) and the filer's: what the queue counts as observer tickets for reporting. */
+export function isObserverTicket(task) {
+  const cf = task?.customFields || {}
+  return cf.source === OBSERVER_SOURCE || isFilerOwnedTask(task) || observerIdsForTask(task).length > 0 || String(cf.idempotencyKey || '').startsWith(IDEMPOTENCY_PREFIX)
+}
+
+/** The first OPERATOR INSTRUCTION, CORRECTION or DECISION NEEDED line on the ticket (description, comments, agent instructions), or null. */
+export function instructionLine(task) {
+  const texts = [task.description, ...(task.comments || []).map((c) => c?.body ?? c?.text), ...(task.agentInstructions || []).filter((i) => !i?.status || ['PENDING', 'ACKNOWLEDGED'].includes(i.status)).map((i) => i?.body)]
+  for (const text of texts) {
+    const line = textLines(text).find((l) => INSTRUCTION_LINE.test(l))
+    if (line) return line.slice(0, 200)
+  }
+  return null
+}
+
+/** A BLOCKED status the filer may still close: its own protocol 1d escalation (the ticket was created BLOCKED with the escalation line in its body), or intake's block (intake's custom fields are on the ticket). A person's BLOCKED is neither. */
+function blockedByIntakeOrFiler(task) {
+  const cf = task.customFields || {}
+  const escalatedAtCreation = /has no registered APEX user; escalated to [^\n]* per protocol 1d/.test(String(task.description || ''))
+  return escalatedAtCreation || Boolean(cf.intakeHash || cf.intakePendingHash || cf.intakeDecision || cf.intakeVersion)
+}
+
+/** A note a person wrote on the ticket: any comment, or a headed note whose actor is neither intake nor an agent script. */
+function humanNote(task) {
+  if ((task.comments || []).length) return `${task.comments.length} comment${task.comments.length === 1 ? '' : 's'} on the ticket`
+  const header = textLines(task.description).find((l) => /^(?:BLOCKED|RESOLUTION|MISSING INFO|CLAIMED|NOTE|HOLD|SOURCE FIX|AUDIT)\b[^(]*\(([^)]*)\)/.test(l) && !/\((?:intake\b|agent\/)/i.test(l))
+  return header ? header.slice(0, 120) : null
+}
+
+/**
+ * May the filer close this ticket on its own (rule 10)? Only a ticket this filer created (isFilerOwnedTask), in NOT_STARTED
+ * or BLOCKED by the filer's own escalation or by intake with no human note, that no check row waits on (decisionPending)
+ * and that carries no OPERATOR INSTRUCTION, CORRECTION or DECISION NEEDED line. Everything else is a person's to close.
+ */
+export function resolveEligibility(task, { decisionTickets = new Set() } = {}) {
+  const filedBy = isFilerOwnedTask(task) ? 'filer' : null
+  if (!filedBy) return { eligible: false, reason: NOT_FILER_OWNED }
+  if (decisionTickets.has(task.id)) return { eligible: false, filedBy, reason: 'a check row waits on this ticket (decisionPending); the decision closes it' }
+  const instruction = instructionLine(task)
+  if (instruction) return { eligible: false, filedBy, reason: `carries an instruction line ("${instruction.slice(0, 80)}")` }
+  const status = String(task.status || '')
+  if (status === 'NOT_STARTED') return { eligible: true, filedBy }
+  if (status === 'BLOCKED') {
+    if (!blockedByIntakeOrFiler(task)) return { eligible: false, filedBy, reason: 'BLOCKED by a person, not by intake or the filer' }
+    const note = humanNote(task)
+    if (note) return { eligible: false, filedBy, reason: `BLOCKED with a human note (${note})` }
+    return { eligible: true, filedBy }
+  }
+  return { eligible: false, filedBy, reason: `status ${status || 'unknown'} belongs to a person (only ${RESOLVABLE_STATUSES.join(' or ')} auto-resolves)` }
+}
+
+/** A clean-run clear: resolved by the observer after at least clearAfterRuns clean runs, with no other resolution reason (superseded-evidence-version, a hand decision). */
+export function isCleanRunClear(incident, clearAfterRuns) {
+  if (!incident || incident.status !== 'resolved') return false
+  if (incident.resolutionReason) return false
+  return (incident.cleanRuns ?? 0) >= clearAfterRuns
 }
 
 function taskPages(task) {
@@ -534,6 +644,11 @@ function taskPages(task) {
 // ---------------------------------------------------------------------------------------------------------------
 // Planning
 // ---------------------------------------------------------------------------------------------------------------
+
+/** Rows whose evidence profile names an observer screenshot: a browser-derived finding files only with its complete desktop and mobile pair (PR 26). */
+function requiresObserverScreenshot(row) {
+  return (row.evidenceProfile || []).some((profile) => String(profile).startsWith('observer-screenshot-'))
+}
 
 function evidencePairs(run, group) {
   const pairs = []
@@ -554,10 +669,6 @@ function evidencePairs(run, group) {
   return pairs
 }
 
-function requiresObserverScreenshot(row) {
-  return (row.evidenceProfile || []).some((profile) => String(profile).startsWith('observer-screenshot-'))
-}
-
 /**
  * Plan what this packet files and resolves. Pure: reads the run folder and queue, writes nothing.
  * Returns files (new tickets), existing (deduped), decisionPending (rows waiting on a ticket), held (grace, consecutive
@@ -565,12 +676,16 @@ function requiresObserverScreenshot(row) {
  * tickets that cannot close yet, with the reason).
  */
 export function planObserverFindings({ run, bundle, queue = [], policy = loadPolicyBundle(), now = new Date() }) {
-  const plan = { filerVersion: FILER_VERSION, runId: run.manifest.runId, runCompletedAt: run.manifest.completedAt, bundleVersion: bundle.version, bundleSha256: bundle.sha256, health: run.health, now: now.toISOString(),
-    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], loopHealth: [], dropped: [], advisory: [], invalid: [], resolves: [], unresolved: [] }
+  const holdsByObserver = observerHoldsApply(run.manifest, bundle)
+  const plan = { filerVersion: FILER_VERSION, runId: run.manifest.runId, runCompletedAt: run.manifest.completedAt, evidenceSha256: run.manifest.evidence?.sha256 || null, bundleVersion: bundle.version, bundleSha256: bundle.sha256, health: run.health, now: now.toISOString(),
+    holds: holdsByObserver ? 'observer (manifest.checkBundle verified; grace and consecutive-run holds not re-applied)' : 'filer (no verified check bundle in the manifest)',
+    suppressedByObserver: run.health.suppressedByLoopHealth || { count: 0, items: null, reported: false },
+    decisionTickets: [...new Set(bundle.rows.map((r) => r.decisionPending).filter(Boolean))],
+    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], loopHealth: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [] }
 
-  // Pass 1: rows, and the run's open loop-health findings (they suppress; they never file).
+  // Pass 1: rows. A loop-health finding that still arrives is counted for the observer owner and never files; the
+  // observer applies its own `suppresses` before the packet is written (health.json suppressedByLoopHealth).
   const assessed = []
-  const loopHealth = []
   for (const finding of run.findings) {
     const row = rowForFinding(bundle, finding, now)
     if (!row) {
@@ -579,51 +694,46 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
       continue
     }
     if (channelFor(row) === 'loop-health') {
-      loopHealth.push({ row, finding, url: normalizePageUrl(finding.url), viewport: viewportFor(finding), route: routeFor(finding) })
       plan.loopHealth.push({ id: finding.id, check: finding.check, row: row.id, entity: finding.entity, severity: finding.severity, decisionPending: row.decisionPending || null })
       continue
     }
     assessed.push({ finding, row })
   }
 
-  // Pass 2: advisory, suppression, grace, consecutive runs, then grouping by idempotency key.
+  // Pass 2: advisory, suppression, holds (unless the observer's verified bundle already applied them), then grouping by key.
   const groups = new Map()
   for (const { finding, row } of assessed) {
     if (row.status === 'advisory') { plan.advisory.push({ id: finding.id, check: finding.check, row: row.id }); continue }
     const unhealthy = unhealthyDependencies(row, bundle, run.health, now)
     if (unhealthy.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'source health', sources: unhealthy }); continue }
-    const byLoopHealth = loopHealthSuppression(row, finding, loopHealth, bundle)
-    if (byLoopHealth.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'loop-health finding', loopHealth: byLoopHealth }); continue }
     if (requiresObserverScreenshot(row)) {
       const evidence = evidencePairs(run, { findings: [finding] })
-      if (!evidence.some((pair) => pair.complete)) {
-        plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'required browser evidence missing', evidence })
-        continue
-      }
+      if (!evidence.some((pair) => pair.complete)) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'required browser evidence missing', evidence }); continue }
     }
     const conditions = findingConditions(finding, now)
     const matched = (row.suppressWhen || []).filter((c) => conditions.includes(c))
     if (matched.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'condition', conditions: matched }); continue }
     const incident = run.incidentsById.get(finding.id) || null
     const firstSeen = incident?.firstSeenAt || run.manifest.startedAt || run.manifest.completedAt
-    const ageHours = (now.getTime() - new Date(firstSeen).getTime()) / 3_600_000
-    if (row.gracePeriodHours > 0 && ageHours < row.gracePeriodHours) { plan.held.push({ id: finding.id, check: finding.check, row: row.id, reason: 'grace period', firstSeenAt: firstSeen, ageHours: Number(ageHours.toFixed(2)), gracePeriodHours: row.gracePeriodHours }); continue }
-    const needRuns = row.requireConsecutiveRuns || 1
-    const observations = incident?.occurrences ?? 1
-    if (needRuns > 1 && observations < needRuns) { plan.held.push({ id: finding.id, check: finding.check, row: row.id, reason: 'consecutive runs', observations, requireConsecutiveRuns: needRuns }); continue }
+    const consecutive = consecutiveFailingRuns(incident, run.manifest)
+    if (!holdsByObserver) {
+      const ageHours = (now.getTime() - new Date(firstSeen).getTime()) / 3_600_000
+      if (row.gracePeriodHours > 0 && ageHours < row.gracePeriodHours) { plan.held.push({ id: finding.id, check: finding.check, row: row.id, reason: 'grace period', firstSeenAt: firstSeen, ageHours: Number(ageHours.toFixed(2)), gracePeriodHours: row.gracePeriodHours }); continue }
+      const needRuns = row.requireConsecutiveRuns || 1
+      if (needRuns > 1 && consecutive.runs < needRuns) { plan.held.push({ id: finding.id, check: finding.check, row: row.id, reason: 'consecutive runs', observations: consecutive.runs, basis: consecutive.basis, requireConsecutiveRuns: needRuns }); continue }
+    }
     const key = idempotencyKeyFor(row, finding)
     if (!groups.has(key)) groups.set(key, { key, row, rows: [row], scopeKey: scopeKeyFor(row, finding), findings: [], pages: [] })
     const group = groups.get(key)
     if (!group.rows.includes(row)) group.rows.push(row)
-    if (!group.findings.some((current) => current.id === finding.id)) {
-      group.findings.push({ ...finding, firstSeenAt: firstSeen, occurrences: observations })
-    }
+    // A packet may repeat an incident id (one finding per viewport image, say); a scope counts each incident once.
+    if (!group.findings.some((current) => current.id === finding.id)) group.findings.push({ ...finding, firstSeenAt: firstSeen, consecutiveFailingRuns: consecutive.runs })
     const page = isPublicPage(finding.url) ? normalizePageUrl(finding.url) : null
     if (page && !group.pages.includes(page)) group.pages.push(page)
   }
 
   const observedThisRun = new Set(run.findings.map((f) => f.id))
-  planResolves(plan, { run, bundle, queue, now, observedThisRun })
+  planResolves(plan, { run, bundle, queue, now, observedThisRun, decisionTickets: new Set(plan.decisionTickets) })
   // A ticket this run completes is not a duplicate candidate: a scope that clears and reappears in the same packet files again.
   const resolvedIds = new Set(plan.resolves.map((r) => r.id))
   const openTasks = queue.filter((t) => !resolvedIds.has(t.id))
@@ -641,9 +751,9 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     }
     const owner = ownerFor(policy, row.ownerRole)
     const contract = buildContract({ row, group, run, bundle, owner, policy, now, related: decision ? [decision] : [] })
-    const body = renderObserverBody(contract)
+    const body = cleanText(renderObserverBody(contract))
     const payload = {
-      title: contract.claim,
+      title: cleanText(contract.claim),
       description: body,
       url: contract.page || group.findings[0].url || null,
       requestType: 'Website QC',
@@ -655,10 +765,10 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
       // APEX PR 409: checkId is the observer SITE-* id (the lead finding's; observerIds carries the whole scope), filerRunId,
       // requirementId and checkBundleVersion mark the ticket filer-owned; the class lives in triagedClass and the body's Class line.
       customFields: {
-        source: 'agent-found', requestFamily: 'website', filedBy: 'agent/file-observer-findings.mjs', filerVersion: FILER_VERSION,
+        source: FILER_SOURCE, requestFamily: 'website', filedBy: FILED_BY, filerVersion: FILER_VERSION,
         checkId: group.findings[0].id, triagedClass: row.ticketClass, defectClass: contract.defectClass, ownerRole: row.ownerRole, contractVersion: '1.0', element: row.element,
         idempotencyKey: group.key, observerCheck: row.observerCheck, observerIds: group.findings.map((f) => f.id), checkRowIds: group.rows.map((r) => r.id),
-        requirementId: requirementIdFor(row), checkBundleVersion: bundle.version || '', checkBundleSha256: bundle.sha256 || '',
+        requirementId: rowKeyFor(row), checkBundleVersion: bundle.version || '', checkBundleSha256: bundle.sha256 || '',
         filerRunId: run.manifest.runId, runId: run.manifest.runId, severity: row.severity, dedupeScope: row.dedupeScope,
         pageUrl: contract.page || '', pages: group.pages, history: contract.history,
       },
@@ -674,51 +784,78 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     plan.files.push(entry)
   }
 
-  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, advisory: plan.advisory.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
+  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
   return plan
 }
 
-/** Auto-resolve: open tickets whose observer incidents are all resolved for at least the row's clearAfterRuns clean runs. */
-function planResolves(plan, { run, bundle, queue, now, observedThisRun }) {
+/**
+ * Auto-resolve (rule 10). Every open observer ticket is assessed: one this filer did not create is refused outright
+ * (PR 26; `unresolved`, never completed on a SITE id alone); a filer-created one whose incidents are all cleared by clean
+ * runs goes to `resolves` when the filer may close it (resolveEligibility), to `needsPerson` when a person must (status,
+ * human note, decision, instruction line, or a resolution that was not a clean-run clear), and to `unresolved` when the
+ * check has not cleared (still observed, incident open or missing, check retired or without a row).
+ */
+function planResolves(plan, { run, bundle, queue, now, observedThisRun, decisionTickets = new Set() }) {
   for (const task of queue) {
+    if (!isObserverTicket(task)) continue
     const ids = observerIdsForTask(task)
-    const cf = task.customFields || {}
-    const isObserverTicket = ids.length > 0 || String(cf.idempotencyKey || '').startsWith(IDEMPOTENCY_PREFIX)
-    if (!isObserverTicket) continue
-    if (!isFilerOwnedTask(task)) {
-      plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'not filer-owned; auto-resolution refused' })
-      continue
-    }
-    if (!ids.length) { plan.unresolved.push({ id: task.id, title: task.title, reason: 'filer ticket without observer ids' }); continue }
+    if (!isFilerOwnedTask(task)) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: NOT_FILER_OWNED }); continue }
+    if (!ids.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, reason: 'observer or filer ticket without an observer id' }); continue }
     const stillObserved = ids.filter((id) => observedThisRun.has(id))
-    if (stillObserved.length) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'still observed in this run', stillObserved }); continue }
+    if (stillObserved.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: 'still observed in this run', stillObserved }); continue }
     const incidents = ids.map((id) => run.incidentsById.get(id) || null)
-    if (incidents.some((i) => !i)) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'incident not in this packet', missing: ids.filter((id) => !run.incidentsById.get(id)) }); continue }
+    if (incidents.some((i) => !i)) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: 'incident not in this packet', missing: ids.filter((id) => !run.incidentsById.get(id)) }); continue }
     const checks = [...new Set(incidents.map((i) => i.check))]
     const retired = checks.filter((c) => bundle.retired.has(c))
-    if (retired.length) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'check retired (workstream 4: close with resolutionKind check-retired on the lead decision)', checks: retired }); continue }
+    if (retired.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: 'check retired (workstream 4: close with resolutionKind check-retired on the lead decision)', checks: retired }); continue }
     // The row per incident (its viewport picks the desktop or mobile row); the check's default row when the incident is too old to match.
     const rowPerIncident = incidents.map((i) => rowForFinding(bundle, i, now) || rowForCheck(bundle, i.check))
-    if (rowPerIncident.some((r) => !r)) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'check has no row in the bundle (retire or correct the row; workstream 4)', checks }); continue }
+    if (rowPerIncident.some((r) => !r)) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: 'check has no row in the bundle (retire or correct the row; workstream 4)', checks }); continue }
     const rows = [...new Map(rowPerIncident.map((r) => [r.id, r])).values()]
     const clearAfterRuns = Math.max(...rows.map((r) => r.clearAfterRuns || DEFAULT_CLEAR_AFTER_RUNS))
     const notResolved = incidents.filter((i) => i.status !== 'resolved')
-    if (notResolved.length) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: 'incident still open in the observer', statuses: Object.fromEntries(notResolved.map((i) => [i.id, i.status])) }); continue }
-    const short = incidents.filter((i) => (i.cleanRuns ?? 0) < clearAfterRuns)
-    if (short.length) { plan.unresolved.push({ id: task.id, title: task.title, observerIds: ids, reason: `resolved by the observer without ${clearAfterRuns} clean runs (${short.map((i) => `${i.id} ${i.cleanRuns ?? 0} clean, ${i.resolutionReason || 'no reason'}`).join('; ')}); needs a person`, clearAfterRuns }); continue }
-    const clearingRunIds = [...new Set([...incidents.map((i) => i.resolvedByRunId).filter(Boolean), run.manifest.runId])]
-    const cleared = { observerIds: ids, checks, rows: rows.map((r) => r.id), clearAfterRuns, cleanRuns: Math.min(...incidents.map((i) => i.cleanRuns)), resolvedAt: incidents.map((i) => i.resolvedAt).sort().at(-1), resolvedByRunIds: [...new Set(incidents.map((i) => i.resolvedByRunId).filter(Boolean))], clearingRunIds, latestRunId: run.manifest.runId, latestRunCompletedAt: run.manifest.completedAt }
-    const page = taskPages(task)[0] || task.url || null
-    const note = renderResolutionNote({ task, cleared, rows, run, now, page })
-    // One v1 PATCH (APEX PR 409): resolutionKind is a first-class field, completion clears agentStatus in APEX itself, and
-    // checkId (SITE-*), filerRunId, requirementId and checkBundleVersion mark the ticket filer-owned; never agentEligible.
-    const patch = {
-      description: `${String(task.description || '').trimEnd()}\n\n${note}`.trim(),
-      status: 'COMPLETED',
-      resolutionKind: RESOLUTION_KIND,
-      customFields: { ...cf, checkId: /^SITE-/i.test(String(cf.checkId || '')) ? cf.checkId : ids[0], resolutionKind: RESOLUTION_KIND, resolvedByRunId: cleared.resolvedByRunIds[0] || run.manifest.runId, clearingRunIds, resolvedAt: now.toISOString(), filerVersion: FILER_VERSION, filerRunId: run.manifest.runId, requirementId: requirementIdFor(rows[0]), checkBundleVersion: bundle.version || '', history: [...(Array.isArray(cf.history) ? cf.history : []), `${now.toISOString().slice(0, 10)} agent/file-observer-findings.mjs ${FILER_VERSION}: completed, check cleared on ${clearingRunIds.join(', ')}`] },
+    if (notResolved.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: 'incident still open in the observer', statuses: Object.fromEntries(notResolved.map((i) => [i.id, i.status])) }); continue }
+    const cleared = { observerIds: ids, checks, rows: rows.map((r) => r.id), clearAfterRuns, cleanRuns: Math.min(...incidents.map((i) => i.cleanRuns ?? 0)), resolvedAt: incidents.map((i) => i.resolvedAt).filter(Boolean).sort().at(-1) || null, resolvedByRunIds: [...new Set(incidents.map((i) => i.resolvedByRunId).filter(Boolean))], resolutionReasons: [...new Set(incidents.map((i) => i.resolutionReason).filter(Boolean))], clearingRunIds: [...new Set([...incidents.map((i) => i.resolvedByRunId).filter(Boolean), run.manifest.runId])], latestRunId: run.manifest.runId, latestRunCompletedAt: run.manifest.completedAt }
+    // Only a clean-run clear is check-cleared: an evidence-version bump or a hand resolution is a person's call.
+    const notClean = incidents.filter((i) => !isCleanRunClear(i, clearAfterRuns))
+    if (notClean.length) {
+      plan.needsPerson.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, checks, cleared, reason: `resolved by the observer without a clean-run clear (${notClean.map((i) => `${i.id} ${i.cleanRuns ?? 0} clean of ${clearAfterRuns}, ${i.resolutionReason || 'no reason'}`).join('; ')}); never check-cleared` })
+      continue
     }
-    plan.resolves.push({ id: task.id, title: task.title, status: task.status, page, cleared, patch })
+    const eligibility = resolveEligibility(task, { decisionTickets })
+    if (!eligibility.eligible) { plan.needsPerson.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, checks, cleared, reason: `cleared but needs a person: ${eligibility.reason}` }); continue }
+    const page = taskPages(task)[0] || task.url || null
+    const noteRows = rows.map((r) => ({ id: r.id, observerCheck: r.observerCheck, requirement: r.requirement, requirementRef: r.requirementRef }))
+    let patch
+    try {
+      patch = buildResolvePatch({ task, cleared, rows: noteRows, runId: run.manifest.runId, runCompletedAt: run.manifest.completedAt, evidenceSha256: run.manifest.evidence?.sha256 || null, bundleVersion: bundle.version, now, page })
+    } catch (error) {
+      plan.invalid.push({ id: task.id, title: task.title, reason: `filer defect: resolution note (${error.code || error.name}: ${error.message})` })
+      continue
+    }
+    plan.resolves.push({ id: task.id, title: task.title, status: task.status, updatedAt: task.updatedAt || null, filedBy: eligibility.filedBy, page, cleared, rows: noteRows, patch })
+  }
+}
+
+/**
+ * The one v1 PATCH that completes a cleared ticket (APEX PR 409), built from the ticket as it is now (the plan's snapshot
+ * for the dry run, the live GET at apply time): the existing description first, then the section-7 note; status
+ * COMPLETED; resolutionKind first class and in customFields; checkId (SITE-*), filerRunId, requirementId and
+ * checkBundleVersion keep it filer-owned; `expectedUpdatedAt` is the ticket's updatedAt so APEX refuses a stale write
+ * the way intake's reconcile does; never agentStatus (APEX clears it) and never a PATCH whose only key is agentEligible.
+ * The note is checked with assertNoteShape before it is used.
+ */
+export function buildResolvePatch({ task, cleared, rows, runId, runCompletedAt, evidenceSha256, bundleVersion, now, page }) {
+  const cf = task.customFields || {}
+  const note = cleanText(renderResolutionNote({ cleared, rows, runId, runCompletedAt, evidenceSha256, now, page }))
+  assertNoteShape(note)
+  const date = now.toISOString().slice(0, 10)
+  return {
+    description: `${String(task.description || '').trimEnd()}\n\n${note}`.trim(),
+    status: 'COMPLETED',
+    resolutionKind: RESOLUTION_KIND,
+    ...(task.updatedAt ? { expectedUpdatedAt: task.updatedAt } : {}),
+    customFields: { ...cf, checkId: isObserverId(cf.checkId) ? String(cf.checkId).toUpperCase() : cleared.observerIds[0], resolutionKind: RESOLUTION_KIND, resolvedByRunId: cleared.resolvedByRunIds[0] || runId, clearingRunIds: cleared.clearingRunIds, resolvedAt: now.toISOString(), filerVersion: FILER_VERSION, filerRunId: runId, requirementId: rowKeyFor(rows[0]), checkBundleVersion: bundleVersion || '', history: [...(Array.isArray(cf.history) ? cf.history : []), `${date} ${FILED_BY} ${FILER_VERSION}: completed, check cleared on ${cleared.clearingRunIds.join(', ')}`] },
   }
 }
 
@@ -726,10 +863,10 @@ function planResolves(plan, { run, bundle, queue, now, observedThisRun }) {
  * Section-7 closing note for a ticket the observer's runs cleared: spec/ticket-templates.json template `verified` (the filer
  * changed nothing on the site; the done condition is met on the observer's own runs). The field values are the filer's facts.
  */
-export function renderResolutionNote({ task, cleared, rows, run, now, page }) {
-  const checks = rows.map((r) => `${r.observerCheck} (${requirementIdFor(r)})`).join(', ')
+export function renderResolutionNote({ cleared, rows, runId, runCompletedAt, evidenceSha256, now, page }) {
+  const checks = rows.map((r) => `${r.observerCheck} (${rowKeyFor(r)})`).join(', ')
   return renderTemplate('verified', {
-    actor: `agent/file-observer-findings.mjs ${FILER_VERSION}`,
+    actor: `${FILED_BY} ${FILER_VERSION}`,
     date: now.toISOString().slice(0, 10),
     playbookVersion: 'playbook check bundle',
     goHere: page || 'n/a (no public page on this ticket)',
@@ -739,7 +876,7 @@ export function renderResolutionNote({ task, cleared, rows, run, now, page }) {
     page: page || 'n/a',
     verifiedBy: 'the filer',
     alreadyMet: 'the check cleared on the observer\'s own runs (fixed elsewhere or the source corrected)',
-    evidence: `observer incident${cleared.observerIds.length === 1 ? '' : 's'} ${cleared.observerIds.join(', ')} resolved ${cleared.resolvedAt} by run ${cleared.resolvedByRunIds.join(', ') || 'n/a'} after ${cleared.cleanRuns} clean run${cleared.cleanRuns === 1 ? '' : 's'} (row requires ${cleared.clearAfterRuns}); latest run ${run.manifest.runId} (${run.manifest.completedAt}) still clear; packet evidence sha256 ${run.manifest.evidence?.sha256 || 'n/a'}`,
+    evidence: `observer incident${cleared.observerIds.length === 1 ? '' : 's'} ${cleared.observerIds.join(', ')} resolved ${cleared.resolvedAt || 'n/a'} by run ${cleared.resolvedByRunIds.join(', ') || 'n/a'} after ${cleared.cleanRuns} clean run${cleared.cleanRuns === 1 ? '' : 's'} (row requires ${cleared.clearAfterRuns}); latest run ${runId} (${runCompletedAt}) still clear; packet evidence sha256 ${evidenceSha256 || 'n/a'}`,
     tests: 'observer verification only; no ring run by the filer',
     observer: `${cleared.observerIds.join(', ')} cleared on run ${cleared.clearingRunIds.join(', ')}`,
     resolutionKind: RESOLUTION_KIND,
@@ -750,13 +887,10 @@ export function renderResolutionNote({ task, cleared, rows, run, now, page }) {
 // APEX client and apply
 // ---------------------------------------------------------------------------------------------------------------
 
-export function isFilerOwnedConflict(error) {
-  if (!error) return false
-  const body = error.body || {}
-  return error.status === 409 && (body.code === FILER_OWNED_CODE || body.error?.code === FILER_OWNED_CODE || String(body.error || body.message || error.message || '').includes(FILER_OWNED_CODE))
-}
+export const LIST_PAGE_SIZE = 100
+export const LIST_MAX_PAGES = 20
 
-export function createApexClient({ env = process.env, fetchImpl = globalThis.fetch } = {}) {
+export function createApexClient({ env = process.env, fetchImpl = globalThis.fetch, log = () => {} } = {}) {
   const { v1Base, agentBase } = apexBases(env)
   const token = env.APEX_API_TOKEN
   async function request(route, method = 'GET', body) {
@@ -764,30 +898,50 @@ export function createApexClient({ env = process.env, fetchImpl = globalThis.fet
     const response = await fetchImpl(`${v1Base}${route}`, { method, headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(30_000) })
     const text = await response.text()
     let data; try { data = text ? JSON.parse(text) : {} } catch { data = { raw: text.slice(0, 500) } }
-    if (!response.ok) throw new ObserverFilerError('APEX_ERROR', `APEX ${method} ${route} ${response.status}: ${JSON.stringify(data).slice(0, 400)}`, { status: response.status, body: data })
+    if (!response.ok) throw new ObserverFilerError('APEX_ERROR', `APEX ${method} ${route} ${response.status}: ${JSON.stringify(data).slice(0, 400)}`, { status: response.status, body: data, code: data?.code || data?.error?.code || null })
     return data?.task || data?.data || data
   }
-  return {
+  const client = {
     v1Base, agentBase, token,
+    /** Statuses whose listing hit the page cap in the last listOpen (the queue may be incomplete); also logged. */
+    listWarnings: [],
     async listOpen() {
       const all = []
+      client.listWarnings = []
       for (const status of OPEN_STATUSES) {
-        for (let page = 1; page <= 20; page++) {
-          const data = await request(`/tasks?status=${encodeURIComponent(status)}&page=${page}&pageSize=100`)
+        for (let page = 1; page <= LIST_MAX_PAGES; page++) {
+          const data = await request(`/tasks?status=${encodeURIComponent(status)}&page=${page}&pageSize=${LIST_PAGE_SIZE}`)
           const items = Array.isArray(data) ? data : data.items || data.tasks || []
           all.push(...items)
-          if (items.length < 100) break
+          if (items.length < LIST_PAGE_SIZE) break
+          if (page === LIST_MAX_PAGES) {
+            const warning = `listOpen: status ${status} hit the ${LIST_MAX_PAGES}-page cap (${LIST_MAX_PAGES * LIST_PAGE_SIZE} tickets); the open queue may be incomplete, dedupe and auto-resolve saw only this much`
+            client.listWarnings.push(warning)
+            log(warning)
+          }
         }
       }
       return [...new Map(all.map((t) => [t.id, t])).values()]
     },
+    get: (id) => request(`/tasks/${encodeURIComponent(id)}`),
     create: (payload) => request('/tasks', 'POST', payload),
     patch: (id, body) => request(`/tasks/${encodeURIComponent(id)}`, 'PATCH', body),
   }
+  return client
+}
+
+/** Why a planned resolve no longer applies to the live ticket, or null: status or updatedAt moved, or the ticket is no longer the filer's to close. */
+export function resolveDrift(item, live, { decisionTickets = new Set() } = {}) {
+  if (!live || !live.id) return 'ticket not readable'
+  if (String(live.status || '') !== String(item.status || '')) return `status is ${live.status || 'unknown'}, the plan saw ${item.status}`
+  if (item.updatedAt && live.updatedAt && live.updatedAt !== item.updatedAt) return `updated ${live.updatedAt} after the plan (${item.updatedAt})`
+  const eligibility = resolveEligibility(live, { decisionTickets })
+  if (!eligibility.eligible) return eligibility.reason
+  return null
 }
 
 /** Perform the plan's writes: create, assign, attach evidence, resolve. Every write is appended to the jsonl log before the next one. */
-export async function applyPlan(plan, { apex, env = process.env, fetchImpl = globalThis.fetch, log = () => {}, writesFile }) {
+export async function applyPlan(plan, { apex, env = process.env, fetchImpl = globalThis.fetch, log = () => {}, writesFile, now = new Date() }) {
   const writes = []
   const record = (entry) => { const line = { at: new Date().toISOString(), runId: plan.runId, ...entry }; writes.push(line); if (writesFile) fs.appendFileSync(writesFile, `${JSON.stringify(line)}\n`) }
   const results = { filed: [], attached: [], resolved: [], skipped: [], errors: [] }
@@ -819,10 +973,22 @@ export async function applyPlan(plan, { apex, env = process.env, fetchImpl = glo
       results.errors.push({ key: item.key, step: 'create', error: error.message })
     }
   }
+  const decisionTickets = new Set(plan.decisionTickets || [])
   for (const item of plan.resolves) {
     try {
-      const patched = await apex.patch(item.id, item.patch)
-      record({ write: 'resolve', ticket: item.id, status: patched.status || 'COMPLETED', resolutionKind: RESOLUTION_KIND, clearingRunIds: item.cleared.clearingRunIds, observerIds: item.cleared.observerIds })
+      // The PATCH is built from the ticket as APEX holds it now, not from the plan's snapshot: a person may have written
+      // on it since; the live description stays first and expectedUpdatedAt makes APEX refuse a write that raced another.
+      const live = await apex.get(item.id)
+      const drift = resolveDrift(item, live, { decisionTickets })
+      if (drift) {
+        record({ write: 'resolve', ticket: item.id, skipped: 'CHANGED_SINCE_PLAN', reason: drift })
+        results.skipped.push({ id: item.id, step: 'resolve', reason: 'CHANGED_SINCE_PLAN', detail: drift })
+        log(`skipped ${item.id}: changed since the plan (${drift})`)
+        continue
+      }
+      const patch = buildResolvePatch({ task: live, cleared: item.cleared, rows: item.rows, runId: plan.runId, runCompletedAt: plan.runCompletedAt, evidenceSha256: plan.evidenceSha256, bundleVersion: plan.bundleVersion, now, page: item.page })
+      const patched = await apex.patch(item.id, patch)
+      record({ write: 'resolve', ticket: item.id, status: patched.status || 'COMPLETED', resolutionKind: RESOLUTION_KIND, expectedUpdatedAt: patch.expectedUpdatedAt || null, clearingRunIds: item.cleared.clearingRunIds, observerIds: item.cleared.observerIds })
       results.resolved.push({ id: item.id, status: patched.status || 'COMPLETED' })
       log(`completed ${item.id} ${item.title.slice(0, 80)} (cleared on ${item.cleared.clearingRunIds.join(', ')})`)
     } catch (error) {
@@ -831,6 +997,13 @@ export async function applyPlan(plan, { apex, env = process.env, fetchImpl = glo
         record({ write: 'resolve', ticket: item.id, skipped: FILER_OWNED_CODE })
         results.skipped.push({ id: item.id, step: 'resolve', reason: FILER_OWNED_CODE })
         log(`skipped ${item.id}: ${FILER_OWNED_CODE}`)
+        continue
+      }
+      if (error.status === 409) {
+        // expectedUpdatedAt did not match: someone wrote between the GET and the PATCH. Abort this ticket; the next run re-plans it.
+        record({ write: 'resolve', ticket: item.id, skipped: 'UPDATED_AT_MISMATCH', error: error.message })
+        results.skipped.push({ id: item.id, step: 'resolve', reason: 'UPDATED_AT_MISMATCH', detail: error.message })
+        log(`skipped ${item.id}: APEX refused the write (${error.message.slice(0, 120)})`)
         continue
       }
       record({ write: 'resolve', ticket: item.id, error: error.message })
@@ -872,27 +1045,33 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
   const bundle = loadCheckBundle(args.bundle && args.bundle !== true ? args.bundle : path.join(root, 'spec', 'check-bundle.generated.json'))
   const now = args.now && args.now !== true ? new Date(args.now) : new Date()
   if (Number.isNaN(now.getTime())) throw new ObserverFilerError('MISSING_ARG', `--now must be an ISO datetime, got ${args.now}`)
-  const apex = createApexClient({ env })
+  const offlineQueue = args.queue && args.queue !== true
+  // --apply writes against the queue it read; a saved export is a dry-run input, never something to write from.
+  if (args.apply && offlineQueue) throw new ObserverFilerError('MISSING_ARG', '--apply writes against the live APEX queue and cannot take --queue <export.json>; drop --queue to apply, or drop --apply for an offline dry run')
+  if (args.apply && !env.APEX_API_TOKEN) throw new ObserverFilerError('MISSING_TOKEN', 'APEX_API_TOKEN required for --apply')
+  const apex = createApexClient({ env, log: io.error })
   let queue
-  if (args.queue && args.queue !== true) queue = loadQueue(args.queue)
+  if (offlineQueue) queue = loadQueue(args.queue)
   else if (env.APEX_API_TOKEN) queue = await apex.listOpen()
   else throw new ObserverFilerError('MISSING_TOKEN', 'APEX_API_TOKEN is required to read the open queue; pass --queue <export.json> for an offline run')
   const plan = planObserverFindings({ run, bundle, queue, now })
   plan.mode = args.apply ? 'apply' : 'dry-run'
   plan.runDir = run.dir
-  plan.queueSource = args.queue && args.queue !== true ? path.resolve(args.queue) : apex.v1Base
+  plan.queueSource = offlineQueue ? path.resolve(args.queue) : apex.v1Base
+  plan.queueWarnings = apex.listWarnings
   const reportFile = args.report && args.report !== true ? path.resolve(args.report) : path.join(run.dir, 'filer-report.json')
   let applied = null
   if (args.apply) {
-    if (!env.APEX_API_TOKEN) throw new ObserverFilerError('MISSING_TOKEN', 'APEX_API_TOKEN required for --apply')
     applied = await applyPlan(plan, { apex, env, log: io.log, writesFile: path.join(run.dir, 'filer-writes.jsonl') })
     plan.applied = { filed: applied.filed, attached: applied.attached, resolved: applied.resolved, skipped: applied.skipped, errors: applied.errors, writes: applied.writes.length, writesFile: path.join(run.dir, 'filer-writes.jsonl') }
   }
   fs.writeFileSync(reportFile, `${JSON.stringify(plan, null, 2)}\n`)
-  const summary = { mode: plan.mode, runId: plan.runId, bundleVersion: plan.bundleVersion, bundleSha256: plan.bundleSha256, healthSource: plan.health.source, unhealthySources: Object.keys(plan.health.unhealthy), counts: plan.counts, report: reportFile,
+  const summary = { mode: plan.mode, runId: plan.runId, bundleVersion: plan.bundleVersion, bundleSha256: plan.bundleSha256, healthSource: plan.health.source, unhealthySources: Object.keys(plan.health.unhealthy), holds: plan.holds, suppressedByObserver: plan.suppressedByObserver.count, counts: plan.counts, report: reportFile,
+    ...(plan.queueWarnings.length ? { queueWarnings: plan.queueWarnings } : {}),
     files: plan.files.map((f) => `${f.title} -> ${f.owner.name} (${f.owner.via})${f.owner.escalated ? ' [BLOCKED, protocol 1d]' : ''}; ${f.findings} finding(s), ${f.evidence.filter((e) => e.complete).length} evidence pair(s)`),
     decisionPending: plan.decisionPending.map((d) => `${d.check} ${d.scopeKey}: ${d.findings} finding(s) wait on ${d.decisionTicket}`),
     resolves: plan.resolves.map((r) => `${r.id} ${r.title.slice(0, 70)} (cleared on ${r.cleared.clearingRunIds.join(', ')})`),
+    needsPerson: plan.needsPerson.map((n) => `${n.id} [${n.status}] ${n.title.slice(0, 60)}: ${n.reason}`),
     ...(applied ? { applied: plan.applied } : {}) }
   io.log(JSON.stringify(summary, null, 2))
   return { plan, applied }

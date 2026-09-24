@@ -47,12 +47,14 @@ export function observerCheckNames(registry = read('registry/observer-checks.jso
 
 /**
  * Re-extract the check names from a checks.mjs source file: every finding(loop, "name", ...) literal, every
- * presentCheck/destinationCheck table entry, and every check: "name" table entry. Used by --observer-source.
+ * presentCheck/destinationCheck table entry, every check: "name" table entry, and every `const check = "name"` binding
+ * a check function passes to finding() (campus-application-finalsite-redirect). Used by --observer-source.
  */
 export function extractObserverCheckNames(source) {
   const names = new Set()
   for (const m of source.matchAll(/finding\(\s*"[a-z-]+",\s*"([a-z0-9-]+)"/g)) names.add(m[1])
   for (const m of source.matchAll(/(?:presentCheck|destinationCheck|check):\s*"([a-z0-9-]+)"/g)) names.add(m[1])
+  for (const m of source.matchAll(/\bconst\s+check\s*=\s*"([a-z0-9-]+)"/g)) names.add(m[1])
   return [...names].sort()
 }
 
@@ -90,7 +92,9 @@ export function buildBundle({ observerSource = null } = {}) {
   if (observerSource) {
     const extracted = extractObserverCheckNames(fs.readFileSync(observerSource, 'utf8'))
     const missing = extracted.filter((n) => !inventory.includes(n))
-    const extra = inventory.filter((n) => !extracted.includes(n))
+    // A retired check the observer no longer emits stays in the registry (older packets still carry it); it is not stale.
+    const retiredHere = new Set((rowsSpec.retired || []).map((r) => r.observerCheck))
+    const extra = inventory.filter((n) => !extracted.includes(n) && !retiredHere.has(n))
     if (missing.length || extra.length) errors.push(`registry/observer-checks.json is stale against ${observerSource}: missing=${missing.join(',') || 'none'} extra=${extra.join(',') || 'none'}`)
   }
 

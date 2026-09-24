@@ -1,6 +1,6 @@
 {
-  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet). 0.3: the playbook brand-visual check (tests/page-check.mjs, not a production observer check) is listed under checks with status advisory and under coverageOutsideObserver site.brand.visual. 0.4 (2026-09-24): every name in registry/observer-checks.json is listed; status retired means spec/check-rows.json retires the check (reason there); spec/check-bundle.generated.json is the compiled row per check and supersedes status here for dispatch.",
-  "version": "0.4",
+  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet). 0.3: the playbook brand-visual check (tests/page-check.mjs, not a production observer check) is listed under checks with status advisory and under coverageOutsideObserver site.brand.visual. 0.4 (2026-09-24): every name in registry/observer-checks.json is listed; status retired means spec/check-rows.json retires the check (reason there); spec/check-bundle.generated.json is the compiled row per check and supersedes status here for dispatch. 0.5 (2026-09-24, filer review fixes): campus-application-finalsite-redirect (campus.resources.apply, enforced), campus-page-email-source-sync (campus.facts.contact, enforced), campus-grade-source-incomplete (campus.facts.grades, advisory: telemetry until the grade-source decision), route-screenshot-capture and route-font-readiness (site.loop.health, loop-health channel) added.",
+  "version": "0.5",
   "requirements": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
@@ -493,6 +493,30 @@
     "hubspot-event-required-facts": {
       "requirement": "site.events.sync",
       "status": "enforced"
+    },
+    "campus-application-finalsite-redirect": {
+      "requirement": "campus.resources.apply",
+      "status": "enforced",
+      "note": "HubSpot admissions_handled_in_finalsite campuses: /application/?submission_campus= must redirect to the Finalsite application; owner hubspot-program-admin (spec/ticket-classes.json observer-link-cta ownerRules)"
+    },
+    "campus-page-email-source-sync": {
+      "requirement": "campus.facts.contact",
+      "status": "enforced"
+    },
+    "campus-grade-source-incomplete": {
+      "requirement": "campus.facts.grades",
+      "status": "advisory",
+      "note": "HubSpot start or end grade missing, invalid or unordered; telemetry only while the grade-source decision (cmu4g13kc00000agmdogkxihp) is open"
+    },
+    "route-screenshot-capture": {
+      "requirement": "site.loop.health",
+      "status": "not-a-website-change",
+      "note": "loop health (screenshot capture telemetry); check bundle channel loop-health"
+    },
+    "route-font-readiness": {
+      "requirement": "site.loop.health",
+      "status": "not-a-website-change",
+      "note": "loop health (fonts did not settle before DOM inspection); check bundle channel loop-health"
     }
   },
   "requirementsWithoutObserverCoverage": [
