@@ -10,6 +10,7 @@
  */
 import fs from 'node:fs'
 import path from 'node:path'
+import { renderTemplate } from '../agent/ticket-templates.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const spec = JSON.parse(fs.readFileSync(path.join(here, '../spec/ticket-classes.json'), 'utf8'))
@@ -125,7 +126,8 @@ export function validate(ticket) {
   const found = {}
   for (const f of def.required) { const v = extract(ticket, f); if (v) found[f] = v; else missing.push(f) }
   const ready = missing.length === 0
-  const note = ready ? null : [`MISSING INFO (validator, ${new Date().toISOString().slice(0, 10)})`, 'This ticket needs the following before it can be executed:', ...missing.map((f, i) => `${i + 1}. ${spec.fields[f]?.missingText || f}`), 'The agent will execute and verify as soon as the items above are on the ticket.'].join('\n')
+  // Wording: spec/ticket-templates.json template missingInfo (protocol step 7); the validator has not checked the page, so "nothing checked yet".
+  const note = ready ? null : renderTemplate('missingInfo', { actor: 'validator', date: new Date().toISOString().slice(0, 10), items: missing.map((f) => spec.fields[f]?.missingText || f), alreadyCorrect: 'nothing checked yet' })
   return { id: ticket.id, title: ticket.title, status: ticket.status, class: cls, scope: def.scope, recipe: def.recipe, ready, missing, found, note }
 }
 

@@ -32,6 +32,7 @@ import {
   intakeCustomFieldsPatch,
   clarificationNote,
   clarificationRequirements,
+  escalationNote,
   evaluateTicket,
   executionRevision,
   pendingClarificationReviews,
@@ -327,10 +328,10 @@ async function applyDecision(ticket, result) {
     const hasRequesterResponses = (current.clarifications || []).some((item) => item.respondedAt || item.responseData)
     if (pending.length && hasRequesterResponses) throw new Error('Cannot safely retire pending clarification after a prior requester response')
     const disposition = pending.length ? 'blocked_internal' : 'blocked'
-    // Protocol 1d: an unowned role's note names the role, the system, and the change (agent/intake-policy.mjs escalationNote).
-    const note = result.escalation?.note
-      ? [result.reason, result.escalation.note].filter(Boolean).join('\n')
-      : result.reason || `Intake ${VERSION}: ${result.outcome}; owner role ${result.ownerRole}.`
+    // Protocol 1d: an unowned role's note is the `blocked` template (DECISION NEEDED, role, system, change; agent/intake-policy.mjs
+    // escalationNote) so a human can name the owner in one step; every other block carries the decision's reason.
+    if (result.escalation) result.escalation.note = escalationNote(bundle, result, ticket, { actor: `intake ${VERSION}` })
+    const note = result.escalation?.note || result.reason || `Intake ${VERSION}: ${result.outcome}; owner role ${result.ownerRole}.`
     const response = await reconcile(ticket, {
       disposition,
       note,

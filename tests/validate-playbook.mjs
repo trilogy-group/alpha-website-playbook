@@ -6,6 +6,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { validateReviewSpec } from '../agent/notice-review.mjs'
 import { OUTPUT as CHECK_BUNDLE, buildBundle, observerCheckNames } from './build-checks.mjs'
+import { EM_DASH, analyzeTemplate, closingNoteLines, renderTemplate, renderTitle, reviewLine } from '../agent/ticket-templates.mjs'
+import { checkDocExamples } from './render-templates-examples.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -53,6 +55,12 @@ export function validateSchemaValue(value, schema, label, errors, root = schema)
     return validateSchemaValue(value, target, label, errors, root)
   }
   if (schema.enum && !schema.enum.includes(value)) errors.push(`${label}: value is not in schema enum`)
+  if (Array.isArray(schema.anyOf)) {
+    // One alternative must validate cleanly; report the failure of the closest one (fewest errors).
+    const attempts = schema.anyOf.map((alt) => { const local = []; validateSchemaValue(value, alt, label, local, root); return local })
+    if (!attempts.some((local) => local.length === 0)) errors.push(...attempts.sort((a, b) => a.length - b.length)[0])
+    return
+  }
   if (Array.isArray(schema.type)) {
     const actual = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value
     if (!schema.type.includes(actual)) errors.push(`${label}: expected one of ${schema.type.join('|')}`)
@@ -82,6 +90,35 @@ export function validateSchemaValue(value, schema, label, errors, root = schema)
     if (typeof value !== 'number') errors.push(`${label}: expected number`)
     else if (schema.minimum !== undefined && value < schema.minimum) errors.push(`${label}: below minimum ${schema.minimum}`)
   } else if (schema.type === 'boolean' && typeof value !== 'boolean') errors.push(`${label}: expected boolean`)
+}
+
+/**
+ * spec/ticket-templates.json beyond the schema: every unconditional placeholder is in `required` and every required field
+ * appears in a line; no template carries an em dash; every example renders; a closing note (protocolSection exactly "7")
+ * starts with rules.closingLines and ends with rules.reviewLine.
+ */
+export function validateTicketTemplates(templates) {
+  const errors = []
+  const closing = closingNoteLines(templates)
+  for (const [name, t] of Object.entries(templates.templates || {})) {
+    const label = `ticket template ${name}`
+    const { unconditional, optional } = analyzeTemplate(t)
+    const required = new Set(t.required || [])
+    for (const field of unconditional) if (!required.has(field)) errors.push(`${label}: placeholder {${field}} is always rendered but not in required`)
+    for (const field of required) if (!unconditional.includes(field) && !optional.includes(field)) errors.push(`${label}: required field ${field} appears in no line`)
+    const texts = [t.title, ...(t.lines || []).map((line) => (typeof line === 'string' ? line : line.text))].filter((s) => typeof s === 'string')
+    if (texts.some((s) => s.includes(EM_DASH))) errors.push(`${label}: carries an em dash`)
+    try {
+      renderTemplate(name, t.example, templates)
+      if (t.title) renderTitle(name, t.example, templates)
+    } catch (error) { errors.push(`${label}: example does not render (${error.message})`) }
+    if (t.protocolSection === '7') {
+      const first = (t.lines || []).slice(0, closing.length)
+      if (JSON.stringify(first) !== JSON.stringify(closing)) errors.push(`${label}: a section 7 closing note must start with the closing lines ${JSON.stringify(closing)}`)
+      if ((t.lines || []).at(-1) !== reviewLine(templates)) errors.push(`${label}: a section 7 closing note must end with "${reviewLine(templates)}"`)
+    }
+  }
+  return errors
 }
 
 export function runValidation() {
@@ -234,11 +271,22 @@ export function runValidation() {
     ['spec/page-family-requirements.json', 'spec/schemas/page-family-requirements.schema.json'],
     ['spec/brand-visual.json', 'spec/schemas/brand-visual.schema.json'],
     ['spec/check-bundle.generated.json', 'spec/schemas/check-bundle.schema.json'],
+    ['spec/ticket-templates.json', 'spec/schemas/ticket-templates.schema.json'],
   ]
   for (const [targetFile, schemaFile] of schemaTargets) {
     const target = readJson(targetFile, errors)
     const schema = readJson(schemaFile, errors)
     if (target && schema) validateSchemaValue(target, schema, targetFile, errors)
+  }
+
+  // Ticket templates: the wording of every protocol note and body lives in spec/ticket-templates.json. Each template's
+  // `required` list names every unconditional placeholder (and only fields the lines use), its example renders, no line
+  // carries an em dash, and a closing note (protocolSection exactly "7") starts with the four closing lines and ends with
+  // the review line. The protocol and runbook quote the templates; a quoted block that differs from the renderer fails here.
+  const templates = readJson('spec/ticket-templates.json', errors)
+  if (templates?.templates) {
+    errors.push(...validateTicketTemplates(templates))
+    for (const problem of checkDocExamples(templates)) errors.push(problem)
   }
 
   // Visual brand: the canonical logo files must be the ones the spec hashes, every colourway file must be listed, and

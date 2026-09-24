@@ -9,10 +9,11 @@
  * (public HubSpot mirror) for the campus state and mirrored facts, HubSpot Programs directly when HUBSPOT_SERVICE_KEY or
  * HUBSPOT_PRIVATE_APP_TOKEN has the Programs read scopes, and spec/campus-page-requirements.json for the expected value.
  * Prints the defect class (data | mapping | delivery | presentation | none), the owner, and a ticket payload usable by
- * tests/file-apex-ticket.mjs. Read-only.
+ * tests/file-apex-ticket.mjs. Read-only. The ticket's line order and labels: spec/ticket-templates.json template `hubspotData`.
  */
 import fs from 'node:fs'
 import path from 'node:path'
+import { renderTemplate, renderTitle } from '../agent/ticket-templates.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const read = (p) => JSON.parse(fs.readFileSync(path.join(here, '..', p), 'utf8'))
@@ -91,20 +92,21 @@ console.log(JSON.stringify(result, null, 2))
 
 function buildTicket() {
   const name = map?.name || slug
-  const titles = { 'hubspot-data': `HubSpot data: ${name} ${elementKey} contradicts state ${state}`, 'sync-mapping': `Website mapping: derive ${elementKey} from ${element.source?.context?.[0] || 'the source state'}`, 'sync-delivery': `n8n run: ${name} ${elementKey} not delivered`, }
+  const titles = { 'hubspot-data': renderTitle('hubspotData', { campus: name, element: elementKey, state }), 'sync-mapping': renderTitle('syncMapping', { element: elementKey, stateField: element.source?.context?.[0] || 'the source state' }), 'sync-delivery': `n8n run: ${name} ${elementKey} not delivered`, }
   const fixPath = { 'hubspot-data': `Change ${element.source?.fields?.join(', ')} for ${name} through the APEX campus Program editor (approver: ${ownerRole}); n8n publishes at 00:15 CT; website agent verifies the page after the run.`, 'sync-mapping': `Change the n8n workflow ORgdHC71YJ5RawBy so ${cssId} is derived per the field map; decision recorded in docs/decisions.md.`, 'sync-delivery': 'n8n-sync-owner runs or repairs the workflow for this page, then the website agent verifies.' }
   return {
     title: titles[ticketClass] || `${ticketClass}: ${name} ${elementKey}`,
     class: ticketClass, assignToRole: ownerRole, assignTo: owner?.email || null,
-    description: [
-      `Page: ${args.url}`, `Element: ${elementKey} (CSS ID ${cssId}; writer ${writer})`, `Campus state: ${state} (${stateSource})`,
-      `Page shows (modified ${pageModified?.modified || 'unknown'}): "${pageValue}"`,
-      `Source: ${element.source?.system} ${element.source?.fields?.join(', ') || element.source?.key || ''}${sourceKnown ? ` = "${sourceValue}" (read ${readAt})` : ` (not read directly: ${hubspot.note})`}`,
-      `Expected: "${expected.value}" (${expected.rule})`, `Derivation today: ${element.derivation}`,
-      `Defect class: ${defectClass}. ${reason}`, `Fix path: ${fixPath[ticketClass] || ''}`,
-      `Done when: the public page shows the expected value after the next n8n run, verified by tests/page-check.mjs.`,
-      `Playbook: spec/campus-page-field-map.json ${elementKey}; protocols/apex-website-ticket-protocol.md step 1b.`,
-    ].join('\n'),
+    // One body shape for the three source-side classes (the diagnosis lines are the same); the sync-mapping ticket a person
+    // files after the decision uses template syncMapping.
+    description: renderTemplate('hubspotData', {
+      campus: name, state, page: args.url, element: elementKey, cssId, writer, stateSource,
+      pageModified: pageModified?.modified || 'unknown', pageValue,
+      source: `${element.source?.system} ${element.source?.fields?.join(', ') || element.source?.key || ''}${sourceKnown ? ` = "${sourceValue}" (read ${readAt})` : ` (not read directly: ${hubspot.note})`}`,
+      expectedValue: expected.value, rule: expected.rule, derivation: element.derivation,
+      defectClass, reason, fixPath: fixPath[ticketClass] || '',
+      doneWhen: 'the public page shows the expected value after the next n8n run, verified by tests/page-check.mjs.',
+    }),
   }
 }
 

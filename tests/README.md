@@ -24,9 +24,21 @@ On Open and Announced pages the checker now verifies that every CSS ID in `spec/
 
 Enforces `spec/ticket-contract.json` on any ticket set: claim, page, element, observed, expected, source with read time, class, defect class, a single owner, fix path, done condition, evidence. Tickets that fail are listed by creator (observer, form, agent) with the missing fields and go back to that creator. On 2026-09-16 all 15 observer grade tickets failed (no source field or read time, suggested-owner list, no class or fix path).
 
+## agent/ticket-templates.mjs and render-templates-examples.mjs (one place for note wording)
+
+Every note and body the protocol prescribes is a named template in `spec/ticket-templates.json` (schema `spec/schemas/ticket-templates.schema.json`): ordered lines with `{placeholder}` fields, a `required` list, the protocol section it comes from, and an `example`. `agent/ticket-templates.mjs` exports `loadTemplates()`, `renderTemplate(name, fields)` (throws `TemplateError` code `MISSING_FIELD` naming the field; `UNKNOWN_TEMPLATE` for a bad name), `renderTitle(name, fields)` for the two ticket templates with a title line, `templateMarker('triage')`, `closingNoteLines()` (the four lines every closing note starts with), `reviewLine()`, and `assertNoteShape(text)` (closing lines first, review line last, no em dash; `TemplateError` code `NOTE_SHAPE`). Placeholders: `{name}` must be supplied (arrays join with ", "); `{?name|text}` and `{?name|text|else}` render conditionally and may nest; a line may be `{when, text}` or `{each, text}` (per array item, with `{index}` and the item's fields, `{item}` for a string).
+
+Renderers that read it: `render-ticket.mjs` (`triageBody`), `triage-ticket.mjs` (the marker), `validate-ticket.mjs` (`missingInfo`), `diagnose-field.mjs` (`hubspotData`, `syncMapping` title), `agent/intake-policy.mjs` (`intakeClarification`, `ownerUnregistered`, `ownerAmbiguous`, `duplicate`, and `escalationNote` rendering `blocked` for `agent/intake.mjs`), `agent/file-observer-findings.mjs` (`observerBody`, `escalation`, `verified`). `render-templates-examples.mjs` renders every template's example: `--check` (run by `npm run validate`) fails when a block quoted under "Rendered from `spec/ticket-templates.json` template `<name>`" in the protocol or the sweep runbook differs from the renderer or a template is quoted nowhere; `--write` rewrites the quoted blocks. Change wording in the spec, run `--write`, commit both.
+
+```bash
+node tests/render-templates-examples.mjs            # print every example
+node tests/render-templates-examples.mjs --write    # refresh the quoted blocks in the protocol and runbook
+node -e "import('./agent/ticket-templates.mjs').then((m) => console.log(m.renderTemplate('filedLine', { id: 'cmx1', defect: 'a broken packet link' })))"
+```
+
 ## render-ticket.mjs and triage-ticket.mjs
 
-`render-ticket.mjs` renders a ticket body from a contract object. `triage-ticket.mjs` brings existing APEX tickets up to the contract: it runs the pathway diagnosis, sets class, defect class, and owner, regenerates the rendered body below the `--- Website agent triage ---` marker while keeping the requester's original description first and verbatim, keeps any existing `checkId` (the triaged class is recorded in `triagedClass`), and adds the owner's APEX user to the assignees without removing anyone. Dry-run by default.
+`render-ticket.mjs` renders a ticket body from a contract object (template `triageBody`). `triage-ticket.mjs` brings existing APEX tickets up to the contract: it runs the pathway diagnosis, sets class, defect class, and owner, regenerates the rendered body below the `--- Website agent triage ---` marker while keeping the requester's original description first and verbatim, keeps any existing `checkId` (the triaged class is recorded in `triagedClass`), and adds the owner's APEX user to the assignees without removing anyone. Dry-run by default.
 
 ```bash
 node tests/triage-ticket.mjs --file tickets.json [--element intro.status-sentence] [--class hubspot-data] [--owner-role hubspot-program-admin] [--status BLOCKED] [--related <id>] [--note "..."] [--apply]

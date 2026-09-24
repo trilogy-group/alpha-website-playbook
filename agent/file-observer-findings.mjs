@@ -49,6 +49,7 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { apexBases, attachEvidence, planEvidence } from './attach-evidence.mjs'
+import { renderTemplate } from './ticket-templates.mjs'
 import { contractCheck } from '../tests/validate-ticket.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -463,7 +464,7 @@ export function buildContract({ row, group, run, bundle, owner, policy, now, rel
     defectClass: defectClassFor(row.ticketClass),
     ownerRole: row.ownerRole,
     ownerName: owner.name,
-    escalation: owner.escalated ? `role ${row.ownerRole} has no registered APEX user; escalated to ${owner.name} (${OPERATOR_ROLE}) per protocol 1d; the work lives in ${policy.classes?.[row.ticketClass]?.executes || row.ownerRole}` : null,
+    escalation: owner.escalated ? renderTemplate('escalation', { role: row.ownerRole, escalatedTo: owner.name, operatorRole: OPERATOR_ROLE, system: policy.classes?.[row.ticketClass]?.executes || row.ownerRole }) : null,
     fixPath: fixPathFor(policy, row),
     doneWhen: doneWhenFor(policy, row),
     evidence: `observer check ${row.observerCheck} run ${run.manifest.runId} (${run.manifest.completedAt}); observer ids ${group.findings.map((f) => f.id).join(', ')}; packet evidence sha256 ${run.manifest.evidence?.sha256 || 'n/a'}; screenshot pair attached with agent/attach-evidence.mjs where the artifact carries it`,
@@ -476,33 +477,33 @@ export function buildContract({ row, group, run, bundle, owner, policy, now, rel
   }
 }
 
-/** Ticket body in the render-ticket.mjs style with the contract's labelled lines (Page, Element, Observed, Expected, Source, Fix path, Done when, Evidence). */
+/** Ticket body with the contract's labelled lines (Page, Element, Observed, Expected, Source, Fix path, Done when, Evidence): spec/ticket-templates.json template observerBody. */
 export function renderObserverBody(c) {
-  const lines = [
-    `${c.ownerName || c.ownerRole}: ${c.fixPath}`,
-    '',
-    `Claim: ${c.claim}`,
-    c.page ? `Page: ${c.page}` : 'Page: n/a (no public page; see the list below)',
-    c.pages.length > 1 ? `Pages (${c.pages.length}): ${c.pages.join(', ')}` : null,
-    c.events.length ? `Events (${c.events.length}): ${c.events.join(' | ')}` : null,
-    `Element: ${c.element}`,
-    `Observed: ${c.observed}`,
-    `Expected: ${c.expected}`,
-    `Source: ${c.source}`,
-    `Defect class: ${c.defectClass}. ${c.reason}`,
-    `Class: ${c.class}`,
-    `Owner: ${c.ownerRole} (${c.ownerName})${c.escalation ? `; ${c.escalation}` : ''}`,
-    `Fix path: ${c.fixPath}`,
-    `Done when: ${c.doneWhen}`,
-    `Evidence: ${c.evidence}`,
-    c.exemptions ? `Exemptions: ${c.exemptions}` : null,
-    c.related?.length ? `Related: ${c.related.join(', ')} (decision recorded; this row files again)` : null,
-    `Playbook: ${c.playbook}`,
-    '',
-    'History:',
-    ...c.history.map((h) => `- ${h}`),
-  ].filter((l) => l !== null && l !== undefined)
-  return lines.join('\n')
+  return renderTemplate('observerBody', {
+    ownerName: c.ownerName || c.ownerRole,
+    ownerRole: c.ownerRole,
+    fixPath: c.fixPath,
+    claim: c.claim,
+    page: c.page || null,
+    pages: c.pages.length > 1 ? c.pages : null,
+    pagesCount: c.pages.length,
+    events: c.events.length ? c.events.join(' | ') : null,
+    eventsCount: c.events.length,
+    element: c.element,
+    observed: c.observed,
+    expected: c.expected,
+    source: c.source,
+    defectClass: c.defectClass,
+    reason: c.reason,
+    class: c.class,
+    escalation: c.escalation || null,
+    doneWhen: c.doneWhen,
+    evidence: c.evidence,
+    exemptions: c.exemptions || null,
+    related: c.related?.length ? c.related : null,
+    playbook: c.playbook,
+    history: c.history,
+  })
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -697,22 +698,28 @@ function planResolves(plan, { run, bundle, queue, now, observedThisRun }) {
   }
 }
 
-/** Section-7 RESOLUTION note for a ticket the observer's runs cleared. The filer changed nothing on the site. */
+/**
+ * Section-7 closing note for a ticket the observer's runs cleared: spec/ticket-templates.json template `verified` (the filer
+ * changed nothing on the site; the done condition is met on the observer's own runs). The field values are the filer's facts.
+ */
 export function renderResolutionNote({ task, cleared, rows, run, now, page }) {
   const checks = rows.map((r) => `${r.observerCheck} (${requirementIdFor(r)})`).join(', ')
-  return [
-    `RESOLUTION (agent/file-observer-findings.mjs ${FILER_VERSION}, ${now.toISOString().slice(0, 10)}, playbook check bundle)`,
-    `Go here: ${page || 'n/a (no public page on this ticket)'}`,
-    `Look for: the condition this ticket reported no longer appears; observer check ${checks} is clear`,
-    'Recommend: Complete',
-    'Also open on this page: not assessed by the filer; the open queue lists any other ticket on this URL',
-    `Page: ${page || 'n/a'}`,
-    'Change: none by the filer; the check cleared on the observer\'s own runs (fixed elsewhere or the source corrected)',
-    `Evidence: observer incident${cleared.observerIds.length === 1 ? '' : 's'} ${cleared.observerIds.join(', ')} resolved ${cleared.resolvedAt} by run ${cleared.resolvedByRunIds.join(', ') || 'n/a'} after ${cleared.cleanRuns} clean run${cleared.cleanRuns === 1 ? '' : 's'} (row requires ${cleared.clearAfterRuns}); latest run ${run.manifest.runId} (${run.manifest.completedAt}) still clear; packet evidence sha256 ${run.manifest.evidence?.sha256 || 'n/a'}`,
-    'Tests: observer verification only; no ring run by the filer',
-    `Observer: ${cleared.observerIds.join(', ')} cleared on run ${cleared.clearingRunIds.join(', ')}`,
-    `Resolution kind: ${RESOLUTION_KIND}`,
-  ].join('\n')
+  return renderTemplate('verified', {
+    actor: `agent/file-observer-findings.mjs ${FILER_VERSION}`,
+    date: now.toISOString().slice(0, 10),
+    playbookVersion: 'playbook check bundle',
+    goHere: page || 'n/a (no public page on this ticket)',
+    lookFor: `the condition this ticket reported no longer appears; observer check ${checks} is clear`,
+    recommend: 'Complete',
+    alsoOpen: 'not assessed by the filer; the open queue lists any other ticket on this URL',
+    page: page || 'n/a',
+    verifiedBy: 'the filer',
+    alreadyMet: 'the check cleared on the observer\'s own runs (fixed elsewhere or the source corrected)',
+    evidence: `observer incident${cleared.observerIds.length === 1 ? '' : 's'} ${cleared.observerIds.join(', ')} resolved ${cleared.resolvedAt} by run ${cleared.resolvedByRunIds.join(', ') || 'n/a'} after ${cleared.cleanRuns} clean run${cleared.cleanRuns === 1 ? '' : 's'} (row requires ${cleared.clearAfterRuns}); latest run ${run.manifest.runId} (${run.manifest.completedAt}) still clear; packet evidence sha256 ${run.manifest.evidence?.sha256 || 'n/a'}`,
+    tests: 'observer verification only; no ring run by the filer',
+    observer: `${cleared.observerIds.join(', ')} cleared on run ${cleared.clearingRunIds.join(', ')}`,
+    resolutionKind: RESOLUTION_KIND,
+  })
 }
 
 // ---------------------------------------------------------------------------------------------------------------

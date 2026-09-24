@@ -42,6 +42,7 @@ import {
   unhealthyDependencies,
 } from '../agent/file-observer-findings.mjs'
 import { contractCheck } from './validate-ticket.mjs'
+import { assertNoteShape } from '../agent/ticket-templates.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const fixtures = path.join(root, 'tests', 'fixtures', 'observer-filer')
@@ -142,7 +143,9 @@ test('observer filer: replay of the 2026-09-24 packet auto-resolves the map-row 
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
   assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.2, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/docs\.google\.com\/spreadsheets\/d\/[^\n]+\/edit\nLook for: [^\n]*map-campus-missing-from-operations \(site\.map\.integrity\) is clear\n/)
-  assert.match(lead.patch.description, /\nObserver: SITE-7B2F6597C8 cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared$/)
+  // The note is the protocol's `verified` template (spec/ticket-templates.json): closing lines first, review line last.
+  assert.match(lead.patch.description, /\nObserver: SITE-7B2F6597C8 cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared\nPlease review\.$/)
+  assertNoteShape(lead.patch.description.slice(lead.patch.description.indexOf('\n\nRESOLUTION (') + 2))
   assert.match(lead.patch.description, /after 118 clean runs \(row requires 2\)/)
 
   // A ticket the observer resolved without clean runs (a decision or an evidence-version bump) is not closed by the filer; a person decides.
