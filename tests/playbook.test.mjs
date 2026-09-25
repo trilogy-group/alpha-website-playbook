@@ -2673,7 +2673,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const rows = JSON.parse(fs.readFileSync(path.join(dir, 'spec', 'check-rows.json'), 'utf8'))
   const find = (id) => rows.rows.find((r) => r.id === id)
   find('campus.facts.phone').comparator.type = 'looks-about-right'
-  delete find('campus.resources.packet.present').literals.missingAsk
+  delete find('campus.intro.media.current').literals.missingAsk
   find('site.coverage.open-campus-registries').dedupeScope = 'page'
   find('campus.hero.identity.heading').entitySource = 'sheet'
   rows.aliases.pageCheck['no-such-check'] = 'campus.intro.media.current'
@@ -2682,7 +2682,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const result = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-checks.mjs'), '--check'], { encoding: 'utf8' })
   assert.notEqual(result.status, 0)
   assert.match(result.stderr, /row campus\.facts\.phone: comparator looks-about-right is not in spec\/observer-comparators\.json/)
-  assert.match(result.stderr, /row campus\.resources\.packet\.present: onMissing finding needs literals\.missingAsk/)
+  assert.match(result.stderr, /row campus\.intro\.media\.current: onMissing finding needs literals\.missingAsk/)
   assert.match(result.stderr, /row site\.coverage\.open-campus-registries: registry-coverage rows dedupe per campus and registry/)
   assert.match(result.stderr, /row campus\.hero\.identity\.heading: entitySource must be one of hubspot-programs, map, got sheet/)
   assert.match(result.stderr, /aliases: no-such-check is not a tests\/page-check\.mjs check id/)
