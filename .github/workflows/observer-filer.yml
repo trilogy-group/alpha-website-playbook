@@ -3,13 +3,24 @@ name: APEX observer filer
 # The observer measures alpha.school in superbuilders/aeo. This workflow applies the
 # playbook's ticket policy to the resulting packet. It is dry-run-only until both the
 # three-run precision gate passes and OBSERVER_FILER_APPLY is explicitly set to true.
+#
+# Packet freshness gate (2026-09-25, after a scheduled apply selected a 17-day-old packet and
+# filed 20 tickets no current run reproduces): the newest successful observer run by createdAt
+# is selected (never list order), its packet is downloaded here, and the job stops before any
+# filer call (agent/packet-freshness-gate.mjs, exit 2) unless manifest.checkBundle.status is
+# `verified` and manifest.completedAt is within the last MAX_PACKET_AGE_HOURS. In apply mode the
+# packet's manifest.runId must also be newer than the last applied run id, read as the newer of
+# the repository variable OBSERVER_FILER_LAST_APPLIED_RUN and the newest filer-apply-ledger
+# artifact of this workflow; after a successful apply the job uploads a new ledger artifact and
+# updates the variable, so no packet is applied twice and no older packet after a newer one.
+# agent/file-observer-findings.mjs --apply enforces the same conditions itself (STALE_PACKET).
 on:
   schedule:
     - cron: '47 * * * *'
   workflow_dispatch:
     inputs:
       run_id:
-        description: 'Exact successful superbuilders/aeo observer run (default: latest successful run)'
+        description: 'Exact successful superbuilders/aeo observer run (default: newest successful run by createdAt)'
         required: false
       apply:
         description: 'Write to APEX (requires an exact run_id and merged APEX PR 409)'
@@ -19,6 +30,14 @@ on:
 
 permissions:
   contents: read
+  # actions: read lists and downloads the filer-apply-ledger artifact of earlier runs; write updates
+  # OBSERVER_FILER_LAST_APPLIED_RUN after a successful apply (best effort; the artifact is the record).
+  actions: write
+
+env:
+  MAX_PACKET_AGE_HOURS: '6'
+  LEDGER_ARTIFACT: filer-apply-ledger
+  LEDGER_VARIABLE: OBSERVER_FILER_LAST_APPLIED_RUN
 
 concurrency:
   group: apex-observer-filer
@@ -49,27 +68,31 @@ jobs:
 
           run_id="$INPUT_RUN_ID"
           if [[ -z "$run_id" ]]; then
+            # The newest successful run by createdAt: gh run list's order is not a contract (2026-09-25 it handed back a 17-day-old run).
             run_id="$(gh run list \
               --repo superbuilders/aeo \
               --workflow 'Alpha Website Production Observer' \
               --status success \
-              --limit 1 \
-              --json databaseId \
-              --jq '.[0].databaseId')"
+              --limit 30 \
+              --json databaseId,createdAt \
+              --jq 'sort_by(.createdAt) | last | .databaseId // empty')"
           fi
           [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "No successful numeric observer run was found: $run_id" >&2; exit 2; }
+          run_created_at="$(gh run view "$run_id" --repo superbuilders/aeo --json createdAt,conclusion --jq '.createdAt + " " + (.conclusion // "unknown")')"
+          [[ "$run_created_at" == *" success" ]] || { echo "Observer run $run_id did not succeed: $run_created_at" >&2; exit 2; }
 
           apply=false
           if [[ "$TRIGGER_EVENT" == 'schedule' && "$CONFIG_APPLY" == 'true' ]]; then apply=true; fi
           if [[ "$TRIGGER_EVENT" == 'workflow_dispatch' && "$INPUT_APPLY" == 'true' ]]; then apply=true; fi
           if [[ "$apply" == 'true' && -z "$INPUT_RUN_ID" ]]; then
-            echo 'Apply mode requires an exact workflow_dispatch run_id; scheduled apply uses the selected successful run.' >&2
+            echo 'Apply mode requires an exact workflow_dispatch run_id; scheduled apply uses the newest successful run.' >&2
             if [[ "$TRIGGER_EVENT" == 'workflow_dispatch' ]]; then exit 2; fi
           fi
 
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "run_created_at=${run_created_at% *}" >> "$GITHUB_OUTPUT"
           echo "apply=$apply" >> "$GITHUB_OUTPUT"
-          echo "Observer run: $run_id"
+          echo "Observer run: $run_id (created ${run_created_at% *})"
           echo "Mode: $([[ "$apply" == 'true' ]] && echo apply || echo dry-run)"
 
       - name: Require merged APEX filer support before writes
@@ -84,29 +107,127 @@ jobs:
             exit 2
           }
 
-      - name: Download packet and build filer report
+      - name: Download the observer packet
         env:
           GH_TOKEN: ${{ secrets.AEO_REPO_TOKEN }}
+          RUN_ID: ${{ steps.select.outputs.run_id }}
+          PACKET_DIR: ${{ runner.temp }}/observer-packet
+        run: |
+          set -euo pipefail
+          mkdir -p "$PACKET_DIR"
+          gh run download "$RUN_ID" -R superbuilders/aeo -n "alpha-site-packet-$RUN_ID" -D "$PACKET_DIR"
+          for name in manifest.json findings.json incidents.json; do
+            test -f "$PACKET_DIR/$name" || { echo "Packet of run $RUN_ID has no $name" >&2; exit 2; }
+          done
+
+      - name: Read the last applied run id
+        id: ledger
+        if: steps.select.outputs.apply == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONFIG_LAST_APPLIED: ${{ vars.OBSERVER_FILER_LAST_APPLIED_RUN }}
+          LEDGER_DIR: ${{ runner.temp }}/filer-apply-ledger
+        run: |
+          set -euo pipefail
+          mkdir -p "$LEDGER_DIR"
+          # The newest unexpired filer-apply-ledger artifact this workflow uploaded; the gate takes the newer of it and the variable.
+          ledger_workflow_run="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$LEDGER_ARTIFACT&per_page=20" \
+            --jq '[.artifacts[] | select(.expired | not)] | sort_by(.created_at) | last | .workflow_run.id // empty')"
+          ledger_file=''
+          if [[ -n "$ledger_workflow_run" ]]; then
+            gh run download "$ledger_workflow_run" -R "$GITHUB_REPOSITORY" -n "$LEDGER_ARTIFACT" -D "$LEDGER_DIR"
+            ledger_file="$LEDGER_DIR/filer-apply-ledger.json"
+            test -f "$ledger_file" || { echo "Ledger artifact of run $ledger_workflow_run has no filer-apply-ledger.json" >&2; exit 2; }
+            echo "Ledger artifact: workflow run $ledger_workflow_run, runId $(jq -r '.runId // "missing"' "$ledger_file")"
+          else
+            echo 'No filer-apply-ledger artifact yet.'
+          fi
+          echo "Variable $LEDGER_VARIABLE: ${CONFIG_LAST_APPLIED:-unset}"
+          echo "ledger_file=$ledger_file" >> "$GITHUB_OUTPUT"
+          echo "variable_last_applied=$CONFIG_LAST_APPLIED" >> "$GITHUB_OUTPUT"
+
+      - name: Packet freshness gate
+        id: gate
+        env:
+          RUN_ID: ${{ steps.select.outputs.run_id }}
+          APPLY: ${{ steps.select.outputs.apply }}
+          PACKET_DIR: ${{ runner.temp }}/observer-packet
+          LEDGER_FILE: ${{ steps.ledger.outputs.ledger_file }}
+          VARIABLE_LAST_APPLIED: ${{ steps.ledger.outputs.variable_last_applied }}
+        run: |
+          set -euo pipefail
+          args=(--run-dir "$PACKET_DIR" --max-packet-age-hours "$MAX_PACKET_AGE_HOURS" --github-run-id "$RUN_ID")
+          if [[ "$APPLY" == 'true' ]]; then
+            args+=(--apply)
+            if [[ -n "$VARIABLE_LAST_APPLIED" ]]; then args+=(--after-run-id "$VARIABLE_LAST_APPLIED"); fi
+            if [[ -n "$LEDGER_FILE" ]]; then args+=(--ledger-file "$LEDGER_FILE"); fi
+          fi
+          # Exit 2 with STALE_PACKET (and the job summary saying why) stops the job here: no filer call.
+          node agent/packet-freshness-gate.mjs "${args[@]}"
+
+      - name: Build filer report
+        env:
           APEX_API_TOKEN: ${{ secrets.APEX_API_TOKEN }}
           APEX_API_BASE: ${{ vars.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1' }}
           APEX_AGENT_API_BASE: ${{ vars.APEX_AGENT_API_BASE || 'https://apex.2hourlearning.com/api/agent' }}
           APEX_QC_REQUESTER_EMAIL: ${{ vars.APEX_QC_REQUESTER_EMAIL || 'matthew.barge@superbuilders.school' }}
-          RUN_ID: ${{ steps.select.outputs.run_id }}
           APPLY: ${{ steps.select.outputs.apply }}
           PACKET_DIR: ${{ runner.temp }}/observer-packet
+          LAST_APPLIED: ${{ steps.gate.outputs.last_applied }}
         run: |
           set -euo pipefail
           test -n "$APEX_API_TOKEN" || { echo 'APEX_API_TOKEN is required to read the open queue.' >&2; exit 2; }
           mkdir -p out
           args=(
-            --run "$RUN_ID"
             --run-dir "$PACKET_DIR"
             --bundle spec/check-bundle.generated.json
             --report out/filer-report.json
+            --max-packet-age-hours "$MAX_PACKET_AGE_HOURS"
           )
-          if [[ "$APPLY" == 'true' ]]; then args+=(--apply); fi
+          if [[ "$APPLY" == 'true' ]]; then
+            args+=(--apply)
+            if [[ -n "$LAST_APPLIED" ]]; then args+=(--after-run-id "$LAST_APPLIED"); fi
+          fi
           node agent/file-observer-findings.mjs "${args[@]}" | tee out/filer-summary.json
           if [[ -f "$PACKET_DIR/filer-writes.jsonl" ]]; then cp "$PACKET_DIR/filer-writes.jsonl" out/; fi
+
+      - name: Record the apply ledger
+        if: steps.select.outputs.apply == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.select.outputs.run_id }}
+          MANIFEST_RUN_ID: ${{ steps.gate.outputs.manifest_run_id }}
+          COMPLETED_AT: ${{ steps.gate.outputs.completed_at }}
+          BUNDLE_SHA256: ${{ steps.gate.outputs.bundle_sha256 }}
+          PREVIOUS_LAST_APPLIED: ${{ steps.gate.outputs.last_applied }}
+        run: |
+          set -euo pipefail
+          mkdir -p ledger
+          jq -n \
+            --arg runId "$MANIFEST_RUN_ID" --arg observerGitHubRunId "$RUN_ID" --arg completedAt "$COMPLETED_AT" \
+            --arg bundleSha256 "$BUNDLE_SHA256" --arg appliedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg filerWorkflowRunId "$GITHUB_RUN_ID" --arg previousLastApplied "$PREVIOUS_LAST_APPLIED" \
+            --slurpfile report out/filer-report.json \
+            '{ runId: $runId, observerGitHubRunId: $observerGitHubRunId, completedAt: $completedAt, bundleSha256: $bundleSha256, appliedAt: $appliedAt,
+               filerWorkflowRunId: $filerWorkflowRunId, previousLastApplied: (if $previousLastApplied == "" then null else $previousLastApplied end),
+               filed: ($report[0].applied.filed | length), resolved: ($report[0].applied.resolved | length), errors: ($report[0].applied.errors | length) }' \
+            > ledger/filer-apply-ledger.json
+          cat ledger/filer-apply-ledger.json
+          # Best effort: the artifact uploaded below is the record; a token without variable rights only loses the convenience copy.
+          gh variable set "$LEDGER_VARIABLE" --repo "$GITHUB_REPOSITORY" --body "$MANIFEST_RUN_ID" \
+            || echo "::warning::Could not update repository variable $LEDGER_VARIABLE; the $LEDGER_ARTIFACT artifact records run $MANIFEST_RUN_ID."
+          {
+            echo '## Apply ledger'
+            echo
+            echo "- Last applied run recorded: \`$MANIFEST_RUN_ID\` (observer GitHub run \`$RUN_ID\`, previously \`${PREVIOUS_LAST_APPLIED:-none}\`)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: steps.select.outputs.apply == 'true' && hashFiles('ledger/filer-apply-ledger.json') != ''
+        with:
+          name: filer-apply-ledger
+          path: ledger/
+          retention-days: 90
 
       - name: Summarize filer decision
         if: always() && hashFiles('out/filer-report.json') != ''
@@ -114,7 +235,10 @@ jobs:
           {
             echo '## APEX observer filer'
             echo
-            jq -r '"- Mode: `\(.mode)`\n- Observer run: `\(.runId)`\n- Bundle: `\(.bundleVersion)` (`\(.bundleSha256)`)\n- Candidate tickets: **\(.counts.files)**\n- Existing/deduped: **\(.counts.existing)**\n- Held: **\(.counts.held)**\n- Suppressed: **\(.counts.suppressed)**\n- Loop-health only: **\(.counts.loopHealth)**\n- Candidate resolutions: **\(.counts.resolves)**\n- Invalid contracts: **\(.counts.invalid)**"' out/filer-report.json
+            jq -r '"- Mode: `\(.mode)`\n- Observer run: `\(.runId)`\n- Packet completed: `\(.packet.completedAt)` (\(.packet.ageHours) h old, bundle `\(.packet.bundleStatus)`)\n- Last applied run: `\(.packet.afterRunId // "none")`\n- Bundle: `\(.bundleVersion)` (`\(.bundleSha256)`)\n- Candidate tickets: **\(.counts.files)**\n- Existing/deduped: **\(.counts.existing)**\n- Held: **\(.counts.held)**\n- Suppressed: **\(.counts.suppressed)**\n- Loop-health only: **\(.counts.loopHealth)**\n- Candidate resolutions: **\(.counts.resolves)**\n- Invalid contracts: **\(.counts.invalid)**"' out/filer-report.json
+            if [[ "$(jq -r '.packetWarnings | length' out/filer-report.json)" != '0' ]]; then
+              jq -r '.packetWarnings[] | "- Packet warning: \(.)"' out/filer-report.json
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

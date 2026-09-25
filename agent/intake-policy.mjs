@@ -265,6 +265,21 @@ export function escalationNote(bundle, result, ticket, { actor, date, assignedTo
  * ticket; it reports its evaluation only. Headings are matched at the start of a line, upper case, in the description,
  * the human comments, and the APEX agent instructions.
  */
+/** The marker agent/file-observer-findings.mjs writes as customFields.filedBy on every ticket it creates (its FILED_BY). */
+export const OBSERVER_FILER_FILED_BY = 'agent/file-observer-findings.mjs'
+
+/**
+ * A ticket the observer filer created: `customFields.filedBy` is the filer's exact marker, or `customFields.filerRunId` is a
+ * non-blank string. True at every status, NOT_STARTED included: the filer opens, holds and closes such a ticket when its
+ * check clears, so intake never requests clarification on it, never re-routes it and never reconciles it (2026-09-25:
+ * intake had moved six filer tickets to Missing Info addressed to the observer owner). APEX PR 409's own server-side test
+ * (checkId SITE-*, a filerRunId, past NOT_STARTED) is a subset of this one.
+ */
+export function observerFilerOwned(ticket) {
+  const fields = ticket?.customFields || {}
+  return fields.filedBy === OBSERVER_FILER_FILED_BY || (typeof fields.filerRunId === 'string' && fields.filerRunId.trim() !== '')
+}
+
 export function operatorInstruction(ticket) {
   const texts = [
     ticket.description,
