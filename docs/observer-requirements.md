@@ -51,3 +51,31 @@ Decision by Matt Barge, 2026-09-25 (Slack): "not only go from viewing the websit
 - **Comparators.** `spec/observer-comparators.json` is a verbatim copy of the observer's `spec/supported-comparators.json` (35 types, aeo #37); the builder refuses a row outside it and the observer fails loop health on a bundle outside its own list, so add a type in the observer first.
 - **Ids.** Cite the row id on every finding as before; `aliases.pageCheck` in the bundle is for the playbook's own found-ticket filer and needs nothing from the observer.
 
+
+## Added 2026-09-25: bundle-versus-observer conformance (repair 3)
+
+`campus.intro.media.current` said `equals-approved-media` while the observer counted stale launch words, and nothing compared the two; East Bay's launch card went unseen for 32 days (`docs/qc-loop-repair-plan-2026-09-25.md`, repair 3). The contract now runs from both ends, and each end fails closed.
+
+**What the observer must publish (superbuilders/aeo `alpha-site-system`).**
+
+- `spec/supported-comparators.json`: every comparator type the code implements, one line of semantics each. The playbook's `spec/observer-comparators.json` is a verbatim copy; add a type there first.
+- `IMPLEMENTED_CHECKS` (`src/checks.mjs`): the set of every check id the code emits, kept equal to the ids the source calls by a test (`tests/conformance.test.mjs`), so the set cannot drift from the code. `registry/observer-checks.json` is the playbook's captured copy.
+- `src/conformance.mjs` and `node alpha-site-system/src/cli.mjs conformance --bundle <path or url>`: for the loaded bundle, (a) every row `comparator.type` is supported; (b) every row `observerCheck` is implemented; (c) every row `entitySource` is one the observer enumerates (`map`, `hubspot-programs`); (d) every row with `expected.derive.onMissing: finding` names a registry file the observer loads and reads with `rules.fileValue` (the coverage row's `literals.registries[].file` included); (e) the literals the code reads are present where required (`launchWords` and `assetPatterns` on `campus-page-stale-launch-media`, `registries` on `campus-registry-coverage`, `rules` on `campus-expired-seasonal-cta`, `missingThing` and `missingAsk` on every onMissing-finding row); (f) every row channel is one the observer routes. Any failure is a non-zero exit and a report naming the row; an implemented check with no row is a warning (telemetry only).
+- Every observer run records the assessment in the packet manifest as `conformance: { ok, failures[] }`, degrades loop health on a failure, and files the loop-health check `bundle-conformance` (row `site.loop.health.conformance`, check bundle 1.4) listing every failure; `comparator-unsupported` (row `site.loop.health.comparator-unsupported`) still names each unsupported type on its own.
+- Semantic fixtures (`tests/conformance.test.mjs`, `tests/fixtures/conformance/`): for `campus.intro.media.current` (`equals-approved-media`), `campus.resources.booking.present` (`present`) and `site.seasonal.window` (`absent-after-date`), a fixture page plus registry plus expected verdict run through `runChecks` against the real bundle row, so the fixture proves the comparator semantics the row states (no registry entry files Missing Info; the approved attachment in the slot passes even with launch words on the page; another attachment is a mismatch naming the observed asset).
+
+**What the playbook must assert (this repository).**
+
+- `tests/build-checks.mjs` refuses a row whose comparator is not in `spec/observer-comparators.json` or whose `observerCheck` is not in `registry/observer-checks.json`, and refuses a registry name with neither a row nor a retirement.
+- `tests/observer-conformance.test.mjs` (in `npm test`) asserts the bundle carries the comparator copy verbatim and every row uses it, every row and retirement names a registered check, the registry names appear in one family each, every `pendingInObserver` name has a row, and the conformance row has the shape above.
+- `tests/sync-observer-comparators.mjs` (`npm run sync:observer`) refetches the observer's `spec/supported-comparators.json` from `superbuilders/aeo` main (GitHub token from `--token`, `GH_TOKEN`, `GITHUB_TOKEN` or `gh auth token`) and reports drift (exit 1); `--write` rewrites the copy so the next build sees the observer's list; `--checks` also refetches `src/checks.mjs`, re-extracts the check ids the way `--observer-source` does, and names the ids the observer emits that the registry lacks (each needs a row or a retirement) and the registry names it no longer emits. Run it whenever the observer changes; a new comparator lands in the observer first, then here, then in a row.
+
+**Where each runs.**
+
+| assertion | where | when |
+|---|---|---|
+| rows use supported comparators and registered checks; registry names are covered | `tests/build-checks.mjs`, `npm run validate`, `npm test` | every playbook pull request (`.github/workflows/validate-playbook.yml`) |
+| comparator copy and check registry match the observer | `tests/sync-observer-comparators.mjs --checks` | by hand or an agent after an observer change; the observer's CI covers the released bundle continuously |
+| the released bundle conforms to the observer code | `node alpha-site-system/src/cli.mjs conformance` against the release manifest URL with `CHECK_BUNDLE_TOKEN` | every aeo pull request and push to main (`.github/workflows/site-ci.yml`) |
+| the loaded bundle conforms on this run | `src/conformance.mjs` in `runObservation`; manifest `conformance`, health `degraded`, finding `bundle-conformance` | every observer run |
+| the row semantics hold against fixtures | `tests/conformance.test.mjs` in aeo | every aeo pull request |

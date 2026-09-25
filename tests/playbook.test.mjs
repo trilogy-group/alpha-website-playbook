@@ -2411,15 +2411,15 @@ test('check bundle: the observer inventory extractor reads finding literals and 
 })
 
 test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
-  assert.equal(checkBundle.version, '1.3')
+  assert.equal(checkBundle.version, '1.4')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
-  assert.deepEqual(byChannel, { ticket: 85, 'source-digest': 17, 'loop-health': 12 })
+  assert.deepEqual(byChannel, { ticket: 85, 'source-digest': 17, 'loop-health': 17 })
   const byGrounding = {}
   for (const row of checkBundle.rows) byGrounding[row.grounding.kind] = (byGrounding[row.grounding.kind] || 0) + 1
   // Grounding restore (2026-09-25, bundle 2c8a5aeb): 20 rows regained a complaint, decision or source-contract ref, so only 5 stay ungrounded.
   // 1.3: the media row is grounded on the 2026-09-25 decision (from source-contract) and the three coverage rows on the same decision.
-  assert.deepEqual(byGrounding, { 'source-contract': 55, decision: 39, complaint: 13, exemplar: 2, none: 5 })
+  assert.deepEqual(byGrounding, { 'source-contract': 55, decision: 44, complaint: 13, exemplar: 2, none: 5 })
   assert.deepEqual(checkBundle.sourceDigest, { ownerRoles: ['growth-map-owner', 'hubspot-program-admin', 'operations-sheet-owner', 'community-app-owner'], reportFile: 'source-digest.md' })
   // Breadth: every map-source row and the Community record, URL form and host rows are source-digest; rows on a WordPress element stay ticket.
   for (const row of checkBundle.rows.filter((r) => r.pageFamily === 'map-source')) assert.notEqual(row.channel, 'ticket', `${row.id} compares sources, never a page`)
@@ -2456,7 +2456,7 @@ test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promot
   for (const family of Object.keys(checkBundle.pageFamilies)) assert.ok(checkBundle.depthDefaults.render.includes(family) || checkBundle.depthDefaults.http.includes(family), `${family} has a depth`)
   const byDepth = {}
   for (const row of checkBundle.rows) byDepth[row.depth] = (byDepth[row.depth] || 0) + 1
-  assert.deepEqual(byDepth, { render: 89, http: 25 })
+  assert.deepEqual(byDepth, { render: 89, http: 30 })
   for (const row of checkBundle.rows) {
     assert.ok(['render', 'http'].includes(row.depth), row.id)
     if ((row.viewports || []).length || row.sourceHealthDependency.includes('browser') || /-rendered$/.test(row.comparator.type)) assert.equal(row.depth, 'render', row.id)
@@ -2589,7 +2589,7 @@ import { classifyTicket, ownerRuleMatches, requirementIdsFor } from '../agent/in
 import { prepareFoundPayload, requirementIdsForCheck } from '../agent/file-found-ticket.mjs'
 
 test('check bundle 1.3: entity sources, comparators, missing-expectation rows, coverage rows and page-check aliases (decision 2026-09-25: from HubSpot to the website)', () => {
-  assert.equal(checkBundle.version, '1.3')
+  assert.equal(checkBundle.version, '1.4')
   // Entity sources: the shape the observer consumes verbatim; campus rows enumerate from HubSpot Programs, the rest from the map.
   const hubspot = checkBundle.entitySources['hubspot-programs']
   assert.deepEqual([hubspot.source, hubspot.fields, hubspot.publicTypes, hubspot.publicHosts, hubspot.lifecycleField, hubspot.pageField], ['hubspot-programs', ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date'], ['Open', 'Announced'], ['alpha.school', 'www.alpha.school'], 'type', 'website'])
@@ -2602,7 +2602,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   }
   const byEntitySource = {}
   for (const row of checkBundle.rows) byEntitySource[row.entitySource] = (byEntitySource[row.entitySource] || 0) + 1
-  assert.deepEqual(byEntitySource, { 'hubspot-programs': 54, map: 60 })
+  assert.deepEqual(byEntitySource, { 'hubspot-programs': 54, map: 65 })
   // Comparators: the bundle carries spec/observer-comparators.json and every row uses one of them.
   const comparators = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'observer-comparators.json'), 'utf8')).comparators
   assert.deepEqual(checkBundle.comparators, comparators)
@@ -2649,7 +2649,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   assert.match(decisions, /\| 2026-09-25 \| Decided \(Matt Barge, Slack message to the website agent 2026-09-25: 'not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website'\): /)
   const observerChecks = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'observer-checks.json'), 'utf8'))
   assert.deepEqual(observerChecks.families.coverage, ['campus-page-rendered', 'campus-registry-coverage', 'program-page-present'])
-  assert.deepEqual(Object.keys(observerChecks.pendingInObserver).filter((k) => !k.startsWith('$')).sort(), ['campus-page-rendered', 'campus-registry-coverage', 'program-page-present'])
+  assert.deepEqual(Object.keys(observerChecks.pendingInObserver).filter((k) => !k.startsWith('$')).sort(), ['bundle-conformance'], 'the coverage family is emitted since aeo #37; only the conformance check waits on the observer')
   // Aliases: every tests/page-check.mjs id is mapped to a row or named as unmapped, and nothing else is listed.
   const ids = pageCheckIds()
   assert.deepEqual(ids, ['announced-names-launch-date', 'book-a-call-consistency', 'brand-visual', 'canonical-tag', 'cta-apply-now', 'cta-attend-an-info-session', 'cta-hidden-everywhere', 'cta-links-resolve', 'cta-stay-in-the-know', 'edge-cache-current', 'footer-template-present', 'h1-names-campus', 'h1-present', 'header-stylesheet-linked', 'header-template-present', 'intro-section-present', 'n8n-override-recorded', 'n8n-synced-elements-present', 'no-other-campus-in-image-names', 'no-sister-brand-words', 'open-intro-media-approved', 'open-no-launch-words', 'open-status-sentence', 'page-reachable', 'team-photo-framing'])
@@ -2692,7 +2692,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
 
 test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before titles, one class per id, and the East Bay launch-card ticket goes to website operations', () => {
   const classesSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'ticket-classes.json'), 'utf8'))
-  assert.equal(classesSpec.version, "0.14")
+  assert.equal(classesSpec.version, "0.15")
   assert.deepEqual(bundle.classes['observer-media-identity'].matchRequirementIds, ['campus.intro.media.current', 'site.identity.other-campus.images', 'site.layout.images.crop', 'site.coverage.open-campus-registries'])
   assert.deepEqual(bundle.classes['observer-media-identity'].matchCheckIds, ['open-intro-media-approved', 'no-other-campus-in-image-names'])
   assert.ok(bundle.classes['observer-media-identity'].observerChecks.includes('campus-page-stale-launch-media'), 'the stale-media check is classified to its row\'s class')
