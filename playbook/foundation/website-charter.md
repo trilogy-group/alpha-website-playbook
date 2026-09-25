@@ -84,7 +84,8 @@ Proposed measures, each with the system that already records it. None is adopted
 | Product owner of the website as a product (sets purpose, audience, priorities, accepts or rejects requirements) | Not named | Gap; Q-04. Yash Chitneni acts in this role by default today |
 | Website operations (executes and approves day-to-day changes) | Yash Chitneni | Confirmed, `registry/people.json` |
 | Website agent operator (runs the supervised agent, owns the observer) | Matt Barge | Confirmed |
-| Brand authority (wording, claims, visual brand) | MacKenzie Price | Confirmed for wording; visual scope is Q-12 |
+| Brand authority (wording, claims, visual brand) | MacKenzie Price | Confirmed for wording; visual brand scope is Q-12 |
+| Design and layout authority (opinions on how the site looks and is laid out) | Haven Mass | Confirmed, MacKenzie Price 2026-09-25 ("rely on her for some thoughts around the design and just the layout"); `registry/people.json`, `spec/responsibilities.json` design-authority |
 | Executive sponsor | Joe Liemandt appears in marketing meeting records as the decision maker on marketing direction | Not recorded as a website role; Q-04 |
 | Elementor and visual template owner | Not named | Gap |
 | Analytics and consent owner | Not named | Gap |
@@ -113,6 +114,8 @@ When two tickets, two owners, or a ticket and a requirement conflict, apply this
 5. Does it have a named approver for its surface in `control-matrix.md`?
 
 A change that fails any step is not made. Silence from an approver is not approval.
+
+Uniformity (MacKenzie Price, 2026-09-25): campus pages are as uniform as possible, and a single Director of Admissions or Dean of Parents asking for a one-off is not a reason for a page to diverge from the template. A campus-specific element exists only as a named exception in `spec/site-rules.json` `site.uniformity.campus-template`; step 5 above is applied to the exception, not to the request.
 
 ## Sources
 

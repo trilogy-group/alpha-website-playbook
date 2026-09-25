@@ -1,5 +1,5 @@
 {
-  "$comment": "Info packet and calendar links on every campus page, read from the live pages 2026-09-16 with logged-out HTTP status. hidden=true means the button is responsive-hidden on all devices (the template placeholder \"INFO PACKET - update link\" is meant to stay hidden until an approved packet exists). approved is unknown until the APEX CampusPacketProfile status is exposed; as of 2026-09-16 Matt Barge states no 2026-27 packet is approved yet.",
+  "$comment": "Info packet and calendar links on every campus page, read from the live pages 2026-09-16 with logged-out HTTP status. hidden=true means the button is responsive-hidden on all devices (the template placeholder \"INFO PACKET - update link\" is meant to stay hidden until an approved packet exists). approved is unknown until the APEX CampusPacketProfile status is exposed; as of 2026-09-16 Matt Barge states no 2026-27 packet is approved yet. Decided 2026-09-25 (MacKenzie Price gave final sign-off on the 2026-27 packet masters that day): from then on the hold is per campus. A Dean of Parents approving their campus packet in APEX generates the packet and publishes it on their campus page; a campus without that approval keeps its 2026/27 button hidden (interimPolicy). The per-campus entries below are the 2026-09-16 read and are unchanged by the sign-off; each is refreshed when its approval is read back from the CampusPacketProfile.",
   "asOf": "2026-09-16",
   "interimPolicy": {
     "$comment": "Read by the check bundle row campus.resources.packet.present. While no 2026-27 packet is approved, a responsive-hidden 2026/27 INFO PACKET button is the approved interim state: it is not cta-hidden-everywhere and files no ticket. A visible placeholder (INFO PACKET - update link) is still a defect.",
@@ -8,6 +8,15 @@
     "since": "2026-09-24",
     "decidedBy": "Matt Barge (QC loop redesign plan 2026-09-24)",
     "decisionPending": "cmtlz33vo000504ju2itpi7d9"
+  },
+  "approvalPolicy": {
+    "$comment": "Per-campus approval from the 2026-27 sign-off. Not read by a check row yet; the packet rows keep interimPolicy until the APEX CampusPacketProfile status is exposed on the API.",
+    "rule": "a Dean of Parents approving their campus packet in APEX generates it and publishes it on the campus page; no other approval is needed after the masters sign-off",
+    "mastersSignedOffBy": "MacKenzie Price",
+    "mastersSignedOffOn": "2026-09-25",
+    "since": "2026-09-25",
+    "decision": "tests/fixtures/decisions/recorded/2026-09-25-campus-packets-234ca879.json",
+    "notifiedBy": "Yash Chitneni (DOP notifications and Loom, 2026-09-25)"
   },
   "campuses": {
     "atlanta": {

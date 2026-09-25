@@ -48,6 +48,7 @@ This is the question the matrix is most often asked to answer. Evidence is recor
 - Brand wording, claims, statistics, tone.
 - Functionality: forms, sync, plugins, maps, scripts.
 - Whether a request is executed as asked. Website operations may decline, reshape, or route a request to a source owner.
+- A campus-only element. Campus pages stay uniform (Confirmed: MacKenzie Price, 2026-09-25); a one-off exists only as a named exception in `spec/site-rules.json` `site.uniformity.campus-template`, and a request for one that is not listed is internal review, not execution.
 
 **Who at a campus may ask** (Observed): Directors of Admissions and Campus Coordinators file most requests. Deans of Parents are often the only role at a campus and marketing collateral is "not in their purview" (Crystle Dorsey, 2026-08-27). Heads of Schools rule on vacancies and card removals. The Admissions Hub org chart is the roster of record.
 

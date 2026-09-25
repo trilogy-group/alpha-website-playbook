@@ -1,6 +1,6 @@
 {
   "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
-  "version": "0.3",
+  "version": "0.4",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
@@ -29,7 +29,8 @@
         "video-editing",
         "videography",
         "website-agent-operator",
-        "website-operations"
+        "website-operations",
+        "design-authority"
       ]
     },
     "hubspot": {
@@ -334,6 +335,23 @@
         "source": "registry/people.json",
         "staleAfterDays": 90
       }
+    },
+    "design-authority": {
+      "department": "marketing",
+      "owns": [
+        "design and layout opinions for alpha.school: how a page looks and is laid out, when website operations put a choice to her"
+      ],
+      "approves": [
+        "layout and design choices website operations ask her to judge; brand wording and the four held items stay with brand-authority"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json",
+        "staleAfterDays": 90
+      },
+      "source": "MacKenzie Price, website strategy meeting 2026-09-25: rely on Haven Mass for design and layout (tests/fixtures/decisions/recorded/2026-09-25-people-f3cf0423.json)"
     },
     "expansion-new-programs": {
       "department": "expansion",

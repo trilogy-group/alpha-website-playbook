@@ -208,5 +208,27 @@
   },
   "readPaths": {
     "hubspotProgramFieldsNotOnGrowthMap": "n8n execution payload of workflow ORgdHC71YJ5RawBy (GET /api/v1/executions?workflowId=...&limit=1, then /executions/{id}?includeData=true, about 65 MB) carries every Program property the nightly run read, including website_campus_intro, tuition, phone, email; use it when the HubSpot token lacks crm.objects.custom.read and the growth map omits the field"
+  },
+  "campusGuideVideos": {
+    "name": "Campus guide videos spreadsheet (every campus guide's \"Welcome to Alpha, I'm your guide\" video)",
+    "spreadsheetId": null,
+    "owner": "Chris Moss",
+    "ownerNote": "Named by MacKenzie Price on 2026-09-25 (\"Chris Moss has the full spreadsheet with every campus guide video\"). Not in registry/people.json; registry/people.json has Chris Mass (videography coverage owner), who may be the same person; confirm the name and the sheet with him before registering the id.",
+    "columns": null,
+    "access": null,
+    "feeds": "spec/campus-page-requirements.json states/Open/campus.guide-videos (advisory until spreadsheetId and access are filled)",
+    "since": "2026-09-25",
+    "decision": "tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-fa389d33.json"
+  },
+  "sis": {
+    "name": "Student information system (SIS): current enrollment, grade and campus per student",
+    "system": null,
+    "owner": null,
+    "ownerNote": "MacKenzie Price named the SIS as the source for the homepage From our students quotes on 2026-09-25; the system and its owner are not yet named. Yash Chitneni said the team will connect to it.",
+    "feeds": "spec/page-family-requirements.json homepage requirements site.homepage.student-quotes.current (advisory until system and owner are filled)",
+    "access": null,
+    "publicFactRestriction": "Student names and grades are personal data: a quote names a student only with the existing approval that put it on the page; the SIS is read to confirm currency (enrolled now, grade now), never to publish new facts.",
+    "since": "2026-09-25",
+    "decision": "tests/fixtures/decisions/recorded/2026-09-25-page-family-requirements-3bfb966c.json"
   }
 }

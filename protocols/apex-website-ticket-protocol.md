@@ -174,6 +174,8 @@ Choose the environment through `protocols/production-and-staging.md`. Recover th
 
 Refuse and send back rather than guess when: the target field cannot be found exactly once; the replacement text or asset is not specified or not approved; the change would touch claims, pricing, admissions, legal text, or campus-opening facts without the named owner's approval; the page structure is not one the recipe supports.
 
+A removal that waits on a replacement is a Missing Info hold, not a removal: when the requester says the replacement (a new guide list, a new roster, a new asset) is coming, put the ticket in Missing Info with the exact ask and leave the current content on the page until the replacement is on the ticket; never empty a section on the promise of a later ticket (the homepage Alpha Guides carousel, removed on 2026-09-23 at Tasha Arnold's request before Zara Rahim's replacement list existed, read as a reverted site to MacKenzie Price on 2026-09-25; decision 2026-09-25, `spec/ticket-templates.json` `rules.removalPendingReplacement`).
+
 ## 5. Test in three rings
 
 All three rings run on the canonical public URL after cache clearing. Screenshots are taken in the agent's browser and attached according to `protocols/evidence-and-screenshots.md`.

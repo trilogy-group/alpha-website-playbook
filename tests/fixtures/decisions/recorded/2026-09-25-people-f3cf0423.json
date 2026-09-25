@@ -1,0 +1,16 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T21:25:54.309Z",
+  "decidedBy": "MacKenzie Price",
+  "source": "Website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25, Granola transcript in marketingsupport docs/meetings/",
+  "date": "2026-09-25",
+  "specRefs": [
+    "registry/people.json havenmass",
+    "spec/responsibilities.json roles/design-authority"
+  ],
+  "summary": "rely on Haven Mass for design and layout opinions on alpha.school; MacKenzie knows when she likes something and when she does not but cannot say how to get there, and wants Haven in the next website meeting; brand wording stays with MacKenzie",
+  "decisionRow": "| 2026-09-25 | Decided (MacKenzie Price, Website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25, Granola transcript in marketingsupport docs/meetings/): rely on Haven Mass for design and layout opinions on alpha.school; MacKenzie knows when she likes something and when she does not but cannot say how to get there, and wants Haven in the next website meeting; brand wording stays with MacKenzie | MacKenzie Price | registry/people.json havenmass; spec/responsibilities.json roles/design-authority; tests/fixtures/decisions/recorded/2026-09-25-people-f3cf0423.json |",
+  "appliedIn": "registry/people.json havenmass; spec/responsibilities.json roles/design-authority; tests/fixtures/decisions/recorded/2026-09-25-people-f3cf0423.json",
+  "textSha256": "f3cf0423d1ce9f9ab544a78796fd895246fbe82af01ba6611806f5f9a5b33f19",
+  "text": "Website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (Granola transcript, marketingsupport docs/meetings/2026-09-25 MacKenzie Price website strategy transcript.md). \"Me\" is Matt Barge. Passage:\n\nMacKenzie Price: as featured in, we had all these different things. Yeah, this is totally old. Okay, um, no, I don't have anything else and I do have to run, um, but let's Let's— we can do another thing sometime. Actually, not next week. I'm super busy next week. Maybe the week after. I've got more availability the week after. I'd like for you to come back with— but, you know, obviously get this website thing fixed, and then I'd like you to come back with, you know, as soon as possible all the like, here's the things we're fixing, here's the data and analysis we're doing, and what We change, and then I know Haven's got a lot of opinions about the building out the website as well, and I want to \nYash Chitneni: get her on. That sounds great. Okay. \nMe: Totally. Do you want us to rely on her for design? Because I feel like we don't always necessarily \nMacKenzie Price: That'd be great. I, I don't— yeah, I don't have— I know what— I know when I think I like something, and I know when I don't like something, but I can't tell you what to do to get to where I like it. Um, so yes, I would love for you to rely on her for some thoughts around the design and like just the layout and how it goes. \nMe: Okay. \n"
+}
