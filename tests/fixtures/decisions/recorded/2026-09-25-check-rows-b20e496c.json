@@ -1,0 +1,16 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T15:41:51.966Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator",
+  "date": "2026-09-25",
+  "specRefs": [
+    "spec/check-rows.json",
+    "spec/schemas/check-bundle.schema.json"
+  ],
+  "summary": "check bundle 1.2 adds channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot Programs; the Community record, URL form and host rows); rows about a WordPress element stay ticket and the builder refuses a source-digest row with a WordPress element or a wordpress-alpha-mcp fix path; the filer never files them and writes source-digest.md grouped by owner role (growth-map-owner, hubspot-program-admin, operations-sheet-owner, community-app-owner) with one audit line per finding, the summary prints the count, and open tickets already on those rows are untouched",
+  "decisionRow": "| 2026-09-25 | Decided (Matt Barge, Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator): check bundle 1.2 adds channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot Programs; the Community record, URL form and host rows); rows about a WordPress element stay ticket and the builder refuses a source-digest row with a WordPress element or a wordpress-alpha-mcp fix path; the filer never files them and writes source-digest.md grouped by owner role (growth-map-owner, hubspot-program-admin, operations-sheet-owner, community-app-owner) with one audit line per finding, the summary prints the count, and open tickets already on those rows are untouched | Matt Barge | spec/check-rows.json; spec/schemas/check-bundle.schema.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-b20e496c.json |",
+  "appliedIn": "spec/check-rows.json; spec/schemas/check-bundle.schema.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-b20e496c.json",
+  "textSha256": "b20e496c6644334b721e9f097dfb5ff079ac77ac6a8a3d23227ff199104f470e",
+  "text": "Decision by Matt Barge, 2026-09-25, relayed to the Claude Code session building the alpha-website-playbook QC cadence branch:\n\nBreadth: a new row channel value source-digest for source-versus-source comparisons that are not website defects: every site.map.integrity.* row that compares the Operations sheet, the growth map API and HubSpot with each other (operations row presence, address agreement, campus missing from map or from Operations, duplicate program records, hubspot-map-sync, program facts), and the site.community.routing.* rows about the Community record, URL form and host. Rows about a WordPress element (a CTA, a link, page copy, an image) stay ticket. Schema updated; tests/build-checks.mjs refuses a source-digest row that carries a WordPress element or a wordpress-alpha-mcp fix path. The filer never files a source-digest row: it writes them to a source-digest.md section of its report grouped by owner role (growth-map-owner, hubspot-program-admin, operations-sheet-owner, community-app-owner) with the audit line per finding, and the run summary prints the count. Existing open tickets on those rows are untouched.\n"
+}

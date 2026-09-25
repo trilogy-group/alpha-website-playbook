@@ -4,6 +4,19 @@ name: APEX observer filer
 # playbook's ticket policy to the resulting packet. It is dry-run-only until both the
 # three-run precision gate passes and OBSERVER_FILER_APPLY is explicitly set to true.
 #
+# Cadence (2026-09-25, Matt Barge): the filer runs after each full observer run, not on its own
+# clock. GitHub's workflow_run trigger does not cross repositories, so the observer workflow
+# (superbuilders/aeo .github/workflows/site-observe.yml, "Alpha Website Production Observer") sends a
+# repository_dispatch to this repository when it completes with conclusion success:
+#   gh api repos/trilogy-group/alpha-website-playbook/dispatches -f event_type=observer-run-completed \
+#     -f 'client_payload[run_id]=<the observer GitHub run id>' -f 'client_payload[mode]=full|events' \
+#     -f 'client_payload[conclusion]=success'
+# The receiver files only after a full run (an events-lane packet carries no rendered evidence);
+# the payload's run id is the packet selected. A fallback cron at 06:45 and 21:45 UTC (45 minutes
+# after the 06:00 and 21:00 UTC full runs) catches a dispatch that never arrived and selects the
+# newest successful run by createdAt; the freshness gate below refuses anything older than six
+# hours either way. Apply stays gated by the repository variable OBSERVER_FILER_APPLY.
+#
 # Packet freshness gate (2026-09-25, after a scheduled apply selected a 17-day-old packet and
 # filed 20 tickets no current run reproduces): the newest successful observer run by createdAt
 # is selected (never list order), its packet is downloaded here, and the job stops before any
@@ -15,8 +28,11 @@ name: APEX observer filer
 # updates the variable, so no packet is applied twice and no older packet after a newer one.
 # agent/file-observer-findings.mjs --apply enforces the same conditions itself (STALE_PACKET).
 on:
+  repository_dispatch:
+    types: [observer-run-completed]
   schedule:
-    - cron: '47 * * * *'
+    # Fallback only: 45 minutes after the 06:00 and 21:00 UTC full observer runs.
+    - cron: '45 6,21 * * *'
   workflow_dispatch:
     inputs:
       run_id:
@@ -62,11 +78,32 @@ jobs:
           INPUT_APPLY: ${{ inputs.apply }}
           CONFIG_APPLY: ${{ vars.OBSERVER_FILER_APPLY }}
           TRIGGER_EVENT: ${{ github.event_name }}
+          DISPATCH_RUN_ID: ${{ github.event.client_payload.run_id }}
+          DISPATCH_MODE: ${{ github.event.client_payload.mode }}
+          DISPATCH_CONCLUSION: ${{ github.event.client_payload.conclusion }}
         run: |
           set -euo pipefail
           test -n "$GH_TOKEN" || { echo 'AEO_REPO_TOKEN is required to read the observer artifact.' >&2; exit 2; }
 
           run_id="$INPUT_RUN_ID"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          if [[ "$TRIGGER_EVENT" == 'repository_dispatch' ]]; then
+            # The observer told us which run completed; the filer runs after full runs only.
+            [[ "$DISPATCH_RUN_ID" =~ ^[0-9]+$ ]] || { echo "repository_dispatch observer-run-completed needs client_payload.run_id (a numeric observer run id), got: $DISPATCH_RUN_ID" >&2; exit 2; }
+            if [[ -n "$DISPATCH_CONCLUSION" && "$DISPATCH_CONCLUSION" != 'success' ]]; then
+              echo "Observer run $DISPATCH_RUN_ID completed with conclusion $DISPATCH_CONCLUSION; the filer runs after successful runs only." >&2; exit 2
+            fi
+            if [[ -n "$DISPATCH_MODE" && "$DISPATCH_MODE" != 'full' ]]; then
+              # Not a failure: the events lane has no rendered evidence; every later step is skipped on skip=true.
+              echo "Observer run $DISPATCH_RUN_ID was an ${DISPATCH_MODE} run; the filer runs after each full run (docs/sweep-runbook.md, Cadence, breadth and depth)."
+              { echo '## APEX observer filer'; echo; echo "- Skipped: observer run \`$DISPATCH_RUN_ID\` was a \`$DISPATCH_MODE\` run; the filer runs after full runs."; } >> "$GITHUB_STEP_SUMMARY"
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "run_id=$DISPATCH_RUN_ID" >> "$GITHUB_OUTPUT"
+              echo "apply=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            run_id="$DISPATCH_RUN_ID"
+          fi
           if [[ -z "$run_id" ]]; then
             # The newest successful run by createdAt: gh run list's order is not a contract (2026-09-25 it handed back a 17-day-old run).
             run_id="$(gh run list \
@@ -82,21 +119,22 @@ jobs:
           [[ "$run_created_at" == *" success" ]] || { echo "Observer run $run_id did not succeed: $run_created_at" >&2; exit 2; }
 
           apply=false
-          if [[ "$TRIGGER_EVENT" == 'schedule' && "$CONFIG_APPLY" == 'true' ]]; then apply=true; fi
+          # Unattended apply (the observer's dispatch after a full run, or the fallback cron) only when OBSERVER_FILER_APPLY is true.
+          if [[ ( "$TRIGGER_EVENT" == 'schedule' || "$TRIGGER_EVENT" == 'repository_dispatch' ) && "$CONFIG_APPLY" == 'true' ]]; then apply=true; fi
           if [[ "$TRIGGER_EVENT" == 'workflow_dispatch' && "$INPUT_APPLY" == 'true' ]]; then apply=true; fi
-          if [[ "$apply" == 'true' && -z "$INPUT_RUN_ID" ]]; then
-            echo 'Apply mode requires an exact workflow_dispatch run_id; scheduled apply uses the newest successful run.' >&2
-            if [[ "$TRIGGER_EVENT" == 'workflow_dispatch' ]]; then exit 2; fi
+          if [[ "$apply" == 'true' && -z "$INPUT_RUN_ID" && "$TRIGGER_EVENT" == 'workflow_dispatch' ]]; then
+            echo 'Apply mode requires an exact workflow_dispatch run_id; the dispatch and the fallback cron carry their own run id.' >&2
+            exit 2
           fi
 
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
           echo "run_created_at=${run_created_at% *}" >> "$GITHUB_OUTPUT"
           echo "apply=$apply" >> "$GITHUB_OUTPUT"
-          echo "Observer run: $run_id (created ${run_created_at% *})"
+          echo "Observer run: $run_id (created ${run_created_at% *}; trigger $TRIGGER_EVENT${DISPATCH_MODE:+, observer mode $DISPATCH_MODE})"
           echo "Mode: $([[ "$apply" == 'true' ]] && echo apply || echo dry-run)"
 
       - name: Require merged APEX filer support before writes
-        if: steps.select.outputs.apply == 'true'
+        if: steps.select.outputs.skip != 'true' && steps.select.outputs.apply == 'true'
         env:
           GH_TOKEN: ${{ secrets.AEO_REPO_TOKEN }}
         run: |
@@ -108,6 +146,7 @@ jobs:
           }
 
       - name: Download the observer packet
+        if: steps.select.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.AEO_REPO_TOKEN }}
           RUN_ID: ${{ steps.select.outputs.run_id }}
@@ -122,7 +161,7 @@ jobs:
 
       - name: Read the last applied run id
         id: ledger
-        if: steps.select.outputs.apply == 'true'
+        if: steps.select.outputs.skip != 'true' && steps.select.outputs.apply == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           CONFIG_LAST_APPLIED: ${{ vars.OBSERVER_FILER_LAST_APPLIED_RUN }}
@@ -148,6 +187,7 @@ jobs:
 
       - name: Packet freshness gate
         id: gate
+        if: steps.select.outputs.skip != 'true'
         env:
           RUN_ID: ${{ steps.select.outputs.run_id }}
           APPLY: ${{ steps.select.outputs.apply }}
@@ -166,6 +206,7 @@ jobs:
           node agent/packet-freshness-gate.mjs "${args[@]}"
 
       - name: Build filer report
+        if: steps.select.outputs.skip != 'true'
         env:
           APEX_API_TOKEN: ${{ secrets.APEX_API_TOKEN }}
           APEX_API_BASE: ${{ vars.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1' }}
@@ -192,7 +233,7 @@ jobs:
           if [[ -f "$PACKET_DIR/filer-writes.jsonl" ]]; then cp "$PACKET_DIR/filer-writes.jsonl" out/; fi
 
       - name: Record the apply ledger
-        if: steps.select.outputs.apply == 'true'
+        if: steps.select.outputs.skip != 'true' && steps.select.outputs.apply == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ steps.select.outputs.run_id }}
@@ -235,7 +276,7 @@ jobs:
           {
             echo '## APEX observer filer'
             echo
-            jq -r '"- Mode: `\(.mode)`\n- Observer run: `\(.runId)`\n- Packet completed: `\(.packet.completedAt)` (\(.packet.ageHours) h old, bundle `\(.packet.bundleStatus)`)\n- Last applied run: `\(.packet.afterRunId // "none")`\n- Bundle: `\(.bundleVersion)` (`\(.bundleSha256)`)\n- Candidate tickets: **\(.counts.files)**\n- Existing/deduped: **\(.counts.existing)**\n- Held: **\(.counts.held)**\n- Suppressed: **\(.counts.suppressed)**\n- Loop-health only: **\(.counts.loopHealth)**\n- Candidate resolutions: **\(.counts.resolves)**\n- Invalid contracts: **\(.counts.invalid)**"' out/filer-report.json
+            jq -r '"- Mode: `\(.mode)`\n- Observer run: `\(.runId)`\n- Packet completed: `\(.packet.completedAt)` (\(.packet.ageHours) h old, bundle `\(.packet.bundleStatus)`)\n- Last applied run: `\(.packet.afterRunId // "none")`\n- Bundle: `\(.bundleVersion)` (`\(.bundleSha256)`)\n- Candidate tickets: **\(.counts.files)**\n- Existing/deduped: **\(.counts.existing)**\n- Held: **\(.counts.held)**\n- Suppressed: **\(.counts.suppressed)**\n- Loop-health only: **\(.counts.loopHealth)**\n- Source digest (never filed; out/source-digest.md): **\(.counts.sourceDigest // 0)**\n- Candidate resolutions: **\(.counts.resolves)**\n- Invalid contracts: **\(.counts.invalid)**"' out/filer-report.json
             if [[ "$(jq -r '.packetWarnings | length' out/filer-report.json)" != '0' ]]; then
               jq -r '.packetWarnings[] | "- Packet warning: \(.)"' out/filer-report.json
             fi

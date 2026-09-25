@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T15:41:52.164Z",
+  "decidedBy": "Matt Barge",
+  "source": "HubSpot Program 57622127456 type change 2026-09-22, relayed by the coordinator 2026-09-25",
+  "date": "2026-09-22",
+  "specRefs": [
+    "spec/campus-lifecycle.json"
+  ],
+  "summary": "Alpha Jamaica Plain (https://alpha.school/jamaica-plain/) is Open: the lifecycle entry moves from Announced to Open with the intro statement \"Alpha Jamaica Plain is open and enrolling.\" and a note citing the HubSpot Program read at 2026-09-25T15:23:34Z (type Open since 2026-09-22T20:22:41.856Z; community_url unchanged); state counts refreshed from the growth map API (38 Open, 7 Announced, 31 Pre-Announcement)",
+  "decisionRow": "| 2026-09-22 | Decided (Matt Barge, HubSpot Program 57622127456 type change 2026-09-22, relayed by the coordinator 2026-09-25): Alpha Jamaica Plain (https://alpha.school/jamaica-plain/) is Open: the lifecycle entry moves from Announced to Open with the intro statement \"Alpha Jamaica Plain is open and enrolling.\" and a note citing the HubSpot Program read at 2026-09-25T15:23:34Z (type Open since 2026-09-22T20:22:41.856Z; community_url unchanged); state counts refreshed from the growth map API (38 Open, 7 Announced, 31 Pre-Announcement) | Matt Barge | spec/campus-lifecycle.json; tests/fixtures/decisions/recorded/2026-09-22-campus-lifecycle-a4af91b2.json |",
+  "appliedIn": "spec/campus-lifecycle.json; tests/fixtures/decisions/recorded/2026-09-22-campus-lifecycle-a4af91b2.json",
+  "textSha256": "a4af91b2f58c81ab4f7fea9220c73cdc2638b16d2f047105b08885dfe8779a00",
+  "text": "Decision by Matt Barge, 2026-09-22 (the HubSpot Program type change), relayed by the coordinator on 2026-09-25 during the Book a Call run:\n\nspec/campus-lifecycle.json still lists jamaica-plain as Announced with the Boston Suburbs community URL, while the HubSpot Program has been Open since 2026-09-22 and the page reads \"Alpha Jamaica Plain is open and enrolling.\" Update the entry to Open (read the Program with HUBSPOT_MARKETING_SYNCING_TOKEN for the current fields and cite the read time in the entry's note), keep whatever regeneration the spec expects, and rebuild.\n\nHubSpot Program 57622127456 read 2026-09-25T15:23:34Z: type Open (hs_lastmodifieddate 2026-09-22T20:22:41.856Z), visibility Visible, website https://alpha.school/jamaica-plain/, start_grade_level K, end_grade_level 8, school_address 3815 Washington St, Jamaica Plain, MA 02130, website_campus_intro \"[DISPLAY_NAME] is open and enrolling.\", wordpress_post_id 9282, community_url https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs (unchanged). Growth map API read 2026-09-25T15:25:23Z mirrors programType Open.\n"
+}
