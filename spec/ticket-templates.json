@@ -1,6 +1,6 @@
 {
   "$comment": "The wording and line order of every note and body the APEX website ticket protocol prescribes, in one place. The renderer (tests/render-ticket.mjs), triage (tests/triage-ticket.mjs), intake (agent/intake-policy.mjs), the pathway diagnosis (tests/diagnose-field.mjs), the observer filer (agent/file-observer-findings.mjs) and any sweep agent writing a note by hand render these through agent/ticket-templates.mjs, so a change to the protocol's wording is made here once. Placeholders: {name} is a field the caller must supply (listed in `required`; arrays join with ', '); {?name|text} renders text only when the field is present, {?name|text|else} renders else otherwise, and both may nest placeholders; a line may be an object {text, when} rendered only when that field is present, or {each, text} rendered once per array item with {index} (1-based) and the item's own fields ({item} for a string item). The protocol document quotes each template through tests/render-templates-examples.mjs from the `example` fields, and a test fails when the quoted block drifts from the renderer.",
-  "version": "1.0",
+  "version": "1.1",
   "asOf": "2026-09-24",
   "markers": {
     "triage": "--- Website agent triage ---"
@@ -17,7 +17,8 @@
     "reviewLine": "Please review.",
     "reviewLineRule": "Every closing note ends with the review line; the reviewer's click is the completion.",
     "noEmDash": "No template and no rendered note contains an em dash (U+2014). Use a colon, a semicolon, or a full stop.",
-    "statusMeansOneThing": "For Review: done and verified, the reviewer's click completes it. Missing Info: waiting on the requester with the exact ask. Blocked: waiting on anyone else, with DECISION NEEDED in the note when it is a decision. In Progress: being executed now, or a published source change waiting for its nightly run (docs/sweep-runbook.md, Status means one thing)."
+    "statusMeansOneThing": "For Review: done and verified, the reviewer's click completes it. Missing Info: waiting on the requester with the exact ask. Blocked: waiting on anyone else, with DECISION NEEDED in the note when it is a decision. In Progress: being executed now, or a published source change waiting for its nightly run (docs/sweep-runbook.md, Status means one thing).",
+    "removalPendingReplacement": "A removal that waits on a replacement is a Missing Info hold, not a removal. When the requester says the replacement (a new guide list, a new roster, a new asset) is coming, the ticket goes to Missing Info with the exact ask and the current content stays on the page until the replacement is on the ticket; a section is never emptied on the promise of a later ticket. Cause: the homepage Alpha Guides carousel was removed on 2026-09-23 at Tasha Arnold's request before Zara Rahim's replacement list existed, and MacKenzie Price read the emptied homepage as a reverted site on 2026-09-25 (decision 2026-09-25; protocol section 4)."
   },
   "templates": {
     "resolution": {

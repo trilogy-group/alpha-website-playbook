@@ -1,6 +1,6 @@
 {
   "$comment": "Per-state, per-section requirements. Rows marked observed_baseline need owner approval before they justify restructuring a page. Each row names its source, owner, checks and exemplar status.",
-  "version": "0.2",
+  "version": "0.3",
   "states": {
     "Open": {
       "campus.hero.identity": {
@@ -145,12 +145,47 @@
       },
       "campus.team": {
         "required": true,
-        "content": "Only approved current staff cards with exact name, public title, biography, photo and order. No placeholders or crossed photos.",
+        "content": "Only approved current staff cards with exact name, public title, biography, photo and order. No placeholders or crossed photos. Order per campus.team.order.",
         "source": "APEX staff request, campus role owner and staff-card safety contract",
         "ownerWhenMissing": "dean-of-parents, then head-of-schools",
         "checks": ["same-card verification", "placeholder check", "desktop and mobile", "page-check team-photo-framing"],
         "exemplars": [],
         "status": "active"
+      },
+      "campus.team.order": {
+        "required": true,
+        "content": "Team section order: the Director of Admissions and the Dean of Parents at the top (leadership row) because they are the most public-facing; the Head of School (Tasha Arnold, who appears on several campuses) lower, after them; head guides and lead guides in the carousel below, with the other guides and campus staff. A card in the wrong place is a placement defect owned by website operations, not a roster question for the campus.",
+        "source": "MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-4ab0267f.json. This is the team-layout standard the roster plans were waiting on (docs/headshot-binding.md).",
+        "ownerWhenMissing": "website-operations for placement; dean-of-parents, then head-of-schools for who holds each role",
+        "checks": [
+          "manual screenshot of the Team section on desktop and mobile until a team-order check exists",
+          "protocols/recipes/staff-card.md placement rule"
+        ],
+        "exemplars": [],
+        "status": "active",
+        "grounding": {
+          "kind": "decision",
+          "ref": "docs/decisions.md 2026-09-25 (MacKenzie Price); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-4ab0267f.json"
+        },
+        "recipe": "protocols/recipes/staff-card.md"
+      },
+      "campus.guide-videos": {
+        "required": true,
+        "content": "A \"Meet Your Alpha <Campus> Guides\" section carrying each guide's \"Welcome to Alpha, I'm your guide\" video, on every campus page from one template, so a new campus gets it automatically and no campus has to ask. The videos come from the registered guide-video source, never from a one-off upload.",
+        "source": "MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-fa389d33.json. Source of the videos: registry/sources.json campusGuideVideos (Chris Moss's spreadsheet of every campus guide video; unregistered, sheet id null).",
+        "ownerWhenMissing": "campus guide video sheet owner (Chris Moss, unregistered in registry/people.json) for the video; website-operations for the section",
+        "checks": [
+          "manual: the section is present and every guide on the Team section has a video, until the source is registered and an observer check exists"
+        ],
+        "exemplars": [
+          "https://alpha.school/raleigh/"
+        ],
+        "status": "advisory",
+        "advisoryReason": "advisory until registry/sources.json campusGuideVideos carries the sheet id and read path (decision 2026-09-25); a missing section files nothing before then",
+        "grounding": {
+          "kind": "decision",
+          "ref": "docs/decisions.md 2026-09-25 (MacKenzie Price); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-fa389d33.json"
+        }
       },
       "campus.video-gallery": {
         "required": true,
@@ -274,6 +309,21 @@
         "checks": ["same-card", "placeholder", "page-check team-photo-framing"],
         "exemplars": [],
         "status": "active"
+      },
+      "campus.guide-videos": {
+        "required": "when the registered guide-video source lists videos for the campus",
+        "content": "Same section and template as the Open state (states/Open/campus.guide-videos); an Announced campus with guides on its Team section carries their videos too.",
+        "source": "MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-fa389d33.json",
+        "ownerWhenMissing": "campus guide video sheet owner (Chris Moss, unregistered) for the video; website-operations for the section",
+        "checks": [
+          "manual until the source is registered"
+        ],
+        "exemplars": [],
+        "status": "advisory",
+        "grounding": {
+          "kind": "decision",
+          "ref": "docs/decisions.md 2026-09-25 (MacKenzie Price); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-fa389d33.json"
+        }
       },
       "campus.discovery": {
         "required": "when page is published",

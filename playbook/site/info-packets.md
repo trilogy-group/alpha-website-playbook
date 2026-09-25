@@ -16,7 +16,7 @@ Machine forms: `registry/campus-packets.json` (per-campus links with logged-out 
 
 ## Rules
 
-1. **No unapproved packet is linked publicly.** As of 2026-09-16 no 2026-27 packet is approved (Matt Barge). Twenty Open campus pages nevertheless show a visible "2026/27 INFO PACKET" button. Decision pending on whether to hide them until approval.
+1. **No unapproved packet is linked publicly; approval is per campus.** MacKenzie Price gave final sign-off on the 2026-27 packet masters on 2026-09-25. From then on a Dean of Parents approving their campus packet in APEX generates the packet and publishes it on their campus page; a campus whose DOP has not approved keeps its 2026/27 button hidden (the approved interim state, `registry/campus-packets.json` `interimPolicy`), and a visible button on a campus without that approval is a defect. The per-campus read below is from 2026-09-16 and is refreshed as approvals are read back. (Before the sign-off: as of 2026-09-16 no 2026-27 packet was approved and twenty Open pages showed a visible button.)
 2. **The placeholder stays hidden.** The template carries a button labeled "INFO PACKET - update link"; it is responsive-hidden on all devices until an approved packet exists. A visible placeholder is a defect.
 3. **Packet facts follow the HubSpot Program.** The APEX generator reads start and end grade, tuition, fees, address, email, and phone from the Program record. A packet that disagrees with the record is regenerated, not hand-edited. Which grade property packets state is part of the pending grade-property decision (APEX cmu4g13kc00000agmdogkxihp).
 4. **Approval is a person in APEX**, recorded on the profile. Brand review before that is the marketing meeting (MacKenzie Price and Joe), per Brittany Goodman on 2026-08-27.
@@ -79,6 +79,7 @@ Findings from this read: four calendars return 401 (Boston Suburbs, Oklahoma Cit
 | Question | Role | Person |
 | --- | --- | --- |
 | Is this packet approved; when will the 2026-27 batch be done | packet-owner | Matt Barge |
+| Has this campus's DOP approved its 2026-27 packet (generates and publishes it) | dean-of-parents, live | the campus Dean of Parents; Yash Chitneni sends the notifications |
 | Current Canva master, template edits | website-operations | Yash Chitneni |
 | A fact in the packet (tuition, grades, address) | hubspot-program-admin | Farhan Raja |
 | Flyers and trifolds | marketing-collateral | Chris Davidson |

@@ -30,6 +30,7 @@ The homepage explains Alpha, routes families into the admissions funnel, present
 - No map or card points to a draft, obsolete campus object, wrong brand, or guessed Community slug.
 - Analytics, consent, chat, and UTM scripts do not block primary content or routing.
 - Desktop and mobile checks include maps, navigation, popups, overlays, and primary CTAs.
+- Every "From our students" quote names a student who is enrolled now, with the grade they are in now; the SIS is the source of truth (MacKenzie Price, 2026-09-25; `spec/page-family-requirements.json` homepage `site.homepage.student-quotes.current`, advisory until the SIS is registered in `registry/sources.json`).
 
 ## Change routing
 
@@ -41,6 +42,7 @@ The homepage explains Alpha, routes families into the admissions funnel, present
 | WordPress map CTA or surrounding copy | Website operations through an approved recipe |
 | Page layout or map implementation | Elementor or platform owner, staging first |
 | Global navigation or tracking | Dedicated global ticket, staging first |
+| A "From our students" quote (name, grade, currency) | SIS owner (not yet named; `registry/sources.json` `sis`) for the read, then website operations for the page edit |
 
 ## Completion
 

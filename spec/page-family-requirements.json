@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/page-family-requirements.schema.json",
   "$comment": "Machine-readable index of alpha.school page families. Detailed human requirements live under playbook/page-families and playbook/campus-page. Status values prevent incomplete families from being treated as unattended-execution ready.",
-  "version": "1.0",
-  "asOf": "2026-09-17",
+  "version": "1.1",
+  "asOf": "2026-09-25",
   "scope": "alpha.school",
   "commonRequiredFields": [
     "canonicalUrl",
@@ -32,15 +32,35 @@
         "campus discovery",
         "header",
         "footer",
-        "desktop and mobile"
+        "desktop and mobile",
+        "current student quotes (site.homepage.student-quotes.current)"
       ],
       "sources": [
         "WordPress and Elementor",
         "HubSpot-backed growth map",
-        "approved admissions routes"
+        "approved admissions routes",
+        "SIS for student quote currency (registry/sources.json sis; system and owner not yet named)"
       ],
       "ownerRole": "website-operations",
-      "status": "component_inventory_incomplete"
+      "status": "component_inventory_incomplete",
+      "requirements": {
+        "site.homepage.student-quotes.current": {
+          "required": true,
+          "status": "advisory",
+          "advisoryReason": "advisory until registry/sources.json sis carries the system, owner and read path (decision 2026-09-25); no ticket files on it before then",
+          "content": "Every quote in the homepage \"From our students\" section names a student who is enrolled now, with the grade they are in now. A student who has left, or whose grade has changed, is removed or refreshed from the SIS; the section never keeps a quote because it reads well.",
+          "source": "MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-page-family-requirements-3bfb966c.json. Source of truth: the SIS (registry/sources.json sis).",
+          "ownerWhenMissing": "SIS owner (not yet named) for the currency read; website-operations (Yash Chitneni) for the page edit",
+          "checks": [
+            "manual: compare each quoted name and grade with the SIS; no observer check yet"
+          ],
+          "knownDefect": "2026-09-25 (MacKenzie Price on the call): Chloe has not been at the school for three years; Marshall is now about grade 8; Lulu is in high school; Silas is no longer enrolled; Shepherd is old; Rosie left and came back.",
+          "grounding": {
+            "kind": "decision",
+            "ref": "docs/decisions.md 2026-09-25 (MacKenzie Price); tests/fixtures/decisions/recorded/2026-09-25-page-family-requirements-3bfb966c.json"
+          }
+        }
+      }
     },
     {
       "id": "locations",

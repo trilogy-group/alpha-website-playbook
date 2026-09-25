@@ -758,7 +758,7 @@
       "roles": [
         {
           "role": "lead-guide",
-          "title": "LEAD GUIDE \u00b7 MIDDLE SCHOOL",
+          "title": "LEAD GUIDE · MIDDLE SCHOOL",
           "campus": "miami",
           "source": "website staff card",
           "asOf": "2026-09-15"
@@ -2103,7 +2103,7 @@
       "roles": [
         {
           "role": "dean-of-parents",
-          "title": "Dean of Parents of Alpha School in Orange County\u200b",
+          "title": "Dean of Parents of Alpha School in Orange County​",
           "campus": "orange-county",
           "source": "website staff card",
           "asOf": "2026-09-15"
@@ -2796,6 +2796,13 @@
           "campus": "all",
           "source": "Slack, 2026-09-15",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "design-authority",
+          "title": "Design and layout opinions for alpha.school; MacKenzie Price asked the web team to rely on her for design and layout",
+          "campus": "all",
+          "source": "MacKenzie Price, website strategy meeting 2026-09-25 (tests/fixtures/decisions/recorded/2026-09-25-people-f3cf0423.json)",
+          "asOf": "2026-09-25"
         }
       ],
       "sources": [
@@ -2805,7 +2812,7 @@
       ],
       "slackId": "U0A4MS0SXHB",
       "hubspotOwnerId": "86877387",
-      "note": "HubSpot owner record uses a personal address; use the alpha.school address from APEX.",
+      "note": "HubSpot owner record uses a personal address; use the alpha.school address from APEX. Design authority (2026-09-25, MacKenzie Price): rely on Haven for thoughts on the design and the layout; MacKenzie wants her in the next website meeting (the week after next from 2026-09-25). Brand wording stays with MacKenzie (brand-authority).",
       "apexUserId": "cmtx2ervs00000bgm59cw8xnt"
     },
     "chrismass": {

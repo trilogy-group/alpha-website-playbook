@@ -1,6 +1,6 @@
 {
   "$comment": "Site-wide rule ids and one-line statements; prose in playbook/site/site-rules.md.",
-  "version": "0.5",
+  "version": "0.6",
   "rules": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
@@ -13,6 +13,27 @@
       "source": "Alpha School Brand Guidelines (47pp) via the alpha-brand-guide skill 2026-09-22; decision 2026-09-22",
       "check": "page-check brand-visual (advisory; tests/brand-visual.mjs)",
       "spec": "spec/brand-visual.json"
+    },
+    "site.uniformity.campus-template": {
+      "id": "site.uniformity.campus-template",
+      "statement": "Campus pages follow one template and are as uniform as possible; a single Director of Admissions or Dean of Parents asking for a one-off is not a reason for a page to diverge. A campus-specific element exists only as a named exception listed here, with the campus, the element, the reason and the decider; a ticket asking for one that is not listed is internal review for website operations, never executed as asked.",
+      "source": "MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-site-rules-3679605d.json",
+      "check": "manual: the campus page rows measure the shared template; a campus-only element request is compared against namedExceptions at intake (no observer check yet)",
+      "spec": "spec/campus-page-requirements.json; playbook/foundation/website-charter.md section 8; playbook/foundation/control-matrix.md section 2; playbook/site/site-rules.md",
+      "namedExceptions": [
+        {
+          "campus": "raleigh",
+          "url": "https://alpha.school/raleigh/",
+          "element": null,
+          "reason": "a legal requirement in the campus region, requested as a one-off by a person from New York (Matt Barge and Yash Chitneni on the call; the original ticket is not in the playbook fixtures)",
+          "elementNote": "Not identified on a read-only read of the public page on 2026-09-25. Contact-block lines present on Raleigh and on neither Plano nor Charlotte: the \"Temporary Location:\" label above the address (Elementor container 308b0c6), \"(Currently enrolling K-10 for Fall 2027)\" under the grade range, and \"Founding Families Tuition Credit: $10,000 per year for 5 years. Contact Admissions for details.\" under the tuition (container 5b54c07). Which of these, if any, is the legal element is for Yash Chitneni to confirm from the original request; until then the exception stands with the element unknown.",
+          "decidedBy": "MacKenzie Price",
+          "source": "website strategy meeting 2026-09-25",
+          "decidedOn": "2026-09-25",
+          "expires": null,
+          "status": "element-unconfirmed"
+        }
+      ]
     },
     "site.identity.sister-brand": "No sister-brand names in page-owned content except the Brownsville/Nova exception.",
     "site.identity.other-campus": "No other campus referenced in image names, alt text, links, packets, calendars, schema.",

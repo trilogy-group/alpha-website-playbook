@@ -1,7 +1,7 @@
 {
   "$comment": "Field-level ownership map for an alpha.school campus page. For every element: who writes it, from which system and field, how the value is derived, what the loop should compare it against, and which ticket class and owner a mismatch produces. This is the map the observer and any agent use to turn 'the page says X' into 'field F in system S says Y, the derivation is D, so the defect is a data defect / mapping defect / presentation defect owned by role R'. Sources: n8n workflow export ORgdHC71YJ5RawBy (2026-09-16), HubSpot Programs object, onboarding sheet, events plugin contract, MCP inventory. Human form: playbook/campus-page/field-map.md.",
-  "version": "0.1",
-  "asOf": "2026-09-16",
+  "version": "0.2",
+  "asOf": "2026-09-25",
   "writers": {
     "n8n-hubspot": "n8n 'Update school pages' writes the element nightly at 00:15 CT from a HubSpot Program property. WordPress edits are overwritten. Fix path: HubSpot data (APEX campus Program editor) or the n8n derivation.",
     "n8n-sheet": "n8n writes the element nightly from the onboarding sheet 'School onboarding - single file for all schools' tabs Website Copy Fixed (one value for all campuses) and Website Copy Dynamic (per HubSpot Program ID). Fix path: the sheet.",
@@ -129,7 +129,7 @@
           "type"
         ]
       },
-      "derivation": "website_campus_intro verbatim with substitutions. The status sentence inside it is hand-typed; it is NOT derived from the status field 'type'.",
+      "derivation": "website_campus_intro verbatim with substitutions today. The status sentence inside it is hand-typed; it is NOT yet derived from the status field 'type'. Decided 2026-09-25 (MacKenzie Price): it is to be derived from 'type' in the n8n workflow so the text field cannot contradict the status; the workflow change is pending with the n8n-sync-owner and this entry is updated to writer n8n-derived when it lands.",
       "expectedFrom": "requirement by lifecycle state: Open -> '<name> is open and enrolling.'; Announced -> '<name> opens <Month or Season> <Year>.'; Pre-Announcement -> no public page",
       "compare": [
         "page sentence vs requirement for Program type",
@@ -137,10 +137,17 @@
       ],
       "onMismatch": {
         "ifSourceWrong": "hubspot-data (website_campus_intro contradicts type)",
-        "ifDerivationWrong": "sync-mapping (proposal: derive the sentence from type in the workflow so the text field cannot contradict the status)",
+        "ifDerivationWrong": "sync-mapping (decided 2026-09-25, MacKenzie Price: derive the sentence from type in the workflow so the text field cannot contradict the status; the n8n change is pending with the n8n-sync-owner)",
         "ifPageOnly": "sync-delivery (HubSpot right, page stale: run not applied)"
       },
-      "knownDefect": "2026-09-16: 13 Open campuses carry launch wording in website_campus_intro"
+      "knownDefect": "2026-09-16: 13 Open campuses carry launch wording in website_campus_intro",
+      "decision": {
+        "date": "2026-09-25",
+        "decidedBy": "MacKenzie Price",
+        "summary": "lifecycle and staff changes propagate from the source of truth without a person reporting them; derive the status sentence from the Program type",
+        "fixture": "tests/fixtures/decisions/recorded/2026-09-25-campus-page-field-map-66bca81f.json",
+        "pending": "n8n workflow ORgdHC71YJ5RawBy change by the n8n-sync-owner; not changed by this record"
+      }
     },
     "intro.attend-cta": {
       "cssId": "attend_cta_button",

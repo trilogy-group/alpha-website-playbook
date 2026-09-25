@@ -2,6 +2,10 @@
 
 Rules that apply to every alpha.school page regardless of campus or state. Machine form: `spec/site-rules.json`. Each rule has an id, a source, and the check that enforces it (observer check names are in `registry/observer-checks.json`).
 
+## Uniformity and named exceptions (`site.uniformity.*`)
+
+- Campus pages follow one template and are as uniform as possible; a single Director of Admissions or Dean of Parents asking for a one-off is not a reason for a page to diverge (MacKenzie Price, 2026-09-25). A campus-specific element exists only as a named exception in `spec/site-rules.json` `site.uniformity.campus-template.namedExceptions`, with the campus, the element, the reason and the decider; a ticket asking for one that is not listed is internal review for website operations, never executed as asked. First named exception: Alpha Raleigh's region-specific legal element (the element itself is not yet identified; the registry entry lists the candidate lines and who confirms). Check: manual at intake until an observer check exists.
+
 ## Header and footer (`site.header.*`, `site.footer.*`)
 
 - Every page renders the theme-builder header with its stylesheet linked, the logo, the navigation, and the Contact Us button; and the theme-builder footer. Source: demonstrated-correct pages; the September 15 Atlanta incident. Check: `page-check header-stylesheet-linked`, observer `route-browser-inspection`.
