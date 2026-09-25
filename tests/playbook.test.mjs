@@ -2396,7 +2396,8 @@ test('check bundle 1.2: source-digest breadth, grounding with the promotion rule
   assert.deepEqual(byChannel, { ticket: 80, 'source-digest': 17, 'loop-health': 11 })
   const byGrounding = {}
   for (const row of checkBundle.rows) byGrounding[row.grounding.kind] = (byGrounding[row.grounding.kind] || 0) + 1
-  assert.deepEqual(byGrounding, { 'source-contract': 53, decision: 25, complaint: 3, exemplar: 2, none: 25 })
+  // Grounding restore (2026-09-25, bundle 2c8a5aeb): 20 rows regained a complaint, decision or source-contract ref, so only 5 stay ungrounded.
+  assert.deepEqual(byGrounding, { 'source-contract': 54, decision: 34, complaint: 13, exemplar: 2, none: 5 })
   assert.deepEqual(checkBundle.sourceDigest, { ownerRoles: ['growth-map-owner', 'hubspot-program-admin', 'operations-sheet-owner', 'community-app-owner'], reportFile: 'source-digest.md' })
   // Breadth: every map-source row and the Community record, URL form and host rows are source-digest; rows on a WordPress element stay ticket.
   for (const row of checkBundle.rows.filter((r) => r.pageFamily === 'map-source')) assert.notEqual(row.channel, 'ticket', `${row.id} compares sources, never a page`)
@@ -2414,9 +2415,13 @@ test('check bundle 1.2: source-digest breadth, grounding with the promotion rule
     if (row.grounding.kind === 'none') { assert.equal(row.status, 'advisory', `${row.id} is ungrounded and must be advisory`) } else assert.ok(!row.advisoryReason, row.id)
   }
   const promoted = checkBundle.rows.filter((r) => r.advisoryReason)
-  assert.equal(promoted.length, 21)
+  // Grounding restore: only the calendar destination and console rows are still promoted; the layout, map, image, seasonal and search rows are enforced on their refs.
+  assert.deepEqual(promoted.map((r) => r.id).sort(), ['campus.resources.calendar.destination-campus', 'site.layout.console'])
   assert.ok(promoted.every((r) => r.grounding.kind === 'none' && r.status === 'advisory' && r.advisoryReason === PROMOTION_RULE))
-  assert.ok(promoted.some((r) => r.id === 'site.layout.horizontal-overflow') && promoted.some((r) => r.id === 'site.search.indexable.canonical'))
+  for (const [id, kind] of [['site.layout.horizontal-overflow', 'complaint'], ['site.layout.images.render', 'complaint'], ['site.identity.other-campus.images', 'complaint'], ['site.seasonal.window', 'complaint'], ['site.map.integrity.scroll-trap', 'complaint'], ['site.search.indexable.canonical', 'decision'], ['site.search.ai-files', 'decision'], ['campus.page.reachable.sitemap', 'source-contract']]) {
+    assert.equal(checkRow(id).status, 'enforced', id)
+    assert.equal(checkRow(id).grounding.kind, kind, id)
+  }
   assert.equal(checkRow('site.layout.header-overlap.mobile').status, 'enforced')
   assert.equal(checkRow('site.layout.header-overlap.mobile').grounding.kind, 'decision')
   assert.equal(checkRow('campus.hero.identity.heading').grounding.kind, 'decision')
