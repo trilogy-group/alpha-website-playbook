@@ -1,0 +1,184 @@
+{
+ "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 11 campuses on 2026-09-25; not a source of truth. Original: Per-campus leadership as shown on the campus page Team section, 2026-09-15. Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide. groups (2026-09-24): campus groups whose l",
+ "version": "1.1",
+ "asOf": "2026-09-24",
+ "campuses": {
+  "boca-raton": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "director-of-admissions": [
+    "Morgan Petek Nyman"
+   ],
+   "lead-guide": [
+    "Allie Bradian"
+   ]
+  },
+  "boston": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "head-guide": [
+    "Ben Gordon-Sniffen"
+   ],
+   "dean-of-parents": [
+    "Kathy Robinson"
+   ],
+   "director-of-admissions": [
+    "Samantha Kravitz"
+   ]
+  },
+  "boston-suburbs": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "head-guide": [
+    "Ben Gordon-Sniffen"
+   ],
+   "dean-of-parents": [
+    "Sean Satterlee"
+   ],
+   "director-of-admissions": [
+    "Samantha Kravitz"
+   ]
+  },
+  "carrollton": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Chelsea Winters"
+   ]
+  },
+  "east-bay": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Kori Riordan"
+   ],
+   "director-of-admissions": [
+    "Free Gary"
+   ],
+   "lead-guide": [
+    "Eric Salgado"
+   ],
+   "admissions": [
+    "Lina Yee"
+   ]
+  },
+  "franklin": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Chelsea Winters"
+   ]
+  },
+  "greenwich": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Sarah Bergin"
+   ]
+  },
+  "jamaica-plain": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "head-guide": [
+    "Ben Gordon-Sniffen"
+   ],
+   "dean-of-parents": [
+    "Sean Satterlee"
+   ],
+   "director-of-admissions": [
+    "Samantha Kravitz"
+   ]
+  },
+  "new-york-city": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Terrence McMullen"
+   ],
+   "director-of-admissions": [
+    "Nancy Torvund"
+   ],
+   "head-guide": [
+    "Drew Casebier"
+   ],
+   "lead-guide": [
+    "Jenna Klemm",
+    "Varenya Hariharan",
+    "Sam McDonald"
+   ]
+  },
+  "raleigh": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Stephanie Dean"
+   ],
+   "director-of-admissions": [
+    "Tara-Anne Johnson"
+   ],
+   "lead-guide": [
+    "Jennifer Greenham"
+   ]
+  },
+  "south-bay-la": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "director-of-admissions": [
+    "John Stuart"
+   ],
+   "dean-of-parents": [
+    "Jeff Barton"
+   ],
+   "head-guide": [
+    "Matt Shenker"
+   ]
+  }
+ },
+ "groups": {
+  "greater-boston": {
+   "label": "Greater Boston",
+   "campuses": [
+    "boston",
+    "jamaica-plain",
+    "boston-suburbs"
+   ],
+   "sharedLeadership": [
+    {
+     "name": "Ben Gordon-Sniffen",
+     "role": "head-guide",
+     "source": "registry campus entries (boston, jamaica-plain, boston-suburbs) 2026-09-15"
+    },
+    {
+     "name": "Samantha Kravitz",
+     "role": "director-of-admissions",
+     "source": "registry campus entries (boston, jamaica-plain, boston-suburbs) 2026-09-15"
+    },
+    {
+     "name": "Sean Satterlee",
+     "role": "dean-of-parents",
+     "source": "registry campus entries (jamaica-plain, boston-suburbs) 2026-09-15"
+    },
+    {
+     "name": "Brandon Maddox",
+     "role": "director-of-admissions",
+     "source": "live team cards on /boston/, /jamaica-plain/ and /boston-suburbs/ read 2026-09-24 (alt text \"Brandon Maddox, Director of Admissions - Boston/Lexington\"); observer run site-full-2026-09-24T14-28-40-974Z SITE-172A936ED4, SITE-984B874744"
+    }
+   ],
+   "decidedBy": "Matt Barge",
+   "decidedOn": "2026-09-24",
+   "note": "First group. Alt text on a shared leader's card names the sibling campuses (Boston/Lexington); that is the decided state, not a conflict."
+  }
+ },
+ "placeholderCards": []
+}

@@ -177,3 +177,22 @@ node agent/roster-diff.mjs --campus scottsdale --redact-bios          # rendered
 ```
 
 Tests use synthetic fixtures only (`tests/fixtures/roster-diff/`): `build-synthetic-pptx.mjs` builds a pptx shaped like the Google Slides export from `synthetic-deck.json`, and the live side comes as a staff cards list, a `get_page` result, and rendered HTML.
+
+## site-truth-report.mjs (what MacKenzie sees)
+
+QC loop repair plan 2026-09-25, repair 9. One row per Open HubSpot Program with an alpha.school page (Announced programs in a second table), derived from a full-mode observer packet's `sources.json` (HubSpot Programs, growth map, rendered campus pages) and the registries (`campus-pages`, `campus-open-media`, `campus-leadership`, `campus-packets`, `campus-cta-exceptions`), never from tickets. Columns: state (HubSpot type vs map vs page sentence), status sentence, intro card (registry `attachmentId` vs the rendered `content_image` slot; "no card recorded" when the registry has no row), team section (DoA, DoP and Head of Schools present and in the 2026-09-25 order where the packet exposes card order), packet (registry status vs page link), CTAs (Book a Call, Apply, Info Session or a recorded exception), guide video (advisory, never red). Every cell is green, red or grey with a one-word reason; a red or grey cell that `incidents.json` carries an active incident for names the first-seen date and the ticket it waits on when `findings.json` (`decisionPending`) or the filer report next to the packet (`existing[].existing.id`, `decisionPending[].decisionTicket`) knows one. Header: packet run id, bundle version, generated time; footer: the counts. An events-mode packet (no `sources.json`) is refused with the reason. Fixture: `tests/fixtures/site-truth/` (eleven campus pages of the 2026-09-25 run with registry snapshots under it, so `--registry-root tests/fixtures/site-truth` keeps the test independent of later registry edits).
+
+```bash
+node tests/site-truth-report.mjs --packet <packet dir> --out report.md --json report.json          # registries from this repo
+node tests/site-truth-report.mjs --packet tests/fixtures/site-truth/packet --registry-root tests/fixtures/site-truth --now 2026-09-25T12:00:00Z
+```
+
+## agent/generate-open-card.mjs (the Open and Enrolling card from the template)
+
+QC loop repair plan 2026-09-25, repair 5. Generates one campus's "Open and Enrolling" intro card from the template recorded in `registry/campus-open-media.json` `template` (owner Yash Chitneni; `source` null until he supplies it): an SVG with a `{{CAMPUS}}` placeholder (preferred), or a flat PNG plus a JSON text layout `{x, y, font, size, color, maxWidth, align}`. The campus name is the registry display name without the brand prefix (`--name` overrides). Rasterizes with the first of sharp, `@resvg/resvg-js` (both looked up in this repo, `SHARP_ROOT`, `PLAYWRIGHT_ROOT` and the sibling aeo and marketingsupport checkouts; neither is a dependency here), Playwright's Chromium (borrowed like `section-shot.mjs`), or ImageMagick's `magick`; `--list-renderers` shows the roster, `--renderer` pins one, and `NO_RASTERIZER` names what was tried. Writes the PNG, optionally the composed SVG (`--svg-out`) and a sidecar JSON (`--json`: template sha256, renderer, output sha256 and size). It never uploads anything; placement is `protocols/recipes/open-card.md` (operator review, APEX asset, `upload_media_from_apex_asset`, media recipe, registry row, For Review). `tests/fixtures/open-card/template-placeholder.svg` is a plain placeholder for the tests, not the brand card; `tests/open-card.test.mjs` renders it end to end when a rasterizer is present and skips (never passes) the raster cases otherwise.
+
+```bash
+node agent/generate-open-card.mjs --list-renderers
+node agent/generate-open-card.mjs --campus east-bay --template <template.svg> --out work/east-bay-open-and-enrolling.png --json work/east-bay.json --svg-out work/east-bay.svg
+node agent/generate-open-card.mjs --campus east-bay --template <flat.png> --layout <layout.json> --out work/east-bay-open-and-enrolling.png
+```

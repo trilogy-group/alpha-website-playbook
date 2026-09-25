@@ -1,0 +1,2169 @@
+{
+ "hubspotPrograms": [
+  {
+   "id": "26463204876",
+   "properties": {
+    "admission_link": "https://apply.alpha.school/new-york",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20NYC",
+    "display_name": "Alpha New York",
+    "email": "admissions.newyork@alpha.school",
+    "end_grade_level": "12",
+    "finalsite_base_url": "https://alpha-anywhere-center.fsenrollment.com/",
+    "grade_levels": "K-8",
+    "hs_createdate": "2025-04-17T07:41:07.325Z",
+    "hs_lastmodifieddate": "2026-09-10T16:27:09.295Z",
+    "hs_object_id": "26463204876",
+    "launch_date": null,
+    "name": "Alpha Anywhere Center",
+    "school_address": "180 Maiden Ln, New York, NY 10038",
+    "school_latitude": "40.7057242",
+    "school_longitude": "-74.00553699999999",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Open",
+    "website": "https://alpha.school/new-york-city/"
+   },
+   "createdAt": "2025-04-17T07:41:07.325Z",
+   "updatedAt": "2026-09-10T16:27:09.295Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/26463204876"
+  },
+  {
+   "id": "29735717555",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=raleigh",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20Raleigh",
+    "display_name": "Alpha Raleigh",
+    "email": "admissions.raleigh@alpha.school",
+    "end_grade_level": "12",
+    "finalsite_base_url": "https://raleigh-alpha.fsenrollment.com/",
+    "grade_levels": "K-5",
+    "hs_createdate": "2025-06-20T10:16:05.181Z",
+    "hs_lastmodifieddate": "2026-09-22T21:44:22.521Z",
+    "hs_object_id": "29735717555",
+    "launch_date": "Fall 2026",
+    "name": "Alpha Raleigh",
+    "school_address": "12600 Spruce Tree Way, Raleigh, NC 27614",
+    "school_latitude": "35.939599",
+    "school_longitude": "-78.561161",
+    "start_grade_level": "K",
+    "tuition": "45000",
+    "type": "Open",
+    "website": "https://alpha.school/raleigh/"
+   },
+   "createdAt": "2025-06-20T10:16:05.181Z",
+   "updatedAt": "2026-09-22T21:44:22.521Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/29735717555"
+  },
+  {
+   "id": "42698614786",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=east_bay",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20School%20East%20Bay",
+    "display_name": "Alpha East Bay",
+    "email": "admissions.eastbay@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://east-bay-alpha.fsenrollment.com/",
+    "hs_createdate": "2025-12-10T16:16:49.218Z",
+    "hs_lastmodifieddate": "2026-09-18T18:11:54.514Z",
+    "hs_object_id": "42698614786",
+    "launch_date": null,
+    "name": "Alpha East Bay",
+    "school_address": "5201 Park Blvd, Piedmont, CA 94611",
+    "school_latitude": "37.81869717685589",
+    "school_longitude": "-122.21095545968974",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Open",
+    "website": "https://alpha.school/east-bay"
+   },
+   "createdAt": "2025-12-10T16:16:49.218Z",
+   "updatedAt": "2026-09-18T18:11:54.514Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/42698614786"
+  },
+  {
+   "id": "42820568924",
+   "properties": {
+    "admission_link": "https://alpha.school/application-fs/?submission_campus=boston",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20Boston",
+    "display_name": "Alpha Boston",
+    "email": "admissions.boston@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://boston-alpha.fsenrollment.com/",
+    "hs_createdate": "2025-12-11T16:44:46.873Z",
+    "hs_lastmodifieddate": "2026-09-22T20:14:24.060Z",
+    "hs_object_id": "42820568924",
+    "launch_date": null,
+    "name": "Alpha Boston",
+    "school_address": "300 Cambridge Street, Boston, MA",
+    "school_latitude": "42.36067501693476",
+    "school_longitude": "-71.05860198007304",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Open",
+    "website": "https://alpha.school/boston/"
+   },
+   "createdAt": "2025-12-11T16:44:46.873Z",
+   "updatedAt": "2026-09-22T20:14:24.060Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/42820568924"
+  },
+  {
+   "id": "49011192957",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=south_bay",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20South%20Bay%20LA",
+    "display_name": "Alpha South Bay LA",
+    "email": "admissions.southbayla@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://south-bay-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-02-27T05:17:52.624Z",
+    "hs_lastmodifieddate": "2026-09-22T21:44:25.692Z",
+    "hs_object_id": "49011192957",
+    "launch_date": null,
+    "name": "Alpha South Bay LA",
+    "school_address": "5401 Beethoven Street, Los Angeles, CA, 90066",
+    "school_latitude": "33.977951065953",
+    "school_longitude": "-118.422224857483",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Open",
+    "website": "https://alpha.school/south-bay-la/"
+   },
+   "createdAt": "2026-02-27T05:17:52.624Z",
+   "updatedAt": "2026-09-22T21:44:25.692Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/49011192957"
+  },
+  {
+   "id": "49011192959",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=greenwich",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "",
+    "display_name": "Alpha Greenwich Port Chester",
+    "email": "admissions.greenwich@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://greenwich-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-02-27T05:19:04.780Z",
+    "hs_lastmodifieddate": "2026-09-18T14:20:48.298Z",
+    "hs_object_id": "49011192959",
+    "launch_date": null,
+    "name": "Alpha Greenwich Port Chester",
+    "school_address": "",
+    "school_latitude": "",
+    "school_longitude": "",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Open",
+    "website": "https://alpha.school/greenwich/"
+   },
+   "createdAt": "2026-02-27T05:19:04.780Z",
+   "updatedAt": "2026-09-18T14:20:48.298Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/49011192959"
+  },
+  {
+   "id": "50893567086",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=carrollton",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20Carrollton",
+    "display_name": "Alpha Carrollton",
+    "email": "admissions.carrollton@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://carrollton-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-04-03T14:09:00.738Z",
+    "hs_lastmodifieddate": "2026-09-21T19:23:51.911Z",
+    "hs_object_id": "50893567086",
+    "launch_date": null,
+    "name": "Alpha Carrollton",
+    "school_address": "2205 E Hebron Pkwy, Carrollton, TX",
+    "school_latitude": "32.95173438",
+    "school_longitude": "-96.9034671",
+    "start_grade_level": "K",
+    "tuition": "50000",
+    "type": "Announced",
+    "website": "https://alpha.school/carrollton/"
+   },
+   "createdAt": "2026-04-03T14:09:00.738Z",
+   "updatedAt": "2026-09-21T19:23:51.911Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/50893567086"
+  },
+  {
+   "id": "51219627099",
+   "properties": {
+    "admission_link": "https://alpha.school/application-fs/?submission_campus=boca_raton",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20Boca%20Raton",
+    "display_name": "Alpha Boca Raton",
+    "email": "admissions.bocaraton@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://boca-raton-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-04-08T17:13:21.015Z",
+    "hs_lastmodifieddate": "2026-09-22T21:44:31.431Z",
+    "hs_object_id": "51219627099",
+    "launch_date": null,
+    "name": "Alpha Boca Raton",
+    "school_address": "2200 NW 5th Ave, Boca Raton, FL 33431",
+    "school_latitude": "26.35797463",
+    "school_longitude": "-80.07827062",
+    "start_grade_level": "K",
+    "tuition": "55000",
+    "type": "Open",
+    "website": "https://alpha.school/boca-raton/"
+   },
+   "createdAt": "2026-04-08T17:13:21.015Z",
+   "updatedAt": "2026-09-22T21:44:31.431Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/51219627099"
+  },
+  {
+   "id": "51223157555",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=boston_suburbs",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs",
+    "display_name": "Alpha Lexington",
+    "email": "admissions.bostonsuburbs@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://lexington-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-04-08T17:19:49.652Z",
+    "hs_lastmodifieddate": "2026-09-24T18:45:12.161Z",
+    "hs_object_id": "51223157555",
+    "launch_date": null,
+    "name": "Alpha Lexington",
+    "school_address": "Boston metro suburbs, MA",
+    "school_latitude": "42.42378502",
+    "school_longitude": "-71.21417724",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Announced",
+    "website": "https://alpha.school/boston-suburbs/"
+   },
+   "createdAt": "2026-04-08T17:19:49.652Z",
+   "updatedAt": "2026-09-24T18:45:12.161Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/51223157555"
+  },
+  {
+   "id": "57601909511",
+   "properties": {
+    "admission_link": null,
+    "admissions_handled_in_finalsite": "true",
+    "community_url": null,
+    "display_name": "Alpha Franklin",
+    "email": null,
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://franklin-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-06-23T02:35:53.243Z",
+    "hs_lastmodifieddate": "2026-09-17T17:51:57.865Z",
+    "hs_object_id": "57601909511",
+    "launch_date": null,
+    "name": "Alpha Franklin",
+    "school_address": "Franklin, Tennessee, United States",
+    "school_latitude": "35.924863",
+    "school_longitude": "-86.868696",
+    "start_grade_level": "K",
+    "tuition": null,
+    "type": "Announced",
+    "website": "https://alpha.school/franklin/"
+   },
+   "createdAt": "2026-06-23T02:35:53.243Z",
+   "updatedAt": "2026-09-17T17:51:57.865Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/57601909511"
+  },
+  {
+   "id": "57622127456",
+   "properties": {
+    "admission_link": "https://alpha.school/application/?submission_campus=jamaica_plain",
+    "admissions_handled_in_finalsite": "true",
+    "community_url": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs",
+    "display_name": "Alpha Jamaica Plain",
+    "email": "admissions.jamaicaplain@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://jamaica-plain-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-06-24T13:18:29.939Z",
+    "hs_lastmodifieddate": "2026-09-22T20:22:41.856Z",
+    "hs_object_id": "57622127456",
+    "launch_date": null,
+    "name": "Alpha Jamaica Plain",
+    "school_address": "3815 Washington St, Jamaica Plain, MA 02130",
+    "school_latitude": "42.31421878343971",
+    "school_longitude": "-71.10737203436209",
+    "start_grade_level": "K",
+    "tuition": "60000",
+    "type": "Open",
+    "website": "https://alpha.school/jamaica-plain/"
+   },
+   "createdAt": "2026-06-24T13:18:29.939Z",
+   "updatedAt": "2026-09-22T20:22:41.856Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/57622127456"
+  },
+  {
+   "id": "60804396611",
+   "properties": {
+    "admission_link": null,
+    "admissions_handled_in_finalsite": "true",
+    "community_url": null,
+    "display_name": "Alpha Greenwich Armonk",
+    "email": "admissions.greenwich@alpha.school",
+    "end_grade_level": "8",
+    "finalsite_base_url": "https://armonk-greenwich-alpha.fsenrollment.com/",
+    "hs_createdate": "2026-08-26T12:57:15.539Z",
+    "hs_lastmodifieddate": "2026-09-22T21:44:19.047Z",
+    "hs_object_id": "60804396611",
+    "launch_date": null,
+    "name": "Alpha Greenwich Armonk",
+    "school_address": "20 Old Post Road, Armonk, NY 10504",
+    "school_latitude": "41.1087826",
+    "school_longitude": "-73.7268371",
+    "start_grade_level": "K",
+    "tuition": "65000",
+    "type": "Open",
+    "website": "https://alpha.school/greenwich/"
+   },
+   "createdAt": "2026-08-26T12:57:15.539Z",
+   "updatedAt": "2026-09-22T21:44:19.047Z",
+   "archived": false,
+   "url": "https://app.hubspot.com/contacts/40051392/record/2-43470849/60804396611"
+  }
+ ],
+ "map": {
+  "locations": [
+   {
+    "id": "program-26463204876",
+    "type": "program",
+    "name": "Alpha New York",
+    "programType": "Open",
+    "programName": "Alpha Anywhere Center",
+    "address": "180 Maiden Ln, New York, NY 10038",
+    "city": "New York",
+    "state": "New York",
+    "url": "https://alpha.school/new-york-city/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20NYC",
+    "latitude": 40.7057242,
+    "longitude": -74.00553699999999,
+    "gradeRange": "K-12",
+    "startGrade": "K",
+    "endGrade": "12",
+    "photoUrl": "https://40051392.fs1.hubspotusercontent-na1.net/hubfs/40051392/crm-properties-file-values/NYC%20(2).jpg"
+   },
+   {
+    "id": "program-51219627099",
+    "type": "program",
+    "name": "Alpha Boca Raton",
+    "programType": "Open",
+    "programName": "Alpha Boca Raton",
+    "address": "2200 NW 5th Ave, Boca Raton, FL 33431",
+    "city": "Boca Raton",
+    "state": "FL",
+    "url": "https://alpha.school/boca-raton/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boca%20Raton",
+    "latitude": 26.35797463,
+    "longitude": -80.07827062,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-42820568924",
+    "type": "program",
+    "name": "Alpha Boston",
+    "programType": "Open",
+    "programName": "Alpha Boston",
+    "address": "300 Cambridge Street, Boston, MA",
+    "city": "Boston",
+    "state": "MA",
+    "url": "https://alpha.school/boston/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston",
+    "latitude": 42.36067501693476,
+    "longitude": -71.05860198007304,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-50893567086",
+    "type": "program",
+    "name": "Alpha Carrollton",
+    "programType": "Announced",
+    "programName": "Alpha Carrollton",
+    "address": "2205 E Hebron Pkwy, Carrollton, TX",
+    "city": "Carrollton",
+    "state": "TX",
+    "url": "https://alpha.school/carrollton/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Carrollton",
+    "latitude": 32.95173438,
+    "longitude": -96.9034671,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-42698614786",
+    "type": "program",
+    "name": "Alpha East Bay",
+    "programType": "Open",
+    "programName": "Alpha East Bay",
+    "address": "5201 Park Blvd, Piedmont, CA 94611",
+    "city": "Piedmont",
+    "state": "California",
+    "url": "https://alpha.school/east-bay",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20School%20East%20Bay",
+    "latitude": 37.81869717685589,
+    "longitude": -122.21095545968974,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-57601909511",
+    "type": "program",
+    "name": "Alpha Franklin",
+    "programType": "Announced",
+    "programName": "Alpha Franklin",
+    "address": "Franklin, Tennessee, United States",
+    "city": "Franklin",
+    "state": "Tennessee",
+    "url": "https://alpha.school/franklin/",
+    "latitude": 35.924863,
+    "longitude": -86.868696,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-60804396611",
+    "type": "program",
+    "name": "Alpha Greenwich Armonk",
+    "programType": "Open",
+    "programName": "Alpha Greenwich Armonk",
+    "address": "20 Old Post Road, Armonk, NY 10504",
+    "city": "Armonk",
+    "state": "NY",
+    "url": "https://alpha.school/greenwich/",
+    "latitude": 41.1087826,
+    "longitude": -73.7268371,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-57622127456",
+    "type": "program",
+    "name": "Alpha Jamaica Plain",
+    "programType": "Open",
+    "programName": "Alpha Jamaica Plain",
+    "address": "3815 Washington St, Jamaica Plain, MA 02130",
+    "city": "Jamaica Plain",
+    "state": "MA",
+    "url": "https://alpha.school/jamaica-plain/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs",
+    "latitude": 42.31421878343971,
+    "longitude": -71.10737203436209,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-51223157555",
+    "type": "program",
+    "name": "Alpha Lexington",
+    "programType": "Announced",
+    "programName": "Alpha Lexington",
+    "address": "Boston metro suburbs, MA",
+    "city": "Boston",
+    "state": "MA",
+    "url": "https://alpha.school/boston-suburbs/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs",
+    "latitude": 42.42378502,
+    "longitude": -71.21417724,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   },
+   {
+    "id": "program-29735717555",
+    "type": "program",
+    "name": "Alpha Raleigh",
+    "programType": "Open",
+    "programName": "Alpha Raleigh",
+    "address": "12600 Spruce Tree Way, Raleigh, NC 27614",
+    "city": "Raleigh",
+    "state": "North Carolina",
+    "url": "https://alpha.school/raleigh/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Raleigh",
+    "latitude": 35.939599,
+    "longitude": -78.561161,
+    "gradeRange": "K-12",
+    "startGrade": "K",
+    "endGrade": "12",
+    "photoUrl": "https://40051392.fs1.hubspotusercontent-na1.net/hubfs/40051392/crm-properties-file-values/Raleigh%20(1)%20(1).jpg",
+    "launchDate": "Fall 2026"
+   },
+   {
+    "id": "program-49011192957",
+    "type": "program",
+    "name": "Alpha South Bay LA",
+    "programType": "Open",
+    "programName": "Alpha South Bay LA",
+    "address": "5401 Beethoven Street, Los Angeles, CA, 90066",
+    "city": "Playa Vista",
+    "state": "CA",
+    "url": "https://alpha.school/south-bay-la/",
+    "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20South%20Bay%20LA",
+    "latitude": 33.977951065953,
+    "longitude": -118.422224857483,
+    "gradeRange": "K-8",
+    "startGrade": "K",
+    "endGrade": "8"
+   }
+  ],
+  "meta": {
+   "total": 11,
+   "requestedAt": "2026-09-25T10:27:33.639Z"
+  }
+ },
+ "campusPages": [
+  {
+   "program": {
+    "id": "program-26463204876",
+    "name": "Alpha New York",
+    "programName": "Alpha Anywhere Center",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/new-york-city/",
+   "finalUrl": "https://alpha.school/new-york-city/",
+   "status": 200,
+   "title": "Alpha New York | Serving K - 12th Grade in New York, New York",
+   "headings": [
+    "Alpha New York Serving K - 12th Grade in New York City",
+    "Welcome to the Future of Education in New York​",
+    "See How Alpha Transforms Kids: Straight From New York City Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "Alpha Anywhere Center Private School",
+    "More Real Stories From Alpha Families"
+   ],
+   "text": "Alpha New York Serving K - 12th Grade in New York City STAY IN-THE-KNOW Attend an Info Session Book A Call Apply now Welcome to the Future of Education in New York​ Looking for a learning experience your child can’t wait to go to in the morning? At Alpha New York, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha New York, kids love the experience. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan’s Financial District, just steps from the East River waterfront and the iconic South Street Seaport. It’s one block from the Imagination Playground, with Battery Park and the Brooklyn Bridge a short walk away. See firsthand why Alpha is ranked among the best private institutions thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From New York City Parents When choosing the right learning environment, nothing matters more than hearing from families just like yours.These New York City parents share how their children gained confidence, learned faster, and rediscovered their love of learning. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet teachers, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events Alpha Anywhere Center Private School K - 12th Grade 180 Maiden Ln, New York, NY 10038 Tuition $65,000 Email: admissions.newyork@alpha.school Telephone: (646) 363-6678 Quick Resources ADMISSION GUIDE 2025/26 INFO PACKET 2026/27 calendar 2026/27 INFO PACKET Book a Call APPLY TODAY! APPLY FOR 9TH GRADE Alpha New York Gallery More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 DaystimebackGradeK–23–56–8High School× Looking for more stories to view and share? Explore the full video library Alpha New York FAQs What communities does Alpha serve? Alpha serves families across Lower Manhattan, including th",
+   "pageOwnedText": "Alpha New York Serving K - 12th Grade in New York City STAY IN-THE-KNOW Attend an Info Session Book A Call Apply now Welcome to the Future of Education in New York​ Looking for a learning experience your child can’t wait to go to in the morning? At Alpha New York, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha New York, kids love the experience. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan’s Financial District, just steps from the East River waterfront and the iconic South Street Seaport. It’s one block from the Imagination Playground, with Battery Park and the Brooklyn Bridge a short walk away. See firsthand why Alpha is ranked among the best private institutions thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From New York City Parents When choosing the right learning environment, nothing matters more than hearing from families just like yours.These New York City parents share how their children gained confidence, learned faster, and rediscovered their love of learning. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet teachers, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events Alpha Anywhere Center Private School K - 12th Grade 180 Maiden Ln, New York, NY 10038 Tuition $65,000 Email: admissions.newyork@alpha.school Telephone: (646) 363-6678 Quick Resources ADMISSION GUIDE 2025/26 INFO PACKET 2026/27 calendar 2026/27 INFO PACKET Book a Call APPLY TODAY! APPLY FOR 9TH GRADE Alpha New York Gallery More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 DaystimebackGradeK–23–56–8High School× Looking for more stories to view and share? Explore the full video library Alpha New York FAQs What communities does Alpha serve? Alpha serves families across Lower Manhattan, including th",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/new-york-city/"
+    },
+    {
+     "text": "Book A Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/new-york-city/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/new-york-city/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/new-york-city/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "2025/26 INFO PACKET",
+     "href": "https://www.flipsnack.com/BADA559BDC9/new-york-info-packet/full-view.html"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-New-York.pdf"
+    },
+    {
+     "text": "2026/27 INFO PACKET",
+     "href": "https://www.flipsnack.com/BADA559BDC9/alpha-new-york-info-packet-2026-27/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/new-york-city/?uuid=18252201-3806-4fcc-9f04-3eca08a5e451"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://apply.alpha.school/new-york/"
+    },
+    {
+     "text": "APPLY FOR 9TH GRADE",
+     "href": "https://alpha.school/high-school-application/?submission_campus=new_york"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://apply.alpha.school/new-york/"
+    },
+    {
+     "text": "APPLY FOR 9TH GRADE",
+     "href": "https://alpha.school/high-school-application/?submission_campus=new_york"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book A Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/new-york-city/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/new-york-city/?uuid=18252201-3806-4fcc-9f04-3eca08a5e451"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "2025/26 INFO PACKET",
+     "href": "https://www.flipsnack.com/BADA559BDC9/new-york-info-packet/full-view.html",
+     "hiddenOnAllViewports": true
+    },
+    {
+     "text": "2026/27 INFO PACKET",
+     "href": "https://www.flipsnack.com/BADA559BDC9/alpha-new-york-info-packet-2026-27/",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-New-York.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Terrence McMullen",
+     "title": "Dean of Parents",
+     "text": "Terrence McMullen | Dean of Parents"
+    },
+    {
+     "name": "Nancy Torvund",
+     "title": "Director of Admissions",
+     "text": "Nancy Torvund | Director of Admissions"
+    },
+    {
+     "name": "Drew Casebier",
+     "title": "Head Guide",
+     "text": "Drew Casebier | Head Guide"
+    },
+    {
+     "name": "Emily Lopez",
+     "title": "Director of Global Programming",
+     "text": "Emily Lopez | Director of Global Programming"
+    },
+    {
+     "name": "Jenna Klemm",
+     "title": "Wonderlab and Learning Lab Lead Guide",
+     "text": "Jenna Klemm | Wonderlab and Learning Lab Lead Guide"
+    },
+    {
+     "name": "Hannah Burkhauser",
+     "title": "Learning Lab Guide",
+     "text": "Hannah Burkhauser | Learning Lab Guide"
+    },
+    {
+     "name": "Varenya Hariharan",
+     "title": "Level One Lead Guide",
+     "text": "Varenya Hariharan | Level One Lead Guide"
+    },
+    {
+     "name": "Jesse Moskowitz",
+     "title": "Level One Guide",
+     "text": "Jesse Moskowitz | Level One Guide"
+    },
+    {
+     "name": "Celine Bernhardt-Lanier",
+     "title": "Level One Guide",
+     "text": "Celine Bernhardt-Lanier | Level One Guide"
+    },
+    {
+     "name": "Asa Siegel",
+     "title": "Level One Guide",
+     "text": "Asa Siegel | Level One Guide"
+    },
+    {
+     "name": "Bethany Harper",
+     "title": "Reading Specialist",
+     "text": "Bethany Harper | Reading Specialist"
+    },
+    {
+     "name": "Tatiana Barbic",
+     "title": "Level Two Guide",
+     "text": "Tatiana Barbic | Level Two Guide"
+    },
+    {
+     "name": "Austin Sacks",
+     "title": "Level Two Guide",
+     "text": "Austin Sacks | Level Two Guide"
+    },
+    {
+     "name": "Chauncey Nartey",
+     "title": "Level Two Guide",
+     "text": "Chauncey Nartey | Level Two Guide"
+    },
+    {
+     "name": "Sam McDonald",
+     "title": "Middle School Lead Guide",
+     "text": "Sam McDonald | Middle School Lead Guide"
+    },
+    {
+     "name": "William Gabreath",
+     "title": "Middle School Guide",
+     "text": "William Gabreath | Middle School Guide"
+    },
+    {
+     "name": "Parthvi Harde",
+     "title": "Middle School Guide",
+     "text": "Parthvi Harde | Middle School Guide"
+    },
+    {
+     "name": "Jebin Justin",
+     "title": "High School Guide",
+     "text": "Jebin Justin | High School Guide"
+    },
+    {
+     "name": "Julianne Braime",
+     "title": "Campus Coordinator",
+     "text": "Julianne Braime | Campus Coordinator"
+    },
+    {
+     "name": "Zara Raheem",
+     "title": "Chief of Staff/Campus Coordinator",
+     "text": "Zara Raheem | Chief of Staff/Campus Coordinator"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-ea2327c elementor-widget elementor-widget-image elementor-element elementor-element-d944364 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-ea2327c elementor-widget elementor-widget-image elementor-element elementor-element-d944364 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-51219627099",
+    "name": "Alpha Boca Raton",
+    "programName": "Alpha Boca Raton",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/boca-raton/",
+   "finalUrl": "https://alpha.school/boca-raton/",
+   "status": 200,
+   "title": "Alpha Boca Raton | K-8 Private School in Boca Raton, FL",
+   "headings": [
+    "Alpha Boca Raton K-8 Private School in Boca Raton, FL",
+    "Welcome to the Future of Education in Boca Raton​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Boca Raton K-8 Private School in Boca Raton, FL STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Boca Raton​ Looking for a private school your child can’t wait to go to each morning? At Alpha Boca Raton, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Boca Raton, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Boca Raton is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 2200 NW 5th Ave, Boca Raton, FL 33431 Tuition $55,000 Email: admissions.bocaraton@alpha.school Telephone: (954) 247-1749 ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Boca Raton Gallery Alpha Boca Raton FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Boca Raton is a candidate for accreditation with Cognia Alpha Boca Raton is accredited by Cognia",
+   "pageOwnedText": "Alpha Boca Raton K-8 Private School in Boca Raton, FL STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Boca Raton​ Looking for a private school your child can’t wait to go to each morning? At Alpha Boca Raton, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Boca Raton, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Boca Raton is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 2200 NW 5th Ave, Boca Raton, FL 33431 Tuition $55,000 Email: admissions.bocaraton@alpha.school Telephone: (954) 247-1749 ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Boca Raton Gallery Alpha Boca Raton FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Boca Raton is a candidate for accreditation with Cognia Alpha Boca Raton is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/boca-raton/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/boca-raton/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/boca-raton/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/boca-raton/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Boca-Raton.pdf"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application-fs/?submission_campus=boca_raton"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application-fs/?submission_campus=boca_raton"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/boca-raton/"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Boca-Raton.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Morgan Petek Nyman",
+     "title": "Director of Admissions",
+     "text": "Morgan Petek Nyman | Director of Admissions"
+    },
+    {
+     "name": "Dr. Allie Bradian",
+     "title": "Lead Guide",
+     "text": "Dr. Allie Bradian | Lead Guide"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-1024x704.png",
+      "alt": "Boca Raton",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9822",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-1024x704.png https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-1024x704.png 1024w, https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-300x206.png 300w, https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-768x528.png 768w, https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-1200x825.png 1200w, https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-1400x963.png 1400w, https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling.png 1424w Boca Raton attachment-large size-large wp-image-9822 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-42820568924",
+    "name": "Alpha Boston",
+    "programName": "Alpha Boston",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/boston/",
+   "finalUrl": "https://alpha.school/boston/",
+   "status": 200,
+   "title": "Alpha Boston | K-8 Private School in Boston, MA",
+   "headings": [
+    "Alpha Boston K-8 Private School in Boston, MA",
+    "Welcome to the Future of Education in Boston​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Boston K-8 Private School in Boston, MA STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Boston​ Looking for a private school your child can’t wait to go to each morning? At Alpha Boston, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Boston, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Boston is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. Alpha has three campuses in Greater Boston: Alpha Beacon Hill, Alpha Lexington, and Alpha Jamaica Plain. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 300 Cambridge Street, Boston, MA Tuition $65,000 Email: admissions.boston@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Boston Gallery Alpha Boston FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Boston is a candidate for accreditation with Cognia Alpha Boston is accredited by Cognia",
+   "pageOwnedText": "Alpha Boston K-8 Private School in Boston, MA STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Boston​ Looking for a private school your child can’t wait to go to each morning? At Alpha Boston, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Boston, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Boston is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. Alpha has three campuses in Greater Boston: Alpha Beacon Hill, Alpha Lexington, and Alpha Jamaica Plain. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 300 Cambridge Street, Boston, MA Tuition $65,000 Email: admissions.boston@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Boston Gallery Alpha Boston FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Boston is a candidate for accreditation with Cognia Alpha Boston is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/boston/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/boston/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/boston/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Boston.pdf"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application-fs/?submission_campus=boston"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application-fs/?submission_campus=boston"
+    }
+   ],
+   "bookCallLinks": [],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Boston.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Ben Gordon-Sniffen",
+     "title": "Head Guide",
+     "text": "Ben Gordon-Sniffen | Head Guide"
+    },
+    {
+     "name": "Kathy Robinson",
+     "title": "Associate Dean of Parents, Boston",
+     "text": "Kathy Robinson | Associate Dean of Parents, Boston"
+    },
+    {
+     "name": "Brandon Maddox",
+     "title": "Director of Admissions - Boston/Lexington",
+     "text": "Brandon Maddox | Director of Admissions - Boston/Lexington"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-1024x704.png",
+      "alt": "Boston",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9826",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-1024x704.png https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-1024x704.png 1024w, https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-300x206.png 300w, https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-768x528.png 768w, https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-1200x825.png 1200w, https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-1400x963.png 1400w, https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling.png 1424w Boston attachment-large size-large wp-image-9826 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-50893567086",
+    "name": "Alpha Carrollton",
+    "programName": "Alpha Carrollton",
+    "programType": "Announced"
+   },
+   "url": "https://alpha.school/carrollton/",
+   "finalUrl": "https://alpha.school/carrollton/",
+   "status": 200,
+   "title": "Alpha Carrollton | K-8 Private School in Carrollton, TX",
+   "headings": [
+    "Alpha Carrollton K-8 Private School in Carrollton, TX",
+    "Welcome to the Future of Education in Carrollton​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Carrollton K-8 Private School in Carrollton, TX STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Carrollton​ Looking for a private school your child can’t wait to go to each morning? At Alpha Carrollton, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Carrollton, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Carrollton is launching in Fall 2026. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 2205 E Hebron Pkwy, Carrollton, TX Tuition $50,000 Email: admissions.carrollton@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 26/27 calendar - update link Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Carrollton Gallery Alpha Carrollton FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Carrollton is a candidate for accreditation with Cognia Alpha Carrollton is accredited by Cognia",
+   "pageOwnedText": "Alpha Carrollton K-8 Private School in Carrollton, TX STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Carrollton​ Looking for a private school your child can’t wait to go to each morning? At Alpha Carrollton, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Carrollton, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Carrollton is launching in Fall 2026. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 2205 E Hebron Pkwy, Carrollton, TX Tuition $50,000 Email: admissions.carrollton@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 26/27 calendar - update link Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Carrollton Gallery Alpha Carrollton FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Carrollton is a candidate for accreditation with Cognia Alpha Carrollton is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/carrollton/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/alpha-carrollton/?uuid=2de056f3-a5c3-4949-b497-50f98aa40d2e"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/carrollton/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/carrollton/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=carrollton"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=carrollton"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/alpha-carrollton/?uuid=2de056f3-a5c3-4949-b497-50f98aa40d2e"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Chelsea Winters",
+     "title": "Dean of Parents",
+     "text": "Chelsea Winters | Dean of Parents"
+    },
+    {
+     "name": "Morgan Hatt",
+     "title": "Community Partnerships",
+     "text": "Morgan Hatt | Community Partnerships"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-1024x704.webp",
+      "alt": "Carrollton",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9284",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-1024x704.webp https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-1024x704.webp 1024w, https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-300x206.webp 300w, https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-768x528.png 768w, https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-1200x825.png 1200w, https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-1400x963.png 1400w, https://alpha.school/wp-content/uploads/2026/06/Subtitle-22.webp 1424w Carrollton attachment-large size-large wp-image-9284 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": [
+     {
+      "kind": "page-copy",
+      "snippet": "mitless futures. Attend an Info Session Alpha Carrollton is launching in Fall 2026. Join us for an info session, and see firsthand why Al"
+     }
+    ]
+   }
+  },
+  {
+   "program": {
+    "id": "program-42698614786",
+    "name": "Alpha East Bay",
+    "programName": "Alpha East Bay",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/east-bay/",
+   "finalUrl": "https://alpha.school/east-bay/",
+   "status": 200,
+   "title": "Alpha East Bay | K-8 Private School in Piedmont, California",
+   "headings": [
+    "Alpha East Bay K-8 Private School in Piedmont, California",
+    "Welcome to the Future of Education in East Bay​",
+    "Personalized Learning",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "Alpha East Bay Private School",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha East Bay K-8 Private School in Piedmont, California STAY IN-THE-KNOW Attend an Info Session Book A Call Apply now Welcome to the Future of Education in East Bay​ Looking for a private school your child can’t wait to go to each morning? At Alpha East Bay, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. Personalized Learning The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha East Bay, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha East Bay is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events Alpha East Bay Private School K - 8th Grade 5201 Park Blvd, Piedmont, CA 94611 Tuition $65,000 Email: admissions.eastbay@alpha.school Telephone: Quick Resources ADMISSION GUIDE INFO PACKET - update link 2026/27 calendar 2026/27 INFO PACKET Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha East Bay Gallery Alpha East Bay FAQs Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha East Bay is a candidate for accreditation with Cognia Alpha East Bay is accredited by Cognia",
+   "pageOwnedText": "Alpha East Bay K-8 Private School in Piedmont, California STAY IN-THE-KNOW Attend an Info Session Book A Call Apply now Welcome to the Future of Education in East Bay​ Looking for a private school your child can’t wait to go to each morning? At Alpha East Bay, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. Personalized Learning The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha East Bay, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha East Bay is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events Alpha East Bay Private School K - 8th Grade 5201 Park Blvd, Piedmont, CA 94611 Tuition $65,000 Email: admissions.eastbay@alpha.school Telephone: Quick Resources ADMISSION GUIDE INFO PACKET - update link 2026/27 calendar 2026/27 INFO PACKET Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha East Bay Gallery Alpha East Bay FAQs Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha East Bay is a candidate for accreditation with Cognia Alpha East Bay is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/east-bay/"
+    },
+    {
+     "text": "Book A Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/east-bay/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/east-bay/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/east-bay/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-East-Bay.pdf"
+    },
+    {
+     "text": "2026/27 INFO PACKET",
+     "href": "https://www.flipsnack.com/BADA559BDC9/alpha-east-bay-info-packet-26-27/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/east-bay/?uuid=be90759c-a205-42b8-bc05-45fb1e59ae51"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=east_bay"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=east_bay"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book A Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/east-bay/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/east-bay/?uuid=be90759c-a205-42b8-bc05-45fb1e59ae51"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    },
+    {
+     "text": "2026/27 INFO PACKET",
+     "href": "https://www.flipsnack.com/BADA559BDC9/alpha-east-bay-info-packet-26-27/",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-East-Bay.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Dr. Kori Riordan",
+     "title": "Associate Dean of Parents",
+     "text": "Dr. Kori Riordan | Associate Dean of Parents"
+    },
+    {
+     "name": "Sarah Rettig",
+     "title": "Guide",
+     "text": "Sarah Rettig | Guide"
+    },
+    {
+     "name": "Amara Cohen",
+     "title": "Guide",
+     "text": "Amara Cohen | Guide"
+    },
+    {
+     "name": "Eva Zhu",
+     "title": "Guide",
+     "text": "Eva Zhu | Guide"
+    },
+    {
+     "name": "Free Gary",
+     "title": "Director of Admissions",
+     "text": "Free Gary | Director of Admissions"
+    },
+    {
+     "name": "Beth Cox",
+     "title": "Reading Specialist",
+     "text": "Beth Cox | Reading Specialist"
+    },
+    {
+     "name": "Vincent De Jesus",
+     "title": "Guide",
+     "text": "Vincent De Jesus | Guide"
+    },
+    {
+     "name": "Eric Salgado",
+     "title": "Lead Guide",
+     "text": "Eric Salgado | Lead Guide"
+    },
+    {
+     "name": "Rachel Diao",
+     "title": "Campus Coordinator",
+     "text": "Rachel Diao | Campus Coordinator"
+    },
+    {
+     "name": "Lina Yee",
+     "title": "Admissions Associate",
+     "text": "Lina Yee | Admissions Associate"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+      "alt": "",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-8550",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp 1024w, https://alpha.school/wp-content/uploads/2026/01/Piedmont-300x206.webp 300w, https://alpha.school/wp-content/uploads/2026/01/Piedmont-768x528.png 768w, https://alpha.school/wp-content/uploads/2026/01/Piedmont-1200x825.png 1200w, https://alpha.school/wp-content/uploads/2026/01/Piedmont-1400x963.png 1400w, https://alpha.school/wp-content/uploads/2026/01/Piedmont.webp 1424w attachment-large size-large wp-image-8550 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-57601909511",
+    "name": "Alpha Franklin",
+    "programName": "Alpha Franklin",
+    "programType": "Announced"
+   },
+   "url": "https://alpha.school/franklin/",
+   "finalUrl": "https://alpha.school/franklin/",
+   "status": 200,
+   "title": "Alpha Franklin | K-8 Private School in Franklin, TN",
+   "headings": [
+    "Alpha Franklin K-8 Private School in Franklin, TN",
+    "Welcome to the Future of Education in Franklin​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Franklin K-8 Private School in Franklin, TN STAY IN-THE-KNOW Attend an Info Session Contact Admissions Apply now Welcome to the Future of Education in Franklin​ Looking for a private school your child can’t wait to go to each morning? At Alpha Franklin, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Franklin, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Franklin is coming soon. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade Franklin, TN Tuition $50,000 Email: admissions@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 26/27 calendar - update link Contact Admissions CONTACT ADMISSIONS APPLY TODAY More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Franklin Gallery Alpha Franklin FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Franklin is a candidate for accreditation with Cognia Alpha Franklin is accredited by Cognia",
+   "pageOwnedText": "Alpha Franklin K-8 Private School in Franklin, TN STAY IN-THE-KNOW Attend an Info Session Contact Admissions Apply now Welcome to the Future of Education in Franklin​ Looking for a private school your child can’t wait to go to each morning? At Alpha Franklin, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Franklin, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Franklin is coming soon. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade Franklin, TN Tuition $50,000 Email: admissions@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 26/27 calendar - update link Contact Admissions CONTACT ADMISSIONS APPLY TODAY More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Franklin Gallery Alpha Franklin FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Franklin is a candidate for accreditation with Cognia Alpha Franklin is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/franklin/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/franklin/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/franklin/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "APPLY TODAY",
+     "href": "https://alpha.school/application/?submission_campus=franklin"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY",
+     "href": "https://alpha.school/application/?submission_campus=franklin"
+    }
+   ],
+   "bookCallLinks": [],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Chelsea Winters",
+     "title": "Dean of Parents",
+     "text": "Chelsea Winters | Dean of Parents"
+    },
+    {
+     "name": "Morgan Hatt",
+     "title": "Community Partnerships",
+     "text": "Morgan Hatt | Community Partnerships"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1024x704.webp",
+      "alt": "Aerial view of downtown Franklin, Tennessee with Coming Soon to Franklin text",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9833",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1024x704.webp https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1024x704.webp 1024w, https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-300x206.webp 300w, https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-768x528.webp 768w, https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1200x825.webp 1200w, https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1400x963.webp 1400w, https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon.webp 1424w Aerial view of downtown Franklin, Tennessee with Coming Soon to Franklin text attachment-large size-large wp-image-9833 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": true
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": [
+     {
+      "kind": "image-metadata",
+      "src": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1024x704.webp",
+      "alt": "Aerial view of downtown Franklin, Tennessee with Coming Soon to Franklin text",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9833",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image"
+     },
+     {
+      "kind": "page-copy",
+      "snippet": "limitless futures. Attend an Info Session Alpha Franklin is coming soon. Join us for an info session, and see firsthand why Alpha i"
+     }
+    ]
+   }
+  },
+  {
+   "program": {
+    "id": "program-60804396611",
+    "name": "Alpha Greenwich Armonk",
+    "programName": "Alpha Greenwich Armonk",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/greenwich/",
+   "finalUrl": "https://alpha.school/greenwich/",
+   "status": 200,
+   "title": "Alpha Greenwich Armonk | K-8 Private School in Armonk, NY",
+   "headings": [
+    "Alpha Greenwich Armonk K-8 Private School in Armonk, NY",
+    "Welcome to the Future of Education in Greenwich​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Greenwich Armonk K-8 Private School in Armonk, NY STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Greenwich​ Looking for a private school your child can’t wait to go to each morning? At Alpha Greenwich Armonk, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Greenwich Armonk, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Greenwich Armonk is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 20 Old Post Road, Armonk, NY 10504 Tuition $65,000 Email: admissions.greenwich@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY NOW More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Greenwich Armonk Gallery Alpha Greenwich Armonk FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Greenwich Armonk is a candidate for accreditation with Cognia Alpha Greenwich Armonk is accredited by Cognia",
+   "pageOwnedText": "Alpha Greenwich Armonk K-8 Private School in Armonk, NY STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Greenwich​ Looking for a private school your child can’t wait to go to each morning? At Alpha Greenwich Armonk, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Greenwich Armonk, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Greenwich Armonk is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 20 Old Post Road, Armonk, NY 10504 Tuition $65,000 Email: admissions.greenwich@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY NOW More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Greenwich Armonk Gallery Alpha Greenwich Armonk FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Greenwich Armonk is a candidate for accreditation with Cognia Alpha Greenwich Armonk is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/greenwich/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/greenwich/?uuid=ec494fc7-e35d-4b5a-87e7-549d3c573cd5"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/greenwich/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/greenwich/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Greenwich.pdf"
+    },
+    {
+     "text": "APPLY NOW",
+     "href": "https://alpha.school/application/?submission_campus=greenwich"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY NOW",
+     "href": "https://alpha.school/application/?submission_campus=greenwich"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/greenwich/?uuid=ec494fc7-e35d-4b5a-87e7-549d3c573cd5"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Greenwich.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Sarah Bergin",
+     "title": "Dean of Parents",
+     "text": "Sarah Bergin | Dean of Parents"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1024x704.png",
+      "alt": "Greenwich",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9821",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1024x704.png https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1024x704.png 1024w, https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-300x206.png 300w, https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-768x528.png 768w, https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1200x825.png 1200w, https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1400x963.png 1400w, https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling.png 1424w Greenwich attachment-large size-large wp-image-9821 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-57622127456",
+    "name": "Alpha Jamaica Plain",
+    "programName": "Alpha Jamaica Plain",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/jamaica-plain/",
+   "finalUrl": "https://alpha.school/jamaica-plain/",
+   "status": 200,
+   "title": "Alpha Jamaica Plain | K-8 Private School in Jamaica Plain, MA",
+   "headings": [
+    "Alpha Jamaica Plain K-8 Private School in Jamaica Plain, MA",
+    "Welcome to the Future of Education in Boston​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Jamaica Plain K-8 Private School in Jamaica Plain, MA STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Boston​ Looking for a private school your child can’t wait to go to each morning? At Alpha Jamaica Plain, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Jamaica Plain, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Jamaica Plain is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. Alpha has three campuses in Greater Boston: Alpha Beacon Hill, Alpha Lexington, and Alpha Jamaica Plain.Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 3815 Washington St, Jamaica Plain, MA 02130 Tuition $60,000 Email: admissions.jamaicaplain@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 26/27 calendar - update link Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Jamaica Plain Gallery Alpha Jamaica Plain FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid",
+   "pageOwnedText": "Alpha Jamaica Plain K-8 Private School in Jamaica Plain, MA STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in Boston​ Looking for a private school your child can’t wait to go to each morning? At Alpha Jamaica Plain, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Jamaica Plain, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Jamaica Plain is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. Alpha has three campuses in Greater Boston: Alpha Beacon Hill, Alpha Lexington, and Alpha Jamaica Plain.Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 3815 Washington St, Jamaica Plain, MA 02130 Tuition $60,000 Email: admissions.jamaicaplain@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 26/27 calendar - update link Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Jamaica Plain Gallery Alpha Jamaica Plain FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/jamaica-plain/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/jamaica-plain/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/jamaica-plain/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=jamaica_plain"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=jamaica_plain"
+    }
+   ],
+   "bookCallLinks": [],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Ben Gordon-Sniffen",
+     "title": "Head Guide",
+     "text": "Ben Gordon-Sniffen | Head Guide"
+    },
+    {
+     "name": "Sean Satterlee",
+     "title": "Associate Dean of Parents, Jamaica Plain",
+     "text": "Sean Satterlee | Associate Dean of Parents, Jamaica Plain"
+    },
+    {
+     "name": "Brandon Maddox",
+     "title": "Director of Admissions - Boston/Lexington",
+     "text": "Brandon Maddox | Director of Admissions - Boston/Lexington"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1024x683.webp",
+      "alt": "",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-4044",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1024x683.webp https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1024x683.webp 1024w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-300x200.webp 300w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-768x512.webp 768w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-370x247.webp 370w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-690x460.webp 690w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1536x1024.webp 1536w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-scaled.webp 1920w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-600x400.webp 600w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1200x800.webp 1200w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1400x933.webp 1400w attachment-large size-large wp-image-4044 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-51223157555",
+    "name": "Alpha Lexington",
+    "programName": "Alpha Lexington",
+    "programType": "Announced"
+   },
+   "url": "https://alpha.school/boston-suburbs/",
+   "finalUrl": "https://alpha.school/boston-suburbs/",
+   "status": 200,
+   "title": "Alpha Lexington | K-8 Private School in Boston, MA",
+   "headings": [
+    "Alpha Lexington K-8 Private School in Boston, MA",
+    "Welcome to the Future of Education in Boston​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Lexington K-8 Private School in Boston, MA STAY IN-THE-KNOW Attend an Info Session Book a Call Welcome to the Future of Education in Boston​ Looking for a private school your child can’t wait to go to each morning? At Alpha Lexington, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Lexington, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment. Alpha has three campuses in Greater Boston: Alpha Beacon Hill, Alpha Lexington, and Alpha Jamaica Plain. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade Boston metro suburbs, MA Tuition $65,000 Email: admissions.bostonsuburbs@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026-2027 CALENDAR Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Lexington Gallery Alpha Lexington FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Lexington is a candidate for accreditation with Cognia Alpha Lexington is accredited by Cognia",
+   "pageOwnedText": "Alpha Lexington K-8 Private School in Boston, MA STAY IN-THE-KNOW Attend an Info Session Book a Call Welcome to the Future of Education in Boston​ Looking for a private school your child can’t wait to go to each morning? At Alpha Lexington, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Lexington, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment. Alpha has three campuses in Greater Boston: Alpha Beacon Hill, Alpha Lexington, and Alpha Jamaica Plain. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade Boston metro suburbs, MA Tuition $65,000 Email: admissions.bostonsuburbs@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026-2027 CALENDAR Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Lexington Gallery Alpha Lexington FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha Lexington is a candidate for accreditation with Cognia Alpha Lexington is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/boston-suburbs/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../"
+    },
+    {
+     "text": "2026-2027 CALENDAR",
+     "href": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=boston_suburbs"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=boston_suburbs"
+    }
+   ],
+   "bookCallLinks": [],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://www.flipsnack.com/.../",
+     "hiddenOnAllViewports": true
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026-2027 CALENDAR",
+     "href": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Ben Gordon-Sniffen",
+     "title": "Head Guide",
+     "text": "Ben Gordon-Sniffen | Head Guide"
+    },
+    {
+     "name": "Sean Satterlee",
+     "title": "Associate Dean of Parents, Lexington",
+     "text": "Sean Satterlee | Associate Dean of Parents, Lexington"
+    },
+    {
+     "name": "Brandon Maddox",
+     "title": "Director of Admissions - Boston/Lexington",
+     "text": "Brandon Maddox | Director of Admissions - Boston/Lexington"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
+      "alt": "Classroom at Alpha private school in Miami",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-4051",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp 1024w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-300x200.webp 300w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-768x512.webp 768w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-370x247.webp 370w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-690x460.webp 690w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1536x1024.webp 1536w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-scaled.webp 1920w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-600x400.webp 600w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1200x800.webp 1200w, https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1400x933.webp 1400w Classroom at Alpha private school in Miami attachment-large size-large wp-image-4051 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-29735717555",
+    "name": "Alpha Raleigh",
+    "programName": "Alpha Raleigh",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/raleigh/",
+   "finalUrl": "https://alpha.school/raleigh/",
+   "status": 200,
+   "title": "Alpha Raleigh | K-12 Private School in Raleigh, North Carolina",
+   "headings": [
+    "Alpha Raleigh K-12 Private School in Raleigh, North Carolina",
+    "Welcome to the Future of Education in Raleigh​",
+    "Personalized Learning",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "Alpha Raleigh Private School",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha Raleigh K-12 Private School in Raleigh, North Carolina STAY IN-THE-KNOW Attend an Info Session Book A Call Apply now Welcome to the Future of Education in Raleigh​ Looking for a private school your child can’t wait to go to each morning? At Alpha Raleigh, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. Personalized Learning The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Raleigh, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Raleigh is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. Will my advanced kid finally be challenged? What about socialization? What do Guides actually do? SEE ANSWERS TO MOST COMMON QUESTIONS Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events Alpha Raleigh Private School K-12th Grade (Currently enrolling K-10 for Fall 2027)Temporary Location:12600 Spruce Tree Way, Raleigh, NC 27614 Tuition $45,000 Founding Families Tuition Credit: $10,000 per year for 5 years. Contact Admissions for details. Email: admissions.raleigh@alpha.school Telephone: (919) 213-0133 To reach the Suicide and Crisis Lifeline, call 988 or text HOME to 741741. Quick Resources ADMISSION GUIDE INFO PACKET 2026/27 calendar 2026/27 INFO PACKET Book a Call APPLY TODAY! Alpha Raleigh Gallery More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Raleigh FAQs Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creat",
+   "pageOwnedText": "Alpha Raleigh K-12 Private School in Raleigh, North Carolina STAY IN-THE-KNOW Attend an Info Session Book A Call Apply now Welcome to the Future of Education in Raleigh​ Looking for a private school your child can’t wait to go to each morning? At Alpha Raleigh, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. Personalized Learning The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha Raleigh, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha Raleigh is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. Will my advanced kid finally be challenged? What about socialization? What do Guides actually do? SEE ANSWERS TO MOST COMMON QUESTIONS Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events Alpha Raleigh Private School K-12th Grade (Currently enrolling K-10 for Fall 2027)Temporary Location:12600 Spruce Tree Way, Raleigh, NC 27614 Tuition $45,000 Founding Families Tuition Credit: $10,000 per year for 5 years. Contact Admissions for details. Email: admissions.raleigh@alpha.school Telephone: (919) 213-0133 To reach the Suicide and Crisis Lifeline, call 988 or text HOME to 741741. Quick Resources ADMISSION GUIDE INFO PACKET 2026/27 calendar 2026/27 INFO PACKET Book a Call APPLY TODAY! Alpha Raleigh Gallery More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Looking for more stories to view and share? Explore the full video library Alpha Raleigh FAQs Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creat",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/raleigh/"
+    },
+    {
+     "text": "Book A Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/raleigh/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/raleigh/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/raleigh/"
+    },
+    {
+     "text": "What do Guides actually do?",
+     "href": "https://alphacontentlibrary.com/c/J-P3-4/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Raleigh.pdf"
+    },
+    {
+     "text": "2026/27 INFO PACKET",
+     "href": "https://alpha.school/wp-content/uploads/2026/09/raleigh-info-packet-2026-2027-cmue5em5e00000agmf0oqyol8.pdf"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/raleigh/"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=raleigh"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=raleigh"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book A Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/raleigh/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/raleigh/"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "2026/27 INFO PACKET",
+     "href": "https://alpha.school/wp-content/uploads/2026/09/raleigh-info-packet-2026-2027-cmue5em5e00000agmf0oqyol8.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://alpha.school/wp-content/uploads/calendars/2026_27/2026-2027-Calendar-Raleigh.pdf",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "Stephanie Dean",
+     "title": "Assoc. Dean of Parents",
+     "text": "Stephanie Dean | Assoc. Dean of Parents"
+    },
+    {
+     "name": "Tara-Anne Johnson",
+     "title": "Director of Admissions",
+     "text": "Tara-Anne Johnson | Director of Admissions"
+    },
+    {
+     "name": "Bailie Grant",
+     "title": "Campus Coordinator",
+     "text": "Bailie Grant | Campus Coordinator"
+    },
+    {
+     "name": "Tamara Friend",
+     "title": "Guide",
+     "text": "Tamara Friend | Guide"
+    },
+    {
+     "name": "Jennifer Greenham",
+     "title": "Lead Guide",
+     "text": "Jennifer Greenham | Lead Guide"
+    },
+    {
+     "name": "Erica Kinney",
+     "title": "Reading Specialist",
+     "text": "Erica Kinney | Reading Specialist"
+    },
+    {
+     "name": "Phil Blake",
+     "title": "Middle School Guide",
+     "text": "Phil Blake | Middle School Guide"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-fcf9c2a elementor-widget elementor-widget-image elementor-element elementor-element-6989768 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-fcf9c2a elementor-widget elementor-widget-image elementor-element elementor-element-6989768 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  },
+  {
+   "program": {
+    "id": "program-49011192957",
+    "name": "Alpha South Bay LA",
+    "programName": "Alpha South Bay LA",
+    "programType": "Open"
+   },
+   "url": "https://alpha.school/south-bay-la/",
+   "finalUrl": "https://alpha.school/south-bay-la/",
+   "status": 200,
+   "title": "Alpha South Bay LA | K-8 Private School in Playa Vista, CA",
+   "headings": [
+    "Alpha South Bay LA K-8 Private School in Playa Vista, CA",
+    "Welcome to the Future of Education in South Bay LA​",
+    "Attend an Info Session",
+    "See How Alpha Transforms Kids: Straight From Alpha Parents",
+    "Ready to see what these parents are talking about?Join an Information Session",
+    "More Real Stories From Alpha Families",
+    "Latest Blogs"
+   ],
+   "text": "Alpha South Bay LA K-8 Private School in Playa Vista, CA STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in South Bay LA​ Looking for a private school your child can’t wait to go to each morning? At Alpha South Bay LA, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha South Bay LA, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha South Bay LA is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 5401 Beethoven Street, Los Angeles, CA, 90066 Tuition $65,000 Email: admissions.southbayla@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Explore the full video library Alpha South Bay LA Gallery Alpha South Bay LA FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha South Bay LA is a candidate for accreditation with Cognia Alpha South Bay LA is accredited by Cognia",
+   "pageOwnedText": "Alpha South Bay LA K-8 Private School in Playa Vista, CA STAY IN-THE-KNOW Attend an Info Session Book a Call Apply now Welcome to the Future of Education in South Bay LA​ Looking for a private school your child can’t wait to go to each morning? At Alpha South Bay LA, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in the top 1% nationally. The rest of the day is spent on life skills and team-based workshops that ignite motivation and teach things like leadership, grit, financial literacy & entrepreneurship. At Alpha South Bay LA, kids love school. We’re not just preparing students for tests; we’re preparing them for limitless futures. Attend an Info Session Alpha South Bay LA is open and enrolling. Join us for an info session, and see firsthand why Alpha is ranked among the best private schools thanks to its groundbreaking learning model. See How Alpha Transforms Kids: Straight From Alpha Parents When choosing a school, nothing matters more than hearing from families just like yours.These Alpha parents share how their children gained confidence, learned faster, and rediscovered their love of school. See More Stories From Alpha Parents Ready to see what these parents are talking about?Join an Information Session In one evening, you’ll see how Alpha kids learn twice as fast, meet guides, and talk with parents whose kids are already thriving. Walk away knowing whether Alpha is the right fit for your child.Save Your Spot See All Upcoming Events K - 8th Grade 5401 Beethoven Street, Los Angeles, CA, 90066 Tuition $65,000 Email: admissions.southbayla@alpha.school Telephone: ADMISSION GUIDE INFO PACKET - update link VIDEO LIBRARY 2026/27 calendar Book a Call APPLY TODAY! More Real Stories From Alpha Families All2X LearningAlpha SummerKindergartenLife SkillsLove SchoolParent TestimonialsShadow DaysStudent TestimonialsThe First 30 Daystimeback× Explore the full video library Alpha South Bay LA Gallery Alpha South Bay LA FAQs Q #1 A #1 Q #2 A #2 Q #3 A #3 Q #4 A #4 Q #5 A #5 Latest Blogs Teach Your Kid What School Doesn’t (Pt. 5): Unleashing Their Creative Genius at Home Read More Does Alpha School Replace Teachers with AI? Read More Teach Your Kid What School Doesn’t (Pt. 4): How to Regulate Emotions at Home Read More Alpha South Bay LA is a candidate for accreditation with Cognia Alpha South Bay LA is accredited by Cognia",
+   "links": [
+    {
+     "text": "Attend an Info Session",
+     "href": "https://alpha.school/south-bay-la/"
+    },
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/south-bay/"
+    },
+    {
+     "text": "Apply now",
+     "href": "https://alpha.school/south-bay-la/"
+    },
+    {
+     "text": "Join us for an info session",
+     "href": "https://alpha.school/south-bay-la/"
+    },
+    {
+     "text": "ADMISSION GUIDE",
+     "href": "https://alpha.school/admissions/"
+    },
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy"
+    },
+    {
+     "text": "2026/27 calendar",
+     "href": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link"
+    },
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=south_bay"
+    }
+   ],
+   "applicationLinks": [
+    {
+     "text": "APPLY TODAY!",
+     "href": "https://alpha.school/application/?submission_campus=south_bay"
+    }
+   ],
+   "bookCallLinks": [
+    {
+     "text": "Book a Call",
+     "href": "https://go.alpha.school/meetings/alpha-school/south-bay/"
+    }
+   ],
+   "infoPacketLinks": [
+    {
+     "text": "INFO PACKET - update link",
+     "href": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "calendarLinks": [
+    {
+     "text": "2026/27 calendar",
+     "href": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link",
+     "hiddenOnAllViewports": false
+    }
+   ],
+   "staff": [
+    {
+     "name": "Dr. Tasha Arnold",
+     "title": "Head of Schools",
+     "text": "Dr. Tasha Arnold | Head of Schools"
+    },
+    {
+     "name": "John Stuart",
+     "title": "Director of Admissions",
+     "text": "John Stuart | Director of Admissions"
+    },
+    {
+     "name": "Jeff Barton",
+     "title": "Dean of Parents",
+     "text": "Jeff Barton | Dean of Parents"
+    },
+    {
+     "name": "Matt Shenker",
+     "title": "Head Guide",
+     "text": "Matt Shenker | Head Guide"
+    },
+    {
+     "name": "Zoe Zimmerman",
+     "title": "Guide",
+     "text": "Zoe Zimmerman | Guide"
+    },
+    {
+     "name": "Dan Reding",
+     "title": "Guide",
+     "text": "Dan Reding | Guide"
+    },
+    {
+     "name": "Drake Turcotte",
+     "title": "Guide",
+     "text": "Drake Turcotte | Guide"
+    },
+    {
+     "name": "Walker Haynes",
+     "title": "Guide",
+     "text": "Walker Haynes | Guide"
+    }
+   ],
+   "media": {
+    "images": [
+     {
+      "src": "https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-1024x704.png",
+      "alt": "South Bay LA",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-9824",
+      "containerId": "content_image",
+      "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-1024x704.png https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-1024x704.png 1024w, https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-300x206.png 300w, https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-768x528.png 768w, https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-1200x825.png 1200w, https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-1400x963.png 1400w, https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling.png 1424w South Bay LA attachment-large size-large wp-image-9824 content_image elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     },
+     {
+      "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+      "alt": "Cognia Accredited",
+      "title": "",
+      "classes": "attachment-large size-large wp-image-6089",
+      "containerId": "",
+      "containerClasses": "elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "origin": null,
+      "metadata": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp 961w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-300x300.webp 300w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-150x150.webp 150w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-768x768.webp 768w, https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg-600x600.webp 600w Cognia Accredited attachment-large size-large wp-image-6089 elementor-element elementor-element-77941ad elementor-widget elementor-widget-image elementor-element elementor-element-0cf56d6 elementor-hidden-desktop elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent",
+      "nearbyText": "",
+      "isPrimaryCampusVisual": true,
+      "staleLaunchSignal": false
+     }
+    ],
+    "youtubeVideos": [],
+    "hasYouTubeVideo": false,
+    "staleLaunchSignals": []
+   }
+  }
+ ]
+}
