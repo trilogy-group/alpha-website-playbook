@@ -1,0 +1,20 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T22:17:05.208Z",
+  "decidedBy": "Matt Barge",
+  "source": "Slack message to the website agent 2026-09-25: 'not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website'",
+  "date": "2026-09-25",
+  "specRefs": [
+    "spec/check-rows.json",
+    "spec/schemas/check-bundle.schema.json",
+    "spec/observer-comparators.json",
+    "spec/ticket-classes.json",
+    "spec/intake-policy.json",
+    "registry/observer-checks.json"
+  ],
+  "summary": "check from HubSpot to the website, not only from the website to HubSpot: check bundle 1.3 gives every row an entitySource (campus rows enumerate from HubSpot Programs whose type is Open or Announced and whose website is on alpha.school; lifecycle from type; the map is downstream), makes a missing registry entry for an in-scope campus a Missing Info finding to the registry owner (expected.derive.onMissing finding, presence not absence; equals-approved-media compares the slot attachment id with registry attachmentId), adds the coverage rows site.coverage.open-campus-registries, site.coverage.program-page and site.coverage.open-campus-rendered, enumerates comparators in spec/observer-comparators.json, maps every tests/page-check.mjs id to its row (aliases.pageCheck) so found tickets carry requirementId, and ticket classes match on matchRequirementIds and matchCheckIds before title patterns; the East Bay ticket cmubrkkm800000agmvukxsioc classifies observer-media-identity for website operations",
+  "decisionRow": "| 2026-09-25 | Decided (Matt Barge, Slack message to the website agent 2026-09-25: 'not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website'): check from HubSpot to the website, not only from the website to HubSpot: check bundle 1.3 gives every row an entitySource (campus rows enumerate from HubSpot Programs whose type is Open or Announced and whose website is on alpha.school; lifecycle from type; the map is downstream), makes a missing registry entry for an in-scope campus a Missing Info finding to the registry owner (expected.derive.onMissing finding, presence not absence; equals-approved-media compares the slot attachment id with registry attachmentId), adds the coverage rows site.coverage.open-campus-registries, site.coverage.program-page and site.coverage.open-campus-rendered, enumerates comparators in spec/observer-comparators.json, maps every tests/page-check.mjs id to its row (aliases.pageCheck) so found tickets carry requirementId, and ticket classes match on matchRequirementIds and matchCheckIds before title patterns; the East Bay ticket cmubrkkm800000agmvukxsioc classifies observer-media-identity for website operations | Matt Barge | spec/check-rows.json; spec/schemas/check-bundle.schema.json; spec/observer-comparators.json; spec/ticket-classes.json; spec/intake-policy.json; registry/observer-checks.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-e768c4a7.json |",
+  "appliedIn": "spec/check-rows.json; spec/schemas/check-bundle.schema.json; spec/observer-comparators.json; spec/ticket-classes.json; spec/intake-policy.json; registry/observer-checks.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-e768c4a7.json",
+  "textSha256": "e768c4a72e7791c15395f5db13ad2b2ea729702ae3d9df1e44d5784b2f2731ee",
+  "text": "Slack message from Matt Barge to the website agent, 2026-09-25, after MacKenzie Price saw the Alpha East Bay page carrying the \"Coming Fall 2026 To Piedmont\" card while HubSpot had the campus Open since 2026-08-24:\n\n\"not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website\"\n"
+}

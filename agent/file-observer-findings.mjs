@@ -25,6 +25,16 @@
  *   1b. Sister-site guard: a campus-page row (pageFamily campus, campus-open, campus-announced) measures alpha.school campus
  *      pages only; a finding on any other host (alphahigh.school, sportsacademy.school, ...) is reported as out-of-scope-site
  *      and never filed. Group titles use the campus display name from registry/campus-pages.json, never a bare program id.
+ *   1d. Presence, not absence (bundle 1.3, repair plan 2026-09-25 repair 1): a finding with `missingExpectation: true` on a
+ *      row whose `expected.derive.onMissing` is `finding` means an in-scope campus has no entry (or a null one) in the
+ *      registry the row derives from. The filer re-reads that registry: when the entry is recorded and complete by now the
+ *      finding is reported as recorded-since and files nothing; otherwise it files Missing Info (status MISSING_INFO) to the
+ *      registry owner role (the row's ownerRole, or the registry entry's ownerRole on the coverage row) with the row's
+ *      `literals.missingAsk` as the one numbered item, titled "no approved <thing> recorded for <state> campus <name>", the
+ *      class from the row (or the registry entry), deduped on campus and row (page scope) or campus and registry
+ *      (`dedupeScope: campus-registry`). A coverage finding whose registry entry has an empty requiredWhen.type is informational.
+ *      A `program-page-present` finding that only says the map lacks the record (`actual.missingFromMap`) is a source-digest
+ *      line under the hubspot-map-sync row, never a page ticket.
  *   1c. Named exceptions, read through the row's exemptionsRef: a campus and CTA with an unexpired entry in
  *      registry/campus-cta-exceptions.json (rule hidden, present or destination; expires an ISO date, lifecycle:Open or
  *      null) is reported as exempted; so is an other-campus or sister-brand finding whose card names a person listed as
@@ -93,7 +103,7 @@ export { FILER_OWNED_CODE, isFilerOwnedConflict }
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
-export const FILER_VERSION = '0.5'
+export const FILER_VERSION = '0.6'
 export const FILED_BY = 'agent/file-observer-findings.mjs'
 export const IDEMPOTENCY_PREFIX = 'observer:'
 export const RESOLUTION_KIND = 'check-cleared'
@@ -106,7 +116,10 @@ export const RESOLVABLE_STATUSES = ['NOT_STARTED', 'BLOCKED']
 export const INSTRUCTION_LINE = /^(?:OPERATOR INSTRUCTION|CORRECTION|DECISION NEEDED)\b/
 /** Provider statuses that suppress a dependent row; not-collected, optional and disabled do not. */
 export const UNHEALTHY_STATUSES = ['degraded', 'failed', 'stale']
-export const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site']
+export const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site', 'campus-registry']
+/** Status of a ticket filed for a missing registry expectation (bundle 1.3): waiting on the registry owner, with the exact ask. */
+export const MISSING_INFO_STATUS = 'MISSING_INFO'
+export const RECORDED_SINCE = 'expectation recorded since the observer read the registry'
 export const CHANNELS = ['ticket', 'source-digest', 'loop-health']
 export const SOURCE_DIGEST_FILE = 'source-digest.md'
 export const ROW_FIELDS = ['id', 'observerCheck', 'title', 'pageFamily', 'lifecycleStates', 'element', 'expected', 'comparator', 'severity', 'status', 'ticketClass', 'ownerRole', 'dedupeScope', 'clearAfterRuns', 'gracePeriodHours', 'evidenceProfile', 'sourceHealthDependency', 'requirementRef']
@@ -312,7 +325,7 @@ export function loadCheckBundle(file) {
   const byCheck = new Map()
   for (const row of rows) { if (!byCheck.has(row.observerCheck)) byCheck.set(row.observerCheck, []); byCheck.get(row.observerCheck).push(row) }
   const retired = new Map((raw.retired || []).map((r) => [r.observerCheck, r]))
-  return { file: resolved, version: raw.version || raw.bundleVersion || null, sha256: raw.sha256 || raw.bundleSha256 || null, rows, byCheck, sourceHealth: raw.sourceHealth || {}, sourceDigest: raw.sourceDigest || { ownerRoles: [], reportFile: SOURCE_DIGEST_FILE }, retired }
+  return { file: resolved, version: raw.version || raw.bundleVersion || null, sha256: raw.sha256 || raw.bundleSha256 || null, rows, byCheck, pageFamilies: raw.pageFamilies || {}, entitySources: raw.entitySources || {}, aliases: raw.aliases || {}, sourceHealth: raw.sourceHealth || {}, sourceDigest: raw.sourceDigest || { ownerRoles: [], reportFile: SOURCE_DIGEST_FILE }, retired }
 }
 
 /** Read an APEX export (array, or {tasks|items|data}) for offline dedupe and auto-resolve. */
@@ -423,6 +436,7 @@ export function scopeKeyFor(row, finding) {
     case 'program': return `program:${programIdFor(finding) || pageSlug(finding.url) || finding.entity || 'unknown'}`
     case 'event': return 'events'
     case 'site': return 'site'
+    case 'campus-registry': return `campus:${campusSlugFor(finding) || pageSlug(finding.url) || finding.entity || 'unknown'}:registry:${registryFileFor(finding) || 'unknown'}`
     default: return `page:${pageSlug(finding.url) || finding.entity || 'unknown'}`
   }
 }
@@ -575,6 +589,89 @@ export function campusNameForProgram(programId) {
   if (!programId) return null
   const entry = Object.values(campusPages()).find((page) => (page.mapProgramIds || []).includes(programId))
   return entry ? entry.names[0] : null
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Presence, not absence (bundle 1.3): missing registry expectations and coverage findings
+// ---------------------------------------------------------------------------------------------------------------
+
+/** The finding says the campus has no (or a null) entry in the registry the row derives from (observer contract `missingExpectation: true`). */
+export function isMissingExpectation(finding) {
+  return finding?.missingExpectation === true || finding?.actual?.missingExpectation === true
+}
+
+/** The registry file a coverage finding names (actual.registry, registry, actual.file), or null. */
+export function registryFileFor(finding) {
+  const actual = finding?.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
+  const value = actual.registry || finding?.registry || actual.file || null
+  return typeof value === 'string' && value ? value : null
+}
+
+/** The registry file a derive row reads: the first `registry/...json` token of expected.derive.field, or null. */
+export function registryFileForRow(row) {
+  const field = [].concat(row?.expected?.derive?.field || []).join(' ')
+  const match = field.match(/\bregistry\/[A-Za-z0-9_.-]+\.json\b/)
+  return match ? match[0] : null
+}
+
+/** The `program-page-present` case that is not a page defect: the page answers and names the campus but the growth map lacks the record. */
+export function missingFromMapOnly(finding) {
+  const actual = finding?.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
+  if (actual.missingFromMap !== true && actual.inMap !== false) return false
+  const status = Number(actual.status ?? actual.httpStatus ?? 200)
+  const named = actual.namesCampus !== false && actual.titleNamesCampus !== false
+  return status >= 200 && status < 300 && named
+}
+
+/** The registry entry for a campus slug at `keyPath` (campuses[slug] today), or undefined. */
+function registryEntryAt(registry, keyPath, slug) {
+  if (!registry || !slug) return undefined
+  const head = String(keyPath || 'campuses[slug]').replace(/\[slug\].*$/, '')
+  const collection = head.split('.').filter(Boolean).reduce((cursor, part) => (cursor && typeof cursor === 'object' ? cursor[part] : undefined), registry)
+  return collection && typeof collection === 'object' ? collection[slug] : undefined
+}
+
+/** A recorded entry is complete when it names what the row needs: the open-media registry needs openMedia (and an attachmentId for a card); any other registry needs a non-empty entry. */
+function entryComplete(file, entry) {
+  if (!entry || typeof entry !== 'object') return false
+  if (/campus-open-media\.json$/.test(file)) return entry.openMedia === 'video' || (entry.openMedia === 'card' && Number.isInteger(entry.attachmentId))
+  return Object.keys(entry).length > 0
+}
+
+/**
+ * What a missingExpectation finding means now. The filer re-reads the registry (repair 1: the registry is the source of the
+ * expectation, so a row recorded after the observer's read must not file): `recorded` with the entry when it is complete now;
+ * otherwise `missing` with the registry, the entry as it stands (a null openMedia row is still missing), the noun for the title,
+ * the exact ask, the owner role and the class. On the coverage row (registry-coverage) the registry entry named by the finding
+ * supplies thing, ask, owner and class; an entry with an empty requiredWhen.type is `informational`. `registries` lets a test
+ * (or a replay) pass registry contents keyed by file instead of reading the repository.
+ */
+export function missingExpectationFor({ row, finding, registries = {} }) {
+  const slug = campusSlugFor(finding) || (typeof finding.actual?.slug === 'string' ? finding.actual.slug : null)
+  const state = lifecycleFor(finding, slug).state
+  const campus = (slug && campusPages()[slug]?.names?.[0]) || campusNameFor(finding.url) || finding.actual?.campus || finding.actual?.name || slug || finding.entity
+  const coverage = row.comparator?.type === 'registry-coverage'
+  const file = coverage ? registryFileFor(finding) : registryFileForRow(row)
+  if (!file) return { kind: 'invalid', reason: coverage ? 'coverage finding names no registry (actual.registry)' : `row ${row.id} derives from no registry file`, slug, campus, state }
+  const entrySpec = coverage ? (row.literals?.registries || []).find((r) => r.file === file) : null
+  if (coverage && !entrySpec) return { kind: 'invalid', reason: `registry ${file} is not in literals.registries of ${row.id}`, slug, campus, state, file }
+  if (coverage && !(entrySpec.requiredWhen?.type || []).length) return { kind: 'informational', slug, campus, state, file, thing: entrySpec.thing, reason: `${file} is informational (requiredWhen.type empty); nothing to file` }
+  if (coverage && state && !(entrySpec.requiredWhen.type || []).includes(state)) return { kind: 'not-required', slug, campus, state, file, thing: entrySpec.thing, reason: `${file} is required for ${entrySpec.requiredWhen.type.join(', ')} campuses, not ${state}` }
+  const registry = registries[file] || loadRegistry(file)
+  const keyPath = coverage ? entrySpec.keyPath : 'campuses[slug]'
+  const entry = registryEntryAt(registry, keyPath, slug)
+  const thing = coverage ? entrySpec.thing : (row.literals?.thing || 'expectation')
+  const ask = coverage ? entrySpec.ask : (row.literals?.missingAsk || `Record the ${thing} for this campus in ${file}.`)
+  const ownerRole = coverage ? entrySpec.ownerRole : row.ownerRole
+  const ticketClass = coverage ? entrySpec.ticketClass : row.ticketClass
+  const base = { slug, campus, state, file, keyPath, thing, ask, ownerRole, ticketClass, entry: entry ?? null }
+  if (entryComplete(file, entry)) return { kind: 'recorded', ...base, reason: RECORDED_SINCE }
+  return { kind: 'missing', ...base, reason: entry ? `${file} ${keyPath.replace('[slug]', `.${slug}`)} is recorded but names no approved ${thing} (${formatFact(entry).slice(0, 160)})` : `${file} has no entry for ${slug || campus}` }
+}
+
+/** Title of a missing-expectation ticket (bundle 1.3 contract): no approved <thing> recorded for <state> campus <name>. */
+export function missingExpectationTitle(assessment) {
+  return cleanText(`no approved ${assessment.thing} recorded for ${assessment.state || 'in-scope'} campus ${assessment.campus}`)
 }
 
 /** Owner for a role through the policy bundle; unnamed roles escalate to the website agent operator (protocol 1d). */
@@ -908,13 +1005,13 @@ function evidencePairs(run, group) {
  * runs), suppressed, loopHealth, dropped, advisory, resolves (open tickets to close), and unresolved (open observer
  * tickets that cannot close yet, with the reason).
  */
-export function planObserverFindings({ run, bundle, queue = [], policy = loadPolicyBundle(), now = new Date() }) {
+export function planObserverFindings({ run, bundle, queue = [], policy = loadPolicyBundle(), now = new Date(), registries = {} }) {
   const holdsByObserver = observerHoldsApply(run.manifest, bundle)
   const plan = { filerVersion: FILER_VERSION, runId: run.manifest.runId, runCompletedAt: run.manifest.completedAt, evidenceSha256: run.manifest.evidence?.sha256 || null, bundleVersion: bundle.version, bundleSha256: bundle.sha256, health: run.health, now: now.toISOString(),
     holds: holdsByObserver ? 'observer (manifest.checkBundle verified; grace and consecutive-run holds not re-applied)' : 'filer (no verified check bundle in the manifest)',
     suppressedByObserver: run.health.suppressedByLoopHealth || { count: 0, items: null, reported: false },
     decisionTickets: [...new Set(bundle.rows.map((r) => r.decisionPending).filter(Boolean))],
-    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], sourceDigest: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [] }
+    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], sourceDigest: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [], missingInfo: [], recordedSince: [], informational: [] }
 
   // Pass 1: rows. A loop-health finding that still arrives is counted for the observer owner and never files; the
   // observer applies its own `suppresses` before the packet is written (health.json suppressedByLoopHealth).
@@ -936,6 +1033,12 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
       plan.sourceDigest.push(sourceDigestItem({ row, finding, run, policy }))
       continue
     }
+    // Source-first coverage (1.3): a Program whose page answers and names the campus but which the map does not list is a
+    // map defect for the growth-map owner, written under the hubspot-map-sync row's digest, never a page ticket.
+    if (finding.check === 'program-page-present' && missingFromMapOnly(finding)) {
+      const digestRow = bundle.rows.find((r) => r.observerCheck === 'hubspot-map-sync' && channelFor(r) === 'source-digest')
+      if (digestRow) { plan.sourceDigest.push({ ...sourceDigestItem({ row: digestRow, finding, run, policy }), via: `program-page-present missingFromMap -> ${digestRow.id}` }); continue }
+    }
     assessed.push({ finding, row })
   }
 
@@ -953,6 +1056,17 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (leadership) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'shared-leadership', ...leadership }); continue }
     const unhealthy = unhealthyDependencies(row, bundle, run.health, now)
     if (unhealthy.length) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'source health', sources: unhealthy }); continue }
+    // Presence, not absence (1.3): a missing registry expectation files Missing Info to the registry owner unless the registry
+    // has the entry by now; the row must say onMissing finding, or the finding is telemetry.
+    let missing = null
+    if (isMissingExpectation(finding)) {
+      if (row.expected?.derive?.onMissing !== 'finding') { plan.dropped.push({ id: finding.id, check: finding.check, row: row.id, reason: `missingExpectation on a row whose expected.derive.onMissing is ${row.expected?.derive?.onMissing || 'unset'} (telemetry)` }); continue }
+      const assessment = missingExpectationFor({ row, finding, registries })
+      if (assessment.kind === 'invalid') { plan.invalid.push({ id: finding.id, check: finding.check, row: row.id, reason: `filer defect: ${assessment.reason}` }); continue }
+      if (assessment.kind === 'recorded') { plan.recordedSince.push({ id: finding.id, check: finding.check, row: row.id, campus: assessment.campus, slug: assessment.slug, file: assessment.file, entry: assessment.entry, reason: assessment.reason }); continue }
+      if (assessment.kind === 'informational' || assessment.kind === 'not-required') { plan.informational.push({ id: finding.id, check: finding.check, row: row.id, campus: assessment.campus, slug: assessment.slug, file: assessment.file, kind: assessment.kind, reason: assessment.reason }); continue }
+      missing = assessment
+    }
     if (requiresObserverScreenshot(row)) {
       const evidence = evidencePairs(run, { findings: [finding] })
       if (!evidence.some((pair) => pair.complete)) { plan.suppressed.push({ id: finding.id, check: finding.check, row: row.id, reason: 'required browser evidence missing', evidence }); continue }
@@ -970,7 +1084,9 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
       if (needRuns > 1 && consecutive.runs < needRuns) { plan.held.push({ id: finding.id, check: finding.check, row: row.id, reason: 'consecutive runs', observations: consecutive.runs, basis: consecutive.basis, requireConsecutiveRuns: needRuns }); continue }
     }
     const key = idempotencyKeyFor(row, finding)
-    if (!groups.has(key)) groups.set(key, { key, row, rows: [row], scopeKey: scopeKeyFor(row, finding), findings: [], pages: [] })
+    // A missing expectation carries the registry owner and class (the coverage row: per registry entry) on an effective row with the same id.
+    const effectiveRow = missing ? { ...row, ownerRole: missing.ownerRole || row.ownerRole, ticketClass: missing.ticketClass || row.ticketClass } : row
+    if (!groups.has(key)) groups.set(key, { key, row: effectiveRow, rows: [row], scopeKey: scopeKeyFor(row, finding), findings: [], pages: [], missing: missing || null })
     const group = groups.get(key)
     if (!group.rows.includes(row)) group.rows.push(row)
     // A packet may repeat an incident id (one finding per viewport image, say); a scope counts each incident once.
@@ -998,7 +1114,16 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     }
     const owner = ownerFor(policy, row.ownerRole)
     const contract = buildContract({ row, group, run, bundle, owner, policy, now, related: decision ? [decision] : [] })
-    const body = cleanText(renderObserverBody(contract))
+    const missing = group.missing
+    if (missing) {
+      contract.claim = missingExpectationTitle(missing)
+      contract.expected = `an approved ${missing.thing} recorded in ${missing.file} ${missing.keyPath.replace('[slug]', `.${missing.slug || '<slug>'}`)} (${requirementIdFor(row)}; ${renderComparator(row)}; severity ${row.severity})`
+      contract.observed = `${missing.reason}; page shows ${truncate(formatFact(group.findings[0].actual), 200)}`
+      contract.reason = `${row.dedupeScope}-scoped ${row.status} check ${row.observerCheck}; no expectation is recorded for this ${missing.state || 'in-scope'} campus, so the page cannot be measured until the registry owner records it (presence, not absence; repair plan 2026-09-25)`
+      contract.history.push(`${now.toISOString().slice(0, 10)} ${FILED_BY} ${FILER_VERSION}: Missing Info to ${row.ownerRole} (${owner.name}) for the registry entry; ask: ${truncate(missing.ask, 200)}`)
+    }
+    const missingNote = missing ? cleanText(renderTemplate('missingInfo', { actor: `${FILED_BY} ${FILER_VERSION}`, date: now.toISOString().slice(0, 10), items: [{ item: missing.ask, owner: owner.name }], alreadyCorrect: `the campus is ${missing.state || 'in scope'} in HubSpot Programs; nothing on the page is changed until the ${missing.thing} is recorded` })) : null
+    const body = `${cleanText(renderObserverBody(contract))}${missingNote ? `\n\n${missingNote}` : ''}`
     const payload = {
       title: cleanText(contract.claim),
       description: body,
@@ -1007,7 +1132,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
       workflow: 'website-maintenance',
       program: [campusNameFor(contract.page) || 'Alpha School'],
       requesterEmail: process.env.APEX_QC_REQUESTER_EMAIL || 'matthew.barge@superbuilders.school',
-      status: owner.escalated ? 'BLOCKED' : 'NOT_STARTED',
+      status: missing ? MISSING_INFO_STATUS : (owner.escalated ? 'BLOCKED' : 'NOT_STARTED'),
       priority: /^(critical|high)$/i.test(String(row.severity)) ? 'HIGH' : 'NORMAL',
       // APEX PR 409: checkId is the observer SITE-* id (the lead finding's; observerIds carries the whole scope), filerRunId,
       // requirementId and checkBundleVersion mark the ticket filer-owned; the class lives in triagedClass and the body's Class line.
@@ -1018,17 +1143,19 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
         requirementId: rowKeyFor(row), checkBundleVersion: bundle.version || '', checkBundleSha256: bundle.sha256 || '',
         filerRunId: run.manifest.runId, runId: run.manifest.runId, severity: row.severity, dedupeScope: row.dedupeScope,
         pageUrl: contract.page || '', pages: group.pages, history: contract.history,
+        ...(missing ? { missingExpectation: true, registry: missing.file, registryKeyPath: missing.keyPath, campusSlug: missing.slug || '', lifecycleState: missing.state || '', missingAsk: missing.ask } : {}),
       },
     }
     const check = contractCheck({ ...payload, id: 'planned', assignees: [{ name: owner.name }] })
     if (!check.valid) { plan.invalid.push({ key: group.key, title: payload.title, missing: check.missing }); continue }
     const dup = findOpenDuplicate(openTasks, { group, row, payload, ids })
-    const entry = { key: group.key, rows: group.rows.map((r) => r.id), check: row.observerCheck, scope: row.dedupeScope, scopeKey: group.scopeKey, title: payload.title, findings: group.findings.length, observerIds: [...ids], pages: group.pages, owner, evidence: evidencePairs(run, group), payload }
+    const entry = { key: group.key, rows: group.rows.map((r) => r.id), check: row.observerCheck, scope: row.dedupeScope, scopeKey: group.scopeKey, title: payload.title, findings: group.findings.length, observerIds: [...ids], pages: group.pages, owner, evidence: evidencePairs(run, group), payload, ...(missing ? { missingExpectation: { campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, ticketClass: row.ticketClass } } : {}) }
     if (dup) { plan.existing.push({ ...entry, existing: { id: dup.task.id, status: dup.task.status, title: dup.task.title, via: dup.via }, payload: undefined }); continue }
     plan.files.push(entry)
+    if (missing) plan.missingInfo.push({ key: group.key, title: payload.title, campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, owner: owner.name, ticketClass: row.ticketClass, ask: missing.ask })
   }
 
-  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, sourceDigest: plan.sourceDigest.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
+  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, sourceDigest: plan.sourceDigest.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0), missingInfo: plan.missingInfo.length, recordedSince: plan.recordedSince.length, informational: plan.informational.length }
   return plan
 }
 
@@ -1426,7 +1553,9 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
     packet: { completedAt: packet.completedAt, ageHours: packet.ageHours, maxAgeHours: packet.maxAgeHours, bundleStatus: packet.bundleStatus, afterRunId: packet.afterRunId },
     ...(plan.packetWarnings.length ? { packetWarnings: plan.packetWarnings } : {}),
     ...(plan.queueWarnings.length ? { queueWarnings: plan.queueWarnings } : {}),
-    files: plan.files.map((f) => `${f.title} -> ${f.owner.name} (${f.owner.via})${f.owner.escalated ? ' [BLOCKED, protocol 1d]' : ''}; ${f.findings} finding(s), ${f.evidence.filter((e) => e.complete).length} evidence pair(s)`),
+    files: plan.files.map((f) => `${f.title} -> ${f.owner.name} (${f.owner.via})${f.owner.escalated ? ' [BLOCKED, protocol 1d]' : ''}${f.missingExpectation ? ` [MISSING_INFO, ${f.missingExpectation.file}]` : ''}; ${f.findings} finding(s), ${f.evidence.filter((e) => e.complete).length} evidence pair(s)`),
+    missingInfo: plan.missingInfo.map((m) => `${m.campus} (${m.state || 'state unknown'}): ${m.file} -> ${m.owner} (${m.ownerRole}), class ${m.ticketClass}`),
+    recordedSince: plan.recordedSince.map((r) => `${r.check} ${r.campus}: ${r.file} entry recorded since the observer's read; nothing filed`),
     existing: plan.existing.map((e) => `${e.check} ${e.scopeKey}: open ticket ${e.existing.id} [${e.existing.status}] via ${e.existing.via}`),
     exempted: plan.exempted.map((e) => `${e.check} ${e.page || e.id}: ${e.kind === 'cta-exception' ? `${e.cta} ${e.rule} (${e.decidedBy}, ${e.source}; ${e.expiryBasis})` : e.reason}`),
     outOfScope: plan.outOfScope.map((o) => `${o.check} ${o.url}: ${o.reason} (${o.host})`),

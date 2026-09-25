@@ -21,8 +21,8 @@
     },
     "cmtm8v0pl000404kzexubc1lz": {
       "class": "observer-media-identity",
-      "outcome": "needs-derivation",
-      "ownerRole": "internal-triage",
+      "outcome": "missing-registry",
+      "ownerRole": "website-operations",
       "check": "campus-image-identity-conflict"
     },
     "cmtma2laz000104ldh32o9p3i": {
@@ -33,8 +33,8 @@
     },
     "cmtma2lx3000204ldfmqby6x0": {
       "class": "observer-media-identity",
-      "outcome": "needs-derivation",
-      "ownerRole": "internal-triage",
+      "outcome": "missing-registry",
+      "ownerRole": "website-operations",
       "check": "campus-image-identity-conflict"
     },
     "cmtma2mjq000304ldbirwtjc9": {
@@ -51,8 +51,8 @@
     },
     "cmtmcis13000304i2yod9biqz": {
       "class": "observer-media-identity",
-      "outcome": "needs-derivation",
-      "ownerRole": "internal-triage",
+      "outcome": "missing-registry",
+      "ownerRole": "website-operations",
       "check": "campus-image-identity-conflict"
     },
     "cmtmecsk3000204jvjzq668tt": {
@@ -123,14 +123,14 @@
     },
     "cmtmn1tdm000404i2tdnufdyk": {
       "class": "observer-media-identity",
-      "outcome": "needs-derivation",
-      "ownerRole": "internal-triage",
+      "outcome": "missing-registry",
+      "ownerRole": "website-operations",
       "check": "campus-image-identity-conflict"
     },
     "cmtmp92li000104jv69k570o0": {
       "class": "observer-media-identity",
-      "outcome": "needs-derivation",
-      "ownerRole": "internal-triage",
+      "outcome": "missing-registry",
+      "ownerRole": "website-operations",
       "check": "campus-image-identity-conflict"
     },
     "cmtmp9484000404jv2w43jq36": {

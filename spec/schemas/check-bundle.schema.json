@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://alpha.school/playbook/check-bundle.schema.json",
   "title": "Alpha Website Playbook check bundle",
-  "description": "The compiled, hashed check bundle the production observer loads and the ticket filer applies (spec/check-bundle.generated.json, built by tests/build-checks.mjs from spec/check-rows.json). Row field names are the contract shared by the playbook, the observer (superbuilders/aeo alpha-site-system) and agent/file-observer-findings.mjs; do not rename them. 1.2 (2026-09-25): channel source-digest, grounding, depth, advisoryReason on rows; depthDefaults and sourceDigest on the bundle.",
+  "description": "The compiled, hashed check bundle the production observer loads and the ticket filer applies (spec/check-bundle.generated.json, built by tests/build-checks.mjs from spec/check-rows.json). Row field names are the contract shared by the playbook, the observer (superbuilders/aeo alpha-site-system) and agent/file-observer-findings.mjs; do not rename them. 1.2 (2026-09-25): channel source-digest, grounding, depth, advisoryReason on rows; depthDefaults and sourceDigest on the bundle. 1.3 (2026-09-25): entitySources, aliases and comparators on the bundle; entitySource and literals on rows; expected.derive.onMissing; dedupeScope campus-registry; comparator registry-coverage.",
   "type": "object",
   "required": [
     "version",
@@ -12,6 +12,9 @@
     "rowsSha256",
     "sha256",
     "pageFamilies",
+    "entitySources",
+    "aliases",
+    "comparators",
     "depthDefaults",
     "sourceDigest",
     "sourceHealth",
@@ -74,6 +77,69 @@
       "type": "object",
       "description": "Every value a row's pageFamily may take: real families from spec/page-family-requirements.json map to themselves; pseudo-families map to the families or routes they group.",
       "additionalProperties": true
+    },
+    "entitySources": {
+      "type": "object",
+      "required": [
+        "hubspot-programs",
+        "map"
+      ],
+      "description": "Where the observer enumerates the entities a row runs over (1.3, decision 2026-09-25 Matt Barge). hubspot-programs: HubSpot Programs whose type is one of publicTypes and whose website host is one of publicHosts; lifecycle from type; the page fetched at website (trailing slash normalised); fields lists the Program properties the observer needs. map: the growth map API, downstream of HubSpot. pageFamilies on each source lists the row families that default to it.",
+      "properties": {
+        "$comment": {
+          "type": "string"
+        },
+        "hubspot-programs": {
+          "$ref": "#/$defs/entitySource"
+        },
+        "map": {
+          "$ref": "#/$defs/entitySource"
+        }
+      }
+    },
+    "aliases": {
+      "type": "object",
+      "required": [
+        "pageCheck"
+      ],
+      "description": "One id everywhere (1.3): pageCheck maps every tests/page-check.mjs check id that measures a row to that row id (or a list of row ids when one check spans several); pageCheckUnmapped names the rest with the reason. agent/file-found-ticket.mjs writes customFields.requirementId from pageCheck.",
+      "properties": {
+        "$comment": {
+          "type": "string"
+        },
+        "pageCheck": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(site|campus)\\.[a-z0-9-]+(\\.[a-z0-9-]+)+$"
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "pattern": "^(site|campus)\\.[a-z0-9-]+(\\.[a-z0-9-]+)+$"
+                }
+              }
+            ]
+          }
+        },
+        "pageCheckUnmapped": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "comparators": {
+      "type": "object",
+      "description": "spec/observer-comparators.json: every comparator type a row may use with one line of semantics; the observer publishes the list it implements and a conformance test reconciles them.",
+      "additionalProperties": {
+        "type": "string"
+      }
     },
     "depthDefaults": {
       "type": "object",
@@ -176,6 +242,7 @@
         "observerCheck",
         "title",
         "pageFamily",
+        "entitySource",
         "lifecycleStates",
         "element",
         "expected",
@@ -213,6 +280,14 @@
         "pageFamily": {
           "type": "string",
           "description": "A key of the bundle's pageFamilies."
+        },
+        "entitySource": {
+          "type": "string",
+          "enum": [
+            "hubspot-programs",
+            "map"
+          ],
+          "description": "Which entitySources list the row runs over (1.3): hubspot-programs for rows about campus pages (the observer enumerates from HubSpot Programs and fetches website), map otherwise. Defaulted from pageFamily through entitySources.<id>.pageFamilies; default map."
         },
         "depth": {
           "type": "string",
@@ -294,10 +369,23 @@
                 },
                 "neverFieldsReason": {
                   "type": "string"
+                },
+                "onMissing": {
+                  "type": "string",
+                  "enum": [
+                    "finding",
+                    "skip"
+                  ],
+                  "description": "1.3: what an in-scope entity with no entry in the derived-from registry means. finding: a finding of this row with missingExpectation true, titled no approved <literals.thing> recorded for <state> campus <name>, filed Missing Info to the row ownerRole (the registry owner) with literals.missingAsk. skip (default): no expectation, nothing measured."
                 }
               }
             }
           }
+        },
+        "literals": {
+          "type": "object",
+          "description": "Fixed values the observer and the filer read for this row (1.3): missingAsk (the exact ask filed with a missingExpectation finding), thing (the noun in the missing-expectation title: no approved <thing> recorded for <state> campus <name>), launchWords (the vision pass word list on the primary campus visuals), assetPatterns (known launch-era asset paths), registries (the coverage row: file, keyPath, requiredWhen.type, ownerRole, ticketClass, thing, ask per registry).",
+          "additionalProperties": true
         },
         "comparator": {
           "type": "object",
@@ -339,7 +427,8 @@
                 "http-status",
                 "valid-json",
                 "valid-dates",
-                "start-before-end"
+                "start-before-end",
+                "registry-coverage"
               ]
             },
             "threshold": {
@@ -421,8 +510,10 @@
             "template",
             "program",
             "event",
-            "site"
-          ]
+            "site",
+            "campus-registry"
+          ],
+          "description": "page, template, program, event, site, or campus-registry (1.3: one ticket per campus and registry for the coverage row)."
         },
         "clearAfterRuns": {
           "type": "number",
@@ -573,6 +664,59 @@
           "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$"
         }
       }
+    },
+    "entitySource": {
+      "type": "object",
+      "required": [
+        "source",
+        "fields",
+        "pageFamilies"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publicTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publicHosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lifecycleField": {
+          "type": "string"
+        },
+        "pageField": {
+          "type": "string"
+        },
+        "pageNormalization": {
+          "type": "string"
+        },
+        "nameField": {
+          "type": "string"
+        },
+        "pageFamilies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
     }
   }
 }

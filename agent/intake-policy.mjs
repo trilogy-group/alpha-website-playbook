@@ -83,13 +83,18 @@ export function evaluateTicket(bundle, ticket, context = {}) {
   const derivableMissing = missing.filter((field) => spec.intake.derivable.includes(field))
   const systemMissing = missing.filter((field) => spec.intake.systemRequired.includes(field))
   const guard = (spec.intake.guards || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
-  const ownerRule = (spec.intake.ownerRules || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
+  const ownerRule = (spec.intake.ownerRules || []).find((item) => ownerRuleMatches(item, ticket, text))
   const policy = guard?.policy || spec.intake.policy
   const configuredOwnerRole = guard?.ownerRole || ownerRule?.ownerRole || spec.intake.ownerRole
   const ownerRole = typeof configuredOwnerRole === 'string' && configuredOwnerRole.trim() ? configuredOwnerRole.trim() : UNRESOLVED_OWNER_ROLE
   const reason = guard?.reason || ownerRule?.reason || spec.note
     || (ownerRole === UNRESOLVED_OWNER_ROLE && configuredOwnerRole !== UNRESOLVED_OWNER_ROLE ? `Class ${classId} names no owner role; routed to the unresolved-owner queue.` : null)
 
+  // Presence, not absence (repair plan 2026-09-25, repair 1): a derivable field whose registry has no entry for the campus
+  // (spec/intake-policy.json fieldSources.<field>.missingRegistryOwnerRole) is Missing Info to that registry's owner role,
+  // never needs-derivation to internal triage: the missing entry is the defect and the owner is known.
+  const registryMissing = derivableMissing.filter((field) => typeof bundle.intakeFieldSources?.[field]?.missingRegistryOwnerRole === 'string')
+  const registryOwnerRole = registryMissing.length && registryMissing.length === derivableMissing.length ? bundle.intakeFieldSources[registryMissing[0]].missingRegistryOwnerRole : null
   let outcome
   let finalOwnerRole = ownerRole
   if (policy === 'disallowed') {
@@ -105,6 +110,9 @@ export function evaluateTicket(bundle, ticket, context = {}) {
   } else if (systemMissing.length) {
     outcome = 'intake-defect'
     finalOwnerRole = sourceOwnerRole(ticket)
+  } else if (registryOwnerRole) {
+    outcome = 'missing-registry'
+    finalOwnerRole = registryOwnerRole
   } else if (derivableMissing.length) {
     outcome = 'needs-derivation'
     finalOwnerRole = 'internal-triage'
@@ -125,9 +133,10 @@ export function evaluateTicket(bundle, ticket, context = {}) {
     systemMissing,
     found,
     invalid,
-    reason,
+    reason: outcome === 'missing-registry' ? (bundle.intakeFieldSources[registryMissing[0]].missingRegistryReason || reason) : reason,
     ownerRule: ownerRule?.reason || null,
     guard: guard?.reason || null,
+    ...(outcome === 'missing-registry' ? { registryMissing } : {}),
   }, bundle)
 }
 
@@ -297,6 +306,7 @@ export function operatorInstruction(ticket) {
 export function administrativeAction(result) {
   if (result.outcome === 'out-of-scope') return { kind: 'no-action', api: null, assign: null }
   if (result.outcome === 'missing-info') return { kind: 'request-clarification', api: '/api/agent/tasks/{id}/status', assign: 'requester' }
+  if (result.outcome === 'missing-registry') return { kind: 'registry-missing-info', api: '/api/agent/tasks/{id}/status', assign: result.ownerRole }
   if (result.outcome === 'ready-for-execution') return { kind: 'execution-ready', api: '/api/agent/tasks/{id}/reconcile', assign: result.ownerRole }
   if (result.outcome === 'routed') return { kind: 'owner-route', api: '/api/v1/tasks/{id}', assign: result.ownerRole }
   return { kind: 'blocked-review', api: '/api/agent/tasks/{id}/reconcile', assign: result.ownerRole }
@@ -314,6 +324,16 @@ export function classifyTicket(bundle, ticket) {
   // 1. A class id recorded in customFields.checkId (a triage or an agent filing) is a decision already made.
   for (const [id, spec] of classes) {
     if (spec.match?.['customFields.checkId'] && ticket.customFields?.checkId === spec.match['customFields.checkId']) return id
+  }
+  // 1b. One id everywhere (spec/ticket-classes.json 0.13, repair plan 2026-09-25 repair 7): the check-bundle row id the ticket
+  //     carries (customFields.requirementId, or requirementIds when a page-check id spans several rows) against each class's
+  //     matchRequirementIds, then the page-check or agent-found check id (customFields.checkId, check) against matchCheckIds.
+  //     tests/build-policy.mjs refuses an id claimed by two classes, so order never decides. Before any title pattern.
+  for (const requirementId of requirementIdsFor(ticket)) {
+    for (const [id, spec] of classes) if ((spec.matchRequirementIds || []).includes(requirementId)) return id
+  }
+  for (const check of observerCheckNames(ticket)) {
+    for (const [id, spec] of classes) if ((spec.matchCheckIds || []).includes(check)) return id
   }
   // 2. The observer's own check name (customFields.check, or an agent-found checkId) against each class's observerChecks
   //    taxonomy: one class per check (tests/build-policy.mjs refuses an overlap), so titles cannot mislead it
@@ -342,6 +362,25 @@ export function classifyTicket(bundle, ticket) {
     if ((copy.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return 'copy'
   }
   return null
+}
+
+/** The check-bundle row ids a ticket carries: customFields.requirementId first, then requirementIds (a page-check id that spans several rows). */
+export function requirementIdsFor(ticket) {
+  const fields = ticket.customFields || {}
+  return [...new Set([fields.requirementId, ...(Array.isArray(fields.requirementIds) ? fields.requirementIds : [])].filter((v) => typeof v === 'string' && v.trim()).map((v) => v.trim()))]
+}
+
+/**
+ * An owner rule (spec/intake-policy.json classes.<id>.ownerRules) applies when its text pattern matches the ticket text, or (1.2)
+ * when its checkIds name the ticket's check id or its requirementIds name the ticket's requirement id; a rule may carry any of the three.
+ */
+export function ownerRuleMatches(rule, ticket, text = ticketText(ticket)) {
+  if (rule?.pattern && trustedPolicyRegex(rule.pattern).test(text)) return true
+  const checks = observerCheckNames(ticket)
+  if (Array.isArray(rule?.checkIds) && rule.checkIds.some((id) => checks.includes(id))) return true
+  const requirements = requirementIdsFor(ticket)
+  if (Array.isArray(rule?.requirementIds) && rule.requirementIds.some((id) => requirements.includes(id))) return true
+  return false
 }
 
 /** match.urlPattern, when a class declares one, gates every rule of that class on the ticket's own URL. */
@@ -375,6 +414,11 @@ export function extractField(bundle, ticket, fieldName, context = {}) {
       const slug = campusSlug(url)
       const entry = slug ? bundle.campusOpenMedia?.[slug] : null
       if (entry?.status === 'placed') return `${entry.openMedia}${entry.attachmentId ? ` #${entry.attachmentId}` : ''}`
+      continue
+    }
+    if (source === 'agent-found:idempotencyKey') {
+      // An agent-found ticket has no observer SITE id; its idempotency key is the durable finding identifier (protocol step 8).
+      if (ticket.customFields?.source === 'agent-found' && hasValue(ticket.customFields?.idempotencyKey)) return String(ticket.customFields.idempotencyKey).trim()
       continue
     }
     if (source === 'apex:users-by-exact-name') {

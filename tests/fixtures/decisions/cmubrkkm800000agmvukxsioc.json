@@ -1,0 +1,32 @@
+{
+  "expected": {
+    "outcome": "missing-registry",
+    "class": "observer-media-identity",
+    "ownerRole": "website-operations",
+    "why": "agent-found East Bay launch-card ticket (checkId open-intro-media-approved, 2026-09-21) classifies to observer-media-identity through matchCheckIds instead of needs-rule; registry/campus-open-media.json records no approved media for east-bay, so it is Missing Info to website operations (the registry owner), never internal triage (repair plan 2026-09-25, repairs 1 and 7)"
+  },
+  "task": {
+    "id": "cmubrkkm800000agmvukxsioc",
+    "title": "Alpha East Bay: Open campus intro still shows the \"Coming Fall 2026 To Piedmont\" launch card",
+    "status": "BLOCKED",
+    "requestType": "Website QC",
+    "program": [
+      "Alpha East Bay"
+    ],
+    "url": "https://alpha.school/east-bay/",
+    "requesterEmail": "matthew.barge@superbuilders.school",
+    "description": "Found while working the 2026-09-21 sweep (partition C).\nPage: https://alpha.school/east-bay/ (object 8544)\nElement: intro card slot (content_image, attachment 8550 Piedmont.webp)\nObserved: the intro card reads \"Coming Fall 2026 To Piedmont\"; HubSpot Program 42698614786 type is Open (since 2026-08-24) and the rendered status sentence says open and enrolling\nExpected: the East Bay Open and Enrolling card from the September 7 template, or an approved campus video (registry/campus-open-media.json: no registry entry for east-bay)\nRecommended path: Yash Chitneni produces the card from the template; the website agent uploads it, records the attachment in the registry and patches the slot.\nDone when: the intro slot shows the approved open-state media on desktop and mobile and page-check open-intro-media-approved passes.",
+    "customFields": {
+      "source": "agent-found",
+      "checkId": "open-intro-media-approved",
+      "pageUrl": "https://alpha.school/east-bay/",
+      "foundWhileWorking": "sweep-2026-09-21-partition-c",
+      "severity": "high",
+      "idempotencyKey": "agent-found:sweep-2026-09-21:east-bay:open-intro-media-approved"
+    },
+    "originalSubmission": null,
+    "requestAssets": [],
+    "createdAt": "2026-09-21T18:40:00.000Z",
+    "updatedAt": "2026-09-25T14:05:00.000Z"
+  }
+}

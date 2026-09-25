@@ -13,7 +13,8 @@
  * spec/campus-page-requirements.json, spec/source-authority.json, spec/community-routing.json, spec/brand-visual.json,
  * registry/sources.json, registry/sister-brand-exceptions.json, registry/campus-packets.json, registry/campus-open-media.json,
  * registry/campus-identities.json, registry/campus-cta-exceptions.json, registry/campus-leadership.json, registry/campus-pages.json,
- * registry/people.json, spec/responsibilities.json.
+ * registry/people.json, spec/responsibilities.json, spec/observer-comparators.json (every comparator type a row may use; 1.3),
+ * tests/page-check.mjs (its check ids must all be in aliases.pageCheck or aliases.pageCheckUnmapped; 1.3).
  *
  * Usage: node tests/build-checks.mjs [--check] [--observer-source <path to aeo src/checks.mjs>]
  *   --check            exit 1 when the committed bundle is stale (no write)
@@ -31,7 +32,9 @@ const read = (p) => JSON.parse(fs.readFileSync(path.join(root, p), 'utf8'))
 
 export const OUTPUT = 'spec/check-bundle.generated.json'
 const LIFECYCLE_STATES = ['Open', 'Announced', 'Pre-Announcement']
-const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site']
+const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site', 'campus-registry']
+const ENTITY_SOURCES = ['hubspot-programs', 'map']
+const ON_MISSING = ['finding', 'skip']
 const SEVERITIES = ['critical', 'high', 'medium', 'low']
 const STATUSES = ['enforced', 'advisory']
 const CHANNELS = ['ticket', 'source-digest', 'loop-health']
@@ -52,6 +55,21 @@ const PSEUDO_ELEMENTS = ['robots.txt', 'sitemap', 'llms.txt', 'header', 'footer'
 /** Names the observer can emit today, from the captured registry (families flattened). */
 export function observerCheckNames(registry = read('registry/observer-checks.json')) {
   return [...new Set(Object.values(registry.families || {}).flat())].sort()
+}
+
+/**
+ * Every check id tests/page-check.mjs can report (1.3, one id everywhere): the static add('id', ...) calls, the
+ * `cta-<label>` ids built from the CTA label loop, and the rendered checks pushed by id (team-photo-framing, brand-visual).
+ * aliases.pageCheck and aliases.pageCheckUnmapped in spec/check-rows.json must together cover exactly this list.
+ */
+export function pageCheckIds(source = fs.readFileSync(path.join(root, 'tests', 'page-check.mjs'), 'utf8')) {
+  const ids = new Set()
+  for (const m of source.matchAll(/\badd\(\s*'([a-z0-9-]+)'/g)) ids.add(m[1])
+  for (const m of source.matchAll(/\bid:\s*'([a-z0-9-]+)'/g)) ids.add(m[1])
+  const labels = source.match(/for \(const label of \[([^\]]+)\]\) add\(`cta-/)
+  for (const m of (labels?.[1] || '').matchAll(/'([^']+)'/g)) ids.add(`cta-${m[1].toLowerCase().replace(/[^a-z]+/g, '-')}`)
+  if (/BRAND_CHECK_ID/.test(source)) ids.add('brand-visual')
+  return [...ids].sort()
 }
 
 /**
@@ -106,10 +124,13 @@ export function buildBundle({ observerSource = null } = {}) {
     const missing = extracted.filter((n) => !inventory.includes(n))
     // A retired check the observer no longer emits stays in the registry (older packets still carry it); it is not stale.
     const retiredHere = new Set((rowsSpec.retired || []).map((r) => r.observerCheck))
-    const extra = inventory.filter((n) => !extracted.includes(n) && !retiredHere.has(n))
+    // A contract-first check (registry pendingInObserver, 1.3) is defined by a row before the observer emits it; not stale either.
+    const pending = new Set(Object.keys(observerRegistry.pendingInObserver || {}).filter((n) => !n.startsWith('$')))
+    const extra = inventory.filter((n) => !extracted.includes(n) && !retiredHere.has(n) && !pending.has(n))
     if (missing.length || extra.length) errors.push(`registry/observer-checks.json is stale against ${observerSource}: missing=${missing.join(',') || 'none'} extra=${extra.join(',') || 'none'}`)
   }
 
+  const defaults = rowsSpec.defaults || {}
   const familyIds = new Set(families.families.map((f) => f.id))
   const pageFamilies = {}
   for (const id of familyIds) pageFamilies[id] = [id]
@@ -130,6 +151,54 @@ export function buildBundle({ observerSource = null } = {}) {
   }
   for (const family of Object.keys(pageFamilies)) if (!depthDefaults.render.includes(family) && !depthDefaults.http.includes(family)) errors.push(`depthDefaults: page family ${family} has no depth (render or http)`)
   const depthFor = (family) => (depthDefaults.render.includes(family) ? 'render' : 'http')
+
+  // Comparators (1.3, repair 3): a row may only use a comparator type spec/observer-comparators.json defines; the observer
+  // publishes the list it implements and a conformance test reconciles the two.
+  const comparatorsSpec = read('spec/observer-comparators.json')
+  const comparators = Object.fromEntries(Object.entries(comparatorsSpec.comparators || {}).filter(([k]) => !k.startsWith('$')))
+  if (!Object.keys(comparators).length) errors.push('spec/observer-comparators.json comparators missing')
+  for (const [type, semantics] of Object.entries(comparators)) if (typeof semantics !== 'string' || !semantics.trim()) errors.push(`spec/observer-comparators.json ${type}: one line of semantics required`)
+
+  // Entity sources (1.3, decision 2026-09-25 Matt Barge: check from HubSpot to the website): every source names its fields
+  // and the row families that default to it; a family defaults to at most one source; rows about campus pages are hubspot-programs.
+  const entitySources = {}
+  const entitySourceByFamily = {}
+  for (const [id, value] of Object.entries(rowsSpec.entitySources || {})) {
+    if (id.startsWith('$')) continue
+    if (!ENTITY_SOURCES.includes(id)) errors.push(`entitySources.${id}: unknown entity source (${ENTITY_SOURCES.join(', ')})`)
+    if (!Array.isArray(value?.fields) || !value.fields.length) errors.push(`entitySources.${id}: fields[] missing`)
+    if (!value?.source || (value.source !== 'registry' && !rowsSpec.sourceHealth?.[value.source])) errors.push(`entitySources.${id}: source must be a sourceHealth id`)
+    for (const family of value?.pageFamilies || []) {
+      if (!pageFamilies[family]) errors.push(`entitySources.${id}.pageFamilies names unknown page family ${family}`)
+      if (entitySourceByFamily[family] && entitySourceByFamily[family] !== id) errors.push(`entitySources: page family ${family} defaults to both ${entitySourceByFamily[family]} and ${id}`)
+      entitySourceByFamily[family] = id
+    }
+    entitySources[id] = value
+  }
+  for (const id of ENTITY_SOURCES) if (!entitySources[id]) errors.push(`entitySources.${id} missing`)
+  if (entitySources['hubspot-programs']) {
+    for (const field of ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date']) if (!entitySources['hubspot-programs'].fields.includes(field)) errors.push(`entitySources.hubspot-programs.fields must include ${field}`)
+    if (!(entitySources['hubspot-programs'].publicTypes || []).length || !(entitySources['hubspot-programs'].publicHosts || []).length) errors.push('entitySources.hubspot-programs needs publicTypes and publicHosts')
+  }
+  const entitySourceFor = (family) => entitySourceByFamily[family] || defaults.entitySource || 'map'
+
+  // Aliases (1.3, repair 7): every tests/page-check.mjs id is mapped to a row id (or ids) or named as unmapped with the reason.
+  const aliases = { pageCheck: {}, pageCheckUnmapped: {} }
+  for (const [id, target] of Object.entries(rowsSpec.aliases?.pageCheck || {})) {
+    if (id.startsWith('$')) continue
+    const targets = [].concat(target)
+    if (!targets.length || targets.some((t) => typeof t !== 'string' || !t)) errors.push(`aliases.pageCheck.${id}: a row id or a non-empty list of row ids`)
+    aliases.pageCheck[id] = target
+  }
+  for (const [id, reason] of Object.entries(rowsSpec.aliases?.pageCheckUnmapped || {})) {
+    if (id.startsWith('$')) continue
+    if (aliases.pageCheck[id]) errors.push(`aliases.pageCheckUnmapped.${id}: also mapped in aliases.pageCheck`)
+    if (typeof reason !== 'string' || !reason.trim()) errors.push(`aliases.pageCheckUnmapped.${id}: the reason is required`)
+    aliases.pageCheckUnmapped[id] = reason
+  }
+  const pageCheck = pageCheckIds()
+  for (const id of pageCheck) if (!aliases.pageCheck[id] && !aliases.pageCheckUnmapped[id]) errors.push(`tests/page-check.mjs check ${id} is in neither aliases.pageCheck nor aliases.pageCheckUnmapped`)
+  for (const id of [...Object.keys(aliases.pageCheck), ...Object.keys(aliases.pageCheckUnmapped)]) if (!pageCheck.includes(id)) errors.push(`aliases: ${id} is not a tests/page-check.mjs check id`)
 
   const sourceDigest = { ownerRoles: rowsSpec.sourceDigest?.ownerRoles || [], reportFile: rowsSpec.sourceDigest?.reportFile || 'source-digest.md' }
   if (!sourceDigest.ownerRoles.length) errors.push('sourceDigest.ownerRoles missing')
@@ -186,7 +255,6 @@ export function buildBundle({ observerSource = null } = {}) {
     }
   }
 
-  const defaults = rowsSpec.defaults || {}
   const rows = []
   const seenIds = new Set()
   for (const source of rowsSpec.rows || []) {
@@ -196,12 +264,14 @@ export function buildBundle({ observerSource = null } = {}) {
       observerCheck: source.observerCheck,
       title: source.title,
       pageFamily: source.pageFamily ?? defaults.pageFamily,
+      entitySource: source.entitySource ?? entitySourceFor(source.pageFamily ?? defaults.pageFamily),
       depth: source.depth ?? depthFor(source.pageFamily ?? defaults.pageFamily),
       lifecycleStates: source.lifecycleStates ?? defaults.lifecycleStates ?? [],
       element: source.element,
       ...(source.viewports ? { viewports: source.viewports } : {}),
       ...(source.when ? { when: source.when } : {}),
-      expected: source.expected,
+      expected: source.expected?.derive ? { derive: { ...source.expected.derive, onMissing: source.expected.derive.onMissing ?? 'skip' } } : source.expected,
+      ...(source.literals ? { literals: source.literals } : {}),
       comparator: source.comparator,
       severity: source.severity ?? defaults.severity,
       status: source.status ?? defaults.status,
@@ -236,6 +306,8 @@ export function buildBundle({ observerSource = null } = {}) {
     if (!inventory.includes(row.observerCheck)) errors.push(`${label}: observerCheck ${row.observerCheck} is not in registry/observer-checks.json`)
     if (!row.title) errors.push(`${label}: title missing`)
     if (!pageFamilies[row.pageFamily]) errors.push(`${label}: unknown pageFamily ${row.pageFamily}`)
+    if (!ENTITY_SOURCES.includes(row.entitySource)) errors.push(`${label}: entitySource must be one of ${ENTITY_SOURCES.join(', ')}, got ${row.entitySource}`)
+    if (row.literals !== undefined && (typeof row.literals !== 'object' || row.literals === null || Array.isArray(row.literals))) errors.push(`${label}: literals must be an object`)
     for (const state of row.lifecycleStates) if (!LIFECYCLE_STATES.includes(state)) errors.push(`${label}: unknown lifecycle state ${state}`)
     if (!row.element) errors.push(`${label}: element missing`)
     else if (!fieldElements.has(row.element) && !PSEUDO_ELEMENTS.includes(row.element) && !PSEUDO_ELEMENT_PREFIXES.some((p) => row.element.startsWith(p))) errors.push(`${label}: element ${row.element} is neither a field-map key nor a page-level pseudo-element`)
@@ -250,9 +322,32 @@ export function buildBundle({ observerSource = null } = {}) {
         for (const k of ['source', 'field', 'transform']) if (d?.[k] === undefined || d?.[k] === '') errors.push(`${label}: expected.derive.${k} missing`)
         if (d?.source && d.source !== 'registry' && !sourceHealth[d.source]) errors.push(`${label}: expected.derive.source ${d.source} is not a sourceHealth id or 'registry'`)
         if (d?.source && d.source !== 'registry' && d.source !== 'browser' && row.channel !== 'loop-health' && !row.sourceHealthDependency.includes(d.source)) errors.push(`${label}: derives from ${d.source} but sourceHealthDependency does not include it`)
+        // Presence, not absence (1.3, repair 1): a row that derives from a registry keyed by campus says what a missing entry means,
+        // and a finding needs the exact ask and the noun for its title.
+        if (!ON_MISSING.includes(d?.onMissing)) errors.push(`${label}: expected.derive.onMissing must be finding or skip`)
+        if (d?.onMissing === 'finding') {
+          if (typeof row.literals?.missingAsk !== 'string' || !row.literals.missingAsk.trim()) errors.push(`${label}: onMissing finding needs literals.missingAsk (the exact ask filed with the Missing Info ticket)`)
+          if (typeof row.literals?.thing !== 'string' || !row.literals.thing.trim()) errors.push(`${label}: onMissing finding needs literals.thing (the noun in "no approved <thing> recorded for <state> campus <name>")`)
+        }
       }
     }
     if (!row.comparator?.type || typeof row.comparator.threshold !== 'number' || !row.comparator.unit) errors.push(`${label}: comparator needs type, numeric threshold, unit`)
+    else if (!comparators[row.comparator.type]) errors.push(`${label}: comparator ${row.comparator.type} is not in spec/observer-comparators.json`)
+    if (row.comparator?.type === 'equals-approved-media' && row.expected?.derive?.onMissing !== 'finding') errors.push(`${label}: equals-approved-media derives from the media registry; expected.derive.onMissing must be finding`)
+    if (row.comparator?.type === 'registry-coverage') {
+      const registries = row.literals?.registries
+      if (!Array.isArray(registries) || !registries.length) errors.push(`${label}: registry-coverage needs literals.registries[]`)
+      for (const entry of registries || []) {
+        for (const k of ['file', 'keyPath', 'ownerRole', 'ask', 'thing', 'ticketClass']) if (typeof entry?.[k] !== 'string' || !entry[k]) errors.push(`${label}: literals.registries entry ${entry?.file || '<no file>'} needs ${k}`)
+        if (entry?.file && !fs.existsSync(path.join(root, entry.file))) errors.push(`${label}: literals.registries file ${entry.file} does not exist`)
+        if (!Array.isArray(entry?.requiredWhen?.type)) errors.push(`${label}: literals.registries entry ${entry?.file} needs requiredWhen.type[] (empty means informational)`)
+        for (const state of entry?.requiredWhen?.type || []) if (!LIFECYCLE_STATES.includes(state)) errors.push(`${label}: literals.registries entry ${entry?.file} requiredWhen.type ${state} is not a lifecycle state`)
+        if (entry?.ownerRole && !roles.has(entry.ownerRole)) errors.push(`${label}: literals.registries entry ${entry.file} ownerRole ${entry.ownerRole} is not a registered role`)
+        if (entry?.ticketClass && !classesSpec.classes?.[entry.ticketClass]) errors.push(`${label}: literals.registries entry ${entry.file} ticketClass ${entry.ticketClass} is unknown`)
+      }
+      if (row.dedupeScope !== 'campus-registry') errors.push(`${label}: registry-coverage rows dedupe per campus and registry (dedupeScope campus-registry)`)
+    }
+    if (row.dedupeScope === 'campus-registry' && row.comparator?.type !== 'registry-coverage') errors.push(`${label}: dedupeScope campus-registry is for registry-coverage rows`)
     if (!SEVERITIES.includes(row.severity)) errors.push(`${label}: unknown severity ${row.severity}`)
     if (!STATUSES.includes(row.status)) errors.push(`${label}: unknown status ${row.status}`)
     if (!CHANNELS.includes(row.channel)) errors.push(`${label}: unknown channel ${row.channel}`)
@@ -330,6 +425,9 @@ export function buildBundle({ observerSource = null } = {}) {
     policySha256: policy.policySha256,
     observerInventory: { version: observerRegistry.version, commit: observerRegistry.capturedFrom?.commit ?? null, count: inventory.length },
     pageFamilies,
+    entitySources,
+    aliases,
+    comparators,
     depthDefaults,
     sourceDigest,
     sourceHealth,

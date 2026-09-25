@@ -102,6 +102,25 @@ for (const name of observerCheckNames) {
     .map(([id]) => id)
   if (claimants.length > 1) throw new Error(`observer check ${name} is claimed by more than one ticket class: ${claimants.join(', ')}`)
 }
+// One class per requirement id and per check id (0.13, repair 7: one id everywhere): matchRequirementIds are check-row ids
+// (spec/check-rows.json) and matchCheckIds are tests/page-check.mjs or agent-found check ids; intake and the found-ticket
+// filer classify on them before the observer check name and before any title pattern, so an id claimed twice would again
+// make classification depend on class order.
+const checkRowIds = new Set((read('spec/check-rows.json').rows || []).map((row) => row.id))
+const claimedRequirementIds = new Map()
+const claimedCheckIds = new Map()
+for (const [id, spec] of Object.entries(classesSpec.classes)) {
+  if (id.startsWith('$')) continue
+  for (const [key, claimed, known] of [['matchRequirementIds', claimedRequirementIds, checkRowIds], ['matchCheckIds', claimedCheckIds, null]]) {
+    const values = spec[key] || []
+    if (!Array.isArray(values) || values.some((v) => typeof v !== 'string' || !v.trim())) throw new Error(`ticket class ${id}: ${key} must be a list of non-empty ids`)
+    for (const value of values) {
+      if (known && !known.has(value)) throw new Error(`ticket class ${id}: ${key} names ${value}, which is not a row id in spec/check-rows.json`)
+      if (claimed.has(value) && claimed.get(value) !== id) throw new Error(`${key} ${value} is claimed by more than one ticket class: ${claimed.get(value)}, ${id}`)
+      claimed.set(value, id)
+    }
+  }
+}
 
 const classes = {}
 for (const [id, spec] of Object.entries(classesSpec.classes)) {
@@ -128,6 +147,8 @@ for (const [id, spec] of Object.entries(classesSpec.classes)) {
     scope: spec.scope || 'unknown',
     note: spec.note || null,
     observerChecks: spec.observerChecks || [],
+    matchRequirementIds: spec.matchRequirementIds || [],
+    matchCheckIds: spec.matchCheckIds || [],
     routingLabel: spec.routingLabel || null,
     doneWhen: spec.doneWhen || null,
     supplies: routing.supplies || null,
@@ -174,7 +195,7 @@ const bundle = {
   generatedAt: new Date().toISOString(),
   playbookCommit: gitCommit(),
   sources: {
-    ticketClasses: classesSpec.version, intakePolicy: intakeSpec.version, responsibilities: responsibilities.version, sourceAuthority: sourceAuthority.version, actorCapabilities: actors.version,
+    ticketClasses: classesSpec.version, intakePolicy: intakeSpec.version, checkRows: read('spec/check-rows.json').version || null, responsibilities: responsibilities.version, sourceAuthority: sourceAuthority.version, actorCapabilities: actors.version,
     fieldMap: fieldMap.version || null, syncedTargets: synced.version, adapters: adapters.version, people: read('registry/people.json').version || null,
   },
   classes,

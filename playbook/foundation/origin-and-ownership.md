@@ -66,6 +66,8 @@ From `playbook/responsibilities.md`. Departments own areas; roles within them ow
 - **Operations** owns the National Growth Map sheet and map API. Not named.
 - **QC** owns the observer and its tickets (Matt).
 
+The observer checks presence, not absence, and starts from the source, not from the site (decision 2026-09-25, Matt Barge, after the East Bay launch card reached a meeting 32 days after HubSpot said Open): it enumerates the campuses from HubSpot Programs (type Open or Announced, website on alpha.school) and then looks at each page, so a Program with no page, no registry rows or no render is found from the source; and a registry keyed by campus (approved open media, leadership, packets) that has no entry for an in-scope campus is a Missing Info ticket to that registry's owner, with the exact ask, never "no expectation". The approved intro media is judged by the attachment recorded in `registry/campus-open-media.json`, not by the absence of launch words in the alt text or file name. Spec: `spec/check-rows.json` 1.3 (`entitySource`, `expected.derive.onMissing`, the `site.coverage.*` rows).
+
 Nobody is named as product owner of the website as a whole (Q-04). Joe Liemandt appears in meeting records as the marketing decision maker but holds no recorded website role.
 
 ## 5. Questions this file raises

@@ -1,10 +1,11 @@
 {
-  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP.",
-  "version": "1.2",
+  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP. 1.3 (2026-09-25, decision by Matt Barge: check from HubSpot to the website, not only from the website to HubSpot): entitySource per row (hubspot-programs or map; campus rows default to hubspot-programs through entitySources.<id>.pageFamilies, so the observer enumerates the campuses from HubSpot Programs whose type is public and whose website is on a public host, takes the lifecycle state from type, and fetches the page at website; the map is downstream). expected.derive.onMissing (finding or skip, default skip): on finding, an in-scope entity with no registry entry is a finding of the same row with missingExpectation true, titled \"no approved <thing> recorded for <state> campus <name>\", filed Missing Info to the registry owner role with literals.missingAsk. literals per row carry the fixed values the observer and the filer read (missingAsk, thing, launchWords, assetPatterns, registries). aliases.pageCheck maps every tests/page-check.mjs check id to its row id (aliases.pageCheckUnmapped names the rest with the reason); agent/file-found-ticket.mjs writes customFields.requirementId from it. Comparator types are enumerated in spec/observer-comparators.json and the builder refuses any other. New coverage rows: site.coverage.open-campus-registries, site.coverage.program-page, site.coverage.open-campus-rendered. dedupeScope campus-registry (one ticket per campus and registry).",
+  "version": "1.3",
   "asOf": "2026-09-25",
   "defaults": {
-    "$comment": "Defaults fill any field a row leaves out. clearAfterRuns counts full observer runs: 2 means two consecutive full runs, about one day at the 06:00 and 21:00 UTC cadence (docs/sweep-runbook.md, Cadence, breadth and depth).",
+    "$comment": "Defaults fill any field a row leaves out. clearAfterRuns counts full observer runs: 2 means two consecutive full runs, about one day at the 06:00 and 21:00 UTC cadence (docs/sweep-runbook.md, Cadence, breadth and depth). entitySource map is the default for rows that are not about campus pages; entitySources.hubspot-programs.pageFamilies lists the families whose rows default to hubspot-programs.",
     "pageFamily": "campus",
+    "entitySource": "map",
     "lifecycleStates": [
       "Open",
       "Announced"
@@ -39,6 +40,102 @@
     "map-source": "growth map API records (the HubSpot Programs mirror) and Operations sheet rows; not a page",
     "site": "every public route",
     "$depthNote": "Depth per family (depthDefaults): campus pages, the homepage, Locations and the events pages, and the pseudo-families that group them (campus, map-routes, critical-routes), are rendered in a browser on desktop 1440x1000 and mobile 390x844; the long tail (site: every public route) and the non-page map-source family are read over HTTP only. A row may set depth itself; a row with viewports, a browser dependency or a rendered comparator must be render."
+  },
+  "entitySources": {
+    "$comment": "Where the observer takes the list of entities a row runs over (1.3, decision 2026-09-25 Matt Barge: check from HubSpot to the website, not only from the website to HubSpot). hubspot-programs: enumerate HubSpot Programs whose type is one of publicTypes and whose website host is one of publicHosts; lifecycle state is the Program type; the page is fetched at website with the trailing slash normalised; fields lists every Program property the observer needs for these rows. map: the growth map API records (the HubSpot mirror), downstream of HubSpot; used by rows that measure the map itself and by non-campus rows. Rows whose pageFamily is in a source's pageFamilies default to that source; a row may set entitySource itself.",
+    "hubspot-programs": {
+      "source": "hubspot-programs",
+      "fields": [
+        "type",
+        "website",
+        "display_name",
+        "wordpress_post_id",
+        "opening_date"
+      ],
+      "publicTypes": [
+        "Open",
+        "Announced"
+      ],
+      "publicHosts": [
+        "alpha.school",
+        "www.alpha.school"
+      ],
+      "lifecycleField": "type",
+      "pageField": "website",
+      "pageNormalization": "https, host lower-cased, trailing slash added, no query or hash",
+      "nameField": "display_name",
+      "pageFamilies": [
+        "campus",
+        "campus-open",
+        "campus-announced",
+        "campus-pre-announcement"
+      ],
+      "note": "A Program with a public type and a public website that has no page, no registry rows or no render is a finding (the coverage rows); the observer never learns a campus only from the map or the page list."
+    },
+    "map": {
+      "source": "growth-map-api",
+      "fields": [
+        "id",
+        "name",
+        "programType",
+        "url",
+        "communityUrl",
+        "latitude",
+        "longitude",
+        "launchDate"
+      ],
+      "pageFamilies": [
+        "map-routes",
+        "map-source",
+        "locations",
+        "homepage",
+        "site",
+        "critical-routes",
+        "events"
+      ],
+      "note": "Downstream of HubSpot Programs (docs/decisions.md 2026-09-15); rows about the map compare it with HubSpot, never the other way round."
+    }
+  },
+  "aliases": {
+    "$comment": "One id everywhere (QC loop repair plan 2026-09-25, repair 7). pageCheck maps every tests/page-check.mjs check id that measures a row to that row id (a list when one page-check id spans several rows: the found-ticket filer writes the first as requirementId and all of them as requirementIds); pageCheckUnmapped names every remaining page-check id with why no row measures it. tests/build-checks.mjs extracts the ids from tests/page-check.mjs and fails when one is in neither list. agent/file-found-ticket.mjs writes customFields.requirementId from pageCheck and keeps checkId; ticket classes match on matchRequirementIds and matchCheckIds before title patterns.",
+    "pageCheck": {
+      "page-reachable": "campus.page.reachable.program-page",
+      "canonical-tag": "site.search.indexable.canonical",
+      "h1-names-campus": "campus.hero.identity.heading",
+      "open-no-launch-words": "campus.intro.status-sentence",
+      "open-status-sentence": "campus.intro.status-sentence",
+      "announced-names-launch-date": "campus.intro.status-sentence",
+      "no-sister-brand-words": "site.identity.sister-brand",
+      "no-other-campus-in-image-names": "site.identity.other-campus.images",
+      "open-intro-media-approved": "campus.intro.media.current",
+      "cta-links-resolve": [
+        "campus.resources.booking.reachable",
+        "campus.resources.calendar.reachable",
+        "campus.resources.packet.reachable",
+        "campus.resources.apply.path"
+      ],
+      "cta-hidden-everywhere": [
+        "campus.resources.booking.present",
+        "campus.resources.calendar.present",
+        "campus.resources.packet.present"
+      ],
+      "book-a-call-consistency": "campus.resources.booking.present",
+      "brand-visual": "site.brand.visual.font"
+    },
+    "pageCheckUnmapped": {
+      "edge-cache-current": "compares the cached and fresh copies of one page after an edit; a ring-2 verification step, not a standing requirement",
+      "header-template-present": "site.header.rendered has no observer row yet (spec/observer-check-map.json requirementsWithoutObserverCoverage); the route-reachable row measures the rendered 2xx, not the template",
+      "header-stylesheet-linked": "same as header-template-present: a shared-template requirement without an observer row",
+      "footer-template-present": "same as header-template-present",
+      "h1-present": "weaker than campus.hero.identity.heading (which also requires the campus name); h1-names-campus is the mapped id",
+      "cta-stay-in-the-know": "label presence of a template CTA; no row measures CTA labels (spec/campus-page-requirements.json campus.hero.ctas exemplars only)",
+      "cta-attend-an-info-session": "same as cta-stay-in-the-know",
+      "cta-apply-now": "same as cta-stay-in-the-know; the apply rows measure the destination, not the label",
+      "intro-section-present": "template paragraph presence; no row",
+      "n8n-synced-elements-present": "site.sync.n8n-synced-elements-present is listed in spec/observer-check-map.json requirementsWithoutObserverCoverage (docs/observer-requirements.md item 6)",
+      "n8n-override-recorded": "a ticket-protocol bookkeeping check (an override suffix must have its APEX ticket recorded); not an observer requirement",
+      "team-photo-framing": "team-card framing (decision 2026-09-22) is filed as observer-layout for the elementor-owner (tests/fixtures/decisions/agent-found-team-photo-framing.json); the nearest row, site.layout.images.crop (campus-image-crop-risk, coverage of visible images), belongs to observer-media-identity, so mapping it would change the class; a framing row is still to be written"
+    }
   },
   "depthDefaults": {
     "$comment": "Row depth defaults by pageFamily (2026-09-25): render means the observer loads the page in a browser on both viewports and screenshots it; http means one HTTP fetch of the route (or a source read for map-source) with no rendering. The builder fills depth on every row that leaves it out; spec/README.md documents the contract the observer reads.",
@@ -352,26 +449,52 @@
       ],
       "element": "intro.media",
       "expected": {
-        "literal": {
-          "approvedMediaSource": "registry/campus-open-media.json campuses[slug].openMedia; null means ask the owner",
-          "assetPatterns": [
-            "/wp-content/uploads/2026/01/Piedmont(?:-\\d+x\\d+)?\\.(?:webp|png|jpe?g)\\b",
-            "/wp-content/uploads/2026/06/Subtitle-(?:13|16|18)(?:-\\d+x\\d+)?\\.(?:webp|png|jpe?g)\\b"
-          ]
+        "derive": {
+          "source": "registry",
+          "field": "registry/campus-open-media.json campuses[slug].openMedia, attachmentId",
+          "transform": "approved-media: openMedia card means the slot attachment id must equal attachmentId; openMedia video means the approved video widget is in the slot; openMedia null or no entry means no approved media is recorded (missingExpectation)",
+          "onMissing": "finding"
         }
+      },
+      "literals": {
+        "thing": "intro media",
+        "missingAsk": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
+        "launchWords": [
+          "Coming Soon",
+          "Coming Fall",
+          "Coming This Fall",
+          "Coming Spring",
+          "Launching",
+          "Launching Fall",
+          "Opening Fall",
+          "Opening Soon",
+          "Now Enrolling Fall",
+          "Enrolling Fall",
+          "Fall 2026",
+          "Fall 2027"
+        ],
+        "launchWordsNote": "Read by the observer's vision pass over the intro card and hero screenshot on full runs (repair 2): any of these words painted into the pixels of an Open campus's primary visual is a finding, whatever the alt, title, filename or nearby text say.",
+        "assetPatterns": [
+          "/wp-content/uploads/2026/01/Piedmont(?:-\\d+x\\d+)?\\.(?:webp|png|jpe?g)\\b",
+          "/wp-content/uploads/2026/06/Subtitle-(?:13|16|18)(?:-\\d+x\\d+)?\\.(?:webp|png|jpe?g)\\b"
+        ],
+        "assetPatternsNote": "Known launch-era asset paths; a deterministic backstop, never the primary control."
       },
       "comparator": {
         "type": "equals-approved-media",
         "threshold": 0,
-        "unit": "stale-signals"
+        "unit": "mismatches",
+        "note": "The slot attachment id (wp-image-<id> class or the widget media id) must equal the registry attachmentId (a video slot must be the approved video); a mismatch names the observed asset; a null openMedia or a missing entry is a missingExpectation finding (East Bay, 2026-09-25: attachment 8550 Piedmont.webp with the words in the pixels read clean under the old absence-of-signals rule)."
       },
       "ticketClass": "observer-media-identity",
+      "ownerRole": "website-operations",
+      "entitySource": "hubspot-programs",
       "suppressWhen": [
         "hidden-on-all-viewports"
       ],
       "grounding": {
-        "kind": "source-contract",
-        "ref": "registry/campus-open-media.json (approved open-state media per campus; spec/source-authority.json fields/campus.intro-media)"
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-25 (Matt Barge): check from HubSpot to the website, not only from the website to HubSpot; presence of the approved asset, never the absence of launch words (docs/qc-loop-repair-plan-2026-09-25.md repair 1); registry/campus-open-media.json is the source contract"
       },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
@@ -658,7 +781,8 @@
         "derive": {
           "source": "registry",
           "field": "registry/campus-pages.json campuses[slug].url",
-          "transform": "normalize-url"
+          "transform": "normalize-url",
+          "onMissing": "finding"
         }
       },
       "comparator": {
@@ -674,6 +798,10 @@
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
+      },
+      "literals": {
+        "thing": "campus page registry entry",
+        "missingAsk": "Add the campus to registry/campus-pages.json (slug, url, objectId, names, mapProgramIds) so the canonical URL is a registry value; until then the schema URL row has no expectation and this ticket stays Missing Info."
       }
     },
     {
@@ -872,7 +1000,8 @@
         "derive": {
           "source": "campus-packets-registry",
           "field": "registry/campus-packets.json campuses[slug].packets[approved=true, schoolYear=current]",
-          "transform": "visible-cta-when-an-approved-packet-exists; otherwise the button stays hidden and no finding is filed"
+          "transform": "visible-cta-when-an-approved-packet-exists; otherwise the button stays hidden and no finding is filed",
+          "onMissing": "finding"
         }
       },
       "comparator": {
@@ -900,6 +1029,10 @@
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.resources.packet"
+      },
+      "literals": {
+        "thing": "info packet",
+        "missingAsk": "Record the campus's approved info packets in registry/campus-packets.json campuses.<slug> (packets with label, url, schoolYear and approved, read back from the APEX CampusPacketProfile after the Dean of Parents approves); until then the 2026/27 button stays hidden (interimPolicy) and this ticket stays Missing Info."
       }
     },
     {
@@ -1365,7 +1498,8 @@
         "derive": {
           "source": "campus-staff-roster",
           "field": "registry/staff-source-decks.json decks[campus] slides",
-          "transform": "roster-names"
+          "transform": "roster-names",
+          "onMissing": "finding"
         }
       },
       "comparator": {
@@ -1387,6 +1521,10 @@
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.team"
+      },
+      "literals": {
+        "thing": "team roster source deck",
+        "missingAsk": "Register the campus's Meet the Guides deck in registry/staff-source-decks.json decks.<slug> (the Google Slides id and the owner); until then the roster row cannot be measured and this ticket stays Missing Info."
       }
     },
     {
@@ -2300,6 +2438,197 @@
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/page.existence"
+      }
+    },
+    {
+      "id": "site.coverage.open-campus-registries",
+      "observerCheck": "campus-registry-coverage",
+      "title": "Every Open or Announced campus has its registry rows (open media, leadership, packets)",
+      "pageFamily": "campus",
+      "entitySource": "hubspot-programs",
+      "depth": "http",
+      "lifecycleStates": [
+        "Open",
+        "Announced"
+      ],
+      "element": "page.registries",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "literals.registries[].file at keyPath for the campus slug (registry/campus-pages.json slug for the Program website)",
+          "transform": "registry-entry-present-for-every-enumerated-campus",
+          "onMissing": "finding"
+        }
+      },
+      "literals": {
+        "thing": "registry row",
+        "missingAsk": "Add the registry entry named in this ticket for the campus; the ask per registry is in literals.registries.",
+        "registries": [
+          {
+            "file": "registry/campus-open-media.json",
+            "keyPath": "campuses[slug]",
+            "thing": "intro media",
+            "requiredWhen": {
+              "type": [
+                "Open"
+              ]
+            },
+            "ownerRole": "website-operations",
+            "ticketClass": "observer-media-identity",
+            "ask": "Record the approved open-state intro media for this Open campus in registry/campus-open-media.json campuses.<slug> (openMedia card with the attachmentId of the Open and Enrolling card, or openMedia video once approved); a campus with no row cannot be measured for launch-era media."
+          },
+          {
+            "file": "registry/campus-leadership.json",
+            "keyPath": "campuses[slug]",
+            "thing": "campus leadership",
+            "requiredWhen": {
+              "type": [
+                "Open",
+                "Announced"
+              ]
+            },
+            "ownerRole": "campus-roles-confirmer",
+            "ticketClass": "staff-bulk",
+            "ask": "Record the campus leadership shown on the page Team section in registry/campus-leadership.json campuses.<slug> (head-of-schools, dean-of-parents, director-of-admissions, head-guide, lead-guide, from the Admissions Hub and the live page) so the identity and roster rows can read it."
+          },
+          {
+            "file": "registry/campus-packets.json",
+            "keyPath": "campuses[slug]",
+            "thing": "info packets",
+            "requiredWhen": {
+              "type": [
+                "Open"
+              ]
+            },
+            "ownerRole": "packet-owner",
+            "ticketClass": "observer-packet",
+            "ask": "Record the campus's info packets and calendars in registry/campus-packets.json campuses.<slug> (label, url, host, hidden, schoolYear, approved) so the packet rows have an expectation."
+          },
+          {
+            "file": "registry/campus-cta-exceptions.json",
+            "keyPath": "campuses[slug]",
+            "thing": "CTA exceptions",
+            "requiredWhen": {
+              "type": []
+            },
+            "ownerRole": "website-agent-operator",
+            "ticketClass": "link-cta",
+            "ask": "Informational: a campus with no CTA exception entry follows the default CTA rows; nothing to add unless a decision exists."
+          }
+        ],
+        "registriesNote": "One finding per campus per registry whose requiredWhen.type includes the Program type and whose file has no entry at keyPath for the campus slug; the finding carries actual.registry (the file), actual.keyPath, actual.slug, actual.campus, actual.state and actual.programId; the filer files it Missing Info to the entry's ownerRole (person from roleOwners) with the entry's ask and ticketClass, deduped on campus and registry. requiredWhen.type empty means informational: listed in the report, never filed."
+      },
+      "comparator": {
+        "type": "registry-coverage",
+        "threshold": 0,
+        "unit": "missing-entries"
+      },
+      "severity": "high",
+      "ticketClass": "observer-media-identity",
+      "ownerRole": "website-operations",
+      "dedupeScope": "campus-registry",
+      "clearAfterRuns": 1,
+      "sourceHealthDependency": [
+        "hubspot-programs"
+      ],
+      "note": "Repair 4 of docs/qc-loop-repair-plan-2026-09-25.md: on 2026-09-25 twelve Open alpha.school campuses (Austin, Brownsville, Charlotte, Chantilly, East Bay, Fort Worth, New York, Orange County, Palm Beach, San Francisco, Scottsdale, The Woodlands) had no open-media row and were never measured. The row's ticketClass and ownerRole are the open-media defaults; each registry entry overrides them.",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-25 (Matt Barge): check from HubSpot to the website, not only from the website to HubSpot; docs/qc-loop-repair-plan-2026-09-25.md repair 4 (coverage rows)"
+      },
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.coverage"
+      }
+    },
+    {
+      "id": "site.coverage.program-page",
+      "observerCheck": "program-page-present",
+      "title": "Every Open or Announced HubSpot Program with an alpha.school website has a public page naming the campus that the map lists",
+      "pageFamily": "campus",
+      "entitySource": "hubspot-programs",
+      "depth": "http",
+      "lifecycleStates": [
+        "Open",
+        "Announced"
+      ],
+      "element": "page.existence",
+      "expected": {
+        "derive": {
+          "source": "hubspot-programs",
+          "field": [
+            "type",
+            "website",
+            "display_name"
+          ],
+          "transform": "for every Program whose type is Open or Announced and whose website is on alpha.school: the page at website answers HTTP 200 after redirects, its title or H1 names the campus (display_name without the School keyword, or a registry name), and the growth map lists a record with that url",
+          "onMissing": "skip"
+        }
+      },
+      "literals": {
+        "missingPage": "critical: no page, or a page that does not name the campus, is a finding on this row (ticketClass page-status)",
+        "missingFromMap": "a page that answers and names the campus but has no growth-map record is not a page defect: the observer emits it with actual.missingFromMap true (or under the existing hubspot-map-sync check) and the filer writes it as a source-digest line under site.map.integrity.hubspot-map-sync for the growth-map-owner"
+      },
+      "comparator": {
+        "type": "present",
+        "threshold": 1,
+        "unit": "page"
+      },
+      "severity": "critical",
+      "ticketClass": "page-status",
+      "ownerRole": "website-operations",
+      "dedupeScope": "program",
+      "requireConsecutiveRuns": 2,
+      "sourceHealthDependency": [
+        "hubspot-programs",
+        "growth-map-api"
+      ],
+      "note": "Source-first enumeration (repair 4): the existing site.map.integrity.wordpress-page-has-program row walks from the page list to the map; this row walks from HubSpot Programs to the page and the map, so a Program that was never published, or whose website points at a page about another campus, is found from the source.",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-25 (Matt Barge): check from HubSpot to the website, not only from the website to HubSpot; spec/campus-page-field-map.json elements/page.existence (writer, source system and fields)"
+      },
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.coverage"
+      }
+    },
+    {
+      "id": "site.coverage.open-campus-rendered",
+      "observerCheck": "campus-page-rendered",
+      "title": "Every Open campus page was rendered in the full run",
+      "pageFamily": "campus",
+      "entitySource": "hubspot-programs",
+      "depth": "render",
+      "lifecycleStates": [
+        "Open"
+      ],
+      "element": "observer.browser",
+      "channel": "loop-health",
+      "expected": {
+        "literal": "a completed browser render (DOM inspected, fonts settled, screenshot pair captured) for every Open campus page in every full run"
+      },
+      "literals": {
+        "missesNote": "One loop-health finding per full run listing the Open campus pages that were not rendered (actual.misses: [{ slug, campus, url, reason }]); a run with no misses emits nothing."
+      },
+      "comparator": {
+        "type": "count-equals",
+        "threshold": 0,
+        "unit": "unrendered-open-campus-pages"
+      },
+      "severity": "high",
+      "ticketClass": "observer-health",
+      "dedupeScope": "site",
+      "clearAfterRuns": 1,
+      "suppresses": "every render-depth campus row on the pages listed under actual.misses for this run (they measured nothing); a run that renders every Open campus suppresses nothing",
+      "note": "Repair 4 and the dead-man's switch of repair 8: on 2026-09-24 and 2026-09-25 runs failed or were cancelled on the runner (out of disk) and a run that produced no packet produced no finding; this row makes an unrendered Open campus a loop-health finding in the run itself.",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-25 (Matt Barge): check from HubSpot to the website, not only from the website to HubSpot; docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (loop health is a separate channel to the observer owner)"
+      },
+      "requirementRef": {
+        "file": "spec/site-rules.json",
+        "key": "rules/site.coverage"
       }
     },
     {

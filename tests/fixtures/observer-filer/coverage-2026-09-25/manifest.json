@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "system": "alpha-site-observer",
+  "runId": "site-full-2026-09-25T14-29-29-000Z",
+  "mode": "full",
+  "startedAt": "2026-09-25T14:20:00.000Z",
+  "completedAt": "2026-09-25T14:39:45.000Z",
+  "authority": "read-only-observer",
+  "publicationAuthorized": false,
+  "loopsExecuted": [
+    "campus-truth",
+    "coverage",
+    "loop-health"
+  ],
+  "providers": {
+    "hubspot-programs": {
+      "status": "healthy",
+      "completedAt": "2026-09-25T14:21:00.000Z",
+      "records": 113
+    },
+    "map": {
+      "status": "healthy",
+      "completedAt": "2026-09-25T14:21:00.000Z",
+      "records": 90
+    },
+    "campus-pages": {
+      "status": "healthy",
+      "completedAt": "2026-09-25T14:25:00.000Z",
+      "records": 45,
+      "failures": 0
+    },
+    "browser": {
+      "status": "healthy",
+      "records": 90,
+      "incompleteRecords": 0,
+      "completedAt": "2026-09-25T14:38:00.000Z"
+    }
+  },
+  "findingsObserved": 8,
+  "evidence": {
+    "kind": "site-observation",
+    "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  }
+}
