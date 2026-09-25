@@ -26,8 +26,11 @@ import {
   normalizePersonName,
   ticketInputSha256,
   observerCheckMatches,
+  observerFilerOwned,
+  OBSERVER_FILER_FILED_BY,
   operatorInstruction,
 } from '../agent/intake-policy.mjs'
+import { FILED_BY as FILER_FILED_BY } from '../agent/file-observer-findings.mjs'
 import {
   RosterDiffError,
   buildPlan,
@@ -329,7 +332,7 @@ function actionKindForOutcome(outcome) {
   return 'blocked-review'
 }
 
-async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null, reconcileRefusal = null }) {
+async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null, reconcileRefusal = null, apply = true }) {
   const operatorRoute = mode === 'operator-route'
   const executionReady = mode === 'execution-ready'
   const task = taskOverride ? { ...baseMockTask(operatorRoute, executionReady, failStatus), ...taskOverride } : baseMockTask(operatorRoute, executionReady, failStatus)
@@ -404,7 +407,7 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
       },
     }))
   }
-  const childArgs = [path.join(root, 'agent', 'intake.mjs'), '--file', input, '--apply', '--report', reportPath, '--force']
+  const childArgs = [path.join(root, 'agent', 'intake.mjs'), '--file', input, ...(apply ? ['--apply'] : []), '--report', reportPath, '--force']
   if (skipReleaseCheck) childArgs.push('--skip-release-check')
   // Real WordPress credentials in the developer's shell would let the child attest for real; the mock decides attestation.
   // A Slack token would let the requester-notice preview look the mock requester up for real; the child gets none.
@@ -700,33 +703,74 @@ test('protocol 1c: an OPERATOR INSTRUCTION or CORRECTION note stops intake from 
   assert.equal(operatorInstruction({ description: 'x', agentInstructions: [{ status: 'RETIRED', body: 'OPERATOR INSTRUCTION: old.' }] }), null)
 })
 
-test('a ticket the observer filer owns is skipped with reason observer_filer_owned: no write, no error, no retry, no v1 fallback', async () => {
-  // APEX PR 409: checkId SITE-*, a filerRunId, past NOT_STARTED. Known client-side, so intake skips before any write.
+test('a ticket the observer filer created is never administered at any status: no clarification, no route, no reconcile, reported as observer_filer_owned', async () => {
+  // The predicate (agent/intake-policy.mjs): the filer's exact filedBy marker, or any non-blank filerRunId, at every status.
+  assert.equal(OBSERVER_FILER_FILED_BY, FILER_FILED_BY, 'the marker intake tests is the one the filer writes')
+  assert.equal(observerFilerOwned({ status: 'NOT_STARTED', customFields: { filedBy: FILER_FILED_BY } }), true)
+  assert.equal(observerFilerOwned({ status: 'NOT_STARTED', customFields: { filerRunId: 'site-full-2026-09-24T14-28-40-974Z' } }), true)
+  assert.equal(observerFilerOwned({ status: 'MISSING_INFO', customFields: { source: 'agent-found', filerRunId: 'site-events-2026-09-25T13-26-58-882Z', checkId: 'SITE-B13C863ED3' } }), true)
+  assert.equal(observerFilerOwned({ status: 'BLOCKED', customFields: { source: 'alpha-site-qc', checkId: 'SITE-B13C863ED3' } }), false, 'the observer\'s own tickets are administered')
+  assert.equal(observerFilerOwned({ status: 'BLOCKED', customFields: { filerRunId: '   ' } }), false, 'a blank filerRunId is no marker')
+  assert.equal(observerFilerOwned({ status: 'BLOCKED', customFields: { filedBy: 'agent/file-found-ticket.mjs' } }), false, 'the exact marker, nothing looser')
+  assert.equal(observerFilerOwned({}), false)
+
+  // 2026-09-25: intake moved six NOT_STARTED filer tickets to Missing Info addressed to the observer owner. Now a filer
+  // ticket at NOT_STARTED (filedBy only, no filerRunId) plans nothing: no status POST, no reconcile, no PATCH, no notice.
+  const notStarted = observerLayoutTask('mock-apply-filer-not-started')
+  notStarted.customFields = { ...notStarted.customFields, source: 'agent-found', filedBy: FILER_FILED_BY }
+  const untouched = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: notStarted })
+  assert.equal(untouched.run.code, 0, untouched.run.stderr)
+  const first = untouched.report.results[0]
+  assert.equal(first.class, 'observer-layout', 'the evaluation is still reported')
+  assert.equal(first.action.kind, 'no-action')
+  assert.equal(first.action.reason, 'observer_filer_owned')
+  assert.deepEqual(first.observerFilerOwned, { filedBy: FILER_FILED_BY, filerRunId: null, status: 'NOT_STARTED' })
+  assert.match(first.skipped, /^observer_filer_owned: the observer filer created this ticket/)
+  assert.equal(first.applied, undefined, 'never reaches applyDecision')
+  assert.equal(first.requesterNotice, undefined, 'no requester notice preview or send')
+  assert.equal(untouched.patches.length, 0)
+  assert.equal(untouched.reconciles.length, 0)
+  assert.equal(untouched.task.status, 'NOT_STARTED')
+  assert.deepEqual(untouched.task.assignees, [])
+  assert.deepEqual(untouched.task.clarifications, [])
+  assert.deepEqual(untouched.report.summary.observerFilerOwned, ['mock-apply-filer-not-started'])
+  assert.deepEqual(untouched.report.summary.actions, { 'no-action': 1 })
+  assert.deepEqual(untouched.report.summary.errors, [])
+  assert.equal(untouched.report.summary.skipped, 1)
+  assert.equal(untouched.report.summary.applied, 0)
+  assert.equal(untouched.report.summary.escalated, 0)
+
+  // The same at BLOCKED with a filerRunId (APEX PR 409's own shape), and in a dry run: no write, no notice preview either way.
   const owned = observerLayoutTask('mock-apply-filer-owned')
   owned.status = 'BLOCKED'
   owned.customFields.filerRunId = 'site-full-2026-09-24T14-28-40-974Z'
   const held = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: owned })
   assert.equal(held.run.code, 0, held.run.stderr)
   const result = held.report.results[0]
-  assert.equal(result.applied.ok, false)
-  assert.equal(result.applied.skipped, 'observer_filer_owned')
-  assert.equal(result.applied.error, undefined)
+  assert.equal(result.applied, undefined)
+  assert.equal(result.action.kind, 'no-action')
   assert.match(result.skipped, /^observer_filer_owned: /)
   assert.equal(held.patches.length, 0)
   assert.equal(held.reconciles.length, 0)
   assert.deepEqual(held.report.summary.observerFilerOwned, ['mock-apply-filer-owned'])
   assert.deepEqual(held.report.summary.errors, [])
-  assert.equal(held.report.summary.skipped, 1)
-  assert.equal(held.report.summary.applied, 0)
   assert.equal(held.task.status, 'BLOCKED')
   assert.deepEqual(held.task.assignees, [])
+  const dry = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: { ...observerLayoutTask('mock-dry-filer-owned'), customFields: { ...observerLayoutTask('x').customFields, filerRunId: 'site-events-2026-09-25T13-26-58-882Z' } }, apply: false })
+  assert.equal(dry.run.code, 0, dry.run.stderr)
+  assert.equal(dry.report.mode, 'dry-run')
+  assert.equal(dry.report.results[0].action.kind, 'no-action')
+  assert.equal(dry.report.results[0].requesterNotice, undefined)
+  assert.deepEqual(dry.report.summary.observerFilerOwned, ['mock-dry-filer-owned'])
+  assert.equal(dry.patches.length + dry.reconciles.length, 0)
 
-  // When APEX decides it first (409 OBSERVER_FILER_OWNED on reconcile) the answer is the same skip: the pending
-  // marker is left as it is, nothing is retried, and no v1 PATCH stands in for the refused reconcile.
+  // When APEX decides it first (409 OBSERVER_FILER_OWNED on reconcile for a ticket carrying no filer marker client-side)
+  // the answer is the same skip: the pending marker is left as it is, nothing is retried, and no v1 PATCH stands in for
+  // the refused reconcile.
   const refused = await runMockApply({
     failStatus: false,
     mode: 'operator-route',
-    taskOverride: { ...observerLayoutTask('mock-apply-filer-409'), customFields: { ...observerLayoutTask('x').customFields, filerRunId: 'site-full-2026-09-24T14-28-40-974Z' } },
+    taskOverride: observerLayoutTask('mock-apply-filer-409'),
     reconcileRefusal: { status: 409, body: { error: 'Ticket is owned by the observer filer', code: 'OBSERVER_FILER_OWNED' } },
   })
   assert.equal(refused.run.code, 0, refused.run.stderr)
@@ -735,7 +779,7 @@ test('a ticket the observer filer owns is skipped with reason observer_filer_own
   assert.equal(late.applied.skipped, 'observer_filer_owned')
   assert.equal(late.applied.apexCode, 'OBSERVER_FILER_OWNED')
   assert.equal(late.applied.error, undefined)
-  assert.match(late.skipped, /^observer_filer_owned: /)
+  assert.match(late.skipped, /^observer_filer_owned: .*APEX answered OBSERVER_FILER_OWNED/)
   assert.equal(refused.reconciles.length, 1, 'one reconcile, no retry')
   assert.equal(refused.patches.length, 1, 'the pending-hash PATCH only; no v1 fallback and no finalization')
   assert.equal(refused.patches[0].customFields.intakePendingHash, late.decisionSha256)

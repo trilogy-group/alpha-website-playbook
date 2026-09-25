@@ -4,7 +4,7 @@
  * 2026-09-24, workstream 6: the playbook defines, the observer measures, the protocol files).
  *
  *   node agent/file-observer-findings.mjs --run-dir <packet dir> [--bundle spec/check-bundle.generated.json] \
- *     [--queue <apex export.json>] [--apply] [--report <file>] [--now <ISO>]
+ *     [--queue <apex export.json>] [--apply] [--report <file>] [--now <ISO>] [--max-packet-age-hours 6] [--after-run-id <run id>]
  *   node agent/file-observer-findings.mjs --run <github run id> [...]      # gh run download -R superbuilders/aeo -n alpha-site-packet-<run>
  *
  * Input: the observer packet artifact (`findings.json`, `incidents.json`, `manifest.json`, optional `health.json`,
@@ -62,6 +62,12 @@
  * checkBundleVersion; the filer sets them on every create and resolve, and treats 409 OBSERVER_FILER_OWNED
  * (agent/apex-errors.mjs, shared with intake) as a skip.
  *
+ * Packet freshness gate (2026-09-25: the scheduled filer applied a 17-day-old packet that filed 20 tickets no current run
+ * reproduces). `--apply` refuses with STALE_PACKET when `manifest.completedAt` is older than `--max-packet-age-hours`
+ * (default 6) before now, when `manifest.checkBundle.status` is not `verified`, or, given `--after-run-id <id>`, when the
+ * packet's run id is not newer than that id (compareRunIds: the run ids' trailing timestamps, so the same packet is never
+ * applied twice and an older one never after a newer one). A dry run reports the same conditions as `packetWarnings`.
+ *
  * Dry run by default: the plan goes to `<run dir>/filer-report.json` and stdout. `--apply` performs the writes against the
  * live queue (never with `--queue`) and appends every one to `<run dir>/filer-writes.jsonl`. Env: APEX_API_TOKEN
  * (APEX_API_BASE, APEX_AGENT_API_BASE optional).
@@ -118,7 +124,7 @@ export function cleanText(value) {
 }
 
 export class ObserverFilerError extends Error {
-  /** @param {'MISSING_ARG'|'MISSING_TOKEN'|'BAD_RUN_DIR'|'BAD_BUNDLE'|'BAD_QUEUE'|'DOWNLOAD_FAILED'|'APEX_ERROR'} code */
+  /** @param {'MISSING_ARG'|'MISSING_TOKEN'|'BAD_RUN_DIR'|'BAD_BUNDLE'|'BAD_QUEUE'|'DOWNLOAD_FAILED'|'APEX_ERROR'|'STALE_PACKET'} code */
   constructor(code, message, extra = {}) { super(message); this.name = 'ObserverFilerError'; this.code = code; Object.assign(this, extra) }
 }
 
@@ -205,6 +211,58 @@ export function observerHoldsApply(manifest, bundle) {
   const record = manifest?.checkBundle
   if (!record || record.status !== 'verified') return false
   return !record.sha256 || !bundle?.sha256 || record.sha256 === bundle.sha256
+}
+
+/** Hours from `manifest.completedAt` to now past which --apply refuses the packet; the observer runs hourly, so six hours means today's runs. */
+export const DEFAULT_MAX_PACKET_AGE_HOURS = 6
+export const STALE_PACKET = 'STALE_PACKET'
+/** The timestamp an observer run id ends in (site-full-2026-09-24T14-28-40-974Z, site-events-2026-09-25T13-26-58-882Z). */
+const RUN_ID_TIMESTAMP = /(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)$/
+
+/** The trailing timestamp of an observer run id, or null when the id carries none. */
+export function runIdTimestamp(id) {
+  const match = RUN_ID_TIMESTAMP.exec(String(id || ''))
+  return match ? match[1] : null
+}
+
+/**
+ * Order two observer run ids: by their trailing timestamps when both carry one (so site-events-2026-09-25T... is newer than
+ * site-full-2026-09-24T... although "events" sorts before "full"), otherwise by the whole id. Negative when `a` is older
+ * than `b`, zero when they are the same run, positive when `a` is newer.
+ */
+export function compareRunIds(a, b) {
+  const ta = runIdTimestamp(a)
+  const tb = runIdTimestamp(b)
+  const [x, y] = ta && tb ? [ta, tb] : [String(a || ''), String(b || '')]
+  return x < y ? -1 : x > y ? 1 : 0
+}
+
+/**
+ * The packet freshness gate. Problems, one sentence each: `manifest.completedAt` missing, unparseable, or more than
+ * `maxAgeHours` before `now`; `manifest.checkBundle.status` not `verified`; and, given `afterRunId` (the last applied run),
+ * the packet's run id not newer than it by compareRunIds (equal: already applied; older: a newer packet was applied since).
+ * `--apply` refuses on any problem (STALE_PACKET); a dry run reports them as warnings.
+ */
+export function assessPacketFreshness(manifest, { now = new Date(), maxAgeHours = DEFAULT_MAX_PACKET_AGE_HOURS, afterRunId = null } = {}) {
+  const problems = []
+  const completedAt = manifest?.completedAt || null
+  const completed = completedAt ? new Date(completedAt) : null
+  const ageHours = completed && !Number.isNaN(completed.getTime()) ? (now.getTime() - completed.getTime()) / 3_600_000 : null
+  if (ageHours === null) problems.push(`manifest.completedAt is ${completedAt ? `not a datetime (${completedAt})` : 'missing'}`)
+  else if (ageHours > maxAgeHours) problems.push(`packet completed ${completedAt}, ${ageHours.toFixed(1)} hours before ${now.toISOString()}; the limit is ${maxAgeHours} hours (--max-packet-age-hours)`)
+  const bundleStatus = manifest?.checkBundle?.status || null
+  if (bundleStatus !== 'verified') problems.push(`manifest.checkBundle.status is ${bundleStatus || 'missing'}, not verified`)
+  const runId = manifest?.runId || null
+  let order = null
+  if (afterRunId) {
+    order = compareRunIds(runId, afterRunId)
+    if (order === 0) problems.push(`run ${runId} is the last applied run (--after-run-id ${afterRunId}); a packet is never applied twice`)
+    else if (order < 0) problems.push(`run ${runId} is older than the last applied run ${afterRunId} (--after-run-id); an older packet is never applied after a newer one`)
+  }
+  return {
+    fresh: problems.length === 0, problems, runId, completedAt, ageHours: ageHours === null ? null : Number(ageHours.toFixed(2)), maxAgeHours,
+    bundleStatus, bundleSha256: manifest?.checkBundle?.sha256 || null, afterRunId: afterRunId || null, newerThanAfterRunId: order === null ? null : order > 0,
+  }
 }
 
 /**
@@ -1247,6 +1305,16 @@ export function parseArgs(argv) {
   return out
 }
 
+/** `--max-packet-age-hours` (a positive number, default DEFAULT_MAX_PACKET_AGE_HOURS) and `--after-run-id` (the last applied observer run id) as assessPacketFreshness options. */
+export function packetGateOptions(args) {
+  const raw = args['max-packet-age-hours']
+  const maxAgeHours = raw === undefined ? DEFAULT_MAX_PACKET_AGE_HOURS : Number(raw)
+  if (raw === true || !(Number.isFinite(maxAgeHours) && maxAgeHours > 0)) throw new ObserverFilerError('MISSING_ARG', `--max-packet-age-hours must be a positive number of hours, got ${raw}`)
+  if (args['after-run-id'] === true) throw new ObserverFilerError('MISSING_ARG', '--after-run-id needs the last applied observer run id (manifest.runId of that packet)')
+  const afterRunId = args['after-run-id'] ? String(args['after-run-id']).trim() : null
+  return { maxAgeHours, afterRunId: afterRunId || null }
+}
+
 /** `gh run download -R superbuilders/aeo -n alpha-site-packet-<run> -D <dir>`; the packet lands in tmp/observer-packets/<run> unless --run-dir says where. */
 export function downloadPacket(runId, dest, { repository = 'superbuilders/aeo', spawn = spawnSync } = {}) {
   if (!/^\d+$/.test(String(runId))) throw new ObserverFilerError('MISSING_ARG', `--run must be the numeric GitHub run id, got ${runId}`)
@@ -1258,7 +1326,7 @@ export function downloadPacket(runId, dest, { repository = 'superbuilders/aeo', 
 
 export async function main(argv = process.argv.slice(2), env = process.env, io = { log: console.log, error: console.error }) {
   const args = parseArgs(argv)
-  if (!args['run-dir'] && !args.run) throw new ObserverFilerError('MISSING_ARG', 'Usage: file-observer-findings.mjs --run-dir <packet dir> | --run <github run id> [--bundle <check bundle>] [--queue <export.json>] [--apply] [--report <file>] [--now <ISO>]')
+  if (!args['run-dir'] && !args.run) throw new ObserverFilerError('MISSING_ARG', 'Usage: file-observer-findings.mjs --run-dir <packet dir> | --run <github run id> [--bundle <check bundle>] [--queue <export.json>] [--apply] [--report <file>] [--now <ISO>] [--max-packet-age-hours 6] [--after-run-id <run id>]')
   let runDir = args['run-dir'] && args['run-dir'] !== true ? path.resolve(args['run-dir']) : null
   if (args.run && args.run !== true) runDir = downloadPacket(args.run, runDir || path.join(root, 'tmp', 'observer-packets', String(args.run)))
   const run = loadRunFolder(runDir)
@@ -1269,14 +1337,19 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
   // --apply writes against the queue it read; a saved export is a dry-run input, never something to write from.
   if (args.apply && offlineQueue) throw new ObserverFilerError('MISSING_ARG', '--apply writes against the live APEX queue and cannot take --queue <export.json>; drop --queue to apply, or drop --apply for an offline dry run')
   if (args.apply && !env.APEX_API_TOKEN) throw new ObserverFilerError('MISSING_TOKEN', 'APEX_API_TOKEN required for --apply')
+  // Packet freshness gate: before the queue is read and before any write. --apply refuses a stale, unverified, already
+  // applied or superseded packet with STALE_PACKET; a dry run carries the same findings as packetWarnings.
+  const packet = assessPacketFreshness(run.manifest, { now, ...packetGateOptions(args) })
+  if (args.apply && !packet.fresh) throw new ObserverFilerError(STALE_PACKET, `--apply refused: ${packet.problems.join('; ')}`, { packet })
   const apex = createApexClient({ env, log: io.error })
-  let queue
-  if (offlineQueue) queue = loadQueue(args.queue)
-  else if (env.APEX_API_TOKEN) queue = await apex.listOpen()
-  else throw new ObserverFilerError('MISSING_TOKEN', 'APEX_API_TOKEN is required to read the open queue; pass --queue <export.json> for an offline run')
+  if (!offlineQueue && !env.APEX_API_TOKEN) throw new ObserverFilerError('MISSING_TOKEN', 'APEX_API_TOKEN is required to read the open queue; pass --queue <export.json> for an offline run')
+  for (const problem of packet.problems) io.error(`packet warning: ${problem}`)
+  const queue = offlineQueue ? loadQueue(args.queue) : await apex.listOpen()
   const plan = planObserverFindings({ run, bundle, queue, now })
   plan.mode = args.apply ? 'apply' : 'dry-run'
   plan.runDir = run.dir
+  plan.packet = packet
+  plan.packetWarnings = packet.problems
   plan.queueSource = offlineQueue ? path.resolve(args.queue) : apex.v1Base
   plan.queueWarnings = apex.listWarnings
   const reportFile = args.report && args.report !== true ? path.resolve(args.report) : path.join(run.dir, 'filer-report.json')
@@ -1287,6 +1360,8 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
   }
   fs.writeFileSync(reportFile, `${JSON.stringify(plan, null, 2)}\n`)
   const summary = { mode: plan.mode, runId: plan.runId, bundleVersion: plan.bundleVersion, bundleSha256: plan.bundleSha256, healthSource: plan.health.source, unhealthySources: Object.keys(plan.health.unhealthy), holds: plan.holds, suppressedByObserver: plan.suppressedByObserver.count, counts: plan.counts, report: reportFile,
+    packet: { completedAt: packet.completedAt, ageHours: packet.ageHours, maxAgeHours: packet.maxAgeHours, bundleStatus: packet.bundleStatus, afterRunId: packet.afterRunId },
+    ...(plan.packetWarnings.length ? { packetWarnings: plan.packetWarnings } : {}),
     ...(plan.queueWarnings.length ? { queueWarnings: plan.queueWarnings } : {}),
     files: plan.files.map((f) => `${f.title} -> ${f.owner.name} (${f.owner.via})${f.owner.escalated ? ' [BLOCKED, protocol 1d]' : ''}; ${f.findings} finding(s), ${f.evidence.filter((e) => e.complete).length} evidence pair(s)`),
     existing: plan.existing.map((e) => `${e.check} ${e.scopeKey}: open ticket ${e.existing.id} [${e.existing.status}] via ${e.existing.via}`),

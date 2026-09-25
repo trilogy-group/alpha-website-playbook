@@ -15,6 +15,7 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import {
   DEFAULT_CLEAR_AFTER_RUNS,
+  DEFAULT_MAX_PACKET_AGE_HOURS,
   FILER_OWNED_CODE,
   FILED_BY,
   FILER_VERSION,
@@ -25,7 +26,12 @@ import {
   OPEN_STATUSES,
   ObserverFilerError,
   RESOLUTION_KIND,
+  STALE_PACKET,
   applyPlan,
+  assessPacketFreshness,
+  compareRunIds,
+  packetGateOptions,
+  runIdTimestamp,
   buildContract,
   buildResolvePatch,
   campusSlugFor,
@@ -74,6 +80,7 @@ import {
   unhealthyDependencies,
 } from '../agent/file-observer-findings.mjs'
 import { isFilerOwnedConflict as sharedPredicate } from '../agent/apex-errors.mjs'
+import { gate, lastAppliedRun } from '../agent/packet-freshness-gate.mjs'
 import { contractCheck } from './validate-ticket.mjs'
 import { assertNoteShape } from '../agent/ticket-templates.mjs'
 
@@ -936,4 +943,167 @@ test('shared-leadership exemption reads the aggregated conflict array the observ
   assert.equal(exemption.sibling, 'boston')
   const stranger = { ...finding, actual: [{ ...finding.actual[0], alt: 'Someone Else, Guide - Boston' }] }
   assert.equal(sharedLeadershipExemption({ row, finding: stranger }), null)
+})
+
+// Packet freshness gate (2026-09-25): the scheduled filer applied the 17-day-old packet of run site-events-2026-09-08T03-27-24-684Z.
+test('packet freshness: run ids order by their trailing timestamp, and assessPacketFreshness names every reason a packet may not be applied', () => {
+  const STALE_RUN = 'site-events-2026-09-08T03-27-24-684Z'
+  const EVENTS_TODAY = 'site-events-2026-09-25T13-26-58-882Z'
+  assert.equal(runIdTimestamp(RUN_ID), '2026-09-24T14-28-40-974Z')
+  assert.equal(runIdTimestamp('36012695049'), null)
+  assert.ok(compareRunIds(EVENTS_TODAY, RUN_ID) > 0, 'site-events of the 25th is newer than site-full of the 24th although "events" sorts before "full"')
+  assert.ok(compareRunIds(STALE_RUN, RUN_ID) < 0)
+  assert.equal(compareRunIds(RUN_ID, RUN_ID), 0)
+  assert.ok(compareRunIds('b', 'a') > 0 && compareRunIds('a', 'b') < 0, 'ids without a timestamp compare as strings')
+  assert.ok(compareRunIds(RUN_ID, 'no-timestamp') > 0, 'mixed ids compare as strings too')
+  assert.equal(DEFAULT_MAX_PACKET_AGE_HOURS, 6)
+
+  const verified = { runId: RUN_ID, completedAt: '2026-09-24T14:39:45.674Z', checkBundle: { status: 'verified', sha256: 'a'.repeat(64) } }
+  const fresh = assessPacketFreshness(verified, { now: NOW })
+  assert.deepEqual(fresh, { fresh: true, problems: [], runId: RUN_ID, completedAt: '2026-09-24T14:39:45.674Z', ageHours: 1.34, maxAgeHours: 6, bundleStatus: 'verified', bundleSha256: 'a'.repeat(64), afterRunId: null, newerThanAfterRunId: null })
+  assert.equal(assessPacketFreshness(verified, { now: new Date('2026-09-24T20:39:45.674Z') }).fresh, true, 'exactly six hours is still fresh')
+  const stale = assessPacketFreshness(verified, { now: new Date('2026-09-24T20:39:46.000Z') })
+  assert.equal(stale.fresh, false)
+  assert.match(stale.problems[0], /^packet completed 2026-09-24T14:39:45\.674Z, 6\.0 hours before 2026-09-24T20:39:46\.000Z; the limit is 6 hours \(--max-packet-age-hours\)$/)
+  assert.equal(assessPacketFreshness(verified, { now: new Date('2026-09-25T14:52:00Z'), maxAgeHours: 48 }).fresh, true, 'the limit is an option')
+  const seventeenDays = assessPacketFreshness({ runId: STALE_RUN, completedAt: '2026-09-08T03:40:00.000Z', checkBundle: { status: 'verified' } }, { now: new Date('2026-09-25T14:52:00Z') })
+  assert.equal(seventeenDays.fresh, false)
+  assert.equal(seventeenDays.ageHours, 419.2)
+  const unverified = assessPacketFreshness({ ...verified, checkBundle: { status: 'mismatch', sha256: 'b' } }, { now: NOW })
+  assert.deepEqual(unverified.problems, ['manifest.checkBundle.status is mismatch, not verified'])
+  assert.deepEqual(assessPacketFreshness({ runId: RUN_ID, completedAt: verified.completedAt }, { now: NOW }).problems, ['manifest.checkBundle.status is missing, not verified'])
+  assert.deepEqual(assessPacketFreshness({ runId: RUN_ID, checkBundle: { status: 'verified' } }, { now: NOW }).problems, ['manifest.completedAt is missing'])
+  assert.match(assessPacketFreshness({ runId: RUN_ID, completedAt: 'yesterday', checkBundle: { status: 'verified' } }, { now: NOW }).problems[0], /^manifest\.completedAt is not a datetime \(yesterday\)$/)
+  const twice = assessPacketFreshness(verified, { now: NOW, afterRunId: RUN_ID })
+  assert.equal(twice.fresh, false)
+  assert.equal(twice.newerThanAfterRunId, false)
+  assert.match(twice.problems[0], /^run site-full-2026-09-24T14-28-40-974Z is the last applied run \(--after-run-id site-full-2026-09-24T14-28-40-974Z\); a packet is never applied twice$/)
+  const superseded = assessPacketFreshness(verified, { now: NOW, afterRunId: EVENTS_TODAY })
+  assert.match(superseded.problems[0], /is older than the last applied run site-events-2026-09-25T13-26-58-882Z \(--after-run-id\); an older packet is never applied after a newer one$/)
+  const newer = assessPacketFreshness(verified, { now: NOW, afterRunId: STALE_RUN })
+  assert.deepEqual([newer.fresh, newer.afterRunId, newer.newerThanAfterRunId], [true, STALE_RUN, true])
+  const everything = assessPacketFreshness({ runId: STALE_RUN, completedAt: '2026-09-08T03:40:00.000Z', checkBundle: { status: 'unverified' } }, { now: new Date('2026-09-25T14:52:00Z'), afterRunId: RUN_ID })
+  assert.equal(everything.problems.length, 3, 'every reason is reported, not just the first')
+
+  // Option parsing: a positive number of hours, an id for --after-run-id.
+  assert.deepEqual(packetGateOptions({}), { maxAgeHours: 6, afterRunId: null })
+  assert.deepEqual(packetGateOptions({ 'max-packet-age-hours': '0.5', 'after-run-id': ` ${RUN_ID} ` }), { maxAgeHours: 0.5, afterRunId: RUN_ID })
+  for (const bad of ['0', '-1', 'six', true]) assert.throws(() => packetGateOptions({ 'max-packet-age-hours': bad }), (e) => e instanceof ObserverFilerError && e.code === 'MISSING_ARG' && /--max-packet-age-hours must be a positive number of hours/.test(e.message), `rejects ${bad}`)
+  assert.throws(() => packetGateOptions({ 'after-run-id': true }), (e) => e.code === 'MISSING_ARG' && /--after-run-id needs/.test(e.message))
+})
+
+test('packet freshness: --apply refuses a stale, unverified, already applied or superseded packet with STALE_PACKET before reading the queue; a dry run reports the same as warnings', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-observer-filer-stale-'))
+  const report = path.join(tmp, 'report.json')
+  // The APEX base points at a closed port: had the gate not fired first, --apply would have failed reading the queue (APEX_ERROR, exit 2), not STALE_PACKET (exit 1).
+  const env = { ...process.env, APEX_API_TOKEN: 'would-write', APEX_API_BASE: 'http://127.0.0.1:9/api/v1', APEX_AGENT_API_BASE: 'http://127.0.0.1:9/api/agent' }
+  const filer = (args, extraEnv = {}) => spawnSync(process.execPath, ['agent/file-observer-findings.mjs', '--bundle', BUNDLE, '--report', report, ...args], { cwd: root, encoding: 'utf8', env: { ...env, ...extraEnv } })
+  // The gate passed: the run got as far as the queue and died on the closed port (a raw fetch failure, exit 3, or a typed APEX_ERROR, exit 2), never STALE_PACKET (exit 1).
+  const passedGate = (result) => { assert.notEqual(result.status, 1, result.stderr); assert.doesNotMatch(result.stderr, /STALE_PACKET/); assert.match(result.stderr, /fetch failed|APEX_ERROR|ECONNREFUSED/) }
+  const fixture = path.join(fixtures, 'run-2026-09-24')
+
+  // The saved packet has no checkBundle record and, at the real clock, is days old: both reasons are named.
+  const stale = filer(['--run-dir', fixture, '--apply'])
+  assert.equal(stale.status, 1, stale.stderr)
+  assert.match(stale.stderr, /^STALE_PACKET: --apply refused: packet completed 2026-09-24T14:39:45\.674Z, [\d.]+ hours before .*; the limit is 6 hours \(--max-packet-age-hours\); manifest\.checkBundle\.status is missing, not verified$/m)
+  assert.ok(!fs.existsSync(report), 'nothing planned, nothing reported')
+  assert.ok(!fs.existsSync(path.join(fixture, 'filer-writes.jsonl')))
+
+  // Verified and within the limit: the gate passes and --apply goes on to the queue (and fails there, on the closed port).
+  const verified = syntheticRun({ pages: 1, manifestExtra: { checkBundle: { status: 'verified', sha256: 'c'.repeat(64) } } })
+  passedGate(filer(['--run-dir', verified.dir, '--apply', '--now', NOW.toISOString()]))
+  // A wider limit is an option; a verified packet older than it is refused on age alone.
+  assert.match(filer(['--run-dir', verified.dir, '--apply', '--now', '2026-09-25T14:52:00Z']).stderr, /^STALE_PACKET: --apply refused: packet completed 2026-09-24T14:39:45\.674Z, 24\.2 hours before 2026-09-25T14:52:00\.000Z; the limit is 6 hours \(--max-packet-age-hours\)$/m)
+  passedGate(filer(['--run-dir', verified.dir, '--apply', '--now', '2026-09-25T14:52:00Z', '--max-packet-age-hours', '48']))
+  // The apply ledger: the same run id, or a newer one, refuses; an older one lets the packet through.
+  assert.match(filer(['--run-dir', verified.dir, '--apply', '--now', NOW.toISOString(), '--after-run-id', RUN_ID]).stderr, /^STALE_PACKET: --apply refused: run site-full-2026-09-24T14-28-40-974Z is the last applied run \(--after-run-id site-full-2026-09-24T14-28-40-974Z\); a packet is never applied twice$/m)
+  assert.match(filer(['--run-dir', verified.dir, '--apply', '--now', NOW.toISOString(), '--after-run-id', 'site-events-2026-09-25T13-26-58-882Z']).stderr, /^STALE_PACKET: --apply refused: run site-full-2026-09-24T14-28-40-974Z is older than the last applied run site-events-2026-09-25T13-26-58-882Z/m)
+  passedGate(filer(['--run-dir', verified.dir, '--apply', '--now', NOW.toISOString(), '--after-run-id', 'site-events-2026-09-08T03-27-24-684Z']))
+  // Unverified alone refuses too, whatever the age.
+  const unverified = syntheticRun({ pages: 1, manifestExtra: { checkBundle: { status: 'mismatch', sha256: 'd'.repeat(64) } } })
+  assert.match(filer(['--run-dir', unverified.dir, '--apply', '--now', NOW.toISOString()]).stderr, /^STALE_PACKET: --apply refused: manifest\.checkBundle\.status is mismatch, not verified$/m)
+  // Bad option values are argument errors, before the gate.
+  assert.match(filer(['--run-dir', verified.dir, '--apply', '--max-packet-age-hours', 'six']).stderr, /^MISSING_ARG: --max-packet-age-hours must be a positive number of hours, got six$/m)
+
+  // A dry run of the stale packet goes ahead and carries the same conditions as packetWarnings, on stderr and in the summary and report.
+  const dry = filer(['--run-dir', fixture, '--queue', path.join(fixtures, 'queue-2026-09-24.json'), '--now', '2026-09-25T14:52:00Z', '--after-run-id', 'site-events-2026-09-25T13-26-58-882Z'], { APEX_API_TOKEN: '' })
+  assert.equal(dry.status, 0, dry.stderr)
+  const summary = JSON.parse(dry.stdout)
+  assert.equal(summary.mode, 'dry-run')
+  assert.deepEqual(summary.packet, { completedAt: '2026-09-24T14:39:45.674Z', ageHours: 24.2, maxAgeHours: 6, bundleStatus: null, afterRunId: 'site-events-2026-09-25T13-26-58-882Z' })
+  assert.equal(summary.packetWarnings.length, 3)
+  assert.match(summary.packetWarnings[0], /^packet completed 2026-09-24T14:39:45\.674Z, 24\.2 hours before/)
+  assert.equal(summary.packetWarnings[1], 'manifest.checkBundle.status is missing, not verified')
+  assert.match(summary.packetWarnings[2], /is older than the last applied run/)
+  assert.equal(dry.stderr.match(/^packet warning: /gm).length, 3)
+  assert.equal(summary.counts.files, 6, 'the dry run itself is unchanged')
+  const written = JSON.parse(fs.readFileSync(report, 'utf8'))
+  assert.deepEqual(written.packetWarnings, summary.packetWarnings)
+  assert.equal(written.packet.fresh, false)
+  const freshDry = filer(['--run-dir', verified.dir, '--queue', path.join(fixtures, 'queue-2026-09-24.json'), '--now', NOW.toISOString()], { APEX_API_TOKEN: '' })
+  assert.equal(freshDry.status, 0, freshDry.stderr)
+  assert.ok(!('packetWarnings' in JSON.parse(freshDry.stdout)), 'a fresh verified packet carries no warning')
+})
+
+test('packet freshness gate script: refuses before any filer call, takes the newer of the ledger artifact and the variable, and writes the job outputs and summary', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-packet-gate-'))
+  const outputs = path.join(tmp, 'outputs.txt')
+  const stepSummary = path.join(tmp, 'summary.md')
+  const ledgerFile = path.join(tmp, 'filer-apply-ledger.json')
+  const STALE_RUN = 'site-events-2026-09-08T03-27-24-684Z'
+  const EVENTS_TODAY = 'site-events-2026-09-25T13-26-58-882Z'
+  const verified = syntheticRun({ pages: 1, manifestExtra: { checkBundle: { status: 'verified', sha256: 'e'.repeat(64) } } })
+  const run = (args, extraEnv = {}) => spawnSync(process.execPath, ['agent/packet-freshness-gate.mjs', ...args], { cwd: root, encoding: 'utf8', env: { ...process.env, GITHUB_OUTPUT: outputs, GITHUB_STEP_SUMMARY: stepSummary, ...extraEnv } })
+  const readOutputs = () => Object.fromEntries(fs.readFileSync(outputs, 'utf8').trim().split('\n').map((l) => l.split(/=(.*)/s).slice(0, 2)))
+
+  // The 17-day-old packet of 2026-09-25: refused with every reason, exit 2, the summary says so.
+  const stale = run(['--run-dir', path.join(fixtures, 'run-2026-09-24'), '--now', '2026-09-25T14:52:00Z', '--github-run-id', '36012695049', '--apply', '--after-run-id', EVENTS_TODAY])
+  assert.equal(stale.status, 2, stale.stderr)
+  assert.match(stale.stderr, /^STALE_PACKET: refusing the packet: packet completed 2026-09-24T14:39:45\.674Z, 24\.2 hours before 2026-09-25T14:52:00\.000Z; the limit is 6 hours \(--max-packet-age-hours\); manifest\.checkBundle\.status is missing, not verified; run site-full-2026-09-24T14-28-40-974Z is older than the last applied run site-events-2026-09-25T13-26-58-882Z/m)
+  const printed = JSON.parse(stale.stdout)
+  assert.equal(printed.fresh, false)
+  assert.equal(printed.githubRunId, '36012695049')
+  assert.deepEqual(printed.lastApplied, { runId: EVENTS_TODAY, source: 'OBSERVER_FILER_LAST_APPLIED_RUN' })
+  const staleOutputs = readOutputs()
+  assert.deepEqual(staleOutputs, { manifest_run_id: RUN_ID, completed_at: '2026-09-24T14:39:45.674Z', bundle_status: '', bundle_sha256: '', age_hours: '24.2', last_applied: EVENTS_TODAY, last_applied_source: 'OBSERVER_FILER_LAST_APPLIED_RUN', fresh: 'false' })
+  const staleSummary = fs.readFileSync(stepSummary, 'utf8')
+  assert.match(staleSummary, /^## Observer packet freshness gate$/m)
+  assert.match(staleSummary, /^- Observer GitHub run: `36012695049`$/m)
+  assert.match(staleSummary, /^- Run id \(manifest\): `site-full-2026-09-24T14-28-40-974Z`$/m)
+  assert.match(staleSummary, /^- Bundle: `missing` \(`no sha256`\)$/m)
+  assert.match(staleSummary, /^- Completed at: `2026-09-24T14:39:45\.674Z` \(24\.2 h old; limit 6 h\)$/m)
+  assert.match(staleSummary, /^- Last applied run: `site-events-2026-09-25T13-26-58-882Z` \(OBSERVER_FILER_LAST_APPLIED_RUN\); this packet is not newer$/m)
+  assert.match(staleSummary, /^- Result: \*\*refused\*\* \(packet completed/m)
+
+  // Fresh, verified, newer than both ledger sources: proceed. The ledger file (artifact) and the variable are compared and the newer one wins.
+  fs.rmSync(outputs); fs.rmSync(stepSummary)
+  fs.writeFileSync(ledgerFile, JSON.stringify({ runId: STALE_RUN, appliedAt: '2026-09-25T14:52:30Z' }))
+  const ok = run(['--run-dir', verified.dir, '--now', NOW.toISOString(), '--github-run-id', '36140698223', '--apply', '--after-run-id', 'site-full-2026-09-23T02-00-00-000Z', '--ledger-file', ledgerFile])
+  assert.equal(ok.status, 0, ok.stderr)
+  const okPrinted = JSON.parse(ok.stdout)
+  assert.equal(okPrinted.fresh, true)
+  assert.equal(okPrinted.mode, 'apply')
+  assert.deepEqual(okPrinted.lastApplied, { runId: 'site-full-2026-09-23T02-00-00-000Z', source: 'OBSERVER_FILER_LAST_APPLIED_RUN' }, 'the variable is newer than the artifact here')
+  assert.equal(okPrinted.newerThanLastApplied, true)
+  assert.deepEqual(readOutputs(), { manifest_run_id: RUN_ID, completed_at: '2026-09-24T14:39:45.674Z', bundle_status: 'verified', bundle_sha256: 'e'.repeat(64), age_hours: '1.34', last_applied: 'site-full-2026-09-23T02-00-00-000Z', last_applied_source: 'OBSERVER_FILER_LAST_APPLIED_RUN', fresh: 'true' })
+  assert.match(fs.readFileSync(stepSummary, 'utf8'), /^- Result: \*\*proceed\*\*$/m)
+  // The artifact newer than the variable: it wins, and equal to the packet it refuses (never twice).
+  fs.writeFileSync(ledgerFile, JSON.stringify({ runId: RUN_ID }))
+  const twice = run(['--run-dir', verified.dir, '--now', NOW.toISOString(), '--apply', '--after-run-id', STALE_RUN, '--ledger-file', ledgerFile])
+  assert.equal(twice.status, 2)
+  assert.match(twice.stderr, /is the last applied run \(--after-run-id site-full-2026-09-24T14-28-40-974Z\); a packet is never applied twice/)
+  assert.match(JSON.parse(twice.stdout).lastApplied.source, /^ledger artifact /)
+  // Without --apply the ledger is reported, not enforced; age and bundle status still are.
+  const dry = run(['--run-dir', verified.dir, '--now', NOW.toISOString(), '--ledger-file', ledgerFile])
+  assert.equal(dry.status, 0, dry.stderr)
+  assert.deepEqual([JSON.parse(dry.stdout).mode, JSON.parse(dry.stdout).newerThanLastApplied, JSON.parse(dry.stdout).afterRunId], ['dry-run', false, null])
+  assert.equal(run(['--run-dir', verified.dir, '--now', '2026-09-25T14:52:00Z']).status, 2, 'a dry run still refuses a stale packet')
+  assert.equal(run(['--run-dir', path.join(fixtures, 'run-2026-09-24'), '--now', NOW.toISOString()]).status, 2, 'and an unverified one')
+  assert.match(run([]).stderr, /^MISSING_ARG: Usage: packet-freshness-gate\.mjs --run-dir/)
+  assert.match(run(['--run-dir', tmp]).stderr, /^BAD_RUN_DIR: /)
+  // Library shape: lastAppliedRun picks by compareRunIds and ignores blanks; gate returns the assessment plus the ledger view.
+  assert.deepEqual(lastAppliedRun([{ runId: '', source: 'a' }, { runId: STALE_RUN, source: 'b' }, null, { runId: EVENTS_TODAY, source: 'c' }, { runId: RUN_ID, source: 'd' }]), { runId: EVENTS_TODAY, source: 'c' })
+  assert.equal(lastAppliedRun([{ runId: ' ', source: 'a' }]), null)
+  const result = gate({ runDir: verified.dir, apply: true, maxAgeHours: 6, afterRunId: STALE_RUN, now: NOW })
+  assert.deepEqual([result.fresh, result.afterRunId, result.lastApplied.runId, result.newerThanLastApplied, result.mode], [true, STALE_RUN, STALE_RUN, true, 'apply'])
 })

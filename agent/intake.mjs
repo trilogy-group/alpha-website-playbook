@@ -12,9 +12,11 @@
  * administered and why (not in the queue, status outside --status, outside the family, --page, --since, --limit).
  * Protocol 1d runs here: an owner role with no registered person is Blocked on the website agent operator with a
  * note naming the role, the system, and the change. Protocol 1c: a ticket carrying an OPERATOR INSTRUCTION or
- * CORRECTION note is reported and never re-routed, re-blocked, or re-assigned. A ticket the observer filer owns
- * (APEX PR 409: checkId SITE-*, filerRunId, past NOT_STARTED; reconcile answers 409 OBSERVER_FILER_OWNED) is skipped
- * with reason observer_filer_owned: no error, no retry, no v1 fallback.
+ * CORRECTION note is reported and never re-routed, re-blocked, or re-assigned. A ticket the observer filer created
+ * (agent/intake-policy.mjs observerFilerOwned: customFields.filedBy is agent/file-observer-findings.mjs or filerRunId is
+ * set) is never administered at any status, NOT_STARTED included: no clarification request, no owner re-route, no
+ * reconcile, reported as observer_filer_owned (summary.observerFilerOwned). The same skip answers APEX PR 409's 409
+ * OBSERVER_FILER_OWNED on reconcile when APEX decides it first: no error, no retry, no v1 fallback.
  *
  * Requester notices (decision 2026-09-23): for a Missing Info or blocked decision the report carries the Slack DM
  * preview from agent/notify-requester.mjs (dry run); the DM goes only with --apply --notify-send after the
@@ -37,6 +39,7 @@ import {
   executionRevision,
   pendingClarificationReviews,
   normalizePersonName,
+  observerFilerOwned,
   operatorInstruction,
   requesterNoticeItems,
   resolveDecisionOwner,
@@ -52,7 +55,8 @@ const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')
 const bundle = read('spec/policy-bundle.generated.json')
 const args = parse(process.argv.slice(2))
 const VERSION = '0.2'
-const OBSERVER_FILER_OWNED = 'observer_filer_owned' // skip reason for tickets the observer filer owns (APEX PR 409)
+const OBSERVER_FILER_OWNED = 'observer_filer_owned' // skip reason for tickets the observer filer created (intake-policy observerFilerOwned; APEX PR 409)
+const isFilerOwnedResult = (result) => Boolean(result.observerFilerOwned) || result.applied?.skipped === OBSERVER_FILER_OWNED
 const configuredApexBase = (process.env.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1').replace(/\/+$/, '')
 const v1Base = /\/api\/v1$/.test(configuredApexBase) ? configuredApexBase : `${configuredApexBase}/api/v1`
 const agentBase = (process.env.APEX_AGENT_API_BASE || new URL('/api/agent', `${v1Base}/`).toString()).replace(/\/+$/, '')
@@ -183,6 +187,16 @@ const byId = new Map(hydrated.map((ticket) => [ticket.id, ticket]))
 for (const result of decisions) {
   const ticket = byId.get(result.id)
   if (!ticket || result.error) continue
+  // A ticket the observer filer created is the filer's at every status, NOT_STARTED included: the evaluation is still
+  // reported, but intake plans nothing for it (no clarification request, no owner route, no reconcile, no requester
+  // notice) in dry run and apply alike. Decided client-side, before any read of the live ticket.
+  if (observerFilerOwned(ticket)) {
+    const fields = ticket.customFields || {}
+    result.observerFilerOwned = { filedBy: fields.filedBy || null, filerRunId: fields.filerRunId || null, status: ticket.status || null }
+    result.action = { kind: 'no-action', api: null, assign: null, reason: OBSERVER_FILER_OWNED }
+    result.skipped = `${OBSERVER_FILER_OWNED}: the observer filer created this ticket (filedBy ${fields.filedBy || 'unset'}, filerRunId ${fields.filerRunId || 'unset'}, status ${ticket.status || 'unknown'}); it opens, holds and closes with its check, intake never administers it`
+    continue
+  }
   if (hydrationErrors.has(result.id)) {
     result.hydrationWarning = hydrationErrors.get(result.id)
     if (args.apply) {
@@ -218,7 +232,7 @@ for (const result of decisions) {
   try { result.applied = await applyDecision(ticket, result) }
   catch (error) { result.applied = { ok: false, error: error.message, status: error.status || null, code: error.code || null } }
   if (result.applied?.skipped === OBSERVER_FILER_OWNED) {
-    result.skipped = `${OBSERVER_FILER_OWNED}: the observer filer owns this ticket (checkId ${ticket.customFields?.checkId}, filerRunId set, status ${result.applied.status}); it closes when the check clears, intake leaves it alone`
+    result.skipped = `${OBSERVER_FILER_OWNED}: the observer filer owns this ticket (${result.applied.apexCode ? `APEX answered ${result.applied.apexCode}` : `filer markers on the live ticket, status ${result.applied.status}`}); it closes when the check clears, intake leaves it alone`
     continue
   }
   if (notifies) result.requesterNotice = await requesterNotice(ticket, result, Boolean(args['notify-send'] && result.applied?.ok))
@@ -242,10 +256,10 @@ async function applyDecision(ticket, result) {
   if (ticketInputSha256(preflight) !== result.inputSha256) {
     throw new Error('Ticket received new requester or human input before administration; evaluate the fresh revision instead')
   }
-  // APEX PR 409: a ticket the observer filer owns (customFields.checkId SITE-*, a filerRunId, past NOT_STARTED) is
-  // closed by the filer when its check clears; reconcile answers 409 OBSERVER_FILER_OWNED. Skip before any write,
-  // and treat the 409 the same way when APEX decides it first: no error, no retry, no v1 fallback.
-  if (observerFilerOwned(preflight)) return { ok: false, skipped: OBSERVER_FILER_OWNED, api: null, status: preflight.status, filerRunId: preflight.customFields.filerRunId }
+  // The live ticket gained the filer's markers since it was listed (or the list response lacked them): the filer closes
+  // it when its check clears. Skip before any write; when APEX decides it first (409 OBSERVER_FILER_OWNED on reconcile,
+  // PR 409) the answer is the same skip: no error, no retry, no v1 fallback.
+  if (observerFilerOwned(preflight)) return { ok: false, skipped: OBSERVER_FILER_OWNED, api: null, status: preflight.status, filerRunId: preflight.customFields?.filerRunId || null }
   if (result.action.kind === 'execution-ready') assertExecutionRelease()
   const pendingCustomFields = intakeCustomFieldsPatch(preflight.customFields, {
     ownerRole: result.ownerRole,
@@ -368,14 +382,6 @@ async function applyDecision(ticket, result) {
     }),
   })
   return { ok: true, ...actionResult, finalized: true }
-}
-
-/** APEX PR 409's ownership test, evaluated client-side so the skip costs no write. */
-function observerFilerOwned(ticket) {
-  const fields = ticket.customFields || {}
-  return /^SITE-/.test(String(fields.checkId || ''))
-    && typeof fields.filerRunId === 'string' && fields.filerRunId.trim() !== ''
-    && Boolean(ticket.status) && ticket.status !== 'NOT_STARTED'
 }
 
 /** POST reconcile; a 409 OBSERVER_FILER_OWNED (agent/apex-errors.mjs isFilerOwnedConflict, shared with the filer) comes back as { observerFilerOwned: true } instead of throwing. */
@@ -542,7 +548,7 @@ function summarize(results) {
       .filter((field) => bundle.intakeFieldSources?.[field]?.kind === 'derivable'))),
     skipped: results.filter((result) => result.skipped).length,
     operatorInstructions: results.filter((result) => result.operatorInstruction).map((result) => result.id),
-    observerFilerOwned: results.filter((result) => result.applied?.skipped === OBSERVER_FILER_OWNED).map((result) => result.id),
+    observerFilerOwned: results.filter(isFilerOwnedResult).map((result) => result.id),
     escalated: results.filter((result) => result.escalation?.assignedTo && !result.skipped).length,
     applied: results.filter((result) => result.applied?.ok).length,
     requesterNotices: {
