@@ -13,7 +13,6 @@ import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { PROMOTION_RULE } from './build-checks.mjs'
 import {
   DEFAULT_CLEAR_AFTER_RUNS,
   DEFAULT_MAX_PACKET_AGE_HOURS,
@@ -167,8 +166,8 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(checks.sha256, loadCheckBundle(path.join(root, 'spec', 'check-bundle.generated.json')).sha256, 'the fixture bundle is a copy of the committed one; rebuild and copy after a row change')
   const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
 
-  // Bundle 1.2 (2026-09-25): 39 findings on source-digest rows leave the queue for source-digest.md; 21 ungrounded rows became advisory (the 17 image-identity and 2 seasonal findings among them), so 1 ticket files and no group waits on a decision.
-  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, sourceDigest: 39, suppressedByObserver: 0, advisory: 28, outOfScope: 3, exempted: 0, suppressed: 35, held: 0, groups: 14, decisionPending: 0, files: 1, existing: 13, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0 })
+  // Bundle 1.2 (2026-09-25): 39 findings on source-digest rows leave the queue for source-digest.md. Grounding restore (bundle 2c8a5aeb): the image-identity and seasonal rows are enforced again on their complaints, so their 19 findings leave advisory: two Maddox cards are exempted, two match the open San Juan and Lexington tickets, and Raleigh, La Jolla and Scottsdale file beside Lexington's calendar; no group waits on a decision.
+  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, sourceDigest: 39, suppressedByObserver: 0, advisory: 9, outOfScope: 3, exempted: 2, suppressed: 35, held: 0, groups: 19, decisionPending: 0, files: 4, existing: 15, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0 })
   assert.deepEqual(countBy(plan.sourceDigest, (x) => x.ownerRole), { 'hubspot-program-admin': 7, 'operations-sheet-owner': 21, 'community-app-owner': 11 })
   assert.deepEqual(countBy(plan.sourceDigest, (x) => x.row), { 'site.map.integrity.address-agreement': 4, 'site.community.routing.host': 11, 'site.map.integrity.operations-row': 12, 'site.map.integrity.operations-on-map': 7, 'site.map.integrity.operations-address': 5 })
   assert.ok(plan.sourceDigest.every((x) => /^.+ \| .+ \| observed: .+ \| expected: .+ \| source: .+ \(read 20[0-9-]+T.+\) \| observer SITE-[0-9A-F]{10}, row site\..+, severity .+, run site-full-2026-09-24T14-28-40-974Z/.test(x.audit)), 'every digest item carries the audit line')
@@ -187,7 +186,8 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.deepEqual(Object.keys(plan.health.unhealthy), ['browser'])
   assert.deepEqual(countBy(plan.suppressed, (x) => `${x.check}|${x.reason}`), { 'campus-layout-header-overlap|source health': 34, 'campus-image-crop-risk|source health': 1 })
   assert.deepEqual(plan.suppressedByObserver, { count: 0, items: null, reported: false })
-  assert.deepEqual(countBy(plan.advisory, (x) => x.check), { 'campus-image-identity-conflict': 17, 'campus-expired-seasonal-cta': 2, 'community-destination': 2, 'claim-evidence': 7 })
+  // Grounding restore: only the still-ungrounded community-destination and claim-evidence rows are advisory; image identity and the seasonal window are enforced.
+  assert.deepEqual(countBy(plan.advisory, (x) => x.check), { 'community-destination': 2, 'claim-evidence': 7 })
   for (const check of ['campus-layout-header-overlap', 'campus-layout-horizontal-overflow', 'campus-layout-offscreen-content', 'campus-layout-clipped-text', 'campus-image-crop-risk']) assert.ok(rowForCheck(checks, check).sourceHealthDependency.includes('browser'), `${check} declares browser health`)
 
   // Provenance, not a SITE id, grants close authority (PR 26): all 180 historical observer tickets predate this filer and none resolves.
@@ -273,14 +273,23 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.ok(!plan.existing.some((e) => e.scopeKey === 'page:alphahigh.school'))
   // Shared leadership (registry/campus-leadership.json groups, Greater Boston): the Brandon Maddox card ("Director of Admissions - Boston/Lexington")
   // on Jamaica Plain and Lexington names a sibling campus by decision; the Lexington Miami classroom image under the same incident id is still a conflict.
-  // Under bundle 1.2 the image-identity row is advisory (grounding none, promotion rule), so the 17 findings are counted before the exemption
-  // applies and nothing is exempted or filed; the exemption itself is exercised on the row directly below and in the CTA test.
-  assert.deepEqual(plan.exempted, [])
-  assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict').length, 17)
+  // Grounding restore: the image-identity row is enforced again (complaint: the San Juan and Lexington tickets), so the two Maddox cards are
+  // exempted by the shared-leadership decision rather than counted as advisory; the exemption is exercised on the row directly below and in the CTA test.
+  assert.deepEqual(plan.exempted.map((e) => [e.check, e.row, e.reason]), [
+    ['campus-image-identity-conflict', 'site.identity.other-campus.images', 'Brandon Maddox is shared leadership for Greater Boston (boston, jamaica-plain, boston-suburbs); a card naming Alpha Boston on Alpha Jamaica Plain is the decided state'],
+    ['campus-image-identity-conflict', 'site.identity.other-campus.images', 'Brandon Maddox is shared leadership for Greater Boston (boston, jamaica-plain, boston-suburbs); a card naming Alpha Boston on Alpha Lexington is the decided state'],
+  ])
+  assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict').length, 0)
   const maddox = run.findings.filter((f) => f.check === 'campus-image-identity-conflict' && /Brandon Maddox/.test(JSON.stringify(f.actual)) && /(jamaica-plain|boston-suburbs)/.test(f.url))
   assert.deepEqual(maddox.map((f) => [sharedLeadershipExemption({ row: rowForCheck(checks, 'campus-image-identity-conflict'), finding: f })?.person, sharedLeadershipExemption({ row: rowForCheck(checks, 'campus-image-identity-conflict'), finding: f })?.sibling]), [['Brandon Maddox', 'boston'], ['Brandon Maddox', 'boston']])
   assert.ok(!plan.files.some((f) => f.title.startsWith('Alpha Jamaica Plain')), 'nothing files for the Jamaica Plain card')
-  assert.ok(!plan.existing.some((e) => e.check === 'campus-image-identity-conflict'), 'an advisory row is not even a duplicate candidate')
+  // The two open tickets the row's complaint cites are the dedupe matches, so nothing files twice; Raleigh has no ticket and files.
+  assert.deepEqual(plan.existing.filter((e) => e.check === 'campus-image-identity-conflict').map((e) => [e.scopeKey, e.existing.id, e.existing.via]).sort(), [
+    ['page:boston-suburbs', 'cmtmp92li000104jv69k570o0', 'observer-id'],
+    ['page:san-juan', 'cmtma2lx3000204ldfmqby6x0', 'observer-id'],
+  ])
+  assert.deepEqual(plan.files.filter((f) => f.check === 'campus-image-identity-conflict').map((f) => f.scopeKey), ['page:raleigh'])
+  assert.deepEqual(plan.files.filter((f) => f.check === 'campus-expired-seasonal-cta').map((f) => f.scopeKey).sort(), ['page:la-jolla', 'page:scottsdale'], 'the seasonal window is enforced again on the 2026-07-29 complaint')
   // Dedupe aliases: the calendar findings on Tulsa, South Bay LA and Oklahoma City match the tickets a sweep agent filed on 2026-09-21 under
   // checkId campus.resources.calendar-reachable; Lexington's calendar has no open ticket and files.
   assert.deepEqual(plan.existing.filter((e) => e.check === 'campus-calendar-link-reachable').map((e) => [e.scopeKey, e.existing.id, e.existing.via]).sort(), [
@@ -291,7 +300,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.ok(queue.filter((t) => t.customFields?.checkId === 'campus.resources.calendar-reachable').every((t) => t.createdAt.startsWith('2026-09-21')))
   assert.deepEqual(plan.files.filter((f) => f.check === 'campus-calendar-link-reachable').map((f) => f.scopeKey), ['page:boston-suburbs'])
   assert.ok(plan.existing.every((e) => e.existing.via), 'every dedupe says how it matched')
-  assert.deepEqual(countBy(plan.existing, (e) => e.existing.via.split(' ')[0]), { 'observer-id': 10, 'alias:checkId': 3 }, 'five observer-id matches sat on rows that are advisory or source-digest since bundle 1.2')
+  assert.deepEqual(countBy(plan.existing, (e) => e.existing.via.split(' ')[0]), { 'observer-id': 12, 'alias:checkId': 3 }, 'three observer-id matches sit on source-digest rows since bundle 1.2; the two image-identity matches returned with the grounding restore')
   assert.equal(plan.counts.invalid, 0, 'a filed ticket never fails the contract')
   assert.ok(plan.existing.every((e) => queue.some((t) => t.id === e.existing.id)), 'every dedupe points at an open ticket')
   assert.deepEqual(plan.existing.filter((e) => e.check === 'campus-sister-brand-leak').map((e) => e.existing.id).sort(), ['cmtmrbhxo000304joy793zilx', 'cmttaplkg00020agmjj5l6kvs', 'cmtvz6lbr000004lakyoue9dx'])
@@ -300,13 +309,16 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
     ['observer:campus.resources.apply.finalsite-redirect:program:program-26463204876', 'cmtxaucwp000104ijvl0dexr2'],
     ['observer:campus.resources.apply.finalsite-redirect:program:program-26445615147', 'cmtxaudtn000204iju8prg65a'],
   ], 'the finalsite redirect row is enforced, program-scoped, and dedupes against the observer\'s open tickets')
-  // Bundle 1.2: the two seasonal and the Raleigh image-identity tickets sit on ungrounded (advisory) rows and the two address conflicts on a
-  // source-digest row, so the Lexington calendar link is the one ticket this packet files.
+  // Grounding restore: the two seasonal and the Raleigh image-identity tickets file again beside the Lexington calendar link (their rows are
+  // enforced on complaints); the two address conflicts stay on a source-digest row. Files keep the packet's order.
   assert.deepEqual(plan.files.map((f) => [f.check, f.scope, f.findings, f.owner.via, f.payload.status]), [
+    ['campus-image-identity-conflict', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
+    ['campus-expired-seasonal-cta', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
     ['campus-calendar-link-reachable', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
+    ['campus-expired-seasonal-cta', 'page', 1, 'website-agent-operator', 'NOT_STARTED'],
   ])
   assert.ok(plan.files.every((f) => !/\bprogram-\d+/.test(f.title)), 'a title carries the campus display name, never a bare program id')
-  const lexington = plan.files[0]
+  const lexington = plan.files.find((f) => f.check === 'campus-calendar-link-reachable')
   assert.equal(lexington.title, 'Alpha Lexington: fails "Visible calendar destination answers 2xx logged out"')
   assert.equal(lexington.key, 'observer:campus.resources.calendar.reachable:page:boston-suburbs')
   assert.deepEqual(lexington.rows, ['campus.resources.calendar.reachable'])
@@ -329,9 +341,12 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.match(lexington.payload.description, /\nObserved: href https:\/\/drive\.google\.com\/file\/d\/[^,]+, status 404, finalUrl /)
   assert.match(lexington.payload.description, /\nExpected: HTTP 2xx calendar destination \(campus\.resources\.calendar; http-2xx 2 status-class; severity medium\)\n/)
   assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.2 row campus\.resources\.calendar\.reachable\n/)
-  // The Raleigh image-identity finding (the packet repeats one incident id nine times) is advisory now: counted once per finding, never grouped.
-  assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict' && /raleigh/.test(run.findings.find((f) => f.id === a.id)?.url || '')).length, 9)
-  assert.ok(!plan.files.some((f) => f.title.startsWith('Alpha Raleigh')))
+  // Grounding restore: the Raleigh image-identity finding (the packet repeats one incident id nine times) is enforced again, so it groups into one ticket, never nine.
+  assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict').length, 0)
+  const raleigh = plan.files.filter((f) => f.title.startsWith('Alpha Raleigh'))
+  assert.equal(raleigh.length, 1)
+  assert.equal(raleigh[0].findings, 1, 'one incident id, one finding on the ticket')
+  assert.deepEqual(raleigh[0].rows, ['site.identity.other-campus.images'])
   for (const f of plan.files) {
     assert.ok(!/[\u2014\u2026]/.test(f.payload.title) && !/[\u2014\u2026]/.test(f.payload.description), `${f.key}: no em dash or ellipsis reaches a title or body`)
   }
@@ -444,13 +459,16 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   const checks = bundle()
   // A browser-derived finding carries its screenshot claim; syntheticRun writes the desktop and mobile pair so PR 26's evidence gate is met.
   const imagesFinding = { loop: 'functional', check: 'images-render', entity: 'campus-program-1000-desktop', field: 'images', severity: 'high', title: 'Alpha Campus 0 has images that failed to render on desktop', actionable: true, url: 'https://alpha.school/campus-0/', expected: 'images render', actual: [{ src: 'a.jpg' }], id: oid('1A6E000001'), evidenceImages: [{ kind: 'screenshot', path: 'screenshots/campus-program-1000-desktop.png', route: 'campus-program-1000', viewport: 'desktop', url: 'https://alpha.school/campus-0/' }] }
-  // Bundle 1.2: site.layout.images.render is advisory (grounding none, promotion rule), so the crop-risk row (decision-grounded, browser-dependent) carries the source-health cases.
+  // Grounding restore: site.layout.images.render is enforced again on the Boston and Jamaica Plain complaints; the crop-risk row (decision-grounded, browser-dependent) still carries the source-health cases.
   const cropFinding = { ...imagesFinding, check: 'campus-image-crop-risk', field: 'crop', title: 'Alpha Campus 0 team card image crops the face on desktop', actual: [{ src: 'a.jpg', coverage: 0.5 }], id: oid('1A6E000002') }
   const imagesRow = checks.rows.find((r) => r.id === 'site.layout.images.render')
-  assert.equal(imagesRow.status, 'advisory')
-  assert.equal(imagesRow.advisoryReason, PROMOTION_RULE)
-  assert.deepEqual(imagesRow.grounding, { kind: 'none', ref: 'no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source' })
-  assert.deepEqual(planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [imagesFinding] }).dir), bundle: checks, queue: [], now: NOW }).advisory.map((a) => a.row), ['site.layout.images.render'])
+  assert.equal(imagesRow.status, 'enforced')
+  assert.equal(imagesRow.advisoryReason, undefined, 'a grounded row carries no promotion-rule reason')
+  assert.deepEqual(imagesRow.grounding, { kind: 'complaint', ref: 'APEX cmty8wn6a00000bgmvl2vv97t 2026-09-13 (Boston: a visible image failed to render) and cmty8wknh00000agmiv9t4g2g (Jamaica Plain)' })
+  const imagesPlan = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [imagesFinding] }).dir), bundle: checks, queue: [], now: NOW })
+  assert.deepEqual(imagesPlan.advisory, [], 'an enforced row files instead of counting as advisory')
+  assert.equal(imagesPlan.counts.files, 1)
+  assert.equal(imagesPlan.files[0].check, 'images-render')
   const degraded = syntheticRun({ pages: 0, browser: 'degraded', extraFindings: [cropFinding] })
   const byHealth = planObserverFindings({ run: loadRunFolder(degraded.dir), bundle: checks, queue: [], now: NOW })
   assert.equal(byHealth.counts.files, 0)
@@ -807,11 +825,12 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   assert.equal(summary.counts.resolves, 0, 'legacy observer tickets are never the filer\'s to close (PR 26)')
   assert.equal(summary.counts.needsPerson, 0)
   assert.equal(summary.counts.unresolved, 180)
-  assert.equal(summary.counts.files, 1)
+  // Grounding restore: image identity and the seasonal window file again (Raleigh, La Jolla, Scottsdale beside Lexington's calendar) and the two Maddox cards are exempted.
+  assert.equal(summary.counts.files, 4)
   assert.equal(summary.counts.decisionPending, 0)
-  assert.equal(summary.counts.exempted, 0)
+  assert.equal(summary.counts.exempted, 2)
   assert.equal(summary.counts.outOfScope, 3)
-  assert.equal(summary.exempted.length, 0)
+  assert.equal(summary.exempted.length, 2)
   assert.equal(summary.outOfScope.length, 3)
   // Bundle 1.2: the source digest is counted in the summary and written next to the report, grouped by owner role.
   assert.equal(summary.counts.sourceDigest, 39)
@@ -828,7 +847,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   assert.equal(summary.suppressedByObserver, 0)
   assert.match(summary.holds, /^filer/)
   assert.deepEqual(summary.unhealthySources, ['browser'])
-  assert.equal(summary.files.length, 1)
+  assert.equal(summary.files.length, 4)
   assert.ok(summary.files.some((line) => /^Alpha Lexington: fails "Visible calendar destination answers 2xx logged out" -> Matt Barge \(website-agent-operator\); 1 finding\(s\), 0 evidence pair\(s\)$/.test(line)), summary.files.join('\n'))
   assert.ok(!fs.existsSync(path.join(fixtures, 'run-2026-09-24', 'source-digest.md')), 'the digest goes next to the report, never into the fixture folder')
   assert.equal(summary.decisionPending.some((line) => /^campus-layout-header-overlap /.test(line)), false, 'suppressed by the degraded browser before any decision applies')
@@ -1096,7 +1115,7 @@ test('packet freshness: --apply refuses a stale, unverified, already applied or 
   assert.equal(summary.packetWarnings[1], 'manifest.checkBundle.status is missing, not verified')
   assert.match(summary.packetWarnings[2], /is older than the last applied run/)
   assert.equal(dry.stderr.match(/^packet warning: /gm).length, 3)
-  assert.equal(summary.counts.files, 1, 'the dry run itself is unchanged')
+  assert.equal(summary.counts.files, 4, 'the dry run itself is unchanged (4 since the grounding restore: image identity and the seasonal window file again)')
   const written = JSON.parse(fs.readFileSync(report, 'utf8'))
   assert.deepEqual(written.packetWarnings, summary.packetWarnings)
   assert.equal(written.packet.fresh, false)

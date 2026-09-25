@@ -220,8 +220,8 @@
         "registry/campus-leadership.json groups: a shared leader of a campus group whose card alt text names a sibling campus is not an other-campus conflict"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "APEX cmtma2lx3000204ldfmqby6x0 (San Juan intro slot showed the Carrollton card, 2026-09-24) and cmtmp92li000104jv69k570o0 (Lexington slot showed the Miami photo, 2026-09-24); #support-websites Franklin image showing Alpha Carrollton, 2026-08-28"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -258,8 +258,8 @@
       "severity": "medium",
       "ticketClass": "observer-launch-copy",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "#support-websites 2026-07-29: Greenwich and New York summer registration links restored after the season (marketingsupport task website-update-qc-2026-07-29-greenwich-and-new-york-summer-registration-restore)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -715,8 +715,8 @@
         "wordpress-rest"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json"
       },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
@@ -776,8 +776,8 @@
         "browser"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "2026-08-28 MacKenzie Price (Slack DM): the embedded map renders on /locations/"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -1737,8 +1737,8 @@
         "browser"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "2026-08-28 MacKenzie Price (Slack DM): the public map was wrong, open campuses were not labelled open, pins need a QC data source"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2691,8 +2691,8 @@
         "observer-screenshot-desktop-mobile"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "#support-websites 2026-08-28: Oklahoma City page formatting completely off on mobile; APEX cmtnl00rs000404l1ihl5ucij 2026-09-04"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2725,8 +2725,8 @@
         "observer-screenshot-desktop-mobile"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "#support-websites 2026-08-28: Scottsdale team section formatted poorly, CTAs offscreen on mobile"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2757,8 +2757,8 @@
         "browser"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "#support-websites 2026-08-28: New York guide heads cropped, clipped text on campus pages"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2796,8 +2796,8 @@
       ],
       "depth": "render",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "APEX cmty8wn6a00000bgmvl2vv97t 2026-09-13 (Boston: a visible image failed to render) and cmty8wknh00000agmiv9t4g2g (Jamaica Plain)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2897,8 +2897,8 @@
         "browser"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "2026-08-28 MacKenzie Price (Slack DM): the embedded map trapped page scrolling"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2930,8 +2930,8 @@
         "browser"
       ],
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "complaint",
+        "ref": "2026-08-28 MacKenzie Price (Slack DM): the map must render on the homepage and /locations/"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -2992,8 +2992,8 @@
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3019,8 +3019,8 @@
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3046,8 +3046,8 @@
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3073,8 +3073,8 @@
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3099,8 +3099,8 @@
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3124,8 +3124,8 @@
       },
       "ticketClass": "seo-redirect",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3149,8 +3149,8 @@
       },
       "ticketClass": "seo-redirect",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3175,8 +3175,8 @@
       "severity": "critical",
       "ticketClass": "seo-redirect",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
@@ -3200,8 +3200,8 @@
       },
       "ticketClass": "seo-redirect",
       "grounding": {
-        "kind": "none",
-        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+        "kind": "decision",
+        "ref": "2026-07-13 Matt Barge: LLM and search visibility program (marketingsupport PR 1 llm-content-site-workflows; alpha.school llms.txt, sitemap, canonical and JSON-LD requirements)"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",
