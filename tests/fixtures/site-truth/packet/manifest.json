@@ -1,0 +1,26 @@
+{
+ "schemaVersion": 2,
+ "system": "alpha-site-observer",
+ "runId": "site-full-2026-09-25T10-27-41-079Z",
+ "mode": "full",
+ "startedAt": "2026-09-25T10:27:41.079Z",
+ "completedAt": "2026-09-25T10:36:26.041Z",
+ "authority": "read-only-observer",
+ "bundleVersion": "1.1",
+ "sha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+ "checkBundle": {
+  "status": "verified",
+  "version": "1.1",
+  "sha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f"
+ },
+ "findingsObserved": 65,
+ "activeIncidents": 179,
+ "counts": {
+  "low": 11,
+  "advisory": 7,
+  "critical": 3,
+  "high": 134,
+  "medium": 24
+ },
+ "fixtureNote": "trimmed by tests/fixtures/site-truth (eleven campus pages of run site-full-2026-09-25T10-27-41-079Z, GitHub run 36123781000)"
+}

@@ -1,0 +1,51 @@
+{
+ "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 11 campuses on 2026-09-25; not a source of truth. Original: Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-E",
+ "owner": "Yash Chitneni (WordPress user 30) produces Open and Enrolling cards; Matt/Yash approve campus videos",
+ "campuses": {
+  "boca-raton": {
+   "openMedia": "card",
+   "attachmentId": 9822,
+   "status": "placed"
+  },
+  "boston": {
+   "openMedia": "card",
+   "attachmentId": 9826,
+   "status": "placed"
+  },
+  "greenwich": {
+   "openMedia": "card",
+   "attachmentId": 9821,
+   "status": "placed"
+  },
+  "south-bay-la": {
+   "openMedia": "card",
+   "attachmentId": 9824,
+   "status": "placed"
+  },
+  "raleigh": {
+   "openMedia": "video",
+   "attachmentId": null,
+   "status": "placed",
+   "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot)"
+  },
+  "jamaica-plain": {
+   "openMedia": null,
+   "attachmentId": null,
+   "status": "missing",
+   "current": "intro slot holds a generic campus photo (Website-Alpha-School-0016), not a launch card and not an Open and Enrolling card; campus moved Announced -> Open 2026-09-22",
+   "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+   "state": "Open",
+   "addedBy": "loose-ends-2026-09-23"
+  },
+  "east-bay": {
+   "openMedia": null,
+   "attachmentId": 8550,
+   "status": "missing",
+   "current": "attachment 8550 (Piedmont.webp) visibly says 'Coming Fall 2026 To Piedmont' although HubSpot Program 42698614786 is Open and the rendered intro sentence says open and enrolling",
+   "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+   "state": "Open",
+   "evidence": "superbuilders/aeo full observer run 36147430369, screenshots/campus-program-42698614786-desktop.png, captured 2026-09-25T14:29:29Z",
+   "addedBy": "Piedmont lifecycle incident review 2026-09-25"
+  }
+ }
+}

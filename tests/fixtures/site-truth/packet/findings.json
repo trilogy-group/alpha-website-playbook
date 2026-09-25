@@ -1,0 +1,1042 @@
+[
+ {
+  "loop": "campus-truth",
+  "check": "campus-application-finalsite-redirect",
+  "entity": "program-26463204876",
+  "field": "application",
+  "severity": "high",
+  "title": "Alpha New York has a broken Finalsite Apply redirect",
+  "summary": "Open and Announced campuses with HubSpot admissions_handled_in_finalsite must send /application/?submission_campus= to the Finalsite application, not keep families on the HubSpot application form.",
+  "actionable": true,
+  "url": "https://alpha.school/application/?submission_campus=new_york_city",
+  "expected": "HTTP 301/302 to /application-fs/?submission_campus=new_york_city or fsenrollment.com/finalsite",
+  "actual": {
+   "href": "https://alpha.school/application/?submission_campus=new_york_city",
+   "status": 301,
+   "location": "/application/?submission_campus=new_york",
+   "finalUrl": "https://alpha.school/application/?submission_campus=new_york_city",
+   "campusUrl": "https://alpha.school/new-york-city/",
+   "admissionLink": "https://apply.alpha.school/new-york",
+   "finalsiteBaseUrl": "https://alpha-anywhere-center.fsenrollment.com/",
+   "admissionsHandledInFinalsite": true
+  },
+  "businessImpact": "conversion",
+  "expectedSource": "HubSpot Program",
+  "actualSource": "live /application/ redirect",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "admissions_handled_in_finalsite",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-26463204876",
+  "entityLabel": "Alpha New York",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus resource presence and campus-specific routing"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-01B657B3C4",
+  "observerCheck": "campus-application-finalsite-redirect",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/application/?submission_campus=new_york_city",
+  "viewport": null,
+  "route": null,
+  "observed": {
+   "href": "https://alpha.school/application/?submission_campus=new_york_city",
+   "status": 301,
+   "location": "/application/?submission_campus=new_york",
+   "finalUrl": "https://alpha.school/application/?submission_campus=new_york_city",
+   "campusUrl": "https://alpha.school/new-york-city/",
+   "admissionLink": "https://apply.alpha.school/new-york",
+   "finalsiteBaseUrl": "https://alpha-anywhere-center.fsenrollment.com/",
+   "admissionsHandledInFinalsite": true
+  },
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.resources.apply.finalsite-redirect",
+  "requirement": "campus.resources.apply",
+  "requirementRef": {
+   "file": "spec/source-authority.json",
+   "key": "fields/campus.application-link"
+  },
+  "element": "resources.apply",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-link-cta",
+  "ownerRole": "hubspot-program-admin",
+  "dedupeScope": "program",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "admissions_handled_in_finalsite",
+   "at": "2026-09-25T10:28:15.387Z"
+  },
+  "sourceReadAt": "2026-09-25T10:28:15.387Z",
+  "dedupeKey": "campus-application-finalsite-redirect|program-26463204876",
+  "firstSeenAt": "2026-09-11T16:12:49.416Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-book-call-present",
+  "entity": "program-57622127456",
+  "field": "bookCall",
+  "severity": "high",
+  "title": "Alpha Jamaica Plain has no visible booking CTA",
+  "summary": "Campus pages configured to require a booking path must expose a campus-specific Book a Call or Book a Tour destination.",
+  "actionable": true,
+  "url": "https://alpha.school/jamaica-plain/",
+  "expected": "visible booking link or button",
+  "actual": null,
+  "businessImpact": "conversion",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-57622127456",
+  "entityLabel": "Alpha Jamaica Plain",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus resource presence and campus-specific routing"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-29B087FDC8",
+  "observerCheck": "campus-book-call-present",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/jamaica-plain/",
+  "viewport": null,
+  "route": null,
+  "observed": null,
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.resources.booking.present",
+  "requirement": "campus.resources.booking",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.hero.ctas"
+  },
+  "element": "hero.ctas",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "bookCall",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-book-call-present|https://alpha.school/jamaica-plain/",
+  "firstSeenAt": "2026-09-24T19:52:12.366Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-application-source-missing",
+  "entity": "program-60804396611",
+  "field": "application",
+  "severity": "high",
+  "title": "Alpha Greenwich Armonk is missing a HubSpot Apply destination",
+  "summary": "Announced campuses need a HubSpot admission_link so the website can publish APPLY TODAY to a live campus application, rather than omitting the button or pointing at a generic admissions-forms page.",
+  "actionable": true,
+  "url": "https://alpha.school/greenwich/",
+  "expected": "HubSpot admission_link and matching APPLY TODAY button",
+  "actual": {
+   "applyLinks": [
+    {
+     "text": "APPLY NOW",
+     "href": "https://alpha.school/application/?submission_campus=greenwich"
+    }
+   ],
+   "placeholderLinks": [],
+   "admissionLink": null,
+   "finalsiteBaseUrl": "https://armonk-greenwich-alpha.fsenrollment.com/",
+   "admissionsHandledInFinalsite": true
+  },
+  "businessImpact": "conversion",
+  "expectedSource": "HubSpot Program",
+  "actualSource": "campus page body",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "admission_link",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-60804396611",
+  "entityLabel": "Alpha Greenwich Armonk",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus fact, staff, brand, and seasonal content integrity"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-32787B6598",
+  "observerCheck": "campus-application-source-missing",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/greenwich/",
+  "viewport": null,
+  "route": null,
+  "observed": {
+   "applyLinks": [
+    {
+     "text": "APPLY NOW",
+     "href": "https://alpha.school/application/?submission_campus=greenwich"
+    }
+   ],
+   "placeholderLinks": [],
+   "admissionLink": null,
+   "finalsiteBaseUrl": "https://armonk-greenwich-alpha.fsenrollment.com/",
+   "admissionsHandledInFinalsite": true
+  },
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.resources.apply.source",
+  "requirement": "campus.resources.apply",
+  "requirementRef": {
+   "file": "spec/source-authority.json",
+   "key": "fields/campus.application-link"
+  },
+  "element": "resources.apply",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "admission_link",
+   "at": "2026-09-25T10:28:15.387Z"
+  },
+  "sourceReadAt": "2026-09-25T10:28:15.387Z",
+  "dedupeKey": "campus-application-source-missing|https://alpha.school/greenwich/",
+  "firstSeenAt": "2026-09-04T19:31:05.539Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-application-source-missing",
+  "entity": "program-57601909511",
+  "field": "application",
+  "severity": "high",
+  "title": "Alpha Franklin is missing a HubSpot Apply destination",
+  "summary": "Announced campuses need a HubSpot admission_link so the website can publish APPLY TODAY to a live campus application, rather than omitting the button or pointing at a generic admissions-forms page.",
+  "actionable": true,
+  "url": "https://alpha.school/franklin/",
+  "expected": "HubSpot admission_link and matching APPLY TODAY button",
+  "actual": {
+   "applyLinks": [
+    {
+     "text": "APPLY TODAY",
+     "href": "https://alpha.school/application/?submission_campus=franklin"
+    }
+   ],
+   "placeholderLinks": [],
+   "admissionLink": null,
+   "finalsiteBaseUrl": "https://franklin-alpha.fsenrollment.com/",
+   "admissionsHandledInFinalsite": true
+  },
+  "businessImpact": "conversion",
+  "expectedSource": "HubSpot Program",
+  "actualSource": "campus page body",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "admission_link",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-57601909511",
+  "entityLabel": "Alpha Franklin",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus fact, staff, brand, and seasonal content integrity"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-4A46A2BD26",
+  "observerCheck": "campus-application-source-missing",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/franklin/",
+  "viewport": null,
+  "route": null,
+  "observed": {
+   "applyLinks": [
+    {
+     "text": "APPLY TODAY",
+     "href": "https://alpha.school/application/?submission_campus=franklin"
+    }
+   ],
+   "placeholderLinks": [],
+   "admissionLink": null,
+   "finalsiteBaseUrl": "https://franklin-alpha.fsenrollment.com/",
+   "admissionsHandledInFinalsite": true
+  },
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.resources.apply.source",
+  "requirement": "campus.resources.apply",
+  "requirementRef": {
+   "file": "spec/source-authority.json",
+   "key": "fields/campus.application-link"
+  },
+  "element": "resources.apply",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "admission_link",
+   "at": "2026-09-25T10:28:15.387Z"
+  },
+  "sourceReadAt": "2026-09-25T10:28:15.387Z",
+  "dedupeKey": "campus-application-source-missing|https://alpha.school/franklin/",
+  "firstSeenAt": "2026-09-04T19:31:05.539Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-book-call-present",
+  "entity": "program-42820568924",
+  "field": "bookCall",
+  "severity": "high",
+  "title": "Alpha Boston has no visible booking CTA",
+  "summary": "Campus pages configured to require a booking path must expose a campus-specific Book a Call or Book a Tour destination.",
+  "actionable": true,
+  "url": "https://alpha.school/boston/",
+  "expected": "visible booking link or button",
+  "actual": null,
+  "businessImpact": "conversion",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-42820568924",
+  "entityLabel": "Alpha Boston",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus resource presence and campus-specific routing"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-59C1A0E7D4",
+  "observerCheck": "campus-book-call-present",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/boston/",
+  "viewport": null,
+  "route": null,
+  "observed": null,
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.resources.booking.present",
+  "requirement": "campus.resources.booking",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.hero.ctas"
+  },
+  "element": "hero.ctas",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "bookCall",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-book-call-present|https://alpha.school/boston/",
+  "firstSeenAt": "2026-09-24T19:52:12.366Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-info-packet-link-reachable",
+  "entity": "program-49011192957",
+  "field": "infoPacket",
+  "severity": "high",
+  "title": "Alpha South Bay LA has a broken info packet CTA",
+  "summary": "The info packet destination returned 404.",
+  "actionable": true,
+  "url": "https://alpha.school/south-bay-la/",
+  "expected": "HTTP 2xx packet destination",
+  "actual": {
+   "href": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy",
+   "status": 404,
+   "finalUrl": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy"
+  },
+  "businessImpact": "conversion",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-49011192957",
+  "entityLabel": "Alpha South Bay LA",
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Dmitry Bakaev"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus packet availability and distribution-platform health"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-7C5D531B00",
+  "observerCheck": "campus-info-packet-link-reachable",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/south-bay-la/",
+  "viewport": null,
+  "route": null,
+  "observed": {
+   "href": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy",
+   "status": 404,
+   "finalUrl": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy"
+  },
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.resources.packet.reachable",
+  "requirement": "campus.resources.packet",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.resources.packet"
+  },
+  "element": "resources.packet",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-packet",
+  "ownerRole": "packet-owner",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "approved-packet-link-logged-out-200",
+   "rendered-controls-json"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "infoPacket",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-info-packet-link-reachable|https://alpha.school/south-bay-la/",
+  "firstSeenAt": "2026-09-02T23:59:57.536Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-image-identity-conflict",
+  "entity": "program-51223157555",
+  "field": "media",
+  "severity": "high",
+  "title": "Alpha Lexington page image metadata appears to reference another Alpha campus",
+  "summary": "Campus page images should not carry visible, alternate-text, filename, or nearby metadata from another Alpha campus. All conflicts on this page are one incident.",
+  "actionable": true,
+  "url": "https://alpha.school/boston-suburbs/",
+  "expected": "Alpha Lexington",
+  "actual": [
+   {
+    "campus": "Alpha Miami",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "nearbyText": "",
+    "source": "page-html",
+    "hiddenOnAllViewports": false
+   },
+   {
+    "campus": "Alpha Miami",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "nearbyText": "",
+    "viewport": "desktop",
+    "source": "rendered-browser",
+    "hiddenOnAllViewports": false
+   },
+   {
+    "campus": "Alpha Miami",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-600x400.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "nearbyText": "",
+    "viewport": "mobile",
+    "source": "rendered-browser",
+    "hiddenOnAllViewports": false
+   }
+  ],
+  "hiddenOnAllViewports": false,
+  "businessImpact": "visual",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-51223157555",
+  "entityLabel": "Alpha Lexington",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus fact, staff, brand, and seasonal content integrity"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-984B874744",
+  "observerCheck": "campus-image-identity-conflict",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/boston-suburbs/",
+  "viewport": null,
+  "route": null,
+  "observed": [
+   {
+    "campus": "Alpha Miami",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "nearbyText": "",
+    "source": "page-html",
+    "hiddenOnAllViewports": false
+   },
+   {
+    "campus": "Alpha Miami",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "nearbyText": "",
+    "viewport": "desktop",
+    "source": "rendered-browser",
+    "hiddenOnAllViewports": false
+   },
+   {
+    "campus": "Alpha Miami",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-600x400.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "nearbyText": "",
+    "viewport": "mobile",
+    "source": "rendered-browser",
+    "hiddenOnAllViewports": false
+   }
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "site.identity.other-campus.images",
+  "requirement": "site.identity.other-campus",
+  "requirementRef": {
+   "file": "spec/site-rules.json",
+   "key": "rules/site.identity.other-campus"
+  },
+  "element": "gallery.images",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "media",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-image-identity-conflict|https://alpha.school/boston-suburbs/",
+  "firstSeenAt": "2026-09-02T23:59:57.536Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-calendar-present",
+  "entity": "program-57601909511",
+  "field": "calendar",
+  "severity": "medium",
+  "title": "Alpha Franklin has no visible calendar CTA",
+  "summary": "Campus pages configured to require an academic calendar must expose the visitor-facing calendar destination.",
+  "actionable": false,
+  "url": "https://alpha.school/franklin/",
+  "expected": "visible calendar link or button",
+  "actual": null,
+  "businessImpact": "accuracy",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-57601909511",
+  "entityLabel": "Alpha Franklin",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus resource presence and campus-specific routing"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-1BA13936C9",
+  "observerCheck": "campus-calendar-present",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/franklin/",
+  "viewport": null,
+  "route": null,
+  "observed": null,
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "medium",
+  "requirementId": "campus.resources.calendar.present",
+  "requirement": "campus.resources.calendar",
+  "requirementRef": {
+   "file": "spec/observer-check-map.json",
+   "key": "requirements/campus.resources.calendar"
+  },
+  "element": "resources.calendar",
+  "status": "advisory",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "calendar",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-calendar-present|https://alpha.school/franklin/",
+  "firstSeenAt": "2026-09-24T19:52:12.366Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-calendar-link-reachable",
+  "entity": "program-49011192957",
+  "field": "calendar",
+  "severity": "medium",
+  "title": "Alpha South Bay LA has a broken calendar CTA",
+  "summary": "The calendar destination returned 404.",
+  "actionable": true,
+  "url": "https://alpha.school/south-bay-la/",
+  "expected": "HTTP 2xx calendar destination",
+  "actual": {
+   "href": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link",
+   "status": 404,
+   "finalUrl": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link"
+  },
+  "businessImpact": "accuracy",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-49011192957",
+  "entityLabel": "Alpha South Bay LA",
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus conversion-resource health"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-9A147F539A",
+  "observerCheck": "campus-calendar-link-reachable",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/south-bay-la/",
+  "viewport": null,
+  "route": null,
+  "observed": {
+   "href": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link",
+   "status": 404,
+   "finalUrl": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link"
+  },
+  "conditions": [],
+  "observerSeverity": "medium",
+  "requirementId": "campus.resources.calendar.reachable",
+  "requirement": "campus.resources.calendar",
+  "requirementRef": {
+   "file": "spec/observer-check-map.json",
+   "key": "requirements/campus.resources.calendar"
+  },
+  "element": "resources.calendar",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "calendar",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-calendar-link-reachable|https://alpha.school/south-bay-la/",
+  "firstSeenAt": "2026-09-02T23:59:57.539Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-calendar-present",
+  "entity": "program-57622127456",
+  "field": "calendar",
+  "severity": "medium",
+  "title": "Alpha Jamaica Plain has no visible calendar CTA",
+  "summary": "Campus pages configured to require an academic calendar must expose the visitor-facing calendar destination.",
+  "actionable": false,
+  "url": "https://alpha.school/jamaica-plain/",
+  "expected": "visible calendar link or button",
+  "actual": null,
+  "businessImpact": "accuracy",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-57622127456",
+  "entityLabel": "Alpha Jamaica Plain",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus resource presence and campus-specific routing"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-D535C008B5",
+  "observerCheck": "campus-calendar-present",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/jamaica-plain/",
+  "viewport": null,
+  "route": null,
+  "observed": null,
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "medium",
+  "requirementId": "campus.resources.calendar.present",
+  "requirement": "campus.resources.calendar",
+  "requirementRef": {
+   "file": "spec/observer-check-map.json",
+   "key": "requirements/campus.resources.calendar"
+  },
+  "element": "resources.calendar",
+  "status": "advisory",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "calendar",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-calendar-present|https://alpha.school/jamaica-plain/",
+  "firstSeenAt": "2026-09-24T19:52:12.366Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-calendar-link-reachable",
+  "entity": "program-51223157555",
+  "field": "calendar",
+  "severity": "medium",
+  "title": "Alpha Lexington has a broken calendar CTA",
+  "summary": "The calendar destination returned 404.",
+  "actionable": true,
+  "url": "https://alpha.school/boston-suburbs/",
+  "expected": "HTTP 2xx calendar destination",
+  "actual": {
+   "href": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/",
+   "status": 404,
+   "finalUrl": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/"
+  },
+  "businessImpact": "accuracy",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-51223157555",
+  "entityLabel": "Alpha Lexington",
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus conversion-resource health"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-F08AFA1A07",
+  "observerCheck": "campus-calendar-link-reachable",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/boston-suburbs/",
+  "viewport": null,
+  "route": null,
+  "observed": {
+   "href": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/",
+   "status": 404,
+   "finalUrl": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/"
+  },
+  "conditions": [],
+  "observerSeverity": "medium",
+  "requirementId": "campus.resources.calendar.reachable",
+  "requirement": "campus.resources.calendar",
+  "requirementRef": {
+   "file": "spec/observer-check-map.json",
+   "key": "requirements/campus.resources.calendar"
+  },
+  "element": "resources.calendar",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "calendar",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-calendar-link-reachable|https://alpha.school/boston-suburbs/",
+  "firstSeenAt": "2026-09-02T23:59:57.539Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-calendar-present",
+  "entity": "program-50893567086",
+  "field": "calendar",
+  "severity": "medium",
+  "title": "Alpha Carrollton has no visible calendar CTA",
+  "summary": "Campus pages configured to require an academic calendar must expose the visitor-facing calendar destination.",
+  "actionable": false,
+  "url": "https://alpha.school/carrollton/",
+  "expected": "visible calendar link or button",
+  "actual": null,
+  "businessImpact": "accuracy",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-50893567086",
+  "entityLabel": "Alpha Carrollton",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus resource presence and campus-specific routing"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-FE8ACA8D4F",
+  "observerCheck": "campus-calendar-present",
+  "bundleVersion": "1.1",
+  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "page": "https://alpha.school/carrollton/",
+  "viewport": null,
+  "route": null,
+  "observed": null,
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "medium",
+  "requirementId": "campus.resources.calendar.present",
+  "requirement": "campus.resources.calendar",
+  "requirementRef": {
+   "file": "spec/observer-check-map.json",
+   "key": "requirements/campus.resources.calendar"
+  },
+  "element": "resources.calendar",
+  "status": "advisory",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": null,
+   "field": "calendar",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-calendar-present|https://alpha.school/carrollton/",
+  "firstSeenAt": "2026-09-24T19:52:12.366Z",
+  "runId": "site-full-2026-09-25T10-27-41-079Z"
+ }
+]

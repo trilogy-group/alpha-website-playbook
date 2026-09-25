@@ -1,0 +1,82 @@
+{
+ "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 11 campuses on 2026-09-25; not a source of truth. Original: Named exceptions to the campus CTA rows of the check bundle (campus.resources.booking.*, campus.resources.calendar.*, campus.resources.packet.*, campus.resources.apply.*, and the Join the Community CT",
+ "version": "1.0",
+ "asOf": "2026-09-24",
+ "ctas": {
+  "book-a-call": {
+   "label": "Book a Call",
+   "control": "hero.book-a-call",
+   "rows": [
+    "campus.resources.booking"
+   ]
+  },
+  "calendar": {
+   "label": "Calendar",
+   "control": "resources.calendar",
+   "rows": [
+    "campus.resources.calendar"
+   ]
+  },
+  "packet": {
+   "label": "Info packet",
+   "control": "resources.info-packet",
+   "rows": [
+    "campus.resources.packet"
+   ]
+  },
+  "apply": {
+   "label": "Apply",
+   "control": "resources.apply-today",
+   "rows": [
+    "campus.resources.apply"
+   ]
+  },
+  "community": {
+   "label": "Join the Community",
+   "control": "preopen.join-community",
+   "rows": [
+    "site.community.routing.cta"
+   ]
+  }
+ },
+ "rules": {
+  "hidden": {
+   "meaning": "The CTA is intentionally not shown on this campus page. Every row of the CTA is exempt: a missing button is the decided state, and nothing can be reachable or campus-specific when nothing is shown.",
+   "exemptsRowSuffixes": [
+    "*"
+   ]
+  },
+  "present": {
+   "meaning": "The CTA is intentionally shown although the lifecycle requirement would not call for it. Only the CTA's present rows are exempt; the destination must still be reachable and campus-specific.",
+   "exemptsRowSuffixes": [
+    "present"
+   ]
+  },
+  "destination": {
+   "meaning": "The CTA points at a decided non-standard destination (recorded in the entry's destination field). The destination comparison rows are exempt; the button must still be present where required and must still answer 2xx logged out. (cta is the Join the Community row, whose whole comparison is the destination host).",
+   "exemptsRowSuffixes": [
+    "destination-campus",
+    "path",
+    "source",
+    "source-sync",
+    "placeholder",
+    "finalsite-redirect",
+    "cta"
+   ]
+  }
+ },
+ "campuses": {
+  "boston-suburbs": {
+   "book-a-call": {
+    "rule": "hidden",
+    "reason": "campus is opening soon; no Book a Call CTA while Announced",
+    "decidedBy": "Matt Barge",
+    "source": "email relayed 2026-09-24",
+    "decidedOn": "2026-09-24",
+    "expires": "lifecycle:Open",
+    "note": "Lexington (Alpha Boston Suburbs Program) is Announced; the observer's campus.resources.booking.present row applies to Open pages only, and the reachable and destination rows stay exempt while the button is hidden by decision.",
+    "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-24-boston-suburbs-book-a-call.json"
+   }
+  }
+ }
+}

@@ -1,0 +1,140 @@
+{
+ "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 11 campuses on 2026-09-25; not a source of truth. Original: Campus page lookup: slug -> canonical URL, WordPress object id, map program ids, and the names APEX tickets use in the program field or title. Derived 2026-09-15 from the site inventory and the growth",
+ "campuses": {
+  "boca-raton": {
+   "url": "https://alpha.school/boca-raton/",
+   "objectId": 9217,
+   "title": "SEO &#8211; Alpha Boca Raton",
+   "names": [
+    "Alpha Boca Raton"
+   ],
+   "mapProgramIds": [
+    "program-51219627099"
+   ]
+  },
+  "boston": {
+   "url": "https://alpha.school/boston/",
+   "objectId": 9271,
+   "title": "SEO &#8211; Alpha Boston",
+   "names": [
+    "Alpha Boston"
+   ],
+   "mapProgramIds": [
+    "program-42820568924"
+   ]
+  },
+  "boston-suburbs": {
+   "url": "https://alpha.school/boston-suburbs/",
+   "objectId": 9209,
+   "title": "SEO &#8211; Alpha Lexington",
+   "names": [
+    "Alpha Lexington",
+    "Alpha Boston Suburbs"
+   ],
+   "mapProgramIds": [
+    "program-51223157555"
+   ]
+  },
+  "carrollton": {
+   "url": "https://alpha.school/carrollton/",
+   "objectId": 9272,
+   "title": "SEO &#8211; Alpha Carrollton",
+   "names": [
+    "Alpha Carrollton"
+   ],
+   "mapProgramIds": [
+    "program-50893567086"
+   ]
+  },
+  "east-bay": {
+   "url": "https://alpha.school/east-bay/",
+   "objectId": 8544,
+   "title": "SEO &#8211; Alpha East Bay",
+   "names": [
+    "Alpha East Bay",
+    "Alpha School East Bay"
+   ],
+   "mapProgramIds": [
+    "program-42698614786"
+   ]
+  },
+  "franklin": {
+   "url": "https://alpha.school/franklin/",
+   "objectId": 9626,
+   "title": "SEO &#8211; Alpha Franklin",
+   "names": [
+    "Alpha Franklin"
+   ],
+   "mapProgramIds": [
+    "program-57601909511"
+   ]
+  },
+  "greenwich": {
+   "url": "https://alpha.school/greenwich/",
+   "objectId": 9213,
+   "title": "SEO &#8211; Alpha Greenwich Port Chester",
+   "names": [
+    "Alpha Greenwich Armonk",
+    "Alpha Greenwich"
+   ],
+   "mapProgramIds": [
+    "program-60804396611"
+   ],
+   "retiredNames": [
+    "Alpha Greenwich Port Chester"
+   ],
+   "retiredProgramIds": [
+    "program-49011192959"
+   ],
+   "note": "Port Chester program retired (absent from the growth map and from the nightly run of 2026-09-21); the page is Armonk. Retired names must not satisfy identity checks."
+  },
+  "jamaica-plain": {
+   "url": "https://alpha.school/jamaica-plain/",
+   "objectId": 9282,
+   "title": "SEO &#8211; Alpha Jamaica Plain",
+   "names": [
+    "Alpha Jamaica Plain"
+   ],
+   "mapProgramIds": [
+    "program-57622127456"
+   ]
+  },
+  "new-york-city": {
+   "url": "https://alpha.school/new-york-city/",
+   "objectId": 6542,
+   "title": "SEO &#8211; Alpha New York",
+   "names": [
+    "Alpha New York",
+    "Alpha NYC",
+    "Alpha New York City"
+   ],
+   "mapProgramIds": [
+    "program-26463204876"
+   ]
+  },
+  "raleigh": {
+   "url": "https://alpha.school/raleigh/",
+   "objectId": 6547,
+   "title": "SEO &#8211; Alpha Raleigh",
+   "names": [
+    "Alpha Raleigh"
+   ],
+   "mapProgramIds": [
+    "program-29735717555"
+   ]
+  },
+  "south-bay-la": {
+   "url": "https://alpha.school/south-bay-la/",
+   "objectId": 9208,
+   "title": "SEO &#8211; Alpha South Bay LA",
+   "names": [
+    "Alpha South Bay LA",
+    "Alpha South Bay",
+    "Alpha South Bay La"
+   ],
+   "mapProgramIds": [
+    "program-49011192957"
+   ]
+  }
+ }
+}

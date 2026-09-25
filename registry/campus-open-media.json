@@ -1,6 +1,17 @@
 {
   "$comment": "Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-Enrolling.png\" made by Yash Chitneni from one template (uploaded 2026-09-07). null = no approved asset yet; ask the owner, never substitute. Verified by screenshot 2026-09-15.",
   "owner": "Yash Chitneni (WordPress user 30) produces Open and Enrolling cards; Matt/Yash approve campus videos",
+  "template": {
+    "$comment": "The one master every Open and Enrolling card is generated from (QC loop repair plan 2026-09-25, repair 5). source is the file Yash supplies (an APEX asset id or a path under tests/fixtures is fine); format is svg or png+layout; null = not supplied yet, so nothing can be generated for production and every missing card stays a Missing Info ask to the owner. The generator is agent/generate-open-card.mjs, the only production path is protocols/recipes/open-card.md, and the fixture is a plain placeholder for the tests, never a card for a page.",
+    "source": null,
+    "format": null,
+    "owner": "Yash Chitneni",
+    "placeholder": "{{CAMPUS}}",
+    "ask": "Yash: please supply the Open and Enrolling card master with the campus name replaced by the literal text {{CAMPUS}}, as an SVG export of the design (fonts outlined or embedded; preferred), or as the flat PNG without the name plus the name's text layout (x, y baseline, font, size, colour, max width, alignment) in template pixels. Attach it to the card batch ticket in APEX or post it in #support-websites. The agent then generates each campus's card with agent/generate-open-card.mjs (protocols/recipes/open-card.md), you approve the first three generated cards, and only then is any card placed.",
+    "fixture": "tests/fixtures/open-card/template-placeholder.svg",
+    "generator": "agent/generate-open-card.mjs",
+    "recipe": "protocols/recipes/open-card.md"
+  },
   "campuses": {
     "boca-raton": {
       "openMedia": "card",
