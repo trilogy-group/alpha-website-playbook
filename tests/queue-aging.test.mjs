@@ -18,6 +18,7 @@ import {
   classifyTicket,
   cleanText,
   createApexClient,
+  familyFilterDrift,
   groupClassGaps,
   hydrateQueue,
   isClassGap,
@@ -59,6 +60,8 @@ test('website filter: the family filter or an alpha.school URL; a videography ti
   assert.equal(isWebsiteTicket({ id: 'x', title: 'Anything', url: 'https://www.alpha.school/austin/', customFields: {} }, bundle), true)
   assert.equal(isWebsiteTicket({ id: 'x', title: 'Anything', url: 'https://alphahigh.school/', customFields: {} }, bundle), false)
   assert.equal(cleanText('Website \u2014 Alpha Southlake\u2026'), 'Website - Alpha Southlake...')
+  assert.equal(familyFilterDrift(bundle), null, 'the literal observer patterns equal the bundle\'s family filter strings')
+  assert.throws(() => isWebsiteTicket(byId['ok-blocked-recent'], { ...bundle, familyFilter: { ...bundle.familyFilter, observerTitlePattern: '^Beta ' } }), (e) => e instanceof QueueAgingError && e.code === 'FILTER_DRIFT')
 })
 
 test('movement ignores intake customFields writes, same-status reconciles and the nudge\'s own description change', () => {

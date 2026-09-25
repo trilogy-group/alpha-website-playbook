@@ -102,6 +102,21 @@ export function peopleIndex(people) {
   return { byApexId, byEmail }
 }
 
+/**
+ * The observer's check id and title shapes from the policy bundle's family filter, as literals (a dynamic RegExp from a
+ * file is a Semgrep finding); familyFilterDrift() fails closed when the bundle's strings no longer match them.
+ */
+export const OBSERVER_CHECK_ID_PATTERN = /^SITE-[A-Z0-9]+$/
+export const OBSERVER_TITLE_PATTERN = /^Alpha [A-Z][A-Za-z .]+: /
+
+/** The family-filter pattern the bundle carries that this module does not implement literally, or null. */
+export function familyFilterDrift(bundle) {
+  const filter = bundle?.familyFilter || {}
+  if (filter.observerCheckIdPattern && filter.observerCheckIdPattern !== OBSERVER_CHECK_ID_PATTERN.source) return `observerCheckIdPattern ${filter.observerCheckIdPattern}`
+  if (filter.observerTitlePattern && filter.observerTitlePattern !== OBSERVER_TITLE_PATTERN.source) return `observerTitlePattern ${filter.observerTitlePattern}`
+  return null
+}
+
 function hostOf(url) {
   try { return new URL(String(url)).hostname.toLowerCase() } catch { return null }
 }
@@ -114,13 +129,15 @@ export function isWebsiteTicket(ticket, bundle) {
   const fields = ticket.customFields || {}
   const filter = bundle.familyFilter || {}
   const hosts = new Set((bundle.siteScope?.publicHosts || ['alpha.school', 'www.alpha.school']).map((h) => h.toLowerCase()))
+  const drift = familyFilterDrift(bundle)
+  if (drift) throw new QueueAgingError('FILTER_DRIFT', `the policy bundle's family filter changed (${drift}); update the literal pattern in agent/queue-aging.mjs`)
   const requestType = String(ticket.requestType || '').trim().toLowerCase()
   if (filter.requestFamily && fields.requestFamily === filter.requestFamily) return true
   if ((filter.titlePrefixes || []).some((prefix) => String(ticket.title || '').startsWith(prefix))) return true
   if ((filter.requestTypes || []).some((type) => String(type).toLowerCase() === requestType)) return true
   if ((filter.sources || []).includes(fields.source)) return true
-  if (filter.observerCheckIdPattern && new RegExp(filter.observerCheckIdPattern).test(String(fields.checkId || ''))) return true
-  if (filter.observerTitlePattern && new RegExp(filter.observerTitlePattern).test(String(ticket.title || ''))) return true
+  if (filter.observerCheckIdPattern && OBSERVER_CHECK_ID_PATTERN.test(String(fields.checkId || ''))) return true
+  if (filter.observerTitlePattern && OBSERVER_TITLE_PATTERN.test(String(ticket.title || ''))) return true
   return [ticket.url, fields.pageUrl, fields.targetPageUrl].some((u) => u && hosts.has(hostOf(u)))
 }
 
