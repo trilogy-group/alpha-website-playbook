@@ -550,6 +550,22 @@ test('observer sweep 2026-09-24: intake selects all 180 observer tickets and cla
   assert.deepEqual([...classOf('campus-layout-header-overlap')], ['observer-layout'])
 })
 
+test('legacy open-intro-media tickets route to media identity instead of needs-rule', () => {
+  const result = evaluateTicket(bundle, {
+    id: 'east-bay-legacy-media',
+    title: 'Alpha East Bay: Open campus intro still shows the "Coming Fall 2026 To Piedmont" launch card',
+    status: 'BLOCKED',
+    requestType: 'Website QC',
+    url: 'https://alpha.school/east-bay/',
+    requesterEmail: 'matthew.barge@superbuilders.school',
+    customFields: { source: 'agent-found', checkId: 'open-intro-media-approved' },
+    description: 'Observed attachment 8550 Piedmont.webp in the intro slot. Approved replacement media is still needed.',
+  })
+  assert.equal(result.class, 'observer-media-identity')
+  assert.equal(result.ownerRole, 'website-agent-operator')
+  assert.notEqual(result.outcome, 'needs-rule')
+})
+
 test('the website family accepts observer tickets whatever URL they carry, and --ticket names every id it does not administer', () => {
   const observer = (id, title, url, check, extra = {}) => ({
     id,

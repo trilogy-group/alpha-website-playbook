@@ -1007,8 +1007,13 @@ test('observer filer: CTA exceptions, the sister-site guard, shared leadership, 
   assert.equal(findOpenDuplicate([byAliasId, byObserverId], { group, row, payload, ids }).via, 'observer-id')
   assert.equal(findOpenDuplicate([byAliasId, { ...byObserverId, customFields: { check: 'campus-calendar-link-reachable' }, url: 'https://alpha.school/tulsa/' }], { group, row, payload, ids }).via, 'check-on-page')
   assert.equal(findOpenDuplicate([byAliasId], { group, row: rowForCheck(checks, 'campus-expired-seasonal-cta'), payload, ids }), null, 'a check without aliases matches nothing by alias')
+  const mediaRow = rowForCheck(checks, 'campus-page-stale-launch-media')
+  const mediaGroup = { key: 'observer:campus.intro.media.current:page:east-bay', pages: ['https://alpha.school/east-bay/'] }
+  const mediaPayload = { title: 'Alpha East Bay: fails "Open campus intro slot shows the approved open-state media, never launch-era media"' }
+  const legacyMedia = { id: 'cmubrkkm800000agmvukxsioc', status: 'BLOCKED', title: 'Alpha East Bay: Open campus intro still shows the "Coming Fall 2026 To Piedmont" launch card', url: 'https://alpha.school/east-bay/', customFields: { source: 'agent-found', checkId: 'open-intro-media-approved' } }
+  assert.deepEqual(findOpenDuplicate([legacyMedia], { group: mediaGroup, row: mediaRow, payload: mediaPayload, ids: new Set([oid('EA57BAY001')]) }), { task: legacyMedia, via: 'alias:checkId open-intro-media-approved' })
   const aliases = loadRegistry('spec/observer-check-map.json').dedupeAliases
-  for (const check of ['campus-calendar-link-reachable', 'campus-info-packet-link-reachable', 'campus-book-call-present', 'campus-sister-brand-leak', 'campus-image-identity-conflict', 'campus-application-path']) assert.ok(aliases[check]?.checkIds?.length && aliases[check]?.titlePatterns?.length, `${check} has aliases`)
+  for (const check of ['campus-calendar-link-reachable', 'campus-info-packet-link-reachable', 'campus-book-call-present', 'campus-sister-brand-leak', 'campus-image-identity-conflict', 'campus-application-path', 'campus-page-stale-launch-media']) assert.ok(aliases[check]?.checkIds?.length && aliases[check]?.titlePatterns?.length, `${check} has aliases`)
   assert.ok(aliases['campus-calendar-link-reachable'].checkIds.includes('cta-links-resolve') && aliases['campus-calendar-link-reachable'].checkIds.includes('cta-hidden-everywhere'))
 })
 
