@@ -47,6 +47,27 @@ Each repair names where it lives, who owns it, and the test that proves it. Orde
 - Next two days: repairs 1, 4, 7 (playbook rows, observer presence logic, id mapping) and 8 (dead-man's switch, runner disk), reviewed and merged in that order; three clean full-mode shadow runs; then apply switches on.
 - Following: repair 3 (conformance), 2 (vision pass), 5 (card generator once Yash supplies the template), 9 (weekly report before the meeting with MacKenzie).
 
-## 5. What this does to the existing tickets
+## 5. Build status (2026-09-25, evening)
+
+Matt approved the full build and added repair 10. Built by six agents in worktrees, reviewed, merged in order; the other Claude session merged overlapping work at the same time (playbook #38 lifecycle source and delivery checks with the east-bay media row, #40 legacy id routing; aeo #39 durable state on `site-runtime-state`, #40 vision as verdict on approved cards), and every PR here was rebased over it.
+
+| repair | where | merged |
+|---|---|---|
+| 1 presence not absence, 4 coverage rows, 7 one id, 10 source-first | playbook #42 (bundle 1.3), aeo #37 | yes |
+| 2 vision pass (tesseract.js, reads the East Bay card at 95 percent) | aeo #36 | yes |
+| 3 conformance (observer publishes 35 comparators and 123 check ids; CLI and CI step; playbook sync test) | playbook #46 (bundle 1.4), aeo #43 | yes |
+| 5 card generator and recipe (template null until Yash supplies it) | playbook #41 | yes |
+| 6 queue aging (protocol 1e, `agent/queue-aging.mjs`, daily workflow dry unless `QUEUE_AGING_APPLY`) | playbook #43 | yes |
+| 8 heartbeat, writer gate, disk report; disk fix itself | aeo #38; aeo #39 (other session) | yes |
+| 9 site-truth report | playbook #41 | yes |
+| review fixes (slot-only attachment compare, gate reads the observe job, one Missing Info per campus and registry, page-status not diverted) | aeo #41, playbook #45 | yes |
+
+First packet on bundle 1.3 (run 36196908791, 22:32Z, full, verified): 143 findings; East Bay files as `campus-page-stale-launch-media` high with the OCR text as evidence and `missingExpectation`; twelve Open campuses get "no approved intro media recorded" Missing Info; 11 HubSpot status-sentence contradictions; filer dry-run would file 33 and hold 16 Missing Info. Noise found in that packet and being fixed: a non-campus Program (High School SAT Prep, website 2hourlearning.com) entered the campus set; informational registry gaps (CTA exceptions) filed as high; approved cards flagged by the vision verdict. Site-truth report from the same packet: 38 Open campuses, 71 red cells, team order red on 32 pages (Tasha Arnold is card 1), intro card red on 20.
+
+Later the same night: aeo #44 removed the first-packet noise (bare-domain Programs out of the campus set, informational registries never filed, approved videos recognised from rendered embeds), and this PR flips the three rows to `onMissing: skip` (bundle 1.5).
+
+Still open: `OBSERVER_FILER_APPLY` stays off until the noise fixes land and one clean full packet follows (the gate counts full-mode packets only); Yash's card template; the three rows that declare `onMissing: finding` without an observer implementation (`site.search.schema.url`, `campus.resources.packet.present`, `campus.team.roster.present`) to flip to skip; classes for the 36 class-gap tickets.
+
+## 6. What this does to the existing tickets
 
 East Bay and the seven other card tickets wait on repair 5, batched under one date; the 42 ownerless tickets get classes (the list is in the queue-aging report); the twelve Open campuses with no registry row get coverage tickets from repair 4 and are the first cards the generator makes.
