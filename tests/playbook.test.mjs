@@ -2393,11 +2393,11 @@ test('check bundle 1.2: source-digest breadth, grounding with the promotion rule
   assert.equal(checkBundle.version, '1.2')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
-  assert.deepEqual(byChannel, { ticket: 80, 'source-digest': 17, 'loop-health': 11 })
+  assert.deepEqual(byChannel, { ticket: 83, 'source-digest': 17, 'loop-health': 11 })
   const byGrounding = {}
   for (const row of checkBundle.rows) byGrounding[row.grounding.kind] = (byGrounding[row.grounding.kind] || 0) + 1
   // Grounding restore (2026-09-25, bundle 2c8a5aeb): 20 rows regained a complaint, decision or source-contract ref, so only 5 stay ungrounded.
-  assert.deepEqual(byGrounding, { 'source-contract': 54, decision: 34, complaint: 13, exemplar: 2, none: 5 })
+  assert.deepEqual(byGrounding, { 'source-contract': 56, decision: 35, complaint: 13, exemplar: 2, none: 5 })
   assert.deepEqual(checkBundle.sourceDigest, { ownerRoles: ['growth-map-owner', 'hubspot-program-admin', 'operations-sheet-owner', 'community-app-owner'], reportFile: 'source-digest.md' })
   // Breadth: every map-source row and the Community record, URL form and host rows are source-digest; rows on a WordPress element stay ticket.
   for (const row of checkBundle.rows.filter((r) => r.pageFamily === 'map-source')) assert.notEqual(row.channel, 'ticket', `${row.id} compares sources, never a page`)
@@ -2434,7 +2434,7 @@ test('check bundle 1.2: source-digest breadth, grounding with the promotion rule
   for (const family of Object.keys(checkBundle.pageFamilies)) assert.ok(checkBundle.depthDefaults.render.includes(family) || checkBundle.depthDefaults.http.includes(family), `${family} has a depth`)
   const byDepth = {}
   for (const row of checkBundle.rows) byDepth[row.depth] = (byDepth[row.depth] || 0) + 1
-  assert.deepEqual(byDepth, { render: 86, http: 22 })
+  assert.deepEqual(byDepth, { render: 88, http: 23 })
   for (const row of checkBundle.rows) {
     assert.ok(['render', 'http'].includes(row.depth), row.id)
     if ((row.viewports || []).length || row.sourceHealthDependency.includes('browser') || /-rendered$/.test(row.comparator.type)) assert.equal(row.depth, 'render', row.id)

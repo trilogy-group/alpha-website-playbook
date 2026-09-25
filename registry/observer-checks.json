@@ -11,7 +11,7 @@
   "notInChecksMjs": {
     "$comment": "Names other parts of the observer or the playbook use that checks.mjs never emits; listed so nobody maps them by mistake.",
     "operations-map-public-campus-missing": "named in src/dispatch.mjs CAMPUS_SOURCE_CHECKS only; never emitted",
-    "campus-page-status-sentence": "to build (docs/observer-requirements.md item 2); playbook page-check open-status-sentence covers it",
+    "campus-page-status-sentence (legacy marker)": "implemented as campus-page-status-sentence in the campus-truth family on 2026-09-25",
     "brand-visual": "playbook tests/page-check.mjs check, not an observer check",
     "campus-page-email-source-sync (moved)": "emitted by checks.mjs since aeo 2917e2b (mailto, visible admissions email and School schema vs HubSpot Program email); listed under campus-truth and rowed as campus.facts.email"
   },
@@ -61,6 +61,7 @@
       "campus-page-grade-source-sync",
       "campus-page-phone-source-sync",
       "campus-page-source-fact-missing",
+      "campus-page-status-sentence",
       "campus-page-stale-launch-media",
       "campus-page-tuition-source-sync",
       "campus-page-youtube-video",
@@ -75,6 +76,7 @@
       "campus-staff-missing",
       "campus-staff-title-missing",
       "campus-staff-title-sync",
+      "campus-source-status-sentence",
       "community-campus-parameter",
       "duplicate-program-id",
       "duplicate-program-url",
@@ -91,6 +93,7 @@
       "program-lifecycle-valid",
       "program-map-facts",
       "program-page-reachable",
+      "published-page-reachable",
       "program-page-sync",
       "program-route-redirect",
       "public-program-host",
