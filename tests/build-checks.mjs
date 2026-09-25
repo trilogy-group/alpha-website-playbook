@@ -34,8 +34,16 @@ const LIFECYCLE_STATES = ['Open', 'Announced', 'Pre-Announcement']
 const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site']
 const SEVERITIES = ['critical', 'high', 'medium', 'low']
 const STATUSES = ['enforced', 'advisory']
-const CHANNELS = ['ticket', 'loop-health']
+const CHANNELS = ['ticket', 'source-digest', 'loop-health']
+const GROUNDING_KINDS = ['complaint', 'source-contract', 'exemplar', 'decision', 'none']
+const DEPTHS = ['render', 'http']
 const VIEWPORTS = ['desktop', 'mobile']
+// The fix path of a class is every step but its verification step; a source-digest row's class may not fix through WordPress.
+const WORDPRESS_ADAPTER = 'wordpress-alpha-mcp'
+// Elements a WordPress page owns (a CTA, a link, page copy, an image, the head, the shared templates): never a source-digest row.
+const WORDPRESS_PSEUDO_PREFIXES = ['page.', 'head.', 'locations.', 'events.']
+const WORDPRESS_PSEUDO_ELEMENTS = ['robots.txt', 'sitemap', 'llms.txt', 'header', 'footer', 'map.embed']
+export const PROMOTION_RULE = 'grounding none: measured, never filed, until a complaint, source contract, exemplar or decision grounds the row (promotion rule, docs/observer-requirements.md 2026-09-25)'
 const SUPPRESS_CONDITIONS = ['event-ended', 'hidden-on-all-viewports', 'every-image-failed-in-run']
 // Page-level pseudo-elements a row may name instead of a field-map key.
 const PSEUDO_ELEMENT_PREFIXES = ['page.', 'head.', 'map.', 'event.', 'events.', 'observer.', 'locations.']
@@ -111,6 +119,21 @@ export function buildBundle({ observerSource = null } = {}) {
     pageFamilies[id] = value
   }
 
+  // Depth defaults (1.2): every family named is a real family or a pseudo-family, each family has exactly one default.
+  const depthDefaults = { render: [], http: [] }
+  for (const depth of DEPTHS) {
+    for (const family of rowsSpec.depthDefaults?.[depth] || []) {
+      if (!pageFamilies[family]) errors.push(`depthDefaults.${depth} names unknown page family ${family}`)
+      if (depthDefaults[depth === 'render' ? 'http' : 'render'].includes(family)) errors.push(`depthDefaults: ${family} is both render and http`)
+      depthDefaults[depth].push(family)
+    }
+  }
+  for (const family of Object.keys(pageFamilies)) if (!depthDefaults.render.includes(family) && !depthDefaults.http.includes(family)) errors.push(`depthDefaults: page family ${family} has no depth (render or http)`)
+  const depthFor = (family) => (depthDefaults.render.includes(family) ? 'render' : 'http')
+
+  const sourceDigest = { ownerRoles: rowsSpec.sourceDigest?.ownerRoles || [], reportFile: rowsSpec.sourceDigest?.reportFile || 'source-digest.md' }
+  if (!sourceDigest.ownerRoles.length) errors.push('sourceDigest.ownerRoles missing')
+
   const sourceHealth = {}
   for (const [id, value] of Object.entries(rowsSpec.sourceHealth || {})) {
     if (id.startsWith('$')) continue
@@ -173,6 +196,7 @@ export function buildBundle({ observerSource = null } = {}) {
       observerCheck: source.observerCheck,
       title: source.title,
       pageFamily: source.pageFamily ?? defaults.pageFamily,
+      depth: source.depth ?? depthFor(source.pageFamily ?? defaults.pageFamily),
       lifecycleStates: source.lifecycleStates ?? defaults.lifecycleStates ?? [],
       element: source.element,
       ...(source.viewports ? { viewports: source.viewports } : {}),
@@ -196,8 +220,14 @@ export function buildBundle({ observerSource = null } = {}) {
       ...(source.exemptions ? { exemptions: source.exemptions } : {}),
       ...(source.decisionPending ? { decisionPending: source.decisionPending } : {}),
       ...(source.note ? { note: source.note } : {}),
+      grounding: source.grounding,
       requirementRef: source.requirementRef,
       requirement: checkMap.checks?.[source.observerCheck]?.requirement ?? null,
+    }
+    // Promotion rule (2026-09-25): an enforced row nobody has grounded is advisory until someone does.
+    if (row.status === 'enforced' && row.grounding?.kind === 'none') {
+      row.status = 'advisory'
+      row.advisoryReason = PROMOTION_RULE
     }
 
     if (!row.id || !/^(site|campus)\.[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(row.id)) errors.push(`${label}: id must be dotted (site.* or campus.*)`)
@@ -238,6 +268,29 @@ export function buildBundle({ observerSource = null } = {}) {
       if (row.ticketClass !== 'observer-health') errors.push(`${label}: loop-health rows use ticketClass observer-health`)
       if (!row.suppresses) errors.push(`${label}: loop-health rows must say what they suppress`)
     }
+    // Source digest (1.2): a source-versus-source comparison, owned by a source role, never a WordPress element or a WordPress fix path.
+    if (row.channel === 'source-digest') {
+      const wordpressElement = row.element && (fieldElements.has(row.element) || WORDPRESS_PSEUDO_ELEMENTS.includes(row.element) || WORDPRESS_PSEUDO_PREFIXES.some((p) => row.element.startsWith(p)))
+      if (wordpressElement) errors.push(`${label}: a source-digest row cannot carry the WordPress element ${row.element}; rows about a page element stay channel ticket`)
+      const fixAdapters = (policy.classes?.[row.ticketClass]?.steps || []).filter((s) => s.id !== 'verify').map((s) => s.adapter)
+      if (fixAdapters.includes(WORDPRESS_ADAPTER)) errors.push(`${label}: a source-digest row cannot use ticketClass ${row.ticketClass}, whose fix path runs through ${WORDPRESS_ADAPTER}`)
+      if (row.ownerRole && !sourceDigest.ownerRoles.includes(row.ownerRole)) errors.push(`${label}: source-digest ownerRole ${row.ownerRole} is not one of ${sourceDigest.ownerRoles.join(', ')}`)
+    }
+    if (row.pageFamily === 'map-source' && row.channel === 'ticket') errors.push(`${label}: a map-source row compares sources, not a page; its channel is source-digest or loop-health`)
+    // Grounding (1.2): every row says what grounds it; none is allowed and makes the row advisory.
+    if (!row.grounding || typeof row.grounding !== 'object') errors.push(`${label}: grounding {kind, ref} missing`)
+    else {
+      if (!GROUNDING_KINDS.includes(row.grounding.kind)) errors.push(`${label}: unknown grounding kind ${row.grounding.kind}`)
+      if (typeof row.grounding.ref !== 'string' || !row.grounding.ref.trim()) errors.push(`${label}: grounding.ref must say where the grounding lives (or why there is none)`)
+      else {
+        const cited = row.grounding.ref.match(/\b(?:spec|registry|docs|playbook)\/[A-Za-z0-9_.\/-]+/g) || []
+        for (const file of cited) if (!fs.existsSync(path.join(root, file))) errors.push(`${label}: grounding.ref cites a missing file ${file}`)
+        if (row.grounding.kind !== 'none' && !cited.length && !/^https?:\/\//.test(row.grounding.ref) && !/\b(APEX|ticket|c[a-z0-9]{20,30}|incident|20[0-9]{2}-[0-9]{2}-[0-9]{2})\b/.test(row.grounding.ref)) errors.push(`${label}: grounding.ref for kind ${row.grounding.kind} names no file, URL, ticket, incident or date`)
+      }
+    }
+    // Depth (1.2): a rendered measurement is never taken over plain HTTP.
+    if (!DEPTHS.includes(row.depth)) errors.push(`${label}: depth must be render or http, got ${row.depth}`)
+    else if (row.depth === 'http' && ((row.viewports || []).length || row.sourceHealthDependency.includes('browser') || /-rendered$/.test(row.comparator?.type || '') || String(row.element).startsWith('observer.browser'))) errors.push(`${label}: a row with viewports, a browser dependency or a rendered comparator must be depth render`)
     for (const ref of [].concat(row.exemptionsRef || [])) {
       if (typeof ref !== 'string' || !ref) errors.push(`${label}: exemptionsRef entries must be non-empty strings`)
       else if (!fs.existsSync(path.join(root, ref.split(' ')[0]))) errors.push(`${label}: exemptionsRef file missing ${ref}`)
@@ -277,6 +330,8 @@ export function buildBundle({ observerSource = null } = {}) {
     policySha256: policy.policySha256,
     observerInventory: { version: observerRegistry.version, commit: observerRegistry.capturedFrom?.commit ?? null, count: inventory.length },
     pageFamilies,
+    depthDefaults,
+    sourceDigest,
     sourceHealth,
     rows,
     retired,

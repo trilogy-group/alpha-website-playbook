@@ -2323,7 +2323,7 @@ test('notify-requester CLI exits 1 on a typed input error without contacting Sla
 })
 
 // Check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2).
-import { buildBundle, extractObserverCheckNames, observerCheckNames } from './build-checks.mjs'
+import { PROMOTION_RULE, buildBundle, extractObserverCheckNames, observerCheckNames } from './build-checks.mjs'
 import { validateSchemaValue } from './validate-playbook.mjs'
 
 const checkBundle = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'check-bundle.generated.json'), 'utf8'))
@@ -2387,6 +2387,89 @@ test('check bundle: the observer inventory extractor reads finding literals and 
     { links: x, label: "calendar", check: "campus-calendar-link-reachable" }
   `)
   assert.deepEqual(names, ['campus-calendar-link-reachable', 'campus-heading-identity', 'campus-info-packet-destination-campus', 'campus-info-packet-present', 'hubspot-event-required-facts'])
+})
+
+test('check bundle 1.2: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
+  assert.equal(checkBundle.version, '1.2')
+  const byChannel = {}
+  for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
+  assert.deepEqual(byChannel, { ticket: 80, 'source-digest': 17, 'loop-health': 11 })
+  const byGrounding = {}
+  for (const row of checkBundle.rows) byGrounding[row.grounding.kind] = (byGrounding[row.grounding.kind] || 0) + 1
+  assert.deepEqual(byGrounding, { 'source-contract': 53, decision: 25, complaint: 3, exemplar: 2, none: 25 })
+  assert.deepEqual(checkBundle.sourceDigest, { ownerRoles: ['growth-map-owner', 'hubspot-program-admin', 'operations-sheet-owner', 'community-app-owner'], reportFile: 'source-digest.md' })
+  // Breadth: every map-source row and the Community record, URL form and host rows are source-digest; rows on a WordPress element stay ticket.
+  for (const row of checkBundle.rows.filter((r) => r.pageFamily === 'map-source')) assert.notEqual(row.channel, 'ticket', `${row.id} compares sources, never a page`)
+  for (const id of ['site.map.integrity.operations-row', 'site.map.integrity.address-agreement', 'site.map.integrity.operations-on-map', 'site.map.integrity.program-id-unique', 'site.map.integrity.hubspot-map-sync', 'site.map.integrity.program-facts', 'site.community.routing.map-destination', 'site.community.routing.pre-announcement-url', 'site.community.routing.host']) {
+    const row = checkRow(id)
+    assert.equal(row.channel, 'source-digest', id)
+    assert.ok(checkBundle.sourceDigest.ownerRoles.includes(row.ownerRole), `${id} owner ${row.ownerRole}`)
+  }
+  assert.deepEqual([checkRow('site.map.integrity.operations-row').ownerRole, checkRow('site.map.integrity.hubspot-map-sync').ownerRole, checkRow('site.map.integrity.program-id-unique').ownerRole, checkRow('site.community.routing.host').ownerRole], ['operations-sheet-owner', 'growth-map-owner', 'hubspot-program-admin', 'community-app-owner'])
+  for (const id of ['site.community.routing.cta', 'site.map.integrity.directory-entry', 'site.map.integrity.locations-embed', 'site.map.integrity.pin-destination', 'site.map.integrity.wordpress-page-has-program']) assert.equal(checkRow(id).channel, 'ticket', `${id} is about a WordPress element`)
+  // Grounding: the promotion rule makes every ungrounded enforced row advisory, with the reason on the row; grounded rows keep their status.
+  for (const row of checkBundle.rows) {
+    assert.ok(['complaint', 'source-contract', 'exemplar', 'decision', 'none'].includes(row.grounding.kind), row.id)
+    assert.ok(row.grounding.ref.length > 10, row.id)
+    if (row.grounding.kind === 'none') { assert.equal(row.status, 'advisory', `${row.id} is ungrounded and must be advisory`) } else assert.ok(!row.advisoryReason, row.id)
+  }
+  const promoted = checkBundle.rows.filter((r) => r.advisoryReason)
+  assert.equal(promoted.length, 21)
+  assert.ok(promoted.every((r) => r.grounding.kind === 'none' && r.status === 'advisory' && r.advisoryReason === PROMOTION_RULE))
+  assert.ok(promoted.some((r) => r.id === 'site.layout.horizontal-overflow') && promoted.some((r) => r.id === 'site.search.indexable.canonical'))
+  assert.equal(checkRow('site.layout.header-overlap.mobile').status, 'enforced')
+  assert.equal(checkRow('site.layout.header-overlap.mobile').grounding.kind, 'decision')
+  assert.equal(checkRow('campus.hero.identity.heading').grounding.kind, 'decision')
+  assert.equal(checkRow('campus.resources.packet.reachable').grounding.kind, 'complaint')
+  assert.equal(checkRow('campus.resources.booking.present').grounding.kind, 'exemplar')
+  assert.match(checkRow('campus.facts.phone').grounding.ref, /^spec\/campus-page-field-map\.json elements\/contact\.phone/)
+  // Depth: campus, home, Locations and events pages render; the long tail and the source rows are http; a rendered measurement is never http.
+  assert.deepEqual(checkBundle.depthDefaults.render, ['campus', 'campus-open', 'campus-announced', 'campus-pre-announcement', 'homepage', 'locations', 'events', 'map-routes', 'critical-routes'])
+  assert.ok(checkBundle.depthDefaults.http.includes('site') && checkBundle.depthDefaults.http.includes('map-source'))
+  for (const family of Object.keys(checkBundle.pageFamilies)) assert.ok(checkBundle.depthDefaults.render.includes(family) || checkBundle.depthDefaults.http.includes(family), `${family} has a depth`)
+  const byDepth = {}
+  for (const row of checkBundle.rows) byDepth[row.depth] = (byDepth[row.depth] || 0) + 1
+  assert.deepEqual(byDepth, { render: 86, http: 22 })
+  for (const row of checkBundle.rows) {
+    assert.ok(['render', 'http'].includes(row.depth), row.id)
+    if ((row.viewports || []).length || row.sourceHealthDependency.includes('browser') || /-rendered$/.test(row.comparator.type)) assert.equal(row.depth, 'render', row.id)
+  }
+  assert.equal(checkRow('site.map.integrity.operations-row').depth, 'http')
+  assert.equal(checkRow('site.search.indexable.robots').depth, 'http')
+  assert.equal(checkRow('site.layout.images.render').depth, 'render', 'a site-family row that renders says so itself')
+  assert.equal(checkRow('site.loop.health.route-screenshot-capture').depth, 'render')
+  assert.equal(checkRow('campus.hero.identity.heading').depth, 'render')
+
+  // The builder refuses: a source-digest row on a WordPress element or a WordPress fix path, a map-source ticket row, an http row with
+  // viewports, a missing or unknown grounding, and a grounding that cites a file that does not exist.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'check-bundle-12-'))
+  // docs and playbook too: grounding refs cite files there and the builder checks they exist.
+  for (const rel of ['spec', 'registry', 'tests', 'docs', 'playbook']) fs.cpSync(path.join(root, rel), path.join(dir, rel), { recursive: true })
+  const rows = JSON.parse(fs.readFileSync(path.join(dir, 'spec', 'check-rows.json'), 'utf8'))
+  const find = (id) => rows.rows.find((r) => r.id === id)
+  find('campus.resources.booking.present').channel = 'source-digest'
+  find('campus.resources.booking.present').ownerRole = 'hubspot-program-admin'
+  find('campus.facts.phone').channel = 'source-digest'
+  find('campus.facts.phone').element = 'map.source'
+  find('campus.facts.phone').ownerRole = 'hubspot-program-admin'
+  find('site.map.integrity.operations-row').channel = 'ticket'
+  find('site.map.integrity.address-agreement').ownerRole = 'website-operations'
+  find('site.layout.header-overlap.desktop').depth = 'http'
+  delete find('site.search.indexable.robots').grounding
+  find('site.search.indexable.sitemap').grounding = { kind: 'rumour', ref: 'x' }
+  find('site.search.ai-files').grounding = { kind: 'decision', ref: 'docs/decisions-that-do-not-exist.md' }
+  fs.writeFileSync(path.join(dir, 'spec', 'check-rows.json'), JSON.stringify(rows))
+  const result = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-checks.mjs'), '--check'], { encoding: 'utf8' })
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /row campus\.resources\.booking\.present: a source-digest row cannot carry the WordPress element hero\.ctas/)
+  assert.match(result.stderr, /row campus\.facts\.phone: a source-digest row cannot use ticketClass observer-fact-sync, whose fix path runs through wordpress-alpha-mcp/)
+  assert.match(result.stderr, /row site\.map\.integrity\.operations-row: a map-source row compares sources, not a page/)
+  assert.match(result.stderr, /row site\.map\.integrity\.address-agreement: source-digest ownerRole website-operations is not one of growth-map-owner, hubspot-program-admin, operations-sheet-owner, community-app-owner/)
+  assert.match(result.stderr, /row site\.layout\.header-overlap\.desktop: a row with viewports, a browser dependency or a rendered comparator must be depth render/)
+  assert.match(result.stderr, /row site\.search\.indexable\.robots: grounding \{kind, ref\} missing/)
+  assert.match(result.stderr, /row site\.search\.indexable\.sitemap: unknown grounding kind rumour/)
+  assert.match(result.stderr, /row site\.search\.ai-files: grounding\.ref cites a missing file docs\/decisions-that-do-not-exist\.md/)
+  fs.rmSync(dir, { recursive: true, force: true })
 })
 
 test('check bundle: workstream 2 corrections are rows, not prose', () => {

@@ -1,5 +1,5 @@
 {
-  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`.",
+  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`. Counts and the jamaica-plain entry refreshed by hand from the growth map API and HubSpot on 2026-09-25 (no generator script exists in the playbook; generatedAt is the original 2026-09-15 capture).",
   "generatedAt": "2026-09-15T19:30:26.872237+00:00",
   "states": {
     "Open": {
@@ -10,7 +10,7 @@
     "Announced": {
       "source": "same",
       "meaning": "Public page may exist; launch language allowed only when the source status and date support it; announced-campus requirements apply.",
-      "count": 8
+      "count": 7
     },
     "Pre-Announcement": {
       "source": "same",
@@ -181,7 +181,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Brownsville is now the academic network\u2019s fastest-growing campus."
+      "introStatement": "Alpha Brownsville is now the academic network’s fastest-growing campus."
     },
     "carrollton": {
       "url": "https://alpha.school/carrollton/",
@@ -219,7 +219,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Chantilly is open and enrolling for the 2026\u201327 &nbsp;school year with rolling admission."
+      "introStatement": "Alpha Chantilly is open and enrolling for the 2026–27 &nbsp;school year with rolling admission."
     },
     "charlotte": {
       "url": "https://alpha.school/charlotte/",
@@ -436,7 +436,7 @@
         {
           "id": "program-57622127456",
           "name": "Alpha Jamaica Plain",
-          "programType": "Announced",
+          "programType": "Open",
           "launchDate": null,
           "gradeRange": "K-8",
           "city": "Jamaica Plain",
@@ -444,9 +444,10 @@
           "communityUrl": "https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs"
         }
       ],
-      "lifecycle": "Announced",
+      "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Jamaica Plain is launching in Fall 2026."
+      "introStatement": "Alpha Jamaica Plain is open and enrolling.",
+      "note": "Open since 2026-09-22 (decision Matt Barge 2026-09-22; HubSpot Program 57622127456 type changed 2026-09-22T20:22:41.856Z). Read with HUBSPOT_MARKETING_SYNCING_TOKEN at 2026-09-25T15:23:34Z: type Open, visibility Visible, website https://alpha.school/jamaica-plain/, start_grade_level K, end_grade_level 8, school_address 3815 Washington St, Jamaica Plain, MA 02130, website_campus_intro \"[DISPLAY_NAME] is open and enrolling.\", wordpress_post_id 9282, community_url still https://community.alpha.school/?preferred_campus=Alpha%20Boston%20Suburbs (unchanged in HubSpot; the growth map API mirrors all of this, read 2026-09-25T15:25:23Z). The page reads \"Alpha Jamaica Plain is open and enrolling.\""
     },
     "kirkland": {
       "url": "https://alpha.school/kirkland/",
@@ -598,7 +599,7 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan\u2019"
+      "introStatement": "Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan’"
     },
     "oklahoma-city": {
       "url": "https://alpha.school/oklahoma-city/",

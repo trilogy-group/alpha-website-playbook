@@ -1,8 +1,9 @@
 {
-  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses).",
-  "version": "1.1",
-  "asOf": "2026-09-24",
+  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP.",
+  "version": "1.2",
+  "asOf": "2026-09-25",
   "defaults": {
+    "$comment": "Defaults fill any field a row leaves out. clearAfterRuns counts full observer runs: 2 means two consecutive full runs, about one day at the 06:00 and 21:00 UTC cadence (docs/sweep-runbook.md, Cadence, breadth and depth).",
     "pageFamily": "campus",
     "lifecycleStates": [
       "Open",
@@ -36,7 +37,50 @@
       "events"
     ],
     "map-source": "growth map API records (the HubSpot Programs mirror) and Operations sheet rows; not a page",
-    "site": "every public route"
+    "site": "every public route",
+    "$depthNote": "Depth per family (depthDefaults): campus pages, the homepage, Locations and the events pages, and the pseudo-families that group them (campus, map-routes, critical-routes), are rendered in a browser on desktop 1440x1000 and mobile 390x844; the long tail (site: every public route) and the non-page map-source family are read over HTTP only. A row may set depth itself; a row with viewports, a browser dependency or a rendered comparator must be render."
+  },
+  "depthDefaults": {
+    "$comment": "Row depth defaults by pageFamily (2026-09-25): render means the observer loads the page in a browser on both viewports and screenshots it; http means one HTTP fetch of the route (or a source read for map-source) with no rendering. The builder fills depth on every row that leaves it out; spec/README.md documents the contract the observer reads.",
+    "render": [
+      "campus",
+      "campus-open",
+      "campus-announced",
+      "campus-pre-announcement",
+      "homepage",
+      "locations",
+      "events",
+      "map-routes",
+      "critical-routes"
+    ],
+    "http": [
+      "site",
+      "map-source",
+      "program",
+      "admissions-forms-applications",
+      "alpha-answers",
+      "editorial",
+      "legal",
+      "campaign",
+      "review-sandbox-confirmation",
+      "global-template",
+      "reference",
+      "careers",
+      "author",
+      "video-resource",
+      "campus-local-seo-post",
+      "podcast-press-landing"
+    ]
+  },
+  "sourceDigest": {
+    "$comment": "Rows with channel source-digest (2026-09-25): a source-versus-source comparison whose fix is in the Operations sheet, HubSpot Programs, the growth map API or the Community app, never a WordPress element. The filer never files them; it writes source-digest.md next to its report, grouped by these owner roles, one audit line per finding. Open tickets already filed on such a row are left alone. tests/build-checks.mjs refuses a source-digest row that names a WordPress element or whose class fixes through the wordpress-alpha-mcp path.",
+    "ownerRoles": [
+      "growth-map-owner",
+      "hubspot-program-admin",
+      "operations-sheet-owner",
+      "community-app-owner"
+    ],
+    "reportFile": "source-digest.md"
   },
   "sourceHealth": {
     "$comment": "Source ids a row may depend on. providerEntity is the entity name the observer's provider-health finding carries; registryKey is the registry/sources.json entry. A finding whose row depends on a source that is failed, degraded, disabled or stale is suppressed and counted, never filed.",
@@ -106,6 +150,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-15 (Matt Barge): HubSpot is the source of truth for campus state; the Operations sheet and the growth map are downstream and are corrected where they disagree"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.hero.identity"
@@ -140,6 +188,10 @@
         "HubSpot-fed event cards (venue names)",
         "registry/campus-leadership.json groups: a shared leader of a campus group whose card alt text names a sibling campus is not an other-campus conflict"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): brand leak reads registry/sister-brand-exceptions.json (word list and exceptions)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.identity.sister-brand"
@@ -167,6 +219,10 @@
       "exemptions": [
         "registry/campus-leadership.json groups: a shared leader of a campus group whose card alt text names a sibling campus is not an other-campus conflict"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.identity.other-campus"
@@ -201,6 +257,10 @@
       },
       "severity": "medium",
       "ticketClass": "observer-launch-copy",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.seasonal.window"
@@ -230,6 +290,10 @@
       "suppressWhen": [
         "hidden-on-all-viewports"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/campus-open-media.json (approved open-state media per campus; spec/source-authority.json fields/campus.intro-media)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.intro.media"
@@ -267,6 +331,10 @@
         "hubspot-programs"
       ],
       "decisionPending": "cmu4g13kc00000agmdogkxihp",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): grades compare start_grade_level and end_grade_level only, never grade_levels"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/hero.title"
@@ -299,6 +367,10 @@
       ],
       "decisionPending": "cmu4g13kc00000agmdogkxihp",
       "note": "Telemetry only: a source defect the grade-source decision (cmu4g13kc00000agmdogkxihp) will route; the observer measures it so the decision has counts.",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): grades compare start_grade_level and end_grade_level only, never grade_levels"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/hero.title"
@@ -332,6 +404,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/contact.phone (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/contact.phone"
@@ -359,6 +435,10 @@
         "hubspot-programs"
       ],
       "note": "spec/campus-page-field-map.json contact.email: writer n8n-hubspot from the Program email field, so a page that disagrees with a correct source is a delivery defect (n8n-sync-owner); when the source is wrong the executor re-classes to hubspot-data (onMismatch.ifSourceWrong).",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/contact.email (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/contact.email"
@@ -392,6 +472,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/contact.tuition (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/contact.tuition"
@@ -424,6 +508,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.facts"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.facts"
@@ -443,6 +531,10 @@
         "unit": "schema"
       },
       "ticketClass": "observer-fact-sync",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.facts (surface includes the School schema)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
@@ -469,6 +561,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.identity"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
@@ -492,6 +588,10 @@
         "unit": "difference"
       },
       "ticketClass": "observer-fact-sync",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/campus-pages.json (canonical URL per campus)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
@@ -523,6 +623,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.facts (surface includes the School schema)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
@@ -552,6 +656,10 @@
       "sourceHealthDependency": [
         "hubspot-programs"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.facts (surface includes the School schema)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
@@ -576,6 +684,10 @@
         "unit": "properties"
       },
       "ticketClass": "observer-fact-sync",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.facts (surface includes the School schema)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.schema"
@@ -602,6 +714,10 @@
       "sourceHealthDependency": [
         "wordpress-rest"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.page.reachable"
@@ -630,6 +746,10 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json growthMapApi (the Locations directory lists every Open and Announced record)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -655,6 +775,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -690,6 +814,10 @@
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
       "decisionPending": "cmtlz33vo000504ju2itpi7d9",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/campus-packets.json (approved packets per campus and year; interimPolicy)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.resources.packet"
@@ -716,6 +844,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "complaint",
+        "ref": "docs/replay-group-a-2026-09-15.md: packet links answered 401 on Oklahoma City, South Bay LA and Tulsa (spec/campus-page-requirements.json states/Open/campus.resources.packet source)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.resources.packet"
@@ -746,6 +878,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "exemplar",
+        "ref": "https://alpha.school/plano/ (spec/campus-page-requirements.json states/Open/campus.resources.packet exemplars)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.resources.packet"
@@ -771,6 +907,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.calendar"
@@ -798,6 +938,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "complaint",
+        "ref": "playbook/site/info-packets.md: four calendars return 401 (Boston Suburbs, Oklahoma City, South Bay LA, Tulsa; Google Drive), read 2026-09-16"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.calendar"
@@ -828,6 +972,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.calendar"
@@ -854,6 +1002,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "exemplar",
+        "ref": "https://alpha.school/plano/ (spec/campus-page-requirements.json states/Open/campus.hero.ctas exemplars)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.hero.ctas"
@@ -877,6 +1029,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.booking-link"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.resources.booking"
@@ -907,6 +1063,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.booking-link"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.booking-link"
@@ -937,6 +1097,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.application-link"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
@@ -967,6 +1131,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.application-link"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
@@ -1005,6 +1173,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.application-link (admissions_handled_in_finalsite)"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
@@ -1035,6 +1207,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/resources.apply (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/resources.apply"
@@ -1058,6 +1234,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/resources.apply (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/resources.apply"
@@ -1088,6 +1268,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.application-link"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.application-link"
@@ -1117,6 +1301,10 @@
       ],
       "decisionPending": "cmtneqjw4000404jslko6zim1",
       "note": "Advisory until the roster source is configured for the observer (health lead cmtneqjw4): the Meet the Guides decks are a reviewable source for agent/roster-diff.mjs; the requester ticket still decides membership.",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.staff"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.team"
@@ -1146,6 +1334,10 @@
         "campus-staff-roster"
       ],
       "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.staff"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.team"
@@ -1174,6 +1366,10 @@
         "campus-staff-roster"
       ],
       "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.staff"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.team"
@@ -1205,6 +1401,10 @@
         "hubspot-events",
         "wordpress-events"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): events: four-hour import grace after a HubSpot event becomes public; past events never file"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Open/campus.events"
@@ -1239,6 +1439,10 @@
         "hubspot-events",
         "wordpress-events"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): events: four-hour import grace after a HubSpot event becomes public; past events never file"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1275,6 +1479,10 @@
       "sourceHealthDependency": [
         "hubspot-events"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1305,6 +1513,10 @@
       "sourceHealthDependency": [
         "wordpress-events"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1333,6 +1545,10 @@
       "sourceHealthDependency": [
         "wordpress-events"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1360,6 +1576,10 @@
       "suppressWhen": [
         "event-ended"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1385,6 +1605,10 @@
       "suppressWhen": [
         "event-ended"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1414,6 +1638,10 @@
       "suppressWhen": [
         "event-ended"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1446,6 +1674,10 @@
       "suppressWhen": [
         "event-ended"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1472,6 +1704,10 @@
       "suppressWhen": [
         "event-ended"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.events"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.events.sync"
@@ -1500,6 +1736,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1535,6 +1775,10 @@
         "growth-map-api",
         "browser"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json growthMapApi"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1568,6 +1812,10 @@
         "growth-map-api",
         "browser"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json growthMapApi"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1600,6 +1848,10 @@
         "growth-map-api",
         "browser"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json growthMapApi"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1639,6 +1891,12 @@
         "community-app",
         "browser"
       ],
+      "channel": "source-digest",
+      "ownerRole": "community-app-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/community-routing.json urlContract (deployed Community app program registry and router inspected 2026-09-16; URL form pending cmu4g45fg00020agm20nd7kc8)"
+      },
       "requirementRef": {
         "file": "spec/community-routing.json",
         "key": "urlContract"
@@ -1664,6 +1922,12 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "hubspot-program-admin",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json hubspotPrograms (one Program per campus; the growth map mirrors it)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1690,6 +1954,12 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "hubspot-program-admin",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json hubspotPrograms (one Program per campus; the growth map mirrors it)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1719,6 +1989,12 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "hubspot-program-admin",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-lifecycle.json states (as the sources define them)"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "states"
@@ -1755,6 +2031,12 @@
         "hubspot-programs",
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "hubspot-program-admin",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/source-authority.json fields/campus.facts"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1779,6 +2061,12 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "growth-map-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json growthMapApi (url field for Open and Announced records)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1808,6 +2096,12 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "growth-map-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json growthMapApi (url field for Open and Announced records)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -1832,6 +2126,10 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/page.existence (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.page.reachable"
@@ -1858,6 +2156,10 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/page.existence (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/observer-check-map.json",
         "key": "requirements/campus.page.reachable"
@@ -1881,6 +2183,10 @@
         "growth-map-api",
         "wordpress-rest"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/page.existence (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/page.existence"
@@ -1908,6 +2214,10 @@
         "growth-map-api",
         "wordpress-rest"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/campus-page-field-map.json elements/page.existence (writer, source system and fields)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/page.existence"
@@ -1946,6 +2256,12 @@
         "hubspot-programs",
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "growth-map-owner",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-15 (Matt Barge): HubSpot is the source of truth for campus state; the Operations sheet and the growth map are downstream and are corrected where they disagree"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.lifecycle"
@@ -1979,6 +2295,12 @@
         "growth-map-api",
         "community-app"
       ],
+      "channel": "source-digest",
+      "ownerRole": "community-app-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/community-routing.json urlContract (deployed Community app program registry and router inspected 2026-09-16; URL form pending cmu4g45fg00020agm20nd7kc8)"
+      },
       "requirementRef": {
         "file": "spec/campus-page-requirements.json",
         "key": "states/Pre-Announcement/campus.map-community"
@@ -2011,6 +2333,12 @@
       "sourceHealthDependency": [
         "growth-map-api"
       ],
+      "channel": "source-digest",
+      "ownerRole": "community-app-owner",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): Community host: www.community.alpha.school canonical, apex host redirecting"
+      },
       "requirementRef": {
         "file": "spec/community-routing.json",
         "key": "communityHosts"
@@ -2042,6 +2370,12 @@
         "growth-map-api",
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "operations-sheet-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json operationsSheet"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "operationsSheetStatuses"
@@ -2072,6 +2406,12 @@
         "growth-map-api",
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "hubspot-program-admin",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json operationsSheet"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "operationsSheetStatuses"
@@ -2098,6 +2438,12 @@
       "sourceHealthDependency": [
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "operations-sheet-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json operationsSheet"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "operationsSheetStatuses"
@@ -2125,6 +2471,12 @@
       "sourceHealthDependency": [
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "operations-sheet-owner",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json operationsSheet"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "operationsSheetStatuses"
@@ -2151,6 +2503,12 @@
         "growth-map-api",
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "hubspot-program-admin",
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "registry/sources.json operationsSheet"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "operationsSheetStatuses"
@@ -2181,6 +2539,12 @@
         "growth-map-api",
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "operations-sheet-owner",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-15 (Matt Barge): HubSpot is the source of truth for campus state; the Operations sheet and the growth map are downstream and are corrected where they disagree"
+      },
       "requirementRef": {
         "file": "spec/campus-lifecycle.json",
         "key": "operationsSheetStatuses"
@@ -2212,6 +2576,12 @@
         "growth-map-api",
         "operations-sheet"
       ],
+      "channel": "source-digest",
+      "ownerRole": "operations-sheet-owner",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-15 (Matt Barge): HubSpot is the source of truth for campus state; the Operations sheet and the growth map are downstream and are corrected where they disagree"
+      },
       "requirementRef": {
         "file": "spec/source-authority.json",
         "key": "fields/campus.facts"
@@ -2246,6 +2616,10 @@
       "evidenceExtra": [
         "observer-screenshot-desktop"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): header overlap: template scope, desktop and mobile stated separately, files at 48 px or 25%, telemetry above 8%"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.viewport"
@@ -2281,6 +2655,10 @@
       "evidenceExtra": [
         "observer-screenshot-mobile"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md workstream 2 (Matt Barge, 2026-09-24): header overlap: template scope, desktop and mobile stated separately, files at 48 px or 25%, telemetry above 8%"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.viewport"
@@ -2312,6 +2690,10 @@
       "evidenceExtra": [
         "observer-screenshot-desktop-mobile"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.viewport"
@@ -2342,6 +2724,10 @@
       "evidenceExtra": [
         "observer-screenshot-desktop-mobile"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.viewport"
@@ -2370,6 +2756,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.viewport"
@@ -2404,6 +2794,11 @@
       "evidenceExtra": [
         "observer-screenshot-desktop-mobile"
       ],
+      "depth": "render",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.images"
@@ -2437,6 +2832,10 @@
         "page-check-team-photo-framing",
         "section-shot-team-card"
       ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-22 (Matt Barge): team-card images are framed to the card ratio; a card fails when less than 95% of the height is visible or a side cut passes 30%"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.images"
@@ -2466,6 +2865,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.layout.console"
@@ -2493,6 +2896,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -2522,6 +2929,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.map.integrity"
@@ -2553,6 +2964,10 @@
       "sourceHealthDependency": [
         "browser"
       ],
+      "grounding": {
+        "kind": "complaint",
+        "ref": "Atlanta incident 2026-09-15: header stylesheet and footer missing on a campus page (spec/campus-page-requirements.json states/Open/site.header.rendered source)"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.header.rendered"
@@ -2576,6 +2991,10 @@
       "severity": "critical",
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2599,6 +3018,10 @@
       "severity": "critical",
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2622,6 +3045,10 @@
       },
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.ai-files"
@@ -2645,6 +3072,10 @@
       "severity": "medium",
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2667,6 +3098,10 @@
       },
       "ticketClass": "seo-redirect",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2688,6 +3123,10 @@
         "unit": "difference"
       },
       "ticketClass": "seo-redirect",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2709,6 +3148,10 @@
         "unit": "parse-errors"
       },
       "ticketClass": "seo-redirect",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2731,6 +3174,10 @@
       },
       "severity": "critical",
       "ticketClass": "seo-redirect",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2752,6 +3199,10 @@
         "unit": "difference"
       },
       "ticketClass": "seo-redirect",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.search.indexable"
@@ -2783,6 +3234,10 @@
       "severity": "low",
       "ticketClass": "observer-brand-visual",
       "note": "Telemetry only; the playbook page-check brand-visual is the measuring check (spec/brand-visual.json check.enforcement).",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-09-22 (Matt Barge): the Alpha School Brand Guidelines are the visual source; Montserrat and only Montserrat"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.brand.visual"
@@ -2807,6 +3262,10 @@
       "severity": "low",
       "ticketClass": "copy",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.claims.evidence"
@@ -2831,6 +3290,10 @@
       "severity": "low",
       "ticketClass": "copy",
       "dedupeScope": "site",
+      "grounding": {
+        "kind": "none",
+        "ref": "no complaint, source contract, exemplar or decision names this rule; spec/site-rules.json states it without a source"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.claims.evidence"
@@ -2862,6 +3325,10 @@
       "exemptions": [
         "registry/campus-cta-exceptions.json: a campus and CTA with an unexpired entry (hidden, present or destination) is exempted by the filer, never filed"
       ],
+      "grounding": {
+        "kind": "source-contract",
+        "ref": "spec/community-routing.json communityHosts"
+      },
       "requirementRef": {
         "file": "spec/community-routing.json",
         "key": "communityHosts"
@@ -2888,6 +3355,10 @@
       "clearAfterRuns": 1,
       "suppresses": "every row whose sourceHealthDependency names the failed provider's source id (sourceHealth[].providerEntity)",
       "decisionPending": "cmtneqjw4000404jslko6zim1",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -2918,6 +3389,10 @@
       "clearAfterRuns": 1,
       "suppresses": "every row whose sourceHealthDependency includes operations-sheet",
       "decisionPending": "cmtnxta3p000104l2mg9p9kvf",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -2944,6 +3419,10 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.map.integrity.* rows on the same run and route",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -2970,6 +3449,10 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.map.integrity.* rows on the same run and route",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -2996,6 +3479,10 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.map.integrity.pin-identity, site.map.integrity.pin-destination, site.community.routing.map-destination on the same run and route",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -3022,6 +3509,10 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.map.integrity.embed-rendered on the same run and route",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -3048,6 +3539,10 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.map.integrity.embed-rendered on the same run and route",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -3074,6 +3569,10 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.layout.* and site.header.rendered.route-reachable on the same run, route and viewport",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -3100,6 +3599,11 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "nothing that files: the DOM measurement stands, only the evidence screenshot pair for that route and viewport is missing from the artifact",
+      "depth": "render",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -3126,6 +3630,11 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.layout.* on the same run, route and viewport (a layout measured before the fonts settled is not evidence)",
+      "depth": "render",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"
@@ -3152,6 +3661,11 @@
       "dedupeScope": "site",
       "clearAfterRuns": 1,
       "suppresses": "site.layout.images.render on the same run and page",
+      "depth": "render",
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/qc-loop-redesign-plan-2026-09-24.md design rule 3 (Matt Barge, 2026-09-24): loop health is a separate channel to the observer owner and suppresses the affected findings"
+      },
       "requirementRef": {
         "file": "spec/site-rules.json",
         "key": "rules/site.loop.health"

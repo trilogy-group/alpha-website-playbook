@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T15:41:52.114Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator",
+  "date": "2026-09-25",
+  "specRefs": [
+    "spec/check-rows.json"
+  ],
+  "summary": "the filer runs after each full observer run as a repository_dispatch observer-run-completed receiver carrying the observer run id (cross-repository workflow_run is not supported), with a fallback cron at 06:45 and 21:45 UTC behind the same freshness gate and OBSERVER_FILER_APPLY gating; full render runs at 06:00 and 21:00 UTC, events every two hours, source contracts daily at 06:30 UTC into the source digest, loop health every run, agent sweep every two or three days, change triggers by repository_dispatch; clearAfterRuns means two consecutive full runs, about one day (docs/sweep-runbook.md, Cadence, breadth and depth)",
+  "decisionRow": "| 2026-09-25 | Decided (Matt Barge, Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator): the filer runs after each full observer run as a repository_dispatch observer-run-completed receiver carrying the observer run id (cross-repository workflow_run is not supported), with a fallback cron at 06:45 and 21:45 UTC behind the same freshness gate and OBSERVER_FILER_APPLY gating; full render runs at 06:00 and 21:00 UTC, events every two hours, source contracts daily at 06:30 UTC into the source digest, loop health every run, agent sweep every two or three days, change triggers by repository_dispatch; clearAfterRuns means two consecutive full runs, about one day (docs/sweep-runbook.md, Cadence, breadth and depth) | Matt Barge | spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-9e1c107d.json |",
+  "appliedIn": "spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-9e1c107d.json",
+  "textSha256": "9e1c107de87d6fe5123095227b4bf02676642d6a760967ea0ef48c899de630b2",
+  "text": "Decision by Matt Barge, 2026-09-25, relayed to the Claude Code session building the alpha-website-playbook QC cadence branch:\n\nFiler cadence: change .github/workflows/observer-filer.yml from the hourly cron to workflow_run on the aeo site-observe.yml workflow completing with conclusion success (cross-repo workflow_run is not supported, so implement it as a repository_dispatch receiver with event type observer-run-completed carrying the run id, plus a fallback cron at 06:45 and 21:45 UTC that uses the freshness gate already in place), and set clearAfterRuns semantics in the runbook to \"two consecutive full runs, about one day\". Keep OBSERVER_FILER_APPLY gating and the freshness gate unchanged.\n\nDocs: a \"Cadence, breadth and depth\" section in docs/sweep-runbook.md with the table (full render twice a day at 06:00 and 21:00 UTC, events every two hours, source contracts daily at 06:30 UTC to the source digest, loop health every run, filer after each full run, agent sweep every two or three days, change triggers via repository_dispatch).\n"
+}

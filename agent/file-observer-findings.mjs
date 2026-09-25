@@ -17,6 +17,11 @@
  * Rules, in order, per finding:
  *   1. A check with no row (or a retired one) is telemetry: dropped and counted. An advisory row is counted and never
  *      filed. A loop-health row (`channel: loop-health`) goes to the observer owner's channel, never the website queue.
+ *      A source-digest row (`channel: source-digest`, bundle 1.2: the map-source rows comparing the Operations sheet,
+ *      HubSpot Programs and the growth map API, and the Community record, URL form and host rows) is never filed: every
+ *      finding on it goes to `source-digest.md` next to the report, grouped by owner role (growth-map-owner,
+ *      hubspot-program-admin, operations-sheet-owner, community-app-owner) with one audit line each, and the summary
+ *      prints the count; a ticket already open on such a row is left to its owner (never auto-resolved).
  *   1b. Sister-site guard: a campus-page row (pageFamily campus, campus-open, campus-announced) measures alpha.school campus
  *      pages only; a finding on any other host (alphahigh.school, sportsacademy.school, ...) is reported as out-of-scope-site
  *      and never filed. Group titles use the campus display name from registry/campus-pages.json, never a bare program id.
@@ -52,7 +57,9 @@
  *      id; those are listed under unresolved), carrying an observer check id whose incidents are all resolved by clean runs (at least the
  *      row's clearAfterRuns; a resolutionReason such as superseded-evidence-version is never a clear) gets a section-7
  *      RESOLUTION note (assertNoteShape) citing the clearing run ids, `resolutionKind: check-cleared` (first class and in
- *      customFields), and status COMPLETED through one v1 PATCH built from the live ticket with `expectedUpdatedAt`:
+ *      customFields), and status COMPLETED through one v1 PATCH built from the live ticket after a client-side stale guard
+ *      (GET, `updatedAt` equal to the plan's, else CHANGED_SINCE_PLAN; the PATCH never carries `expectedUpdatedAt`, which
+ *      APEX v1 rejects with 400 "Unsupported task field", 2026-09-25):
  *      never a PATCH whose only key is agentEligible, no agentStatus (APEX clears it on completion), the existing
  *      description first (APEX PR 409). Only a ticket in NOT_STARTED, or BLOCKED by intake or the filer with no human
  *      note, closes this way; FOR_REVIEW, MISSING_INFO, IN_PROGRESS, a ticket a row's decisionPending names, and one
@@ -68,7 +75,8 @@
  * packet's run id is not newer than that id (compareRunIds: the run ids' trailing timestamps, so the same packet is never
  * applied twice and an older one never after a newer one). A dry run reports the same conditions as `packetWarnings`.
  *
- * Dry run by default: the plan goes to `<run dir>/filer-report.json` and stdout. `--apply` performs the writes against the
+ * Dry run by default: the plan goes to `<run dir>/filer-report.json` and stdout, and the source digest to `source-digest.md`
+ * next to the report. `--apply` performs the writes against the
  * live queue (never with `--queue`) and appends every one to `<run dir>/filer-writes.jsonl`. Env: APEX_API_TOKEN
  * (APEX_API_BASE, APEX_AGENT_API_BASE optional).
  */
@@ -85,7 +93,7 @@ export { FILER_OWNED_CODE, isFilerOwnedConflict }
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
-export const FILER_VERSION = '0.4'
+export const FILER_VERSION = '0.5'
 export const FILED_BY = 'agent/file-observer-findings.mjs'
 export const IDEMPOTENCY_PREFIX = 'observer:'
 export const RESOLUTION_KIND = 'check-cleared'
@@ -99,7 +107,8 @@ export const INSTRUCTION_LINE = /^(?:OPERATOR INSTRUCTION|CORRECTION|DECISION NE
 /** Provider statuses that suppress a dependent row; not-collected, optional and disabled do not. */
 export const UNHEALTHY_STATUSES = ['degraded', 'failed', 'stale']
 export const DEDUPE_SCOPES = ['page', 'template', 'program', 'event', 'site']
-export const CHANNELS = ['ticket', 'loop-health']
+export const CHANNELS = ['ticket', 'source-digest', 'loop-health']
+export const SOURCE_DIGEST_FILE = 'source-digest.md'
 export const ROW_FIELDS = ['id', 'observerCheck', 'title', 'pageFamily', 'lifecycleStates', 'element', 'expected', 'comparator', 'severity', 'status', 'ticketClass', 'ownerRole', 'dedupeScope', 'clearAfterRuns', 'gracePeriodHours', 'evidenceProfile', 'sourceHealthDependency', 'requirementRef']
 export const OPEN_STATUSES = ['NOT_STARTED', 'IN_PROGRESS', 'MISSING_INFO', 'BLOCKED', 'FOR_REVIEW', 'TESTING', 'APPROVED']
 export const OPERATOR_ROLE = 'website-agent-operator'
@@ -291,7 +300,7 @@ export function loadCheckBundle(file) {
     for (const field of ROW_FIELDS) if (row[field] === undefined) problems.push(`row ${index} (${row.id || 'no id'}): missing ${field}`)
     if (!row.requirement && typeof row.requirementRef !== 'string') problems.push(`row ${index} (${row.id || 'no id'}): missing requirement (the requirement id)`)
     if (row.status && !['enforced', 'advisory'].includes(row.status)) problems.push(`row ${row.id}: status must be enforced or advisory, got ${row.status}`)
-    if (row.channel && !CHANNELS.includes(row.channel)) problems.push(`row ${row.id}: channel must be ticket or loop-health, got ${row.channel}`)
+    if (row.channel && !CHANNELS.includes(row.channel)) problems.push(`row ${row.id}: channel must be ticket, source-digest or loop-health, got ${row.channel}`)
     if (row.dedupeScope && !DEDUPE_SCOPES.includes(row.dedupeScope)) problems.push(`row ${row.id}: dedupeScope must be one of ${DEDUPE_SCOPES.join(', ')}, got ${row.dedupeScope}`)
     if (row.clearAfterRuns !== undefined && !(Number.isInteger(row.clearAfterRuns) && row.clearAfterRuns >= 1)) problems.push(`row ${row.id}: clearAfterRuns must be a positive integer`)
     if (row.gracePeriodHours !== undefined && !(Number.isFinite(row.gracePeriodHours) && row.gracePeriodHours >= 0)) problems.push(`row ${row.id}: gracePeriodHours must be a non-negative number`)
@@ -303,7 +312,7 @@ export function loadCheckBundle(file) {
   const byCheck = new Map()
   for (const row of rows) { if (!byCheck.has(row.observerCheck)) byCheck.set(row.observerCheck, []); byCheck.get(row.observerCheck).push(row) }
   const retired = new Map((raw.retired || []).map((r) => [r.observerCheck, r]))
-  return { file: resolved, version: raw.version || raw.bundleVersion || null, sha256: raw.sha256 || raw.bundleSha256 || null, rows, byCheck, sourceHealth: raw.sourceHealth || {}, retired }
+  return { file: resolved, version: raw.version || raw.bundleVersion || null, sha256: raw.sha256 || raw.bundleSha256 || null, rows, byCheck, sourceHealth: raw.sourceHealth || {}, sourceDigest: raw.sourceDigest || { ownerRoles: [], reportFile: SOURCE_DIGEST_FILE }, retired }
 }
 
 /** Read an APEX export (array, or {tasks|items|data}) for offline dedupe and auto-resolve. */
@@ -349,7 +358,7 @@ export function rowForFinding(bundle, finding, now = new Date()) {
   if (rows.length > 1) {
     const conditions = findingConditions(finding, now)
     const loopHealth = rows.filter((r) => channelFor(r) === 'loop-health')
-    const tickets = rows.filter((r) => channelFor(r) === 'ticket')
+    const tickets = rows.filter((r) => channelFor(r) !== 'loop-health')
     if (loopHealth.length && tickets.length) {
       // The condition that turns a page finding into loop health sits on the ticket row's suppressWhen (images-render:
       // every-image-failed-in-run) or on the loop-health row itself.
@@ -636,7 +645,10 @@ export function formatFact(value, depth = 0) {
     const entries = Object.entries(value).filter(([, v]) => v !== null && v !== undefined && v !== '')
     // An object whose every value is null or empty (a missing CTA: { href: null }) still needs a word on the Observed line.
     if (!entries.length) return Object.keys(value).length ? `${Object.keys(value).join(', ')} empty` : 'empty'
-    if (depth >= 2) return entries.map(([k]) => k).join(', ')
+    // A record inside a list inside a fact (applyLinks[0] on campus-application-source-missing) still shows its values:
+    // keys alone ("text, href") tell the owner nothing. Only the fourth level down collapses to keys.
+    if (depth >= 3) return entries.map(([k]) => k).join(', ')
+    if (depth >= 2) return entries.slice(0, 4).map(([k, v]) => (v && typeof v === 'object' ? k : `${k} ${formatFact(v, depth + 1)}`)).join(', ')
     return entries.slice(0, 8).map(([k, v]) => `${k} ${formatFact(v, depth + 1)}`).join(', ')
   }
   return String(value)
@@ -902,7 +914,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     holds: holdsByObserver ? 'observer (manifest.checkBundle verified; grace and consecutive-run holds not re-applied)' : 'filer (no verified check bundle in the manifest)',
     suppressedByObserver: run.health.suppressedByLoopHealth || { count: 0, items: null, reported: false },
     decisionTickets: [...new Set(bundle.rows.map((r) => r.decisionPending).filter(Boolean))],
-    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [] }
+    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], sourceDigest: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [] }
 
   // Pass 1: rows. A loop-health finding that still arrives is counted for the observer owner and never files; the
   // observer applies its own `suppresses` before the packet is written (health.json suppressedByLoopHealth).
@@ -916,6 +928,12 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     }
     if (channelFor(row) === 'loop-health') {
       plan.loopHealth.push({ id: finding.id, check: finding.check, row: row.id, entity: finding.entity, severity: finding.severity, decisionPending: row.decisionPending || null })
+      continue
+    }
+    // A source-digest row (1.2) is a source-versus-source comparison, never a website ticket: it goes to source-digest.md
+    // for its owner role with one audit line per finding, whatever its status or its open decision.
+    if (channelFor(row) === 'source-digest') {
+      plan.sourceDigest.push(sourceDigestItem({ row, finding, run, policy }))
       continue
     }
     assessed.push({ finding, row })
@@ -1010,8 +1028,38 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     plan.files.push(entry)
   }
 
-  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
+  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, sourceDigest: plan.sourceDigest.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0) }
   return plan
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Source digest (check bundle 1.2): source-versus-source findings, one audit line each, grouped by owner role
+// ---------------------------------------------------------------------------------------------------------------
+
+/** One digest item: the audit line names the row, the record, observed and expected, the sources with their read time, and the observer id. */
+export function sourceDigestItem({ row, finding, run, policy }) {
+  const owner = ownerFor(policy, row.ownerRole)
+  const programId = programIdFor(finding)
+  const record = campusNameForProgram(programId) || campusNameFor(finding.url) || finding.actual?.name || (programId ? `unregistered program ${programId}` : finding.entity)
+  const readAt = finding.sourceReadAt || run.manifest.completedAt
+  const sources = [...new Set([finding.expectedSource, finding.actualSource].filter(Boolean).map(cleanText))]
+  const audit = `${cleanText(row.title)} | ${cleanText(record)} | observed: ${truncate(formatFact(finding.actual), 200)} | expected: ${truncate(renderExpected(row), 160)} (${renderComparator(row)}) | source: ${sources.length ? sources.join(' vs ') : 'the finding names no source system'} (read ${readAt}) | observer ${finding.id}, row ${row.id}, severity ${row.severity}, run ${run.manifest.runId}${row.decisionPending ? `, decision pending ${row.decisionPending}` : ''}`
+  return { id: finding.id, check: finding.check, row: row.id, ownerRole: row.ownerRole, owner: owner.name, ownerRegistered: !owner.escalated, record: cleanText(record), entity: finding.entity, url: finding.url || null, severity: row.severity, status: row.status, decisionPending: row.decisionPending || null, audit }
+}
+
+/** source-digest.md: the digest grouped by owner role, in the bundle's role order, unregistered roles named as such. */
+export function renderSourceDigest(plan, bundle) {
+  const roles = [...new Set([...(bundle.sourceDigest?.ownerRoles || []), ...plan.sourceDigest.map((i) => i.ownerRole)])]
+  const lines = [`# Source digest: observer run ${plan.runId}`, '', `Run completed ${plan.runCompletedAt}; check bundle ${plan.bundleVersion || 'unversioned'} (${plan.bundleSha256 || 'no sha'}); ${plan.sourceDigest.length} finding${plan.sourceDigest.length === 1 ? '' : 's'} on source-digest rows. These compare the Operations sheet, HubSpot Programs, the growth map API and the Community app with each other; none is a website defect, none is filed as a ticket, and any ticket already open on such a row stays with its owner. Each line is the audit line for the owner: row, record, observed, expected, sources with read time, observer id.`, '']
+  for (const role of roles) {
+    const items = plan.sourceDigest.filter((i) => i.ownerRole === role)
+    const owner = items[0]?.owner
+    lines.push(`## ${role}${owner ? ` (${items[0].ownerRegistered ? owner : `no registered person; ${owner} as operator`})` : ''}: ${items.length} finding${items.length === 1 ? '' : 's'}`, '')
+    if (!items.length) { lines.push('- none this run', ''); continue }
+    for (const item of items) lines.push(`- ${item.audit}`)
+    lines.push('')
+  }
+  return `${lines.join('\n').trimEnd()}\n`
 }
 
 /**
@@ -1073,12 +1121,19 @@ export function findOpenDuplicate(openTasks, { group, row, payload, ids }, alias
  * human note, decision, instruction line, or a resolution that was not a clean-run clear), and to `unresolved` when the
  * check has not cleared (still observed, incident open or missing, check retired or without a row).
  */
+export const SOURCE_DIGEST_TICKET = 'source-digest row: the ticket stays with its owner; the filer neither files nor closes on this channel'
+
 function planResolves(plan, { run, bundle, queue, now, observedThisRun, decisionTickets = new Set() }) {
+  const findingsById = new Map(run.findings.map((f) => [f.id, f]))
   for (const task of queue) {
     if (!isObserverTicket(task)) continue
     const ids = observerIdsForTask(task)
     if (!isFilerOwnedTask(task)) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: NOT_FILER_OWNED }); continue }
     if (!ids.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, reason: 'observer or filer ticket without an observer id' }); continue }
+    // A ticket filed earlier on a row that is now source-digest (bundle 1.2) stays with its owner, observed or cleared: the filer
+    // neither files nor closes on that channel. The row comes from this run's finding or the incident for each observer id.
+    const digestRows = [...new Set(ids.map((id) => findingsById.get(id) || run.incidentsById.get(id)).filter(Boolean).map((f) => rowForFinding(bundle, f, now) || rowForCheck(bundle, f.check)).filter((r) => r && channelFor(r) === 'source-digest').map((r) => r.id))]
+    if (digestRows.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: SOURCE_DIGEST_TICKET, rows: digestRows }); continue }
     const stillObserved = ids.filter((id) => observedThisRun.has(id))
     if (stillObserved.length) { plan.unresolved.push({ id: task.id, title: task.title, status: task.status, observerIds: ids, reason: 'still observed in this run', stillObserved }); continue }
     const incidents = ids.map((id) => run.incidentsById.get(id) || null)
@@ -1119,8 +1174,9 @@ function planResolves(plan, { run, bundle, queue, now, observedThisRun, decision
  * The one v1 PATCH that completes a cleared ticket (APEX PR 409), built from the ticket as it is now (the plan's snapshot
  * for the dry run, the live GET at apply time): the existing description first, then the section-7 note; status
  * COMPLETED; resolutionKind first class and in customFields; checkId (SITE-*), filerRunId, requirementId and
- * checkBundleVersion keep it filer-owned; `expectedUpdatedAt` is the ticket's updatedAt so APEX refuses a stale write
- * the way intake's reconcile does; never agentStatus (APEX clears it) and never a PATCH whose only key is agentEligible.
+ * checkBundleVersion keep it filer-owned; never agentStatus (APEX clears it) and never a PATCH whose only key is
+ * agentEligible. The v1 PATCH carries no `expectedUpdatedAt` (APEX answers 400 "Unsupported task field", 2026-09-25):
+ * staleness is the filer's own guard in applyPlan (GET, compare `updatedAt` with the plan's, abort on drift).
  * The note is checked with assertNoteShape before it is used.
  */
 export function buildResolvePatch({ task, cleared, rows, runId, runCompletedAt, evidenceSha256, bundleVersion, now, page }) {
@@ -1132,7 +1188,6 @@ export function buildResolvePatch({ task, cleared, rows, runId, runCompletedAt, 
     description: `${String(task.description || '').trimEnd()}\n\n${note}`.trim(),
     status: 'COMPLETED',
     resolutionKind: RESOLUTION_KIND,
-    ...(task.updatedAt ? { expectedUpdatedAt: task.updatedAt } : {}),
     customFields: { ...cf, checkId: isObserverId(cf.checkId) ? String(cf.checkId).toUpperCase() : cleared.observerIds[0], resolutionKind: RESOLUTION_KIND, resolvedByRunId: cleared.resolvedByRunIds[0] || runId, clearingRunIds: cleared.clearingRunIds, resolvedAt: now.toISOString(), filerVersion: FILER_VERSION, filerRunId: runId, requirementId: rowKeyFor(rows[0]), checkBundleVersion: bundleVersion || '', history: [...(Array.isArray(cf.history) ? cf.history : []), `${date} ${FILED_BY} ${FILER_VERSION}: completed, check cleared on ${cleared.clearingRunIds.join(', ')}`] },
   }
 }
@@ -1255,7 +1310,9 @@ export async function applyPlan(plan, { apex, env = process.env, fetchImpl = glo
   for (const item of plan.resolves) {
     try {
       // The PATCH is built from the ticket as APEX holds it now, not from the plan's snapshot: a person may have written
-      // on it since; the live description stays first and expectedUpdatedAt makes APEX refuse a write that raced another.
+      // on it since; the live description stays first. The stale guard is client-side (APEX v1 PATCH rejects
+      // expectedUpdatedAt with 400 "Unsupported task field", 2026-09-25): the live updatedAt must equal the one the plan
+      // read, and any status change, later write or instruction line aborts this ticket with CHANGED_SINCE_PLAN.
       const live = await apex.get(item.id)
       const drift = resolveDrift(item, live, { decisionTickets })
       if (drift) {
@@ -1266,7 +1323,7 @@ export async function applyPlan(plan, { apex, env = process.env, fetchImpl = glo
       }
       const patch = buildResolvePatch({ task: live, cleared: item.cleared, rows: item.rows, runId: plan.runId, runCompletedAt: plan.runCompletedAt, evidenceSha256: plan.evidenceSha256, bundleVersion: plan.bundleVersion, now, page: item.page })
       const patched = await apex.patch(item.id, patch)
-      record({ write: 'resolve', ticket: item.id, status: patched.status || 'COMPLETED', resolutionKind: RESOLUTION_KIND, expectedUpdatedAt: patch.expectedUpdatedAt || null, clearingRunIds: item.cleared.clearingRunIds, observerIds: item.cleared.observerIds })
+      record({ write: 'resolve', ticket: item.id, status: patched.status || 'COMPLETED', resolutionKind: RESOLUTION_KIND, updatedAtSeen: live.updatedAt || null, clearingRunIds: item.cleared.clearingRunIds, observerIds: item.cleared.observerIds })
       results.resolved.push({ id: item.id, status: patched.status || 'COMPLETED' })
       log(`completed ${item.id} ${item.title.slice(0, 80)} (cleared on ${item.cleared.clearingRunIds.join(', ')})`)
     } catch (error) {
@@ -1278,7 +1335,7 @@ export async function applyPlan(plan, { apex, env = process.env, fetchImpl = glo
         continue
       }
       if (error.status === 409) {
-        // expectedUpdatedAt did not match: someone wrote between the GET and the PATCH. Abort this ticket; the next run re-plans it.
+        // APEX refused the write (a conflict between the GET and the PATCH). Abort this ticket; the next run re-plans it.
         record({ write: 'resolve', ticket: item.id, skipped: 'UPDATED_AT_MISMATCH', error: error.message })
         results.skipped.push({ id: item.id, step: 'resolve', reason: 'UPDATED_AT_MISMATCH', detail: error.message })
         log(`skipped ${item.id}: APEX refused the write (${error.message.slice(0, 120)})`)
@@ -1358,8 +1415,14 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
     applied = await applyPlan(plan, { apex, env, log: io.log, writesFile: path.join(run.dir, 'filer-writes.jsonl') })
     plan.applied = { filed: applied.filed, attached: applied.attached, resolved: applied.resolved, skipped: applied.skipped, errors: applied.errors, writes: applied.writes.length, writesFile: path.join(run.dir, 'filer-writes.jsonl') }
   }
+  // The source digest goes next to the report (never into a fixture run folder): one section per owner role.
+  const digestFile = path.join(path.dirname(reportFile), bundle.sourceDigest?.reportFile || SOURCE_DIGEST_FILE)
+  plan.sourceDigestFile = digestFile
+  plan.sourceDigestByOwnerRole = Object.fromEntries((bundle.sourceDigest?.ownerRoles || []).map((role) => [role, plan.sourceDigest.filter((i) => i.ownerRole === role).length]))
+  fs.writeFileSync(digestFile, renderSourceDigest(plan, bundle))
   fs.writeFileSync(reportFile, `${JSON.stringify(plan, null, 2)}\n`)
   const summary = { mode: plan.mode, runId: plan.runId, bundleVersion: plan.bundleVersion, bundleSha256: plan.bundleSha256, healthSource: plan.health.source, unhealthySources: Object.keys(plan.health.unhealthy), holds: plan.holds, suppressedByObserver: plan.suppressedByObserver.count, counts: plan.counts, report: reportFile,
+    sourceDigest: { file: digestFile, count: plan.sourceDigest.length, byOwnerRole: plan.sourceDigestByOwnerRole },
     packet: { completedAt: packet.completedAt, ageHours: packet.ageHours, maxAgeHours: packet.maxAgeHours, bundleStatus: packet.bundleStatus, afterRunId: packet.afterRunId },
     ...(plan.packetWarnings.length ? { packetWarnings: plan.packetWarnings } : {}),
     ...(plan.queueWarnings.length ? { queueWarnings: plan.queueWarnings } : {}),

@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T15:41:52.014Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator",
+  "date": "2026-09-25",
+  "specRefs": [
+    "spec/check-rows.json"
+  ],
+  "summary": "every check row carries grounding {kind, ref} (complaint, source-contract, exemplar, decision or none, in the 2026-09-15 precedence order) and the builder sets status advisory with advisoryReason on any enforced row whose grounding is none (the promotion rule, docs/observer-requirements.md); 25 rows are none today and 21 of them turned advisory until someone grounds or retires them",
+  "decisionRow": "| 2026-09-25 | Decided (Matt Barge, Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator): every check row carries grounding {kind, ref} (complaint, source-contract, exemplar, decision or none, in the 2026-09-15 precedence order) and the builder sets status advisory with advisoryReason on any enforced row whose grounding is none (the promotion rule, docs/observer-requirements.md); 25 rows are none today and 21 of them turned advisory until someone grounds or retires them | Matt Barge | spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-2b1ee92c.json |",
+  "appliedIn": "spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-2b1ee92c.json",
+  "textSha256": "2b1ee92c98bb2b8cc2e4a16bff73efc6b9997f4c190cded79cf8c926b9b888a1",
+  "text": "Decision by Matt Barge, 2026-09-25, relayed to the Claude Code session building the alpha-website-playbook QC cadence branch:\n\nGrounding: add a grounding field to every row (complaint, source-contract, exemplar, decision, or none) with a reference; the builder sets status: advisory on any enforced row whose grounding is none, per the promotion rule in docs/observer-requirements.md. Fill it from the requirement refs and the check map where they say so; where you cannot tell, write none and list those rows in your reply.\n"
+}

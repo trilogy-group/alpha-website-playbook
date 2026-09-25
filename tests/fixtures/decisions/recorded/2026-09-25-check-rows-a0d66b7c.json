@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-25T15:41:52.065Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator",
+  "date": "2026-09-25",
+  "specRefs": [
+    "spec/check-rows.json"
+  ],
+  "summary": "every check row carries depth (render or http), defaulted from pageFamily through depthDefaults: campus pages, the homepage, Locations and the events pages render in the browser on both viewports, the long tail is read over HTTP, map-source rows are source reads; a row with viewports, a browser dependency or a rendered comparator is always render; the contract the observer reads is in spec/README.md",
+  "decisionRow": "| 2026-09-25 | Decided (Matt Barge, Claude Code session 2026-09-25, Matt Barge's decisions relayed by the coordinator): every check row carries depth (render or http), defaulted from pageFamily through depthDefaults: campus pages, the homepage, Locations and the events pages render in the browser on both viewports, the long tail is read over HTTP, map-source rows are source reads; a row with viewports, a browser dependency or a rendered comparator is always render; the contract the observer reads is in spec/README.md | Matt Barge | spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-a0d66b7c.json |",
+  "appliedIn": "spec/check-rows.json; tests/fixtures/decisions/recorded/2026-09-25-check-rows-a0d66b7c.json",
+  "textSha256": "a0d66b7cb05c62e2db8a6c5985ad26e17699d35cdc7a6547dcef47bde6a7700c",
+  "text": "Decision by Matt Barge, 2026-09-25, relayed to the Claude Code session building the alpha-website-playbook QC cadence branch:\n\nDepth: add a depth field per row (render or http) and a pageFamilies note: render for campus pages, home, locations and events pages; http for the long tail; the builder defaults from pageFamily. The observer (being changed in parallel) will read it; document the contract in spec/README.md.\n"
+}
