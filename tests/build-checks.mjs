@@ -270,7 +270,11 @@ export function buildBundle({ observerSource = null } = {}) {
       element: source.element,
       ...(source.viewports ? { viewports: source.viewports } : {}),
       ...(source.when ? { when: source.when } : {}),
-      expected: source.expected?.derive ? { derive: { ...source.expected.derive, onMissing: source.expected.derive.onMissing ?? 'skip' } } : source.expected,
+      // 1.3: a derive row fills onMissing; a row's literals are published at row.literals and mirrored at expected.literal, the
+      // key the observer reads them under (aeo check-bundle.mjs rules.literalValue), next to the derive.
+      expected: source.expected?.derive
+        ? { derive: { ...source.expected.derive, onMissing: source.expected.derive.onMissing ?? 'skip' }, ...(source.literals ? { literal: source.literals } : {}) }
+        : (source.expected && source.literals && typeof source.expected.literal === 'object' && source.expected.literal !== null && !Array.isArray(source.expected.literal) ? { literal: { ...source.expected.literal, ...source.literals } } : source.expected),
       ...(source.literals ? { literals: source.literals } : {}),
       comparator: source.comparator,
       severity: source.severity ?? defaults.severity,
@@ -312,11 +316,11 @@ export function buildBundle({ observerSource = null } = {}) {
     if (!row.element) errors.push(`${label}: element missing`)
     else if (!fieldElements.has(row.element) && !PSEUDO_ELEMENTS.includes(row.element) && !PSEUDO_ELEMENT_PREFIXES.some((p) => row.element.startsWith(p))) errors.push(`${label}: element ${row.element} is neither a field-map key nor a page-level pseudo-element`)
     for (const v of row.viewports || []) if (!VIEWPORTS.includes(v)) errors.push(`${label}: unknown viewport ${v}`)
-    if (!row.expected || typeof row.expected !== 'object') errors.push(`${label}: expected missing`)
+    if (!source.expected || typeof source.expected !== 'object') errors.push(`${label}: expected missing`)
     else {
-      const hasLiteral = 'literal' in row.expected
-      const hasDerive = 'derive' in row.expected
-      if (hasLiteral === hasDerive) errors.push(`${label}: expected must be exactly one of literal or derive`)
+      const hasLiteral = 'literal' in source.expected
+      const hasDerive = 'derive' in source.expected
+      if (hasLiteral === hasDerive) errors.push(`${label}: expected must be exactly one of literal or derive (literals go in the row's literals field)`)
       if (hasDerive) {
         const d = row.expected.derive
         for (const k of ['source', 'field', 'transform']) if (d?.[k] === undefined || d?.[k] === '') errors.push(`${label}: expected.derive.${k} missing`)
@@ -327,14 +331,14 @@ export function buildBundle({ observerSource = null } = {}) {
         if (!ON_MISSING.includes(d?.onMissing)) errors.push(`${label}: expected.derive.onMissing must be finding or skip`)
         if (d?.onMissing === 'finding') {
           if (typeof row.literals?.missingAsk !== 'string' || !row.literals.missingAsk.trim()) errors.push(`${label}: onMissing finding needs literals.missingAsk (the exact ask filed with the Missing Info ticket)`)
-          if (typeof row.literals?.thing !== 'string' || !row.literals.thing.trim()) errors.push(`${label}: onMissing finding needs literals.thing (the noun in "no approved <thing> recorded for <state> campus <name>")`)
+          if (typeof row.literals?.missingThing !== 'string' || !row.literals.missingThing.trim()) errors.push(`${label}: onMissing finding needs literals.missingThing (the noun in "no approved <thing> recorded for <state> campus <name>")`)
         }
       }
     }
     if (!row.comparator?.type || typeof row.comparator.threshold !== 'number' || !row.comparator.unit) errors.push(`${label}: comparator needs type, numeric threshold, unit`)
     else if (!comparators[row.comparator.type]) errors.push(`${label}: comparator ${row.comparator.type} is not in spec/observer-comparators.json`)
     if (row.comparator?.type === 'equals-approved-media' && row.expected?.derive?.onMissing !== 'finding') errors.push(`${label}: equals-approved-media derives from the media registry; expected.derive.onMissing must be finding`)
-    if (row.comparator?.type === 'registry-coverage') {
+    if (row.observerCheck === 'campus-registry-coverage') {
       const registries = row.literals?.registries
       if (!Array.isArray(registries) || !registries.length) errors.push(`${label}: registry-coverage needs literals.registries[]`)
       for (const entry of registries || []) {
@@ -347,7 +351,7 @@ export function buildBundle({ observerSource = null } = {}) {
       }
       if (row.dedupeScope !== 'campus-registry') errors.push(`${label}: registry-coverage rows dedupe per campus and registry (dedupeScope campus-registry)`)
     }
-    if (row.dedupeScope === 'campus-registry' && row.comparator?.type !== 'registry-coverage') errors.push(`${label}: dedupeScope campus-registry is for registry-coverage rows`)
+    if (row.dedupeScope === 'campus-registry' && row.observerCheck !== 'campus-registry-coverage') errors.push(`${label}: dedupeScope campus-registry is for the registry-coverage row`)
     if (!SEVERITIES.includes(row.severity)) errors.push(`${label}: unknown severity ${row.severity}`)
     if (!STATUSES.includes(row.status)) errors.push(`${label}: unknown status ${row.status}`)
     if (!CHANNELS.includes(row.channel)) errors.push(`${label}: unknown channel ${row.channel}`)

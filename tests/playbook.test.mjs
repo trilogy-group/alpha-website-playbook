@@ -2372,7 +2372,9 @@ test('check bundle builds without errors, is current, validates against its sche
   // every row carries the shared contract fields with the exact names
   for (const row of checkBundle.rows) {
     for (const field of ['id', 'observerCheck', 'title', 'pageFamily', 'lifecycleStates', 'element', 'expected', 'comparator', 'severity', 'status', 'ticketClass', 'ownerRole', 'dedupeScope', 'clearAfterRuns', 'gracePeriodHours', 'evidenceProfile', 'sourceHealthDependency', 'requirementRef']) assert.ok(field in row, `${row.id} lacks ${field}`)
-    assert.ok(('literal' in row.expected) !== ('derive' in row.expected), `${row.id} expected must be literal xor derive`)
+    // 1.3: a derive row may also carry expected.literal (its literals mirrored for the observer); a literal-only row never derives.
+    assert.ok(('literal' in row.expected) || ('derive' in row.expected), `${row.id} expected must carry literal or derive`)
+    if ('literal' in row.expected && 'derive' in row.expected) assert.deepEqual(row.expected.literal, row.literals, `${row.id} expected.literal mirrors literals`)
     assert.ok(checkBundle.pageFamilies[row.pageFamily], `${row.id} pageFamily ${row.pageFamily}`)
   }
   for (const entry of checkBundle.retired) for (const field of ['observerCheck', 'reason', 'replacedBy', 'decidedBy', 'date']) assert.ok(field in entry, `retired ${entry.observerCheck} lacks ${field}`)
@@ -2605,13 +2607,19 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const comparators = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'observer-comparators.json'), 'utf8')).comparators
   assert.deepEqual(checkBundle.comparators, comparators)
   for (const row of checkBundle.rows) assert.ok(comparators[row.comparator.type], `${row.id} comparator ${row.comparator.type} is not in spec/observer-comparators.json`)
-  const used = new Set(checkBundle.rows.map((r) => r.comparator.type))
-  for (const type of Object.keys(comparators)) assert.ok(used.has(type), `comparator ${type} is defined but no row uses it`)
+  // The list is the observer's published one (aeo #37 supported-comparators.json, 35 types): the numeric aliases are unused by rows today.
+  assert.equal(Object.keys(comparators).length, 35)
+  for (const type of ['lte', 'gte', 'eq', 'lt', 'gt', 'equals-approved-media', 'count-equals']) assert.ok(comparators[type], type)
+  // A derive row mirrors its literals at expected.literal; a literal-object row merges them in; a string literal (the loop-health rendered row) keeps its sentence.
+  for (const row of checkBundle.rows.filter((r) => r.literals)) {
+    if (row.expected.derive) assert.deepEqual(row.expected.literal, row.literals, `${row.id} literals are mirrored at expected.literal for the observer`)
+    else if (row.expected.literal && typeof row.expected.literal === 'object') for (const [k, v] of Object.entries(row.literals)) assert.deepEqual(row.expected.literal[k], v, `${row.id} literal ${k}`)
+  }
   // Presence, not absence: every derive row says what a missing entry means; the registry-keyed rows say finding, with the ask and the noun.
   for (const row of checkBundle.rows.filter((r) => r.expected.derive)) assert.ok(['finding', 'skip'].includes(row.expected.derive.onMissing), `${row.id} onMissing`)
   const finding = checkBundle.rows.filter((r) => r.expected.derive?.onMissing === 'finding').map((r) => r.id).sort()
   assert.deepEqual(finding, ['campus.intro.media.current', 'campus.resources.packet.present', 'campus.team.roster.present', 'site.coverage.open-campus-registries', 'site.search.schema.url'])
-  for (const id of finding) { const row = checkRow(id); assert.ok(row.literals.missingAsk.length > 40 && row.literals.thing, id) }
+  for (const id of finding) { const row = checkRow(id); assert.ok(row.literals.missingAsk.length > 40 && row.literals.missingThing, id) }
   const media = checkRow('campus.intro.media.current')
   assert.deepEqual([media.entitySource, media.ownerRole, media.ticketClass, media.comparator.type, media.comparator.threshold, media.comparator.unit, media.expected.derive.source, media.grounding.kind], ['hubspot-programs', 'website-operations', 'observer-media-identity', 'equals-approved-media', 0, 'mismatches', 'registry', 'decision'])
   assert.match(media.expected.derive.field, /^registry\/campus-open-media\.json campuses\[slug\]/)
@@ -2620,7 +2628,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   assert.match(media.literals.missingAsk, /registry\/campus-open-media\.json/)
   // Coverage rows.
   const registries = checkRow('site.coverage.open-campus-registries')
-  assert.deepEqual([registries.observerCheck, registries.entitySource, registries.lifecycleStates, registries.channel, registries.ticketClass, registries.ownerRole, registries.dedupeScope, registries.comparator.type, registries.clearAfterRuns], ['campus-registry-coverage', 'hubspot-programs', ['Open', 'Announced'], 'ticket', 'observer-media-identity', 'website-operations', 'campus-registry', 'registry-coverage', 1])
+  assert.deepEqual([registries.observerCheck, registries.entitySource, registries.lifecycleStates, registries.channel, registries.ticketClass, registries.ownerRole, registries.dedupeScope, registries.comparator.type, registries.clearAfterRuns], ['campus-registry-coverage', 'hubspot-programs', ['Open', 'Announced'], 'ticket', 'observer-media-identity', 'website-operations', 'campus-registry', 'count-equals', 1])
   assert.deepEqual(registries.literals.registries.map((r) => [r.file, r.keyPath, r.requiredWhen.type, r.ownerRole, r.ticketClass]), [
     ['registry/campus-open-media.json', 'campuses[slug]', ['Open'], 'website-operations', 'observer-media-identity'],
     ['registry/campus-leadership.json', 'campuses[slug]', ['Open', 'Announced'], 'campus-roles-confirmer', 'staff-bulk'],
@@ -2635,6 +2643,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const renderedRow = checkRow('site.coverage.open-campus-rendered')
   assert.deepEqual([renderedRow.observerCheck, renderedRow.channel, renderedRow.ticketClass, renderedRow.ownerRole, renderedRow.lifecycleStates, renderedRow.depth, renderedRow.dedupeScope], ['campus-page-rendered', 'loop-health', 'observer-health', 'observer-owner', ['Open'], 'render', 'site'])
   assert.ok(renderedRow.suppresses)
+  assert.match(renderedRow.literals.missesNote, /\[\{ id, name, url \}\]/)
   for (const id of ['site.coverage.open-campus-registries', 'site.coverage.program-page', 'site.coverage.open-campus-rendered']) assert.match(checkRow(id).grounding.ref, /docs\/decisions\.md 2026-09-25 \(Matt Barge\): check from HubSpot to the website/)
   const decisions = fs.readFileSync(path.join(root, 'docs', 'decisions.md'), 'utf8')
   assert.match(decisions, /\| 2026-09-25 \| Decided \(Matt Barge, Slack message to the website agent 2026-09-25: 'not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website'\): /)

@@ -1,5 +1,5 @@
 {
-  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP. 1.3 (2026-09-25, decision by Matt Barge: check from HubSpot to the website, not only from the website to HubSpot): entitySource per row (hubspot-programs or map; campus rows default to hubspot-programs through entitySources.<id>.pageFamilies, so the observer enumerates the campuses from HubSpot Programs whose type is public and whose website is on a public host, takes the lifecycle state from type, and fetches the page at website; the map is downstream). expected.derive.onMissing (finding or skip, default skip): on finding, an in-scope entity with no registry entry is a finding of the same row with missingExpectation true, titled \"no approved <thing> recorded for <state> campus <name>\", filed Missing Info to the registry owner role with literals.missingAsk. literals per row carry the fixed values the observer and the filer read (missingAsk, thing, launchWords, assetPatterns, registries). aliases.pageCheck maps every tests/page-check.mjs check id to its row id (aliases.pageCheckUnmapped names the rest with the reason); agent/file-found-ticket.mjs writes customFields.requirementId from it. Comparator types are enumerated in spec/observer-comparators.json and the builder refuses any other. New coverage rows: site.coverage.open-campus-registries, site.coverage.program-page, site.coverage.open-campus-rendered. dedupeScope campus-registry (one ticket per campus and registry).",
+  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP. 1.3 (2026-09-25, decision by Matt Barge: check from HubSpot to the website, not only from the website to HubSpot): entitySource per row (hubspot-programs or map; campus rows default to hubspot-programs through entitySources.<id>.pageFamilies, so the observer enumerates the campuses from HubSpot Programs whose type is public and whose website is on a public host, takes the lifecycle state from type, and fetches the page at website; the map is downstream). expected.derive.onMissing (finding or skip, default skip): on finding, an in-scope entity with no registry entry is a finding of the same row with missingExpectation true, titled \"no approved <thing> recorded for <state> campus <name>\", filed Missing Info to the registry owner role with literals.missingAsk. literals per row carry the fixed values the observer and the filer read (missingAsk, missingThing, launchWords, assetPatterns, registries); the builder publishes them at row.literals and mirrors them at expected.literal next to expected.derive, which is where the observer reads them (rules.literalValue). aliases.pageCheck maps every tests/page-check.mjs check id to its row id (aliases.pageCheckUnmapped names the rest with the reason); agent/file-found-ticket.mjs writes customFields.requirementId from it. Comparator types are enumerated in spec/observer-comparators.json and the builder refuses any other. New coverage rows: site.coverage.open-campus-registries, site.coverage.program-page, site.coverage.open-campus-rendered. dedupeScope campus-registry (one ticket per campus and registry).",
   "version": "1.3",
   "asOf": "2026-09-25",
   "defaults": {
@@ -457,7 +457,7 @@
         }
       },
       "literals": {
-        "thing": "intro media",
+        "missingThing": "intro media",
         "missingAsk": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
         "launchWords": [
           "Coming Soon",
@@ -800,7 +800,7 @@
         "key": "rules/site.search.schema"
       },
       "literals": {
-        "thing": "campus page registry entry",
+        "missingThing": "campus page registry entry",
         "missingAsk": "Add the campus to registry/campus-pages.json (slug, url, objectId, names, mapProgramIds) so the canonical URL is a registry value; until then the schema URL row has no expectation and this ticket stays Missing Info."
       }
     },
@@ -1031,7 +1031,7 @@
         "key": "states/Open/campus.resources.packet"
       },
       "literals": {
-        "thing": "info packet",
+        "missingThing": "info packet",
         "missingAsk": "Record the campus's approved info packets in registry/campus-packets.json campuses.<slug> (packets with label, url, schoolYear and approved, read back from the APEX CampusPacketProfile after the Dean of Parents approves); until then the 2026/27 button stays hidden (interimPolicy) and this ticket stays Missing Info."
       }
     },
@@ -1523,7 +1523,7 @@
         "key": "states/Open/campus.team"
       },
       "literals": {
-        "thing": "team roster source deck",
+        "missingThing": "team roster source deck",
         "missingAsk": "Register the campus's Meet the Guides deck in registry/staff-source-decks.json decks.<slug> (the Google Slides id and the owner); until then the roster row cannot be measured and this ticket stays Missing Info."
       }
     },
@@ -2461,7 +2461,7 @@
         }
       },
       "literals": {
-        "thing": "registry row",
+        "missingThing": "registry row",
         "missingAsk": "Add the registry entry named in this ticket for the campus; the ask per registry is in literals.registries.",
         "registries": [
           {
@@ -2516,12 +2516,13 @@
             "ask": "Informational: a campus with no CTA exception entry follows the default CTA rows; nothing to add unless a decision exists."
           }
         ],
-        "registriesNote": "One finding per campus per registry whose requiredWhen.type includes the Program type and whose file has no entry at keyPath for the campus slug; the finding carries actual.registry (the file), actual.keyPath, actual.slug, actual.campus, actual.state and actual.programId; the filer files it Missing Info to the entry's ownerRole (person from roleOwners) with the entry's ask and ticketClass, deduped on campus and registry. requiredWhen.type empty means informational: listed in the report, never filed."
+        "registriesNote": "One finding per campus per registry whose requiredWhen.type includes the Program type and whose file has no entry at keyPath for the campus slug; the observer's finding carries missingExpectation true, registry (the registry name from the file), expected {file, keyPath}, observed (the value read), ownerRole (the entry's) and the entry's ask as its summary; the filer files it Missing Info to the entry's ownerRole (person from roleOwners) with the entry's ask and ticketClass, deduped on campus and registry. requiredWhen.type empty means informational: listed in the report, never filed."
       },
       "comparator": {
-        "type": "registry-coverage",
+        "type": "count-equals",
         "threshold": 0,
-        "unit": "missing-entries"
+        "unit": "missing-registry-entries",
+        "note": "One finding per campus per registry entry missing at keyPath for a registry whose requiredWhen.type includes the campus type (literals.registries); the observer emits each with missingExpectation true, registry (the registry name), expected {file, keyPath}, ownerRole and the entry ask."
       },
       "severity": "high",
       "ticketClass": "observer-media-identity",
@@ -2609,7 +2610,7 @@
         "literal": "a completed browser render (DOM inspected, fonts settled, screenshot pair captured) for every Open campus page in every full run"
       },
       "literals": {
-        "missesNote": "One loop-health finding per full run listing the Open campus pages that were not rendered (actual.misses: [{ slug, campus, url, reason }]); a run with no misses emits nothing."
+        "missesNote": "One loop-health finding per full run when any Open campus page in the entity set was not rendered: actual is the list of misses [{ id, name, url }], expected the number of Open campus pages, observed the number rendered; a run that renders every one emits nothing."
       },
       "comparator": {
         "type": "count-equals",

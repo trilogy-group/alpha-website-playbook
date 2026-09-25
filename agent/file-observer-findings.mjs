@@ -603,7 +603,8 @@ export function isMissingExpectation(finding) {
 /** The registry file a coverage finding names (actual.registry, registry, actual.file), or null. */
 export function registryFileFor(finding) {
   const actual = finding?.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
-  const value = actual.registry || finding?.registry || actual.file || null
+  // The observer names the registry file under expected.file (aeo #37) and the registry's short name under finding.registry.
+  const value = (finding?.expected && typeof finding.expected === 'object' && finding.expected.file) || actual.registry || actual.file || (typeof finding?.registry === 'string' && /^registry\//.test(finding.registry) ? finding.registry : null) || null
   return typeof value === 'string' && value ? value : null
 }
 
@@ -617,7 +618,7 @@ export function registryFileForRow(row) {
 /** The `program-page-present` case that is not a page defect: the page answers and names the campus but the growth map lacks the record. */
 export function missingFromMapOnly(finding) {
   const actual = finding?.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
-  if (actual.missingFromMap !== true && actual.inMap !== false) return false
+  if (actual.missingFromMap !== true && actual.inMap !== false && finding?.onMap !== false) return false
   const status = Number(actual.status ?? actual.httpStatus ?? 200)
   const named = actual.namesCampus !== false && actual.titleNamesCampus !== false
   return status >= 200 && status < 300 && named
@@ -650,7 +651,7 @@ export function missingExpectationFor({ row, finding, registries = {} }) {
   const slug = campusSlugFor(finding) || (typeof finding.actual?.slug === 'string' ? finding.actual.slug : null)
   const state = lifecycleFor(finding, slug).state
   const campus = (slug && campusPages()[slug]?.names?.[0]) || campusNameFor(finding.url) || finding.actual?.campus || finding.actual?.name || slug || finding.entity
-  const coverage = row.comparator?.type === 'registry-coverage'
+  const coverage = row.observerCheck === 'campus-registry-coverage'
   const file = coverage ? registryFileFor(finding) : registryFileForRow(row)
   if (!file) return { kind: 'invalid', reason: coverage ? 'coverage finding names no registry (actual.registry)' : `row ${row.id} derives from no registry file`, slug, campus, state }
   const entrySpec = coverage ? (row.literals?.registries || []).find((r) => r.file === file) : null
@@ -660,7 +661,7 @@ export function missingExpectationFor({ row, finding, registries = {} }) {
   const registry = registries[file] || loadRegistry(file)
   const keyPath = coverage ? entrySpec.keyPath : 'campuses[slug]'
   const entry = registryEntryAt(registry, keyPath, slug)
-  const thing = coverage ? entrySpec.thing : (row.literals?.thing || 'expectation')
+  const thing = coverage ? entrySpec.thing : (row.literals?.missingThing || 'expectation')
   const ask = coverage ? entrySpec.ask : (row.literals?.missingAsk || `Record the ${thing} for this campus in ${file}.`)
   const ownerRole = coverage ? entrySpec.ownerRole : row.ownerRole
   const ticketClass = coverage ? entrySpec.ticketClass : row.ticketClass
@@ -754,8 +755,9 @@ export function formatFact(value, depth = 0) {
 export function renderExpected(row) {
   const e = row.expected
   if (e && typeof e === 'object' && !Array.isArray(e)) {
-    if (e.literal !== undefined) return formatFact(e.literal)
+    // 1.3: a derive row may carry its literals mirrored at expected.literal; the derivation is still the expectation.
     if (e.derive) return `derived from ${e.derive.source} ${[].concat(e.derive.field || []).join(', ')} (${e.derive.transform})${e.derive.neverFields?.length ? `; never ${e.derive.neverFields.join(', ')}` : ''}`
+    if (e.literal !== undefined) return formatFact(e.literal)
   }
   return formatFact(e)
 }

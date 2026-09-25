@@ -330,7 +330,7 @@
         },
         "expected": {
           "type": "object",
-          "description": "Either { literal } or { derive: { source, field, transform } }.",
+          "description": "Either { literal } or { derive: { source, field, transform, onMissing } }. 1.3: a row with literals publishes them at row.literals and, on a derive row, mirrored at expected.literal next to the derive (the observer reads them there through rules.literalValue).",
           "properties": {
             "literal": {},
             "derive": {
@@ -384,7 +384,7 @@
         },
         "literals": {
           "type": "object",
-          "description": "Fixed values the observer and the filer read for this row (1.3): missingAsk (the exact ask filed with a missingExpectation finding), thing (the noun in the missing-expectation title: no approved <thing> recorded for <state> campus <name>), launchWords (the vision pass word list on the primary campus visuals), assetPatterns (known launch-era asset paths), registries (the coverage row: file, keyPath, requiredWhen.type, ownerRole, ticketClass, thing, ask per registry).",
+          "description": "Fixed values the observer and the filer read for this row (1.3): missingAsk (the exact ask filed with a missingExpectation finding), missingThing (the noun in the missing-expectation title: no approved <missingThing> recorded for <state> campus <name>), launchWords (the vision pass word list on the primary campus visuals), assetPatterns (known launch-era asset paths), registries (the coverage row: file, keyPath, requiredWhen.type, ownerRole, ticketClass, thing, ask per registry). Mirrored at expected.literal.",
           "additionalProperties": true
         },
         "comparator": {
@@ -428,7 +428,11 @@
                 "valid-json",
                 "valid-dates",
                 "start-before-end",
-                "registry-coverage"
+                "lte",
+                "gte",
+                "eq",
+                "lt",
+                "gt"
               ]
             },
             "threshold": {

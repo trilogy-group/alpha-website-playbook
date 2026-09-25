@@ -1267,7 +1267,7 @@ test('observer filer: coverage findings file one Missing Info per campus and reg
   const run = loadRunFolder(path.join(fixtures, 'coverage-2026-09-25'))
   const now = new Date('2026-09-25T15:00:00Z')
   const coverage = rowForCheck(checks, 'campus-registry-coverage')
-  assert.deepEqual([coverage.id, coverage.entitySource, coverage.dedupeScope, coverage.comparator.type, coverage.lifecycleStates, coverage.channel], ['site.coverage.open-campus-registries', 'hubspot-programs', 'campus-registry', 'registry-coverage', ['Open', 'Announced'], 'ticket'])
+  assert.deepEqual([coverage.id, coverage.entitySource, coverage.dedupeScope, coverage.comparator.type, coverage.lifecycleStates, coverage.channel], ['site.coverage.open-campus-registries', 'hubspot-programs', 'campus-registry', 'count-equals', ['Open', 'Announced'], 'ticket'])
   assert.deepEqual(coverage.literals.registries.map((r) => [r.file, r.requiredWhen.type.join('+') || 'informational', r.ownerRole, r.ticketClass]), [
     ['registry/campus-open-media.json', 'Open', 'website-operations', 'observer-media-identity'],
     ['registry/campus-leadership.json', 'Open+Announced', 'campus-roles-confirmer', 'staff-bulk'],
