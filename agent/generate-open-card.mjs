@@ -170,8 +170,21 @@ export function detectRenderers(args = {}, env = process.env) {
   out.push({ name: 'chromium', available: Boolean(chromium), detail: chromium ? 'playwright chromium' : chromiumError })
   const magick = spawnSync('magick', ['-version'], { encoding: 'utf8' })
   const magickOk = !magick.error && magick.status === 0
-  out.push({ name: 'magick', available: magickOk, detail: magickOk ? (magick.stdout.split('\n')[0] || 'magick') : 'ImageMagick `magick` not on PATH' })
+  const probe = magickOk ? magickProbe() : null
+  out.push({ name: 'magick', available: Boolean(magickOk && probe?.ok), detail: !magickOk ? 'ImageMagick `magick` not on PATH' : (probe.ok ? (magick.stdout.split('\n')[0] || 'magick') : `magick cannot render SVG text here: ${probe.reason}`) })
   return out
+}
+
+/** ImageMagick's own SVG renderer needs a working font setup; a `magick` that cannot draw one letter is not a renderer. */
+function magickProbe() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'open-card-probe-'))
+  try {
+    const svgFile = path.join(dir, 'probe.svg'); const pngFile = path.join(dir, 'probe.png')
+    fs.writeFileSync(svgFile, '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><text x="2" y="12" font-family="Arial, sans-serif" font-size="12">a</text></svg>')
+    const run = spawnSync('magick', ['-background', 'none', svgFile, '-depth', '8', `PNG32:${pngFile}`], { encoding: 'utf8' })
+    if (run.error || run.status !== 0 || !fs.existsSync(pngFile)) return { ok: false, reason: String(run.error?.message || run.stderr || `exit ${run.status}`).split('\n')[0].trim() }
+    return { ok: true }
+  } catch (e) { return { ok: false, reason: String(e.message).split('\n')[0] } } finally { fs.rmSync(dir, { recursive: true, force: true }) }
 }
 
 async function rasterizeWithSharp(svg, { width, height }, args, env) {
