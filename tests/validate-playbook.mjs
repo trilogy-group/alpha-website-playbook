@@ -184,8 +184,10 @@ export function runValidation() {
       if (!allowedQueues.has(policy.queue)) errors.push(`intake policy ${id}: unknown queue ${policy.queue}`)
       for (const [kind, rules] of [['guard', policy.guards], ['owner rule', policy.ownerRules]]) {
         for (const [index, rule] of (rules || []).entries()) {
-          requireFields(rule, ['pattern', 'ownerRole', 'reason'], `intake policy ${id} ${kind} ${index}`, errors)
-          try { new RegExp(rule.pattern, 'i') } catch (error) { errors.push(`intake policy ${id} ${kind} ${index}: invalid pattern (${error.message})`) }
+          // An owner rule (1.2) may match on checkIds or requirementIds instead of a text pattern; a guard always needs the pattern.
+          const idMatched = kind === 'owner rule' && ((Array.isArray(rule.checkIds) && rule.checkIds.length) || (Array.isArray(rule.requirementIds) && rule.requirementIds.length))
+          requireFields(rule, idMatched && rule.pattern === undefined ? ['ownerRole', 'reason'] : ['pattern', 'ownerRole', 'reason'], `intake policy ${id} ${kind} ${index}`, errors)
+          if (rule.pattern !== undefined) { try { new RegExp(rule.pattern, 'i') } catch (error) { errors.push(`intake policy ${id} ${kind} ${index}: invalid pattern (${error.message})`) } }
           if (rule.policy && !allowedPolicies.has(rule.policy)) errors.push(`intake policy ${id} ${kind} ${index}: unknown policy ${rule.policy}`)
         }
       }

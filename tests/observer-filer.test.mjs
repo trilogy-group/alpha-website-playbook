@@ -43,6 +43,14 @@ import {
   isCampusPageRow,
   lifecycleFor,
   loadRegistry,
+  MISSING_INFO_STATUS,
+  RECORDED_SINCE,
+  isMissingExpectation,
+  missingExpectationFor,
+  missingExpectationTitle,
+  missingFromMapOnly,
+  registryFileForRow,
+  resetRegistryCache,
   outOfScopeSite,
   sharedLeadershipExemption,
   consecutiveFailingRuns,
@@ -161,13 +169,13 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   const queue = loadQueue(path.join(fixtures, 'queue-2026-09-24.json'))
   assert.equal(queue.length, 199, 'the 180 open observer tickets the sweep worked, the open grade decision ticket the bundle names, and the 18 agent-found tickets under pre-redesign check ids')
   const checks = bundle()
-  assert.equal(checks.version, '1.2')
+  assert.equal(checks.version, '1.3')
   assert.match(checks.sha256, /^[0-9a-f]{64}$/)
   assert.equal(checks.sha256, loadCheckBundle(path.join(root, 'spec', 'check-bundle.generated.json')).sha256, 'the fixture bundle is a copy of the committed one; rebuild and copy after a row change')
   const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
 
   // Bundle 1.2 (2026-09-25): 39 findings on source-digest rows leave the queue for source-digest.md. Grounding restore (bundle 2c8a5aeb): the image-identity and seasonal rows are enforced again on their complaints, so their 19 findings leave advisory: two Maddox cards are exempted, two match the open San Juan and Lexington tickets, and Raleigh, La Jolla and Scottsdale file beside Lexington's calendar; no group waits on a decision.
-  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, sourceDigest: 39, suppressedByObserver: 0, advisory: 9, outOfScope: 3, exempted: 2, suppressed: 35, held: 0, groups: 19, decisionPending: 0, files: 4, existing: 15, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0 })
+  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, sourceDigest: 39, suppressedByObserver: 0, advisory: 9, outOfScope: 3, exempted: 2, suppressed: 35, held: 0, groups: 19, decisionPending: 0, files: 4, existing: 15, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0, missingInfo: 0, recordedSince: 0, informational: 0 })
   assert.deepEqual(countBy(plan.sourceDigest, (x) => x.ownerRole), { 'hubspot-program-admin': 7, 'operations-sheet-owner': 21, 'community-app-owner': 11 })
   assert.deepEqual(countBy(plan.sourceDigest, (x) => x.row), { 'site.map.integrity.address-agreement': 4, 'site.community.routing.host': 11, 'site.map.integrity.operations-row': 12, 'site.map.integrity.operations-on-map': 7, 'site.map.integrity.operations-address': 5 })
   assert.ok(plan.sourceDigest.every((x) => /^.+ \| .+ \| observed: .+ \| expected: .+ \| source: .+ \(read 20[0-9-]+T.+\) \| observer SITE-[0-9A-F]{10}, row site\..+, severity .+, run site-full-2026-09-24T14-28-40-974Z/.test(x.audit)), 'every digest item carries the audit line')
@@ -248,11 +256,11 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lead.patch.customFields.checkId, 'SITE-4E2ADC7F5B', 'the observer check id stays on the ticket')
   assert.equal(lead.patch.customFields.filerRunId, RUN_ID)
   assert.equal(lead.patch.customFields.requirementId, 'site.layout.header-overlap', 'the row key (row id minus viewport), never the coarse requirement')
-  assert.equal(lead.patch.customFields.checkBundleVersion, '1.2')
+  assert.equal(lead.patch.customFields.checkBundleVersion, '1.3')
   assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
-  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.5, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
+  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.6, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
   assert.match(lead.patch.description, /\nObserver: SITE-4E2ADC7F5B cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared\nPlease review\.$/)
   assertNoteShape(lead.patch.description.slice(lead.patch.description.indexOf('\n\nRESOLUTION (') + 2))
   assert.match(lead.patch.description, /after 20 clean runs \(row requires 2\)/)
@@ -330,7 +338,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lexington.payload.customFields.filedBy, FILED_BY)
   assert.equal(lexington.payload.customFields.idempotencyKey, lexington.key)
   assert.equal(lexington.payload.customFields.requirementId, 'campus.resources.calendar.reachable')
-  assert.equal(lexington.payload.customFields.checkBundleVersion, '1.2')
+  assert.equal(lexington.payload.customFields.checkBundleVersion, '1.3')
   assert.equal(lexington.payload.customFields.checkBundleSha256, checks.sha256)
   assert.equal(lexington.payload.customFields.filerRunId, RUN_ID)
   assert.ok(isFilerOwnedTask({ customFields: lexington.payload.customFields }), 'what the filer files, the filer may later close')
@@ -340,7 +348,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.match(lexington.payload.description, /\nSource: [^\n]*\(read 2026-09-24T/)
   assert.match(lexington.payload.description, /\nObserved: href https:\/\/drive\.google\.com\/file\/d\/[^,]+, status 404, finalUrl /)
   assert.match(lexington.payload.description, /\nExpected: HTTP 2xx calendar destination \(campus\.resources\.calendar; http-2xx 2 status-class; severity medium\)\n/)
-  assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.2 row campus\.resources\.calendar\.reachable\n/)
+  assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.3 row campus\.resources\.calendar\.reachable\n/)
   // Grounding restore: the Raleigh image-identity finding (the packet repeats one incident id nine times) is enforced again, so it groups into one ticket, never nine.
   assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict').length, 0)
   const raleigh = plan.files.filter((f) => f.title.startsWith('Alpha Raleigh'))
@@ -387,7 +395,7 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.match(ticket.payload.description, /\(\+14 more; every observer id is listed under Evidence\)/)
   assert.match(ticket.payload.description, /\nExpected: header separated from headings on desktop 1440x1000 \(site\.layout\.viewport; box-overlap-max 48 px or 0\.25 ratio-of-heading-box; severity high\)\n/)
   assert.match(ticket.payload.description, /\nRelated: cmtnl00rs000404l1ihl5ucij \(decision recorded; this row files again\)\n/)
-  assert.match(ticket.payload.description, /check bundle 1\.2 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
+  assert.match(ticket.payload.description, /check bundle 1\.3 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
   assert.equal(ticket.payload.customFields.triagedClass, 'observer-layout')
   assert.equal(ticket.payload.customFields.checkId, oid('00D0000000'))
   assert.equal(ticket.payload.customFields.requirementId, 'site.layout.header-overlap')
@@ -437,8 +445,8 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   ])
   assert.equal(digested.sourceDigest[0].audit, 'Operations address and map address agree | Alpha Testville | observed: name Alpha Testville, operations 1 Main St, map 2 Side St | expected: derived from operations-sheet address (normalize-address; city-only before opening is intentional) (equals 0 difference) | source: Alpha & Specialty Schools National Growth Map vs production map API (read 2026-09-24T14:30:00.000Z) | observer SITE-ADD0000001, row site.map.integrity.address-agreement, severity medium, run site-full-2026-09-24T14-28-40-974Z')
   assert.deepEqual(digested.unresolved.map((u) => [u.id, u.reason.split(':')[0]]), [['cmaddr1', 'source-digest row']], 'the ticket already open on that row is neither deduped against nor closed')
-  const digestMd = renderSourceDigest({ ...digested, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', bundleVersion: '1.2', bundleSha256: 'a'.repeat(64) }, bundle())
-  assert.match(digestMd, /^# Source digest: observer run site-full-2026-09-24T14-28-40-974Z\n\nRun completed 2026-09-24T14:39:45\.674Z; check bundle 1\.2 \(a{64}\); 2 findings on source-digest rows\./)
+  const digestMd = renderSourceDigest({ ...digested, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', bundleVersion: '1.3', bundleSha256: 'a'.repeat(64) }, bundle())
+  assert.match(digestMd, /^# Source digest: observer run site-full-2026-09-24T14-28-40-974Z\n\nRun completed 2026-09-24T14:39:45\.674Z; check bundle 1\.3 \(a{64}\); 2 findings on source-digest rows\./)
   assert.deepEqual(digestMd.split('\n').filter((l) => l.startsWith('## ')), ['## growth-map-owner: 0 findings', '## hubspot-program-admin (Farhan Raja): 1 finding', '## operations-sheet-owner (no registered person; Matt Barge as operator): 1 finding', '## community-app-owner: 0 findings'])
 
   // A loop-health finding that still arrives in findings.json is counted for the observer owner and files nothing; it suppresses
@@ -619,7 +627,7 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alpha-observer-filer-bad-'))
   const badBundle = path.join(tmp, 'bundle.json')
   fs.writeFileSync(badBundle, JSON.stringify({ rows: [{ id: 'r1', observerCheck: 'x', status: 'enforced', dedupeScope: 'galaxy', channel: 'slack' }] }))
-  assert.throws(() => loadCheckBundle(badBundle), (e) => e instanceof ObserverFilerError && e.code === 'BAD_BUNDLE' && /missing title/.test(e.message) && e.problems.some((p) => /dedupeScope must be one of page, template, program, event, site, got galaxy/.test(p)) && e.problems.some((p) => /channel must be ticket, source-digest or loop-health/.test(p)))
+  assert.throws(() => loadCheckBundle(badBundle), (e) => e instanceof ObserverFilerError && e.code === 'BAD_BUNDLE' && /missing title/.test(e.message) && e.problems.some((p) => /dedupeScope must be one of page, template, program, event, site, campus-registry, got galaxy/.test(p)) && e.problems.some((p) => /channel must be ticket, source-digest or loop-health/.test(p)))
   assert.throws(() => loadCheckBundle(path.join(tmp, 'missing.json')), (e) => e.code === 'BAD_BUNDLE' && /--bundle/.test(e.message))
   assert.throws(() => loadRunFolder(tmp), (e) => e.code === 'BAD_RUN_DIR' && /manifest\.json/.test(e.message))
   fs.writeFileSync(path.join(tmp, 'queue.json'), JSON.stringify({ nope: true }))
@@ -795,7 +803,7 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
 
   // buildResolvePatch checks the note's shape before anything is written, and never rewrites the existing text.
   const patch = buildResolvePatch({ task: live.get('cmfiler2'), cleared: plan.resolves[1].cleared, rows: plan.resolves[1].rows, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', evidenceSha256: 'f'.repeat(64), bundleVersion: '1.0', now: NOW, page: 'https://alpha.school/second/' })
-  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.5, 2026-09-24, playbook check bundle)\n'))
+  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.6, 2026-09-24, playbook check bundle)\n'))
   assert.ok(!patch.description.includes('—'))
 
   // listOpen logs when a status hits the page cap, so an incomplete queue is never silent.
@@ -821,7 +829,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   const summary = JSON.parse(stdout)
   assert.equal(summary.mode, 'dry-run')
   assert.equal(summary.runId, RUN_ID)
-  assert.equal(summary.bundleVersion, '1.2')
+  assert.equal(summary.bundleVersion, '1.3')
   assert.equal(summary.counts.resolves, 0, 'legacy observer tickets are never the filer\'s to close (PR 26)')
   assert.equal(summary.counts.needsPerson, 0)
   assert.equal(summary.counts.unresolved, 180)
@@ -1190,4 +1198,119 @@ test('packet freshness gate script: refuses before any filer call, takes the new
   assert.equal(lastAppliedRun([{ runId: ' ', source: 'a' }]), null)
   const result = gate({ runDir: verified.dir, apply: true, maxAgeHours: 6, afterRunId: STALE_RUN, now: NOW })
   assert.deepEqual([result.fresh, result.afterRunId, result.lastApplied.runId, result.newerThanLastApplied, result.mode], [true, STALE_RUN, STALE_RUN, true, 'apply'])
+})
+
+// Presence, not absence (bundle 1.3, QC loop repair plan 2026-09-25 repairs 1 and 4): the East Bay page fixture and the coverage fixture.
+test('observer filer: East Bay with no registry row files one Missing Info to website operations; a row naming attachment 8550 with openMedia null files Missing Info; an approved attachment in the slot files nothing', () => {
+  const checks = bundle()
+  const run = loadRunFolder(path.join(fixtures, 'east-bay-2026-09-25'))
+  const row = rowForCheck(checks, 'campus-page-stale-launch-media')
+  assert.equal(row.id, 'campus.intro.media.current')
+  assert.deepEqual([row.entitySource, row.ownerRole, row.ticketClass, row.expected.derive.onMissing, row.comparator.type], ['hubspot-programs', 'website-operations', 'observer-media-identity', 'finding', 'equals-approved-media'])
+  assert.equal(registryFileForRow(row), 'registry/campus-open-media.json')
+  assert.ok(row.literals.launchWords.includes('Coming Fall') && row.literals.launchWords.includes('Now Enrolling Fall'))
+  assert.ok(isMissingExpectation(run.findings[0]))
+  const withRegistry = (campuses) => ({ 'registry/campus-open-media.json': { campuses } })
+  const now = new Date('2026-09-25T15:00:00Z')
+
+  // (a) no registry row: one Missing Info to the registry owner (website operations, Yash), titled per the contract, deduped on campus and row.
+  const none = planObserverFindings({ run, bundle: checks, queue: [], now, registries: withRegistry({}) })
+  assert.deepEqual([none.counts.files, none.counts.missingInfo, none.counts.recordedSince, none.counts.invalid], [1, 1, 0, 0])
+  const ticket = none.files[0]
+  assert.equal(ticket.title, 'no approved intro media recorded for Open campus Alpha East Bay')
+  assert.equal(ticket.key, 'observer:campus.intro.media.current:page:east-bay')
+  assert.equal(ticket.payload.status, MISSING_INFO_STATUS)
+  assert.deepEqual([ticket.owner.name, ticket.owner.role, ticket.owner.escalated], ['Yash Chitneni', 'website-operations', false])
+  assert.deepEqual([ticket.payload.customFields.triagedClass, ticket.payload.customFields.ownerRole, ticket.payload.customFields.requirementId, ticket.payload.customFields.missingExpectation, ticket.payload.customFields.registry, ticket.payload.customFields.campusSlug, ticket.payload.customFields.lifecycleState], ['observer-media-identity', 'website-operations', 'campus.intro.media.current', true, 'registry/campus-open-media.json', 'east-bay', 'Open'])
+  assert.equal(ticket.payload.customFields.missingAsk, row.literals.missingAsk)
+  assert.equal(contractCheck({ ...ticket.payload, id: 'x', assignees: [{ name: 'Yash Chitneni' }] }).valid, true)
+  assert.match(ticket.payload.description, /\nObserved: registry\/campus-open-media\.json has no entry for east-bay; page shows attachmentId 8550, src https:\/\/alpha\.school\/wp-content\/uploads\/2026\/01\/Piedmont-1024x704\.webp/)
+  assert.match(ticket.payload.description, /\nExpected: an approved intro media recorded in registry\/campus-open-media\.json campuses\.east-bay \(campus\.intro\.media; equals-approved-media 0 mismatches; severity high\)\n/)
+  assert.match(ticket.payload.description, /\n\nMISSING INFO \(agent\/file-observer-findings\.mjs 0\.6, 2026-09-25\)\nThis ticket needs the following before it can be executed:\n1\. Record the approved open-state intro media for this campus in registry\/campus-open-media\.json[^\n]* \(owner: Yash Chitneni\)\nWhat is already correct on the page: the campus is Open in HubSpot Programs; nothing on the page is changed until the intro media is recorded\n/)
+  assert.ok(!/[—…]/.test(ticket.payload.description))
+  assert.deepEqual(none.missingInfo.map((m) => [m.campus, m.state, m.file, m.owner, m.ticketClass]), [['Alpha East Bay', 'Open', 'registry/campus-open-media.json', 'Yash Chitneni', 'observer-media-identity']])
+  // The same finding again dedupes against the ticket it filed (campus and row).
+  const filed = { id: 'cmeastbay1', status: 'MISSING_INFO', title: ticket.title, url: 'https://alpha.school/east-bay/', customFields: { ...ticket.payload.customFields } }
+  const again = planObserverFindings({ run, bundle: checks, queue: [filed], now, registries: withRegistry({}) })
+  assert.deepEqual([again.counts.files, again.counts.existing, again.existing[0].existing.via], [0, 1, 'idempotency-key'])
+
+  // (b) a row that names attachment 8550 as current with openMedia null is still no approved media: Missing Info.
+  const nullRow = { 'east-bay': { openMedia: null, attachmentId: 8550, status: 'missing', current: "attachment 8550 (Piedmont.webp) visibly says 'Coming Fall 2026 To Piedmont'" } }
+  const assessment = missingExpectationFor({ row, finding: run.findings[0], registries: withRegistry(nullRow) })
+  assert.equal(assessment.kind, 'missing')
+  assert.match(assessment.reason, /^registry\/campus-open-media\.json campuses\.east-bay is recorded but names no approved intro media \(attachmentId 8550, status missing/)
+  assert.equal(missingExpectationTitle(assessment), 'no approved intro media recorded for Open campus Alpha East Bay')
+  const recordedNull = planObserverFindings({ run, bundle: checks, queue: [], now, registries: withRegistry(nullRow) })
+  assert.deepEqual([recordedNull.counts.files, recordedNull.counts.missingInfo, recordedNull.files[0].payload.status], [1, 1, MISSING_INFO_STATUS])
+  assert.match(recordedNull.files[0].payload.description, /\nObserved: registry\/campus-open-media\.json campuses\.east-bay is recorded but names no approved intro media/)
+  // The committed registry (2026-09-25) is exactly that row, so the fixture files Missing Info against the repository too.
+  resetRegistryCache()
+  const committed = planObserverFindings({ run, bundle: checks, queue: [], now })
+  assert.deepEqual([committed.counts.files, committed.counts.missingInfo, committed.files[0].owner.name], [1, 1, 'Yash Chitneni'])
+
+  // (c) an approved attachment recorded for the slot: the expectation exists now, nothing files, the report says why.
+  const approved = planObserverFindings({ run, bundle: checks, queue: [], now, registries: withRegistry({ 'east-bay': { openMedia: 'card', attachmentId: 8550, status: 'placed' } }) })
+  assert.deepEqual([approved.counts.files, approved.counts.missingInfo, approved.counts.recordedSince], [0, 0, 1])
+  assert.deepEqual([approved.recordedSince[0].campus, approved.recordedSince[0].file, approved.recordedSince[0].reason, approved.recordedSince[0].entry.attachmentId], ['Alpha East Bay', 'registry/campus-open-media.json', RECORDED_SINCE, 8550])
+  const video = planObserverFindings({ run, bundle: checks, queue: [], now, registries: withRegistry({ 'east-bay': { openMedia: 'video', attachmentId: null, status: 'placed' } }) })
+  assert.equal(video.counts.recordedSince, 1, 'an approved video is a recorded expectation too')
+
+  // A missingExpectation on a row whose onMissing is skip is telemetry, never a ticket.
+  const skipRow = { ...run.findings[0], id: oid('EA57BA0002'), check: 'campus-page-phone-source-sync', field: 'contact.phone' }
+  const skipped = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [skipRow] }).dir), bundle: checks, queue: [], now })
+  assert.deepEqual([skipped.counts.files, skipped.counts.dropped], [0, 1])
+  assert.match(skipped.dropped[0].reason, /^missingExpectation on a row whose expected\.derive\.onMissing is skip/)
+})
+
+test('observer filer: coverage findings file one Missing Info per campus and registry gap to the registry owner, informational registries never file, a map-only program-page finding is a source-digest line, an unrendered Open campus is loop health', () => {
+  const checks = bundle()
+  const run = loadRunFolder(path.join(fixtures, 'coverage-2026-09-25'))
+  const now = new Date('2026-09-25T15:00:00Z')
+  const coverage = rowForCheck(checks, 'campus-registry-coverage')
+  assert.deepEqual([coverage.id, coverage.entitySource, coverage.dedupeScope, coverage.comparator.type, coverage.lifecycleStates, coverage.channel], ['site.coverage.open-campus-registries', 'hubspot-programs', 'campus-registry', 'count-equals', ['Open', 'Announced'], 'ticket'])
+  assert.deepEqual(coverage.literals.registries.map((r) => [r.file, r.requiredWhen.type.join('+') || 'informational', r.ownerRole, r.ticketClass]), [
+    ['registry/campus-open-media.json', 'Open', 'website-operations', 'observer-media-identity'],
+    ['registry/campus-leadership.json', 'Open+Announced', 'campus-roles-confirmer', 'staff-bulk'],
+    ['registry/campus-packets.json', 'Open', 'packet-owner', 'observer-packet'],
+    ['registry/campus-cta-exceptions.json', 'informational', 'website-agent-operator', 'link-cta'],
+  ])
+  const page = rowForCheck(checks, 'program-page-present')
+  assert.deepEqual([page.id, page.severity, page.ticketClass, page.dedupeScope, page.requireConsecutiveRuns, page.depth], ['site.coverage.program-page', 'critical', 'page-status', 'program', 2, 'http'])
+  const rendered = rowForCheck(checks, 'campus-page-rendered')
+  assert.deepEqual([rendered.id, rendered.channel, rendered.ticketClass, rendered.ownerRole, rendered.lifecycleStates], ['site.coverage.open-campus-rendered', 'loop-health', 'observer-health', 'observer-owner', ['Open']])
+  assert.ok(missingFromMapOnly(run.findings.find((f) => f.id === 'SITE-C0FE000007')))
+  assert.ok(!missingFromMapOnly(run.findings.find((f) => f.id === 'SITE-C0FE000006')), 'a 404 page is a page defect even when the map lacks it too')
+
+  // Open-media registry as of the fixture: East Bay and Scottsdale have no approved row; leadership and packets have East Bay and Lexington.
+  const registries = { 'registry/campus-open-media.json': { campuses: {} } }
+  const plan = planObserverFindings({ run, bundle: checks, queue: [], now, registries })
+  assert.deepEqual(plan.counts, { ...plan.counts, files: 3, missingInfo: 2, recordedSince: 1, informational: 2, sourceDigest: 1, loopHealth: 1, invalid: 0, dropped: 0 })
+  const byKey = Object.fromEntries(plan.files.map((f) => [f.key, f]))
+  assert.deepEqual(Object.keys(byKey).sort(), ['observer:site.coverage.open-campus-registries:campus:east-bay:registry:registry/campus-open-media.json', 'observer:site.coverage.open-campus-registries:campus:scottsdale:registry:registry/campus-open-media.json', 'observer:site.coverage.program-page:program:program-99999999901'])
+  const eastBay = byKey['observer:site.coverage.open-campus-registries:campus:east-bay:registry:registry/campus-open-media.json']
+  assert.deepEqual([eastBay.title, eastBay.payload.status, eastBay.owner.name, eastBay.payload.customFields.triagedClass, eastBay.payload.customFields.ownerRole, eastBay.payload.customFields.registry], ['no approved intro media recorded for Open campus Alpha East Bay', MISSING_INFO_STATUS, 'Yash Chitneni', 'observer-media-identity', 'website-operations', 'registry/campus-open-media.json'])
+  assert.match(eastBay.payload.description, /\n1\. Record the approved open-state intro media for this Open campus in registry\/campus-open-media\.json campuses\.<slug>[^\n]* \(owner: Yash Chitneni\)\n/)
+  assert.equal(contractCheck({ ...eastBay.payload, id: 'x', assignees: [{ name: 'Yash Chitneni' }] }).valid, true)
+  assert.equal(byKey['observer:site.coverage.open-campus-registries:campus:scottsdale:registry:registry/campus-open-media.json'].title, 'no approved intro media recorded for Open campus Alpha Scottsdale')
+  // Leadership: East Bay is recorded, so the coverage finding is recorded-since; the CTA registry is informational; Lexington's packets row exists.
+  assert.deepEqual(plan.recordedSince.map((r) => [r.campus, r.file]), [['Alpha East Bay', 'registry/campus-leadership.json']])
+  // The CTA registry is informational; a packets row is required for Open campuses only, so Announced Lexington is not-required.
+  assert.deepEqual(plan.informational.map((r) => [r.campus, r.file, r.kind]), [['Alpha East Bay', 'registry/campus-cta-exceptions.json', 'informational'], ['Alpha Lexington', 'registry/campus-packets.json', 'not-required']])
+  // A leadership gap files to the campus roles confirmer (Hailey) as staff-bulk; a packets gap to the packet owner (Matt) as observer-packet.
+  const gaps = planObserverFindings({ run, bundle: checks, queue: [], now, registries: { ...registries, 'registry/campus-leadership.json': { campuses: {} }, 'registry/campus-packets.json': { campuses: {} } } })
+  assert.deepEqual(gaps.missingInfo.map((m) => [m.campus, m.state, m.file, m.owner, m.ownerRole, m.ticketClass]).sort(), [
+    ['Alpha East Bay', 'Open', 'registry/campus-leadership.json', 'Hailey McSpadden', 'campus-roles-confirmer', 'staff-bulk'],
+    ['Alpha East Bay', 'Open', 'registry/campus-open-media.json', 'Yash Chitneni', 'website-operations', 'observer-media-identity'],
+    ['Alpha Scottsdale', 'Open', 'registry/campus-open-media.json', 'Yash Chitneni', 'website-operations', 'observer-media-identity'],
+  ].sort())
+  assert.equal(gaps.missingInfo.find((m) => m.file === 'registry/campus-leadership.json').title, 'no approved campus leadership recorded for Open campus Alpha East Bay')
+  // A packets gap on an Open campus files to the packet owner (Matt) as observer-packet.
+  const openPackets = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [{ ...run.findings.find((f) => f.id === 'SITE-C0FE000005'), url: 'https://alpha.school/east-bay/', entity: 'program-42698614786', actual: { ...run.findings.find((f) => f.id === 'SITE-C0FE000005').actual, slug: 'east-bay', campus: 'Alpha East Bay', state: 'Open', programType: 'Open', programId: 'program-42698614786' } }] }).dir), bundle: checks, queue: [], now, registries: { 'registry/campus-packets.json': { campuses: {} } } })
+  assert.deepEqual(openPackets.missingInfo.map((m) => [m.campus, m.file, m.owner, m.ticketClass, m.ownerRole]), [['Alpha East Bay', 'registry/campus-packets.json', 'Matt Barge', 'observer-packet', 'packet-owner']])
+  // The missing page is critical and files to page-status (website operations); the map-only finding is a digest line under hubspot-map-sync.
+  const missingPage = byKey['observer:site.coverage.program-page:program:program-99999999901']
+  assert.deepEqual([missingPage.payload.status, missingPage.payload.priority, missingPage.payload.customFields.triagedClass, missingPage.owner.role], ['NOT_STARTED', 'HIGH', 'page-status', 'website-operations'])
+  assert.deepEqual(plan.sourceDigest.map((d) => [d.check, d.row, d.ownerRole, d.record, d.via]), [['program-page-present', 'site.map.integrity.hubspot-map-sync', 'growth-map-owner', 'Alpha East Bay', 'program-page-present missingFromMap -> site.map.integrity.hubspot-map-sync']])
+  // Loop health: the unrendered Open campuses go to the observer owner, never the queue.
+  assert.deepEqual(plan.loopHealth.map((l) => [l.check, l.row]), [['campus-page-rendered', 'site.coverage.open-campus-rendered']])
 })

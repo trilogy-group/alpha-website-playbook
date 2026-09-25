@@ -327,6 +327,7 @@ function decisionFixture(name) {
 function actionKindForOutcome(outcome) {
   if (outcome === 'out-of-scope') return 'no-action'
   if (outcome === 'missing-info') return 'request-clarification'
+  if (outcome === 'missing-registry') return 'registry-missing-info'
   if (outcome === 'ready-for-execution') return 'execution-ready'
   if (outcome === 'routed') return 'owner-route'
   return 'blocked-review'
@@ -562,7 +563,9 @@ test('legacy open-intro-media tickets route to media identity instead of needs-r
     description: 'Observed attachment 8550 Piedmont.webp in the intro slot. Approved replacement media is still needed.',
   })
   assert.equal(result.class, 'observer-media-identity')
-  assert.equal(result.ownerRole, 'website-agent-operator')
+  // This synthetic ticket carries no Observed line and no idempotency key, so it is an intake defect for the agent that filed it;
+  // the real ticket (tests/fixtures/decisions/cmubrkkm800000agmvukxsioc.json) is missing-registry for website operations (repair 1).
+  assert.deepEqual([result.outcome, result.ownerRole], ['intake-defect', 'website-agent-operator'])
   assert.notEqual(result.outcome, 'needs-rule')
 })
 
@@ -2369,7 +2372,9 @@ test('check bundle builds without errors, is current, validates against its sche
   // every row carries the shared contract fields with the exact names
   for (const row of checkBundle.rows) {
     for (const field of ['id', 'observerCheck', 'title', 'pageFamily', 'lifecycleStates', 'element', 'expected', 'comparator', 'severity', 'status', 'ticketClass', 'ownerRole', 'dedupeScope', 'clearAfterRuns', 'gracePeriodHours', 'evidenceProfile', 'sourceHealthDependency', 'requirementRef']) assert.ok(field in row, `${row.id} lacks ${field}`)
-    assert.ok(('literal' in row.expected) !== ('derive' in row.expected), `${row.id} expected must be literal xor derive`)
+    // 1.3: a derive row may also carry expected.literal (its literals mirrored for the observer); a literal-only row never derives.
+    assert.ok(('literal' in row.expected) || ('derive' in row.expected), `${row.id} expected must carry literal or derive`)
+    if ('literal' in row.expected && 'derive' in row.expected) assert.deepEqual(row.expected.literal, row.literals, `${row.id} expected.literal mirrors literals`)
     assert.ok(checkBundle.pageFamilies[row.pageFamily], `${row.id} pageFamily ${row.pageFamily}`)
   }
   for (const entry of checkBundle.retired) for (const field of ['observerCheck', 'reason', 'replacedBy', 'decidedBy', 'date']) assert.ok(field in entry, `retired ${entry.observerCheck} lacks ${field}`)
@@ -2405,15 +2410,16 @@ test('check bundle: the observer inventory extractor reads finding literals and 
   assert.deepEqual(names, ['campus-calendar-link-reachable', 'campus-heading-identity', 'campus-info-packet-destination-campus', 'campus-info-packet-present', 'hubspot-event-required-facts'])
 })
 
-test('check bundle 1.2: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
-  assert.equal(checkBundle.version, '1.2')
+test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
+  assert.equal(checkBundle.version, '1.3')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
-  assert.deepEqual(byChannel, { ticket: 83, 'source-digest': 17, 'loop-health': 11 })
+  assert.deepEqual(byChannel, { ticket: 85, 'source-digest': 17, 'loop-health': 12 })
   const byGrounding = {}
   for (const row of checkBundle.rows) byGrounding[row.grounding.kind] = (byGrounding[row.grounding.kind] || 0) + 1
   // Grounding restore (2026-09-25, bundle 2c8a5aeb): 20 rows regained a complaint, decision or source-contract ref, so only 5 stay ungrounded.
-  assert.deepEqual(byGrounding, { 'source-contract': 56, decision: 35, complaint: 13, exemplar: 2, none: 5 })
+  // 1.3: the media row is grounded on the 2026-09-25 decision (from source-contract) and the three coverage rows on the same decision.
+  assert.deepEqual(byGrounding, { 'source-contract': 55, decision: 39, complaint: 13, exemplar: 2, none: 5 })
   assert.deepEqual(checkBundle.sourceDigest, { ownerRoles: ['growth-map-owner', 'hubspot-program-admin', 'operations-sheet-owner', 'community-app-owner'], reportFile: 'source-digest.md' })
   // Breadth: every map-source row and the Community record, URL form and host rows are source-digest; rows on a WordPress element stay ticket.
   for (const row of checkBundle.rows.filter((r) => r.pageFamily === 'map-source')) assert.notEqual(row.channel, 'ticket', `${row.id} compares sources, never a page`)
@@ -2450,7 +2456,7 @@ test('check bundle 1.2: source-digest breadth, grounding with the promotion rule
   for (const family of Object.keys(checkBundle.pageFamilies)) assert.ok(checkBundle.depthDefaults.render.includes(family) || checkBundle.depthDefaults.http.includes(family), `${family} has a depth`)
   const byDepth = {}
   for (const row of checkBundle.rows) byDepth[row.depth] = (byDepth[row.depth] || 0) + 1
-  assert.deepEqual(byDepth, { render: 88, http: 23 })
+  assert.deepEqual(byDepth, { render: 89, http: 25 })
   for (const row of checkBundle.rows) {
     assert.ok(['render', 'http'].includes(row.depth), row.id)
     if ((row.viewports || []).length || row.sourceHealthDependency.includes('browser') || /-rendered$/.test(row.comparator.type)) assert.equal(row.depth, 'render', row.id)
@@ -2575,4 +2581,183 @@ test('check bundle: workstream 2 corrections are rows, not prose', () => {
     assert.ok(row.suppresses)
   }
   assert.equal(checkRow('site.loop.health.provider').decisionPending, 'cmtneqjw4000404jslko6zim1')
+})
+
+// Check bundle 1.3 (QC loop repair plan 2026-09-25, repairs 1, 4 and 7): presence not absence, source-first enumeration, one id everywhere.
+import { pageCheckIds } from './build-checks.mjs'
+import { classifyTicket, ownerRuleMatches, requirementIdsFor } from '../agent/intake-policy.mjs'
+import { prepareFoundPayload, requirementIdsForCheck } from '../agent/file-found-ticket.mjs'
+
+test('check bundle 1.3: entity sources, comparators, missing-expectation rows, coverage rows and page-check aliases (decision 2026-09-25: from HubSpot to the website)', () => {
+  assert.equal(checkBundle.version, '1.3')
+  // Entity sources: the shape the observer consumes verbatim; campus rows enumerate from HubSpot Programs, the rest from the map.
+  const hubspot = checkBundle.entitySources['hubspot-programs']
+  assert.deepEqual([hubspot.source, hubspot.fields, hubspot.publicTypes, hubspot.publicHosts, hubspot.lifecycleField, hubspot.pageField], ['hubspot-programs', ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date'], ['Open', 'Announced'], ['alpha.school', 'www.alpha.school'], 'type', 'website'])
+  assert.deepEqual(hubspot.pageFamilies, ['campus', 'campus-open', 'campus-announced', 'campus-pre-announcement'])
+  assert.equal(checkBundle.entitySources.map.source, 'growth-map-api')
+  for (const row of checkBundle.rows) {
+    assert.ok(['hubspot-programs', 'map'].includes(row.entitySource), `${row.id} entitySource`)
+    if (hubspot.pageFamilies.includes(row.pageFamily)) assert.equal(row.entitySource, 'hubspot-programs', `${row.id} is a campus row`)
+    else assert.equal(row.entitySource, 'map', `${row.id} is not a campus row`)
+  }
+  const byEntitySource = {}
+  for (const row of checkBundle.rows) byEntitySource[row.entitySource] = (byEntitySource[row.entitySource] || 0) + 1
+  assert.deepEqual(byEntitySource, { 'hubspot-programs': 54, map: 60 })
+  // Comparators: the bundle carries spec/observer-comparators.json and every row uses one of them.
+  const comparators = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'observer-comparators.json'), 'utf8')).comparators
+  assert.deepEqual(checkBundle.comparators, comparators)
+  for (const row of checkBundle.rows) assert.ok(comparators[row.comparator.type], `${row.id} comparator ${row.comparator.type} is not in spec/observer-comparators.json`)
+  // The list is the observer's published one (aeo #37 supported-comparators.json, 35 types): the numeric aliases are unused by rows today.
+  assert.equal(Object.keys(comparators).length, 35)
+  for (const type of ['lte', 'gte', 'eq', 'lt', 'gt', 'equals-approved-media', 'count-equals']) assert.ok(comparators[type], type)
+  // A derive row mirrors its literals at expected.literal; a literal-object row merges them in; a string literal (the loop-health rendered row) keeps its sentence.
+  for (const row of checkBundle.rows.filter((r) => r.literals)) {
+    if (row.expected.derive) assert.deepEqual(row.expected.literal, row.literals, `${row.id} literals are mirrored at expected.literal for the observer`)
+    else if (row.expected.literal && typeof row.expected.literal === 'object') for (const [k, v] of Object.entries(row.literals)) assert.deepEqual(row.expected.literal[k], v, `${row.id} literal ${k}`)
+  }
+  // Presence, not absence: every derive row says what a missing entry means; the registry-keyed rows say finding, with the ask and the noun.
+  for (const row of checkBundle.rows.filter((r) => r.expected.derive)) assert.ok(['finding', 'skip'].includes(row.expected.derive.onMissing), `${row.id} onMissing`)
+  const finding = checkBundle.rows.filter((r) => r.expected.derive?.onMissing === 'finding').map((r) => r.id).sort()
+  assert.deepEqual(finding, ['campus.intro.media.current', 'campus.resources.packet.present', 'campus.team.roster.present', 'site.coverage.open-campus-registries', 'site.search.schema.url'])
+  for (const id of finding) { const row = checkRow(id); assert.ok(row.literals.missingAsk.length > 40 && row.literals.missingThing, id) }
+  const media = checkRow('campus.intro.media.current')
+  assert.deepEqual([media.entitySource, media.ownerRole, media.ticketClass, media.comparator.type, media.comparator.threshold, media.comparator.unit, media.expected.derive.source, media.grounding.kind], ['hubspot-programs', 'website-operations', 'observer-media-identity', 'equals-approved-media', 0, 'mismatches', 'registry', 'decision'])
+  assert.match(media.expected.derive.field, /^registry\/campus-open-media\.json campuses\[slug\]/)
+  assert.ok(media.literals.launchWords.includes('Coming Soon') && media.literals.launchWords.includes('Coming Fall') && media.literals.launchWords.includes('Coming This Fall') && media.literals.launchWords.includes('Launching') && media.literals.launchWords.includes('Opening Fall') && media.literals.launchWords.includes('Now Enrolling Fall'))
+  assert.equal(media.literals.assetPatterns.length, 2, 'the known launch-era asset paths stay as the backstop')
+  assert.match(media.literals.missingAsk, /registry\/campus-open-media\.json/)
+  // Coverage rows.
+  const registries = checkRow('site.coverage.open-campus-registries')
+  assert.deepEqual([registries.observerCheck, registries.entitySource, registries.lifecycleStates, registries.channel, registries.ticketClass, registries.ownerRole, registries.dedupeScope, registries.comparator.type, registries.clearAfterRuns], ['campus-registry-coverage', 'hubspot-programs', ['Open', 'Announced'], 'ticket', 'observer-media-identity', 'website-operations', 'campus-registry', 'count-equals', 1])
+  assert.deepEqual(registries.literals.registries.map((r) => [r.file, r.keyPath, r.requiredWhen.type, r.ownerRole, r.ticketClass]), [
+    ['registry/campus-open-media.json', 'campuses[slug]', ['Open'], 'website-operations', 'observer-media-identity'],
+    ['registry/campus-leadership.json', 'campuses[slug]', ['Open', 'Announced'], 'campus-roles-confirmer', 'staff-bulk'],
+    ['registry/campus-packets.json', 'campuses[slug]', ['Open'], 'packet-owner', 'observer-packet'],
+    ['registry/campus-cta-exceptions.json', 'campuses[slug]', [], 'website-agent-operator', 'link-cta'],
+  ])
+  for (const entry of registries.literals.registries) assert.ok(entry.ask.length > 40 && entry.thing, entry.file)
+  const programPage = checkRow('site.coverage.program-page')
+  assert.deepEqual([programPage.observerCheck, programPage.entitySource, programPage.lifecycleStates, programPage.severity, programPage.ticketClass, programPage.dedupeScope, programPage.depth, programPage.element, programPage.requireConsecutiveRuns], ['program-page-present', 'hubspot-programs', ['Open', 'Announced'], 'critical', 'page-status', 'program', 'http', 'page.existence', 2])
+  assert.deepEqual(programPage.expected.derive.field, ['type', 'website', 'display_name'])
+  assert.match(programPage.literals.missingFromMap, /hubspot-map-sync/)
+  const renderedRow = checkRow('site.coverage.open-campus-rendered')
+  assert.deepEqual([renderedRow.observerCheck, renderedRow.channel, renderedRow.ticketClass, renderedRow.ownerRole, renderedRow.lifecycleStates, renderedRow.depth, renderedRow.dedupeScope], ['campus-page-rendered', 'loop-health', 'observer-health', 'observer-owner', ['Open'], 'render', 'site'])
+  assert.ok(renderedRow.suppresses)
+  assert.match(renderedRow.literals.missesNote, /\[\{ id, name, url \}\]/)
+  for (const id of ['site.coverage.open-campus-registries', 'site.coverage.program-page', 'site.coverage.open-campus-rendered']) assert.match(checkRow(id).grounding.ref, /docs\/decisions\.md 2026-09-25 \(Matt Barge\): check from HubSpot to the website/)
+  const decisions = fs.readFileSync(path.join(root, 'docs', 'decisions.md'), 'utf8')
+  assert.match(decisions, /\| 2026-09-25 \| Decided \(Matt Barge, Slack message to the website agent 2026-09-25: 'not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website'\): /)
+  const observerChecks = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'observer-checks.json'), 'utf8'))
+  assert.deepEqual(observerChecks.families.coverage, ['campus-page-rendered', 'campus-registry-coverage', 'program-page-present'])
+  assert.deepEqual(Object.keys(observerChecks.pendingInObserver).filter((k) => !k.startsWith('$')).sort(), ['campus-page-rendered', 'campus-registry-coverage', 'program-page-present'])
+  // Aliases: every tests/page-check.mjs id is mapped to a row or named as unmapped, and nothing else is listed.
+  const ids = pageCheckIds()
+  assert.deepEqual(ids, ['announced-names-launch-date', 'book-a-call-consistency', 'brand-visual', 'canonical-tag', 'cta-apply-now', 'cta-attend-an-info-session', 'cta-hidden-everywhere', 'cta-links-resolve', 'cta-stay-in-the-know', 'edge-cache-current', 'footer-template-present', 'h1-names-campus', 'h1-present', 'header-stylesheet-linked', 'header-template-present', 'intro-section-present', 'n8n-override-recorded', 'n8n-synced-elements-present', 'no-other-campus-in-image-names', 'no-sister-brand-words', 'open-intro-media-approved', 'open-no-launch-words', 'open-status-sentence', 'page-reachable', 'team-photo-framing'])
+  const { pageCheck, pageCheckUnmapped } = checkBundle.aliases
+  assert.deepEqual([...Object.keys(pageCheck), ...Object.keys(pageCheckUnmapped)].sort(), ids)
+  assert.equal(pageCheck['open-intro-media-approved'], 'campus.intro.media.current')
+  assert.equal(pageCheck['page-reachable'], 'campus.page.reachable.program-page')
+  assert.deepEqual(pageCheck['cta-hidden-everywhere'], ['campus.resources.booking.present', 'campus.resources.calendar.present', 'campus.resources.packet.present'])
+  const rowIds = new Set(checkBundle.rows.map((r) => r.id))
+  for (const target of Object.values(pageCheck).flat()) assert.ok(rowIds.has(target), `alias target ${target} is a row`)
+  assert.match(pageCheckUnmapped['team-photo-framing'], /observer-layout/)
+  assert.match(pageCheckUnmapped['n8n-synced-elements-present'], /requirementsWithoutObserverCoverage/)
+  assert.equal(requirementIdsForCheck('open-intro-media-approved', pageCheck).requirementId, 'campus.intro.media.current')
+  assert.deepEqual(requirementIdsForCheck('cta-links-resolve', pageCheck), { requirementId: 'campus.resources.booking.reachable', requirementIds: ['campus.resources.booking.reachable', 'campus.resources.calendar.reachable', 'campus.resources.packet.reachable', 'campus.resources.apply.path'] })
+  assert.equal(requirementIdsForCheck('edge-cache-current', pageCheck), null)
+
+  // The builder refuses: a comparator not in spec/observer-comparators.json, an onMissing finding without the ask, a registry-coverage row
+  // on the wrong scope, an alias for an id page-check.mjs does not report, and a page-check id in neither list.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'check-bundle-13-'))
+  for (const rel of ['spec', 'registry', 'tests', 'docs', 'playbook']) fs.cpSync(path.join(root, rel), path.join(dir, rel), { recursive: true })
+  const rows = JSON.parse(fs.readFileSync(path.join(dir, 'spec', 'check-rows.json'), 'utf8'))
+  const find = (id) => rows.rows.find((r) => r.id === id)
+  find('campus.facts.phone').comparator.type = 'looks-about-right'
+  delete find('campus.resources.packet.present').literals.missingAsk
+  find('site.coverage.open-campus-registries').dedupeScope = 'page'
+  find('campus.hero.identity.heading').entitySource = 'sheet'
+  rows.aliases.pageCheck['no-such-check'] = 'campus.intro.media.current'
+  delete rows.aliases.pageCheckUnmapped['edge-cache-current']
+  fs.writeFileSync(path.join(dir, 'spec', 'check-rows.json'), JSON.stringify(rows))
+  const result = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-checks.mjs'), '--check'], { encoding: 'utf8' })
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /row campus\.facts\.phone: comparator looks-about-right is not in spec\/observer-comparators\.json/)
+  assert.match(result.stderr, /row campus\.resources\.packet\.present: onMissing finding needs literals\.missingAsk/)
+  assert.match(result.stderr, /row site\.coverage\.open-campus-registries: registry-coverage rows dedupe per campus and registry/)
+  assert.match(result.stderr, /row campus\.hero\.identity\.heading: entitySource must be one of hubspot-programs, map, got sheet/)
+  assert.match(result.stderr, /aliases: no-such-check is not a tests\/page-check\.mjs check id/)
+  assert.match(result.stderr, /tests\/page-check\.mjs check edge-cache-current is in neither aliases\.pageCheck nor aliases\.pageCheckUnmapped/)
+  fs.rmSync(dir, { recursive: true, force: true })
+})
+
+test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before titles, one class per id, and the East Bay launch-card ticket goes to website operations', () => {
+  const classesSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'ticket-classes.json'), 'utf8'))
+  assert.equal(classesSpec.version, "0.14")
+  assert.deepEqual(bundle.classes['observer-media-identity'].matchRequirementIds, ['campus.intro.media.current', 'site.identity.other-campus.images', 'site.layout.images.crop', 'site.coverage.open-campus-registries'])
+  assert.deepEqual(bundle.classes['observer-media-identity'].matchCheckIds, ['open-intro-media-approved', 'no-other-campus-in-image-names'])
+  assert.ok(bundle.classes['observer-media-identity'].observerChecks.includes('campus-page-stale-launch-media'), 'the stale-media check is classified to its row\'s class')
+  assert.ok(!bundle.classes['observer-launch-copy'].observerChecks.includes('campus-page-stale-launch-media'))
+  assert.ok(bundle.classes['observer-media-identity'].observerChecks.includes('campus-registry-coverage') && bundle.classes['page-status'].observerChecks.includes('program-page-present') && bundle.classes['observer-health'].observerChecks.includes('campus-page-rendered'))
+  assert.deepEqual(bundle.classes['sync-delivery'].matchCheckIds, ['open-no-launch-words', 'open-status-sentence', 'announced-names-launch-date'])
+  assert.deepEqual(bundle.classes['link-cta'].matchCheckIds, ['cta-links-resolve', 'cta-hidden-everywhere', 'book-a-call-consistency'])
+  assert.deepEqual(bundle.classes['page-status'].matchCheckIds, ['page-reachable'])
+  assert.deepEqual(bundle.classes['seo-redirect'].matchCheckIds, ['canonical-tag'])
+  assert.deepEqual(bundle.classes['observer-brand-leak'].matchCheckIds, ['no-sister-brand-words', 'h1-names-campus'])
+  assert.deepEqual(bundle.classes['observer-brand-visual'].matchCheckIds, ['brand-visual'])
+  // Every mapped page-check id is claimed by exactly one class, and every requirement id claimed is a row.
+  const claimedChecks = Object.entries(bundle.classes).flatMap(([id, spec]) => spec.matchCheckIds.map((c) => [c, id]))
+  const claimedRequirements = Object.entries(bundle.classes).flatMap(([id, spec]) => spec.matchRequirementIds.map((r) => [r, id]))
+  for (const [check] of claimedChecks) assert.equal(claimedChecks.filter(([c]) => c === check).length, 1, `${check} claimed once`)
+  for (const [requirementId] of claimedRequirements) assert.equal(claimedRequirements.filter(([r]) => r === requirementId).length, 1, `${requirementId} claimed once`)
+  const rowIds = new Set(checkBundle.rows.map((r) => r.id))
+  for (const [requirementId] of claimedRequirements) assert.ok(rowIds.has(requirementId), `${requirementId} is a row`)
+  for (const check of Object.keys(checkBundle.aliases.pageCheck)) assert.ok(claimedChecks.some(([c]) => c === check), `mapped page-check id ${check} is claimed by a class`)
+
+  // The East Bay ticket (cmubrkkm800000agmvukxsioc, 2026-09-21): its customFields alone classify to observer-media-identity through matchCheckIds,
+  // and the class's owner rule sends it to website operations, the owner of registry/campus-open-media.json.
+  const fixture = decisionFixture('cmubrkkm800000agmvukxsioc.json')
+  assert.deepEqual([fixture.task.customFields.source, fixture.task.customFields.checkId, fixture.task.title], ['agent-found', 'open-intro-media-approved', 'Alpha East Bay: Open campus intro still shows the "Coming Fall 2026 To Piedmont" launch card'])
+  assert.equal(classifyTicket(bundle, { customFields: fixture.task.customFields }), 'observer-media-identity', 'the custom fields alone decide the class')
+  assert.equal(classifyTicket(bundle, { customFields: { source: 'agent-found', requirementId: 'campus.intro.media.current' } }), 'observer-media-identity')
+  assert.equal(classifyTicket(bundle, { title: 'Alpha Atlanta still shows launch copy but is already open', customFields: { source: 'agent-found', requirementId: 'campus.intro.media.current' } }), 'observer-media-identity', 'a requirement id outranks the observer-launch-copy title pattern')
+  assert.equal(classifyTicket(bundle, { title: 'Alpha Atlanta still shows launch copy but is already open', customFields: { source: 'agent-found' } }), 'observer-launch-copy')
+  assert.equal(classifyTicket(bundle, { customFields: { source: 'agent-found', checkId: 'cta-links-resolve', requirementIds: ['campus.resources.booking.reachable'] } }), 'link-cta')
+  assert.equal(classifyTicket(bundle, { customFields: { source: 'agent-found', checkId: 'canonical-tag' } }), 'seo-redirect')
+  assert.deepEqual(requirementIdsFor({ customFields: { requirementId: 'a.b.c', requirementIds: ['a.b.c', 'd.e.f'] } }), ['a.b.c', 'd.e.f'])
+  const mediaRule = bundle.classes['observer-media-identity'].intake.ownerRules.find((r) => r.checkIds)
+  assert.deepEqual([mediaRule.ownerRole, mediaRule.checkIds, mediaRule.requirementIds], ['website-operations', ['open-intro-media-approved', 'campus-page-stale-launch-media', 'campus-registry-coverage'], ['campus.intro.media.current', 'site.coverage.open-campus-registries']])
+  assert.ok(ownerRuleMatches(mediaRule, fixture.task))
+  assert.ok(ownerRuleMatches(mediaRule, { customFields: { check: 'campus-page-stale-launch-media' } }))
+  assert.ok(!ownerRuleMatches(mediaRule, { title: 'x', customFields: { checkId: 'no-other-campus-in-image-names' } }))
+  const decision = evaluateTicket(bundle, fixture.task)
+  resolveDecisionOwner(bundle, decision, fixture.task)
+  assert.deepEqual([decision.class, decision.outcome, decision.ownerRole, decision.owner, decision.registryMissing, administrativeAction(decision).kind], ['observer-media-identity', 'missing-registry', 'website-operations', 'Yash Chitneni', ['approvedMedia'], 'registry-missing-info'])
+  assert.deepEqual(decision.found.observerId, fixture.task.customFields.idempotencyKey, 'an agent-found ticket\'s durable id is its idempotency key')
+  assert.match(decision.reason, /^registry\/campus-open-media\.json has no approved open-state media for this campus; website operations records/)
+
+  // agent/file-found-ticket.mjs writes requirementId from the alias, keeps checkId, and records the class and the owner role the policy decides.
+  const prepared = prepareFoundPayload({ idempotencyKey: fixture.task.customFields.idempotencyKey, payload: { title: fixture.task.title, url: fixture.task.url, description: fixture.task.description, customFields: { source: 'agent-found', checkId: 'open-intro-media-approved', pageUrl: fixture.task.url } } }, { policy: bundle, aliases: checkBundle.aliases.pageCheck })
+  assert.deepEqual([prepared.checkId, prepared.requirementId, prepared.classId, prepared.ownerRole, prepared.ownerVia], ['open-intro-media-approved', 'campus.intro.media.current', 'observer-media-identity', 'website-operations', 'class observer-media-identity owner rule'])
+  assert.deepEqual([prepared.payload.customFields.checkId, prepared.payload.customFields.requirementId, prepared.payload.customFields.triagedClass, prepared.payload.customFields.ownerRole, prepared.payload.customFields.idempotencyKey, prepared.payload.customFields.source], ['open-intro-media-approved', 'campus.intro.media.current', 'observer-media-identity', 'website-operations', fixture.task.customFields.idempotencyKey, 'agent-found'])
+  assert.ok(!('requirementIds' in prepared.payload.customFields), 'a single row maps to requirementId only')
+  const spanning = prepareFoundPayload({ title: 'Alpha Tulsa: calendar link broken', url: 'https://alpha.school/tulsa/', customFields: { source: 'agent-found', checkId: 'cta-links-resolve', ownerRole: 'website-agent-operator' } }, { policy: bundle, aliases: checkBundle.aliases.pageCheck })
+  assert.deepEqual([spanning.payload.customFields.requirementId, spanning.payload.customFields.requirementIds, spanning.classId, spanning.ownerVia], ['campus.resources.booking.reachable', ['campus.resources.booking.reachable', 'campus.resources.calendar.reachable', 'campus.resources.packet.reachable', 'campus.resources.apply.path'], 'link-cta', 'payload'])
+  const unmapped = prepareFoundPayload({ title: 'Alpha Tulsa: stale edge cache', url: 'https://alpha.school/tulsa/', customFields: { source: 'agent-found', checkId: 'edge-cache-current', triagedClass: 'page-status' } }, { policy: bundle, aliases: checkBundle.aliases.pageCheck })
+  assert.deepEqual([unmapped.requirementId, unmapped.classId, unmapped.payload.customFields.triagedClass], [null, 'page-status', 'page-status'])
+
+  // tests/build-policy.mjs refuses an id claimed by two classes and a requirement id that is not a row.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'policy-bundle-13-'))
+  for (const rel of ['spec', 'registry', 'tests']) fs.cpSync(path.join(root, rel), path.join(dir, rel), { recursive: true })
+  const twice = JSON.parse(fs.readFileSync(path.join(dir, 'spec', 'ticket-classes.json'), 'utf8'))
+  twice.classes['observer-brand-leak'].matchCheckIds.push('open-intro-media-approved')
+  fs.writeFileSync(path.join(dir, 'spec', 'ticket-classes.json'), JSON.stringify(twice))
+  const dup = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-policy.mjs'), '--check'], { encoding: 'utf8' })
+  assert.notEqual(dup.status, 0)
+  assert.match(dup.stderr, /matchCheckIds open-intro-media-approved is claimed by more than one ticket class: observer-brand-leak, observer-media-identity/)
+  twice.classes['observer-brand-leak'].matchCheckIds.pop()
+  twice.classes['observer-brand-leak'].matchRequirementIds.push('campus.no.such.row')
+  fs.writeFileSync(path.join(dir, 'spec', 'ticket-classes.json'), JSON.stringify(twice))
+  const unknown = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-policy.mjs'), '--check'], { encoding: 'utf8' })
+  assert.match(unknown.stderr, /ticket class observer-brand-leak: matchRequirementIds names campus\.no\.such\.row, which is not a row id in spec\/check-rows\.json/)
+  fs.rmSync(dir, { recursive: true, force: true })
 })

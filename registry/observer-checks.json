@@ -1,7 +1,7 @@
 {
-  "$comment": "Every check name the production observer (superbuilders/aeo alpha-site-system/src/checks.mjs) can emit, grouped by the loop that emits it. This is the coverage list for spec/check-bundle.generated.json: tests/build-checks.mjs fails when a name here has neither a row in spec/check-rows.json nor a retirement entry, and when a row or retirement names a check that is not here. Refresh by re-reading checks.mjs (the finding(loop, check, ...) calls plus the presentCheck/destinationCheck table and the resource-link probe table); node tests/build-checks.mjs --observer-source <path to checks.mjs> re-extracts the names and fails when this file is stale. Captured 2026-09-15; re-captured 2026-09-24 from aeo commit cca5ac6 working tree (109 names: 103 literal, 6 from the resource-requirement table); 2026-09-24.1 re-read against aeo commit 2917e2b (the check bundle consumer): campus-application-finalsite-redirect (emitted through a `const check` binding), campus-grade-source-incomplete, campus-page-email-source-sync, route-screenshot-capture and route-font-readiness added (114 names). primary-cta-count and current-family-destination are no longer emitted by checks.mjs but stay here because they are retired in spec/check-rows.json and older packets still carry them; --observer-source tolerates a retired name the observer dropped.",
-  "version": "2026-09-24.1",
-  "asOf": "2026-09-24",
+  "$comment": "Every check name the production observer (superbuilders/aeo alpha-site-system/src/checks.mjs) can emit, grouped by the loop that emits it. This is the coverage list for spec/check-bundle.generated.json: tests/build-checks.mjs fails when a name here has neither a row in spec/check-rows.json nor a retirement entry, and when a row or retirement names a check that is not here. Refresh by re-reading checks.mjs (the finding(loop, check, ...) calls plus the presentCheck/destinationCheck table and the resource-link probe table); node tests/build-checks.mjs --observer-source <path to checks.mjs> re-extracts the names and fails when this file is stale. Captured 2026-09-15; re-captured 2026-09-24 from aeo commit cca5ac6 working tree (109 names: 103 literal, 6 from the resource-requirement table); 2026-09-24.1 re-read against aeo commit 2917e2b (the check bundle consumer): campus-application-finalsite-redirect (emitted through a `const check` binding), campus-grade-source-incomplete, campus-page-email-source-sync, route-screenshot-capture and route-font-readiness added (114 names). primary-cta-count and current-family-destination are no longer emitted by checks.mjs but stay here because they are retired in spec/check-rows.json and older packets still carry them; --observer-source tolerates a retired name the observer dropped. 2026-09-25.1: the coverage family (campus-registry-coverage, program-page-present, campus-page-rendered) is contract-first: the rows in spec/check-rows.json 1.3 define them and the observer implements them in parallel (aeo change of the same date); they are listed under pendingInObserver until the next --observer-source capture finds them in checks.mjs, and --observer-source tolerates a pending name the observer does not emit yet.",
+  "version": "2026-09-25.1",
+  "asOf": "2026-09-25",
   "capturedFrom": {
     "repository": "superbuilders/aeo",
     "path": "alpha-site-system/src/checks.mjs",
@@ -148,6 +148,17 @@
       "llm-file-reachable",
       "robots-reachable",
       "sitemap-populated"
+    ],
+    "coverage": [
+      "campus-page-rendered",
+      "campus-registry-coverage",
+      "program-page-present"
     ]
+  },
+  "pendingInObserver": {
+    "$comment": "Check names the playbook rows define ahead of the observer (contract-first). Remove a name here once checks.mjs emits it.",
+    "campus-registry-coverage": "spec/check-rows.json site.coverage.open-campus-registries (1.3, 2026-09-25)",
+    "program-page-present": "spec/check-rows.json site.coverage.program-page (1.3, 2026-09-25)",
+    "campus-page-rendered": "spec/check-rows.json site.coverage.open-campus-rendered (1.3, 2026-09-25)"
   }
 }

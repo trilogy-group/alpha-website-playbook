@@ -305,6 +305,18 @@ async function applyDecision(ticket, result) {
       requirements: clarificationRequirements(bundle, result),
     })
     actionResult = { api: 'agent-status', status: response.status, clarificationDelivery: response.clarificationDelivery?.status || null }
+  } else if (result.action.kind === 'registry-missing-info') {
+    // Presence, not absence (repair plan 2026-09-25): the registry the class derives from has no entry for the campus; the
+    // ticket waits on the registry owner (assigned above), with the exact ask in the missingInfo note, not on the requester.
+    const runId = `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`
+    await agent(`/tasks/${ticket.id}/claim`, 'POST', { agentRunId: runId })
+    const response = await agent(`/tasks/${ticket.id}/status`, 'POST', {
+      status: 'MISSING_INFO',
+      agentStatus: 'MISSING_INFO',
+      agentRunId: runId,
+      note: registryMissingNote(bundle, result),
+    })
+    actionResult = { api: 'agent-status', status: response.status, registryOwner: result.owner || null }
   } else if (result.action.kind === 'execution-ready') {
     const current = await agent(`/tasks/${ticket.id}`)
     const pending = pendingClarificationReviews(current)
@@ -415,9 +427,16 @@ async function requesterNotice(ticket, result, send) {
   }
 }
 
+/** The Missing Info note for a missing registry expectation: template missingInfo, one item per registry field with the owner named. */
+function registryMissingNote(bundle, result) {
+  const items = (result.registryMissing || []).map((field) => ({ item: `${bundle.fields?.[field]?.missingText || field}: ${bundle.intakeFieldSources?.[field]?.missingRegistryReason || 'record it in the registry'}`, owner: result.owner || result.ownerRole }))
+  return renderTemplate('missingInfo', { actor: `intake ${VERSION}`, date: new Date().toISOString().slice(0, 10), items, alreadyCorrect: Object.keys(result.found || {}).length ? `${Object.keys(result.found).join(', ')} resolved by intake` : 'nothing checked yet' })
+}
+
 /** What the requester is told the ticket waits on, per intake outcome, in their words; intake's own reason is internal. */
 function requesterBlocker(result) {
   const plain = {
+    'missing-registry': `${result.owner || 'the website team'} recording the approved asset for this campus`,
     'policy-review': 'an internal review of this request before any page change',
     'policy-denied': 'an internal decision on this request, which the website team cannot make on its own',
     'owner-unresolved': 'the website team naming the person who owns this change',

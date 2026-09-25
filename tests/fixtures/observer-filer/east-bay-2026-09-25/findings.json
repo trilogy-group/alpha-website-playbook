@@ -1,0 +1,41 @@
+[
+  {
+    "loop": "campus-truth",
+    "check": "campus-page-stale-launch-media",
+    "entity": "program-42698614786",
+    "field": "intro.media",
+    "severity": "high",
+    "title": "Alpha East Bay has no approved open-state intro media recorded",
+    "summary": "The Open campus intro slot must show the approved open-state media from registry/campus-open-media.json; no approved media is recorded for east-bay.",
+    "actionable": true,
+    "url": "https://alpha.school/east-bay/",
+    "expected": "registry/campus-open-media.json campuses.east-bay openMedia and attachmentId",
+    "actual": {
+      "attachmentId": 8550,
+      "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+      "alt": "",
+      "widget": "content_image",
+      "programType": "Open",
+      "registryEntry": null,
+      "missingExpectation": true
+    },
+    "missingExpectation": true,
+    "requirementId": "campus.intro.media.current",
+    "checkBundleVersion": "1.3",
+    "businessImpact": "accuracy",
+    "expectedSource": "registry/campus-open-media.json",
+    "actualSource": "rendered intro slot",
+    "sourceReadAt": "2026-09-25T14:29:29.000Z",
+    "evidenceVersion": 8,
+    "id": "SITE-EA57BA0001",
+    "evidenceImages": [
+      {
+        "kind": "screenshot",
+        "path": "screenshots/campus-program-42698614786-desktop.png",
+        "route": "campus-program-42698614786",
+        "viewport": "desktop",
+        "url": "https://alpha.school/east-bay/"
+      }
+    ]
+  }
+]
