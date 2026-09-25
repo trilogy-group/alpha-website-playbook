@@ -173,8 +173,16 @@
       "requirement": "campus.facts.contact",
       "status": "enforced"
     },
+    "campus-page-status-sentence": {
+      "requirement": "campus.intro.status-sentence",
+      "status": "enforced"
+    },
     "campus-page-stale-launch-media": {
       "requirement": "campus.intro.media",
+      "status": "enforced"
+    },
+    "campus-source-status-sentence": {
+      "requirement": "campus.intro.status-source",
       "status": "enforced"
     },
     "campus-page-tuition-source-sync": {
@@ -281,6 +289,10 @@
     },
     "program-page-reachable": {
       "requirement": "campus.page.reachable",
+      "status": "enforced"
+    },
+    "published-page-reachable": {
+      "requirement": "site.search.indexable.published-page-reachable",
       "status": "enforced"
     },
     "program-page-sync": {
@@ -545,6 +557,7 @@
     "campus-schema-address": "schema.school",
     "campus-schema-required-facts": "schema.school",
     "campus-expired-seasonal-cta": "intro.status-sentence",
+    "campus-source-status-sentence": "intro.status-sentence",
     "campus-page-status-sentence": "intro.status-sentence",
     "campus-image-identity-conflict": "intro.media",
     "campus-application-source-missing": "resources.apply",
