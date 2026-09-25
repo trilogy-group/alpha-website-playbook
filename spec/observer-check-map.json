@@ -1,6 +1,6 @@
 {
-  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet). 0.3: the playbook brand-visual check (tests/page-check.mjs, not a production observer check) is listed under checks with status advisory and under coverageOutsideObserver site.brand.visual. 0.4 (2026-09-24): every name in registry/observer-checks.json is listed; status retired means spec/check-rows.json retires the check (reason there); spec/check-bundle.generated.json is the compiled row per check and supersedes status here for dispatch. 0.5 (2026-09-24, filer review fixes): campus-application-finalsite-redirect (campus.resources.apply, enforced), campus-page-email-source-sync (campus.facts.contact, enforced), campus-grade-source-incomplete (campus.facts.grades, advisory: telemetry until the grade-source decision), route-screenshot-capture and route-font-readiness (site.loop.health, loop-health channel) added. 0.6 (2026-09-24): dedupeAliases lists, per observer check, the older check ids (tests/page-check.mjs ids such as cta-links-resolve and cta-hidden-everywhere, the sweep agents' campus.resources.* and campus.controls.* ids) and title patterns under which a ticket for the same defect was filed before the check bundle; agent/file-observer-findings.mjs treats an open ticket on the same page carrying one of them as the same ticket and files nothing new.",
-  "version": "0.6",
+  "$comment": "Observer check -> playbook requirement row. status: enforced (dispatches tickets), advisory (measured, not dispatched), not-a-website-change (routes to a source owner), needs-row (no requirement yet). 0.3: the playbook brand-visual check (tests/page-check.mjs, not a production observer check) is listed under checks with status advisory and under coverageOutsideObserver site.brand.visual. 0.4 (2026-09-24): every name in registry/observer-checks.json is listed; status retired means spec/check-rows.json retires the check (reason there); spec/check-bundle.generated.json is the compiled row per check and supersedes status here for dispatch. 0.5 (2026-09-24, filer review fixes): campus-application-finalsite-redirect (campus.resources.apply, enforced), campus-page-email-source-sync (campus.facts.contact, enforced), campus-grade-source-incomplete (campus.facts.grades, advisory: telemetry until the grade-source decision), route-screenshot-capture and route-font-readiness (site.loop.health, loop-health channel) added. 0.6 (2026-09-24): dedupeAliases lists, per observer check, the older check ids (tests/page-check.mjs ids such as cta-links-resolve and cta-hidden-everywhere, the sweep agents' campus.resources.* and campus.controls.* ids) and title patterns under which a ticket for the same defect was filed before the check bundle; agent/file-observer-findings.mjs treats an open ticket on the same page carrying one of them as the same ticket and files nothing new. 0.7 (2026-09-25): campus-page-stale-launch-media recognizes the legacy open-intro-media-approved page-check id and East Bay launch-card title so the governed filer adopts the existing ticket instead of opening a duplicate.",
+  "version": "0.7",
   "requirements": {
     "site.header.rendered": "Header template renders with its stylesheet, logo, navigation, Contact Us; footer renders.",
     "site.layout.viewport": "No horizontal overflow beyond 160px, header overlap under 48px/25%, no clipped text, CTAs inside viewport on desktop 1440x1000 and mobile 390x844.",
@@ -576,6 +576,15 @@
   },
   "dedupeAliases": {
     "$comment": "Older ticket ids and title shapes for the same defect on the same page, per observer check. checkIds are matched exactly (case-insensitive) against a ticket's customFields.checkId, check and observerCheck; titlePatterns are case-insensitive regular expressions against the ticket title. A match counts only on one of the group's pages (ticket url, customFields.pageUrl, or an alpha.school URL in the description).",
+    "campus-page-stale-launch-media": {
+      "checkIds": [
+        "open-intro-media-approved"
+      ],
+      "titlePatterns": [
+        "\\bOpen campus intro\\b.*\\b(?:Coming Fall|launch card)\\b",
+        "\\bintro\\b.*\\b(?:launch|coming[ -]soon)\\b"
+      ]
+    },
     "campus-calendar-link-reachable": {
       "checkIds": [
         "cta-links-resolve",
