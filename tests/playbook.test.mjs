@@ -878,7 +878,7 @@ test('ticket template invariants: closing lines on every section 7 template, the
   const spec = loadTemplates()
   assert.deepEqual(closingNoteLines(), ['RESOLUTION ({actor}, {date}, {playbookVersion})', 'Go here: {goHere}', 'Look for: {lookFor}', 'Recommend: {recommend}'])
   assert.equal(reviewLine(), 'Please review.')
-  assert.deepEqual(Object.keys(spec.templates), ['resolution', 'verified', 'missingInfo', 'intakeClarification', 'blocked', 'escalation', 'ownerUnregistered', 'ownerAmbiguous', 'duplicate', 'filedLine', 'claimed', 'triageBody', 'observerBody', 'hubspotData', 'syncMapping'])
+  assert.deepEqual(Object.keys(spec.templates), ['resolution', 'verified', 'missingInfo', 'intakeClarification', 'blocked', 'escalation', 'ownerUnregistered', 'ownerAmbiguous', 'duplicate', 'filedLine', 'claimed', 'triageBody', 'observerBody', 'hubspotData', 'syncMapping', 'agingNudge', 'agingEscalation'])
   assert.deepEqual(validateTicketTemplates(spec), [])
   for (const name of ['resolution', 'verified']) assertNoteShape(renderExamples()[name])
   // A section 7 template that drops a closing line, ends elsewhere, or carries an em dash fails the validator.

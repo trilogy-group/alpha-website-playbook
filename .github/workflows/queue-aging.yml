@@ -1,0 +1,87 @@
+name: APEX website queue aging
+
+# The clock on Blocked and Missing Info (protocol 1e; repair 6 of docs/qc-loop-repair-plan-2026-09-25.md).
+# Once a day agent/queue-aging.mjs reads the open website queue, classifies every ticket as ok, nudge,
+# escalate or class-gap, and writes the report, the markdown and the Slack drafts as an artifact. Nothing
+# is sent by the workflow. Dry run unless the repository variable QUEUE_AGING_APPLY is "true" (or the
+# workflow_dispatch input apply is true): apply posts each planned nudge on its ticket as a dated
+# description note through the v1 task API; never a status change, never agentEligible, never a close.
+# The #support-websites summary and the escalation to the website agent operator are files a person sends.
+on:
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Post the planned nudges on their tickets (description note only)'
+        required: false
+        default: false
+        type: boolean
+      now:
+        description: 'ISO time to classify against (default: now)'
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apex-queue-aging
+  cancel-in-progress: false
+
+jobs:
+  age:
+    name: Classify the held queue
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+
+      - name: Run queue aging
+        env:
+          APEX_API_TOKEN: ${{ secrets.APEX_API_TOKEN }}
+          APEX_API_BASE: ${{ vars.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1' }}
+          APEX_AGENT_API_BASE: ${{ vars.APEX_AGENT_API_BASE || 'https://apex.2hourlearning.com/api/agent' }}
+          QUEUE_AGING_APPLY: ${{ vars.QUEUE_AGING_APPLY }}
+          INPUT_APPLY: ${{ inputs.apply }}
+          INPUT_NOW: ${{ inputs.now }}
+          TRIGGER_EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          test -n "$APEX_API_TOKEN" || { echo 'APEX_API_TOKEN is required to read the open queue.' >&2; exit 2; }
+          apply=false
+          if [[ "$TRIGGER_EVENT" == 'schedule' && "$QUEUE_AGING_APPLY" == 'true' ]]; then apply=true; fi
+          if [[ "$TRIGGER_EVENT" == 'workflow_dispatch' && "$INPUT_APPLY" == 'true' ]]; then apply=true; fi
+          mkdir -p out/queue-aging
+          args=(--report out/queue-aging/report.json --markdown out/queue-aging/report.md --slack-draft out/queue-aging/slack-draft.md)
+          if [[ -n "$INPUT_NOW" ]]; then args+=(--now "$INPUT_NOW"); fi
+          if [[ "$apply" == 'true' ]]; then args+=(--apply); fi
+          echo "Mode: $([[ "$apply" == 'true' ]] && echo apply || echo dry-run)"
+          node agent/queue-aging.mjs "${args[@]}" | tee out/queue-aging/summary.json
+
+      - name: Summarize
+        if: always() && hashFiles('out/queue-aging/report.json') != ''
+        run: |
+          {
+            echo '## APEX website queue aging'
+            echo
+            jq -r '"- Mode: `\(.mode)`\n- Now: `\(.now)`\n- Website tickets: **\(.counts.website)** of \(.counts.open) open; held **\(.counts.held)** (Blocked \(.counts.blocked), Missing Info \(.counts.missingInfo))\n- Nudge: **\(.counts.nudge)** (suppressed as already nudged this week: \(.counts.nudgeSuppressed))\n- Escalate: **\(.counts.escalate)**\n- Class gaps: **\(.counts.classGap)**\n- Not hydrated: \(.counts.notHydrated)"' out/queue-aging/report.json
+            if [[ "$(jq -r '.classGaps | length' out/queue-aging/report.json)" != '0' ]]; then
+              echo
+              echo 'Class gaps by check id:'
+              jq -r '.classGaps[] | "- \(.checkId) (\(.count)): \(.ids | join(", "))"' out/queue-aging/report.json
+            fi
+            if [[ "$(jq -r '.applied // empty | length' out/queue-aging/report.json)" != '' ]]; then
+              echo
+              jq -r '"- Applied: posted \(.applied.posted | length), skipped \(.applied.skipped | length), errors \(.applied.errors | length)"' out/queue-aging/report.json
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && hashFiles('out/queue-aging/**') != ''
+        with:
+          name: queue-aging-${{ github.run_id }}
+          path: out/queue-aging/
+          retention-days: 30
