@@ -24,14 +24,14 @@
         {
           "campus": "raleigh",
           "url": "https://alpha.school/raleigh/",
-          "element": null,
+          "element": "Text editor widget 8d5b4f9 at /5/elements/1/elements/10 (last widget of the Contact and resources block): \"To reach the Suicide and Crisis Lifeline, call 988 or text HOME to 741741.\"",
           "reason": "a legal requirement in the campus region, requested as a one-off by a person from New York (Matt Barge and Yash Chitneni on the call; the original ticket is not in the playbook fixtures)",
-          "elementNote": "Not identified on a read-only read of the public page on 2026-09-25. Contact-block lines present on Raleigh and on neither Plano nor Charlotte: the \"Temporary Location:\" label above the address (Elementor container 308b0c6), \"(Currently enrolling K-10 for Fall 2027)\" under the grade range, and \"Founding Families Tuition Credit: $10,000 per year for 5 years. Contact Admissions for details.\" under the tuition (container 5b54c07). Which of these, if any, is the legal element is for Yash Chitneni to confirm from the original request; until then the exception stands with the element unknown.",
+          "elementNote": "Identified 2026-09-25 (run mackenzie-2026-09-25) by reading the Raleigh page against Plano: the crisis-line text is Raleigh-only, present and visible on desktop and mobile. Other Raleigh-only lines (Founding Families tuition credit, the temporary-location box, a hidden attend_cta_button) are not legal elements and are not exceptions.",
           "decidedBy": "MacKenzie Price",
           "source": "website strategy meeting 2026-09-25",
           "decidedOn": "2026-09-25",
           "expires": null,
-          "status": "element-unconfirmed"
+          "status": "active"
         }
       ]
     },

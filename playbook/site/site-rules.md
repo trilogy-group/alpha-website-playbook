@@ -4,7 +4,7 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 
 ## Uniformity and named exceptions (`site.uniformity.*`)
 
-- Campus pages follow one template and are as uniform as possible; a single Director of Admissions or Dean of Parents asking for a one-off is not a reason for a page to diverge (MacKenzie Price, 2026-09-25). A campus-specific element exists only as a named exception in `spec/site-rules.json` `site.uniformity.campus-template.namedExceptions`, with the campus, the element, the reason and the decider; a ticket asking for one that is not listed is internal review for website operations, never executed as asked. First named exception: Alpha Raleigh's region-specific legal element (the element itself is not yet identified; the registry entry lists the candidate lines and who confirms). Check: manual at intake until an observer check exists.
+- Campus pages follow one template and are as uniform as possible; a single Director of Admissions or Dean of Parents asking for a one-off is not a reason for a page to diverge (MacKenzie Price, 2026-09-25). A campus-specific element exists only as a named exception in `spec/site-rules.json` `site.uniformity.campus-template.namedExceptions`, with the campus, the element, the reason and the decider; a ticket asking for one that is not listed is internal review for website operations, never executed as asked. First named exception: Alpha Raleigh's region-specific legal element (the crisis-line text "To reach the Suicide and Crisis Lifeline, call 988 or text HOME to 741741." in the Contact and resources block, text editor 8d5b4f9; identified 2026-09-25). Check: manual at intake until an observer check exists.
 
 ## Header and footer (`site.header.*`, `site.footer.*`)
 
