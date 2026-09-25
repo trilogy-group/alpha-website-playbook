@@ -49,6 +49,7 @@ import {
   missingExpectationFor,
   missingExpectationTitle,
   missingFromMapOnly,
+  missingExpectationKey,
   registryFileForRow,
   resetRegistryCache,
   outOfScopeSite,
@@ -260,7 +261,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
-  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.6, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
+  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.7, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
   assert.match(lead.patch.description, /\nObserver: SITE-4E2ADC7F5B cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared\nPlease review\.$/)
   assertNoteShape(lead.patch.description.slice(lead.patch.description.indexOf('\n\nRESOLUTION (') + 2))
   assert.match(lead.patch.description, /after 20 clean runs \(row requires 2\)/)
@@ -803,7 +804,7 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
 
   // buildResolvePatch checks the note's shape before anything is written, and never rewrites the existing text.
   const patch = buildResolvePatch({ task: live.get('cmfiler2'), cleared: plan.resolves[1].cleared, rows: plan.resolves[1].rows, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', evidenceSha256: 'f'.repeat(64), bundleVersion: '1.0', now: NOW, page: 'https://alpha.school/second/' })
-  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.6, 2026-09-24, playbook check bundle)\n'))
+  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.7, 2026-09-24, playbook check bundle)\n'))
   assert.ok(!patch.description.includes('—'))
 
   // listOpen logs when a status hits the page cap, so an incomplete queue is never silent.
@@ -1226,7 +1227,7 @@ test('observer filer: East Bay with no registry row files one Missing Info to we
   assert.equal(contractCheck({ ...ticket.payload, id: 'x', assignees: [{ name: 'Yash Chitneni' }] }).valid, true)
   assert.match(ticket.payload.description, /\nObserved: registry\/campus-open-media\.json has no entry for east-bay; page shows attachmentId 8550, src https:\/\/alpha\.school\/wp-content\/uploads\/2026\/01\/Piedmont-1024x704\.webp/)
   assert.match(ticket.payload.description, /\nExpected: an approved intro media recorded in registry\/campus-open-media\.json campuses\.east-bay \(campus\.intro\.media; equals-approved-media 0 mismatches; severity high\)\n/)
-  assert.match(ticket.payload.description, /\n\nMISSING INFO \(agent\/file-observer-findings\.mjs 0\.6, 2026-09-25\)\nThis ticket needs the following before it can be executed:\n1\. Record the approved open-state intro media for this campus in registry\/campus-open-media\.json[^\n]* \(owner: Yash Chitneni\)\nWhat is already correct on the page: the campus is Open in HubSpot Programs; nothing on the page is changed until the intro media is recorded\n/)
+  assert.match(ticket.payload.description, /\n\nMISSING INFO \(agent\/file-observer-findings\.mjs 0\.7, 2026-09-25\)\nThis ticket needs the following before it can be executed:\n1\. Record the approved open-state intro media for this campus in registry\/campus-open-media\.json[^\n]* \(owner: Yash Chitneni\)\nWhat is already correct on the page: the campus is Open in HubSpot Programs; nothing on the page is changed until the intro media is recorded\n/)
   assert.ok(!/[—…]/.test(ticket.payload.description))
   assert.deepEqual(none.missingInfo.map((m) => [m.campus, m.state, m.file, m.owner, m.ticketClass]), [['Alpha East Bay', 'Open', 'registry/campus-open-media.json', 'Yash Chitneni', 'observer-media-identity']])
   // The same finding again dedupes against the ticket it filed (campus and row).
@@ -1313,4 +1314,41 @@ test('observer filer: coverage findings file one Missing Info per campus and reg
   assert.deepEqual(plan.sourceDigest.map((d) => [d.check, d.row, d.ownerRole, d.record, d.via]), [['program-page-present', 'site.map.integrity.hubspot-map-sync', 'growth-map-owner', 'Alpha East Bay', 'program-page-present missingFromMap -> site.map.integrity.hubspot-map-sync']])
   // Loop health: the unrendered Open campuses go to the observer owner, never the queue.
   assert.deepEqual(plan.loopHealth.map((l) => [l.check, l.row]), [['campus-page-rendered', 'site.coverage.open-campus-rendered']])
+})
+
+test('observer filer 0.7: one Missing Info per campus and registry when the media row and the coverage row both find the campus unrecorded; the observer\'s program-page-present findings are page tickets, never digest lines', () => {
+  const checks = bundle()
+  const eastBay = loadRunFolder(path.join(fixtures, 'east-bay-2026-09-25'))
+  const [media] = eastBay.findings
+  const now = new Date('2026-09-25T15:00:00Z')
+  // The coverage finding as aeo #37 checkCampusRegistryCoverage emits it: expected {file, keyPath}, actual null, registry the short name, ownerRole from the entry.
+  const coverage = { ...media, id: oid('C0FE000011'), check: 'campus-registry-coverage', observerCheck: 'campus-registry-coverage', requirementId: 'site.coverage.open-campus-registries', field: 'campus-open-media', title: 'no campus open media entry recorded for Open campus Alpha East Bay', summary: 'Record the approved open-state intro media for this Open campus.', expected: { file: 'registry/campus-open-media.json', keyPath: 'campuses.east-bay' }, actual: null, observed: null, missingExpectation: true, ownerRole: 'website-operations', registry: 'campus-open-media', entitySource: 'hubspot-programs', dedupeScope: 'campus-registry', ticketClass: 'observer-media-identity', severity: 'high' }
+  // program-page-present as aeo #37 checkProgramPagePresent emits it for a Program that is on HubSpot but not on the map: onMap false on the finding, actual the page facts.
+  const notNamed = { ...media, id: oid('C0FE000012'), check: 'program-page-present', observerCheck: 'program-page-present', requirementId: 'site.coverage.program-page', field: 'page', title: 'Alpha East Bay campus page does not name the campus', summary: 'https://alpha.school/east-bay/ answers 200 but neither its title nor its H1 names Alpha East Bay.', expected: 'Alpha East Bay', actual: { status: 200, title: 'Alpha Piedmont', h1: ['Alpha Piedmont'] }, observed: undefined, missingExpectation: false, onMap: false, entitySource: 'hubspot-programs', sourceKey: 'hubspot-programs', sourceField: 'website', ticketClass: 'page-status', ownerRole: 'website-operations', severity: 'critical', dedupeScope: 'program' }
+  const notFetched = { ...notNamed, id: oid('C0FE000013'), title: 'Alpha East Bay campus page does not answer 200', summary: 'Open Program Alpha East Bay lists https://alpha.school/east-bay/ as its website, but the page was not fetched in this run.', actual: null }
+  assert.equal(missingFromMapOnly(notNamed), false, 'a page that does not name the campus is a page defect even when the Program is not on the map')
+  assert.equal(missingFromMapOnly(notFetched), false, 'a page the run did not fetch is not a map-only case')
+  assert.equal(missingFromMapOnly({ ...notNamed, actual: { status: 200, namesCampus: true, inMap: false, missingFromMap: true } }), true, 'the explicit map-only verdict still goes to the digest')
+  assert.equal(missingExpectationKey({ slug: 'east-bay', file: 'registry/campus-open-media.json' }), 'east-bay|registry/campus-open-media.json')
+
+  // A verified bundle in the manifest: the observer applied requireConsecutiveRuns (2 on the page row) already.
+  const verified = { checkBundle: { status: 'verified', sha256: checks.sha256 } }
+  const run = loadRunFolder(syntheticRun({ pages: 0, extraFindings: [media, coverage, notNamed], manifestExtra: verified }).dir)
+  const plan = planObserverFindings({ run, bundle: checks, queue: [], now, registries: { 'registry/campus-open-media.json': { campuses: {} } } })
+  assert.deepEqual([plan.counts.files, plan.counts.missingInfo, plan.counts.existing, plan.counts.sourceDigest, plan.counts.invalid], [2, 1, 1, 0, 0])
+  const titles = plan.files.map((f) => f.title)
+  assert.equal(titles.filter((t) => t === 'no approved intro media recorded for Open campus Alpha East Bay').length, 1, 'exactly one Missing Info for the campus and registry')
+  const mediaTicket = plan.files.find((f) => f.title === 'no approved intro media recorded for Open campus Alpha East Bay')
+  assert.deepEqual([mediaTicket.key, mediaTicket.payload.status, mediaTicket.owner.name], ['observer:campus.intro.media.current:page:east-bay', MISSING_INFO_STATUS, 'Yash Chitneni'])
+  const merged = plan.existing.find((e) => e.check === 'campus-registry-coverage')
+  assert.ok(merged, 'the coverage group is reported against the media ticket planned this run')
+  assert.deepEqual([merged.existing.id, merged.existing.status], ['observer:campus.intro.media.current:page:east-bay', 'planned this run'])
+  assert.match(merged.existing.via, /^same-run missing expectation for Alpha East Bay in registry\/campus-open-media\.json \(campus\.intro\.media\.current\)$/)
+  const pageTicket = plan.files.find((f) => f.check === 'program-page-present')
+  assert.ok(pageTicket, 'the page that does not name the campus files as a page ticket')
+  assert.deepEqual([pageTicket.payload.status, pageTicket.payload.priority, pageTicket.payload.customFields.triagedClass, pageTicket.owner.role], ['NOT_STARTED', 'HIGH', 'page-status', 'website-operations'])
+  // Order does not decide which row files: the coverage finding first still leaves one Missing Info.
+  const reversed = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [coverage, media], manifestExtra: verified }).dir), bundle: checks, queue: [], now, registries: { 'registry/campus-open-media.json': { campuses: {} } } })
+  assert.deepEqual([reversed.counts.files, reversed.counts.missingInfo, reversed.counts.existing], [1, 1, 1])
+  assert.equal(reversed.files[0].check, 'campus-registry-coverage')
 })

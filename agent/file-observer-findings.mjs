@@ -103,7 +103,7 @@ export { FILER_OWNED_CODE, isFilerOwnedConflict }
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
-export const FILER_VERSION = '0.6'
+export const FILER_VERSION = '0.7'
 export const FILED_BY = 'agent/file-observer-findings.mjs'
 export const IDEMPOTENCY_PREFIX = 'observer:'
 export const RESOLUTION_KIND = 'check-cleared'
@@ -615,13 +615,24 @@ export function registryFileForRow(row) {
   return match ? match[0] : null
 }
 
-/** The `program-page-present` case that is not a page defect: the page answers and names the campus but the growth map lacks the record. */
+/**
+ * The `program-page-present` case that is not a page defect: the finding itself says the page answers and names the
+ * campus but the growth map lacks the record (`actual.missingFromMap` true or `actual.inMap` false). The observer's
+ * `onMap: false` on a finding is context, not that verdict (aeo #37 files the map gap separately as hubspot-map-sync,
+ * and its program-page-present findings are always page defects: no page, no 2xx, or a page that does not name the
+ * campus), so it never diverts one to the digest (filer 0.7).
+ */
 export function missingFromMapOnly(finding) {
-  const actual = finding?.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : {}
-  if (actual.missingFromMap !== true && actual.inMap !== false && finding?.onMap !== false) return false
-  const status = Number(actual.status ?? actual.httpStatus ?? 200)
+  const actual = finding?.actual && typeof finding.actual === 'object' && !Array.isArray(finding.actual) ? finding.actual : null
+  if (!actual || (actual.missingFromMap !== true && actual.inMap !== false)) return false
+  const status = Number(actual.status ?? actual.httpStatus ?? NaN)
   const named = actual.namesCampus !== false && actual.titleNamesCampus !== false
   return status >= 200 && status < 300 && named
+}
+
+/** The campus-and-registry key a missing-expectation group is one ticket under, whichever row raised it (filer 0.7). */
+export function missingExpectationKey(missing) {
+  return `${missing.slug || missing.campus || 'unknown'}|${missing.file || 'unknown'}`
 }
 
 /** The registry entry for a campus slug at `keyPath` (campuses[slug] today), or undefined. */
@@ -1097,6 +1108,10 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (page && !group.pages.includes(page)) group.pages.push(page)
   }
 
+  // One Missing Info per campus and registry (repair plan 2026-09-25, repair 1): when two rows derive from the same
+  // registry (campus.intro.media.current and the open-media entry of site.coverage.open-campus-registries, say) and both
+  // find the same campus unrecorded, the first group planned files and the second is reported against it as existing.
+  const plannedMissing = new Map()
   const observedThisRun = new Set(run.findings.map((f) => f.id))
   planResolves(plan, { run, bundle, queue, now, observedThisRun, decisionTickets: new Set(plan.decisionTickets) })
   // A ticket this run completes is not a duplicate candidate: a scope that clears and reappears in the same packet files again.
@@ -1115,8 +1130,15 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
       continue
     }
     const owner = ownerFor(policy, row.ownerRole)
-    const contract = buildContract({ row, group, run, bundle, owner, policy, now, related: decision ? [decision] : [] })
     const missing = group.missing
+    if (missing) {
+      const sameRun = plannedMissing.get(missingExpectationKey(missing))
+      if (sameRun) {
+        plan.existing.push({ key: group.key, rows: group.rows.map((r) => r.id), check: row.observerCheck, scope: row.dedupeScope, scopeKey: group.scopeKey, title: missingExpectationTitle(missing), findings: group.findings.length, observerIds: [...ids], pages: group.pages, owner, existing: { id: sameRun.key, status: 'planned this run', title: sameRun.title, via: `same-run missing expectation for ${missing.campus} in ${missing.file} (${sameRun.row})` } })
+        continue
+      }
+    }
+    const contract = buildContract({ row, group, run, bundle, owner, policy, now, related: decision ? [decision] : [] })
     if (missing) {
       contract.claim = missingExpectationTitle(missing)
       contract.expected = `an approved ${missing.thing} recorded in ${missing.file} ${missing.keyPath.replace('[slug]', `.${missing.slug || '<slug>'}`)} (${requirementIdFor(row)}; ${renderComparator(row)}; severity ${row.severity})`
@@ -1154,6 +1176,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     const entry = { key: group.key, rows: group.rows.map((r) => r.id), check: row.observerCheck, scope: row.dedupeScope, scopeKey: group.scopeKey, title: payload.title, findings: group.findings.length, observerIds: [...ids], pages: group.pages, owner, evidence: evidencePairs(run, group), payload, ...(missing ? { missingExpectation: { campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, ticketClass: row.ticketClass } } : {}) }
     if (dup) { plan.existing.push({ ...entry, existing: { id: dup.task.id, status: dup.task.status, title: dup.task.title, via: dup.via }, payload: undefined }); continue }
     plan.files.push(entry)
+    if (missing) plannedMissing.set(missingExpectationKey(missing), { key: group.key, title: payload.title, row: row.id })
     if (missing) plan.missingInfo.push({ key: group.key, title: payload.title, campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, owner: owner.name, ticketClass: row.ticketClass, ask: missing.ask })
   }
 
