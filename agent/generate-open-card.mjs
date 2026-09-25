@@ -86,7 +86,8 @@ export function escapeXml(value) {
 export function svgSize(svgText) {
   const open = svgText.match(/<svg\b[^>]*>/i)?.[0]
   if (!open) throw new OpenCardError('BAD_TEMPLATE', 'no <svg> root element')
-  const attr = (name) => { const m = open.match(new RegExp(`\\s${name}\\s*=\\s*"([^"]+)"`, 'i')); return m ? m[1].trim() : null }
+  const attrs = new Map([...open.matchAll(/\s([A-Za-z_:][\w:.-]*)\s*=\s*"([^"]*)"/g)].map((m) => [m[1].toLowerCase(), m[2].trim()]))
+  const attr = (name) => (attrs.has(name.toLowerCase()) && attrs.get(name.toLowerCase()) !== '' ? attrs.get(name.toLowerCase()) : null)
   const px = (value) => { if (value === null) return null; const m = value.match(/^(\d+(?:\.\d+)?)(?:px)?$/); return m ? Math.round(Number(m[1])) : null }
   let width = px(attr('width')), height = px(attr('height'))
   const viewBox = attr('viewBox')?.split(/[\s,]+/).map(Number)
