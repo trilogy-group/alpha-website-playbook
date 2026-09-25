@@ -1,0 +1,204 @@
+{
+  "$comment": "Offline queue for tests/queue-aging.test.mjs, as the agent API returns tickets (comments and activityLog present) unless noted. Now is 2026-09-25T21:40:00Z. Assignee ids are Yash Chitneni and Matt Barge from registry/people.json.",
+  "data": [
+    {
+      "id": "ok-blocked-recent",
+      "title": "Website: Alpha Austin hero CTA destination",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/austin/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-15T10:00:00.000Z",
+      "updatedAt": "2026-09-24T10:00:00.000Z",
+      "assignees": [{ "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" }],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "routed", "class": "cta-links" } },
+      "description": "Requester text.\n\nBLOCKED (sweep, 2026-09-24)\nDECISION NEEDED: keep the Community link or point at the map?",
+      "comments": [],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-15T10:00:00.000Z", "meta": {} },
+        { "id": "a2", "action": "field_changed", "createdAt": "2026-09-24T10:00:00.000Z", "meta": { "field": "Status", "from": "NOT_STARTED", "to": "BLOCKED" } }
+      ]
+    },
+    {
+      "id": "nudge-blocked-4d",
+      "title": "Website: Alpha Boston team order",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/boston/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-10T10:00:00.000Z",
+      "updatedAt": "2026-09-25T15:00:00.000Z",
+      "assignees": [{ "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" }],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "routed", "class": "staff-update", "evaluatedAt": "2026-09-25T15:00:00.000Z" } },
+      "description": "Requester text.\n\nBLOCKED (sweep, 2026-09-21)\nDECISION NEEDED: does the Dean of Parents card go before the guides?",
+      "comments": [
+        { "id": "c1", "body": "Holding until Yash decides the order.", "createdAt": "2026-09-21T12:00:00.000Z", "authorId": "cmq61oe6i000004lduh172vf3" }
+      ],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-10T10:00:00.000Z", "meta": {} },
+        { "id": "a2", "action": "agent_status_updated", "createdAt": "2026-09-21T11:59:00.000Z", "meta": { "fromStatus": "IN_PROGRESS", "toStatus": "BLOCKED" } },
+        { "id": "a3", "action": "comment_added", "createdAt": "2026-09-21T12:00:00.000Z", "meta": {} },
+        { "id": "a4", "action": "field_changed", "createdAt": "2026-09-25T15:00:00.000Z", "meta": { "field": "customFields", "from": "{}", "to": "{intakeHash}" } },
+        { "id": "a5", "action": "agent_reconciled", "createdAt": "2026-09-25T15:00:01.000Z", "meta": { "fromStatus": "BLOCKED", "toStatus": "BLOCKED", "disposition": "blocked" } }
+      ]
+    },
+    {
+      "id": "escalate-missing-11d",
+      "title": "Website: Alpha Raleigh staff headshots",
+      "status": "MISSING_INFO",
+      "url": "https://alpha.school/raleigh/",
+      "requesterEmail": "dawn.adams@alpha.school",
+      "createdAt": "2026-09-10T10:00:00.000Z",
+      "updatedAt": "2026-09-14T09:00:00.000Z",
+      "assignees": [],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "missing-info", "class": "staff-add" } },
+      "description": "Requester text.\n\nMISSING INFO (intake 0.2, 2026-09-14)\nThis ticket needs the following before it can be executed:\n1. Dawn Adams: headshot for Jane Roe (owner: Dawn Adams)\n2. Dawn Adams: title for Jane Roe (owner: Dawn Adams)\nWhat is already correct on the page: nothing checked yet\nThe agent will execute and verify as soon as the items above are on the ticket.",
+      "comments": [],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-10T10:00:00.000Z", "meta": {} },
+        { "id": "a2", "action": "agent_clarification_requested", "createdAt": "2026-09-14T09:00:00.000Z", "meta": { "requirementKeys": "['details']" } }
+      ]
+    },
+    {
+      "id": "classgap-east-bay",
+      "title": "Alpha East Bay: Open campus intro still shows the \"Coming Fall 2026 To Piedmont\" launch card",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/east-bay/",
+      "requesterEmail": "matthew.barge@superbuilders.school",
+      "createdAt": "2026-09-21T21:35:17.601Z",
+      "updatedAt": "2026-09-25T21:55:49.532Z",
+      "assignees": [
+        { "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" },
+        { "id": "cmq61oe6i000004lduh172vf3", "name": "Matthew Barge", "email": "matthew.barge@superbuilders.school" }
+      ],
+      "customFields": { "source": "agent-found", "checkId": "open-intro-media-approved", "ownerRole": "internal-triage", "intakeDecision": { "outcome": "needs-rule", "class": null, "ownerRole": "internal-triage" } },
+      "description": "Found while working: the intro card on an Open campus carries launch words.",
+      "comments": [
+        { "id": "c1", "body": "Reconciliation: Blocked\n\nNo compiled ticket class matched. Intake cannot invent a route or fall back to Matt or Yash.", "createdAt": "2026-09-23T01:36:22.879Z", "authorId": "cmq61oe6i000004lduh172vf3" }
+      ],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-21T21:35:17.601Z", "meta": {} },
+        { "id": "a2", "action": "agent_reconciled", "createdAt": "2026-09-23T01:36:22.879Z", "meta": { "fromStatus": "NOT_STARTED", "toStatus": "BLOCKED", "disposition": "blocked" } }
+      ]
+    },
+    {
+      "id": "classgap-new-york",
+      "title": "Alpha New York: Open campus intro still shows a launch card",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/new-york/",
+      "requesterEmail": "matthew.barge@superbuilders.school",
+      "createdAt": "2026-09-21T22:00:00.000Z",
+      "updatedAt": "2026-09-21T22:00:00.000Z",
+      "assignees": [{ "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" }],
+      "customFields": { "source": "agent-found", "checkId": "open-intro-media-approved", "ownerRole": "internal-triage", "intakeDecision": { "outcome": "needs-rule", "class": null } },
+      "description": "Found while working.",
+      "comments": [],
+      "activityLog": [{ "id": "a1", "action": "created", "createdAt": "2026-09-21T22:00:00.000Z", "meta": {} }]
+    },
+    {
+      "id": "classgap-no-check",
+      "title": "Website: sister brand question about Waypoint footer",
+      "status": "NOT_STARTED",
+      "url": "https://alpha.school/locations/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-24T22:00:00.000Z",
+      "updatedAt": "2026-09-24T22:00:00.000Z",
+      "assignees": [],
+      "customFields": { "ownerRole": "internal-triage", "intakeDecision": { "outcome": "needs-rule", "class": null } },
+      "description": "Requester text.",
+      "comments": [],
+      "activityLog": [{ "id": "a1", "action": "created", "createdAt": "2026-09-24T22:00:00.000Z", "meta": {} }]
+    },
+    {
+      "id": "suppressed-nudged-2d-ago",
+      "title": "Website: Alpha Chantilly packet link",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/chantilly/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-12T10:00:00.000Z",
+      "updatedAt": "2026-09-23T13:00:00.000Z",
+      "assignees": [{ "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" }],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "routed", "class": "packet-link" } },
+      "description": "Requester text.\n\nBLOCKED (sweep, 2026-09-20)\nDECISION NEEDED: which Flipsnack packet is current?\n\nQUEUE AGING NUDGE (queue-aging 0.1, 2026-09-23)\nYash Chitneni: this ticket has been Blocked for 3 days with no movement since 2026-09-20.\nWaiting on: DECISION NEEDED: which Flipsnack packet is current?\nNext step: answer the question on the ticket or move the status; or say on the ticket why it stays held\nIt escalates to Matt Barge after 7 days idle (protocol 1e); nothing closes on its own.\nMarker: queue-aging nudge suppressed-nudged-2d-ago 2026-09-23\n",
+      "comments": [],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-12T10:00:00.000Z", "meta": {} },
+        { "id": "a2", "action": "field_changed", "createdAt": "2026-09-20T10:00:00.000Z", "meta": { "field": "Status", "from": "IN_PROGRESS", "to": "BLOCKED" } },
+        { "id": "a3", "action": "field_changed", "createdAt": "2026-09-23T13:00:00.000Z", "meta": { "field": "Description", "from": "Requester text.\n\nBLOCKED (sweep, 2026-09-20)\nDECISION NEEDED: which Flipsnack packet is current?", "to": "Requester text.\n\nBLOCKED (sweep, 2026-09-20)\nDECISION NEEDED: which Flipsnack packet is current?\n\nQUEUE AGING NUDGE (queue-aging 0.1, 2026-09-23)\n...\nMarker: queue-aging nudge suppressed-nudged-2d-ago 2026-09-23\n" } }
+      ]
+    },
+    {
+      "id": "escalate-old-marker-9d",
+      "title": "Website: Alpha Fort Worth guide video",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/fort-worth/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-01T10:00:00.000Z",
+      "updatedAt": "2026-09-16T13:00:00.000Z",
+      "assignees": [{ "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" }],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "routed", "class": "media-embed" } },
+      "description": "Requester text.\n\nBLOCKED (sweep, 2026-09-13)\nDECISION NEEDED: which video?\n\nQUEUE AGING NUDGE (queue-aging 0.1, 2026-09-16)\n...\nMarker: queue-aging nudge escalate-old-marker-9d 2026-09-16\n",
+      "comments": [],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-01T10:00:00.000Z", "meta": {} },
+        { "id": "a2", "action": "field_changed", "createdAt": "2026-09-16T12:00:00.000Z", "meta": { "field": "Assignees", "from": "None", "to": "new assignees added" } },
+        { "id": "a3", "action": "field_changed", "createdAt": "2026-09-16T13:00:00.000Z", "meta": { "field": "Description", "from": "x", "to": "x\nMarker: queue-aging nudge escalate-old-marker-9d 2026-09-16\n" } }
+      ]
+    },
+    {
+      "id": "escalate-no-person",
+      "title": "Website: Alpha Scottsdale Book a Call widget",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/scottsdale/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-24T10:00:00.000Z",
+      "updatedAt": "2026-09-25T10:00:00.000Z",
+      "assignees": [],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "routed", "class": "cta-links" } },
+      "description": "Requester text.",
+      "comments": [],
+      "activityLog": [
+        { "id": "a1", "action": "created", "createdAt": "2026-09-24T10:00:00.000Z", "meta": {} },
+        { "id": "a2", "action": "field_changed", "createdAt": "2026-09-25T10:00:00.000Z", "meta": { "field": "Status", "from": "NOT_STARTED", "to": "BLOCKED" } }
+      ]
+    },
+    {
+      "id": "escalate-not-hydrated-8d",
+      "title": "Website: Alpha Palm Beach address",
+      "status": "BLOCKED",
+      "url": "https://alpha.school/palm-beach/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-10T10:00:00.000Z",
+      "updatedAt": "2026-09-17T10:00:00.000Z",
+      "assignees": [{ "id": "cmq61oe6i000004lduh172vf3", "name": "Matthew Barge", "email": "matthew.barge@superbuilders.school" }],
+      "customFields": { "ownerRole": "website-agent-operator", "intakeDecision": { "outcome": "routed", "class": "hubspot-data" } },
+      "description": "Requester text."
+    },
+    {
+      "id": "excluded-videography",
+      "title": "Videography — Alpha Raleigh",
+      "status": "BLOCKED",
+      "url": "https://app.hubspot.com/contacts/40051392/record/0-54/1",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-01T10:00:00.000Z",
+      "updatedAt": "2026-09-01T10:00:00.000Z",
+      "assignees": [],
+      "customFields": {},
+      "description": "Not a website ticket.",
+      "comments": [],
+      "activityLog": [{ "id": "a1", "action": "created", "createdAt": "2026-09-01T10:00:00.000Z", "meta": {} }]
+    },
+    {
+      "id": "ok-in-progress-old",
+      "title": "Website: Alpha Miami intro sentence",
+      "status": "IN_PROGRESS",
+      "url": "https://alpha.school/miami/",
+      "requesterEmail": "someone@alpha.school",
+      "createdAt": "2026-09-01T10:00:00.000Z",
+      "updatedAt": "2026-09-01T10:00:00.000Z",
+      "assignees": [{ "id": "cmq5pjifs000004ldan0da45a", "name": "Yash Chitneni", "email": "yash.chitneni@superbuilders.school" }],
+      "customFields": { "ownerRole": "website-operations", "intakeDecision": { "outcome": "ready-for-execution", "class": "copy-edit" } },
+      "description": "Requester text.",
+      "comments": [],
+      "activityLog": [{ "id": "a1", "action": "created", "createdAt": "2026-09-01T10:00:00.000Z", "meta": {} }]
+    }
+  ]
+}

@@ -32,7 +32,7 @@
         "type": "object",
         "required": ["protocolSection", "description", "required", "lines", "example"],
         "properties": {
-          "protocolSection": { "type": "string", "pattern": "^(0|1|1d|2|7|7 \\(.+\\)|8)$" },
+          "protocolSection": { "type": "string", "pattern": "^(0|1|1d|1e|2|7|7 \\(.+\\)|8)$" },
           "description": { "type": "string" },
           "title": { "type": "string" },
           "required": { "type": "array", "items": { "type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9]*$" } },

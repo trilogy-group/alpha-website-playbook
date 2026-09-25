@@ -1,7 +1,7 @@
 {
   "$comment": "The wording and line order of every note and body the APEX website ticket protocol prescribes, in one place. The renderer (tests/render-ticket.mjs), triage (tests/triage-ticket.mjs), intake (agent/intake-policy.mjs), the pathway diagnosis (tests/diagnose-field.mjs), the observer filer (agent/file-observer-findings.mjs) and any sweep agent writing a note by hand render these through agent/ticket-templates.mjs, so a change to the protocol's wording is made here once. Placeholders: {name} is a field the caller must supply (listed in `required`; arrays join with ', '); {?name|text} renders text only when the field is present, {?name|text|else} renders else otherwise, and both may nest placeholders; a line may be an object {text, when} rendered only when that field is present, or {each, text} rendered once per array item with {index} (1-based) and the item's own fields ({item} for a string item). The protocol document quotes each template through tests/render-templates-examples.mjs from the `example` fields, and a test fails when the quoted block drifts from the renderer.",
-  "version": "1.1",
-  "asOf": "2026-09-24",
+  "version": "1.2",
+  "asOf": "2026-09-25",
   "markers": {
     "triage": "--- Website agent triage ---"
   },
@@ -361,6 +361,54 @@
         "currentDerivation": "<from the field map>",
         "proposedDerivation": "<rule>",
         "reason": "<the incident, with pages and dates>"
+      }
+    },
+    "agingNudge": {
+      "protocolSection": "1e",
+      "description": "The note agent/queue-aging.mjs appends to a Blocked or Missing Info website ticket that has had no status, assignee, comment or description change for three days (protocol 1e): the named person, how long it has waited, what it waits on, and the next step. Written through the v1 task API as a dated description note (the APEX agent comment route needs an active claim, which moves the ticket to In Progress, and reconcile always writes a status); never a status change, never agentEligible. The last line is the idempotency marker: the same ticket is not nudged again within seven days.",
+      "required": ["actor", "date", "person", "statusLabel", "idleDays", "lastMovementAt", "waitingOn", "nextStep", "operator", "escalateAfterDays", "ticketId"],
+      "lines": [
+        "QUEUE AGING NUDGE ({actor}, {date})",
+        "{person}: this ticket has been {statusLabel} for {idleDays} days with no movement since {lastMovementAt}.",
+        "Waiting on: {waitingOn}",
+        "Next step: {nextStep}",
+        "It escalates to {operator} after {escalateAfterDays} days idle (protocol 1e); nothing closes on its own.",
+        "Marker: queue-aging nudge {ticketId} {date}"
+      ],
+      "example": {
+        "actor": "<actor>",
+        "date": "<date>",
+        "person": "<person, never a role>",
+        "statusLabel": "Blocked | in Missing Info",
+        "idleDays": "<n>",
+        "lastMovementAt": "<date of the last status, assignee, comment or description change>",
+        "waitingOn": "<the DECISION NEEDED line, the Missing Info items, or the blocker the note names>",
+        "nextStep": "<answer the question, add the items, or move the status; or say on the ticket why it stays held>",
+        "operator": "<website agent operator>",
+        "escalateAfterDays": "7",
+        "ticketId": "<ticket id>"
+      }
+    },
+    "agingEscalation": {
+      "protocolSection": "1e",
+      "description": "The escalation agent/queue-aging.mjs writes for the website agent operator (Matt Barge) as a Slack draft file, never sent by the script: every website ticket Blocked or in Missing Info for seven days or more without movement, one line each with the named person, then the class gaps (tickets in needs-rule or internal-triage) grouped by check id, which are playbook defects (a missing class or owner) and are never nudged to the requester. Closing a stale ticket is a person's decision.",
+      "required": ["date", "operator", "escalations", "escalateAfterDays", "classGaps"],
+      "lines": [
+        "QUEUE AGING ESCALATION ({date})",
+        "{operator}: {escalations} website tickets have been Blocked or in Missing Info for {escalateAfterDays} days or more with no movement.",
+        { "each": "tickets", "text": "- {id} [{status}, {idleDays} days idle, {person}]: {title}" },
+        "Class gaps ({classGaps} tickets in needs-rule or internal-triage): playbook defects, a missing class or owner; add the class, never nudge the requester.",
+        { "each": "gaps", "text": "- {checkId} ({count}): {ids}" },
+        "Nothing closes automatically; a stale ticket is closed only by a person."
+      ],
+      "example": {
+        "date": "<date>",
+        "operator": "<website agent operator>",
+        "escalations": "<n>",
+        "escalateAfterDays": "7",
+        "tickets": [{ "id": "<ticket id>", "status": "<BLOCKED | MISSING_INFO>", "idleDays": "<n>", "person": "<named person or: no named person>", "title": "<title>" }],
+        "classGaps": "<n>",
+        "gaps": [{ "checkId": "<check id or: no check id>", "count": "<n>", "ids": "<ticket ids>" }]
       }
     }
   }

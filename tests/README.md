@@ -53,6 +53,16 @@ node tests/telemetry-report.mjs --since 2026-08-25 --until 2026-09-24T23:59:59Z 
 node tests/telemetry-report.mjs --since 2026-09-15 --tickets-file tickets.json --receipts-file receipts.json --out /tmp/report.md
 ```
 
+## agent/queue-aging.mjs (the clock on Blocked and Missing Info)
+
+Protocol 1e (repair 6 of `docs/qc-loop-repair-plan-2026-09-25.md`). Reads the open queue (v1 listing, agent API hydration for comments and the activity log), keeps website tickets, and classifies each as `ok`, `nudge` (held, idle three days or more: one `agingNudge` note to the named person, a description-only v1 PATCH with `--apply`, never a status or agentEligible change, not repeated within seven days thanks to the marker line), `escalate` (idle seven days or more, or held with no named person) or `class-gap` (intake outcome `needs-rule` or owner role `internal-triage`; grouped by check id, observer incidents by their check name, never nudged). Movement is a status, assignee, comment or description change; intake's customFields writes and the nudge itself are not. Writes `--report` (JSON), `--markdown` and, with `--slack-draft`, the #support-websites summary and the operator's escalation as files; nothing is sent, nothing is closed. Tests: `tests/queue-aging.test.mjs` on `tests/fixtures/queue-aging/queue-2026-09-25.json` (ok, nudge, escalate, class-gap, repeat-suppressed, the apply PATCH shape, the stale guard).
+
+```bash
+node agent/queue-aging.mjs --report out/queue-aging/report.json --slack-draft            # live dry run
+node agent/queue-aging.mjs --queue export.json --now 2026-09-25T21:40:00Z --slack-draft   # offline
+node agent/queue-aging.mjs --apply --report out/queue-aging/report.json                    # post the nudges
+```
+
 ## diagnose-field.mjs
 
 Pathway diagnosis (protocol step 1b). Given a campus URL and an element from `spec/campus-page-field-map.json`, it reads the rendered page, the growth map API (HubSpot mirror), HubSpot Programs directly when the token has the scopes, and the requirement for the campus state; then prints the defect class (data, mapping, delivery, presentation, none), the owner role and person, and a ready ticket.
