@@ -2411,7 +2411,7 @@ test('check bundle: the observer inventory extractor reads finding literals and 
 })
 
 test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
-  assert.equal(checkBundle.version, '1.4')
+  assert.equal(checkBundle.version, '1.5')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
   assert.deepEqual(byChannel, { ticket: 85, 'source-digest': 17, 'loop-health': 17 })
@@ -2589,7 +2589,7 @@ import { classifyTicket, ownerRuleMatches, requirementIdsFor } from '../agent/in
 import { prepareFoundPayload, requirementIdsForCheck } from '../agent/file-found-ticket.mjs'
 
 test('check bundle 1.3: entity sources, comparators, missing-expectation rows, coverage rows and page-check aliases (decision 2026-09-25: from HubSpot to the website)', () => {
-  assert.equal(checkBundle.version, '1.4')
+  assert.equal(checkBundle.version, '1.5')
   // Entity sources: the shape the observer consumes verbatim; campus rows enumerate from HubSpot Programs, the rest from the map.
   const hubspot = checkBundle.entitySources['hubspot-programs']
   assert.deepEqual([hubspot.source, hubspot.fields, hubspot.publicTypes, hubspot.publicHosts, hubspot.lifecycleField, hubspot.pageField], ['hubspot-programs', ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date'], ['Open', 'Announced'], ['alpha.school', 'www.alpha.school'], 'type', 'website'])
@@ -2618,7 +2618,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   // Presence, not absence: every derive row says what a missing entry means; the registry-keyed rows say finding, with the ask and the noun.
   for (const row of checkBundle.rows.filter((r) => r.expected.derive)) assert.ok(['finding', 'skip'].includes(row.expected.derive.onMissing), `${row.id} onMissing`)
   const finding = checkBundle.rows.filter((r) => r.expected.derive?.onMissing === 'finding').map((r) => r.id).sort()
-  assert.deepEqual(finding, ['campus.intro.media.current', 'campus.resources.packet.present', 'campus.team.roster.present', 'site.coverage.open-campus-registries', 'site.search.schema.url'])
+  assert.deepEqual(finding, ['campus.intro.media.current', 'site.coverage.open-campus-registries']) // 2026-09-25: packet, roster and schema rows flipped to skip until the observer implements their missing-expectation finding (conformance warning); their registry gaps file through site.coverage.open-campus-registries
   for (const id of finding) { const row = checkRow(id); assert.ok(row.literals.missingAsk.length > 40 && row.literals.missingThing, id) }
   const media = checkRow('campus.intro.media.current')
   assert.deepEqual([media.entitySource, media.ownerRole, media.ticketClass, media.comparator.type, media.comparator.threshold, media.comparator.unit, media.expected.derive.source, media.grounding.kind], ['hubspot-programs', 'website-operations', 'observer-media-identity', 'equals-approved-media', 0, 'mismatches', 'registry', 'decision'])
@@ -2673,7 +2673,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const rows = JSON.parse(fs.readFileSync(path.join(dir, 'spec', 'check-rows.json'), 'utf8'))
   const find = (id) => rows.rows.find((r) => r.id === id)
   find('campus.facts.phone').comparator.type = 'looks-about-right'
-  delete find('campus.resources.packet.present').literals.missingAsk
+  delete find('campus.intro.media.current').literals.missingAsk
   find('site.coverage.open-campus-registries').dedupeScope = 'page'
   find('campus.hero.identity.heading').entitySource = 'sheet'
   rows.aliases.pageCheck['no-such-check'] = 'campus.intro.media.current'
@@ -2682,7 +2682,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const result = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-checks.mjs'), '--check'], { encoding: 'utf8' })
   assert.notEqual(result.status, 0)
   assert.match(result.stderr, /row campus\.facts\.phone: comparator looks-about-right is not in spec\/observer-comparators\.json/)
-  assert.match(result.stderr, /row campus\.resources\.packet\.present: onMissing finding needs literals\.missingAsk/)
+  assert.match(result.stderr, /row campus\.intro\.media\.current: onMissing finding needs literals\.missingAsk/)
   assert.match(result.stderr, /row site\.coverage\.open-campus-registries: registry-coverage rows dedupe per campus and registry/)
   assert.match(result.stderr, /row campus\.hero\.identity\.heading: entitySource must be one of hubspot-programs, map, got sheet/)
   assert.match(result.stderr, /aliases: no-such-check is not a tests\/page-check\.mjs check id/)
