@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.3",
+  "version": "0.4",
   "asOf": "2026-09-28",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -142,7 +142,7 @@
         "registry/forms.json",
         "registry/plugins.json"
       ],
-      "note": "Passive: setContentType only. The identity join for current versus prospective parents depends on it plus HubSpot reporting access."
+      "note": "Passive setContentType only in HTML, but HubSpot attributes sessions, sources, geography, devices and campaigns for the whole site and ties identified sessions to contacts; see hubspot-reporting for what the held tokens read."
     },
     {
       "id": "hubspot-reporting",
@@ -155,16 +155,39 @@
         "contact lifecycle for identified sessions"
       ],
       "access": {
-        "privateApp": null,
-        "scopes": null,
-        "holder": "Garbhit Sharma (HubSpot admin)"
+        "verifiedAt": "2026-09-28",
+        "readsWith": {
+          "analytics (/analytics/v2/reports/{breakdown}/{period}: totals, sessions, sources, geolocation, utm-campaigns, standard-pages)": [
+            "HUBSPOT_MARKETING_SYNCING_TOKEN",
+            "HUBSPOT_PRIVATE_APP_TOKEN",
+            "HUBSPOT_MARKETING_EVENTS_TOKEN"
+          ],
+          "forms and form submissions": [
+            "HUBSPOT_MARKETING_SYNCING_TOKEN",
+            "HUBSPOT_PRIVATE_APP_TOKEN",
+            "HUBSPOT_AUTOMATION_TOKEN"
+          ],
+          "marketing events (registrants, attendees)": [
+            "HUBSPOT_MARKETING_SYNCING_TOKEN",
+            "HUBSPOT_PRIVATE_APP_TOKEN"
+          ],
+          "meetings": [
+            "HUBSPOT_SERVICE_KEY",
+            "HUBSPOT_AUTOMATION_TOKEN"
+          ],
+          "contacts (lifecycle, analytics source)": [
+            "HUBSPOT_SERVICE_KEY",
+            "HUBSPOT_AUTOMATION_TOKEN"
+          ]
+        },
+        "where": "marketingsupport .env"
       },
       "owner": null,
-      "status": "unknown",
+      "status": "held",
       "recordedIn": [
         "marketingsupport workflows/hubspot-api-registry/agent.md"
       ],
-      "note": "Existing apps carry content and CRM-read scopes and Program writes; none carries meetings, marketing-events analytics or forms analytics."
+      "note": "Corrected 2026-09-28: the held tokens do read HubSpot traffic analytics, forms, submissions, marketing events, meetings and contacts (tested endpoint by endpoint). First read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
