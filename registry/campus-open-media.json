@@ -1,5 +1,5 @@
 {
-  "$comment": "Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-Enrolling.png\" made by Yash Chitneni from one template (uploaded 2026-09-07). null = no approved asset yet; ask the owner, never substitute. Verified by screenshot 2026-09-15.",
+  "$comment": "Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-Enrolling.png\" made by Yash Chitneni from one template (uploaded 2026-09-07). A row records the approval only: openMedia (card, video or null = no approved asset yet; ask the owner, never substitute), attachmentId, status (placed or missing), owner, state, evidence and addedBy. What the slot shows today is never written here: free-text descriptions rot (the Atlanta note of 2026-09-15 outlived the asset it described); the observer packet (sources.json media, vision.json) describes the slot and tests/site-truth-report.mjs grades it from that observation, with this registry contributing the approval alone.",
   "owner": "Yash Chitneni (WordPress user 30) produces Open and Enrolling cards; Matt/Yash approve campus videos",
   "template": {
     "$comment": "The one master every Open and Enrolling card is generated from (QC loop repair plan 2026-09-25, repair 5). source is the file Yash supplies (an APEX asset id or a path under tests/fixtures is fine); format is svg or png+layout; null = not supplied yet, so nothing can be generated for production and every missing card stays a Missing Info ask to the owner. The generator is agent/generate-open-card.mjs, the only production path is protocols/recipes/open-card.md, and the fixture is a plain placeholder for the tests, never a card for a page.",
@@ -98,29 +98,22 @@
     "atlanta": {
       "openMedia": null,
       "attachmentId": null,
-      "status": "missing",
-      "current": "stale card attachment 8630 (atlanta.png, \"Coming Fall 2026 To Roswell\")",
-      "apexStatus": "MISSING_INFO 2026-09-15"
+      "status": "missing"
     },
     "la-jolla": {
       "openMedia": null,
       "attachmentId": null,
-      "status": "missing",
-      "current": "stale card attachment 9226 (Subtitle-8.png, \"Coming Fall 2026 To San Diego\")",
-      "apexStatus": "MISSING_INFO 2026-09-15"
+      "status": "missing"
     },
     "santa-monica": {
       "openMedia": null,
       "attachmentId": null,
-      "status": "missing",
-      "current": "stale card attachment 8465 (Santa-Monica.png, \"Coming Fall 2026 To Santa Monica\")",
-      "apexStatus": "MISSING_INFO 2026-09-15"
+      "status": "missing"
     },
     "southlake": {
       "openMedia": null,
       "attachmentId": null,
       "status": "missing",
-      "current": "southlake: attachment 8789 keller.webp (generic Fort Worth skyline stock, alt empty); lake-travis: intro slot attachment 0 (empty), hero background attachment 8422 dorado-beach-min.webp (Alpha Dorado)",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "sweep-2026-09-21 partition C"
@@ -129,7 +122,6 @@
       "openMedia": null,
       "attachmentId": null,
       "status": "missing",
-      "current": "intro slot attachment 0 (empty); hero background attachment 8422 dorado-beach-min.webp belongs to Alpha Dorado (ticket cmubc0h9j00000agmteobt3jx)",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Announced",
       "addedBy": "sweep-2026-09-21 partition C"
@@ -138,7 +130,6 @@
       "openMedia": null,
       "attachmentId": null,
       "status": "missing",
-      "current": "intro slot plays Welcome Alpha School MacKenzie.mp4 via insert_url (video widget); Gaby Guajardo asks for the campus YouTube video, ticket cmubcluiz000304jy9pnujyhx",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "sweep-2026-09-21 partition A"
@@ -147,7 +138,6 @@
       "openMedia": null,
       "attachmentId": null,
       "status": "missing",
-      "current": "no approved intro asset recorded",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "sweep-2026-09-21 partition A"
@@ -156,7 +146,6 @@
       "openMedia": null,
       "attachmentId": null,
       "status": "missing",
-      "current": "no approved intro asset recorded (ticket cmubc5q5x000c04ibpqx5x4os)",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "sweep-2026-09-21 partition A"
@@ -165,7 +154,6 @@
       "openMedia": "video",
       "attachmentId": null,
       "status": "placed",
-      "current": "intro slot plays the campus video (content_video widget); no launch-era card; verified by tests/page-check.mjs and section capture 2026-09-23 (morning-verify-2026-09-23)",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "loose-ends-2026-09-23"
@@ -174,7 +162,6 @@
       "openMedia": null,
       "attachmentId": null,
       "status": "missing",
-      "current": "intro slot holds a generic campus photo (Website-Alpha-School-0016), not a launch card and not an Open and Enrolling card; campus moved Announced -> Open 2026-09-22",
       "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
       "state": "Open",
       "addedBy": "loose-ends-2026-09-23"
@@ -183,7 +170,6 @@
       "openMedia": null,
       "attachmentId": 8550,
       "status": "missing",
-      "current": "attachment 8550 (Piedmont.webp) visibly says 'Coming Fall 2026 To Piedmont' although HubSpot Program 42698614786 is Open and the rendered intro sentence says open and enrolling",
       "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
       "state": "Open",
       "evidence": "superbuilders/aeo full observer run 36147430369, screenshots/campus-program-42698614786-desktop.png, captured 2026-09-25T14:29:29Z",

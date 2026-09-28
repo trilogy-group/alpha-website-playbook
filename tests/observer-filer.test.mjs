@@ -47,6 +47,7 @@ import {
   RECORDED_SINCE,
   isMissingExpectation,
   missingExpectationFor,
+  slotObservation,
   missingExpectationTitle,
   missingFromMapOnly,
   missingExpectationKey,
@@ -261,7 +262,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
-  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.7, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
+  assert.match(lead.patch.description, /\n\nRESOLUTION \(agent\/file-observer-findings\.mjs 0\.8, 2026-09-24, playbook check bundle\)\nGo here: https:\/\/alpha\.school\/kirkland\/\nLook for: [^\n]*campus-layout-header-overlap \(site\.layout\.header-overlap\) is clear\n/)
   assert.match(lead.patch.description, /\nObserver: SITE-4E2ADC7F5B cleared on run site-full-2026-09-24T14-28-40-974Z\nResolution kind: check-cleared\nPlease review\.$/)
   assertNoteShape(lead.patch.description.slice(lead.patch.description.indexOf('\n\nRESOLUTION (') + 2))
   assert.match(lead.patch.description, /after 20 clean runs \(row requires 2\)/)
@@ -804,7 +805,7 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
 
   // buildResolvePatch checks the note's shape before anything is written, and never rewrites the existing text.
   const patch = buildResolvePatch({ task: live.get('cmfiler2'), cleared: plan.resolves[1].cleared, rows: plan.resolves[1].rows, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', evidenceSha256: 'f'.repeat(64), bundleVersion: '1.0', now: NOW, page: 'https://alpha.school/second/' })
-  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.7, 2026-09-24, playbook check bundle)\n'))
+  assert.ok(patch.description.startsWith('Matt Barge: fix it\n\nRESOLUTION (agent/file-observer-findings.mjs 0.8, 2026-09-24, playbook check bundle)\n'))
   assert.ok(!patch.description.includes('—'))
 
   // listOpen logs when a status hits the page cap, so an incomplete queue is never silent.
@@ -1225,9 +1226,27 @@ test('observer filer: East Bay with no registry row files one Missing Info to we
   assert.deepEqual([ticket.payload.customFields.triagedClass, ticket.payload.customFields.ownerRole, ticket.payload.customFields.requirementId, ticket.payload.customFields.missingExpectation, ticket.payload.customFields.registry, ticket.payload.customFields.campusSlug, ticket.payload.customFields.lifecycleState], ['observer-media-identity', 'website-operations', 'campus.intro.media.current', true, 'registry/campus-open-media.json', 'east-bay', 'Open'])
   assert.equal(ticket.payload.customFields.missingAsk, row.literals.missingAsk)
   assert.equal(contractCheck({ ...ticket.payload, id: 'x', assignees: [{ name: 'Yash Chitneni' }] }).valid, true)
-  assert.match(ticket.payload.description, /\nObserved: registry\/campus-open-media\.json has no entry for east-bay; page shows attachmentId 8550, src https:\/\/alpha\.school\/wp-content\/uploads\/2026\/01\/Piedmont-1024x704\.webp/)
+  // 2026-09-28: the Observed line and the first numbered item say what is in the slot now (graded launch, unapproved or
+  // unaccounted from the finding's own actual) and ask the owner to approve or replace it; title, class and status stay.
+  assert.match(ticket.payload.description, /\nObserved: registry\/campus-open-media\.json has no entry for east-bay; the intro slot shows launch-era media: attachment 8550 \(Piedmont-1024x704\.webp, alt empty\) \(known launch-era asset\)\n/)
+  assert.match(ticket.payload.description, /\n1\. the intro slot shows launch-era media: attachment 8550 \(Piedmont-1024x704\.webp, alt empty\) \(known launch-era asset\)\. Replace it with the Open and Enrolling card \(or the campus video Matt or Yash approves\) and record the approval in registry\/campus-open-media\.json; a launch card is never approved for an Open campus \(owner: Yash Chitneni\)\n2\. Record the approved open-state intro media/)
+  assert.deepEqual([none.missingInfo[0].slot.level, ticket.missingExpectation.slug], ['launch', 'east-bay'])
+  const withVision = { ...run.findings[0], actual: [{ kind: 'image-metadata', src: run.findings[0].actual.src, alt: '', classes: 'attachment-large size-large wp-image-8550', containerId: 'content_image' }, { kind: 'vision-text', source: 'vision', slot: 'intro-card', launchWord: 'Coming Fall', visionText: 'Coming Fall 2026\nTo Piedmont', confidence: 95 }] }
+  const vision = slotObservation(withVision, row)
+  assert.deepEqual([vision.level, vision.attachmentId, vision.reading, vision.launch], ['launch', 8550, 'Coming Fall 2026 To Piedmont', ['Coming Fall', 'known launch-era asset']])
+  assert.match(vision.what, /^the intro slot shows launch-era media: attachment 8550 \(Piedmont-1024x704\.webp, alt empty\) reads "Coming Fall 2026 To Piedmont" \(Coming Fall, known launch-era asset\)$/)
+  const skyline = slotObservation({ actual: [{ kind: 'image-metadata', src: 'https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-1024x576.webp', alt: '', classes: 'attachment-large size-large wp-image-8790', containerId: 'content_image' }, { kind: 'media-governance', src: 'https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-1024x576.webp', reason: 'no-approved-open-state-media', registryStatus: 'missing' }], observed: 'https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-1024x576.webp' }, row)
+  assert.deepEqual([skyline.level, skyline.attachmentId], ['unapproved', 8790])
+  assert.equal(skyline.what, 'the intro slot holds attachment 8790 (Best-things-to-do-in-Atlanta-Header-1024x576.webp, alt empty), which no registry row approves')
+  assert.match(skyline.ask, /^Approve what is there \(record openMedia card with attachmentId 8790 in registry\/campus-open-media\.json\) or replace it with the Open and Enrolling card$/)
+  const badge = slotObservation({ actual: [{ kind: 'media-governance', src: 'https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp', reason: 'no-approved-open-state-media', registryStatus: 'missing', registryCurrent: null }], observed: 'https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp' }, row)
+  assert.equal(badge.level, 'unaccounted')
+  assert.match(badge.what, /^the observer exposes no intro slot image for this page \(its primary visual is Cognia-removebg\.webp\); a campus video in the slot is not visible to the observer$/)
+  assert.match(badge.ask, /^Approve the campus video in the slot \(record openMedia video/)
+  const altLaunch = slotObservation({ actual: { attachmentId: 9833, src: 'https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1024x704.webp', alt: 'Aerial view with Coming Soon to Franklin text', widget: 'content_image' } }, row)
+  assert.deepEqual([altLaunch.level, altLaunch.launch], ['launch', ['Coming Soon']])
   assert.match(ticket.payload.description, /\nExpected: an approved intro media recorded in registry\/campus-open-media\.json campuses\.east-bay \(campus\.intro\.media; equals-approved-media 0 mismatches; severity high\)\n/)
-  assert.match(ticket.payload.description, /\n\nMISSING INFO \(agent\/file-observer-findings\.mjs 0\.7, 2026-09-25\)\nThis ticket needs the following before it can be executed:\n1\. Record the approved open-state intro media for this campus in registry\/campus-open-media\.json[^\n]* \(owner: Yash Chitneni\)\nWhat is already correct on the page: the campus is Open in HubSpot Programs; nothing on the page is changed until the intro media is recorded\n/)
+  assert.match(ticket.payload.description, /\n\nMISSING INFO \(agent\/file-observer-findings\.mjs 0\.8, 2026-09-25\)\nThis ticket needs the following before it can be executed:\n1\. the intro slot shows launch-era media[^\n]* \(owner: Yash Chitneni\)\n2\. Record the approved open-state intro media for this campus in registry\/campus-open-media\.json[^\n]* \(owner: Yash Chitneni\)\nWhat is already correct on the page: the campus is Open in HubSpot Programs; nothing on the page is changed until the intro media is recorded\n/)
   assert.ok(!/[—…]/.test(ticket.payload.description))
   assert.deepEqual(none.missingInfo.map((m) => [m.campus, m.state, m.file, m.owner, m.ticketClass]), [['Alpha East Bay', 'Open', 'registry/campus-open-media.json', 'Yash Chitneni', 'observer-media-identity']])
   // The same finding again dedupes against the ticket it filed (campus and row).

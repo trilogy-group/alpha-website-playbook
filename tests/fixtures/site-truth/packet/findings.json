@@ -1,34 +1,54 @@
 [
  {
   "loop": "campus-truth",
-  "check": "campus-application-finalsite-redirect",
-  "entity": "program-26463204876",
-  "field": "application",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-42698676589",
+  "field": "media",
   "severity": "high",
-  "title": "Alpha New York has a broken Finalsite Apply redirect",
-  "summary": "Open and Announced campuses with HubSpot admissions_handled_in_finalsite must send /application/?submission_campus= to the Finalsite application, not keep families on the HubSpot application form.",
+  "title": "no approved intro media recorded for Open campus Alpha Atlanta",
+  "summary": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
   "actionable": true,
-  "url": "https://alpha.school/application/?submission_campus=new_york_city",
-  "expected": "HTTP 301/302 to /application-fs/?submission_campus=new_york_city or fsenrollment.com/finalsite",
-  "actual": {
-   "href": "https://alpha.school/application/?submission_campus=new_york_city",
-   "status": 301,
-   "location": "/application/?submission_campus=new_york",
-   "finalUrl": "https://alpha.school/application/?submission_campus=new_york_city",
-   "campusUrl": "https://alpha.school/new-york-city/",
-   "admissionLink": "https://apply.alpha.school/new-york",
-   "finalsiteBaseUrl": "https://alpha-anywhere-center.fsenrollment.com/",
-   "admissionsHandledInFinalsite": true
-  },
-  "businessImpact": "conversion",
-  "expectedSource": "HubSpot Program",
-  "actualSource": "live /application/ redirect",
-  "sourceKey": "hubspot-programs",
-  "sourceField": "admissions_handled_in_finalsite",
+  "url": "https://alpha.school/atlanta/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-42698676589-desktop.png",
+    "route": "campus-program-42698676589",
+    "viewport": "desktop",
+    "url": "https://alpha.school/atlanta/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 0,
   "lifecycleState": "Open",
   "pageFamily": "campus-open",
-  "programId": "program-26463204876",
-  "entityLabel": "Alpha New York",
+  "programId": "program-42698676589",
+  "entityLabel": "Alpha Atlanta",
+  "expected": {
+   "approvedMedia": {
+    "openMedia": null,
+    "attachmentId": null,
+    "status": "missing",
+    "current": "stale card attachment 8630 (atlanta.png, \"Coming Fall 2026 To Roswell\")",
+    "apexStatus": "MISSING_INFO 2026-09-15"
+   },
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-1024x576.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": "stale card attachment 8630 (atlanta.png, \"Coming Fall 2026 To Roswell\")"
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-1024x576.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
   "routing": {
    "owners": [
     "Matt Barge",
@@ -36,115 +56,33 @@
     "Hailey McSpadden"
    ],
    "channel": "#support-websites",
-   "reason": "Campus resource presence and campus-specific routing"
+   "reason": "Campus page visual/content freshness"
   },
   "evidenceVersion": 7,
-  "id": "SITE-01B657B3C4",
-  "observerCheck": "campus-application-finalsite-redirect",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
-  "page": "https://alpha.school/application/?submission_campus=new_york_city",
+  "id": "SITE-13F7C2AABD",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/atlanta/",
   "viewport": null,
   "route": null,
-  "observed": {
-   "href": "https://alpha.school/application/?submission_campus=new_york_city",
-   "status": 301,
-   "location": "/application/?submission_campus=new_york",
-   "finalUrl": "https://alpha.school/application/?submission_campus=new_york_city",
-   "campusUrl": "https://alpha.school/new-york-city/",
-   "admissionLink": "https://apply.alpha.school/new-york",
-   "finalsiteBaseUrl": "https://alpha-anywhere-center.fsenrollment.com/",
-   "admissionsHandledInFinalsite": true
-  },
-  "conditions": [],
-  "hiddenOnAllViewports": false,
-  "observerSeverity": "high",
-  "requirementId": "campus.resources.apply.finalsite-redirect",
-  "requirement": "campus.resources.apply",
-  "requirementRef": {
-   "file": "spec/source-authority.json",
-   "key": "fields/campus.application-link"
-  },
-  "element": "resources.apply",
-  "status": "enforced",
-  "channel": "ticket",
-  "ticketClass": "observer-link-cta",
-  "ownerRole": "hubspot-program-admin",
-  "dedupeScope": "program",
-  "clearAfterRuns": 2,
-  "gracePeriodHours": 0,
-  "evidenceProfile": [
-   "mcp-receipt",
-   "rendered-controls-json-or-screenshots-desktop-mobile",
-   "page-check-json",
-   "verify-public-page"
+  "evidence": [
+   "screenshots/campus-program-42698676589-desktop.png"
   ],
-  "sourceHealthDependency": [
-   "hubspot-programs"
-  ],
-  "suppressWhen": [],
-  "suppresses": null,
-  "requireConsecutiveRuns": 1,
-  "decisionPending": null,
-  "sourceRead": {
-   "source": "hubspot-programs",
-   "field": "admissions_handled_in_finalsite",
-   "at": "2026-09-25T10:28:15.387Z"
-  },
-  "sourceReadAt": "2026-09-25T10:28:15.387Z",
-  "dedupeKey": "campus-application-finalsite-redirect|program-26463204876",
-  "firstSeenAt": "2026-09-11T16:12:49.416Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
- },
- {
-  "loop": "campus-truth",
-  "check": "campus-book-call-present",
-  "entity": "program-57622127456",
-  "field": "bookCall",
-  "severity": "high",
-  "title": "Alpha Jamaica Plain has no visible booking CTA",
-  "summary": "Campus pages configured to require a booking path must expose a campus-specific Book a Call or Book a Tour destination.",
-  "actionable": true,
-  "url": "https://alpha.school/jamaica-plain/",
-  "expected": "visible booking link or button",
-  "actual": null,
-  "businessImpact": "conversion",
-  "lifecycleState": "Open",
-  "pageFamily": "campus-open",
-  "programId": "program-57622127456",
-  "entityLabel": "Alpha Jamaica Plain",
-  "routing": {
-   "owners": [
-    "Matt Barge",
-    "Yash Chitneni",
-    "Hailey McSpadden"
-   ],
-   "channel": "#support-websites",
-   "reason": "Campus resource presence and campus-specific routing"
-  },
-  "evidenceVersion": 7,
-  "id": "SITE-29B087FDC8",
-  "observerCheck": "campus-book-call-present",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
-  "page": "https://alpha.school/jamaica-plain/",
-  "viewport": null,
-  "route": null,
-  "observed": null,
   "conditions": [],
-  "hiddenOnAllViewports": false,
   "observerSeverity": "high",
-  "requirementId": "campus.resources.booking.present",
-  "requirement": "campus.resources.booking",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
   "requirementRef": {
    "file": "spec/campus-page-requirements.json",
-   "key": "states/Open/campus.hero.ctas"
+   "key": "states/Open/campus.intro.media"
   },
-  "element": "hero.ctas",
+  "element": "intro.media",
   "status": "enforced",
   "channel": "ticket",
-  "ticketClass": "link-cta",
-  "ownerRole": "website-agent-operator",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -155,19 +93,21 @@
    "verify-public-page"
   ],
   "sourceHealthDependency": [],
-  "suppressWhen": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
   "suppresses": null,
   "requireConsecutiveRuns": 1,
   "decisionPending": null,
   "sourceRead": {
-   "source": null,
-   "field": "bookCall",
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
    "at": null
   },
   "sourceReadAt": null,
-  "dedupeKey": "campus-book-call-present|https://alpha.school/jamaica-plain/",
-  "firstSeenAt": "2026-09-24T19:52:12.366Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/atlanta/",
+  "firstSeenAt": "2026-09-02T23:59:57.534Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -213,8 +153,8 @@
   "evidenceVersion": 7,
   "id": "SITE-32787B6598",
   "observerCheck": "campus-application-source-missing",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/greenwich/",
   "viewport": null,
   "route": null,
@@ -230,6 +170,7 @@
    "finalsiteBaseUrl": "https://armonk-greenwich-alpha.fsenrollment.com/",
    "admissionsHandledInFinalsite": true
   },
+  "evidence": [],
   "conditions": [],
   "hiddenOnAllViewports": false,
   "observerSeverity": "high",
@@ -244,6 +185,8 @@
   "channel": "ticket",
   "ticketClass": "observer-link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -263,12 +206,92 @@
   "sourceRead": {
    "source": "hubspot-programs",
    "field": "admission_link",
-   "at": "2026-09-25T10:28:15.387Z"
+   "at": "2026-09-28T06:23:06.630Z"
   },
-  "sourceReadAt": "2026-09-25T10:28:15.387Z",
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
   "dedupeKey": "campus-application-source-missing|https://alpha.school/greenwich/",
   "firstSeenAt": "2026-09-04T19:31:05.539Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-source-status-sentence",
+  "entity": "program-42820443702",
+  "field": "website_campus_intro",
+  "severity": "high",
+  "title": "Alpha Kirkland HubSpot intro contradicts its lifecycle state",
+  "summary": "The HubSpot Program intro must use lifecycle wording that agrees with the authoritative Program type before n8n publishes it.",
+  "actionable": true,
+  "url": "https://alpha.school/kirkland/",
+  "expected": "Alpha Kirkland is open and enrolling.",
+  "actual": "[DISPLAY_NAME] is now open with rolling admissions.",
+  "businessImpact": "accuracy",
+  "expectedSource": "HubSpot Programs type",
+  "actualSource": "HubSpot Programs website_campus_intro",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "website_campus_intro",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-42820443702",
+  "entityLabel": "Alpha Kirkland",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-459363DF34",
+  "observerCheck": "campus-source-status-sentence",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/kirkland/",
+  "viewport": null,
+  "route": null,
+  "observed": "[DISPLAY_NAME] is now open with rolling admissions.",
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.status-source",
+  "requirement": "campus.intro.status-source",
+  "requirementRef": {
+   "file": "spec/campus-page-field-map.json",
+   "key": "elements/intro.status-sentence"
+  },
+  "element": "intro.status-sentence",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "hubspot-data",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "hubspot-property-history-or-apex-editor-record",
+   "nightly-run-reference",
+   "page-check-json-after-run"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "website_campus_intro",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-source-status-sentence|https://alpha.school/kirkland/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -314,8 +337,8 @@
   "evidenceVersion": 7,
   "id": "SITE-4A46A2BD26",
   "observerCheck": "campus-application-source-missing",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/franklin/",
   "viewport": null,
   "route": null,
@@ -331,6 +354,7 @@
    "finalsiteBaseUrl": "https://franklin-alpha.fsenrollment.com/",
    "admissionsHandledInFinalsite": true
   },
+  "evidence": [],
   "conditions": [],
   "hiddenOnAllViewports": false,
   "observerSeverity": "high",
@@ -345,6 +369,8 @@
   "channel": "ticket",
   "ticketClass": "observer-link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -364,30 +390,57 @@
   "sourceRead": {
    "source": "hubspot-programs",
    "field": "admission_link",
-   "at": "2026-09-25T10:28:15.387Z"
+   "at": "2026-09-28T06:23:06.630Z"
   },
-  "sourceReadAt": "2026-09-25T10:28:15.387Z",
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
   "dedupeKey": "campus-application-source-missing|https://alpha.school/franklin/",
   "firstSeenAt": "2026-09-04T19:31:05.539Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
-  "check": "campus-book-call-present",
-  "entity": "program-42820568924",
-  "field": "bookCall",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-26463204885",
+  "field": "media",
   "severity": "high",
-  "title": "Alpha Boston has no visible booking CTA",
-  "summary": "Campus pages configured to require a booking path must expose a campus-specific Book a Call or Book a Tour destination.",
+  "title": "no approved intro media recorded for Open campus Alpha Fort Worth",
+  "summary": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
   "actionable": true,
-  "url": "https://alpha.school/boston/",
-  "expected": "visible booking link or button",
-  "actual": null,
-  "businessImpact": "conversion",
+  "url": "https://alpha.school/fort-worth/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-26463204885-desktop.png",
+    "route": "campus-program-26463204885",
+    "viewport": "desktop",
+    "url": "https://alpha.school/fort-worth/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 0,
   "lifecycleState": "Open",
   "pageFamily": "campus-open",
-  "programId": "program-42820568924",
-  "entityLabel": "Alpha Boston",
+  "programId": "program-26463204885",
+  "entityLabel": "Alpha Fort Worth",
+  "expected": {
+   "approvedMedia": "not recorded; ask the owner",
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": null
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
   "routing": {
    "owners": [
     "Matt Barge",
@@ -395,31 +448,33 @@
     "Hailey McSpadden"
    ],
    "channel": "#support-websites",
-   "reason": "Campus resource presence and campus-specific routing"
+   "reason": "Campus page visual/content freshness"
   },
   "evidenceVersion": 7,
-  "id": "SITE-59C1A0E7D4",
-  "observerCheck": "campus-book-call-present",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
-  "page": "https://alpha.school/boston/",
+  "id": "SITE-5AD180224B",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/fort-worth/",
   "viewport": null,
   "route": null,
-  "observed": null,
+  "evidence": [
+   "screenshots/campus-program-26463204885-desktop.png"
+  ],
   "conditions": [],
-  "hiddenOnAllViewports": false,
   "observerSeverity": "high",
-  "requirementId": "campus.resources.booking.present",
-  "requirement": "campus.resources.booking",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
   "requirementRef": {
    "file": "spec/campus-page-requirements.json",
-   "key": "states/Open/campus.hero.ctas"
+   "key": "states/Open/campus.intro.media"
   },
-  "element": "hero.ctas",
+  "element": "intro.media",
   "status": "enforced",
   "channel": "ticket",
-  "ticketClass": "link-cta",
-  "ownerRole": "website-agent-operator",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -430,19 +485,181 @@
    "verify-public-page"
   ],
   "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/fort-worth/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-registry-coverage",
+  "entity": "program-29737764384",
+  "field": "campus-open-media",
+  "severity": "high",
+  "title": "no campus open media entry recorded for Open campus Alpha Charlotte",
+  "summary": "Record the approved open-state intro media for this Open campus in registry/campus-open-media.json campuses.<slug> (openMedia card with the attachmentId of the Open and Enrolling card, or openMedia video once approved); a campus with no row cannot be measured for launch-era media.",
+  "actionable": true,
+  "url": "https://alpha.school/charlotte/",
+  "expected": {
+   "file": "registry/campus-open-media.json",
+   "keyPath": "campuses.charlotte"
+  },
+  "actual": null,
+  "observed": null,
+  "missingExpectation": true,
+  "ownerRole": "website-operations",
+  "businessImpact": "accuracy",
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "registry": "campus-open-media",
+  "entitySource": "hubspot-programs",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-29737764384",
+  "entityLabel": "Alpha Charlotte",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-70D9E1B924",
+  "observerCheck": "campus-registry-coverage",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/charlotte/",
+  "viewport": null,
+  "route": null,
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "site.coverage.open-campus-registries",
+  "requirement": "site.coverage",
+  "requirementRef": {
+   "file": "spec/site-rules.json",
+   "key": "rules/site.coverage"
+  },
+  "element": "page.registries",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "dedupeScope": "campus-registry",
+  "clearAfterRuns": 1,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
   "suppressWhen": [],
   "suppresses": null,
   "requireConsecutiveRuns": 1,
   "decisionPending": null,
   "sourceRead": {
-   "source": null,
-   "field": "bookCall",
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
    "at": null
   },
   "sourceReadAt": null,
-  "dedupeKey": "campus-book-call-present|https://alpha.school/boston/",
-  "firstSeenAt": "2026-09-24T19:52:12.366Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "dedupeKey": "campus-registry-coverage|https://alpha.school/charlotte/|campus-open-media",
+  "firstSeenAt": "2026-09-25T22:44:59.306Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-schema-name",
+  "entity": "program-49011192959",
+  "field": "name",
+  "severity": "high",
+  "title": "Alpha Greenwich Port Chester has a conflicting page identity",
+  "summary": "The campus name in School schema must match the visitor-facing map identity.",
+  "actionable": true,
+  "url": "https://alpha.school/greenwich/",
+  "expected": "Alpha Greenwich Port Chester",
+  "actual": "Alpha Greenwich Armonk",
+  "businessImpact": "accuracy",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-49011192959",
+  "entityLabel": "Alpha Greenwich Port Chester",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-7AC66149AC",
+  "observerCheck": "campus-schema-name",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/greenwich/",
+  "viewport": null,
+  "route": null,
+  "observed": "Alpha Greenwich Armonk",
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "site.search.schema.name",
+  "requirement": "site.search.schema",
+  "requirementRef": {
+   "file": "spec/site-rules.json",
+   "key": "rules/site.search.schema"
+  },
+  "element": "schema.school",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-fact-sync",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "school_without_school_keyword",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-schema-name|https://alpha.school/greenwich/",
+  "firstSeenAt": "2026-08-25T17:19:10.713Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -478,8 +695,8 @@
   "evidenceVersion": 7,
   "id": "SITE-7C5D531B00",
   "observerCheck": "campus-info-packet-link-reachable",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/south-bay-la/",
   "viewport": null,
   "route": null,
@@ -488,6 +705,7 @@
    "status": 404,
    "finalUrl": "https://drive.google.com/open/?id=1TIDYbICRzlB35Mpq0asWgGn87KzoHhn4&usp=drive_copy"
   },
+  "evidence": [],
   "conditions": [],
   "observerSeverity": "high",
   "requirementId": "campus.resources.packet.reachable",
@@ -501,6 +719,8 @@
   "channel": "ticket",
   "ticketClass": "observer-packet",
   "ownerRole": "packet-owner",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -523,7 +743,191 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-info-packet-link-reachable|https://alpha.school/south-bay-la/",
   "firstSeenAt": "2026-09-02T23:59:57.536Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-42698614786",
+  "field": "media",
+  "severity": "high",
+  "title": "Alpha East Bay still has launch/coming-soon content on its campus page",
+  "summary": "The rendered intro visual visibly contradicts the campus's Open lifecycle. Replace the stale launch artwork with approved open-state media and record that approval in the playbook registry.",
+  "actionable": true,
+  "url": "https://alpha.school/east-bay/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-42698614786-desktop.png",
+    "route": "campus-program-42698614786",
+    "viewport": "desktop",
+    "url": "https://alpha.school/east-bay/"
+   },
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-42698614786-mobile.png",
+    "route": "campus-program-42698614786",
+    "viewport": "mobile",
+    "url": "https://alpha.school/east-bay/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 5,
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-42698614786",
+  "entityLabel": "Alpha East Bay",
+  "expected": {
+   "approvedMedia": {
+    "openMedia": null,
+    "attachmentId": 8550,
+    "status": "missing",
+    "current": "attachment 8550 (Piedmont.webp) visibly says 'Coming Fall 2026 To Piedmont' although HubSpot Program 42698614786 is Open and the rendered intro sentence says open and enrolling",
+    "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+    "state": "Open",
+    "evidence": "superbuilders/aeo full observer run 36147430369, screenshots/campus-program-42698614786-desktop.png, captured 2026-09-25T14:29:29Z",
+    "addedBy": "Piedmont lifecycle incident review 2026-09-25"
+   },
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "visible-image",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+    "alt": "",
+    "viewport": "desktop",
+    "rendered": {
+     "left": 694.1,
+     "top": 553.4,
+     "right": 1260,
+     "bottom": 942.4,
+     "width": 565.9,
+     "height": 389
+    },
+    "contextText": ""
+   },
+   {
+    "kind": "visible-image",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-768x528.png",
+    "alt": "",
+    "viewport": "mobile",
+    "rendered": {
+     "left": 20,
+     "top": 1358.5,
+     "right": 370,
+     "bottom": 1599.1,
+     "width": 350,
+     "height": 240.6
+    },
+    "contextText": ""
+   },
+   {
+    "kind": "image-metadata",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+    "alt": "",
+    "title": "",
+    "classes": "attachment-large size-large wp-image-8550",
+    "containerId": "content_image",
+    "containerClasses": "elementor-element elementor-element-4edf185 elementor-widget elementor-widget-image"
+   },
+   {
+    "kind": "vision-text",
+    "source": "vision",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont.webp",
+    "slot": "intro-card",
+    "viewport": "desktop",
+    "launchWord": "Coming Fall",
+    "matchedText": "coming fall",
+    "snippet": "coming fall",
+    "confidence": 95,
+    "visionText": "Coming Fall 2026 To Piedmont"
+   },
+   {
+    "kind": "vision-text",
+    "source": "vision",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont.webp",
+    "slot": "intro-card",
+    "viewport": "desktop",
+    "launchWord": "Fall 2026",
+    "matchedText": "fall 2026",
+    "snippet": "fall 2026",
+    "confidence": 95,
+    "visionText": "Coming Fall 2026 To Piedmont"
+   },
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": "attachment 8550 (Piedmont.webp) visibly says 'Coming Fall 2026 To Piedmont' although HubSpot Program 42698614786 is Open and the rendered intro sentence says open and enrolling"
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus page visual/content freshness"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-8137AC4FE6",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/east-bay/",
+  "viewport": null,
+  "route": null,
+  "evidence": [
+   "screenshots/campus-program-42698614786-desktop.png",
+   "screenshots/campus-program-42698614786-mobile.png"
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.intro.media"
+  },
+  "element": "intro.media",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/east-bay/",
+  "firstSeenAt": "2026-09-02T23:59:57.536Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -543,24 +947,6 @@
     "alt": "Classroom at Alpha private school in Miami",
     "nearbyText": "",
     "source": "page-html",
-    "hiddenOnAllViewports": false
-   },
-   {
-    "campus": "Alpha Miami",
-    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
-    "alt": "Classroom at Alpha private school in Miami",
-    "nearbyText": "",
-    "viewport": "desktop",
-    "source": "rendered-browser",
-    "hiddenOnAllViewports": false
-   },
-   {
-    "campus": "Alpha Miami",
-    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-600x400.webp",
-    "alt": "Classroom at Alpha private school in Miami",
-    "nearbyText": "",
-    "viewport": "mobile",
-    "source": "rendered-browser",
     "hiddenOnAllViewports": false
    }
   ],
@@ -582,8 +968,8 @@
   "evidenceVersion": 7,
   "id": "SITE-984B874744",
   "observerCheck": "campus-image-identity-conflict",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/boston-suburbs/",
   "viewport": null,
   "route": null,
@@ -595,26 +981,9 @@
     "nearbyText": "",
     "source": "page-html",
     "hiddenOnAllViewports": false
-   },
-   {
-    "campus": "Alpha Miami",
-    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
-    "alt": "Classroom at Alpha private school in Miami",
-    "nearbyText": "",
-    "viewport": "desktop",
-    "source": "rendered-browser",
-    "hiddenOnAllViewports": false
-   },
-   {
-    "campus": "Alpha Miami",
-    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-600x400.webp",
-    "alt": "Classroom at Alpha private school in Miami",
-    "nearbyText": "",
-    "viewport": "mobile",
-    "source": "rendered-browser",
-    "hiddenOnAllViewports": false
    }
   ],
+  "evidence": [],
   "conditions": [],
   "observerSeverity": "high",
   "requirementId": "site.identity.other-campus.images",
@@ -628,6 +997,8 @@
   "channel": "ticket",
   "ticketClass": "observer-media-identity",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -652,7 +1023,1204 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-image-identity-conflict|https://alpha.school/boston-suburbs/",
   "firstSeenAt": "2026-09-02T23:59:57.536Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-registry-coverage",
+  "entity": "program-38325891178",
+  "field": "campus-open-media",
+  "severity": "high",
+  "title": "no campus open media entry recorded for Open campus Alpha The Woodlands",
+  "summary": "Record the approved open-state intro media for this Open campus in registry/campus-open-media.json campuses.<slug> (openMedia card with the attachmentId of the Open and Enrolling card, or openMedia video once approved); a campus with no row cannot be measured for launch-era media.",
+  "actionable": true,
+  "url": "https://alpha.school/the-woodlands/",
+  "expected": {
+   "file": "registry/campus-open-media.json",
+   "keyPath": "campuses.the-woodlands"
+  },
+  "actual": null,
+  "observed": null,
+  "missingExpectation": true,
+  "ownerRole": "website-operations",
+  "businessImpact": "accuracy",
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "registry": "campus-open-media",
+  "entitySource": "hubspot-programs",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-38325891178",
+  "entityLabel": "Alpha The Woodlands",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-9CE5376141",
+  "observerCheck": "campus-registry-coverage",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/the-woodlands/",
+  "viewport": null,
+  "route": null,
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "site.coverage.open-campus-registries",
+  "requirement": "site.coverage",
+  "requirementRef": {
+   "file": "spec/site-rules.json",
+   "key": "rules/site.coverage"
+  },
+  "element": "page.registries",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "dedupeScope": "campus-registry",
+  "clearAfterRuns": 1,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-registry-coverage|https://alpha.school/the-woodlands/|campus-open-media",
+  "firstSeenAt": "2026-09-25T22:44:59.306Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-57622127456",
+  "field": "media",
+  "severity": "high",
+  "title": "no approved intro media recorded for Open campus Alpha Jamaica Plain",
+  "summary": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
+  "actionable": true,
+  "url": "https://alpha.school/jamaica-plain/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-57622127456-desktop.png",
+    "route": "campus-program-57622127456",
+    "viewport": "desktop",
+    "url": "https://alpha.school/jamaica-plain/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 0,
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-57622127456",
+  "entityLabel": "Alpha Jamaica Plain",
+  "expected": {
+   "approvedMedia": {
+    "openMedia": null,
+    "attachmentId": null,
+    "status": "missing",
+    "current": "intro slot holds a generic campus photo (Website-Alpha-School-0016), not a launch card and not an Open and Enrolling card; campus moved Announced -> Open 2026-09-22",
+    "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+    "state": "Open",
+    "addedBy": "loose-ends-2026-09-23"
+   },
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1024x683.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": "intro slot holds a generic campus photo (Website-Alpha-School-0016), not a launch card and not an Open and Enrolling card; campus moved Announced -> Open 2026-09-22"
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1024x683.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus page visual/content freshness"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-A17140C4B8",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/jamaica-plain/",
+  "viewport": null,
+  "route": null,
+  "evidence": [
+   "screenshots/campus-program-57622127456-desktop.png"
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.intro.media"
+  },
+  "element": "intro.media",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/jamaica-plain/",
+  "firstSeenAt": "2026-09-23T01:20:20.761Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-source-status-sentence",
+  "entity": "program-29737764384",
+  "field": "website_campus_intro",
+  "severity": "high",
+  "title": "Alpha Charlotte HubSpot intro contradicts its lifecycle state",
+  "summary": "The HubSpot Program intro must use lifecycle wording that agrees with the authoritative Program type before n8n publishes it.",
+  "actionable": true,
+  "url": "https://alpha.school/charlotte/",
+  "expected": "Alpha Charlotte is open and enrolling.",
+  "actual": "[DISPLAY_NAME] is open K-8 for Fall 2026.",
+  "businessImpact": "accuracy",
+  "expectedSource": "HubSpot Programs type",
+  "actualSource": "HubSpot Programs website_campus_intro",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "website_campus_intro",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-29737764384",
+  "entityLabel": "Alpha Charlotte",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-AA527ED701",
+  "observerCheck": "campus-source-status-sentence",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/charlotte/",
+  "viewport": null,
+  "route": null,
+  "observed": "[DISPLAY_NAME] is open K-8 for Fall 2026.",
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.status-source",
+  "requirement": "campus.intro.status-source",
+  "requirementRef": {
+   "file": "spec/campus-page-field-map.json",
+   "key": "elements/intro.status-sentence"
+  },
+  "element": "intro.status-sentence",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "hubspot-data",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "hubspot-property-history-or-apex-editor-record",
+   "nightly-run-reference",
+   "page-check-json-after-run"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "website_campus_intro",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-source-status-sentence|https://alpha.school/charlotte/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-source-status-sentence",
+  "entity": "program-51223157555",
+  "field": "website_campus_intro",
+  "severity": "high",
+  "title": "Alpha Lexington HubSpot intro contradicts its lifecycle state",
+  "summary": "The HubSpot Program intro must use lifecycle wording that agrees with the authoritative Program type before n8n publishes it.",
+  "actionable": true,
+  "url": "https://alpha.school/boston-suburbs/",
+  "expected": "Alpha Lexington opening or launching in a named month or season and year",
+  "actual": "Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment.",
+  "businessImpact": "accuracy",
+  "expectedSource": "HubSpot Programs type",
+  "actualSource": "HubSpot Programs website_campus_intro",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "website_campus_intro",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-51223157555",
+  "entityLabel": "Alpha Lexington",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-B11841A40F",
+  "observerCheck": "campus-source-status-sentence",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/boston-suburbs/",
+  "viewport": null,
+  "route": null,
+  "observed": "Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment.",
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.status-source",
+  "requirement": "campus.intro.status-source",
+  "requirementRef": {
+   "file": "spec/campus-page-field-map.json",
+   "key": "elements/intro.status-sentence"
+  },
+  "element": "intro.status-sentence",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "hubspot-data",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "hubspot-property-history-or-apex-editor-record",
+   "nightly-run-reference",
+   "page-check-json-after-run"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "website_campus_intro",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-source-status-sentence|https://alpha.school/boston-suburbs/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-26463204876",
+  "field": "media",
+  "severity": "high",
+  "title": "no approved intro media recorded for Open campus Alpha New York",
+  "summary": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
+  "actionable": true,
+  "url": "https://alpha.school/new-york-city/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-26463204876-desktop.png",
+    "route": "campus-program-26463204876",
+    "viewport": "desktop",
+    "url": "https://alpha.school/new-york-city/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 0,
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-26463204876",
+  "entityLabel": "Alpha New York",
+  "expected": {
+   "approvedMedia": "not recorded; ask the owner",
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": null
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus page visual/content freshness"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-B5AE1222E4",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/new-york-city/",
+  "viewport": null,
+  "route": null,
+  "evidence": [
+   "screenshots/campus-program-26463204876-desktop.png"
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.intro.media"
+  },
+  "element": "intro.media",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/new-york-city/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-registry-coverage",
+  "entity": "program-26463204885",
+  "field": "campus-open-media",
+  "severity": "high",
+  "title": "no campus open media entry recorded for Open campus Alpha Fort Worth",
+  "summary": "Record the approved open-state intro media for this Open campus in registry/campus-open-media.json campuses.<slug> (openMedia card with the attachmentId of the Open and Enrolling card, or openMedia video once approved); a campus with no row cannot be measured for launch-era media.",
+  "actionable": true,
+  "url": "https://alpha.school/fort-worth/",
+  "expected": {
+   "file": "registry/campus-open-media.json",
+   "keyPath": "campuses.fort-worth"
+  },
+  "actual": null,
+  "observed": null,
+  "missingExpectation": true,
+  "ownerRole": "website-operations",
+  "businessImpact": "accuracy",
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "registry": "campus-open-media",
+  "entitySource": "hubspot-programs",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-26463204885",
+  "entityLabel": "Alpha Fort Worth",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-BBFFBCF50B",
+  "observerCheck": "campus-registry-coverage",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/fort-worth/",
+  "viewport": null,
+  "route": null,
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "site.coverage.open-campus-registries",
+  "requirement": "site.coverage",
+  "requirementRef": {
+   "file": "spec/site-rules.json",
+   "key": "rules/site.coverage"
+  },
+  "element": "page.registries",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "dedupeScope": "campus-registry",
+  "clearAfterRuns": 1,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-registry-coverage|https://alpha.school/fort-worth/|campus-open-media",
+  "firstSeenAt": "2026-09-25T22:44:59.306Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-source-status-sentence",
+  "entity": "program-49011192959",
+  "field": "website_campus_intro",
+  "severity": "high",
+  "title": "Alpha Greenwich Port Chester HubSpot intro contradicts its lifecycle state",
+  "summary": "The HubSpot Program intro must use lifecycle wording that agrees with the authoritative Program type before n8n publishes it.",
+  "actionable": true,
+  "url": "https://alpha.school/greenwich/",
+  "expected": "Alpha Greenwich Port Chester is open and enrolling.",
+  "actual": "[DISPLAY_NAME] is launching in Fall 2026.",
+  "businessImpact": "accuracy",
+  "expectedSource": "HubSpot Programs type",
+  "actualSource": "HubSpot Programs website_campus_intro",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "website_campus_intro",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-49011192959",
+  "entityLabel": "Alpha Greenwich Port Chester",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-BE7D84559D",
+  "observerCheck": "campus-source-status-sentence",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/greenwich/",
+  "viewport": null,
+  "route": null,
+  "observed": "[DISPLAY_NAME] is launching in Fall 2026.",
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.status-source",
+  "requirement": "campus.intro.status-source",
+  "requirementRef": {
+   "file": "spec/campus-page-field-map.json",
+   "key": "elements/intro.status-sentence"
+  },
+  "element": "intro.status-sentence",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "hubspot-data",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "hubspot-property-history-or-apex-editor-record",
+   "nightly-run-reference",
+   "page-check-json-after-run"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "website_campus_intro",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-source-status-sentence|https://alpha.school/greenwich/",
+  "firstSeenAt": "2026-09-25T22:44:59.306Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-source-status-sentence",
+  "entity": "program-57601909511",
+  "field": "website_campus_intro",
+  "severity": "high",
+  "title": "Alpha Franklin HubSpot intro contradicts its lifecycle state",
+  "summary": "The HubSpot Program intro must use lifecycle wording that agrees with the authoritative Program type before n8n publishes it.",
+  "actionable": true,
+  "url": "https://alpha.school/franklin/",
+  "expected": "Alpha Franklin opening or launching in a named month or season and year",
+  "actual": null,
+  "businessImpact": "accuracy",
+  "expectedSource": "HubSpot Programs type",
+  "actualSource": "HubSpot Programs website_campus_intro",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "website_campus_intro",
+  "lifecycleState": "Announced",
+  "pageFamily": "campus-announced",
+  "programId": "program-57601909511",
+  "entityLabel": "Alpha Franklin",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-C49BD9444B",
+  "observerCheck": "campus-source-status-sentence",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/franklin/",
+  "viewport": null,
+  "route": null,
+  "observed": null,
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.status-source",
+  "requirement": "campus.intro.status-source",
+  "requirementRef": {
+   "file": "spec/campus-page-field-map.json",
+   "key": "elements/intro.status-sentence"
+  },
+  "element": "intro.status-sentence",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "hubspot-data",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "hubspot-property-history-or-apex-editor-record",
+   "nightly-run-reference",
+   "page-check-json-after-run"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "website_campus_intro",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-source-status-sentence|https://alpha.school/franklin/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-29737764384",
+  "field": "media",
+  "severity": "high",
+  "title": "no approved intro media recorded for Open campus Alpha Charlotte",
+  "summary": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
+  "actionable": true,
+  "url": "https://alpha.school/charlotte/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-29737764384-desktop.png",
+    "route": "campus-program-29737764384",
+    "viewport": "desktop",
+    "url": "https://alpha.school/charlotte/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 0,
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-29737764384",
+  "entityLabel": "Alpha Charlotte",
+  "expected": {
+   "approvedMedia": "not recorded; ask the owner",
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": null
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus page visual/content freshness"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-C4FCD03EAC",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/charlotte/",
+  "viewport": null,
+  "route": null,
+  "evidence": [
+   "screenshots/campus-program-29737764384-desktop.png"
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.intro.media"
+  },
+  "element": "intro.media",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/charlotte/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-source-status-sentence",
+  "entity": "program-26463204876",
+  "field": "website_campus_intro",
+  "severity": "high",
+  "title": "Alpha New York HubSpot intro contradicts its lifecycle state",
+  "summary": "The HubSpot Program intro must use lifecycle wording that agrees with the authoritative Program type before n8n publishes it.",
+  "actionable": true,
+  "url": "https://alpha.school/new-york-city/",
+  "expected": "Alpha New York is open and enrolling.",
+  "actual": "Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan’s Financial District, just steps from the East River waterfront and the iconic South Street Seaport.",
+  "businessImpact": "accuracy",
+  "expectedSource": "HubSpot Programs type",
+  "actualSource": "HubSpot Programs website_campus_intro",
+  "sourceKey": "hubspot-programs",
+  "sourceField": "website_campus_intro",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-26463204876",
+  "entityLabel": "Alpha New York",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-DFEEA5FC97",
+  "observerCheck": "campus-source-status-sentence",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/new-york-city/",
+  "viewport": null,
+  "route": null,
+  "observed": "Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan’s Financial District, just steps from the East River waterfront and the iconic South Street Seaport.",
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.status-source",
+  "requirement": "campus.intro.status-source",
+  "requirementRef": {
+   "file": "spec/campus-page-field-map.json",
+   "key": "elements/intro.status-sentence"
+  },
+  "element": "intro.status-sentence",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "hubspot-data",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "hubspot-property-history-or-apex-editor-record",
+   "nightly-run-reference",
+   "page-check-json-after-run"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "hubspot-programs",
+   "field": "website_campus_intro",
+   "at": "2026-09-28T06:23:06.630Z"
+  },
+  "sourceReadAt": "2026-09-28T06:23:06.630Z",
+  "dedupeKey": "campus-source-status-sentence|https://alpha.school/new-york-city/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-26445615176",
+  "field": "media",
+  "severity": "high",
+  "title": "no approved intro media recorded for Open campus Alpha Miami",
+  "summary": "Record the approved open-state intro media for this campus in registry/campus-open-media.json (openMedia card with the WordPress attachmentId of the Open and Enrolling card made from the September 7 template, or openMedia video once Matt or Yash approves the campus video), then place it in the intro slot; until then the page keeps whatever it shows and this ticket stays Missing Info.",
+  "actionable": true,
+  "url": "https://alpha.school/miami/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-26445615176-desktop.png",
+    "route": "campus-program-26445615176",
+    "viewport": "desktop",
+    "url": "https://alpha.school/miami/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 0,
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-26445615176",
+  "entityLabel": "Alpha Miami",
+  "expected": {
+   "approvedMedia": {
+    "openMedia": null,
+    "attachmentId": null,
+    "status": "missing",
+    "current": "intro slot plays Welcome Alpha School MacKenzie.mp4 via insert_url (video widget); Gaby Guajardo asks for the campus YouTube video, ticket cmubcluiz000304jy9pnujyhx",
+    "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+    "state": "Open",
+    "addedBy": "sweep-2026-09-21 partition A"
+   },
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": "intro slot plays Welcome Alpha School MacKenzie.mp4 via insert_url (video widget); Gaby Guajardo asks for the campus YouTube video, ticket cmubcluiz000304jy9pnujyhx"
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2025/07/Cognia-removebg.webp",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus page visual/content freshness"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-F09E314265",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/miami/",
+  "viewport": null,
+  "route": null,
+  "evidence": [
+   "screenshots/campus-program-26445615176-desktop.png"
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.intro.media"
+  },
+  "element": "intro.media",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/miami/",
+  "firstSeenAt": "2026-09-25T22:30:13.016Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-registry-coverage",
+  "entity": "program-26463204876",
+  "field": "campus-open-media",
+  "severity": "high",
+  "title": "no campus open media entry recorded for Open campus Alpha New York",
+  "summary": "Record the approved open-state intro media for this Open campus in registry/campus-open-media.json campuses.<slug> (openMedia card with the attachmentId of the Open and Enrolling card, or openMedia video once approved); a campus with no row cannot be measured for launch-era media.",
+  "actionable": true,
+  "url": "https://alpha.school/new-york-city/",
+  "expected": {
+   "file": "registry/campus-open-media.json",
+   "keyPath": "campuses.new-york-city"
+  },
+  "actual": null,
+  "observed": null,
+  "missingExpectation": true,
+  "ownerRole": "website-operations",
+  "businessImpact": "accuracy",
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "registry": "campus-open-media",
+  "entitySource": "hubspot-programs",
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-26463204876",
+  "entityLabel": "Alpha New York",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-F460D61F78",
+  "observerCheck": "campus-registry-coverage",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/new-york-city/",
+  "viewport": null,
+  "route": null,
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "observerSeverity": "high",
+  "requirementId": "site.coverage.open-campus-registries",
+  "requirement": "site.coverage",
+  "requirementRef": {
+   "file": "spec/site-rules.json",
+   "key": "rules/site.coverage"
+  },
+  "element": "page.registries",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "dedupeScope": "campus-registry",
+  "clearAfterRuns": 1,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [
+   "hubspot-programs"
+  ],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-registry-coverage|https://alpha.school/new-york-city/|campus-open-media",
+  "firstSeenAt": "2026-09-25T22:44:59.306Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "campus-truth",
+  "check": "campus-page-stale-launch-media",
+  "entity": "program-38325891178",
+  "field": "media",
+  "severity": "high",
+  "title": "Alpha The Woodlands still has launch/coming-soon content on its campus page",
+  "summary": "The rendered intro visual visibly contradicts the campus's Open lifecycle. Replace the stale launch artwork with approved open-state media and record that approval in the playbook registry.",
+  "actionable": true,
+  "url": "https://alpha.school/the-woodlands/",
+  "businessImpact": "accuracy",
+  "evidenceImages": [
+   {
+    "kind": "screenshot",
+    "path": "screenshots/campus-program-38325891178-desktop.png",
+    "route": "campus-program-38325891178",
+    "viewport": "desktop",
+    "url": "https://alpha.school/the-woodlands/"
+   }
+  ],
+  "sourceKey": "registry",
+  "sourceField": "registry/campus-open-media.json",
+  "staleSignals": 1,
+  "lifecycleState": "Open",
+  "pageFamily": "campus-open",
+  "programId": "program-38325891178",
+  "entityLabel": "Alpha The Woodlands",
+  "expected": {
+   "approvedMedia": "not recorded; ask the owner",
+   "attachmentId": null,
+   "staleSignals": 0
+  },
+  "actual": [
+   {
+    "kind": "vision-text",
+    "source": "vision",
+    "src": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+    "slot": "intro-card",
+    "viewport": "desktop",
+    "launchWord": "Fall 2026",
+    "matchedText": "fall 2026",
+    "snippet": "fall 2026",
+    "confidence": 95,
+    "visionText": "Coming in Fall 2026 to The Woodlands!"
+   },
+   {
+    "kind": "media-governance",
+    "src": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+    "reason": "no-approved-open-state-media",
+    "registryStatus": "missing",
+    "registryCurrent": null
+   }
+  ],
+  "observed": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+  "missingExpectation": true,
+  "hiddenOnAllViewports": false,
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni",
+    "Hailey McSpadden"
+   ],
+   "channel": "#support-websites",
+   "reason": "Campus page visual/content freshness"
+  },
+  "evidenceVersion": 7,
+  "id": "SITE-FC335E4093",
+  "observerCheck": "campus-page-stale-launch-media",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/the-woodlands/",
+  "viewport": null,
+  "route": null,
+  "evidence": [
+   "screenshots/campus-program-38325891178-desktop.png"
+  ],
+  "conditions": [],
+  "observerSeverity": "high",
+  "requirementId": "campus.intro.media.current",
+  "requirement": "campus.intro.media",
+  "requirementRef": {
+   "file": "spec/campus-page-requirements.json",
+   "key": "states/Open/campus.intro.media"
+  },
+  "element": "intro.media",
+  "status": "enforced",
+  "channel": "ticket",
+  "ticketClass": "observer-media-identity",
+  "ownerRole": "website-operations",
+  "entitySource": "hubspot-programs",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [
+   "hidden-on-all-viewports"
+  ],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "registry/campus-open-media.json",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "campus-page-stale-launch-media|https://alpha.school/the-woodlands/",
+  "firstSeenAt": "2026-09-02T23:59:57.538Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -683,12 +2251,13 @@
   "evidenceVersion": 7,
   "id": "SITE-1BA13936C9",
   "observerCheck": "campus-calendar-present",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/franklin/",
   "viewport": null,
   "route": null,
   "observed": null,
+  "evidence": [],
   "conditions": [],
   "hiddenOnAllViewports": false,
   "observerSeverity": "medium",
@@ -703,6 +2272,8 @@
   "channel": "ticket",
   "ticketClass": "link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -725,7 +2296,7 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-calendar-present|https://alpha.school/franklin/",
   "firstSeenAt": "2026-09-24T19:52:12.366Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -761,8 +2332,8 @@
   "evidenceVersion": 7,
   "id": "SITE-9A147F539A",
   "observerCheck": "campus-calendar-link-reachable",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/south-bay-la/",
   "viewport": null,
   "route": null,
@@ -771,6 +2342,7 @@
    "status": 404,
    "finalUrl": "https://drive.google.com/file/d/16oGXcxkofNpXQGEiQ1Bis3pICC0YnLMi/view/?usp=drive_link"
   },
+  "evidence": [],
   "conditions": [],
   "observerSeverity": "medium",
   "requirementId": "campus.resources.calendar.reachable",
@@ -784,6 +2356,8 @@
   "channel": "ticket",
   "ticketClass": "link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -808,7 +2382,7 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-calendar-link-reachable|https://alpha.school/south-bay-la/",
   "firstSeenAt": "2026-09-02T23:59:57.539Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -839,12 +2413,13 @@
   "evidenceVersion": 7,
   "id": "SITE-D535C008B5",
   "observerCheck": "campus-calendar-present",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/jamaica-plain/",
   "viewport": null,
   "route": null,
   "observed": null,
+  "evidence": [],
   "conditions": [],
   "hiddenOnAllViewports": false,
   "observerSeverity": "medium",
@@ -859,6 +2434,8 @@
   "channel": "ticket",
   "ticketClass": "link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -881,7 +2458,7 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-calendar-present|https://alpha.school/jamaica-plain/",
   "firstSeenAt": "2026-09-24T19:52:12.366Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -917,8 +2494,8 @@
   "evidenceVersion": 7,
   "id": "SITE-F08AFA1A07",
   "observerCheck": "campus-calendar-link-reachable",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/boston-suburbs/",
   "viewport": null,
   "route": null,
@@ -927,6 +2504,7 @@
    "status": 404,
    "finalUrl": "https://drive.google.com/file/d/1U14f_Q1AKwQtv3BjvcZdMR7kszmK9AfD/view/"
   },
+  "evidence": [],
   "conditions": [],
   "observerSeverity": "medium",
   "requirementId": "campus.resources.calendar.reachable",
@@ -940,6 +2518,8 @@
   "channel": "ticket",
   "ticketClass": "link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -964,7 +2544,7 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-calendar-link-reachable|https://alpha.school/boston-suburbs/",
   "firstSeenAt": "2026-09-02T23:59:57.539Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  },
  {
   "loop": "campus-truth",
@@ -995,12 +2575,13 @@
   "evidenceVersion": 7,
   "id": "SITE-FE8ACA8D4F",
   "observerCheck": "campus-calendar-present",
-  "bundleVersion": "1.1",
-  "bundleSha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
   "page": "https://alpha.school/carrollton/",
   "viewport": null,
   "route": null,
   "observed": null,
+  "evidence": [],
   "conditions": [],
   "hiddenOnAllViewports": false,
   "observerSeverity": "medium",
@@ -1015,6 +2596,8 @@
   "channel": "ticket",
   "ticketClass": "link-cta",
   "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "hubspot-programs",
   "dedupeScope": "page",
   "clearAfterRuns": 2,
   "gracePeriodHours": 0,
@@ -1037,6 +2620,100 @@
   "sourceReadAt": null,
   "dedupeKey": "campus-calendar-present|https://alpha.school/carrollton/",
   "firstSeenAt": "2026-09-24T19:52:12.366Z",
-  "runId": "site-full-2026-09-25T10-27-41-079Z"
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
+ },
+ {
+  "loop": "audience-funnel",
+  "check": "community-destination",
+  "entity": "campus-program-26445615176",
+  "field": "https://communitynewspapers.com/aventura-news/alpha-school-miami-the-future-of-education-in-our-community/",
+  "severity": "low",
+  "title": "campus-program-26445615176 Community CTA does not route to the Community host",
+  "summary": "Join the Community CTAs must route to the canonical Community host or a host that redirects to it.",
+  "actionable": false,
+  "url": "https://alpha.school/miami/",
+  "expected": [
+   "www.community.alpha.school",
+   "community.alpha.school"
+  ],
+  "actual": {
+   "text": "Miami’s Community News: Alpha School Miami: The Future of Education in Our Community",
+   "href": "https://communitynewspapers.com/aventura-news/alpha-school-miami-the-future-of-education-in-our-community/",
+   "tag": "a",
+   "classes": "",
+   "region": "body",
+   "host": "communitynewspapers.com"
+  },
+  "businessImpact": "conversion",
+  "sourceKey": "registry",
+  "sourceField": "spec/community-routing.json communityHosts",
+  "pageFamily": "campus-open",
+  "lifecycleState": "Open",
+  "programId": "program-26445615176",
+  "route": "campus-program-26445615176",
+  "viewport": "desktop",
+  "routing": {
+   "owners": [
+    "Matt Barge",
+    "Yash Chitneni"
+   ],
+   "channel": "#support-websites",
+   "reason": null
+  },
+  "evidenceVersion": 1,
+  "id": "SITE-896F9229EE",
+  "observerCheck": "community-destination",
+  "bundleVersion": "1.5",
+  "bundleSha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
+  "page": "https://alpha.school/miami/",
+  "observed": {
+   "text": "Miami’s Community News: Alpha School Miami: The Future of Education in Our Community",
+   "href": "https://communitynewspapers.com/aventura-news/alpha-school-miami-the-future-of-education-in-our-community/",
+   "tag": "a",
+   "classes": "",
+   "region": "body",
+   "host": "communitynewspapers.com"
+  },
+  "evidence": [],
+  "conditions": [],
+  "hiddenOnAllViewports": false,
+  "entityLabel": "campus-program-26445615176",
+  "observerSeverity": "advisory",
+  "requirementId": "site.community.routing.cta",
+  "requirement": "site.community.routing",
+  "requirementRef": {
+   "file": "spec/community-routing.json",
+   "key": "communityHosts"
+  },
+  "element": "hero.ctas",
+  "status": "advisory",
+  "channel": "ticket",
+  "ticketClass": "link-cta",
+  "ownerRole": "website-agent-operator",
+  "missingExpectation": false,
+  "entitySource": "map",
+  "dedupeScope": "page",
+  "clearAfterRuns": 2,
+  "gracePeriodHours": 0,
+  "evidenceProfile": [
+   "mcp-receipt",
+   "rendered-controls-json-or-screenshots-desktop-mobile",
+   "page-check-json",
+   "verify-public-page"
+  ],
+  "sourceHealthDependency": [],
+  "suppressWhen": [],
+  "suppresses": null,
+  "requireConsecutiveRuns": 1,
+  "decisionPending": null,
+  "sourceRead": {
+   "source": "registry",
+   "field": "spec/community-routing.json communityHosts",
+   "at": null
+  },
+  "sourceReadAt": null,
+  "dedupeKey": "community-destination|https://alpha.school/miami/",
+  "firstSeenAt": "2026-09-24T19:52:12.366Z",
+  "runId": "site-full-2026-09-28T06-22-58-124Z"
  }
 ]

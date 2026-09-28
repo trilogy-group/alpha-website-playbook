@@ -1,8 +1,13 @@
 {
- "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 11 campuses on 2026-09-25; not a source of truth. Original: Per-campus leadership as shown on the campus page Team section, 2026-09-15. Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide. groups (2026-09-24): campus groups whose l",
+ "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 18 campuses on 2026-09-28 (campus-pages kept whole so other campuses' names resolve); not a source of truth. Original: Per-campus leadership as shown on the campus page Team section, 2026-09-15. Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide. groups (2026-09-24): campus groups whose l",
  "version": "1.1",
  "asOf": "2026-09-24",
  "campuses": {
+  "atlanta": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ]
+  },
   "boca-raton": {
    "head-of-schools": [
     "Tasha Arnold"
@@ -50,6 +55,17 @@
     "Chelsea Winters"
    ]
   },
+  "charlotte": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "lead-guide": [
+    "Timothy Berry, M.Div."
+   ],
+   "director-of-admissions": [
+    "Megan Bartl"
+   ]
+  },
   "east-bay": {
    "head-of-schools": [
     "Tasha Arnold"
@@ -65,6 +81,20 @@
    ],
    "admissions": [
     "Lina Yee"
+   ]
+  },
+  "fort-worth": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "lead-guide": [
+    "Sam DePalo"
+   ],
+   "dean-of-parents": [
+    "Jasmine Cochran"
+   ],
+   "director-of-admissions": [
+    "Jamie Hunter"
    ]
   },
   "franklin": {
@@ -95,6 +125,40 @@
    ],
    "director-of-admissions": [
     "Samantha Kravitz"
+   ]
+  },
+  "kirkland": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "director-of-admissions": [
+    "Qiuhong Tang"
+   ],
+   "lead-guide": [
+    "Ashley Storms"
+   ]
+  },
+  "lake-travis": {
+   "dean-of-parents": [
+    "Heather McMahan"
+   ]
+  },
+  "miami": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Heather McMahan"
+   ],
+   "lead-guide": [
+    "Evan Ore"
+   ],
+   "admissions": [
+    "Morgan Hembree",
+    "Zoe Lovay"
+   ],
+   "director-of-admissions": [
+    "Bianca De La Riva"
    ]
   },
   "new-york-city": {
@@ -143,6 +207,20 @@
    "head-guide": [
     "Matt Shenker"
    ]
+  },
+  "the-woodlands": {
+   "head-of-schools": [
+    "Tasha Arnold"
+   ],
+   "dean-of-parents": [
+    "Taylor Cantrell, JD"
+   ],
+   "director-of-admissions": [
+    "Rebecca Haack"
+   ],
+   "head-guide": [
+    "Sam DePalo"
+   ]
   }
  },
  "groups": {
@@ -180,5 +258,16 @@
    "note": "First group. Alt text on a shared leader's card names the sibling campuses (Boston/Lexington); that is the decided state, not a conflict."
   }
  },
- "placeholderCards": []
+ "placeholderCards": [
+  {
+   "campus": "austin",
+   "name": "[John Doe]",
+   "title": "Head of Alpha Private School in [CITY]"
+  },
+  {
+   "campus": "palo-alto",
+   "name": "_John_Doe_",
+   "title": "Head of Alpha School in _City_"
+  }
+ ]
 }
