@@ -1,58 +1,30 @@
 {
- "filerVersion": "0.4",
- "runId": "site-full-2026-09-25T10-27-41-079Z",
- "bundleVersion": "1.1",
- "mode": "dry-run",
+ "$comment": "ticket references from the filer apply run on packet site-events-2026-09-28T17-26-15-704Z (filer 0.7), kept where the observer ids are in this fixture's incidents; the site truth report reads existing[].existing.id and decisionPending[].decisionTicket only",
+ "filerVersion": "0.7",
+ "runId": "site-events-2026-09-28T17-26-15-704Z",
+ "bundleVersion": "1.5",
+ "mode": "apply",
  "existing": [
   {
-   "key": "observer:campus.resources.apply.finalsite-redirect:program:program-26463204876",
-   "rows": [
-    "campus.resources.apply.finalsite-redirect"
-   ],
-   "check": "campus-application-finalsite-redirect",
-   "scope": "program",
-   "scopeKey": "program:program-26463204876",
+   "key": "observer:campus.intro.media.current:page:atlanta",
+   "check": "campus-page-stale-launch-media",
+   "scopeKey": "page:atlanta",
    "observerIds": [
-    "SITE-01B657B3C4"
+    "SITE-13F7C2AABD"
    ],
    "pages": [
-    "https://alpha.school/application/"
+    "https://alpha.school/atlanta/"
    ],
    "existing": {
-    "id": "cmtxaucwp000104ijvl0dexr2",
-    "status": "NOT_STARTED",
-    "title": "Alpha New York: Apply stays on the HubSpot form (HTTP 301 /application/?submission_campus=new_york) instead of redirecting to Finalsite.",
-    "via": "observer-id"
-   }
-  },
-  {
-   "key": "observer:campus.resources.booking.present:page:jamaica-plain",
-   "rows": [
-    "campus.resources.booking.present"
-   ],
-   "check": "campus-book-call-present",
-   "scope": "page",
-   "scopeKey": "page:jamaica-plain",
-   "observerIds": [
-    "SITE-29B087FDC8"
-   ],
-   "pages": [
-    "https://alpha.school/jamaica-plain/"
-   ],
-   "existing": {
-    "id": "cmug3lp9500030agm0ab10c3q",
-    "status": "MISSING_INFO",
-    "title": "Alpha Jamaica Plain: fails \"Book a Call CTA present on Open campus pages\"",
-    "via": "idempotency-key"
+    "id": "cmuep7wd000070agml9fxaia4",
+    "status": "IN_PROGRESS",
+    "title": "Alpha Atlanta: intro card slot needs the Open and Enrolling card (no approved open-campus media)",
+    "via": "alias:checkId open-intro-media-approved"
    }
   },
   {
    "key": "observer:campus.resources.apply.source:page:greenwich",
-   "rows": [
-    "campus.resources.apply.source"
-   ],
    "check": "campus-application-source-missing",
-   "scope": "page",
    "scopeKey": "page:greenwich",
    "observerIds": [
     "SITE-32787B6598"
@@ -62,60 +34,31 @@
    ],
    "existing": {
     "id": "cmtncnhf9000104l20ahh10kk",
-    "status": "IN_PROGRESS",
+    "status": "BLOCKED",
     "title": "Alpha Greenwich Armonk has no HubSpot admission_link, so APPLY TODAY is missing or cannot be published.",
     "via": "observer-id"
    }
   },
   {
-   "key": "observer:campus.resources.apply.source:page:franklin",
-   "rows": [
-    "campus.resources.apply.source"
-   ],
-   "check": "campus-application-source-missing",
-   "scope": "page",
-   "scopeKey": "page:franklin",
+   "key": "observer:site.search.schema.name:page:greenwich",
+   "check": "campus-schema-name",
+   "scopeKey": "page:greenwich",
    "observerIds": [
-    "SITE-4A46A2BD26"
+    "SITE-7AC66149AC"
    ],
    "pages": [
-    "https://alpha.school/franklin/"
+    "https://alpha.school/greenwich/"
    ],
    "existing": {
-    "id": "cmtncnisk000404l29ptwdfs6",
-    "status": "IN_PROGRESS",
-    "title": "Alpha Franklin has no HubSpot admission_link, so APPLY TODAY is missing or cannot be published.",
+    "id": "cmtnc9xz500020agmzxbykybk",
+    "status": "BLOCKED",
+    "title": "Alpha Greenwich Port Chester: source name is Alpha Greenwich Port Chester, and website schema name is Alpha Greenwich Armonk.",
     "via": "observer-id"
    }
   },
   {
-   "key": "observer:campus.resources.booking.present:page:boston",
-   "rows": [
-    "campus.resources.booking.present"
-   ],
-   "check": "campus-book-call-present",
-   "scope": "page",
-   "scopeKey": "page:boston",
-   "observerIds": [
-    "SITE-59C1A0E7D4"
-   ],
-   "pages": [
-    "https://alpha.school/boston/"
-   ],
-   "existing": {
-    "id": "cmug3lrmc00040agmfrfr03q7",
-    "status": "MISSING_INFO",
-    "title": "Alpha Boston: fails \"Book a Call CTA present on Open campus pages\"",
-    "via": "idempotency-key"
-   }
-  },
-  {
    "key": "observer:campus.resources.packet.reachable:page:south-bay-la",
-   "rows": [
-    "campus.resources.packet.reachable"
-   ],
    "check": "campus-info-packet-link-reachable",
-   "scope": "page",
    "scopeKey": "page:south-bay-la",
    "observerIds": [
     "SITE-7C5D531B00"
@@ -131,12 +74,25 @@
    }
   },
   {
-   "key": "observer:site.identity.other-campus.images:page:boston-suburbs",
-   "rows": [
-    "site.identity.other-campus.images"
+   "key": "observer:campus.intro.media.current:page:east-bay",
+   "check": "campus-page-stale-launch-media",
+   "scopeKey": "page:east-bay",
+   "observerIds": [
+    "SITE-8137AC4FE6"
    ],
+   "pages": [
+    "https://alpha.school/east-bay/"
+   ],
+   "existing": {
+    "id": "cmubrkkm800000agmvukxsioc",
+    "status": "IN_PROGRESS",
+    "title": "Alpha East Bay: Open campus intro still shows the \"Coming Fall 2026 To Piedmont\" launch card",
+    "via": "alias:checkId open-intro-media-approved"
+   }
+  },
+  {
+   "key": "observer:site.identity.other-campus.images:page:boston-suburbs",
    "check": "campus-image-identity-conflict",
-   "scope": "page",
    "scopeKey": "page:boston-suburbs",
    "observerIds": [
     "SITE-984B874744"
@@ -152,12 +108,25 @@
    }
   },
   {
-   "key": "observer:campus.resources.calendar.reachable:page:south-bay-la",
-   "rows": [
-    "campus.resources.calendar.reachable"
+   "key": "observer:campus.intro.media.current:page:jamaica-plain",
+   "check": "campus-page-stale-launch-media",
+   "scopeKey": "page:jamaica-plain",
+   "observerIds": [
+    "SITE-A17140C4B8"
    ],
+   "pages": [
+    "https://alpha.school/jamaica-plain/"
+   ],
+   "existing": {
+    "id": "cmuep7yyo00010agmtyu6xb82",
+    "status": "IN_PROGRESS",
+    "title": "Alpha Jamaica Plain: intro card slot needs the Open and Enrolling card (no approved open-campus media)",
+    "via": "alias:checkId open-intro-media-approved"
+   }
+  },
+  {
+   "key": "observer:campus.resources.calendar.reachable:page:south-bay-la",
    "check": "campus-calendar-link-reachable",
-   "scope": "page",
    "scopeKey": "page:south-bay-la",
    "observerIds": [
     "SITE-9A147F539A"
@@ -174,11 +143,7 @@
   },
   {
    "key": "observer:campus.resources.calendar.reachable:page:boston-suburbs",
-   "rows": [
-    "campus.resources.calendar.reachable"
-   ],
    "check": "campus-calendar-link-reachable",
-   "scope": "page",
    "scopeKey": "page:boston-suburbs",
    "observerIds": [
     "SITE-F08AFA1A07"
@@ -188,7 +153,7 @@
    ],
    "existing": {
     "id": "cmug3m0hh00070agmpz4en2el",
-    "status": "MISSING_INFO",
+    "status": "BLOCKED",
     "title": "Alpha Lexington: fails \"Visible calendar destination answers 2xx logged out\"",
     "via": "idempotency-key"
    }

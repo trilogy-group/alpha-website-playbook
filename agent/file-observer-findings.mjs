@@ -103,7 +103,7 @@ export { FILER_OWNED_CODE, isFilerOwnedConflict }
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..')
-export const FILER_VERSION = '0.7'
+export const FILER_VERSION = '0.8'
 export const FILED_BY = 'agent/file-observer-findings.mjs'
 export const IDEMPOTENCY_PREFIX = 'observer:'
 export const RESOLUTION_KIND = 'check-cleared'
@@ -676,7 +676,8 @@ export function missingExpectationFor({ row, finding, registries = {} }) {
   const ask = coverage ? entrySpec.ask : (row.literals?.missingAsk || `Record the ${thing} for this campus in ${file}.`)
   const ownerRole = coverage ? entrySpec.ownerRole : row.ownerRole
   const ticketClass = coverage ? entrySpec.ticketClass : row.ticketClass
-  const base = { slug, campus, state, file, keyPath, thing, ask, ownerRole, ticketClass, entry: entry ?? null }
+  const slot = /campus-open-media\.json$/.test(file) && !coverage ? slotObservation(finding, row) : null
+  const base = { slug, campus, state, file, keyPath, thing, ask, ownerRole, ticketClass, entry: entry ?? null, slot }
   if (entryComplete(file, entry)) return { kind: 'recorded', ...base, reason: RECORDED_SINCE }
   return { kind: 'missing', ...base, reason: entry ? `${file} ${keyPath.replace('[slug]', `.${slug}`)} is recorded but names no approved ${thing} (${formatFact(entry).slice(0, 160)})` : `${file} has no entry for ${slug || campus}` }
 }
@@ -684,6 +685,42 @@ export function missingExpectationFor({ row, finding, registries = {} }) {
 /** Title of a missing-expectation ticket (bundle 1.3 contract): no approved <thing> recorded for <state> campus <name>. */
 export function missingExpectationTitle(assessment) {
   return cleanText(`no approved ${assessment.thing} recorded for ${assessment.state || 'in-scope'} campus ${assessment.campus}`)
+}
+
+const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const basename = (src) => { try { return decodeURIComponent(String(src || '').split('/').pop() || '') } catch { return String(src || '').split('/').pop() || '' } }
+
+/**
+ * What the intro slot shows now, from the media finding's own `actual` (2026-09-28, the three levels the site truth
+ * report grades the card cell in): `launch` (red) when the observer's vision pass read a launch word in the picture, the
+ * alt or file name carries one (the row's literals.launchWords), or the asset matches the row's literals.assetPatterns;
+ * `unapproved` (amber) when a content_image is rendered in the slot with no launch words; `unaccounted` when the finding
+ * exposes no slot image (the page's primary visual is something else, a badge say; a campus video in the slot is not
+ * visible to the observer). `what` states the observation and `ask` tells the owner to approve or replace it; the ticket's
+ * title, class and status are the missing-expectation contract's and do not change with the level.
+ */
+export function slotObservation(finding, row = null) {
+  const list = Array.isArray(finding?.actual) ? finding.actual : (finding?.actual && typeof finding.actual === 'object' ? [finding.actual] : [])
+  const meta = list.find((a) => a && (a.kind === 'image-metadata' && a.containerId === 'content_image')) || list.find((a) => a && a.widget === 'content_image') || null
+  const visible = list.find((a) => a && a.kind === 'visible-image') || null
+  const governance = list.find((a) => a && a.kind === 'media-governance') || null
+  const src = meta?.src || visible?.src || governance?.src || (typeof finding?.observed === 'string' ? finding.observed : null) || null
+  const file = basename(src)
+  const attachmentId = Number(meta?.classes?.match(/wp-image-(\d+)/)?.[1] ?? meta?.attachmentId ?? NaN)
+  const alt = String(meta?.alt ?? visible?.alt ?? '')
+  const isSlotImage = Boolean(meta)
+  const words = (row?.literals?.launchWords || []).map((w) => new RegExp(`\\b${escapeRegExp(w).replace(/\\\s+/g, '\\s+')}\\b`, 'i'))
+  const patterns = (row?.literals?.assetPatterns || []).map((p) => { try { return new RegExp(p, 'i') } catch { return null } }).filter(Boolean)
+  const visionHits = list.filter((a) => a && a.kind === 'vision-text' && a.launchWord)
+  const reading = cleanText(visionHits.find((a) => a.visionText)?.visionText || '').replace(/\s+/g, ' ').trim()
+  const launch = []
+  for (const hit of visionHits) if (hit.launchWord && !launch.includes(hit.launchWord)) launch.push(hit.launchWord)
+  for (const text of [alt, file.replace(/[-_]+/g, ' ')]) for (const re of words) { const hit = text.match(re)?.[0]; if (hit && !launch.some((l) => l.toLowerCase() === hit.toLowerCase())) launch.push(hit) }
+  if (src && patterns.some((re) => re.test(src)) && !launch.includes('known launch-era asset')) launch.push('known launch-era asset')
+  const id = Number.isInteger(attachmentId) ? `attachment ${attachmentId} (${file}${alt ? `, alt "${alt}"` : ', alt empty'})` : (file ? `${file}${alt ? ` (alt "${alt}")` : ''}` : 'an unnamed asset')
+  if (launch.length) return { level: 'launch', src, file, attachmentId: Number.isInteger(attachmentId) ? attachmentId : null, alt, launch, reading: reading || null, what: `the intro slot shows launch-era media: ${id}${reading ? ` reads "${reading}"` : ''} (${launch.join(', ')})`, ask: 'Replace it with the Open and Enrolling card (or the campus video Matt or Yash approves) and record the approval in registry/campus-open-media.json; a launch card is never approved for an Open campus' }
+  if (isSlotImage || Number.isInteger(attachmentId)) return { level: 'unapproved', src, file, attachmentId: Number.isInteger(attachmentId) ? attachmentId : null, alt, launch, reading: null, what: `the intro slot holds ${id}, which no registry row approves`, ask: `Approve what is there (record openMedia card with attachmentId ${Number.isInteger(attachmentId) ? attachmentId : '<id>'} in registry/campus-open-media.json) or replace it with the Open and Enrolling card` }
+  return { level: 'unaccounted', src, file, attachmentId: null, alt, launch, reading: null, what: `the observer exposes no intro slot image for this page${file ? ` (its primary visual is ${file})` : ''}; a campus video in the slot is not visible to the observer`, ask: 'Approve the campus video in the slot (record openMedia video in registry/campus-open-media.json) or place the Open and Enrolling card' }
 }
 
 /** Owner for a role through the policy bundle; unnamed roles escalate to the website agent operator (protocol 1d). */
@@ -1142,11 +1179,13 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (missing) {
       contract.claim = missingExpectationTitle(missing)
       contract.expected = `an approved ${missing.thing} recorded in ${missing.file} ${missing.keyPath.replace('[slug]', `.${missing.slug || '<slug>'}`)} (${requirementIdFor(row)}; ${renderComparator(row)}; severity ${row.severity})`
-      contract.observed = `${missing.reason}; page shows ${truncate(formatFact(group.findings[0].actual), 200)}`
+      contract.observed = missing.slot ? `${missing.reason}; ${missing.slot.what}` : `${missing.reason}; page shows ${truncate(formatFact(group.findings[0].actual), 200)}`
       contract.reason = `${row.dedupeScope}-scoped ${row.status} check ${row.observerCheck}; no expectation is recorded for this ${missing.state || 'in-scope'} campus, so the page cannot be measured until the registry owner records it (presence, not absence; repair plan 2026-09-25)`
       contract.history.push(`${now.toISOString().slice(0, 10)} ${FILED_BY} ${FILER_VERSION}: Missing Info to ${row.ownerRole} (${owner.name}) for the registry entry; ask: ${truncate(missing.ask, 200)}`)
     }
-    const missingNote = missing ? cleanText(renderTemplate('missingInfo', { actor: `${FILED_BY} ${FILER_VERSION}`, date: now.toISOString().slice(0, 10), items: [{ item: missing.ask, owner: owner.name }], alreadyCorrect: `the campus is ${missing.state || 'in scope'} in HubSpot Programs; nothing on the page is changed until the ${missing.thing} is recorded` })) : null
+    // The slot observation (open-media row) leads the ask: what is in the slot now, then approve it or replace it; the registry ask follows.
+    const missingItems = missing ? [...(missing.slot ? [{ item: `${missing.slot.what}. ${missing.slot.ask}`, owner: owner.name }] : []), { item: missing.ask, owner: owner.name }] : []
+    const missingNote = missing ? cleanText(renderTemplate('missingInfo', { actor: `${FILED_BY} ${FILER_VERSION}`, date: now.toISOString().slice(0, 10), items: missingItems, alreadyCorrect: `the campus is ${missing.state || 'in scope'} in HubSpot Programs; nothing on the page is changed until the ${missing.thing} is recorded` })) : null
     const body = `${cleanText(renderObserverBody(contract))}${missingNote ? `\n\n${missingNote}` : ''}`
     const payload = {
       title: cleanText(contract.claim),
@@ -1177,7 +1216,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (dup) { plan.existing.push({ ...entry, existing: { id: dup.task.id, status: dup.task.status, title: dup.task.title, via: dup.via }, payload: undefined }); continue }
     plan.files.push(entry)
     if (missing) plannedMissing.set(missingExpectationKey(missing), { key: group.key, title: payload.title, row: row.id })
-    if (missing) plan.missingInfo.push({ key: group.key, title: payload.title, campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, owner: owner.name, ticketClass: row.ticketClass, ask: missing.ask })
+    if (missing) plan.missingInfo.push({ key: group.key, title: payload.title, campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, owner: owner.name, ticketClass: row.ticketClass, ask: missing.ask, ...(missing.slot ? { slot: { level: missing.slot.level, what: missing.slot.what } } : {}) })
   }
 
   plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, sourceDigest: plan.sourceDigest.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0), missingInfo: plan.missingInfo.length, recordedSince: plan.recordedSince.length, informational: plan.informational.length }

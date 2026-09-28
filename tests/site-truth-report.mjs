@@ -2,9 +2,15 @@
 /**
  * Site truth report (QC loop repair plan 2026-09-25, repair 9: "what MacKenzie sees"). One row per Open HubSpot
  * Program with an alpha.school campus page, and a second table for Announced programs, derived from the observer
- * packet's sources and the playbook registries, never from tickets. Each cell is green, red or grey with a one-word
- * reason; a red or grey cell that the packet carries an active incident for names the date the incident was first
- * seen and, when a ticket reference is known, the ticket it waits on.
+ * packet's sources and the playbook registries, never from tickets. Each cell is green, amber, red or grey with a
+ * one-word reason; a red, amber or grey cell that the packet carries an active incident for names the date the
+ * incident was first seen and, when a ticket reference is known, the ticket it waits on.
+ *
+ * Every cell's detail comes from the packet (the rendered slot image or video embed, the vision pass's OCR reading,
+ * the HubSpot fields), never from a registry free-text note (2026-09-28: the registry's `current` note for Atlanta
+ * described a card that had been replaced by a stock skyline; the report repeated it). A registry contributes only
+ * the approval (attachmentId, openMedia, status). Amber is the third level: the slot or sentence is plausible but not
+ * the decided one, and needs an approval or a rewording rather than a repair; amber never counts as red.
  *
  *   node tests/site-truth-report.mjs --packet <dir> [--registry-root .] --out <report.md> [--json <report.json>]
  *       [--filer-report <filer-report.json>] [--now <ISO>]
@@ -12,7 +18,10 @@
  * Inputs (all read-only):
  *   <packet>/manifest.json   run id, mode, bundle version, completedAt (header)
  *   <packet>/sources.json    hubspotPrograms (type, website), map.locations (programType), campusPages (text, staff,
- *                            media.images, links, bookCallLinks, applicationLinks, infoPacketLinks)
+ *                            media.images and media.youtubeVideos, links, bookCallLinks, applicationLinks, infoPacketLinks)
+ *   <packet>/vision.json     optional: the vision pass's OCR reading per slot image (images[].pageUrl, slot, visionText,
+ *                            confidence); the intro-card reading is the card cell's text
+ *   <packet>/browser.json    optional: rendered routes; only embeds[].url and title are read, to name a campus video
  *   <packet>/incidents.json  active incidents: firstSeenAt per cell (mapped by requirementId, else check name)
  *   <packet>/findings.json   decisionPending ticket references
  *   <packet>/../filer-report.json (or --filer-report): existing[].existing.id and decisionPending[].decisionTicket,
@@ -23,10 +32,19 @@
  * Columns and the reason words:
  *   state     HubSpot type vs growth-map programType vs page sentence: agree | map:<type> | page:launch | page:open |
  *             no-map | unfetched
- *   sentence  Open: open | launch | absent | unfetched.  Announced: dated | undated | open-wording | absent | unfetched
- *   card      registry attachmentId vs the rendered intro slot: placed | video | mismatch | missing | unrecorded
- *             ("no card recorded": the registry has no row for an Open campus) | unobserved (the packet does not
- *             expose the slot) | not-open (Announced page with no row)
+ *   sentence  Open: open (the decided sentence "<Campus> is open and enrolling.") | open-variant (amber: an open-state
+ *             sentence in other words, "is open K-8 for Fall 2026", "is now open with rolling admissions") | launch
+ *             (launching, coming or opening-in wording on an Open page) | absent | unfetched.
+ *             Announced: dated | undated | open-wording | absent | unfetched
+ *   card      the intro slot as the packet observes it, graded in three levels, then matched to the registry's approval:
+ *             red   launch (launch words in the vision reading, alt, filename or the observer's stale-launch signal) |
+ *                   other-campus (the slot names another campus) | placeholder | empty (no slot image and no campus
+ *                   video in the packet) | mismatch (the registry approves a different asset than the one rendered)
+ *             amber unapproved (plausible media, a campus video or a photo with no launch words, that no registry row
+ *                   approves; the detail names what is there)
+ *             green placed (the approved card is rendered) | video (the approved campus video is on the page)
+ *             grey  unobserved (approved video recorded; the packet exposes neither a slot image nor a campus video) |
+ *                   not-open (Announced page: launch-stage media is expected) | unfetched
  *   team      leadership registry DoA, DoP and Head of Schools on the page, in the decided order (DoA and DoP before
  *             the Head of Schools, all three before any guide): ordered | misordered | missing | no-cards |
  *             unrecorded | no-leadership | unfetched
@@ -44,11 +62,16 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
-export const REPORT_VERSION = '0.1'
+export const REPORT_VERSION = '0.2'
 export const COLUMNS = ['state', 'sentence', 'card', 'team', 'packet', 'ctas', 'guide']
 export const COLUMN_LABELS = { state: 'State', sentence: 'Status sentence', card: 'Intro card', team: 'Team section', packet: 'Packet', ctas: 'CTAs', guide: 'Guide video' }
-export const COLORS = ['green', 'red', 'grey']
-export const COLOR_MARK = { green: '\u{1F7E2}', red: '\u{1F534}', grey: '⚪' }
+export const COLORS = ['green', 'amber', 'red', 'grey']
+export const COLOR_MARK = { green: '\u{1F7E2}', amber: '\u{1F7E1}', red: '\u{1F534}', grey: '⚪' }
+/** A YouTube video on this many campus pages or more is site-wide content (the "30 Days to a Different Kid" trio), not a campus video. */
+export const SHARED_VIDEO_PAGES = 4
+/** Below this tesseract confidence a vision reading is noise (a photo read at 25) and is neither quoted nor searched for launch words. */
+export const VISION_MIN_CONFIDENCE = 60
+export const PLACEHOLDER_MEDIA = /placeholder|\blorem\b|\bsample\b/i
 export const PUBLIC_HOSTS = ['alpha.school', 'www.alpha.school']
 export const REGISTRY_FILES = {
   pages: 'registry/campus-pages.json',
@@ -58,8 +81,17 @@ export const REGISTRY_FILES = {
   ctaExceptions: 'registry/campus-cta-exceptions.json',
 }
 /** Launch-era wording (tests/page-check.mjs LAUNCH_WORDS) plus the sentence forms n8n writes on Announced pages. */
-export const LAUNCH_WORDS = [/\bComing\s+Soon\b/i, /\bComing\s+(?:Fall|Spring|Winter|Summer)\b/i, /\bis\s+launching\b/i, /\bLaunching\s+(?:in\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bOpening\s+(?:in\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bopens\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\b/i]
+export const LAUNCH_WORDS = [/\bComing\s+Soon\b/i, /\bComing\s+(?:in\s+|this\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bis\s+launching\b/i, /\bLaunching\s+(?:in\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bOpening\s+(?:in\s+)?(?:Fall|Spring|Winter|Summer)\b/i, /\bopens\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\b/i]
+/**
+ * Launch words painted into a slot image (the check bundle's campus.intro.media.current literals.launchWords): the sentence
+ * list plus the forms a launch card carries ("Opening Soon", "Now Enrolling Fall 2026", a bare season and year). Only the
+ * card cell uses these; "for Fall 2026" in an open sentence is not launch wording.
+ */
+export const SLOT_LAUNCH_WORDS = [...LAUNCH_WORDS, /\bOpening\s+Soon\b/i, /\b(?:Now\s+)?Enrolling\s+(?:Fall|Spring|Winter|Summer)\b/i, /\bLaunching\b/i, /\b(?:Fall|Spring|Winter|Summer)\s*[.,]?\s*20\d\d\b/i]
+/** The decided open sentence (docs/decisions.md: "<Campus> is open and enrolling."). */
 export const OPEN_SENTENCE = /\bis\s+(?:now\s+)?open\s+and\s+enrolling\b/i
+/** Any other open-state sentence about the campus: "Alpha Charlotte is open K-8 for Fall 2026", "Alpha Kirkland is now open with rolling admissions". */
+export const OPEN_VARIANT = /\bAlpha\s+[A-Z][^.!?\n]{0,60}?\b(?:is|are)\s+(?:now\s+)?open\b[^.!?\n]*/
 export const DATED_LAUNCH = /(?:opens|launching|opening|coming)\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\s+20\d\d/i
 export const PLACEHOLDER_PACKET = /update link|\[|placeholder/i
 export const GUIDE_SECTION = /\bMeet\s+Your\s+Alpha\b[^.]{0,60}\bGuides?\b/i
@@ -108,9 +140,38 @@ export function loadPacket(dir, { filerReport = null } = {}) {
   if (!Array.isArray(sources.campusPages)) throw new SiteTruthError('BAD_PACKET', `${sourcesFile} has no campusPages[] (mode ${manifest.mode || 'unknown'})`)
   const incidents = readJsonIf(path.join(dir, 'incidents.json')) || []
   const findings = readJsonIf(path.join(dir, 'findings.json')) || []
+  const vision = readJsonIf(path.join(dir, 'vision.json'))
+  const browser = readJsonIf(path.join(dir, 'browser.json'))
   const filerReportFile = filerReport || path.join(dir, '..', 'filer-report.json')
   const filer = readJsonIf(filerReportFile)
-  return { dir: path.resolve(dir), manifest, sources, incidents, findings, filer, filerReportFile: filer ? path.resolve(filerReportFile) : null }
+  return { dir: path.resolve(dir), manifest, sources, incidents, findings, filer, filerReportFile: filer ? path.resolve(filerReportFile) : null, vision: visionIndex(vision), embeds: embedIndex(browser) }
+}
+
+/** vision.json images grouped by canonical page URL (the packet's OCR readings; absent on an events-mode or older packet). */
+export function visionIndex(vision) {
+  const index = new Map()
+  for (const image of vision?.images || []) {
+    const key = canonicalUrl(image.pageUrl)
+    if (!key) continue
+    if (!index.has(key)) index.set(key, [])
+    index.get(key).push(image)
+  }
+  return index
+}
+
+/** browser.json embed titles keyed by canonical page URL then video id (only YouTube embeds are kept). */
+export function embedIndex(browser) {
+  const index = new Map()
+  for (const entry of Array.isArray(browser) ? browser : []) {
+    const key = canonicalUrl(entry.url || entry.finalUrl)
+    if (!key) continue
+    if (!index.has(key)) index.set(key, new Map())
+    for (const embed of entry.embeds || []) {
+      const id = videoId(embed.url)
+      if (id && !index.get(key).has(id) && embed.title) index.get(key).set(id, String(embed.title).replace(/\s*-\s*YouTube\s*$/i, '').trim())
+    }
+  }
+  return index
 }
 
 export function loadRegistries(root = path.join(here, '..')) {
@@ -188,18 +249,28 @@ function cell(color, reason, detail = null) {
 
 // ---------- cells ----------
 
+/**
+ * Open: the decided sentence is green; launching, coming or opening-in wording is red whatever else the intro says; an
+ * open-state sentence in other words is amber (a rewording, not a repair); nothing of the kind is red absent.
+ */
 export function sentenceCell(page, state) {
   if (!page) return cell('grey', 'unfetched', 'page not in the packet')
   const text = String(page.pageOwnedText || page.text || '')
   const open = text.match(OPEN_SENTENCE)
+  const variant = open ? null : text.match(OPEN_VARIANT)
   const launch = LAUNCH_WORDS.map((re) => text.match(re)?.[0]).filter(Boolean)
   if (state === 'Open') {
-    if (launch.length && !open) return cell('red', 'launch', `launch wording on an Open page: ${launch.join(', ')}`)
-    if (launch.length && open) return cell('red', 'launch', `open sentence present but launch wording remains: ${launch.join(', ')}`)
+    if (launch.length && !open && !variant) return cell('red', 'launch', `launch wording on an Open page: ${launch.join(', ')}`)
+    if (launch.length) return cell('red', 'launch', `open sentence present but launch wording remains: ${launch.join(', ')}`)
     if (open) return cell('green', 'open', open[0])
-    return cell('red', 'absent', 'no "is open and enrolling" sentence in the intro')
+    if (variant) {
+      const sentence = variant[0].trim()
+      const subject = sentence.match(/^(Alpha\s+.*?)\s+(?:is|are)\b/)?.[1] || 'the campus'
+      return cell('amber', 'open-variant', `open, non-standard wording: "${sentence}."; the decided sentence is "${subject} is open and enrolling."`)
+    }
+    return cell('red', 'absent', 'no open-state sentence about the campus in the intro (decided: "<Campus> is open and enrolling.")')
   }
-  if (open) return cell('red', 'open-wording', `Announced page says "${open[0]}"`)
+  if (open || variant) return cell('red', 'open-wording', `Announced page says "${(open || variant)[0].trim()}"`)
   if (DATED_LAUNCH.test(text)) return cell('green', 'dated', text.match(DATED_LAUNCH)[0])
   if (launch.length) return cell('red', 'undated', `${launch.join(', ')} names no month or season and year`)
   return cell('red', 'absent', 'no launch statement in the intro')
@@ -221,28 +292,131 @@ export function renderedSlot(page) {
   const slot = first(images, (img) => img.containerId === 'content_image') || null
   if (!slot) return null
   const id = slot.classes?.match(/wp-image-(\d+)/)?.[1]
-  return { attachmentId: id ? Number(id) : null, src: slot.src, file: String(slot.src || '').split('/').pop(), alt: slot.alt || '', staleLaunchSignal: Boolean(slot.staleLaunchSignal) }
+  return { attachmentId: id ? Number(id) : null, src: slot.src, file: String(slot.src || '').split('/').pop(), alt: slot.alt || '', nearbyText: slot.nearbyText || '', staleLaunchSignal: Boolean(slot.staleLaunchSignal) }
 }
 
-export function cardCell(registry, slug, page, state) {
+/** The YouTube id of a watch, share or embed URL, else null. */
+export function videoId(href) {
+  const value = String(href || '')
+  const match = value.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/) || value.match(/[?&]v=([A-Za-z0-9_-]{6,})/) || value.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/)
+  return match ? match[1] : null
+}
+
+/** Video ids that appear on SHARED_VIDEO_PAGES or more of the packet's campus pages: site-wide content, never a campus video. */
+export function sharedVideoIds(campusPages, threshold = SHARED_VIDEO_PAGES) {
+  const count = new Map()
+  for (const page of campusPages || []) for (const id of new Set((page.media?.youtubeVideos || []).map((v) => videoId(v.href)).filter(Boolean))) count.set(id, (count.get(id) || 0) + 1)
+  return new Set([...count.entries()].filter(([, n]) => n >= threshold).map(([id]) => id))
+}
+
+/** The same asset at any WordPress size: /2026/01/Piedmont-1024x704.webp and /2026/01/Piedmont.webp. */
+function assetKey(src) {
+  return String(src || '').replace(/-\d+x\d+(?=\.[a-z0-9]+$)/i, '').replace(/-scaled(?=\.[a-z0-9]+$)/i, '').toLowerCase()
+}
+
+const cleanVision = (text) => String(text || '').replace(/\s+/g, ' ').trim()
+const fileWords = (file) => decodeURIComponent(String(file || '')).replace(/\.[a-z0-9]+$/i, '').replace(/-\d+x\d+$/, '').replace(/[-_]+/g, ' ')
+
+const bareName = (name) => String(name).replace(/^Alpha\s+/i, '').trim()
+const namePattern = (bare) => new RegExp(`(?<![a-z])${bare.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![a-z])`, 'i')
+
+/** The page's own campus is named in the text (any registry name for the slug, with or without "Alpha"). */
+export function namesOwnCampus(text, slug, pages) {
+  const haystack = String(text || '')
+  return (pages?.campuses?.[slug]?.names || []).some((n) => bareName(n) && namePattern(bareName(n)).test(haystack))
+}
+
+/** Another registered campus named in the slot's alt, filename or reading; the page's own names (and names they contain) never count. */
+export function otherCampusIn(texts, slug, pages) {
+  const own = (pages?.campuses?.[slug]?.names || []).map((n) => bareName(n).toLowerCase())
+  const haystack = texts.filter(Boolean).map((t) => String(t).toLowerCase()).join(' \n ')
+  if (!haystack.trim()) return null
+  for (const [other, entry] of Object.entries(pages?.campuses || {})) {
+    if (other === slug) continue
+    for (const name of entry.names || []) {
+      const bare = bareName(name)
+      if (!bare || own.some((o) => o.includes(bare.toLowerCase()))) continue
+      if (namePattern(bare).test(haystack)) return { slug: other, name: String(name) }
+    }
+  }
+  return null
+}
+
+/**
+ * What the intro slot holds, from the packet alone: the rendered content_image (with the vision pass's reading when it
+ * is confident), the page's campus videos (YouTube ids that are not site-wide, titled from browser.json embeds), and
+ * the launch words, other-campus name or placeholder found in any of it.
+ */
+export function observeSlot(page, { vision = [], embeds = new Map(), shared = new Set(), pages = null, slug = null } = {}) {
+  if (!page) return null
+  const image = renderedSlot(page)
+  if (image) {
+    const reading = (vision || []).find((v) => v.slot === 'intro-card' && assetKey(v.src || v.url) === assetKey(image.src)) || (vision || []).find((v) => v.slot === 'intro-card') || null
+    image.confidence = Number.isFinite(reading?.confidence) ? reading.confidence : null
+    image.text = reading && image.confidence >= VISION_MIN_CONFIDENCE ? cleanVision(reading.visionText) : null
+    image.read = Boolean(reading)
+  }
+  // A campus video: a YouTube id that is not site-wide and whose embed title (when known) does not name another campus only
+  // (the Scottsdale testimonial embedded on other campus pages is Scottsdale's, however few pages a trimmed packet holds).
+  const seen = new Set()
+  const videos = []
+  for (const v of page.media?.youtubeVideos || []) {
+    const id = videoId(v.href)
+    if (!id || shared.has(id) || seen.has(id)) continue
+    seen.add(id)
+    const title = embeds?.get?.(id) || null
+    if (title && otherCampusIn([title], slug, pages) && !namesOwnCampus(title, slug, pages)) continue
+    videos.push({ id, href: v.href, title })
+  }
+  const texts = image ? [image.text, image.alt, fileWords(image.file), image.nearbyText] : []
+  const launch = []
+  for (const text of texts.filter(Boolean)) for (const re of SLOT_LAUNCH_WORDS) { const hit = text.match(re)?.[0]; if (hit && !launch.includes(hit)) launch.push(hit) }
+  if (image && (image.staleLaunchSignal || (page.media?.staleLaunchSignals || []).length)) launch.push('observer stale-launch signal')
+  const otherCampus = image ? otherCampusIn([image.alt, fileWords(image.file), image.text], slug, pages) : null
+  const placeholder = Boolean(image && (PLACEHOLDER_MEDIA.test(image.alt) || PLACEHOLDER_MEDIA.test(fileWords(image.file))))
+  return { image, videos, launch, otherCampus, placeholder }
+}
+
+function describeImage(image) {
+  const text = image.text ? `reads "${image.text}"` : (image.read ? `no text read (OCR confidence ${image.confidence ?? '?'})` : 'not read by the vision pass')
+  return `attachment ${image.attachmentId ?? '?'} (${image.file}, alt ${image.alt ? `"${image.alt}"` : 'empty'}, ${text})`
+}
+
+const describeVideos = (videos) => videos.map((v) => (v.title ? `"${v.title}" (${v.id})` : v.id)).join(', ')
+
+/**
+ * Intro card cell: the observation is graded first (red when the slot shows launch words, another campus, a placeholder
+ * or nothing; amber when it holds plausible media that no registry row approves; green when the registry approves what
+ * is rendered), and the registry contributes the approval only. `observation` is observeSlot(page, ...) when the caller
+ * has the packet's vision readings and shared-video set; without it the page alone is observed.
+ */
+export function cardCell(registry, slug, page, state, observation = undefined) {
   const row = registry?.campuses?.[slug]
-  const slot = renderedSlot(page)
-  const hasVideo = Boolean(page?.media?.hasYouTubeVideo || page?.media?.youtubeVideos?.length)
-  if (!row) {
-    if (state !== 'Open') return cell('grey', 'not-open', 'no open-media row; Announced pages carry launch-stage media')
-    return cell('red', 'unrecorded', `no card recorded for Open campus ${slug}${slot ? `; slot shows attachment ${slot.attachmentId ?? '?'} (${slot.file})` : ''}`)
+  const approvedCard = row?.openMedia === 'card' && Number.isInteger(row.attachmentId) ? row.attachmentId : null
+  const approvedVideo = row?.openMedia === 'video'
+  if (!page) return cell('grey', 'unfetched', `${approvedCard ? `card ${approvedCard} recorded` : approvedVideo ? 'approved video recorded' : 'no approved media recorded'}; page not in the packet`)
+  const obs = observation === undefined ? observeSlot(page, { slug }) : observation
+  const image = obs?.image || null
+  const videos = obs?.videos || []
+  const there = image ? describeImage(image) : videos.length ? `campus video ${describeVideos(videos)}` : 'no slot image and no campus video'
+  if (state !== 'Open') return cell('grey', 'not-open', `Announced page (launch-stage media expected): ${there}`)
+  if (obs?.launch?.length) return cell('red', 'launch', `${there}; launch wording: ${obs.launch.join(', ')}`)
+  if (obs?.otherCampus) return cell('red', 'other-campus', `${there} names ${obs.otherCampus.name}`)
+  if (obs?.placeholder) return cell('red', 'placeholder', there)
+  if (image) {
+    if (approvedCard && image.attachmentId === approvedCard) return cell('green', 'placed', there)
+    if (approvedCard) return cell('red', 'mismatch', `registry approves attachment ${approvedCard}; slot shows ${there}`)
+    if (approvedVideo) return cell('red', 'mismatch', `registry approves a campus video; slot shows ${there}`)
+    return cell('amber', 'unapproved', `${there}: no registry row approves it; approve it (record the attachment) or replace it with the Open and Enrolling card`)
   }
-  if (row.status === 'missing' || row.openMedia === null) return cell('red', 'missing', row.current || row.note || 'registry: no approved asset yet')
-  if (row.openMedia === 'video') {
-    if (!page) return cell('grey', 'unfetched', 'approved video recorded; page not in the packet')
-    if (hasVideo) return cell('green', 'video', row.note || 'approved campus video')
-    if (slot) return cell('red', 'mismatch', `registry: approved video; slot shows attachment ${slot.attachmentId ?? '?'} (${slot.file})`)
-    return cell('grey', 'unobserved', 'approved video recorded; the packet exposes no video or slot image')
+  if (videos.length) {
+    if (approvedVideo) return cell('green', 'video', there)
+    if (approvedCard) return cell('red', 'mismatch', `registry approves attachment ${approvedCard}; the slot shows no image and the page carries ${there}`)
+    return cell('amber', 'unapproved', `${there} on the page and no slot image: no registry row approves it; approve it (record openMedia video) or place the Open and Enrolling card`)
   }
-  if (!page) return cell('grey', 'unfetched', `card ${row.attachmentId} recorded; page not in the packet`)
-  if (!slot) return cell('grey', 'unobserved', `card ${row.attachmentId} recorded; the packet exposes no intro slot image`)
-  if (slot.attachmentId === row.attachmentId) return cell('green', 'placed', `attachment ${row.attachmentId} (${slot.file})`)
-  return cell('red', 'mismatch', `registry attachment ${row.attachmentId}; slot shows ${slot.attachmentId ?? '?'} (${slot.file})`)
+  if (approvedVideo) return cell('grey', 'unobserved', 'approved video recorded; the packet exposes neither a slot image nor a campus video')
+  if (approvedCard) return cell('red', 'empty', `registry approves attachment ${approvedCard}; the packet renders no intro slot image`)
+  return cell('red', 'empty', `${there} in the packet (an mp4 video widget is not visible to the packet); no registry row approves anything`)
 }
 
 export function teamCell(registry, slug, page) {
@@ -387,15 +561,20 @@ export function buildReport(packet, registries, { now = new Date() } = {}) {
   const pagesByProgram = new Map((sources.campusPages || []).map((p) => [p.program?.id, p]))
   const pagesByUrl = new Map((sources.campusPages || []).map((p) => [canonicalUrl(p.finalUrl || p.url), p]))
   const tickets = ticketIndex(findings, filer)
+  const shared = sharedVideoIds(sources.campusPages)
+  const vision = packet.vision instanceof Map ? packet.vision : visionIndex(packet.vision)
+  const embeds = packet.embeds instanceof Map ? packet.embeds : embedIndex(packet.embeds)
   const rows = programRows(sources).map((program) => {
     const slug = slugFor(program.url, registries.pages)
     const page = pagesByProgram.get(program.programId) || pagesByUrl.get(program.url) || null
     const mapLocation = mapById.get(program.programId) || null
     const sentence = sentenceCell(page, program.type)
+    const pageKey = page ? canonicalUrl(page.finalUrl || page.url) : null
+    const observation = page ? observeSlot(page, { vision: vision.get(pageKey) || vision.get(program.url) || [], embeds: embeds.get(pageKey) || embeds.get(program.url) || new Map(), shared, pages: registries.pages, slug }) : null
     const cells = {
       state: stateCell(program, mapLocation, page, sentence),
       sentence,
-      card: cardCell(registries.openMedia, slug, page, program.type),
+      card: cardCell(registries.openMedia, slug, page, program.type, observation),
       team: teamCell(registries.leadership, slug, page),
       packet: packetCell(registries.packets, slug, page),
       ctas: ctasCell(registries.ctaExceptions, slug, page, { state: program.type, now }),
@@ -408,15 +587,20 @@ export function buildReport(packet, registries, { now = new Date() } = {}) {
   const perSlug = new Map()
   for (const row of rows) perSlug.set(row.slug, (perSlug.get(row.slug) || 0) + 1)
   for (const row of rows) if (perSlug.get(row.slug) > 1) { row.sharedPage = true; row.campus = `${row.campus} (HubSpot: ${row.hubspotName})` }
-  const counts = { open: 0, announced: 0, red: 0, byColumn: {} }
-  for (const column of COLUMNS) counts.byColumn[column] = { green: 0, red: 0, grey: 0 }
+  const counts = { open: 0, announced: 0, red: 0, amber: 0, byColumn: {} }
+  for (const column of COLUMNS) counts.byColumn[column] = { green: 0, amber: 0, red: 0, grey: 0 }
   for (const row of rows) {
     if (row.state === 'Open') counts.open++; else counts.announced++
-    for (const column of COLUMNS) { counts.byColumn[column][row.cells[column].color]++; if (row.cells[column].color === 'red') counts.red++ }
+    for (const column of COLUMNS) { const color = row.cells[column].color; counts.byColumn[column][color]++; if (color === 'red') counts.red++; if (color === 'amber') counts.amber++ }
   }
   counts.redRows = rows.filter((r) => COLUMNS.some((c) => r.cells[c].color === 'red')).length
+  counts.amberRows = rows.filter((r) => COLUMNS.some((c) => r.cells[c].color === 'amber')).length
   counts.openRedByColumn = {}
-  for (const column of COLUMNS) counts.openRedByColumn[column] = rows.filter((r) => r.state === 'Open' && r.cells[column].color === 'red').length
+  counts.openAmberByColumn = {}
+  for (const column of COLUMNS) {
+    counts.openRedByColumn[column] = rows.filter((r) => r.state === 'Open' && r.cells[column].color === 'red').length
+    counts.openAmberByColumn[column] = rows.filter((r) => r.state === 'Open' && r.cells[column].color === 'amber').length
+  }
   return {
     reportVersion: REPORT_VERSION,
     generatedAt: now.toISOString(),
@@ -430,7 +614,7 @@ export function buildReport(packet, registries, { now = new Date() } = {}) {
 
 // ---------- markdown ----------
 
-/** A green cell prints only its reason; the incident date and ticket belong to a red or grey cell (the JSON keeps them on every cell). */
+/** A green cell prints only its reason; the incident date and ticket belong to a red, amber or grey cell (the JSON keeps them on every cell). */
 function renderCell(c) {
   const parts = [`${COLOR_MARK[c.color]} ${c.reason}`]
   if (c.color === 'green') return parts[0]
@@ -453,9 +637,9 @@ function renderTable(rows, title) {
   return lines
 }
 
-function renderDetails(rows) {
-  const lines = ['## Red cells, in detail', '']
-  const reds = rows.flatMap((row) => COLUMNS.filter((c) => row.cells[c].color === 'red').map((c) => ({ row, column: c, cell: row.cells[c] })))
+function renderDetails(rows, color, title) {
+  const lines = [`## ${title}`, '']
+  const reds = rows.flatMap((row) => COLUMNS.filter((c) => row.cells[c].color === color).map((c) => ({ row, column: c, cell: row.cells[c] })))
   if (!reds.length) { lines.push('_none_', ''); return lines }
   for (const { row, column, cell: c } of reds) {
     const refs = [c.firstSeen ? `first seen ${c.firstSeen}` : 'no incident in the packet', c.incidents?.length ? c.incidents.join(', ') : '', c.tickets?.length ? 'ticket ' + c.tickets.map((t) => `${t.id} (${t.via})`).join(', ') : ''].filter(Boolean).join('; ')
@@ -473,18 +657,20 @@ export function renderMarkdown(report) {
     '',
     `Packet run \`${packet.runId || 'unknown'}\` (${packet.mode || 'unknown'} mode, check bundle ${packet.bundleVersion || 'unknown'}, completed ${packet.completedAt || 'unknown'}). Report generated ${report.generatedAt} by tests/site-truth-report.mjs ${report.reportVersion}.`,
     '',
-    `Derived from the packet's sources (HubSpot Programs, growth map, rendered campus pages) and the playbook registries, never from tickets. Programs from ${packet.programsSource}; ${packet.campusPages} campus pages in the packet. ${COLOR_MARK.green} as required, ${COLOR_MARK.red} defect, ${COLOR_MARK.grey} not observable, not required, or advisory; a dated cell names when the observer first saw the incident and the ticket it waits on when one is known.`,
+    `Derived from the packet's sources (HubSpot Programs, growth map, rendered campus pages, the vision pass's readings) and the playbook registries, never from tickets or registry notes. Programs from ${packet.programsSource}; ${packet.campusPages} campus pages in the packet. ${COLOR_MARK.green} as decided, ${COLOR_MARK.amber} plausible but not approved or not the decided wording (needs an approval or a rewording, never counted as red), ${COLOR_MARK.red} defect, ${COLOR_MARK.grey} not observable, not required, or advisory; a dated cell names when the observer first saw the incident and the ticket it waits on when one is known.`,
     '',
     ...renderTable(open, 'Open campuses'),
     ...renderTable(announced, 'Announced campuses'),
-    ...renderDetails(rows),
+    ...renderDetails(rows, 'red', 'Red cells, in detail'),
+    ...renderDetails(rows, 'amber', 'Amber cells (needs approval or rewording), in detail'),
     '## Counts',
     '',
-    `- Open campuses: ${counts.open}; Announced campuses: ${counts.announced}; rows with a red cell: ${counts.redRows}; red cells: ${counts.red}.`,
+    `- Open campuses: ${counts.open}; Announced campuses: ${counts.announced}; rows with a red cell: ${counts.redRows}; red cells: ${counts.red}; rows with an amber cell: ${counts.amberRows}; amber cells (needs approval): ${counts.amber}.`,
     `- Red by column (Open only): ${COLUMNS.map((c) => `${COLUMN_LABELS[c]} ${counts.openRedByColumn[c]}`).join(', ')}.`,
-    `- All rows by column: ${COLUMNS.map((c) => `${COLUMN_LABELS[c]} ${COLOR_MARK.green}${counts.byColumn[c].green} ${COLOR_MARK.red}${counts.byColumn[c].red} ${COLOR_MARK.grey}${counts.byColumn[c].grey}`).join('; ')}.`,
+    `- Needs approval by column (Open only, amber): ${COLUMNS.map((c) => `${COLUMN_LABELS[c]} ${counts.openAmberByColumn[c]}`).join(', ')}.`,
+    `- All rows by column: ${COLUMNS.map((c) => `${COLUMN_LABELS[c]} ${COLOR_MARK.green}${counts.byColumn[c].green} ${COLOR_MARK.amber}${counts.byColumn[c].amber} ${COLOR_MARK.red}${counts.byColumn[c].red} ${COLOR_MARK.grey}${counts.byColumn[c].grey}`).join('; ')}.`,
     '',
-    'Reason words: state agree | map:<type> | page:launch | page:open | no-map | unfetched. Sentence (Open) open | launch | absent; (Announced) dated | undated | open-wording | absent. Card placed | video | mismatch | missing | unrecorded (no card recorded) | unobserved | not-open. Team ordered | misordered | missing | no-cards | unrecorded | no-leadership. Packet visible | interim | placeholder | drift | absent | unrecorded. CTAs present | missing | conditional. Guide present | absent (advisory).',
+    'Reason words: state agree | map:<type> | page:launch | page:open | no-map | unfetched. Sentence (Open) open | open-variant (amber: open-state wording other than "<Campus> is open and enrolling.") | launch | absent; (Announced) dated | undated | open-wording | absent. Card (from the observed slot) launch | other-campus | placeholder | empty | mismatch (red) | unapproved (amber: plausible media with no registry approval) | placed | video (green) | unobserved | not-open (grey). Team ordered | misordered | missing | no-cards | unrecorded | no-leadership. Packet visible | interim | placeholder | drift | absent | unrecorded. CTAs present | missing | conditional. Guide present | absent (advisory).',
     '',
   ]
   return lines.join('\n')
@@ -503,7 +689,7 @@ export async function main(argv = process.argv.slice(2), io = { log: console.log
   if (typeof args.out === 'string') { fs.mkdirSync(path.dirname(path.resolve(args.out)), { recursive: true }); fs.writeFileSync(args.out, markdown) }
   if (typeof args.json === 'string') { fs.mkdirSync(path.dirname(path.resolve(args.json)), { recursive: true }); fs.writeFileSync(args.json, JSON.stringify(report, null, 2) + '\n') }
   if (typeof args.out !== 'string' && typeof args.json !== 'string') io.log(markdown)
-  else io.log(`site truth: ${report.counts.open} Open, ${report.counts.announced} Announced, ${report.counts.red} red cells in ${report.counts.redRows} rows; ${typeof args.out === 'string' ? args.out : ''} ${typeof args.json === 'string' ? args.json : ''}`.trim())
+  else io.log(`site truth: ${report.counts.open} Open, ${report.counts.announced} Announced, ${report.counts.red} red cells in ${report.counts.redRows} rows, ${report.counts.amber} amber cells in ${report.counts.amberRows} rows; ${typeof args.out === 'string' ? args.out : ''} ${typeof args.json === 'string' ? args.json : ''}`.trim())
   return report
 }
 

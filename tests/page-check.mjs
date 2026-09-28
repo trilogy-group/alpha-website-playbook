@@ -181,7 +181,7 @@ async function checkPage(url, stateOverride) {
   const entry = media.campuses[slug]
   const hasCard = /Open-and-Enrolling\.png/.test(mainHtml)
   const hasVideo = /elementor-widget-video|youtube\.com\/embed|youtu\.be/.test(mainHtml)
-  if (state === 'Open') add('open-intro-media-approved', hasCard || (entry?.openMedia === 'video' && hasVideo), hasCard ? 'Open and Enrolling card' : (entry?.openMedia === 'video' ? 'approved video' : (entry ? `registry: ${entry.status}${entry.current ? ' (' + entry.current + ')' : ''}` : 'no registry entry')))
+  if (state === 'Open') add('open-intro-media-approved', hasCard || (entry?.openMedia === 'video' && hasVideo), hasCard ? 'Open and Enrolling card' : (entry?.openMedia === 'video' ? 'approved video' : (entry ? `registry: ${entry.status}` : 'no registry entry')))
 
   // synced targets: every CSS ID the n8n workflow expects must still exist on an Open or Announced campus page
   if (state === 'Open' || state === 'Announced') {

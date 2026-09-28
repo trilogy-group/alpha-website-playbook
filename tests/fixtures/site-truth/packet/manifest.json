@@ -1,26 +1,26 @@
 {
  "schemaVersion": 2,
  "system": "alpha-site-observer",
- "runId": "site-full-2026-09-25T10-27-41-079Z",
+ "runId": "site-full-2026-09-28T06-22-58-124Z",
  "mode": "full",
- "startedAt": "2026-09-25T10:27:41.079Z",
- "completedAt": "2026-09-25T10:36:26.041Z",
+ "startedAt": "2026-09-28T06:22:58.124Z",
+ "completedAt": "2026-09-28T06:35:56.214Z",
  "authority": "read-only-observer",
- "bundleVersion": "1.1",
- "sha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f",
+ "bundleVersion": "1.5",
+ "sha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120",
  "checkBundle": {
   "status": "verified",
-  "version": "1.1",
-  "sha256": "907cbd5e58b5b8ca3813199dd917d4722199565ba2620cf1e9ae3f1fc5c11f6f"
+  "version": "1.5",
+  "sha256": "a5b71c8e9e4018b88bf327b8c6a21b58addff653de78c880e631721bc135f120"
  },
- "findingsObserved": 65,
- "activeIncidents": 179,
+ "findingsObserved": 89,
+ "activeIncidents": 194,
  "counts": {
-  "low": 11,
-  "advisory": 7,
+  "low": 22,
+  "advisory": 3,
   "critical": 3,
-  "high": 134,
-  "medium": 24
+  "high": 151,
+  "medium": 15
  },
- "fixtureNote": "trimmed by tests/fixtures/site-truth (eleven campus pages of run site-full-2026-09-25T10-27-41-079Z, GitHub run 36123781000)"
+ "fixtureNote": "trimmed by tests/fixtures/site-truth (19 campus pages of run site-full-2026-09-28T06-22-58-124Z, GitHub run 36386076572): sources (programs, map pins, pages without eventWidget), findings and active incidents on those pages (incident run history dropped), vision.json readings and browser.json embeds for those pages, and the filer report's ticket references"
 }

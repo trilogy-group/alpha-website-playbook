@@ -1,0 +1,1576 @@
+[
+ {
+  "route": {
+   "id": "campus-program-26445615176",
+   "kind": "campus",
+   "url": "https://alpha.school/miami/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/miami/",
+  "finalUrl": "https://alpha.school/miami/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/pETkSYZoGWc?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=1&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=3",
+    "title": "Welcome to Alpha School Miami - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/wETefRuQ0y0?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Scottsdale - Learning that Mirrors Real Life - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-fbd9621 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-26445615176",
+   "kind": "campus",
+   "url": "https://alpha.school/miami/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/miami/",
+  "finalUrl": "https://alpha.school/miami/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/pETkSYZoGWc?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=1&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "Welcome to Alpha School Miami - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/wETefRuQ0y0?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Scottsdale - Learning that Mirrors Real Life - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Fmiami%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-fbd9621 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-26463204876",
+   "kind": "campus",
+   "url": "https://alpha.school/new-york-city/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/new-york-city/",
+  "finalUrl": "https://alpha.school/new-york-city/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/9ywA5oNmYaM?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=4",
+    "title": "From Good to Great | Alpha New York - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/3oIkzR4xQ5s?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "Empowering Students to Go Further | Alpha New York - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/VdcB9F_LGQg?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "Reigniting Motivation at Alpha New York - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/oNgmrvkppIk?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "Turning Test Anxiety Into Motivation | Alpha New York - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-53a36f2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-26463204876",
+   "kind": "campus",
+   "url": "https://alpha.school/new-york-city/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/new-york-city/",
+  "finalUrl": "https://alpha.school/new-york-city/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/9ywA5oNmYaM?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "From Good to Great | Alpha New York - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/3oIkzR4xQ5s?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "Empowering Students to Go Further | Alpha New York - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/VdcB9F_LGQg?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "Reigniting Motivation at Alpha New York - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/oNgmrvkppIk?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Fnew-york-city%2F&aoriginsup=1&vf=1",
+    "title": "Turning Test Anxiety Into Motivation | Alpha New York - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-53a36f2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-26463204885",
+   "kind": "campus",
+   "url": "https://alpha.school/fort-worth/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/fort-worth/",
+  "finalUrl": "https://alpha.school/fort-worth/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/roEuGtNR-GQ?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=1&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Limitless Learning Mindset I Alpha Fort Worth - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/770rUH1hImg?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Fort Worth: Where Kids Actually Want School on Saturdays - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/Y17gcitTJRY?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Kids Love Mondays At Alpha Fort Worth and Plano! - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/Ybc-R8PAu68?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Fort Worth - Learning Reimagined - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-f4b5501 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-26463204885",
+   "kind": "campus",
+   "url": "https://alpha.school/fort-worth/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/fort-worth/",
+  "finalUrl": "https://alpha.school/fort-worth/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/roEuGtNR-GQ?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=1&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Limitless Learning Mindset I Alpha Fort Worth - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/770rUH1hImg?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Fort Worth: Where Kids Actually Want School on Saturdays - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/Y17gcitTJRY?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Kids Love Mondays At Alpha Fort Worth and Plano! - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/Ybc-R8PAu68?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Ffort-worth%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Fort Worth - Learning Reimagined - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-f4b5501 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-29735717555",
+   "kind": "campus",
+   "url": "https://alpha.school/raleigh/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/raleigh/",
+  "finalUrl": "https://alpha.school/raleigh/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/eGB0P702a5U?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fraleigh%2F&aoriginsup=1&vf=4",
+    "title": "This Is Alpha School. (2 Hours. Top 1% Scores.) - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/WAhZdnk8Frw?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fraleigh%2F&aoriginsup=1&vf=1",
+    "title": "Meet Your Alpha Raleigh Guides! - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-ec96754 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-29735717555",
+   "kind": "campus",
+   "url": "https://alpha.school/raleigh/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/raleigh/",
+  "finalUrl": "https://alpha.school/raleigh/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/eGB0P702a5U?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fraleigh%2F&aoriginsup=1&vf=1",
+    "title": "This Is Alpha School. (2 Hours. Top 1% Scores.) - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/WAhZdnk8Frw?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fraleigh%2F&aoriginsup=1&vf=1",
+    "title": "Meet Your Alpha Raleigh Guides! - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-ec96754 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-29737764384",
+   "kind": "campus",
+   "url": "https://alpha.school/charlotte/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/charlotte/",
+  "finalUrl": "https://alpha.school/charlotte/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/iPidNvq5SNM?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "The Future of Education is Now in Charlotte - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/wETefRuQ0y0?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Scottsdale - Learning that Mirrors Real Life - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-86599ff elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-29737764384",
+   "kind": "campus",
+   "url": "https://alpha.school/charlotte/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/charlotte/",
+  "finalUrl": "https://alpha.school/charlotte/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/iPidNvq5SNM?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "The Future of Education is Now in Charlotte - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/wETefRuQ0y0?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "Alpha Scottsdale - Learning that Mirrors Real Life - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=7&forigin=https%3A%2F%2Falpha.school%2Fcharlotte%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-86599ff elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-38325891178",
+   "kind": "campus",
+   "url": "https://alpha.school/the-woodlands/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/the-woodlands/",
+  "finalUrl": "https://alpha.school/the-woodlands/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fthe-woodlands%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fthe-woodlands%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fthe-woodlands%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+    "url": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-7694"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-38325891178",
+   "kind": "campus",
+   "url": "https://alpha.school/the-woodlands/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/the-woodlands/",
+  "finalUrl": "https://alpha.school/the-woodlands/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fthe-woodlands%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fthe-woodlands%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fthe-woodlands%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+    "url": "https://alpha.school/wp-content/uploads/2025/10/The-Woodlands-TX.png",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-7694"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42698614786",
+   "kind": "campus",
+   "url": "https://alpha.school/east-bay/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/east-bay/",
+  "finalUrl": "https://alpha.school/east-bay/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Feast-bay%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Feast-bay%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Feast-bay%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-1024x704.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/01/Piedmont.webp",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-8550"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-53ee836 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42698614786",
+   "kind": "campus",
+   "url": "https://alpha.school/east-bay/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/east-bay/",
+  "finalUrl": "https://alpha.school/east-bay/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Feast-bay%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Feast-bay%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Feast-bay%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/Piedmont-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/01/Piedmont.webp",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-8550"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-53ee836 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42698676589",
+   "kind": "campus",
+   "url": "https://alpha.school/atlanta/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/atlanta/",
+  "finalUrl": "https://alpha.school/atlanta/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fatlanta%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fatlanta%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fatlanta%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-1024x576.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-scaled.webp",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-8790"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-ea24d5a elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42698676589",
+   "kind": "campus",
+   "url": "https://alpha.school/atlanta/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/atlanta/",
+  "finalUrl": "https://alpha.school/atlanta/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fatlanta%2F&aoriginsup=1&vf=4",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fatlanta%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fatlanta%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-768x432.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/03/Best-things-to-do-in-Atlanta-Header-scaled.webp",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-8790"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-ea24d5a elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42820443702",
+   "kind": "campus",
+   "url": "https://alpha.school/kirkland/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/kirkland/",
+  "finalUrl": "https://alpha.school/kirkland/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fkirkland%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fkirkland%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fkirkland%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9228-Kirkland-Open-and-Enrolling-1024x704.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9228-Kirkland-Open-and-Enrolling.png",
+    "alt": "Kirkland",
+    "classes": "attachment-large size-large wp-image-9818"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42820443702",
+   "kind": "campus",
+   "url": "https://alpha.school/kirkland/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/kirkland/",
+  "finalUrl": "https://alpha.school/kirkland/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fkirkland%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fkirkland%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fkirkland%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9228-Kirkland-Open-and-Enrolling-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9228-Kirkland-Open-and-Enrolling.png",
+    "alt": "Kirkland",
+    "classes": "attachment-large size-large wp-image-9818"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42820568924",
+   "kind": "campus",
+   "url": "https://alpha.school/boston/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/boston/",
+  "finalUrl": "https://alpha.school/boston/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fboston%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fboston%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fboston%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-1024x704.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling.png",
+    "alt": "Boston",
+    "classes": "attachment-large size-large wp-image-9826"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-42820568924",
+   "kind": "campus",
+   "url": "https://alpha.school/boston/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/boston/",
+  "finalUrl": "https://alpha.school/boston/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fboston%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fboston%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fboston%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9273-Boston-Open-and-Enrolling.png",
+    "alt": "Boston",
+    "classes": "attachment-large size-large wp-image-9826"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-49011192957",
+   "kind": "campus",
+   "url": "https://alpha.school/south-bay-la/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/south-bay-la/",
+  "finalUrl": "https://alpha.school/south-bay-la/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fsouth-bay-la%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fsouth-bay-la%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fsouth-bay-la%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-1024x704.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling.png",
+    "alt": "South Bay LA",
+    "classes": "attachment-large size-large wp-image-9824"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-49011192957",
+   "kind": "campus",
+   "url": "https://alpha.school/south-bay-la/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/south-bay-la/",
+  "finalUrl": "https://alpha.school/south-bay-la/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fsouth-bay-la%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fsouth-bay-la%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fsouth-bay-la%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9235-SouthBayLA-Open-and-Enrolling.png",
+    "alt": "South Bay LA",
+    "classes": "attachment-large size-large wp-image-9824"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-49011192959",
+   "kind": "campus",
+   "url": "https://alpha.school/greenwich/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/greenwich/",
+  "finalUrl": "https://alpha.school/greenwich/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=6",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=6",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=6",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1024x704.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling.png",
+    "alt": "Greenwich",
+    "classes": "attachment-large size-large wp-image-9821"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-49011192959",
+   "kind": "campus",
+   "url": "https://alpha.school/greenwich/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/greenwich/",
+  "finalUrl": "https://alpha.school/greenwich/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=3",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=6",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=2",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling.png",
+    "alt": "Greenwich",
+    "classes": "attachment-large size-large wp-image-9821"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-50888725544",
+   "kind": "campus",
+   "url": "https://alpha.school/lake-travis/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/lake-travis/",
+  "finalUrl": "https://alpha.school/lake-travis/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Flake-travis%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Flake-travis%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Flake-travis%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-50888725544",
+   "kind": "campus",
+   "url": "https://alpha.school/lake-travis/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/lake-travis/",
+  "finalUrl": "https://alpha.school/lake-travis/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Flake-travis%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Flake-travis%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Flake-travis%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/01/dorado-beach-min.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-50893567086",
+   "kind": "campus",
+   "url": "https://alpha.school/carrollton/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/carrollton/",
+  "finalUrl": "https://alpha.school/carrollton/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fcarrollton%2F&aoriginsup=1&vf=6",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fcarrollton%2F&aoriginsup=1&vf=6",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fcarrollton%2F&aoriginsup=1&vf=6",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-1024x704.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/06/Subtitle-22.webp",
+    "alt": "Carrollton",
+    "classes": "attachment-large size-large wp-image-9284"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-50893567086",
+   "kind": "campus",
+   "url": "https://alpha.school/carrollton/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/carrollton/",
+  "finalUrl": "https://alpha.school/carrollton/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fcarrollton%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fcarrollton%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fcarrollton%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/06/Subtitle-22-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/06/Subtitle-22.webp",
+    "alt": "Carrollton",
+    "classes": "attachment-large size-large wp-image-9284"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-51219627099",
+   "kind": "campus",
+   "url": "https://alpha.school/boca-raton/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/boca-raton/",
+  "finalUrl": "https://alpha.school/boca-raton/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fboca-raton%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fboca-raton%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fboca-raton%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-1024x704.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling.png",
+    "alt": "Boca Raton",
+    "classes": "attachment-large size-large wp-image-9822"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-51219627099",
+   "kind": "campus",
+   "url": "https://alpha.school/boca-raton/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/boca-raton/",
+  "finalUrl": "https://alpha.school/boca-raton/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fboca-raton%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fboca-raton%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fboca-raton%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9233-BocaRaton-Open-and-Enrolling.png",
+    "alt": "Boca Raton",
+    "classes": "attachment-large size-large wp-image-9822"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-51223157555",
+   "kind": "campus",
+   "url": "https://alpha.school/boston-suburbs/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/boston-suburbs/",
+  "finalUrl": "https://alpha.school/boston-suburbs/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fboston-suburbs%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fboston-suburbs%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fboston-suburbs%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-1024x683.webp",
+    "url": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-scaled.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "classes": "attachment-large size-large wp-image-4051"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-51223157555",
+   "kind": "campus",
+   "url": "https://alpha.school/boston-suburbs/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/boston-suburbs/",
+  "finalUrl": "https://alpha.school/boston-suburbs/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fboston-suburbs%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fboston-suburbs%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fboston-suburbs%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-600x400.webp",
+    "url": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0023-scaled.webp",
+    "alt": "Classroom at Alpha private school in Miami",
+    "classes": "attachment-large size-large wp-image-4051"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-57601909511",
+   "kind": "campus",
+   "url": "https://alpha.school/franklin/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/franklin/",
+  "finalUrl": "https://alpha.school/franklin/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Ffranklin%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Ffranklin%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Ffranklin%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-1024x704.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon.webp",
+    "alt": "Aerial view of downtown Franklin, Tennessee with Coming Soon to Franklin text",
+    "classes": "attachment-large size-large wp-image-9833"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-57601909511",
+   "kind": "campus",
+   "url": "https://alpha.school/franklin/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/franklin/",
+  "finalUrl": "https://alpha.school/franklin/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Ffranklin%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Ffranklin%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Ffranklin%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon-768x528.webp",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/alpha-franklin-coming-soon.webp",
+    "alt": "Aerial view of downtown Franklin, Tennessee with Coming Soon to Franklin text",
+    "classes": "attachment-large size-large wp-image-9833"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-57622127456",
+   "kind": "campus",
+   "url": "https://alpha.school/jamaica-plain/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/jamaica-plain/",
+  "finalUrl": "https://alpha.school/jamaica-plain/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fjamaica-plain%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fjamaica-plain%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fjamaica-plain%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-1024x683.webp",
+    "url": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-scaled.webp",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-4044"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-57622127456",
+   "kind": "campus",
+   "url": "https://alpha.school/jamaica-plain/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/jamaica-plain/",
+  "finalUrl": "https://alpha.school/jamaica-plain/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fjamaica-plain%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fjamaica-plain%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fjamaica-plain%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-600x400.webp",
+    "url": "https://alpha.school/wp-content/uploads/2024/12/Website-Alpha-School-0016-scaled.webp",
+    "alt": "",
+    "classes": "attachment-large size-large wp-image-4044"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-60804396611",
+   "kind": "campus",
+   "url": "https://alpha.school/greenwich/"
+  },
+  "viewport": {
+   "id": "desktop"
+  },
+  "url": "https://alpha.school/greenwich/",
+  "finalUrl": "https://alpha.school/greenwich/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-1024x704.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling.png",
+    "alt": "Greenwich",
+    "classes": "attachment-large size-large wp-image-9821"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ },
+ {
+  "route": {
+   "id": "campus-program-60804396611",
+   "kind": "campus",
+   "url": "https://alpha.school/greenwich/"
+  },
+  "viewport": {
+   "id": "mobile"
+  },
+  "url": "https://alpha.school/greenwich/",
+  "finalUrl": "https://alpha.school/greenwich/",
+  "status": 200,
+  "embeds": [
+   {
+    "url": "https://www.youtube.com/embed/CuSijUisnyE?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=1&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=1",
+    "title": "30 Days to a Different Kid - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/KMvjR0NfTMs?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=3&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=1",
+    "title": "How Alpha Schools Grow: Austin to Miami and Beyond - YouTube"
+   },
+   {
+    "url": "https://www.youtube.com/embed/lFrGQmg0yc4?controls=1&rel=0&playsinline=0&cc_load_policy=0&autoplay=0&enablejsapi=1&origin=https%3A%2F%2Falpha.school&widgetid=5&forigin=https%3A%2F%2Falpha.school%2Fgreenwich%2F&aoriginsup=1&vf=1",
+    "title": "Alpha San Francisco - Learning Without Limits - YouTube"
+   }
+  ],
+  "primaryVisuals": [
+   {
+    "slot": "intro-card",
+    "src": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling-768x528.png",
+    "url": "https://alpha.school/wp-content/uploads/2026/09/9231-Greenwich-Open-and-Enrolling.png",
+    "alt": "Greenwich",
+    "classes": "attachment-large size-large wp-image-9821"
+   },
+   {
+    "slot": "hero",
+    "src": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "url": "https://alpha.school/wp-content/uploads/2025/11/Untitled-design-12.webp",
+    "alt": "",
+    "classes": "elementor-section elementor-top-section elementor-element elementor-element-57717c2 elementor-section-height-min-height elementor-section-content-middle elementor-section-stretched elementor-section-boxed elementor-section-height-default el"
+   }
+  ]
+ }
+]

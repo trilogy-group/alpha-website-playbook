@@ -1,5 +1,5 @@
 {
- "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 11 campuses on 2026-09-25; not a source of truth. Original: Named exceptions to the campus CTA rows of the check bundle (campus.resources.booking.*, campus.resources.calendar.*, campus.resources.packet.*, campus.resources.apply.*, and the Join the Community CT",
+ "$comment": "FIXTURE SNAPSHOT for tests/site-truth-report.test.mjs, filtered to 18 campuses on 2026-09-28 (campus-pages kept whole so other campuses' names resolve); not a source of truth. Original: Named exceptions to the campus CTA rows of the check bundle (campus.resources.booking.*, campus.resources.calendar.*, campus.resources.packet.*, campus.resources.apply.*, and the Join the Community CT",
  "version": "1.0",
  "asOf": "2026-09-24",
  "ctas": {
