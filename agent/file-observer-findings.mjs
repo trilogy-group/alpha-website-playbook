@@ -687,7 +687,20 @@ export function missingExpectationTitle(assessment) {
   return cleanText(`no approved ${assessment.thing} recorded for ${assessment.state || 'in-scope'} campus ${assessment.campus}`)
 }
 
-const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const isWordChar = (ch) => /[a-z0-9]/i.test(ch || '')
+/** A launch word (lower-cased, single spaces) found in the text as whole words, case-insensitive, returned as the text spells it; else null. */
+function launchWordIn(text, word) {
+  const haystack = String(text || '').replace(/\s+/g, ' ')
+  const lower = haystack.toLowerCase()
+  let from = 0
+  while (from <= lower.length) {
+    const at = lower.indexOf(word, from)
+    if (at < 0) return null
+    if (!isWordChar(lower[at - 1]) && !isWordChar(lower[at + word.length])) return haystack.slice(at, at + word.length)
+    from = at + 1
+  }
+  return null
+}
 const basename = (src) => { try { return decodeURIComponent(String(src || '').split('/').pop() || '') } catch { return String(src || '').split('/').pop() || '' } }
 
 /**
@@ -709,13 +722,14 @@ export function slotObservation(finding, row = null) {
   const attachmentId = Number(meta?.classes?.match(/wp-image-(\d+)/)?.[1] ?? meta?.attachmentId ?? NaN)
   const alt = String(meta?.alt ?? visible?.alt ?? '')
   const isSlotImage = Boolean(meta)
-  const words = (row?.literals?.launchWords || []).map((w) => new RegExp(`\\b${escapeRegExp(w).replace(/\\\s+/g, '\\s+')}\\b`, 'i'))
-  const patterns = (row?.literals?.assetPatterns || []).map((p) => { try { return new RegExp(p, 'i') } catch { return null } }).filter(Boolean)
+  const words = (row?.literals?.launchWords || []).map((w) => String(w).toLowerCase().replace(/\s+/g, ' ').trim()).filter(Boolean)
+  // The bundle row's asset patterns are regex sources committed in spec/check-rows.json (the observer compiles the same ones), not user input.
+  const patterns = (row?.literals?.assetPatterns || []).map((p) => { try { return new RegExp(p, 'i') } catch { return null } }).filter(Boolean) // nosemgrep: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
   const visionHits = list.filter((a) => a && a.kind === 'vision-text' && a.launchWord)
   const reading = cleanText(visionHits.find((a) => a.visionText)?.visionText || '').replace(/\s+/g, ' ').trim()
   const launch = []
   for (const hit of visionHits) if (hit.launchWord && !launch.includes(hit.launchWord)) launch.push(hit.launchWord)
-  for (const text of [alt, file.replace(/[-_]+/g, ' ')]) for (const re of words) { const hit = text.match(re)?.[0]; if (hit && !launch.some((l) => l.toLowerCase() === hit.toLowerCase())) launch.push(hit) }
+  for (const text of [alt, file.replace(/[-_]+/g, ' ')]) for (const word of words) { const hit = launchWordIn(text, word); if (hit && !launch.some((l) => l.toLowerCase() === hit.toLowerCase())) launch.push(hit) }
   if (src && patterns.some((re) => re.test(src)) && !launch.includes('known launch-era asset')) launch.push('known launch-era asset')
   const id = Number.isInteger(attachmentId) ? `attachment ${attachmentId} (${file}${alt ? `, alt "${alt}"` : ', alt empty'})` : (file ? `${file}${alt ? ` (alt "${alt}")` : ''}` : 'an unnamed asset')
   if (launch.length) return { level: 'launch', src, file, attachmentId: Number.isInteger(attachmentId) ? attachmentId : null, alt, launch, reading: reading || null, what: `the intro slot shows launch-era media: ${id}${reading ? ` reads "${reading}"` : ''} (${launch.join(', ')})`, ask: 'Replace it with the Open and Enrolling card (or the campus video Matt or Yash approves) and record the approval in registry/campus-open-media.json; a launch card is never approved for an Open campus' }
