@@ -1,0 +1,17 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-28T19:01:30.156Z",
+  "decidedBy": "Matt Barge",
+  "source": "Slack conversation with the website agent, 2026-09-28",
+  "date": "2026-09-28",
+  "specRefs": [
+    "spec/check-rows.json campus.intro.status-source expected.derive.transform",
+    "spec/campus-lifecycle.json states.Announced.introSentence",
+    "spec/campus-page-field-map.json elements/intro.status-sentence"
+  ],
+  "summary": "Undated Announced campuses: an Announced campus with no launch_date or opening_date reads '<name> is coming soon.' (first case Alpha Houston Heights, https://alpha.school/houston/, HubSpot Program 26459919662); when a date is set the dated form of campus.intro.status-source (named month or season and year supported by the date) applies; Houston Heights written 2026-09-28 in HubSpot website_campus_intro, publishes with the nightly sync",
+  "decisionRow": "| 2026-09-28 | Decided (Matt Barge, Slack conversation with the website agent, 2026-09-28): Undated Announced campuses: an Announced campus with no launch_date or opening_date reads '<name> is coming soon.' (first case Alpha Houston Heights, https://alpha.school/houston/, HubSpot Program 26459919662); when a date is set the dated form of campus.intro.status-source (named month or season and year supported by the date) applies; Houston Heights written 2026-09-28 in HubSpot website_campus_intro, publishes with the nightly sync | Matt Barge | spec/check-rows.json campus.intro.status-source expected.derive.transform; spec/campus-lifecycle.json states.Announced.introSentence; spec/campus-page-field-map.json elements/intro.status-sentence; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json |",
+  "appliedIn": "spec/check-rows.json campus.intro.status-source expected.derive.transform; spec/campus-lifecycle.json states.Announced.introSentence; spec/campus-page-field-map.json elements/intro.status-sentence; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json",
+  "textSha256": "7db3cda2a12a614f09f589cd4f390b008bdc9ad0a00fc70ecd99907ca208ede5",
+  "text": "Relayed by the website agent on 2026-09-28 from a Slack conversation with Matt Barge about the Alpha Houston Heights ticket (APEX cmulj8cw7000304l64uztgo2l, row campus.intro.status-source; HubSpot Program 26459919662, Announced, no launch_date and no opening_date, website_campus_intro empty):\n\nDecision (Matt Barge, 2026-09-28): an Announced campus with no launch or opening date reads \"<Campus> is coming soon.\" When a date is set, the rule's dated form (named month or season and year supported by the date) applies. Write the Houston Heights sentence now as \"[DISPLAY_NAME] is coming soon.\" followed by the standard info-session paragraph; it publishes with the nightly sync at 00:15 CT.\n"
+}

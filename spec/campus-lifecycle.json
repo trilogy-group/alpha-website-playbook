@@ -5,12 +5,14 @@
     "Open": {
       "source": "HubSpot Programs property `type` as published by the growth map API (programType)",
       "meaning": "Public campus page is a live destination; open-campus requirements apply.",
-      "count": 38
+      "count": 38,
+      "introSentence": "'<name> is open and enrolling.' (check row campus.intro.status-source)"
     },
     "Announced": {
       "source": "same",
       "meaning": "Public page may exist; launch language allowed only when the source status and date support it; announced-campus requirements apply.",
-      "count": 7
+      "count": 7,
+      "introSentence": "dated (launch_date or opening_date set): named month or season and year supported by that date, e.g. '<name> is launching in Fall 2027.'; undated (no launch_date and no opening_date): '<name> is coming soon.' Decided by Matt Barge on 2026-09-28 (Slack conversation with the website agent; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json); check row campus.intro.status-source literals.undatedAnnounced."
     },
     "Pre-Announcement": {
       "source": "same",
@@ -164,17 +166,19 @@
       "conflicts": [],
       "introStatement": "Join us for an info session , and see firsthand why Alpha is ranked among the be",
       "introStatementException": {
-        "status": "Proposed",
+        "status": "Decided",
         "wording": "Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment.",
         "reason": "The campus is Announced with no opening date and its opening depends on School Committee approval; the deliberate pending-approval sentence in HubSpot website_campus_intro is the accurate statement of the lifecycle and is kept as a named exception to the Announced season-and-year form of campus.intro.status-source until a date exists or the type becomes Open.",
         "hubspotProgramId": "51223157555",
         "field": "website_campus_intro",
         "recommendedBy": "website agent, review of the 2026-09-28 status-sentence tickets (APEX cmulj7zkl000e0agmluohkx5c)",
-        "awaiting": "Matt Barge",
         "proposedOn": "2026-09-28",
         "expires": "lifecycle:Open",
         "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-28-campus-lifecycle-a161726a.json",
-        "note": "Read by the check row campus.intro.status-source through literals.exceptions: a campus listed there with an unexpired exception whose website_campus_intro contains the wording is not a finding of that row. Proposed rows are advisory until Matt confirms; the row lists the exception so the observer and the filer see it as pending."
+        "note": "Read by the check row campus.intro.status-source through literals.exceptions: a campus listed there with an unexpired exception whose website_campus_intro contains the wording is not a finding of that row. Decided by Matt Barge on 2026-09-28 (Slack conversation with the website agent); no HubSpot change; expires when the Program type becomes Open, at which point the Open sentence applies and this entry is removed.",
+        "decidedBy": "Matt Barge",
+        "decidedOn": "2026-09-28",
+        "source": "Slack conversation with the website agent, 2026-09-28"
       }
     },
     "brownsville": {
@@ -440,7 +444,17 @@
       ],
       "lifecycle": "Announced",
       "conflicts": [],
-      "introStatement": "Alpha Houston is coming soon."
+      "introStatement": "Alpha Houston Heights is coming soon.",
+      "introStatementDecision": {
+        "decidedBy": "Matt Barge",
+        "decidedOn": "2026-09-28",
+        "source": "Slack conversation with the website agent, 2026-09-28",
+        "hubspotProgramId": "26459919662",
+        "field": "website_campus_intro",
+        "writtenOn": "2026-09-28",
+        "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json",
+        "note": "Announced with no launch_date and no opening_date, so the undated form applies; HubSpot website_campus_intro was empty until 2026-09-28 and now carries '[DISPLAY_NAME] is coming soon.' plus the standard info-session paragraph; publishes with the nightly sync (00:15 CT). The page is https://alpha.school/houston/ (the Program's website; /houston-heights/ answers 404). When a date is set the dated form applies and this entry is updated."
+      }
     },
     "jamaica-plain": {
       "url": "https://alpha.school/jamaica-plain/",

@@ -129,8 +129,8 @@
           "type"
         ]
       },
-      "derivation": "website_campus_intro verbatim with substitutions today. The status sentence inside it is hand-typed; it is NOT yet derived from the status field 'type'. Decided 2026-09-25 (MacKenzie Price): it is to be derived from 'type' in the n8n workflow so the text field cannot contradict the status; the workflow change is pending with the n8n-sync-owner and this entry is updated to writer n8n-derived when it lands.",
-      "expectedFrom": "requirement by lifecycle state: Open -> '<name> is open and enrolling.'; Announced -> '<name> opens <Month or Season> <Year>.'; Pre-Announcement -> no public page",
+      "derivation": "website_campus_intro verbatim with substitutions today. The status sentence inside it is hand-typed; it is NOT yet derived from the status field 'type'. Decided 2026-09-25 (MacKenzie Price): it is to be derived from 'type' in the n8n workflow so the text field cannot contradict the status; the workflow change is pending with the n8n-sync-owner and this entry is updated to writer n8n-derived when it lands. Undated Announced (decided 2026-09-28, Matt Barge, Slack conversation with the website agent; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json): with no launch_date or opening_date the status sentence is '<name> is coming soon.'; the dated form applies once a date is set. First case Alpha Houston Heights, written in website_campus_intro on 2026-09-28.",
+      "expectedFrom": "requirement by lifecycle state: Open -> '<name> is open and enrolling.'; Announced with launch_date or opening_date -> '<name> opens <Month or Season> <Year>.' (named month or season and year supported by the date); Announced with no launch_date or opening_date -> '<name> is coming soon.' (decided by Matt Barge, 2026-09-28); Pre-Announcement -> no public page",
       "compare": [
         "page sentence vs requirement for Program type",
         "website_campus_intro vs requirement for Program type"
