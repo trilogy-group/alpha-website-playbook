@@ -1,0 +1,440 @@
+{
+  "$comment": "Website Funnel layer 1 (docs/website-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
+  "version": "0.1",
+  "asOf": "2026-09-28",
+  "owner": {
+    "role": "analytics-and-consent-owner",
+    "person": null,
+    "note": "role exists in registry/owners.json as a gap; Matt Barge proposed as interim owner of definitions and access, Yash Chitneni for HubSpot reporting"
+  },
+  "tools": [
+    {
+      "id": "gtm",
+      "name": "Google Tag Manager",
+      "kind": "tag-container",
+      "answers": [
+        "which conversion triggers exist",
+        "what fires on each CTA"
+      ],
+      "access": {
+        "containerId": "GTM-5W56ZLQJ",
+        "readAccess": null,
+        "holder": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/global-runtime.json"
+      ],
+      "note": "On every page through Site Kit; noscript iframe emitted twice per page; contents unreadable from HTML; no dataLayer pushes or gtag events on any CTA."
+    },
+    {
+      "id": "google-tag",
+      "name": "Google tag (gtag.js)",
+      "kind": "tag",
+      "answers": [
+        "pageviews into the GA4 property behind it"
+      ],
+      "access": {
+        "tagId": "GT-PJNQ32T9",
+        "ga4PropertyId": null,
+        "readAccess": null,
+        "holder": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/global-runtime.json"
+      ],
+      "note": "Cross-domain linker lists alpha.school only; go.alpha.school, events.alpha.school and apply.alpha.school are not linked, so sessions break at every conversion click."
+    },
+    {
+      "id": "ga4",
+      "name": "Google Analytics 4 property",
+      "kind": "analytics",
+      "answers": [
+        "sessions",
+        "landing pages",
+        "paths",
+        "drop-off",
+        "per-campus visits",
+        "source and campaign",
+        "device"
+      ],
+      "access": {
+        "propertyId": null,
+        "serviceAccount": null,
+        "apiClient": null,
+        "holder": null
+      },
+      "owner": null,
+      "status": "unknown",
+      "recordedIn": [],
+      "note": "No property id, credential or API client in any repo. The first access ask of the project."
+    },
+    {
+      "id": "search-console",
+      "name": "Google Search Console",
+      "kind": "search",
+      "answers": [
+        "queries by page",
+        "impressions and clicks per campus",
+        "which cities search for Alpha"
+      ],
+      "access": {
+        "siteUrl": "sc-domain:alpha.school",
+        "credential": "aeo repo secrets GOOGLE_SEARCH_CONSOLE_* and GOOGLE_OAUTH_*",
+        "readAccess": true
+      },
+      "owner": null,
+      "status": "held",
+      "recordedIn": [
+        "aeo alpha-site-system/src/sources.mjs"
+      ],
+      "note": "Fetched by the observer (28 days, page dimension) and consumed by no check or report yet."
+    },
+    {
+      "id": "site-kit",
+      "name": "Google Site Kit (WordPress plugin)",
+      "kind": "plugin",
+      "answers": [
+        "ties WordPress to the Google account that owns the tag and property"
+      ],
+      "access": {
+        "version": "1.179.0",
+        "googleAccount": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/plugins.json"
+      ],
+      "note": "The Google account behind Site Kit is the holder of GA4 and GTM; unknown."
+    },
+    {
+      "id": "hubspot-tracking",
+      "name": "HubSpot tracking script (leadin)",
+      "kind": "tag",
+      "answers": [
+        "identified sessions once a contact is known",
+        "content type per page"
+      ],
+      "access": {
+        "portalId": "40051392",
+        "plugin": "leadin 11.3.45"
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/forms.json",
+        "registry/plugins.json"
+      ],
+      "note": "Passive: setContentType only. The identity join for current versus prospective parents depends on it plus HubSpot reporting access."
+    },
+    {
+      "id": "hubspot-reporting",
+      "name": "HubSpot reporting (meetings, marketing events, forms analytics)",
+      "kind": "analytics",
+      "answers": [
+        "booked calls",
+        "event registrations",
+        "form fills",
+        "contact lifecycle for identified sessions"
+      ],
+      "access": {
+        "privateApp": null,
+        "scopes": null,
+        "holder": "Garbhit Sharma (HubSpot admin)"
+      },
+      "owner": null,
+      "status": "unknown",
+      "recordedIn": [
+        "marketingsupport workflows/hubspot-api-registry/agent.md"
+      ],
+      "note": "Existing apps carry content and CRM-read scopes and Program writes; none carries meetings, marketing-events analytics or forms analytics."
+    },
+    {
+      "id": "hubspot-programs",
+      "name": "HubSpot Programs object",
+      "kind": "source-of-truth",
+      "answers": [
+        "campus lifecycle",
+        "conversion destinations (call link, admission link)",
+        "campus facts"
+      ],
+      "access": {
+        "object": "2-43470849",
+        "token": "HUBSPOT_MARKETING_SYNCING_TOKEN (marketingsupport .env)"
+      },
+      "owner": "hubspot-program-admin",
+      "status": "held",
+      "recordedIn": [
+        "registry/sources.json"
+      ],
+      "note": ""
+    },
+    {
+      "id": "utm-cookie",
+      "name": "UTM to first-party cookie script",
+      "kind": "attribution",
+      "answers": [
+        "campaign attribution carried to HubSpot forms"
+      ],
+      "access": {
+        "where": "global inline JavaScript in the document head"
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/global-runtime.json",
+        "registry/forms.json"
+      ],
+      "note": "Writes every utm_* query value to a 30-day cookie without Secure or SameSite; nothing reads it in page HTML; owner unknown."
+    },
+    {
+      "id": "consent",
+      "name": "Consent management",
+      "kind": "consent",
+      "answers": [
+        "whether tags may fire per region"
+      ],
+      "access": {},
+      "owner": null,
+      "status": "absent",
+      "recordedIn": [
+        "spec/brand-visual.json",
+        "spec/ticket-classes.json"
+      ],
+      "note": "No banner installed; GTM, gtag and HubSpot fire unconditionally. The spec and the owner role assume one exists."
+    },
+    {
+      "id": "meta-pixel",
+      "name": "Meta pixel",
+      "kind": "tag",
+      "answers": [
+        "paid social attribution"
+      ],
+      "access": {
+        "pixelId": null
+      },
+      "owner": null,
+      "status": "unknown",
+      "recordedIn": [
+        "registry/global-runtime.json"
+      ],
+      "note": "Only a dns-prefetch to connect.facebook.net in HTML; if present it lives inside GTM. The registry row claiming rendered Meta and LinkedIn markers is stale: LinkedIn has no trace."
+    },
+    {
+      "id": "voiceflow",
+      "name": "Voiceflow chat widget",
+      "kind": "conversion-surface",
+      "answers": [
+        "chat leads (name, email, phone, school of interest)"
+      ],
+      "access": {
+        "projectId": "68419bad5e2fdcd71c745d90"
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/global-runtime.json"
+      ],
+      "note": "Gated by query parameters, effectively off; submits leads to Voiceflow, not HubSpot; no analytics event."
+    },
+    {
+      "id": "founder-chat",
+      "name": "Ask MacKenzie founder chat",
+      "kind": "conversion-surface",
+      "answers": [],
+      "access": {
+        "widget": "founder.app.alpha.school/widget.js"
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "registry/global-runtime.json"
+      ],
+      "note": "Off unless the agent query parameter is present."
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube embeds",
+      "kind": "content",
+      "answers": [
+        "video plays and drop-off (not collected)"
+      ],
+      "access": {},
+      "owner": null,
+      "status": "present",
+      "recordedIn": [],
+      "note": "Plain embeds; no player API events; MacKenzie asked for video drop-off and a mid-video prompt."
+    },
+    {
+      "id": "podcast-ordering",
+      "name": "Podcast card ordering",
+      "kind": "content",
+      "answers": [
+        "listens and trend per episode"
+      ],
+      "access": {
+        "where": "automation Yash Chitneni maintains",
+        "weeklyEmail": null
+      },
+      "owner": "Yash Chitneni",
+      "status": "held",
+      "recordedIn": [],
+      "note": "Order automated on listens plus trend; weekly performance email promised 2026-09-25."
+    },
+    {
+      "id": "observer",
+      "name": "Alpha site observer (superbuilders/aeo)",
+      "kind": "rendered-site-measurement",
+      "answers": [
+        "every CTA per campus",
+        "rendered state versus HubSpot",
+        "loop health"
+      ],
+      "access": {
+        "packets": "site-runtime-state branch and run artifacts"
+      },
+      "owner": "website-operations",
+      "status": "held",
+      "recordedIn": [
+        "spec/check-bundle.generated.json"
+      ],
+      "note": "Measures conformance of the rendered site twice daily; reads no analytics. audience-funnel loop is one advisory CTA-routing check."
+    },
+    {
+      "id": "cta-inventory",
+      "name": "Campus CTA inventory",
+      "kind": "reference",
+      "answers": [
+        "conversion destinations per campus and control"
+      ],
+      "access": {
+        "file": "spec/campus-page-controls.json",
+        "asOf": "2026-09-16"
+      },
+      "owner": "website-operations",
+      "status": "held",
+      "recordedIn": [
+        "spec/campus-page-controls.json"
+      ],
+      "note": "Snapshot; must become live before attribution is built on it."
+    },
+    {
+      "id": "wordpress-mcp",
+      "name": "Alpha WordPress MCP",
+      "kind": "site-write",
+      "answers": [
+        "page and slot state, receipts"
+      ],
+      "access": {
+        "tools": 44
+      },
+      "owner": "website-operations",
+      "status": "held",
+      "recordedIn": [
+        "marketingsupport projects/alpha-wordpress-mcp"
+      ],
+      "note": "No analytics ability."
+    },
+    {
+      "id": "n8n",
+      "name": "n8n workflows",
+      "kind": "sync",
+      "answers": [
+        "what HubSpot fields reach the page"
+      ],
+      "access": {
+        "apiKey": "N8N_API_KEY read-only (marketingsupport .env)"
+      },
+      "owner": "n8n-sync-owner",
+      "status": "held",
+      "recordedIn": [
+        "registry/sources.json"
+      ],
+      "note": ""
+    },
+    {
+      "id": "sis",
+      "name": "Student information system",
+      "kind": "source-of-truth",
+      "answers": [
+        "who is a current student (for current-parent identification and quote currency)"
+      ],
+      "access": {
+        "system": null,
+        "owner": null
+      },
+      "owner": null,
+      "status": "unknown",
+      "recordedIn": [
+        "registry/sources.json"
+      ],
+      "note": "Named by MacKenzie 2026-09-25; system and owner not yet named."
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare (in front of production)",
+      "kind": "edge",
+      "answers": [
+        "request-level traffic, bots, countries (not collected)"
+      ],
+      "access": {
+        "account": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "marketingsupport docs/migration/integration-register.md"
+      ],
+      "note": "Web Analytics beacon is off; no account access recorded."
+    },
+    {
+      "id": "seo-dashboard",
+      "name": "Local SEO dashboard skeleton",
+      "kind": "report",
+      "answers": [
+        "per-city search presence"
+      ],
+      "access": {
+        "file": "marketingsupport registry/seo-dashboard.json"
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [],
+      "note": "All rows null; build-versus-archive decision pending with Yash."
+    },
+    {
+      "id": "claims-registry",
+      "name": "Approved claims and testimonials registries",
+      "kind": "governance",
+      "answers": [
+        "which claim may appear where, with evidence"
+      ],
+      "access": {
+        "files": null
+      },
+      "owner": "marketing",
+      "status": "absent",
+      "recordedIn": [
+        "marketingsupport registry/alpha-website-messaging-sources.json"
+      ],
+      "note": "not-yet-created; the observer's claims loop is advisory until they exist."
+    }
+  ],
+  "audienceClasses": {
+    "$comment": "Layer 6 draft, to be validated against identified sessions once HubSpot reporting access exists.",
+    "classes": [
+      "prospective-parent",
+      "current-parent",
+      "staff",
+      "press",
+      "job-seeker",
+      "city-champion",
+      "bot-or-test"
+    ],
+    "signals": null
+  }
+}
