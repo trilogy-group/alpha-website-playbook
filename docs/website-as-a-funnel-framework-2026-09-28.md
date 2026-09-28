@@ -88,6 +88,8 @@ Until this exists, "5,000 visits a day" is an unsegmented number and any recomme
 
 Baseline pulled the same day from HubSpot: `docs/website-as-a-funnel-baseline-2026-09-28.md` (numbers, caveats, and the intent-readiness assessment: level 1 on intent, level 2 only for the converting 4 percent).
 
+Gap register (what stops each capability reaching Instrumented, with owners): `docs/website-as-a-funnel-gap-register-2026-09-28.md`.
+
 ### 7a. Progress log
 
 - Days 1 to 3: the tooling registry (layer 1), the access requests sent, the audience classes drafted, the tracking-state report in its "unknown" form.
