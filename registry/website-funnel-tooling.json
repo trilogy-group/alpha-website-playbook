@@ -1,6 +1,6 @@
 {
-  "$comment": "Website Funnel layer 1 (docs/website-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.1",
+  "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
+  "version": "0.2",
   "asOf": "2026-09-28",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -39,14 +39,17 @@
         "tagId": "GT-PJNQ32T9",
         "ga4PropertyId": null,
         "readAccess": null,
-        "holder": null
+        "holder": null,
+        "googleTagAccountId": "6244084123",
+        "googleTagContainerId": "192305539",
+        "destination": "G-G7M04CYHH0"
       },
       "owner": null,
       "status": "present",
       "recordedIn": [
         "registry/global-runtime.json"
       ],
-      "note": "Cross-domain linker lists alpha.school only; go.alpha.school, events.alpha.school and apply.alpha.school are not linked, so sessions break at every conversion click."
+      "note": "Read from Site Kit settings 2026-09-28. Cross-domain linker lists alpha.school only; go., events. and apply. subdomains are not linked, so sessions break at every conversion click."
     },
     {
       "id": "ga4",
@@ -62,15 +65,25 @@
         "device"
       ],
       "access": {
-        "propertyId": null,
+        "propertyId": "452530593",
         "serviceAccount": null,
         "apiClient": null,
-        "holder": null
+        "holder": null,
+        "accountId": "325161189",
+        "webDataStreamId": "8528930369",
+        "measurementId": "G-G7M04CYHH0",
+        "propertyCreated": "2024-08-01",
+        "adsLinked": true,
+        "siteKitOwner": "WordPress admin \"Alpha School\" (info@alpha.school, user 9)",
+        "readPaths": [
+          "Site Kit REST proxy (modules/analytics-4/data/report) once a WordPress admin user has granted Site Kit the analytics.readonly scope with a Google account that can view the property",
+          "GA4 Data API with a service account granted Viewer on property 452530593"
+        ]
       },
       "owner": null,
-      "status": "unknown",
+      "status": "present",
       "recordedIn": [],
-      "note": "No property id, credential or API client in any repo. The first access ask of the project."
+      "note": "Property ids read from Site Kit settings on 2026-09-28 (wp-json/google-site-kit/v1/modules/analytics-4/data/settings). No credential in any repo yet; Site Kit reports answer 403 missing_required_scopes for the agent user (Matt Barge, WordPress user 34) until that user authenticates Site Kit with Google."
     },
     {
       "id": "search-console",
@@ -84,7 +97,9 @@
       "access": {
         "siteUrl": "sc-domain:alpha.school",
         "credential": "aeo repo secrets GOOGLE_SEARCH_CONSOLE_* and GOOGLE_OAUTH_*",
-        "readAccess": true
+        "readAccess": true,
+        "siteKit": "connected, owner info@alpha.school",
+        "siteKitProxy": "403 for the agent user until Google-authenticated"
       },
       "owner": null,
       "status": "held",
@@ -102,14 +117,14 @@
       ],
       "access": {
         "version": "1.179.0",
-        "googleAccount": null
+        "googleAccount": "the account behind WordPress admin \"Alpha School\" (info@alpha.school); modules analytics-4, search-console and pagespeed-insights are shareable"
       },
       "owner": null,
-      "status": "present",
+      "status": "held",
       "recordedIn": [
         "registry/plugins.json"
       ],
-      "note": "The Google account behind Site Kit is the holder of GA4 and GTM; unknown."
+      "note": "Site Kit exposes property, stream, tag and Search Console settings through its REST API to any WordPress admin; report data needs the calling WordPress user to be Google-authenticated in Site Kit."
     },
     {
       "id": "hubspot-tracking",
@@ -422,6 +437,96 @@
         "marketingsupport registry/alpha-website-messaging-sources.json"
       ],
       "note": "not-yet-created; the observer's claims loop is advisory until they exist."
+    },
+    {
+      "id": "rio-seo",
+      "name": "Rio SEO Local Manager",
+      "kind": "local-listings",
+      "answers": [
+        "Google Business Profile and directory listings per campus",
+        "local search presence"
+      ],
+      "access": {
+        "url": "https://localmanager.rioseo.com/",
+        "user": "matthew.barge@superbuilders.school",
+        "credential": "mattbarge-superbuilderscontext secrets (SB_RIOSEO_LOCALMANAGER_*)"
+      },
+      "owner": "Cristi Constantin (pushes data by API; no longer edits in Local Manager)",
+      "status": "held",
+      "recordedIn": [
+        "mattbarge-superbuilderscontext accounts/credential-access.md",
+        "registry/sources.json (GBP events workflow giviJTDi7Q3uM4HM)"
+      ],
+      "note": "The listings and local-SEO vendor; the \"rhino\" tool Matt recalled on 2026-09-28. Not web analytics."
+    },
+    {
+      "id": "peec",
+      "name": "Peec AI",
+      "kind": "answer-engine-sensor",
+      "answers": [
+        "which AI answer surfaces cite alpha.school and which sources shape the answers"
+      ],
+      "access": {
+        "credential": "aeo repo secret PEEC_API_TOKEN, PEEC_PROJECT_ID"
+      },
+      "owner": "AEO system (superbuilders/aeo alpha-aeo-system)",
+      "status": "held",
+      "recordedIn": [
+        "mattbarge-superbuilderscontext brainlifts/AEO brainlift.md",
+        "aeo alpha-aeo-system"
+      ],
+      "note": "Answer-engine visibility, not site traffic; the AEO brainlift records that Peec cannot do attribution."
+    },
+    {
+      "id": "bing-webmaster",
+      "name": "Bing Webmaster Tools",
+      "kind": "search",
+      "answers": [
+        "Bing queries and index status"
+      ],
+      "access": {
+        "credential": "aeo repo secret BING_WEBMASTER_API_KEY"
+      },
+      "owner": "AEO system",
+      "status": "held",
+      "recordedIn": [
+        "aeo alpha-aeo-system"
+      ],
+      "note": ""
+    },
+    {
+      "id": "google-service-account",
+      "name": "Google Workspace service account (observer)",
+      "kind": "credential",
+      "answers": [
+        "can be granted Viewer on the GA4 property to read the Data API without a person"
+      ],
+      "access": {
+        "credential": "aeo repo secret GOOGLE_WORKSPACE_SERVICE_ACCOUNT_JSON",
+        "email": null
+      },
+      "owner": null,
+      "status": "held",
+      "recordedIn": [
+        "aeo alpha-site-system README (Operations sheet reader)"
+      ],
+      "note": "Email unknown to this workspace (inside the secret); read from the aeo repo secret by whoever holds it, then add as Viewer on GA4 property 452530593."
+    },
+    {
+      "id": "superbuilders-context",
+      "name": "mattbarge-superbuilderscontext repo",
+      "kind": "context",
+      "answers": [
+        "credential catalogue, collaborators, project overviews, brainlifts (AEO, Joe messaging)"
+      ],
+      "access": {
+        "path": "~/DevProjects/mattbarge-superbuilderscontext",
+        "secrets": "secrets/reusable.env (gitignored)"
+      },
+      "owner": "Matt Barge",
+      "status": "held",
+      "recordedIn": [],
+      "note": "Holds no Google Analytics credential as of 2026-09-28; the GA4 property was found through Site Kit."
     }
   ],
   "audienceClasses": {
