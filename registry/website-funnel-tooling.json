@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.2",
+  "version": "0.3",
   "asOf": "2026-09-28",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -96,17 +96,15 @@
       ],
       "access": {
         "siteUrl": "sc-domain:alpha.school",
-        "credential": "aeo repo secrets GOOGLE_SEARCH_CONSOLE_* and GOOGLE_OAUTH_*",
-        "readAccess": true,
-        "siteKit": "connected, owner info@alpha.school",
-        "siteKitProxy": "403 for the agent user until Google-authenticated"
+        "siteKit": "connected, owner info@alpha.school; proxy 403 for the agent user until Google-authenticated",
+        "observerActions": "not configured: the aeo repo holds GOOGLE_OAUTH_CLIENT_ID and SECRET but no GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN; health.json reports \"Google Search Console OAuth is not configured\""
       },
       "owner": null,
-      "status": "held",
+      "status": "present",
       "recordedIn": [
         "aeo alpha-site-system/src/sources.mjs"
       ],
-      "note": "Fetched by the observer (28 days, page dimension) and consumed by no check or report yet."
+      "note": "The observer has the code path and the OAuth client but no refresh token, so nothing reads Search Console today. Corrected 2026-09-28 from an earlier \"held\"."
     },
     {
       "id": "site-kit",
@@ -208,19 +206,21 @@
     },
     {
       "id": "consent",
-      "name": "Consent management",
+      "name": "Consent management (HubSpot cookie banner)",
       "kind": "consent",
       "answers": [
         "whether tags may fire per region"
       ],
-      "access": {},
+      "access": {
+        "where": "HubSpot Privacy and Consent settings for portal 40051392; the banner is injected at runtime by the HubSpot loader when enabled"
+      },
       "owner": null,
-      "status": "absent",
+      "status": "unknown",
       "recordedIn": [
         "spec/brand-visual.json",
         "spec/ticket-classes.json"
       ],
-      "note": "No banner installed; GTM, gtag and HubSpot fire unconditionally. The spec and the owner role assume one exists."
+      "note": "No banner or consent call is in the static HTML; if one exists it is HubSpot-rendered at runtime and must be confirmed from a browser render (observer). Earlier \"absent\" downgraded to unknown on 2026-09-28."
     },
     {
       "id": "meta-pixel",
@@ -230,14 +230,15 @@
         "paid social attribution"
       ],
       "access": {
-        "pixelId": null
+        "pixelId": "5961380957279503",
+        "where": "inside GTM (not in page HTML); Meta Events Manager"
       },
       "owner": null,
-      "status": "unknown",
+      "status": "present",
       "recordedIn": [
         "registry/global-runtime.json"
       ],
-      "note": "Only a dns-prefetch to connect.facebook.net in HTML; if present it lives inside GTM. The registry row claiming rendered Meta and LinkedIn markers is stale: LinkedIn has no trace."
+      "note": "Id supplied by the 2026-09-28 shareable inventory; only a dns-prefetch is visible in HTML. LinkedIn: no live marker."
     },
     {
       "id": "voiceflow",
@@ -254,7 +255,7 @@
       "recordedIn": [
         "registry/global-runtime.json"
       ],
-      "note": "Gated by query parameters, effectively off; submits leads to Voiceflow, not HubSpot; no analytics event."
+      "note": "Configured for a 20 percent visitor rollout (2026-09-28 inventory); submits leads to Voiceflow, not HubSpot; no analytics event."
     },
     {
       "id": "founder-chat",
@@ -394,9 +395,11 @@
       "name": "Cloudflare (in front of production)",
       "kind": "edge",
       "answers": [
-        "request-level traffic, bots, countries (not collected)"
+        "edge requests, bandwidth, cache, bots, threats, availability"
       ],
       "access": {
+        "dashboard": "https://dash.cloudflare.com/",
+        "zone": "alpha.school",
         "account": null
       },
       "owner": null,
@@ -527,6 +530,131 @@
       "status": "held",
       "recordedIn": [],
       "note": "Holds no Google Analytics credential as of 2026-09-28; the GA4 property was found through Site Kit."
+    },
+    {
+      "id": "google-ads",
+      "name": "Google Ads",
+      "kind": "ads",
+      "answers": [
+        "paid search attribution, conversions, remarketing"
+      ],
+      "access": {
+        "conversionId": "AW-11219766583",
+        "where": "Google Ads under Goals and Audiences; tag deployed inside GTM"
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "docs/website-architecture.md"
+      ],
+      "note": "Linked to the GA4 property (adsLinked true in Site Kit)."
+    },
+    {
+      "id": "posthog",
+      "name": "PostHog",
+      "kind": "product-analytics",
+      "answers": [
+        "sessions, events and feature flags inside the Community app and Alpha Camp (not the marketing site)"
+      ],
+      "access": {
+        "where": "posthog-js bundled in the Community app (community.alpha.school) and in Alpha Camp (PostHogProvider, us.posthog.com); alpha-camp .env carries POSTHOG_PROJECT_TOKEN and POSTHOG_HOST",
+        "projects": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "marketingsupport work-assets sweep-2026-09-24-observer community entry.js capture",
+        "alpha-camp src/app/layout.tsx"
+      ],
+      "note": "Not installed on alpha.school. Relevant to the current-parent question: the Community app is where enrolled families act, and PostHog is its analytics. The tool Matt recalled on 2026-09-28."
+    },
+    {
+      "id": "wp-engine",
+      "name": "WP Engine",
+      "kind": "hosting",
+      "answers": [
+        "origin traffic, cache behaviour, errors, logs"
+      ],
+      "access": {
+        "portal": "https://my.wpengine.com/",
+        "account": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "docs/website-architecture.md"
+      ],
+      "note": ""
+    },
+    {
+      "id": "goldcast",
+      "name": "Goldcast",
+      "kind": "events",
+      "answers": [
+        "info-session registrations and attendance (with HubSpot Marketing Events)"
+      ],
+      "access": {
+        "account": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "docs/website-architecture.md"
+      ],
+      "note": "One of the five outcome systems."
+    },
+    {
+      "id": "finalsite",
+      "name": "Finalsite application",
+      "kind": "applications",
+      "answers": [
+        "application starts and submissions for campuses routed to /application-fs/"
+      ],
+      "access": {
+        "account": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "spec/campus-page-controls.json",
+        "docs/website-architecture.md"
+      ],
+      "note": "Application outcome lives here or in the HubSpot application form depending on the campus."
+    },
+    {
+      "id": "community-app",
+      "name": "Community app",
+      "kind": "conversion-surface",
+      "answers": [
+        "community and waitlist signups; where enrolled families act"
+      ],
+      "access": {
+        "url": "https://www.community.alpha.school/",
+        "analytics": "PostHog"
+      },
+      "owner": "community-app-owner",
+      "status": "present",
+      "recordedIn": [
+        "registry/sources.json"
+      ],
+      "note": ""
+    },
+    {
+      "id": "youtube-studio",
+      "name": "YouTube Studio",
+      "kind": "content-analytics",
+      "answers": [
+        "views, watch time, retention per video"
+      ],
+      "access": {
+        "channel": null
+      },
+      "owner": null,
+      "status": "present",
+      "recordedIn": [
+        "docs/website-architecture.md"
+      ],
+      "note": "The only place video drop-off (MacKenzie ask) can be read today."
     }
   ],
   "audienceClasses": {
