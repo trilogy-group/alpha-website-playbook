@@ -365,14 +365,22 @@
       "access": {
         "packets": "site-runtime-state branch and run artifacts",
         "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
-        "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843"
+        "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843",
+        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36487732243",
+        "latestVerifiedSummary": {
+          "healthy": 4,
+          "unknown": 1,
+          "blocked": 4,
+          "degraded": 1,
+          "failed": 0
+        }
       },
       "owner": "website-operations",
       "status": "held",
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. The API-hardening update performs real GA4, Search Console, GTM and full HubSpot surface probes and classifies 401/403 as access blockers, not false provider failures."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. Post-merge run 36487732243 loaded the contract and found the homepage, GTM marker, and HubSpot marker healthy; cross-domain linking degraded; Meta Pixel unknown pending rendered verification; GA4, Search Console, GTM configuration, and full HubSpot reporting blocked with no provider failures."
     },
     {
       "id": "cta-inventory",
