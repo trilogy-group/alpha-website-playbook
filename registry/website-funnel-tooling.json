@@ -342,17 +342,20 @@
       "answers": [
         "every CTA per campus",
         "rendered state versus HubSpot",
-        "loop health"
+        "loop health",
+        "measurement access, tag, linker, freshness, key-event and anomaly health"
       ],
       "access": {
-        "packets": "site-runtime-state branch and run artifacts"
+        "packets": "site-runtime-state branch and run artifacts",
+        "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
+        "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843"
       },
       "owner": "website-operations",
       "status": "held",
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "Measures conformance of the rendered site twice daily; reads no analytics. audience-funnel loop is one advisory CTA-routing check."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow merged 2026-09-28 and runs daily/on demand from the playbook contract. First production run: homepage, GTM tag and HubSpot tracking healthy; cross-domain linker degraded; GA4, Search Console and GTM configuration access blocked; AEO HubSpot token could read forms and marketing events but not contacts."
     },
     {
       "id": "cta-inventory",
