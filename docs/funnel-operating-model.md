@@ -55,6 +55,8 @@ The read-only instrumentation audit must identify:
 
 The contract is versioned. A dashboard always names the contract version and data-through date. A changed event name, CTA route, consent rule, campus identity, or attribution window is a measurement change and must not rewrite historical meaning silently.
 
+The machine-readable working contract is `registry/website-measurement-contract.json`. It records the observed events and their evidence-window counts, the five outcome authorities, required dimensions, public health markers, cross-domain requirements, and every explicit gap. It is intentionally nonbinding while the analytics owner and primary outcome are undecided. A null event name, join key, attribution window, owner, or completion count is a blocker to resolve, not a blank for an agent to complete from intuition.
+
 ## 4. Prove instrumentation with journeys, not tag presence
 
 For each page family and each lifecycle-specific CTA path:

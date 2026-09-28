@@ -1,0 +1,215 @@
+{
+  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. This is a working, nonbinding inventory of what is observed, what each signal may mean, what completion system is authoritative, and what remains unproven. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
+  "version": "0.1",
+  "status": "working-nonbinding",
+  "asOf": "2026-09-28",
+  "evidenceWindow": {
+    "start": "2026-06-30",
+    "end": "2026-09-27",
+    "source": "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
+  },
+  "governance": {
+    "analyticsAndConsentOwner": null,
+    "primaryProspectiveParentOutcome": null,
+    "primaryOutcomeDecision": "docs/questions-for-staff-2026-09-17.md Q-01",
+    "meaning": "Observed events and downstream records may be reported separately. None may be promoted to a governed conversion or GA4 key event until its firing contract, parameters, owner, and completion reconciliation are approved."
+  },
+  "healthConfig": {
+    "homepageUrl": "https://alpha.school/",
+    "ga4PropertyId": "452530593",
+    "searchConsoleSiteUrl": "sc-domain:alpha.school",
+    "expectedPublicMarkers": {
+      "gtmContainer": "GTM-5W56ZLQJ",
+      "hubspotPortal": "40051392",
+      "metaPixel": "5961380957279503"
+    },
+    "requiredLinkerDomains": [
+      "alpha.school",
+      "go.alpha.school",
+      "events.alpha.school"
+    ],
+    "provisionalTrafficQualityThresholds": {
+      "activeUsersGreaterThan": 1000,
+      "engagementRateBelow": 0.1,
+      "averageSessionDurationSecondsBelow": 10
+    }
+  },
+  "requiredDimensions": [
+    "campus_program_id",
+    "campus_slug",
+    "campus_lifecycle_at_event_time",
+    "page_family",
+    "cta_type",
+    "cta_position",
+    "landing_page",
+    "source",
+    "medium",
+    "campaign",
+    "device_category",
+    "experiment_id",
+    "experiment_variant"
+  ],
+  "observedEvents": {
+    "video_start": {
+      "status": "observed-ungoverned",
+      "ga4KeyEvent": false,
+      "evidenceCount": 62133,
+      "currentMeaning": "A site video began playing.",
+      "requiredParametersVerified": false,
+      "nextStep": "Verify video identity, page identity, and exposure denominator before reporting a start rate."
+    },
+    "video_progress": {
+      "status": "observed-ungoverned",
+      "ga4KeyEvent": false,
+      "evidenceCount": 129197,
+      "currentMeaning": "A video crossed one or more progress thresholds.",
+      "requiredParametersVerified": false,
+      "nextStep": "Document the progress thresholds and prevent multiple thresholds from being interpreted as unique viewers."
+    },
+    "video_complete": {
+      "status": "observed-ungoverned",
+      "ga4KeyEvent": false,
+      "evidenceCount": 13121,
+      "currentMeaning": "A site video completed.",
+      "requiredParametersVerified": false,
+      "nextStep": "Join unique completers to unique starters by video and page, then test whether completion precedes an approved next step."
+    },
+    "click": {
+      "status": "observed-generic",
+      "ga4KeyEvent": false,
+      "evidenceCount": 62103,
+      "currentMeaning": "Enhanced-measurement outbound click.",
+      "requiredParametersVerified": false,
+      "nextStep": "Do not use as a conversion. Classify destinations and CTA controls first."
+    },
+    "event_click": {
+      "status": "observed-meaning-unverified",
+      "ga4KeyEvent": false,
+      "evidenceCount": 14160,
+      "currentMeaning": null,
+      "requiredParametersVerified": false,
+      "nextStep": "Find the GTM trigger and parameter contract before using the event."
+    },
+    "file_download": {
+      "status": "observed-generic",
+      "ga4KeyEvent": false,
+      "evidenceCount": 6819,
+      "currentMeaning": "Enhanced-measurement file download.",
+      "requiredParametersVerified": false,
+      "nextStep": "Classify file identity and confirm which downloads are approved campus information packets."
+    },
+    "popup_cta_click": {
+      "status": "observed-ungoverned",
+      "ga4KeyEvent": false,
+      "evidenceCount": 3647,
+      "currentMeaning": "Popup CTA interaction.",
+      "requiredParametersVerified": false,
+      "nextStep": "Document the popup, destination, eligibility, and outcome relationship."
+    },
+    "workshop_click": {
+      "status": "observed-meaning-unverified",
+      "ga4KeyEvent": false,
+      "evidenceCount": 2756,
+      "currentMeaning": null,
+      "requiredParametersVerified": false,
+      "nextStep": "Locate the trigger and distinguish a workshop content interaction from an event registration."
+    },
+    "hubspot_form_submit": {
+      "status": "observed-conversion-candidate",
+      "ga4KeyEvent": false,
+      "evidenceCount": 1620,
+      "currentMeaning": "A HubSpot form submission was observed by the alpha.school GA4 property.",
+      "requiredParametersVerified": false,
+      "nextStep": "Reconcile by host, form ID, purpose, and date against HubSpot before promoting any subset."
+    },
+    "community_button_click": {
+      "status": "observed-low-volume",
+      "ga4KeyEvent": false,
+      "evidenceCount": 2,
+      "currentMeaning": "A Community CTA interaction on the instrumented surface.",
+      "requiredParametersVerified": false,
+      "nextStep": "Verify deployment coverage and destination identity before interpreting volume."
+    }
+  },
+  "outcomes": {
+    "book-a-call": {
+      "ctaControls": [
+        "spec/campus-page-controls.json hero.book-a-call"
+      ],
+      "siteStartEvent": null,
+      "destinationHost": "go.alpha.school",
+      "completionAuthority": "HubSpot public scheduling-page booking",
+      "completionReadable": true,
+      "evidenceCompletionCount": 1912,
+      "joinKey": null,
+      "attributionWindow": null,
+      "status": "completion-readable-origin-unjoined",
+      "doNotInfer": "A CTA click, scheduling-page view, or scheduling-form analytics record is not a booked meeting."
+    },
+    "info-session": {
+      "ctaControls": [
+        "public website event card",
+        "campus event strip"
+      ],
+      "siteStartEvent": null,
+      "destinationHost": "events.alpha.school",
+      "completionAuthority": "Event registration system and HubSpot Marketing Event registration",
+      "completionReadable": true,
+      "evidenceCompletionCount": 17728,
+      "joinKey": null,
+      "attributionWindow": null,
+      "status": "completion-readable-origin-unjoined",
+      "doNotInfer": "An event-card click or registration-page view is not a registration; integrations and event types must be classified before totals are compared."
+    },
+    "info-packet": {
+      "ctaControls": [
+        "spec/campus-page-controls.json resources packet control"
+      ],
+      "siteStartEvent": null,
+      "destinationHost": null,
+      "completionAuthority": null,
+      "completionReadable": false,
+      "evidenceCompletionCount": null,
+      "joinKey": null,
+      "attributionWindow": null,
+      "status": "definition-blocked",
+      "doNotInfer": "A generic file_download is not proof that an approved packet was requested, read, or acted on."
+    },
+    "application": {
+      "ctaControls": [
+        "spec/campus-page-controls.json resources apply control"
+      ],
+      "siteStartEvent": null,
+      "destinationHost": null,
+      "completionAuthority": "Finalsite or the campus admissions system named by the governed destination",
+      "completionReadable": false,
+      "evidenceCompletionCount": null,
+      "joinKey": null,
+      "attributionWindow": null,
+      "status": "destination-and-completion-blocked",
+      "doNotInfer": "A HubSpot redirect-form submission, application-page view, application start, and submitted application are separate stages."
+    },
+    "join-community": {
+      "ctaControls": [
+        "spec/campus-page-controls.json community control"
+      ],
+      "siteStartEvent": "community_button_click",
+      "destinationHost": null,
+      "completionAuthority": "Community join or interest submission",
+      "completionReadable": false,
+      "evidenceCompletionCount": null,
+      "joinKey": null,
+      "attributionWindow": null,
+      "status": "start-observed-completion-blocked",
+      "doNotInfer": "A Community button click is not a completed join or interest submission."
+    }
+  },
+  "knownGaps": [
+    "No observed GA4 event is configured as a key event.",
+    "The GTM container cannot be read by the tested Google account, so firing contracts and parameters remain unverified.",
+    "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
+    "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
+    "No downstream completion has an approved site-to-system join key or attribution window.",
+    "The analytics-and-consent owner and primary prospective-parent outcome are undecided."
+  ]
+}

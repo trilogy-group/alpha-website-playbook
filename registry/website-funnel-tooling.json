@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.4",
+  "version": "0.6",
   "asOf": "2026-09-28",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -18,15 +18,20 @@
       ],
       "access": {
         "containerId": "GTM-5W56ZLQJ",
-        "readAccess": null,
-        "holder": null
+        "readAccess": false,
+        "holder": null,
+        "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+        "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
+        "testedAccount": "matthew.barge@superbuilders.school",
+        "verifiedAt": "2026-09-28",
+        "verification": "The tested human account and scheduled measurement identity cannot read this container yet; grant Read on the existing container, do not create another container"
       },
       "owner": null,
       "status": "present",
       "recordedIn": [
         "registry/global-runtime.json"
       ],
-      "note": "On every page through Site Kit; noscript iframe emitted twice per page; contents unreadable from HTML; no dataLayer pushes or gtag events on any CTA."
+    "note": "On every page through Site Kit; noscript iframe emitted twice per page. AEO now verifies the actual container by API rather than trusting a flag, but the measurement identity still needs the product grant."
     },
     {
       "id": "google-tag",
@@ -37,9 +42,9 @@
       ],
       "access": {
         "tagId": "GT-PJNQ32T9",
-        "ga4PropertyId": null,
-        "readAccess": null,
-        "holder": null,
+        "ga4PropertyId": "452530593",
+        "readAccess": true,
+        "holder": "matthew.barge@superbuilders.school for supervised GA4 UI; shared Site Kit owner for configuration",
         "googleTagAccountId": "6244084123",
         "googleTagContainerId": "192305539",
         "destination": "G-G7M04CYHH0"
@@ -66,9 +71,9 @@
       ],
       "access": {
         "propertyId": "452530593",
-        "serviceAccount": null,
-        "apiClient": null,
-        "holder": null,
+        "serviceAccount": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+        "apiClient": "Google Cloud project alpha-website-measurement; GA4 Data and Admin APIs enabled",
+        "holder": "matthew.barge@superbuilders.school for supervised browser reports",
         "accountId": "325161189",
         "webDataStreamId": "8528930369",
         "measurementId": "G-G7M04CYHH0",
@@ -76,14 +81,19 @@
         "adsLinked": true,
         "siteKitOwner": "WordPress admin \"Alpha School\" (info@alpha.school, user 9)",
         "readPaths": [
+          "Direct Google Analytics UI with matthew.barge@superbuilders.school (verified 2026-09-28)",
           "Site Kit REST proxy (modules/analytics-4/data/report) once a WordPress admin user has granted Site Kit the analytics.readonly scope with a Google account that can view the property",
           "GA4 Data API with a service account granted Viewer on property 452530593"
-        ]
+        ],
+        "uiVerifiedAt": "2026-09-28",
+        "scheduledReadAccess": false
       },
       "owner": null,
-      "status": "present",
-      "recordedIn": [],
-      "note": "Property ids read from Site Kit settings on 2026-09-28 (wp-json/google-site-kit/v1/modules/analytics-4/data/settings). No credential in any repo yet; Site Kit reports answer 403 missing_required_scopes for the agent user (Matt Barge, WordPress user 34) until that user authenticates Site Kit with Google."
+      "status": "held",
+      "recordedIn": [
+        "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
+      ],
+    "note": "Direct GA4 UI access is verified and returned live, 28-day and 90-day reports. The first 90-day baseline found 560,394 sessions, existing video/form/click events, zero key events, and strong traffic-quality anomalies. The dedicated scheduled identity, API, AEO secret, property variable, and real freshness/traffic-quality probes exist; property 452530593 still needs to grant Viewer. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
     },
     {
       "id": "search-console",
@@ -97,14 +107,18 @@
       "access": {
         "siteUrl": "sc-domain:alpha.school",
         "siteKit": "connected, owner info@alpha.school; proxy 403 for the agent user until Google-authenticated",
-        "observerActions": "not configured: the aeo repo holds GOOGLE_OAUTH_CLIENT_ID and SECRET but no GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN; health.json reports \"Google Search Console OAuth is not configured\""
+        "observerActions": "AEO now exchanges the dedicated measurement service account for webmasters.readonly and performs a real searchAnalytics query",
+        "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+        "testedAccount": "matthew.barge@superbuilders.school",
+        "directUiAccess": false,
+        "verifiedAt": "2026-09-28"
       },
       "owner": null,
       "status": "present",
       "recordedIn": [
         "aeo alpha-site-system/src/sources.mjs"
       ],
-      "note": "The observer has the code path and the OAuth client but no refresh token, so nothing reads Search Console today. Corrected 2026-09-28 from an earlier \"held\"."
+    "note": "The durable API path exists, but sc-domain:alpha.school has not granted the measurement identity read access, so the real query remains blocked. Direct browser verification also returned 'you don't have access to this property' for matthew.barge@superbuilders.school. Site Kit's shared-owner connection is separate."
     },
     {
       "id": "site-kit",
@@ -156,6 +170,20 @@
       ],
       "access": {
         "verifiedAt": "2026-09-28",
+        "dedicatedServiceKey": {
+          "name": "Alpha Website Funnel Reporting",
+          "id": "54942577",
+          "portal": "40051392",
+          "runtimeSecret": "superbuilders/aeo HUBSPOT_REPORTING_TOKEN",
+          "successfulProbes": [
+            "contacts",
+            "forms",
+            "marketing events",
+            "appointments",
+            "meeting links"
+          ],
+          "blockedProbe": "legacy traffic analytics returned HTTP 403 despite reporting.full.read"
+        },
         "readsWith": {
           "analytics (/analytics/v2/reports/{breakdown}/{period}: totals, sessions, sources, geolocation, utm-campaigns, standard-pages)": [
             "HUBSPOT_MARKETING_SYNCING_TOKEN",
@@ -187,7 +215,7 @@
       "recordedIn": [
         "marketingsupport workflows/hubspot-api-registry/agent.md"
       ],
-      "note": "Corrected 2026-09-28: the held tokens do read HubSpot traffic analytics, forms, submissions, marketing events, meetings and contacts (tested endpoint by endpoint). First read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
+    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. The new dedicated read-only AEO key independently proves contacts, forms, marketing events, appointments and meeting links, but not the legacy traffic-analytics endpoint. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
@@ -331,17 +359,20 @@
       "answers": [
         "every CTA per campus",
         "rendered state versus HubSpot",
-        "loop health"
+        "loop health",
+        "measurement access, tag, linker, freshness, key-event and anomaly health"
       ],
       "access": {
-        "packets": "site-runtime-state branch and run artifacts"
+        "packets": "site-runtime-state branch and run artifacts",
+        "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
+        "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843"
       },
       "owner": "website-operations",
       "status": "held",
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "Measures conformance of the rendered site twice daily; reads no analytics. audience-funnel loop is one advisory CTA-routing check."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. The API-hardening update performs real GA4, Search Console, GTM and full HubSpot surface probes and classifies 401/403 as access blockers, not false provider failures."
     },
     {
       "id": "cta-inventory",
@@ -537,6 +568,39 @@
         "aeo alpha-site-system README (Operations sheet reader)"
       ],
       "note": "Email unknown to this workspace (inside the secret); read from the aeo repo secret by whoever holds it, then add as Viewer on GA4 property 452530593."
+    },
+    {
+      "id": "google-measurement-service-account",
+      "name": "Alpha Website Measurement service account",
+      "kind": "credential",
+      "answers": [
+        "scheduled GA4 traffic and freshness",
+        "scheduled Search Console performance",
+        "GTM account and container configuration access"
+      ],
+      "access": {
+        "project": "alpha-website-measurement",
+        "email": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+        "credential": "aeo repo secret GOOGLE_ANALYTICS_SERVICE_ACCOUNT_JSON",
+        "ga4PropertyId": "452530593",
+        "enabledApis": [
+          "Google Analytics Data API",
+          "Google Analytics Admin API",
+          "Google Search Console API",
+          "Google Tag Manager API"
+        ],
+        "productGrants": {
+          "ga4": "blocked: needs Viewer on property 452530593",
+          "searchConsole": "blocked: needs Restricted/read on sc-domain:alpha.school",
+          "gtm": "blocked: needs Read on GTM-5W56ZLQJ"
+        }
+      },
+      "owner": "website-operations",
+      "status": "held",
+      "recordedIn": [
+        "aeo .github/workflows/measurement-integrity.yml"
+      ],
+      "note": "The durable credential exists and the downloaded local key was removed. Authentication alone is not provider health; each product remains blocked until its real API read succeeds."
     },
     {
       "id": "superbuilders-context",
