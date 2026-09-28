@@ -86,6 +86,10 @@ Until this exists, "5,000 visits a day" is an unsegmented number and any recomme
 
 ## 7. First two weeks
 
+Baseline pulled the same day from HubSpot: `docs/website-as-a-funnel-baseline-2026-09-28.md` (numbers, caveats, and the intent-readiness assessment: level 1 on intent, level 2 only for the converting 4 percent).
+
+### 7a. Progress log
+
 - Days 1 to 3: the tooling registry (layer 1), the access requests sent, the audience classes drafted, the tracking-state report in its "unknown" form.
 - Days 4 to 7: with GA4 and GTM read, the tracking-state report completed, the measurement-integrity lane in the observer (layer 2), the 90-day baseline pulled (layer 4 in raw form).
 - Days 8 to 10: criteria agreed, the first three angles run (kill list, hot cities, content to next step), the site-truth report joined to traffic so every campus row shows visits and outcomes next to its defects.
