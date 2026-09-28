@@ -22,6 +22,9 @@ import {
   COLUMNS,
   COLOR_MARK,
   LAUNCH_WORDS,
+  campusCityIn,
+  launchAssetPatterns,
+  launchCardPattern,
   SLOT_LAUNCH_WORDS,
   REPORT_VERSION,
   SiteTruthError,
@@ -163,6 +166,56 @@ test('card cell, three levels from the observation: East Bay red with the OCR te
   assert.deepEqual(colorReason(row('carrollton').cells.card), ['grey', 'not-open'])
   assert.match(row('carrollton').cells.card.detail, /reads "Coming Fall 2026 To Carrollton"/, 'an Announced page names what it shows and is not graded')
   assert.deepEqual(colorReason(row('lake-travis').cells.card), ['grey', 'not-open'])
+})
+
+test('card cell, a launch-card file name plus an alt naming another campus city is red launch when OCR read nothing; the pattern alone is evidence in the detail', () => {
+  // The bundle row's assetPatterns come with the registries (the repository bundle when the fixture root has none).
+  assert.ok(registries.assetPatterns.some((p) => /Subtitle-/.test(p)), 'the Subtitle-<n> export naming is a launch-card pattern')
+  assert.deepEqual(launchAssetPatterns(FIXTURE), registries.assetPatterns)
+  assert.deepEqual(launchAssetPatterns(fs.mkdtempSync(path.join(os.tmpdir(), 'no-bundle-'))), registries.assetPatterns, 'a root with no bundle falls back to the repository bundle')
+  assert.equal(launchCardPattern('https://alpha.school/wp-content/uploads/2026/06/Subtitle-8-1024x704.webp', registries.assetPatterns), registries.assetPatterns[0])
+  assert.equal(launchCardPattern('https://alpha.school/wp-content/uploads/2026/09/9228-Kirkland-Open-and-Enrolling-1024x704.png', registries.assetPatterns), null, 'the Open and Enrolling cards never match')
+  assert.equal(launchCardPattern('https://alpha.school/wp-content/uploads/2026/01/Santa-Monica%E2%80%8B-1024x704.png', registries.assetPatterns), registries.assetPatterns[2], 'Santa Monica with its zero-width space')
+  assert.equal(launchCardPattern('', registries.assetPatterns), null)
+  assert.equal(campusCityIn('San Diego', registries.pages), 'San Diego', 'La Jolla\'s own alias is a campus city')
+  assert.equal(campusCityIn('Open and Enrolling', registries.pages), null)
+
+  // The 2026-09-28 packet: the La Jolla slot, Subtitle-8.webp with alt "San Diego", read as noise at 25 by the raw OCR step.
+  const src = 'https://alpha.school/wp-content/uploads/2026/06/Subtitle-8-1024x704.webp'
+  const laJolla = (alt) => ({ program: { id: 'program-51235904641' }, url: 'https://alpha.school/la-jolla/', finalUrl: 'https://alpha.school/la-jolla/', status: 200, text: 'Alpha La Jolla is open and enrolling.', media: { images: [{ src, alt, title: '', classes: 'attachment-large size-large wp-image-9226', containerId: 'content_image', nearbyText: '', isPrimaryCampusVisual: true, staleLaunchSignal: false }], youtubeVideos: [], hasYouTubeVideo: false, staleLaunchSignals: [] } })
+  const noise = [{ slot: 'intro-card', src, url: 'https://alpha.school/wp-content/uploads/2026/06/Subtitle-8.webp', alt: 'San Diego', visionText: 'P— SL Et Ta\n" 2 valine', confidence: 25 }]
+  const options = { vision: noise, pages: registries.pages, slug: 'la-jolla', assetPatterns: registries.assetPatterns }
+  const obs = observeSlot(laJolla('San Diego'), options)
+  assert.equal(obs.image.launchAsset, registries.assetPatterns[0])
+  assert.equal(obs.image.text, null, 'noise at 25 is not quoted')
+  assert.deepEqual(obs.launch, [`launch-card file Subtitle-8-1024x704.webp (pattern ${registries.assetPatterns[0]}) with alt "San Diego"`])
+  assert.equal(obs.otherCampus, null, 'San Diego is La Jolla\'s own alias, not another campus')
+  const red = cardCell({ campuses: {} }, 'la-jolla', laJolla('San Diego'), 'Open', obs)
+  assert.deepEqual(colorReason(red), ['red', 'launch'])
+  assert.match(red.detail, /^attachment 9226 \(Subtitle-8-1024x704\.webp, alt "San Diego", no text read \(OCR confidence 25\), file matches launch-card pattern .*Subtitle.*\); launch wording: launch-card file Subtitle-8-1024x704\.webp \(pattern .*\) with alt "San Diego"$/)
+  assert.deepEqual(colorReason(cardCell({ campuses: { 'la-jolla': { openMedia: 'card', attachmentId: 9226, status: 'placed' } } }, 'la-jolla', laJolla('San Diego'), 'Open', obs)), ['red', 'launch'], 'red whatever the registry approves')
+  // The pattern alone: an empty alt, or the page's own city, stays amber with the pattern named in the detail.
+  for (const alt of ['', 'La Jolla']) {
+    const evidenceOnly = observeSlot(laJolla(alt), options)
+    assert.deepEqual(evidenceOnly.launch, [], `alt ${JSON.stringify(alt)}`)
+    const amber = cardCell({ campuses: {} }, 'la-jolla', laJolla(alt), 'Open', evidenceOnly)
+    assert.deepEqual(colorReason(amber), ['amber', 'unapproved'])
+    assert.match(amber.detail, /file matches launch-card pattern/)
+  }
+  // Without the bundle's patterns (a caller that observes the page alone) nothing changes.
+  assert.deepEqual(colorReason(cardCell({ campuses: {} }, 'la-jolla', laJolla('San Diego'), 'Open')), ['amber', 'unapproved'])
+  // Read by the observer's preprocessing ladder: red by the words, the pattern no longer needed in the detail.
+  const read = observeSlot(laJolla('San Diego'), { ...options, vision: [{ ...noise[0], visionText: 'Coming Fall 2026\nTo San Diego', confidence: 95 }] })
+  assert.deepEqual(read.launch, ['Coming Fall', 'Fall 2026', `launch-card file Subtitle-8-1024x704.webp (pattern ${registries.assetPatterns[0]}) with alt "San Diego"`])
+  const readCell = cardCell({ campuses: {} }, 'la-jolla', laJolla('San Diego'), 'Open', read)
+  assert.deepEqual(colorReason(readCell), ['red', 'launch'])
+  assert.match(readCell.detail, /reads "Coming Fall 2026 To San Diego"/)
+  assert.doesNotMatch(readCell.detail, /file matches launch-card pattern/)
+  // The fixture's East Bay card matches a pattern too (empty alt); its detail is the words read, unchanged.
+  const eastBay = observeSlot(pageFor('east-bay'), { vision: packet.vision.get('https://alpha.school/east-bay/'), pages: registries.pages, slug: 'east-bay', assetPatterns: registries.assetPatterns })
+  assert.equal(eastBay.image.launchAsset, registries.assetPatterns[1])
+  assert.deepEqual(eastBay.launch, ['Coming Fall', 'Fall 2026'])
+  assert.doesNotMatch(cardCell({ campuses: {} }, 'east-bay', pageFor('east-bay'), 'Open', eastBay).detail, /file matches launch-card pattern/)
 })
 
 test('card cell, the registry contributes the approval only: mismatch, other-campus, placeholder, empty, unobserved, unfetched', () => {

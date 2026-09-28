@@ -37,7 +37,10 @@
  *             (launching, coming or opening-in wording on an Open page) | absent | unfetched.
  *             Announced: dated | undated | open-wording | absent | unfetched
  *   card      the intro slot as the packet observes it, graded in three levels, then matched to the registry's approval:
- *             red   launch (launch words in the vision reading, alt, filename or the observer's stale-launch signal) |
+ *             red   launch (launch words in the vision reading, alt, filename or the observer's stale-launch signal; or a
+ *                   file name matching the check bundle's launch-card assetPatterns whose alt or title names a campus
+ *                   city other than the page's own, La Jolla's Subtitle-8.webp with alt "San Diego", when OCR read
+ *                   nothing confident; a pattern match alone is named in the detail and is never the verdict) |
  *                   other-campus (the slot names another campus) | placeholder | empty (no slot image and no campus
  *                   video in the packet) | mismatch (the registry approves a different asset than the one rendered)
  *             amber unapproved (plausible media, a campus video or a photo with no launch words, that no registry row
@@ -73,6 +76,8 @@ export const SHARED_VIDEO_PAGES = 4
 export const VISION_MIN_CONFIDENCE = 60
 export const PLACEHOLDER_MEDIA = /placeholder|\blorem\b|\bsample\b/i
 export const PUBLIC_HOSTS = ['alpha.school', 'www.alpha.school']
+/** The compiled check bundle, read for campus.intro.media.current literals.assetPatterns (the launch-card file names); the repository's own copy when the registry root has none. */
+export const CHECK_BUNDLE_FILE = 'spec/check-bundle.generated.json'
 export const REGISTRY_FILES = {
   pages: 'registry/campus-pages.json',
   openMedia: 'registry/campus-open-media.json',
@@ -182,7 +187,27 @@ export function loadRegistries(root = path.join(here, '..')) {
     out[key] = readJson(file)
   }
   out.root = path.resolve(root)
+  out.assetPatterns = launchAssetPatterns(root)
   return out
+}
+
+/** campus.intro.media.current literals.assetPatterns from the check bundle under `root`, else the repository's bundle, else none. */
+export function launchAssetPatterns(root = path.join(here, '..')) {
+  for (const candidate of [path.join(root, CHECK_BUNDLE_FILE), path.join(here, '..', CHECK_BUNDLE_FILE)]) {
+    if (!fs.existsSync(candidate)) continue
+    const row = (readJson(candidate).rows || []).find((r) => r.id === 'campus.intro.media.current')
+    const patterns = row?.literals?.assetPatterns
+    if (Array.isArray(patterns)) return patterns.map(String)
+  }
+  return []
+}
+
+/** The first launch-card asset pattern the slot's src matches (as a pattern string), else null. */
+export function launchCardPattern(src, assetPatterns = []) {
+  const value = String(src || '')
+  if (!value) return null
+  for (const pattern of assetPatterns || []) { try { if (new RegExp(pattern, 'i').test(value)) return pattern } catch { /* a bad pattern never matches */ } }
+  return null
 }
 
 // ---------- helpers ----------
@@ -292,7 +317,7 @@ export function renderedSlot(page) {
   const slot = first(images, (img) => img.containerId === 'content_image') || null
   if (!slot) return null
   const id = slot.classes?.match(/wp-image-(\d+)/)?.[1]
-  return { attachmentId: id ? Number(id) : null, src: slot.src, file: String(slot.src || '').split('/').pop(), alt: slot.alt || '', nearbyText: slot.nearbyText || '', staleLaunchSignal: Boolean(slot.staleLaunchSignal) }
+  return { attachmentId: id ? Number(id) : null, src: slot.src, file: String(slot.src || '').split('/').pop(), alt: slot.alt || '', title: slot.title || '', nearbyText: slot.nearbyText || '', staleLaunchSignal: Boolean(slot.staleLaunchSignal) }
 }
 
 /** The YouTube id of a watch, share or embed URL, else null. */
@@ -326,6 +351,17 @@ export function namesOwnCampus(text, slug, pages) {
   return (pages?.campuses?.[slug]?.names || []).some((n) => bareName(n) && namePattern(bareName(n)).test(haystack))
 }
 
+/** A registered campus city (any campus's name without "Alpha", the page's own aliases included) named whole-word in the text, else null. */
+export function campusCityIn(text, pages) {
+  const haystack = String(text || '')
+  if (!haystack.trim()) return null
+  for (const entry of Object.values(pages?.campuses || {})) for (const name of entry.names || []) { const bare = bareName(name); if (bare && namePattern(bare).test(haystack)) return bare }
+  return null
+}
+
+/** The page's own city as its slug spells it ("la-jolla" names La Jolla, not San Diego). */
+const namesSlugCity = (text, slug) => Boolean(slug) && namePattern(String(slug).replace(/-+/g, ' ')).test(String(text || ''))
+
 /** Another registered campus named in the slot's alt, filename or reading; the page's own names (and names they contain) never count. */
 export function otherCampusIn(texts, slug, pages) {
   const own = (pages?.campuses?.[slug]?.names || []).map((n) => bareName(n).toLowerCase())
@@ -347,10 +383,11 @@ export function otherCampusIn(texts, slug, pages) {
  * is confident), the page's campus videos (YouTube ids that are not site-wide, titled from browser.json embeds), and
  * the launch words, other-campus name or placeholder found in any of it.
  */
-export function observeSlot(page, { vision = [], embeds = new Map(), shared = new Set(), pages = null, slug = null } = {}) {
+export function observeSlot(page, { vision = [], embeds = new Map(), shared = new Set(), pages = null, slug = null, assetPatterns = [] } = {}) {
   if (!page) return null
   const image = renderedSlot(page)
   if (image) {
+    image.launchAsset = launchCardPattern(image.src, assetPatterns)
     const reading = (vision || []).find((v) => v.slot === 'intro-card' && assetKey(v.src || v.url) === assetKey(image.src)) || (vision || []).find((v) => v.slot === 'intro-card') || null
     image.confidence = Number.isFinite(reading?.confidence) ? reading.confidence : null
     image.text = reading && image.confidence >= VISION_MIN_CONFIDENCE ? cleanVision(reading.visionText) : null
@@ -372,6 +409,11 @@ export function observeSlot(page, { vision = [], embeds = new Map(), shared = ne
   const launch = []
   for (const text of texts.filter(Boolean)) for (const re of SLOT_LAUNCH_WORDS) { const hit = text.match(re)?.[0]; if (hit && !launch.includes(hit)) launch.push(hit) }
   if (image && (image.staleLaunchSignal || (page.media?.staleLaunchSignals || []).length)) launch.push('observer stale-launch signal')
+  // A launch-card file name (the bundle's assetPatterns) whose alt or title names a campus city other than the page's own
+  // slug city: the La Jolla slot, Subtitle-8.webp with alt "San Diego", read as noise by the raw OCR step. The pattern
+  // alone (an empty alt, or the page's own city) is evidence in the detail, never the verdict.
+  const place = image ? String(image.alt || image.title || '').trim() : ''
+  if (image?.launchAsset && place && campusCityIn(place, pages) && !namesSlugCity(place, slug)) launch.push(`launch-card file ${image.file} (pattern ${image.launchAsset}) with alt "${place}"`)
   const otherCampus = image ? otherCampusIn([image.alt, fileWords(image.file), image.text], slug, pages) : null
   const placeholder = Boolean(image && (PLACEHOLDER_MEDIA.test(image.alt) || PLACEHOLDER_MEDIA.test(fileWords(image.file))))
   return { image, videos, launch, otherCampus, placeholder }
@@ -379,7 +421,8 @@ export function observeSlot(page, { vision = [], embeds = new Map(), shared = ne
 
 function describeImage(image) {
   const text = image.text ? `reads "${image.text}"` : (image.read ? `no text read (OCR confidence ${image.confidence ?? '?'})` : 'not read by the vision pass')
-  return `attachment ${image.attachmentId ?? '?'} (${image.file}, alt ${image.alt ? `"${image.alt}"` : 'empty'}, ${text})`
+  const asset = !image.text && image.launchAsset ? `, file matches launch-card pattern ${image.launchAsset}` : ''
+  return `attachment ${image.attachmentId ?? '?'} (${image.file}, alt ${image.alt ? `"${image.alt}"` : 'empty'}, ${text}${asset})`
 }
 
 const describeVideos = (videos) => videos.map((v) => (v.title ? `"${v.title}" (${v.id})` : v.id)).join(', ')
@@ -570,7 +613,7 @@ export function buildReport(packet, registries, { now = new Date() } = {}) {
     const mapLocation = mapById.get(program.programId) || null
     const sentence = sentenceCell(page, program.type)
     const pageKey = page ? canonicalUrl(page.finalUrl || page.url) : null
-    const observation = page ? observeSlot(page, { vision: vision.get(pageKey) || vision.get(program.url) || [], embeds: embeds.get(pageKey) || embeds.get(program.url) || new Map(), shared, pages: registries.pages, slug }) : null
+    const observation = page ? observeSlot(page, { vision: vision.get(pageKey) || vision.get(program.url) || [], embeds: embeds.get(pageKey) || embeds.get(program.url) || new Map(), shared, pages: registries.pages, slug, assetPatterns: registries.assetPatterns || [] }) : null
     const cells = {
       state: stateCell(program, mapLocation, page, sentence),
       sentence,
@@ -605,7 +648,7 @@ export function buildReport(packet, registries, { now = new Date() } = {}) {
     reportVersion: REPORT_VERSION,
     generatedAt: now.toISOString(),
     packet: { dir: packet.dir, runId: manifest.runId || null, mode: manifest.mode || null, bundleVersion: manifest.bundleVersion || manifest.checkBundle?.version || null, completedAt: manifest.completedAt || manifest.generatedAt || null, programsSource: rows[0]?.source || (Array.isArray(sources.hubspotPrograms) && sources.hubspotPrograms.length ? 'hubspot-programs' : 'growth-map'), campusPages: (sources.campusPages || []).length, filerReport: packet.filerReportFile },
-    registries: { root: registries.root, files: REGISTRY_FILES },
+    registries: { root: registries.root, files: REGISTRY_FILES, assetPatterns: registries.assetPatterns || [] },
     columns: COLUMNS.map((c) => ({ id: c, label: COLUMN_LABELS[c], advisory: c === 'guide' })),
     rows,
     counts,
