@@ -1263,10 +1263,11 @@ test('observer filer: East Bay with no registry row files one Missing Info to we
   const recordedNull = planObserverFindings({ run, bundle: checks, queue: [], now, registries: withRegistry(nullRow) })
   assert.deepEqual([recordedNull.counts.files, recordedNull.counts.missingInfo, recordedNull.files[0].payload.status], [1, 1, MISSING_INFO_STATUS])
   assert.match(recordedNull.files[0].payload.description, /\nObserved: registry\/campus-open-media\.json campuses\.east-bay is recorded but names no approved intro media/)
-  // The committed registry (2026-09-25) is exactly that row, so the fixture files Missing Info against the repository too.
+  // The committed registry records the card placed on 2026-09-28 (attachment 12142, run open-cards-2026-09-28), so the 2026-09-25 fixture
+  // is an expectation recorded since the observer read the registry: nothing files, the report says why.
   resetRegistryCache()
   const committed = planObserverFindings({ run, bundle: checks, queue: [], now })
-  assert.deepEqual([committed.counts.files, committed.counts.missingInfo, committed.files[0].owner.name], [1, 1, 'Yash Chitneni'])
+  assert.deepEqual([committed.counts.files, committed.counts.missingInfo, committed.counts.recordedSince, committed.recordedSince[0].entry.attachmentId], [0, 0, 1, 12142])
 
   // (c) an approved attachment recorded for the slot: the expectation exists now, nothing files, the report says why.
   const approved = planObserverFindings({ run, bundle: checks, queue: [], now, registries: withRegistry({ 'east-bay': { openMedia: 'card', attachmentId: 8550, status: 'placed' } }) })

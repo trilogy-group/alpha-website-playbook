@@ -1,9 +1,9 @@
 {
   "expected": {
-    "outcome": "missing-registry",
+    "outcome": "routed",
     "class": "observer-media-identity",
     "ownerRole": "website-operations",
-    "why": "agent-found East Bay launch-card ticket (checkId open-intro-media-approved, 2026-09-21) classifies to observer-media-identity through matchCheckIds instead of needs-rule; registry/campus-open-media.json records no approved media for east-bay, so it is Missing Info to website operations (the registry owner), never internal triage (repair plan 2026-09-25, repairs 1 and 7)"
+    "why": "agent-found East Bay launch-card ticket (checkId open-intro-media-approved, 2026-09-21) classifies to observer-media-identity through matchCheckIds instead of needs-rule and routes to website operations, the owner of registry/campus-open-media.json (repair plan 2026-09-25, repairs 1 and 7). Until 2026-09-28 the registry recorded no approved media for east-bay and the outcome was missing-registry (Missing Info to the registry owner); run open-cards-2026-09-28 placed attachment 12142 and recorded the row, so the decision is the owner route."
   },
   "task": {
     "id": "cmubrkkm800000agmvukxsioc",

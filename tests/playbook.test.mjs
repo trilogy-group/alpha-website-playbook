@@ -2731,9 +2731,11 @@ test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before
   assert.ok(!ownerRuleMatches(mediaRule, { title: 'x', customFields: { checkId: 'no-other-campus-in-image-names' } }))
   const decision = evaluateTicket(bundle, fixture.task)
   resolveDecisionOwner(bundle, decision, fixture.task)
-  assert.deepEqual([decision.class, decision.outcome, decision.ownerRole, decision.owner, decision.registryMissing, administrativeAction(decision).kind], ['observer-media-identity', 'missing-registry', 'website-operations', 'Yash Chitneni', ['approvedMedia'], 'registry-missing-info'])
+  // Since 2026-09-28 registry/campus-open-media.json records the East Bay card (attachment 12142, run open-cards-2026-09-28), so the same
+  // ticket routes to website operations as the owner instead of Missing Info for a missing registry value.
+  assert.deepEqual([decision.class, decision.outcome, decision.ownerRole, decision.owner, decision.registryMissing, administrativeAction(decision).kind], ['observer-media-identity', 'routed', 'website-operations', 'Yash Chitneni', undefined, 'owner-route'])
   assert.deepEqual(decision.found.observerId, fixture.task.customFields.idempotencyKey, 'an agent-found ticket\'s durable id is its idempotency key')
-  assert.match(decision.reason, /^registry\/campus-open-media\.json has no approved open-state media for this campus; website operations records/)
+  assert.match(decision.reason, /^The approved open-state intro media is a registry value website operations owns \(registry\/campus-open-media\.json/)
 
   // agent/file-found-ticket.mjs writes requirementId from the alias, keeps checkId, and records the class and the owner role the policy decides.
   const prepared = prepareFoundPayload({ idempotencyKey: fixture.task.customFields.idempotencyKey, payload: { title: fixture.task.title, url: fixture.task.url, description: fixture.task.description, customFields: { source: 'agent-found', checkId: 'open-intro-media-approved', pageUrl: fixture.task.url } } }, { policy: bundle, aliases: checkBundle.aliases.pageCheck })
