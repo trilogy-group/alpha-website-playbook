@@ -1,0 +1,18 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-09-28T18:43:05.468Z",
+  "decidedBy": "Matt Barge",
+  "source": "review of the 2026-09-28 status-sentence tickets",
+  "date": "2026-09-28",
+  "specRefs": [
+    "spec/campus-lifecycle.json campuses.boston-suburbs.introStatementException",
+    "spec/check-rows.json campus.intro.status-source literals.exceptions"
+  ],
+  "summary": "Alpha Lexington (https://alpha.school/boston-suburbs/, HubSpot Program 51223157555, Announced, no opening date): the deliberate website_campus_intro sentence 'Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment.' is a named exception to the Announced season-and-year form of campus.intro.status-source (spec/campus-lifecycle.json introStatementException, listed in the row's literals.exceptions), not normalised; ends when a date exists or the Program type becomes Open; recommended by the website agent, awaiting Matt Barge's confirmation",
+  "decisionRow": "| 2026-09-28 | Proposed, awaiting Matt Barge (recommended by the website agent from the review of the 2026-09-28 status-sentence tickets, 2026-09-28): Alpha Lexington (https://alpha.school/boston-suburbs/, HubSpot Program 51223157555, Announced, no opening date): the deliberate website_campus_intro sentence 'Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment.' is a named exception to the Announced season-and-year form of campus.intro.status-source (spec/campus-lifecycle.json introStatementException, listed in the row's literals.exceptions), not normalised; ends when a date exists or the Program type becomes Open; recommended by the website agent, awaiting Matt Barge's confirmation | Matt Barge (asked 2026-09-28) | spec/campus-lifecycle.json campuses.boston-suburbs.introStatementException; spec/check-rows.json campus.intro.status-source literals.exceptions; tests/fixtures/decisions/recorded/2026-09-28-campus-lifecycle-a161726a.json |",
+  "appliedIn": "spec/campus-lifecycle.json campuses.boston-suburbs.introStatementException; spec/check-rows.json campus.intro.status-source literals.exceptions; tests/fixtures/decisions/recorded/2026-09-28-campus-lifecycle-a161726a.json",
+  "textSha256": "a161726a469f432c33834446b4b3133880374e0013a637409cd511dedaf85e97",
+  "text": "Relayed by the website agent on 2026-09-28 from Matt Barge's review of the 2026-09-28 status-sentence tickets (observer run site-events-2026-09-28T17-26-15-704Z, row campus.intro.status-source):\n\nDo NOT write Lexington (deliberate wording; exception to be recorded separately). The Alpha Lexington Program (51223157555, Announced, no opening_date) carries the sentence \"Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment.\" in website_campus_intro. Record the pending-approval wording as a named exception (recommended) or normalise; recommendation pending Matt's confirmation, so the row is Proposed, not Decided.\n",
+  "status": "Proposed",
+  "awaiting": "Matt Barge"
+}
