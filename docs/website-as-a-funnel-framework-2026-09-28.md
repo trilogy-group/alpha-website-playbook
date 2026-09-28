@@ -30,7 +30,7 @@ Five levels, applied to six capabilities. The level names are the vocabulary for
 
 | capability | level | evidence |
 |---|---|---|
-| A. Traffic measurement | 1 | GA4 account 325161189, property 452530593, stream 8528930369 and measurement ID G-G7M04CYHH0 are verified. Matt's Google account successfully read live, 28-day and 90-day GA4 reports directly in Chrome on 2026-09-28. The held HubSpot tokens also produced a matching-window baseline. Collection is active, but no GA4 API identity has Viewer access, GTM is unreadable to the tested account, no analytics owner is named, anomalies are unfiltered, and GA4 has zero key events. Search Console is connected under Site Kit's shared owner but inaccessible to Matt and unconfigured in the scheduled AEO runtime. |
+| A. Traffic measurement | 1 | GA4 account 325161189, property 452530593, stream 8528930369 and measurement ID G-G7M04CYHH0 are verified. Matt's Google account successfully read live, 28-day and 90-day GA4 reports directly in Chrome on 2026-09-28. A dedicated scheduled Google identity, enabled APIs, AEO secret, and real GA4/Search Console/GTM probes now exist. It still lacks the three product-level read grants, no analytics owner is named, anomalies are unfiltered, and GA4 has zero key events. |
 | B. Audience identity (current vs prospective, city, source) | 0 | No definition of audience classes, no identity join to HubSpot contacts, no page-family signal used. The ICP names one prospective-parent persona and says enrolled families are not the site's audience, yet admission forms, calendars and packets on the site are current-parent surfaces. |
 | C. Conversion outcomes | 1 | Five outcomes are defined, and the held HubSpot tokens read forms, submissions, public scheduling-page meetings, marketing events and contacts. A 90-day baseline found 11,303 form submissions, 1,912 public bookings and 17,728 marketing-event registrations. GA4 also records candidate events but has zero key events. The systems are not joined to the originating WordPress session, cross-domain continuity is unverified, and no final outcome definition is adopted (charter Q-01 open). |
 | D. Content performance | 1 | Podcast cards auto-order on listens plus trend. GA4 already collects `video_start`, `video_progress`, and `video_complete`; over 90 days it recorded 62,133 starts and 13,121 completes. Video/page identity and content-to-next-step attribution are not yet reported. About 125 editorial URLs still have no owner or declared next step. |
@@ -41,13 +41,13 @@ Read across: the first traffic and outcome baseline now exists, but the site rem
 
 ## 3. What we hold, what we lack
 
-**Held.** Supervised GA4 UI access; HubSpot traffic/forms/meetings/marketing-event/contact reads; WordPress admin and Site Kit configuration access; Alpha WordPress MCP (44 tools, none analytics); n8n read; Slack; APEX; Peec; Bing; the observer with a rendered-site inventory of every CTA per campus (`spec/campus-page-controls.json`, 12 controls, 44 pages); the ICP, belief sequence, funnel stages, messaging review standard and brand rules. Search Console is connected in Site Kit but is not held by Matt or the scheduled observer.
+**Held.** Supervised GA4 UI access; a dedicated Google measurement identity and AEO secret; a dedicated read-only HubSpot reporting key; existing HubSpot traffic/forms/meetings/marketing-event/contact reads; WordPress admin and Site Kit configuration access; Alpha WordPress MCP (44 tools, none analytics); n8n read; Slack; APEX; Peec; Bing; the observer with a rendered-site inventory of every CTA per campus (`spec/campus-page-controls.json`, 12 controls, 44 pages); the ICP, belief sequence, funnel stages, messaging review standard and brand rules. Search Console is connected in Site Kit but has not granted the scheduled identity.
 
 **Lacking, in the order it blocks work.**
 
-1. Scheduled GA4 access: property and supervised UI access are proven; a service account still needs Viewer access for a reliable scheduled pull.
-2. GTM: read access to container GTM-5W56ZLQJ. The tested Google account sees no Tag Manager accounts. Do not create another container.
-3. Search Console: property access for Matt plus a purpose-scoped scheduled refresh token; the current browser account and observer cannot read it.
+1. Scheduled GA4 access: the durable identity and real probe are ready; property 452530593 still needs to grant Viewer.
+2. GTM: the real API check is ready; container GTM-5W56ZLQJ still needs to grant the measurement identity Read. Do not create another container.
+3. Search Console: the real API check is ready; `sc-domain:alpha.school` still needs to grant the measurement identity Restricted/read.
 4. GA4/HubSpot reconciliation: forms, bookings and marketing events are readable but are not joined to the originating WordPress page/session; historical form IDs also need classification.
 5. An analytics and consent owner. The role exists in `registry/owners.json` as a gap; there is no consent banner on the site while the spec assumes one.
 6. An event taxonomy: the five events and the stable keys in the operating model, implemented in GTM with cross-domain linking to the three conversion subdomains.
@@ -58,7 +58,7 @@ Read across: the first traffic and outcome baseline now exists, but the site rem
 
 | layer | deliverable | what exists | what it needs |
 |---|---|---|---|
-| 1. Base layer: the tool inventory | `registry/website-funnel-tooling.json` in the playbook: every tool, plugin, skill, credential and data source we use to understand the site, each with owner, access path, status, and what it can answer | 35 entries in registry version 0.5; live GA4, HubSpot, Site Kit, Search Console and GTM access results now recorded | keep the access evidence current; add scheduled GA4 and Search Console access; add GTM read access; name the owner |
+| 1. Base layer: the tool inventory | `registry/website-funnel-tooling.json` in the playbook: every tool, plugin, skill, credential and data source we use to understand the site, each with owner, access path, status, and what it can answer | 36 entries in registry version 0.6; dedicated Google and HubSpot identities and live access results are recorded | finish the three Google product grants, resolve or document the HubSpot traffic-analytics limitation, keep evidence current, and name the owner |
 | 2. Health of the tools | a health check that runs on a cadence: does each tool answer, is the tag firing, is the linker right, is the container unchanged, does the HubSpot tracking cookie set, does Search Console return rows | implemented on AEO `main` as `.github/workflows/measurement-integrity.yml`; first production run 36481408843 passed and emitted a degraded evidence packet with healthy public tags and explicit access/linker gaps | grant the blocked read paths, merge the code-owner-approved contract, add the rendered Meta Pixel check, and calibrate thresholds after four clean weeks |
 | 3. Tracking-state report | one page: what is tracked, what is not, what is broken, per CTA and per page family, with the level from section 2 | `registry/website-measurement-contract.json` version 0.1 maps observed GA4 events to all five completion authorities and preserves unknown events, join keys and attribution windows as explicit nulls | GTM read access, event firing contracts, and cross-system reconciliation to turn the remaining unknowns into yes/no |
 | 4. Current metrics with criteria | baseline numbers for the last 90 days: sessions, landing pages, per-campus visits, drop-off by page, each outcome count from the system that holds it, form fill rates; with a stated criterion for each | first raw 90-day GA4 + HubSpot baseline completed in marketingsupport | automate the pulls, add raw vs quality-screened views, reconcile outcomes, and calibrate the provisional criteria |
@@ -80,8 +80,8 @@ Until this exists, "5,000 visits a day" is an unsegmented number and any recomme
 ## 6. Decisions and asks for Matt now
 
 1. Name the analytics and consent owner. Proposal: Matt as owner of definitions and access, Yash as owner of HubSpot reporting, the website agent as the executor of layers 1 to 4.
-2. Preserve Matt's verified GA4 UI access and request Viewer access for a service account on property 452530593. Separately request read access to existing GTM container GTM-5W56ZLQJ and Search Console `sc-domain:alpha.school`.
-3. Preserve the verified least-privilege HubSpot reads and operationalize the read-only baseline; request no new scopes unless a named missing report proves they are needed.
+2. Grant the existing measurement identity Viewer on GA4 property 452530593, Restricted/read on Search Console `sc-domain:alpha.school`, and Read on existing GTM container GTM-5W56ZLQJ.
+3. Preserve the dedicated least-privilege HubSpot reporting key. Investigate the legacy traffic-analytics 403 without broadening to write access; request no new scope unless a named endpoint proves it is required and supported.
 4. Decide the primary next step for a prospective parent (charter Q-01: event, call, apply, or a personalised path). Every funnel stage's CTA and every conversion criterion waits on it.
 5. Confirm that the first four layers are in scope for the next meeting with MacKenzie and Haven (week after next), with layers 5 to 8 framed as the following month.
 
