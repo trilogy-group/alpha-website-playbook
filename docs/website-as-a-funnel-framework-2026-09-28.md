@@ -1,8 +1,8 @@
-# Website Funnel: framework and maturity baseline
+# Website as a Funnel: framework and maturity baseline
 
-Project name: **Website Funnel**. Started 2026-09-28 by Matt Barge after MacKenzie Price's 2026-09-25 ask (about 5,000 visits a day, "we are throwing away all these leads", which pages kill visitors, which cities are hot, which content converts, and recommendations rather than a data dump). This document lays the groundwork: what we hold, how mature each capability is, and the layers to build. It is a system-maturity view, not an operations report; page breakage and ticket flow live in the QC loop documents.
+Project name: **Website as a Funnel**. Started 2026-09-28 by Matt Barge after MacKenzie Price's 2026-09-25 ask (about 5,000 visits a day, "we are throwing away all these leads", which pages kill visitors, which cities are hot, which content converts, and recommendations rather than a data dump). This document lays the groundwork: what we hold, how mature each capability is, and the layers to build. It is a system-maturity view, not an operations report; page breakage and ticket flow live in the QC loop documents.
 
-Companion documents: `Alpha Website Funnel and Analytics Plan 2026-09-25.md` (the first deliverable list), playbook `docs/funnel-operating-model.md` (measurement contract, five outcomes), playbook `playbook/foundation/audience-and-messaging.md` and `website-charter.md` (ICP, belief sequence, funnel stages), `docs/meetings/2026-09-25 MacKenzie Price website strategy.md`.
+Companion documents: marketingsupport `docs/Alpha Website Funnel and Analytics Plan 2026-09-25.md` (the first deliverable list), `docs/funnel-operating-model.md` (measurement contract, five outcomes), `playbook/foundation/audience-and-messaging.md` and `website-charter.md` (ICP, belief sequence, funnel stages), marketingsupport `docs/meetings/2026-09-25 MacKenzie Price website strategy.md`.
 
 ## 1. The questions this project has to be able to answer
 
