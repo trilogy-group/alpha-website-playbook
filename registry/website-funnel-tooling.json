@@ -25,8 +25,8 @@
         "reportingWorkflow": "superbuilders/aeo .github/workflows/google-read-reports.yml",
         "testedAccount": "matthew.barge@superbuilders.school",
         "verifiedAt": "2026-09-29",
-        "lastApiProbe": "https://github.com/superbuilders/aeo/actions/runs/36612072711",
-        "verification": "The tested human account still sees no GTM accounts and the scheduled measurement identity authenticated but returned zero accounts after the 2026-09-29 access request; grant Read on the existing container to the exact identity, do not create another container"
+        "lastApiProbe": "https://github.com/superbuilders/aeo/actions/runs/36616030581",
+        "verification": "The scheduled measurement identity authenticated but cannot read the existing container. The dedicated GTM report reached the container-access gate on 2026-09-29 after the OAuth fix; grant Read on the existing container to the exact identity, do not create another container"
       },
       "owner": null,
       "status": "present",
@@ -48,7 +48,10 @@
       ],
       "access": {
         "workflow": "https://github.com/superbuilders/aeo/actions/workflows/google-read-reports.yml",
-        "mergedIn": "https://github.com/superbuilders/aeo/pull/53",
+        "mergedIn": [
+          "https://github.com/superbuilders/aeo/pull/53",
+          "https://github.com/superbuilders/aeo/pull/55"
+        ],
         "credential": "aeo repo secret GOOGLE_ANALYTICS_SERVICE_ACCOUNT_JSON",
         "oauthScopes": [
           "webmasters.readonly",
@@ -64,7 +67,7 @@
         "aeo .github/workflows/google-read-reports.yml",
         "aeo docs/operations/alpha-website-google-read-reports.md"
       ],
-      "note": "The reporting workflow is deployed and fully tested. It becomes usable for live Search Console and GTM reports as soon as those products grant the scheduled identity access; no new token is required."
+      "note": "The reporting workflow is deployed and fully tested. PR 55 corrected the live JWT bearer exchange after run 36615221678 exposed the defect. Post-fix runs now reach the real Search Console and GTM product-access gates; the workflow becomes usable as soon as those products grant the scheduled identity access. No new token is required."
     },
     {
       "id": "google-tag",
@@ -147,10 +150,12 @@
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
         "reportingWorkflow": "superbuilders/aeo .github/workflows/google-read-reports.yml",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "directUiAccess": false,
+        "directUiAccess": true,
+        "directUiIdentity": "matthew.barge@superbuilders.school",
+        "directUiOwner": false,
         "verifiedAt": "2026-09-29",
-        "lastApiProbe": "https://github.com/superbuilders/aeo/actions/runs/36612072711",
-        "verification": "The tested human account still shows no access and the scheduled identity still returns Search Console HTTP 403 after the 2026-09-29 access request"
+        "lastApiProbe": "https://github.com/superbuilders/aeo/actions/runs/36615963316",
+        "verification": "Matt accepted the invitation and directly opened the alpha.school Overview with live Search Console reports on 2026-09-29. Settings says he is not a verified owner, so his account cannot grant the scheduled identity. The scheduled identity still returns Search Console HTTP 403."
       },
       "owner": null,
       "status": "present",
@@ -159,7 +164,7 @@
         "aeo .github/workflows/measurement-integrity.yml",
         "aeo .github/workflows/google-read-reports.yml"
       ],
-      "note": "The durable health probe and parameterized reporting path exist, but sc-domain:alpha.school has not granted the measurement identity read access, so real queries remain blocked. Direct browser verification still returns 'you don't have access to this property' for matthew.barge@superbuilders.school. Site Kit's shared-owner connection is separate."
+      "note": "Human read access is verified for matthew.barge@superbuilders.school. The durable health probe and parameterized reporting path exist, but sc-domain:alpha.school has not granted the measurement identity read access, so scheduled queries remain blocked. Site Kit's shared-owner connection is separate."
     },
     {
       "id": "site-kit",
