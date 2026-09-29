@@ -1,0 +1,21 @@
+{
+  "$comment": "tests/announced-status.test.mjs: the two Announced pages that failed page-check announced-names-launch-date on 2026-09-29 under the pre-bundle-1.8 rule (a month or season and year on every Announced page). Page text is the page-owned intro sentence as served; HubSpot is the Program's launch_date / opening_date as read the same day.",
+  "cases": {
+    "franklin": {
+      "url": "https://alpha.school/franklin/",
+      "campusNames": ["Alpha Franklin"],
+      "hubspotProgramId": "57601909511",
+      "pageText": "Alpha Franklin is coming soon. Join us for an info session, and see firsthand why Alpha is ranked among the best schools in the country.",
+      "hubspot": { "type": "Announced", "launch_date": "", "opening_date": "2027-08-11" },
+      "note": "opening_date 2027-08-11 in HubSpot but the Program has no wordpress_post_id, so page 9626 is unsynced and still reads coming soon: dated Program, the sentence must name the season and year"
+    },
+    "houston": {
+      "url": "https://alpha.school/houston/",
+      "campusNames": ["Alpha Houston Heights", "Alpha Houston"],
+      "hubspotProgramId": "26459919662",
+      "pageText": "Alpha Houston is coming soon. Join us for an info session, and see firsthand why Alpha is ranked among the best schools in the country.",
+      "hubspot": { "type": "Announced", "launch_date": "", "opening_date": "" },
+      "note": "no launch_date or opening_date: the undated form applies and coming soon passes (decision 2026-09-28)"
+    }
+  }
+}

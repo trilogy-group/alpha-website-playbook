@@ -7,7 +7,10 @@
  *
  * Fetches the canonical public URL as a visitor (no cache-busting), then checks the rendered HTML:
  *   structure  header template linked to its stylesheet, footer present, H1, hero CTA row, intro section
- *   state      Open pages carry no launch-era words; Announced pages name a month and year
+ *   state      Open pages carry no launch-era words; Announced pages name a month or season and year when the HubSpot
+ *              Program has launch_date or opening_date, and read "<name> is coming soon." when it has neither
+ *              (bundle 1.8 campus.intro.status-source; tests/announced-status.mjs reads the Program with
+ *              HUBSPOT_SERVICE_KEY or HUBSPOT_PRIVATE_APP_TOKEN; without a token "coming soon" is warn, not fail)
  *   identity   no sister-brand words; no other campus named in image file names or alt text
  *   links      every hero/resource CTA resolves (HEAD/GET 2xx, no cross-host surprises)
  *   media      intro card slot is an approved card, a video, or flagged
@@ -33,6 +36,7 @@ import path from 'node:path'
 import { loadChromium, SectionShotError } from './section-shot.mjs'
 import { measureTeamCards, teamPhotoFramingCheck } from './photo-framing.mjs'
 import { CHECK_ID as BRAND_CHECK_ID, brandVisualCheck, loadBrandVisual, measureBrandVisual } from './brand-visual.mjs'
+import { announcedStatusCheck, hubspotProgramIdFor, readHubSpotProgramDates } from './announced-status.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const brandVisual = loadBrandVisual()
@@ -132,7 +136,11 @@ async function checkPage(url, stateOverride) {
     const namesThisCampus = sentence ? campusNames.some((n) => sentence[1].trim().toLowerCase() === n.toLowerCase()) : false
     add('open-status-sentence', Boolean(sentence) && namesThisCampus, sentence ? (namesThisCampus ? sentence[0] : `sentence names "${sentence[1].trim()}", not this campus (${campusNames.join(' / ')})`) : 'expects "Alpha <Campus> is open and enrolling."')
   } else if (state === 'Announced') {
-    add('announced-names-launch-date', /(?:opens|launching|opening|coming)\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\s+20\d\d/i.test(mainText), 'launch statement must name a month or season and a year')
+    // Bundle 1.8 campus.intro.status-source (2026-09-28): dated Program (launch_date or opening_date) names a month or
+    // season and year; undated Program reads "<name> is coming soon."; no HubSpot read makes "coming soon" a warn.
+    const hubspot = await readHubSpotProgramDates(hubspotProgramIdFor(campus))
+    const campusNames = [...new Set([...(campus?.mapPrograms || []).map((p) => p?.name).filter(Boolean), ...(campusPages[slug]?.names || [])])]
+    checks.push({ id: 'announced-names-launch-date', ...announcedStatusCheck({ mainText, campusNames, hubspot }) })
   }
 
   // identity: page-owned copy only. Shared navigation is already outside mainHtml; HubSpot-fed event cards and the
