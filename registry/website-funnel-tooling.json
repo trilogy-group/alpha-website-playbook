@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.7",
+  "version": "0.8",
   "asOf": "2026-09-29",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -18,20 +18,25 @@
       ],
       "access": {
         "containerId": "GTM-5W56ZLQJ",
-        "readAccess": false,
-        "holder": null,
+        "readAccess": true,
+        "writeAccess": true,
+        "holder": "matthew.barge@superbuilders.school for supervised GTM UI",
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+        "scheduledReadAccess": false,
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
         "verifiedAt": "2026-09-29",
-        "verification": "The tested human account and scheduled measurement identity cannot read this container yet; grant Read on the existing container, do not create another container"
+        "productionVersion": 6,
+        "productionVersionName": "Add Alpha funnel CTA listener and GA4 event tracking tags",
+        "verification": "Supervised human admin/read-write access is verified. Production version 6 was published and tested on 2026-09-29. The scheduled measurement identity still cannot read the container, so automated configuration-drift monitoring remains blocked."
       },
       "owner": null,
-      "status": "present",
+      "status": "held",
       "recordedIn": [
-        "registry/global-runtime.json"
+        "registry/global-runtime.json",
+        "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-    "note": "On every page through Site Kit; noscript iframe emitted twice per page. AEO now verifies the actual container by API rather than trusting a flag, but the measurement identity still needs the product grant."
+    "note": "On every page through Site Kit; noscript iframe emitted twice per page. Version 6 emits five named diagnostic CTA-start events with six non-personal parameters. GA4 DebugView verified Book a Call, Info Session, Info Packet, and Apply ingestion. No release event is a GA4 key event. Primary Community controls remain outside coverage in the cross-origin map.app.alpha.school iframe."
     },
     {
       "id": "google-tag",
