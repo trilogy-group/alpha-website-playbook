@@ -31,7 +31,7 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 ## Seasonal and dated content (`site.seasonal.*`)
 
 - Seasonal CTAs and popups appear only inside their approved window. Summer 2026 registration, programs, and camps copy expired on August 15, 2026. Check: `campus-expired-seasonal-cta`.
-- A launch statement anywhere on the site names a month or season and a year; "coming soon" alone is a defect. Source: APEX ticket for Alpha Bethesda, August 2026.
+- A launch statement anywhere on the site names a month or season and a year; "coming soon" alone is a defect. Source: APEX ticket for Alpha Bethesda, August 2026. Exception (Matt Barge, 2026-09-28): an Announced campus whose HubSpot Program has neither `launch_date` nor `opening_date` reads "<name> is coming soon." until a date is set (`spec/campus-lifecycle.json` states.Announced.introSentence).
 
 ## Search, schema, and AI discovery (`site.search.*`)
 
