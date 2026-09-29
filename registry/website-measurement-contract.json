@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. This is a working, nonbinding inventory of what is observed, what each signal may mean, what completion system is authoritative, and what remains unproven. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.2",
+  "version": "0.3",
   "status": "working-nonbinding",
   "asOf": "2026-09-29",
   "evidenceWindow": {
@@ -73,6 +73,40 @@
       { "id": "30516292", "name": "Perplexity" },
       { "id": "60822", "name": "Livestorm Webinars" }
     ],
+    "writeOriginAudit": {
+      "enabled": true,
+      "acquisitionFieldIds": [
+        "utmSource",
+        "utmMedium",
+        "utmCampaign"
+      ],
+      "primaryFieldId": "utmSource",
+      "creationWindowMinutes": 5,
+      "maxContacts": 200,
+      "meaning": "For contacts whose UTM source is currently populated, inspect property history without requesting personal fields and distinguish a write by the creating integration near contact creation from a HubSpot form, merge, or later write. Current field presence alone is not preservation evidence."
+    },
+    "proposedRepairContract": {
+      "status": "controlled-test-only",
+      "ticket": "https://github.com/superbuilders/aeo/issues/51",
+      "firstSurface": "Goldcast to HubSpot",
+      "firstTouchProperties": [
+        "utm_source",
+        "utm_medium",
+        "utm_campaign"
+      ],
+      "existingValuePolicy": "Write only when the HubSpot property is empty; never replace an existing first-touch value.",
+      "contextProperties": [
+        "program",
+        "event_id",
+        "event_name",
+        "event_page",
+        "event_registration_program",
+        "simpleevents_last_event_registered_date"
+      ],
+      "historicalBackfill": "prohibited-without-a-separately-approved-source",
+      "rollout": "One QA registration, read-back, no-overwrite replay, scheduled integrity verification, then separate approval before another integration.",
+      "rollback": "Disable only the new Goldcast mappings or write action and revert only the QA contact if cleanup is needed; never bulk-edit historical contacts."
+    },
     "provisionalDiagnostic": {
       "contextField": "program",
       "acquisitionField": "utmSource",
@@ -256,7 +290,7 @@
     "The GTM container cannot be read by the tested Google account, so firing contracts and parameters remain unverified.",
     "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
-    "Named integrations preserve Program on 94.95 percent of created contacts but utm_source on only 0.11 percent; the writable carried-attribution contract and integration owners are not approved.",
+    "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
     "No downstream completion has an approved site-to-system join key or attribution window.",
     "The analytics-and-consent owner and primary prospective-parent outcome are undecided."
   ]
