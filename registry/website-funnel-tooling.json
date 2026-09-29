@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.7",
+  "version": "0.8",
   "asOf": "2026-09-29",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -22,16 +22,52 @@
         "holder": null,
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
+        "reportingWorkflow": "superbuilders/aeo .github/workflows/google-read-reports.yml",
         "testedAccount": "matthew.barge@superbuilders.school",
         "verifiedAt": "2026-09-29",
-        "verification": "The tested human account and scheduled measurement identity cannot read this container yet; grant Read on the existing container, do not create another container"
+        "lastApiProbe": "https://github.com/superbuilders/aeo/actions/runs/36616030581",
+        "verification": "The scheduled measurement identity authenticated but cannot read the existing container. The dedicated GTM report reached the container-access gate on 2026-09-29 after the OAuth fix; grant Read on the existing container to the exact identity, do not create another container"
       },
       "owner": null,
       "status": "present",
       "recordedIn": [
-        "registry/global-runtime.json"
+        "registry/global-runtime.json",
+        "aeo .github/workflows/measurement-integrity.yml",
+        "aeo .github/workflows/google-read-reports.yml"
       ],
-    "note": "On every page through Site Kit; noscript iframe emitted twice per page. AEO now verifies the actual container by API rather than trusting a flag, but the measurement identity still needs the product grant."
+    "note": "On every page through Site Kit; noscript iframe emitted twice per page. AEO verifies the actual container by API and can export a redacted published-version inventory, but the measurement identity still needs the product grant."
+    },
+    {
+      "id": "google-read-reports",
+      "name": "AEO Google read reports",
+      "kind": "scheduled-report",
+      "answers": [
+        "Search Console queries, pages, countries, devices and date ranges",
+        "which tags, triggers and variables are in the published GTM container",
+        "which published GTM tags have explicit consent settings"
+      ],
+      "access": {
+        "workflow": "https://github.com/superbuilders/aeo/actions/workflows/google-read-reports.yml",
+        "mergedIn": [
+          "https://github.com/superbuilders/aeo/pull/53",
+          "https://github.com/superbuilders/aeo/pull/55"
+        ],
+        "credential": "aeo repo secret GOOGLE_ANALYTICS_SERVICE_ACCOUNT_JSON",
+        "oauthScopes": [
+          "webmasters.readonly",
+          "tagmanager.readonly"
+        ],
+        "artifactRetentionDays": 30,
+        "scheduled": "weekly Monday plus manual workflow_dispatch",
+        "rawGtmParameterValues": "always redacted"
+      },
+      "owner": "website-operations",
+      "status": "present",
+      "recordedIn": [
+        "aeo .github/workflows/google-read-reports.yml",
+        "aeo docs/operations/alpha-website-google-read-reports.md"
+      ],
+      "note": "The reporting workflow is deployed and fully tested. PR 55 corrected the live JWT bearer exchange after run 36615221678 exposed the defect. Post-fix runs now reach the real Search Console and GTM product-access gates; the workflow becomes usable as soon as those products grant the scheduled identity access. No new token is required."
     },
     {
       "id": "google-tag",
@@ -112,16 +148,23 @@
         "siteKit": "connected, owner info@alpha.school; proxy 403 for the agent user until Google-authenticated",
         "observerActions": "AEO now exchanges the dedicated measurement service account for webmasters.readonly and performs a real searchAnalytics query",
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+        "reportingWorkflow": "superbuilders/aeo .github/workflows/google-read-reports.yml",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "directUiAccess": false,
-        "verifiedAt": "2026-09-28"
+        "directUiAccess": true,
+        "directUiIdentity": "matthew.barge@superbuilders.school",
+        "directUiOwner": false,
+        "verifiedAt": "2026-09-29",
+        "lastApiProbe": "https://github.com/superbuilders/aeo/actions/runs/36615963316",
+        "verification": "Matt accepted the invitation and directly opened the alpha.school Overview with live Search Console reports on 2026-09-29. Settings says he is not a verified owner, so his account cannot grant the scheduled identity. The scheduled identity still returns Search Console HTTP 403."
       },
       "owner": null,
       "status": "present",
       "recordedIn": [
-        "aeo alpha-site-system/src/sources.mjs"
+        "aeo alpha-site-system/src/sources.mjs",
+        "aeo .github/workflows/measurement-integrity.yml",
+        "aeo .github/workflows/google-read-reports.yml"
       ],
-    "note": "The durable API path exists, but sc-domain:alpha.school has not granted the measurement identity read access, so the real query remains blocked. Direct browser verification also returned 'you don't have access to this property' for matthew.barge@superbuilders.school. Site Kit's shared-owner connection is separate."
+      "note": "Human read access is verified for matthew.barge@superbuilders.school. The durable health probe and parameterized reporting path exist, but sc-domain:alpha.school has not granted the measurement identity read access, so scheduled queries remain blocked. Site Kit's shared-owner connection is separate."
     },
     {
       "id": "site-kit",
@@ -604,17 +647,18 @@
           "Google Tag Manager API"
         ],
         "productGrants": {
-          "ga4": "blocked: needs Viewer on property 452530593",
-          "searchConsole": "blocked: needs Restricted/read on sc-domain:alpha.school",
-          "gtm": "blocked: needs Read on GTM-5W56ZLQJ"
+          "ga4": "healthy: Viewer on property 452530593; real Data API read reconfirmed in run 36612072711 on 2026-09-29",
+          "searchConsole": "blocked: needs Full user on sc-domain:alpha.school; run 36612072711 returned HTTP 403",
+          "gtm": "blocked: needs Read on GTM-5W56ZLQJ; run 36612072711 authenticated but returned zero accessible GTM accounts"
         }
       },
       "owner": "website-operations",
       "status": "held",
       "recordedIn": [
-        "aeo .github/workflows/measurement-integrity.yml"
+        "aeo .github/workflows/measurement-integrity.yml",
+        "aeo .github/workflows/google-read-reports.yml"
       ],
-      "note": "The durable credential exists and the downloaded local key was removed. Authentication alone is not provider health; each product remains blocked until its real API read succeeds."
+      "note": "The durable credential exists and the downloaded local key was removed. GA4 is healthy. Search Console and GTM remain blocked on exact product grants; authentication alone is not provider health."
     },
     {
       "id": "superbuilders-context",
