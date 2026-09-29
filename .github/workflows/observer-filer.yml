@@ -13,9 +13,20 @@ name: APEX observer filer
 #     -f 'client_payload[conclusion]=success'
 # The receiver files only after a full run (an events-lane packet carries no rendered evidence);
 # the payload's run id is the packet selected. A fallback cron at 06:45 and 21:45 UTC (45 minutes
-# after the 06:00 and 21:00 UTC full runs) catches a dispatch that never arrived and selects the
-# newest successful run by createdAt; the freshness gate below refuses anything older than six
-# hours either way. Apply stays gated by the repository variable OBSERVER_FILER_APPLY.
+# after the 06:00 and 21:00 UTC full runs) catches a dispatch that never arrived; the freshness
+# gate below refuses anything older than six hours either way. Apply stays gated by the repository
+# variable OBSERVER_FILER_APPLY.
+#
+# Run selection without a run id (2026-09-29, after the 06:45 fallback run 36534543907 was handed
+# the 2026-09-08 run 34183507075 by `gh run list --workflow '<display name>' | sort_by(.createdAt)`,
+# refused it at the gate and never filed the 06:15 full run 36530193433): agent/select-observer-run.mjs
+# lists successful runs of the observer by workflow file (site-observe.yml, never the display name),
+# created within the last MAX_CANDIDATE_AGE_HOURS (`--created ">=<ISO>"` and the same window applied
+# again locally), reads each run's lane from its title as the observer does (aeo src/observer-runs.mjs
+# laneFromRun), prefers the newest full-site run (`[schedule 0 6 * * *]`, `[schedule 0 21 * * *]`,
+# `[workflow_dispatch full]`, `[push]`) and otherwise the newest of any lane, prints the candidates
+# (id, createdAt, lane, title) to the log and the job summary, and when nothing is young enough the
+# job skips with a summary line instead of failing. The freshness gate stays the last defence.
 #
 # Packet freshness gate (2026-09-25, after a scheduled apply selected a 17-day-old packet and
 # filed 20 tickets no current run reproduces): the newest successful observer run by createdAt
@@ -36,7 +47,7 @@ on:
   workflow_dispatch:
     inputs:
       run_id:
-        description: 'Exact successful superbuilders/aeo observer run (default: newest successful run by createdAt)'
+        description: 'Exact successful superbuilders/aeo observer run (default: agent/select-observer-run.mjs, the newest full-site run of the last 14 hours)'
         required: false
       apply:
         description: 'Write to APEX (requires an exact run_id and merged APEX PR 409)'
@@ -52,6 +63,8 @@ permissions:
 
 env:
   MAX_PACKET_AGE_HOURS: '6'
+  # Fallback selection window (agent/select-observer-run.mjs): a run older than this is never a candidate.
+  MAX_CANDIDATE_AGE_HOURS: '14'
   LEDGER_ARTIFACT: filer-apply-ledger
   LEDGER_VARIABLE: OBSERVER_FILER_LAST_APPLIED_RUN
 
@@ -105,14 +118,18 @@ jobs:
             run_id="$DISPATCH_RUN_ID"
           fi
           if [[ -z "$run_id" ]]; then
-            # The newest successful run by createdAt: gh run list's order is not a contract (2026-09-25 it handed back a 17-day-old run).
-            run_id="$(gh run list \
-              --repo superbuilders/aeo \
-              --workflow 'Alpha Website Production Observer' \
-              --status success \
-              --limit 30 \
-              --json databaseId,createdAt \
-              --jq 'sort_by(.createdAt) | last | .databaseId // empty')"
+            # By workflow file, inside the candidate window, newest full-site run first; the candidate list goes to the
+            # log (stderr) and the job summary. No candidate young enough is a skip, not a failure (2026-09-29).
+            selection="$RUNNER_TEMP/observer-run-selection.json"
+            node agent/select-observer-run.mjs --live --max-age-hours "$MAX_CANDIDATE_AGE_HOURS" > "$selection"
+            run_id="$(jq -r '.selected.id // empty' "$selection")"
+            if [[ -z "$run_id" ]]; then
+              echo "No observer run created in the last $MAX_CANDIDATE_AGE_HOURS hours: $(jq -r '.reason' "$selection")"
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "run_id=" >> "$GITHUB_OUTPUT"
+              echo "apply=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
           fi
           [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "No successful numeric observer run was found: $run_id" >&2; exit 2; }
           run_created_at="$(gh run view "$run_id" --repo superbuilders/aeo --json createdAt,conclusion --jq '.createdAt + " " + (.conclusion // "unknown")')"
