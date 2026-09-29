@@ -1,8 +1,8 @@
 {
   "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. This is a working, nonbinding inventory of what is observed, what each signal may mean, what completion system is authoritative, and what remains unproven. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.1",
+  "version": "0.2",
   "status": "working-nonbinding",
-  "asOf": "2026-09-28",
+  "asOf": "2026-09-29",
   "evidenceWindow": {
     "start": "2026-06-30",
     "end": "2026-09-27",
@@ -33,6 +33,53 @@
       "engagementRateBelow": 0.1,
       "averageSessionDurationSecondsBelow": 10
     }
+  },
+  "sourcePreservation": {
+    "status": "working-nonbinding",
+    "purpose": "Measure whether HubSpot integrations that create contacts preserve Alpha program context and the acquisition context required for later funnel attribution.",
+    "evidenceSource": "marketingsupport/work-assets/website-as-a-funnel/hubspot-source-preservation-audit-2026-09-29.json",
+    "window": {
+      "lookbackDays": 90,
+      "lagDays": 1,
+      "basis": "HubSpot contact createdate"
+    },
+    "contactSelection": {
+      "originalSourceProperty": "hs_analytics_source",
+      "originalSourceValue": "OFFLINE",
+      "sourceDrillDown1Property": "hs_analytics_source_data_1",
+      "sourceDrillDown1Value": "INTEGRATION",
+      "integrationIdProperty": "hs_analytics_source_data_2"
+    },
+    "fields": [
+      { "id": "firstPageSeen", "property": "hs_analytics_first_url", "category": "acquisition", "writable": false },
+      { "id": "firstReferrer", "property": "hs_analytics_first_referrer", "category": "acquisition", "writable": false },
+      { "id": "utmSource", "property": "utm_source", "category": "acquisition", "writable": true },
+      { "id": "utmMedium", "property": "utm_medium", "category": "acquisition", "writable": true },
+      { "id": "utmCampaign", "property": "utm_campaign", "category": "acquisition", "writable": true },
+      { "id": "normalizedLeadSource", "property": "normalized_lead_source", "category": "acquisition", "writable": true },
+      { "id": "program", "property": "program", "category": "program-context", "writable": true }
+    ],
+    "integrations": [
+      { "id": "480915", "name": "Goldcast" },
+      { "id": "38820312", "name": "Alpha Community HubSpot" },
+      { "id": "3393360", "name": "Read AI" },
+      { "id": "26519280", "name": "Finalsite-Sync" },
+      { "id": "35340085", "name": "Alpha Summer" },
+      { "id": "9567168", "name": "GT / Alpha Founders / External Apps Integrations" },
+      { "id": "16228553", "name": "HubSpot connector for Claude" },
+      { "id": "21392224", "name": "EduCRM Data Layer" },
+      { "id": "10342661", "name": "HubSpot - SIS Automation" },
+      { "id": "199720", "name": "Calendly" },
+      { "id": "30516292", "name": "Perplexity" },
+      { "id": "60822", "name": "Livestorm Webinars" }
+    ],
+    "provisionalDiagnostic": {
+      "contextField": "program",
+      "acquisitionField": "utmSource",
+      "minimumCoverageGap": 0.5,
+      "meaning": "A gap at or above this value is a measurement-debt finding, not a business KPI or an authorization to change production fields."
+    },
+    "privacyBoundary": "The scheduled audit requests aggregate totals only and writes no contact rows or personal fields. Passing GA client IDs, session IDs, raw email exports, or cross-system personal joins requires analytics-and-consent owner approval."
   },
   "requiredDimensions": [
     "campus_program_id",
@@ -209,6 +256,7 @@
     "The GTM container cannot be read by the tested Google account, so firing contracts and parameters remain unverified.",
     "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
+    "Named integrations preserve Program on 94.95 percent of created contacts but utm_source on only 0.11 percent; the writable carried-attribution contract and integration owners are not approved.",
     "No downstream completion has an approved site-to-system join key or attribution window.",
     "The analytics-and-consent owner and primary prospective-parent outcome are undecided."
   ]

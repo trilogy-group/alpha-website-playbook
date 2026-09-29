@@ -1,7 +1,7 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
   "version": "0.7",
-  "asOf": "2026-09-28",
+  "asOf": "2026-09-29",
   "owner": {
     "role": "analytics-and-consent-owner",
     "person": null,
@@ -23,7 +23,7 @@
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "verifiedAt": "2026-09-28",
+        "verifiedAt": "2026-09-29",
         "verification": "The tested human account and scheduled measurement identity cannot read this container yet; grant Read on the existing container, do not create another container"
       },
       "owner": null,
@@ -180,6 +180,7 @@
           "runtimeSecret": "superbuilders/aeo HUBSPOT_REPORTING_TOKEN",
           "successfulProbes": [
             "contacts",
+            "aggregate contact source-preservation search",
             "forms",
             "marketing events",
             "appointments",
@@ -216,9 +217,11 @@
       "owner": null,
       "status": "held",
       "recordedIn": [
-        "marketingsupport workflows/hubspot-api-registry/agent.md"
+        "marketingsupport workflows/hubspot-api-registry/agent.md",
+        "marketingsupport/work-assets/website-as-a-funnel/hubspot-source-preservation-audit-2026-09-29.json",
+        "superbuilders/aeo actions run 36600633639"
       ],
-    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. The new dedicated read-only AEO key independently proves contacts, forms, marketing events, appointments and meeting links, but not the legacy traffic-analytics endpoint. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
+    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. The dedicated read-only AEO key independently proves contacts, aggregate source-preservation searches, forms, marketing events, appointments and meeting links, but not the legacy traffic-analytics endpoint. AEO branch run 36600633639 audited the rolling 90-day integration cohort without writing contact rows: Program was populated on 94.65 percent and utm_source on 0.10 percent. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
