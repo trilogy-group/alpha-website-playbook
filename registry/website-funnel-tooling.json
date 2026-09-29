@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.6",
+  "version": "0.7",
   "asOf": "2026-09-28",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -85,15 +85,18 @@
           "Site Kit REST proxy (modules/analytics-4/data/report) once a WordPress admin user has granted Site Kit the analytics.readonly scope with a Google account that can view the property",
           "GA4 Data API with a service account granted Viewer on property 452530593"
         ],
-        "uiVerifiedAt": "2026-09-28",
-        "scheduledReadAccess": false
+      "uiVerifiedAt": "2026-09-28",
+      "scheduledReadAccess": true,
+      "scheduledReadVerifiedAt": "2026-09-29",
+      "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36590083782",
+      "scheduledRole": "Viewer"
       },
       "owner": null,
       "status": "held",
       "recordedIn": [
         "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
       ],
-    "note": "Direct GA4 UI access is verified and returned live, 28-day and 90-day reports. The first 90-day baseline found 560,394 sessions, existing video/form/click events, zero key events, and strong traffic-quality anomalies. The dedicated scheduled identity, API, AEO secret, property variable, and real freshness/traffic-quality probes exist; property 452530593 still needs to grant Viewer. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
+    "note": "Direct GA4 UI access is verified and returned live, 28-day and 90-day reports. The first 90-day baseline found 560,394 sessions, existing video/form/click events, zero key events, and strong traffic-quality anomalies. On 2026-09-29, property 452530593 granted the dedicated measurement service account Viewer; the scheduled AEO integrity lane then completed a real GA4 Data API read and returned 58,204 sessions, 45,940 active users, and 297,520 events for the last seven complete days. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
     },
     {
       "id": "search-console",
