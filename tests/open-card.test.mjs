@@ -51,7 +51,7 @@ test('registry: the template block names the placeholder, the owner and the ask,
   assert.equal(openMedia.template.fixture, 'tests/fixtures/open-card/template-placeholder.svg')
   assert.equal(openMedia.template.recipe, 'protocols/recipes/open-card.md')
   assert.ok(fs.existsSync(path.join(root, openMedia.template.recipe)))
-  assert.equal(Object.keys(openMedia.campuses).length, 27, 'every campus row kept (27 on 2026-09-25)')
+  assert.equal(Object.keys(openMedia.campuses).length, 28, 'every campus row kept (27 on 2026-09-25, the-woodlands added 2026-09-29 by run open-cards-2026-09-29)')
   assert.deepEqual(openMedia.campuses['boca-raton'], { openMedia: 'card', attachmentId: 9822, status: 'placed' })
   assert.equal(openMedia.campuses.raleigh.openMedia, 'video')
   for (const [slug, row] of Object.entries(openMedia.campuses)) assert.ok(pages.campuses[slug], `${slug} is a registered campus`) && assert.ok('openMedia' in row && 'attachmentId' in row && 'status' in row, `${slug} keeps its fields`)

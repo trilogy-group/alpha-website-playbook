@@ -123,8 +123,8 @@
     },
     "cmtmn1tdm000404i2tdnufdyk": {
       "class": "observer-media-identity",
-      "outcome": "missing-registry",
-      "ownerRole": "website-operations",
+      "outcome": "routed",
+      "ownerRole": "website-agent-operator",
       "check": "campus-image-identity-conflict"
     },
     "cmtmp92li000104jv69k570o0": {
