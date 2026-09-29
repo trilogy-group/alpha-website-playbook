@@ -1,7 +1,7 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.6",
-  "asOf": "2026-09-28",
+  "version": "0.7",
+  "asOf": "2026-09-29",
   "owner": {
     "role": "analytics-and-consent-owner",
     "person": null,
@@ -23,7 +23,7 @@
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "verifiedAt": "2026-09-28",
+        "verifiedAt": "2026-09-29",
         "verification": "The tested human account and scheduled measurement identity cannot read this container yet; grant Read on the existing container, do not create another container"
       },
       "owner": null,
@@ -85,15 +85,18 @@
           "Site Kit REST proxy (modules/analytics-4/data/report) once a WordPress admin user has granted Site Kit the analytics.readonly scope with a Google account that can view the property",
           "GA4 Data API with a service account granted Viewer on property 452530593"
         ],
-        "uiVerifiedAt": "2026-09-28",
-        "scheduledReadAccess": false
+      "uiVerifiedAt": "2026-09-28",
+      "scheduledReadAccess": true,
+      "scheduledReadVerifiedAt": "2026-09-29",
+      "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36590083782",
+      "scheduledRole": "Viewer"
       },
       "owner": null,
       "status": "held",
       "recordedIn": [
         "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
       ],
-    "note": "Direct GA4 UI access is verified and returned live, 28-day and 90-day reports. The first 90-day baseline found 560,394 sessions, existing video/form/click events, zero key events, and strong traffic-quality anomalies. The dedicated scheduled identity, API, AEO secret, property variable, and real freshness/traffic-quality probes exist; property 452530593 still needs to grant Viewer. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
+    "note": "Direct GA4 UI access is verified and returned live, 28-day and 90-day reports. The first 90-day baseline found 560,394 sessions, existing video/form/click events, zero key events, and strong traffic-quality anomalies. On 2026-09-29, property 452530593 granted the dedicated measurement service account Viewer; the scheduled AEO integrity lane then completed a real GA4 Data API read and returned 58,204 sessions, 45,940 active users, and 297,520 events for the last seven complete days. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
     },
     {
       "id": "search-console",
@@ -177,6 +180,7 @@
           "runtimeSecret": "superbuilders/aeo HUBSPOT_REPORTING_TOKEN",
           "successfulProbes": [
             "contacts",
+            "aggregate contact source-preservation search",
             "forms",
             "marketing events",
             "appointments",
@@ -213,9 +217,11 @@
       "owner": null,
       "status": "held",
       "recordedIn": [
-        "marketingsupport workflows/hubspot-api-registry/agent.md"
+        "marketingsupport workflows/hubspot-api-registry/agent.md",
+        "marketingsupport/work-assets/website-as-a-funnel/hubspot-source-preservation-audit-2026-09-29.json",
+        "superbuilders/aeo actions run 36600633639"
       ],
-    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. The new dedicated read-only AEO key independently proves contacts, forms, marketing events, appointments and meeting links, but not the legacy traffic-analytics endpoint. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
+    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. The dedicated read-only AEO key independently proves contacts, aggregate source-preservation searches, forms, marketing events, appointments and meeting links, but not the legacy traffic-analytics endpoint. AEO branch run 36600633639 audited the rolling 90-day integration cohort without writing contact rows: Program was populated on 94.65 percent and utm_source on 0.10 percent. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
