@@ -2411,7 +2411,7 @@ test('check bundle: the observer inventory extractor reads finding literals and 
 })
 
 test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
-  assert.equal(checkBundle.version, '1.8')
+  assert.equal(checkBundle.version, '1.9')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
   assert.deepEqual(byChannel, { ticket: 85, 'source-digest': 17, 'loop-health': 17 })
@@ -2589,7 +2589,7 @@ import { classifyTicket, ownerRuleMatches, requirementIdsFor } from '../agent/in
 import { prepareFoundPayload, requirementIdsForCheck } from '../agent/file-found-ticket.mjs'
 
 test('check bundle 1.3: entity sources, comparators, missing-expectation rows, coverage rows and page-check aliases (decision 2026-09-25: from HubSpot to the website)', () => {
-  assert.equal(checkBundle.version, '1.8')
+  assert.equal(checkBundle.version, '1.9')
   // Entity sources: the shape the observer consumes verbatim; campus rows enumerate from HubSpot Programs, the rest from the map.
   const hubspot = checkBundle.entitySources['hubspot-programs']
   assert.deepEqual([hubspot.source, hubspot.fields, hubspot.publicTypes, hubspot.publicHosts, hubspot.lifecycleField, hubspot.pageField], ['hubspot-programs', ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date'], ['Open', 'Announced'], ['alpha.school', 'www.alpha.school'], 'type', 'website'])
