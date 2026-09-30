@@ -43,15 +43,15 @@
       "application_cta_click"
     ],
     "scheduledIngestionEvidence": {
-      "run": "https://github.com/superbuilders/aeo/actions/runs/36664589112",
-      "generatedAt": "2026-09-30T03:29:17.537Z",
+      "run": "https://github.com/superbuilders/aeo/actions/runs/36664885513",
+      "generatedAt": "2026-09-30T03:33:03.688Z",
       "window": {
         "startDate": "2daysAgo",
         "endDate": "today"
       },
       "counts": {
         "book_call_cta_click": 5,
-        "info_session_cta_click": 102,
+        "info_session_cta_click": 103,
         "info_packet_cta_click": 8,
         "application_cta_click": 35,
         "community_cta_click": 0
@@ -247,7 +247,7 @@
     "info_session_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": 102,
+      "evidenceCount": 103,
       "debugEvidenceCount": 6,
       "currentMeaning": "A governed main-document CTA leading toward an information-session or public event registration surface was clicked.",
       "requiredParametersVerified": false,
