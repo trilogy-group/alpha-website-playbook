@@ -43,17 +43,17 @@
       "application_cta_click"
     ],
     "scheduledIngestionEvidence": {
-      "run": "https://github.com/superbuilders/aeo/actions/runs/36664885513",
-      "generatedAt": "2026-09-30T03:33:03.688Z",
+      "run": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
+      "generatedAt": "2026-09-30T13:51:30.533Z",
       "window": {
         "startDate": "2daysAgo",
         "endDate": "today"
       },
       "counts": {
         "book_call_cta_click": 5,
-        "info_session_cta_click": 103,
-        "info_packet_cta_click": 8,
-        "application_cta_click": 35,
+        "info_session_cta_click": 257,
+        "info_packet_cta_click": 13,
+        "application_cta_click": 61,
         "community_cta_click": 0
       },
       "meaning": "Recent ingestion health only. Counts are starts, not unique people or completed outcomes."
@@ -247,7 +247,7 @@
     "info_session_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": 103,
+      "evidenceCount": 257,
       "debugEvidenceCount": 6,
       "currentMeaning": "A governed main-document CTA leading toward an information-session or public event registration surface was clicked.",
       "requiredParametersVerified": false,
@@ -256,7 +256,7 @@
     "info_packet_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": 8,
+      "evidenceCount": 13,
       "debugEvidenceCount": 1,
       "currentMeaning": "A governed main-document information-packet CTA was clicked.",
       "requiredParametersVerified": false,
@@ -265,7 +265,7 @@
     "application_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": 35,
+      "evidenceCount": 61,
       "debugEvidenceCount": 1,
       "currentMeaning": "A governed main-document application CTA was clicked.",
       "requiredParametersVerified": false,
@@ -436,7 +436,6 @@
   },
   "knownGaps": [
     "No observed GA4 event is configured as a key event.",
-    "Supervised human GTM access is verified, but the scheduled measurement identity cannot read the container, so automated configuration-drift monitoring remains blocked.",
     "The main-document listener cannot observe the primary Community controls inside the cross-origin map.app.alpha.school iframe.",
     "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
     "The primary GA4 measurement ID G-G7M04CYHH0 is not present on go.alpha.school or events.alpha.school. go.alpha.school runs a different GTM container and GA4 properties; events.alpha.school exposed no Google measurement ID in the 2026-09-29 public inspection. Adding linker domains on alpha.school alone cannot create continuity.",

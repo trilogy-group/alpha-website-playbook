@@ -1,7 +1,7 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.9",
-  "asOf": "2026-09-29",
+  "version": "1.0",
+  "asOf": "2026-09-30",
   "owner": {
     "role": "analytics-and-consent-owner",
     "person": null,
@@ -22,13 +22,14 @@
         "writeAccess": true,
         "holder": "matthew.barge@superbuilders.school for supervised GTM UI",
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
-        "scheduledReadAccess": false,
+        "scheduledReadAccess": true,
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "verifiedAt": "2026-09-29",
+        "verifiedAt": "2026-09-30",
+        "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
         "productionVersion": 6,
         "productionVersionName": "Add Alpha funnel CTA listener and GA4 event tracking tags",
-        "verification": "Supervised human admin/read-write access is verified. Production version 6 was published and tested on 2026-09-29. The scheduled measurement identity still cannot read the container, so automated configuration-drift monitoring remains blocked."
+        "verification": "Supervised human admin/read-write access is verified. Production version 6 was published and tested on 2026-09-29. On 2026-09-30 the scheduled identity read the existing container and live version 6 through the GTM API, including all five governed start-event names."
       },
       "owner": null,
       "status": "held",
@@ -119,14 +120,16 @@
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
         "testedAccount": "matthew.barge@superbuilders.school",
         "directUiAccess": false,
-        "verifiedAt": "2026-09-28"
+        "verifiedAt": "2026-09-30",
+        "scheduledReadAccess": true,
+        "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420"
       },
       "owner": null,
-      "status": "present",
+      "status": "held",
       "recordedIn": [
         "aeo alpha-site-system/src/sources.mjs"
       ],
-    "note": "The durable API path exists, but sc-domain:alpha.school has not granted the measurement identity read access, so the real query remains blocked. Direct browser verification also returned 'you don't have access to this property' for matthew.barge@superbuilders.school. Site Kit's shared-owner connection is separate."
+    "note": "The durable API path is healthy. On 2026-09-30 AEO run 36724689420 exchanged the service-account credential for webmasters.readonly and completed a real searchAnalytics query for sc-domain:alpha.school. Site Kit's shared-owner connection and human browser access remain separate paths."
     },
     {
       "id": "site-kit",
@@ -379,11 +382,11 @@
         "packets": "site-runtime-state branch and run artifacts",
         "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
         "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843",
-        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36664885513",
+        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
         "latestVerifiedSummary": {
-          "healthy": 9,
+          "healthy": 12,
           "unknown": 1,
-          "blocked": 7,
+          "blocked": 5,
           "degraded": 5,
           "failed": 0
         }
@@ -393,7 +396,7 @@
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. Post-merge AEO main run 36664885513 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, destination gaps, and explicit product-grant blockers. Search Console, scheduled GTM configuration, and legacy HubSpot traffic analytics remain blocked; no provider failure occurred."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO main run 36724689420 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, a real Search Console query, and live GTM version 6 with all five governed start-event names. Destination continuity, Community coverage, outcome joins, and legacy HubSpot traffic analytics remain blocked or degraded; no provider failure occurred."
     },
     {
       "id": "cta-inventory",
@@ -611,9 +614,9 @@
           "Google Tag Manager API"
         ],
         "productGrants": {
-          "ga4": "blocked: needs Viewer on property 452530593",
-          "searchConsole": "blocked: needs Restricted/read on sc-domain:alpha.school",
-          "gtm": "blocked: needs Read on GTM-5W56ZLQJ"
+          "ga4": "healthy: Viewer on property 452530593; real Data API read verified",
+          "searchConsole": "healthy: read access on sc-domain:alpha.school; real searchAnalytics read verified",
+          "gtm": "healthy: Read on GTM-5W56ZLQJ; existing container and live version 6 verified"
         }
       },
       "owner": "website-operations",
@@ -621,7 +624,7 @@
       "recordedIn": [
         "aeo .github/workflows/measurement-integrity.yml"
       ],
-      "note": "The durable credential exists and the downloaded local key was removed. Authentication alone is not provider health; each product remains blocked until its real API read succeeds."
+      "note": "The durable credential exists and the downloaded local key was removed. GA4, Search Console, and GTM each completed a real product API read by 2026-09-30; latest combined evidence is AEO run 36724689420."
     },
     {
       "id": "superbuilders-context",
