@@ -43,6 +43,7 @@ import {
   renderMarkdown,
   sameName,
   sentenceCell,
+  sharedHeadsOfSchools,
   sharedVideoIds,
   slugFor,
   teamCell,
@@ -273,21 +274,38 @@ test('sentence cell: the decided sentence is green, an open-state variant is amb
   assert.deepEqual(colorReason(sentenceCell({ text: 'Alpha Carrollton is open K-8 for Fall 2026.' }, 'Announced')), ['red', 'open-wording'], 'a variant is open wording on an Announced page too')
 })
 
-test('team cell: leadership present and in the decided order, missing people named, a registry row without leadership is grey', () => {
+test('team cell: leadership present and in the decided order (DoA and DoP first, campus staff, the shared Head of Schools last), missing people named, a registry row without leadership is grey', () => {
   assert.deepEqual(colorReason(row('boston').cells.team), ['red', 'missing'])
   assert.match(row('boston').cells.team.detail, /DoA Samantha Kravitz not on the page/)
-  assert.deepEqual(colorReason(row('atlanta').cells.team), ['green', 'ordered'])
+  assert.deepEqual(colorReason(row('atlanta').cells.team), ['green', 'ordered'], 'Tasha Arnold as the only card is last')
   const eb = row('east-bay')
   assert.deepEqual(colorReason(eb.cells.team), ['red', 'misordered'])
-  assert.match(eb.cells.team.detail, /Head of Schools \(card 1\) before DoA\/DoP \(card 6\); guide card 3 before leadership card 6/)
+  assert.match(eb.cells.team.detail, /Head of Schools \(card 1\) before campus staff \(card 11\); guide card 3 before leadership card 6 \(DoA@6 DoP@2 Head@1\)/)
+  assert.deepEqual(colorReason(row('kirkland').cells.team), ['red', 'misordered'], 'DoA at card 2 after Tasha at card 1: Tasha is not last')
   const page = pageFor('east-bay')
   const staff = page.staff
   const byName = (name) => staff.find((s) => sameName(s.name, name))
-  const ordered = teamCell(registries.leadership, 'east-bay', { staff: [byName('Free Gary'), byName('Kori Riordan'), byName('Tasha Arnold'), ...staff.filter((s) => !['Free Gary', 'Kori Riordan', 'Tasha Arnold'].some((n) => sameName(s.name, n)))] })
+  const others = staff.filter((s) => !['Free Gary', 'Kori Riordan', 'Tasha Arnold'].some((n) => sameName(s.name, n)))
+  const ordered = teamCell(registries.leadership, 'east-bay', { staff: [byName('Free Gary'), byName('Kori Riordan'), ...others, byName('Tasha Arnold')] })
   assert.deepEqual(colorReason(ordered), ['green', 'ordered'])
-  assert.equal(ordered.detail, 'DoA@1 DoP@2 Head@3')
+  assert.equal(ordered.detail, 'DoA@1 DoP@2 Head@11')
+  const dopFirst = teamCell(registries.leadership, 'east-bay', { staff: [byName('Kori Riordan'), byName('Free Gary'), ...others, byName('Tasha Arnold')] })
+  assert.deepEqual(colorReason(dopFirst), ['green', 'ordered'], 'DoA and DoP are not ranked against each other')
+  const tashaSecond = teamCell(registries.leadership, 'east-bay', { staff: [byName('Free Gary'), byName('Tasha Arnold'), byName('Kori Riordan'), ...others] })
+  assert.deepEqual(colorReason(tashaSecond), ['red', 'misordered'], 'the 2026-09-25 reading (Tasha after DoA and DoP, before the guides) is misordered since the 2026-09-30 clarification')
+  assert.equal(tashaSecond.detail, 'Head of Schools (card 2) before campus staff (card 11) (DoA@1 DoP@3 Head@2)')
   const guideFirst = teamCell({ campuses: { 'east-bay': { 'director-of-admissions': ['Free Gary'] } } }, 'east-bay', { staff: [byName('Sarah Rettig'), byName('Free Gary')] })
   assert.deepEqual(colorReason(guideFirst), ['red', 'misordered'])
+  assert.match(guideFirst.detail, /^guide card 1 before leadership card 2/)
+  // A campus's own head of school (listed on that campus only) is campus-present: leadership row, before the guides, not last.
+  const own = { campuses: { brownsville: { 'head-of-schools': ['Paige L. Fults'], 'dean-of-parents': ['Heather McMahan'] }, ...registries.leadership.campuses } }
+  assert.deepEqual(sharedHeadsOfSchools(own), ['tasha arnold'])
+  const guide = (name) => ({ name, title: 'Guide' })
+  const brownsville = teamCell(own, 'brownsville', { staff: [{ name: 'Heather McMahan', title: 'Dean of Parents' }, { name: 'Paige L. Fults', title: 'Head of School' }, guide('Morgan Swain'), guide('A Guide')] })
+  assert.deepEqual([colorReason(brownsville), brownsville.detail], [['green', 'ordered'], 'DoP@1 Head@2'])
+  const ownAfterGuide = teamCell(own, 'brownsville', { staff: [{ name: 'Heather McMahan', title: 'Dean of Parents' }, guide('Morgan Swain'), { name: 'Paige L. Fults', title: 'Head of School' }] })
+  assert.deepEqual(colorReason(ownAfterGuide), ['red', 'misordered'], 'a campus-present head of school below a guide is a leadership card out of place')
+  assert.match(ownAfterGuide.detail, /^guide card 2 before leadership card 3/)
   assert.deepEqual(colorReason(teamCell({ campuses: { austin: {} } }, 'austin', page)), ['grey', 'no-leadership'])
   assert.deepEqual(colorReason(teamCell({ campuses: {} }, 'austin', page)), ['grey', 'unrecorded'])
   assert.deepEqual(colorReason(teamCell(registries.leadership, 'east-bay', { staff: [] })), ['red', 'no-cards'])

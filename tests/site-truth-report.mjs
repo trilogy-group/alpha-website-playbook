@@ -48,9 +48,12 @@
  *             green placed (the approved card is rendered) | video (the approved campus video is on the page)
  *             grey  unobserved (approved video recorded; the packet exposes neither a slot image nor a campus video) |
  *                   not-open (Announced page: launch-stage media is expected) | unfetched
- *   team      leadership registry DoA, DoP and Head of Schools on the page, in the decided order (DoA and DoP before
- *             the Head of Schools, all three before any guide): ordered | misordered | missing | no-cards |
- *             unrecorded | no-leadership | unfetched
+ *   team      leadership registry DoA, DoP and Head of Schools on the page, in the decided order (campus.team.order,
+ *             MacKenzie Price 2026-09-25 clarified by Matt Barge 2026-09-30: DoA and DoP before any guide, campus staff
+ *             next, and a Head of Schools listed on more than one campus, Dr. Tasha Arnold, last in the section; a head
+ *             of school listed on one campus only, Paige Fults on Brownsville, is campus-present and stays with the
+ *             leadership row): ordered | misordered (Head of Schools before campus staff, or a guide before a
+ *             leadership card) | missing | no-cards | unrecorded | no-leadership | unfetched
  *   packet    registry status vs page link: visible | interim (only responsive-hidden buttons; approved interim
  *             state) | placeholder | drift | absent | unrecorded | unfetched
  *   ctas      Book a Call, Apply, Info Session present or a recorded exception: present | missing | conditional
@@ -100,7 +103,7 @@ export const OPEN_VARIANT = /\bAlpha\s+[A-Z][^.!?\n]{0,60}?\b(?:is|are)\s+(?:now
 export const DATED_LAUNCH = /(?:opens|launching|opening|coming)\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\s+20\d\d/i
 export const PLACEHOLDER_PACKET = /update link|\[|placeholder/i
 export const GUIDE_SECTION = /\bMeet\s+Your\s+Alpha\b[^.]{0,60}\bGuides?\b/i
-/** Leadership roles the team cell checks, in the decided order (spec/campus-page-requirements.json campus.team.order). */
+/** Leadership roles the team cell checks (spec/campus-page-requirements.json campus.team.order, clarified 2026-09-30: DoA and DoP first, campus staff, the shared Head of Schools last). */
 export const LEADERSHIP_ROLES = ['director-of-admissions', 'dean-of-parents', 'head-of-schools']
 export const ROLE_LABELS = { 'director-of-admissions': 'DoA', 'dean-of-parents': 'DoP', 'head-of-schools': 'Head' }
 /** Cell to incident mapping: bundle requirement id prefixes first, observer check name prefixes as the fallback. */
@@ -462,10 +465,27 @@ export function cardCell(registry, slug, page, state, observation = undefined) {
   return cell('red', 'empty', `${there} in the packet (an mp4 video widget is not visible to the packet); no registry row approves anything`)
 }
 
+/**
+ * A head of schools listed on more than one campus in the leadership registry (Dr. Tasha Arnold) is shared, not
+ * campus-present, and goes last in the Team section; one listed on a single campus (Paige L. Fults, Brownsville) is that
+ * campus's own head of school and stays in the leadership row (Matt Barge, 2026-09-30, clarifying MacKenzie Price 2026-09-25).
+ */
+export function sharedHeadsOfSchools(registry) {
+  const seen = new Map()
+  for (const roster of Object.values(registry?.campuses || {})) {
+    for (const name of roster?.['head-of-schools'] || []) {
+      const key = normalizeName(name)
+      if (key) seen.set(key, (seen.get(key) || 0) + 1)
+    }
+  }
+  return [...seen].filter(([, campuses]) => campuses > 1).map(([key]) => key)
+}
+
 export function teamCell(registry, slug, page) {
   const roster = registry?.campuses?.[slug]
   if (!roster) return cell('grey', 'unrecorded', 'no leadership row in the registry')
-  const expected = LEADERSHIP_ROLES.flatMap((role) => (roster[role] || []).map((name) => ({ role, name })))
+  const shared = sharedHeadsOfSchools(registry)
+  const expected = LEADERSHIP_ROLES.flatMap((role) => (roster[role] || []).map((name) => ({ role, name, shared: role === 'head-of-schools' && shared.some((key) => sameName(key, name)) })))
   if (!expected.length) return cell('grey', 'no-leadership', 'registry row names no DoA, DoP or Head of Schools')
   if (!page) return cell('grey', 'unfetched', 'page not in the packet')
   const staff = page.staff || []
@@ -473,13 +493,18 @@ export function teamCell(registry, slug, page) {
   const placed = expected.map((e) => ({ ...e, index: staff.findIndex((card) => sameName(card.name, e.name)) }))
   const missing = placed.filter((p) => p.index < 0)
   if (missing.length) return cell('red', 'missing', missing.map((m) => `${ROLE_LABELS[m.role]} ${m.name}`).join(', ') + ' not on the page')
-  const top = placed.filter((p) => p.role !== 'head-of-schools').map((p) => p.index)
-  const heads = placed.filter((p) => p.role === 'head-of-schools').map((p) => p.index)
+  // Campus-present leadership (DoA, DoP, a campus's own head of school) precedes every guide; the shared Head of Schools follows every campus-present card.
+  const leaders = placed.filter((p) => !p.shared)
+  const sharedHeads = placed.filter((p) => p.shared)
   const firstGuide = staff.findIndex((card) => /\bguide\b/i.test(card.title || ''))
-  const lastLeader = Math.max(...placed.map((p) => p.index))
+  const lastLeader = leaders.length ? Math.max(...leaders.map((p) => p.index)) : -1
   const problems = []
-  if (top.length && heads.length && Math.max(...top) > Math.min(...heads)) problems.push(`Head of Schools (card ${Math.min(...heads) + 1}) before DoA/DoP (card ${Math.max(...top) + 1})`)
-  if (firstGuide >= 0 && firstGuide < lastLeader) problems.push(`guide card ${firstGuide + 1} before leadership card ${lastLeader + 1}`)
+  if (sharedHeads.length) {
+    const firstShared = Math.min(...sharedHeads.map((p) => p.index))
+    const lastCampusCard = staff.reduce((last, card, index) => (sharedHeads.some((p) => sameName(card.name, p.name)) ? last : index), -1)
+    if (lastCampusCard > firstShared) problems.push(`Head of Schools (card ${firstShared + 1}) before campus staff (card ${lastCampusCard + 1})`)
+  }
+  if (firstGuide >= 0 && lastLeader >= 0 && firstGuide < lastLeader) problems.push(`guide card ${firstGuide + 1} before leadership card ${lastLeader + 1}`)
   const order = placed.map((p) => `${ROLE_LABELS[p.role]}@${p.index + 1}`).join(' ')
   if (problems.length) return cell('red', 'misordered', `${problems.join('; ')} (${order})`)
   return cell('green', 'ordered', order)

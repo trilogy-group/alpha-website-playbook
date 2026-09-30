@@ -154,18 +154,19 @@
       },
       "campus.team.order": {
         "required": true,
-        "content": "Team section order: the Director of Admissions and the Dean of Parents at the top (leadership row) because they are the most public-facing; the Head of School (Tasha Arnold, who appears on several campuses) lower, after them; head guides and lead guides in the carousel below, with the other guides and campus staff. A card in the wrong place is a placement defect owned by website operations, not a roster question for the campus.",
-        "source": "MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-4ab0267f.json. This is the team-layout standard the roster plans were waiting on (docs/headshot-binding.md).",
+        "content": "Team section order: the people present and involved at the campus come first. The Director of Admissions and the Dean of Parents (or Associate Dean of Parents) at the top (leadership row) because they are the most public-facing, not ranked against each other; then the head or lead guide and every other campus-present card (guides and campus staff in the carousel or row); the Head of Schools who appears across many campuses (Dr. Tasha Arnold) last in the Team section, after every campus-present card. A campus whose own head of school is campus-present (Brownsville, Paige Fults) keeps that person in the leadership row. A card in the wrong place is a placement defect owned by website operations, not a roster question for the campus.",
+        "source": "Origin: MacKenzie Price, website strategy meeting with Matt Barge and Yash Chitneni, 2026-09-25 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-4ab0267f.json (Director of Admissions and Dean of Parents at the top, the Head of School lower). Clarification: Matt Barge, Slack conversation with the website agent, 2026-09-30 (docs/decisions.md); tests/fixtures/decisions/recorded/2026-09-30-campus-page-requirements-5c8952a9.json (the Head of Schools who appears across many campuses goes last, after every campus-present card; a campus-present head of school stays in the leadership row). This is the team-layout standard the roster plans were waiting on (docs/headshot-binding.md).",
         "ownerWhenMissing": "website-operations for placement; dean-of-parents, then head-of-schools for who holds each role",
         "checks": [
-          "manual screenshot of the Team section on desktop and mobile until a team-order check exists",
+          "tests/site-truth-report.mjs team cell: ordered means Director of Admissions and Dean of Parents first, campus staff, the shared Head of Schools last; misordered names the card out of place",
+          "manual screenshot of the Team section on desktop and mobile",
           "protocols/recipes/staff-card.md placement rule"
         ],
         "exemplars": [],
         "status": "active",
         "grounding": {
           "kind": "decision",
-          "ref": "docs/decisions.md 2026-09-25 (MacKenzie Price); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-4ab0267f.json"
+          "ref": "docs/decisions.md 2026-09-25 (MacKenzie Price, origin) and 2026-09-30 (Matt Barge, clarification); tests/fixtures/decisions/recorded/2026-09-25-campus-page-requirements-4ab0267f.json; tests/fixtures/decisions/recorded/2026-09-30-campus-page-requirements-5c8952a9.json"
         },
         "recipe": "protocols/recipes/staff-card.md"
       },
