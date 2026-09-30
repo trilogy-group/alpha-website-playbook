@@ -42,6 +42,22 @@
       "info_packet_cta_click",
       "application_cta_click"
     ],
+    "scheduledIngestionEvidence": {
+      "run": "https://github.com/superbuilders/aeo/actions/runs/36664589112",
+      "generatedAt": "2026-09-30T03:29:17.537Z",
+      "window": {
+        "startDate": "2daysAgo",
+        "endDate": "today"
+      },
+      "counts": {
+        "book_call_cta_click": 5,
+        "info_session_cta_click": 102,
+        "info_packet_cta_click": 8,
+        "application_cta_click": 35,
+        "community_cta_click": 0
+      },
+      "meaning": "Recent ingestion health only. Counts are starts, not unique people or completed outcomes."
+    },
     "ga4KeyEventsCreated": false,
     "completionEventsCreated": false,
     "crossDomainContinuityVerified": false,
@@ -222,7 +238,7 @@
     "book_call_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": null,
+      "evidenceCount": 5,
       "debugEvidenceCount": 1,
       "currentMeaning": "A governed main-document CTA leading toward a public call-booking surface was clicked.",
       "requiredParametersVerified": false,
@@ -231,7 +247,7 @@
     "info_session_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": null,
+      "evidenceCount": 102,
       "debugEvidenceCount": 6,
       "currentMeaning": "A governed main-document CTA leading toward an information-session or public event registration surface was clicked.",
       "requiredParametersVerified": false,
@@ -240,7 +256,7 @@
     "info_packet_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": null,
+      "evidenceCount": 8,
       "debugEvidenceCount": 1,
       "currentMeaning": "A governed main-document information-packet CTA was clicked.",
       "requiredParametersVerified": false,
@@ -249,7 +265,7 @@
     "application_cta_click": {
       "status": "live-diagnostic-start",
       "ga4KeyEvent": false,
-      "evidenceCount": null,
+      "evidenceCount": 35,
       "debugEvidenceCount": 1,
       "currentMeaning": "A governed main-document application CTA was clicked.",
       "requiredParametersVerified": false,
@@ -258,7 +274,7 @@
     "community_cta_click": {
       "status": "configured-primary-surface-unobservable",
       "ga4KeyEvent": false,
-      "evidenceCount": null,
+      "evidenceCount": 0,
       "debugEvidenceCount": 0,
       "currentMeaning": "An eligible main-document Community CTA was clicked; this does not cover the primary controls inside the map app iframe.",
       "requiredParametersVerified": false,

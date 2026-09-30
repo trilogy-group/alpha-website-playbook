@@ -189,7 +189,9 @@
             "forms",
             "marketing events",
             "appointments",
-            "meeting links"
+            "meeting links",
+            "aggregate governed public/embedded meeting bookings",
+            "aggregate public-website marketing-event totals"
           ],
           "blockedProbe": "legacy traffic analytics returned HTTP 403 despite reporting.full.read"
         },
@@ -226,7 +228,7 @@
         "marketingsupport/work-assets/website-as-a-funnel/hubspot-source-preservation-audit-2026-09-29.json",
         "superbuilders/aeo actions run 36600633639"
       ],
-    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. The dedicated read-only AEO key independently proves contacts, aggregate source-preservation searches, forms, marketing events, appointments and meeting links, but not the legacy traffic-analytics endpoint. AEO branch run 36600633639 audited the rolling 90-day integration cohort without writing contact rows: Program was populated on 94.65 percent and utm_source on 0.10 percent. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
+    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. AEO PR 56 run 36664589112 independently proved contacts, forms, marketing events, appointments, meeting links, 175 aggregate governed public/embedded bookings, and separate aggregate event authority in one scheduled runtime; the legacy traffic-analytics endpoint still returned 403. The same run audited the rolling integration cohort without writing contact rows: Program was populated on 94.35 percent and utm_source on 0.10 percent. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
@@ -377,12 +379,12 @@
         "packets": "site-runtime-state branch and run artifacts",
         "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
         "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843",
-        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36487732243",
+        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36664589112",
         "latestVerifiedSummary": {
-          "healthy": 4,
+          "healthy": 9,
           "unknown": 1,
-          "blocked": 4,
-          "degraded": 1,
+          "blocked": 7,
+          "degraded": 5,
           "failed": 0
         }
       },
@@ -391,7 +393,7 @@
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. Post-merge run 36487732243 loaded the contract and found the homepage, GTM marker, and HubSpot marker healthy; cross-domain linking degraded; Meta Pixel unknown pending rendered verification; GA4, Search Console, GTM configuration, and full HubSpot reporting blocked with no provider failures."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO PR 56 run 36664589112 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, destination gaps, and explicit product-grant blockers. Search Console, scheduled GTM configuration, and legacy HubSpot traffic analytics remain blocked; no provider failure occurred."
     },
     {
       "id": "cta-inventory",
