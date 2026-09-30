@@ -61,6 +61,8 @@ As of 2026-09-29, production GTM version 6 emits five diagnostic CTA-start event
 
 The contract also defines aggregate-only HubSpot authority snapshots for public/embedded scheduling-page bookings and public Marketing Events. These establish downstream totals, not attributed website conversions. They remain separate from CTA starts until the analytics-and-consent owner approves a privacy-safe join key and attribution window.
 
+As of 2026-09-30, the read-only `superbuilders/aeo` synthesis operationalizes the evidence layer on seven-, 28-, and 90-day windows. It keeps GA4 sessions, HubSpot tracked visits, HubSpot contacts, CTA-start clicks, bookings, and event registrations separate; publishes transparent traffic-quality, landing-page, mobile, page-attention, search, city, and trend review candidates; and labels partial instrumentation or row-cap coverage. The aggregate GA4 Data API does not expose exits or ordered user paths. Those require an approved BigQuery export. None of this adopts a primary outcome, joins a person, or authorizes a site change.
+
 ## 4. Prove instrumentation with journeys, not tag presence
 
 For each page family and each lifecycle-specific CTA path:

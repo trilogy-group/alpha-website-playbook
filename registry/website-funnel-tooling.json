@@ -94,7 +94,7 @@
       "uiVerifiedAt": "2026-09-28",
       "scheduledReadAccess": true,
       "scheduledReadVerifiedAt": "2026-09-29",
-      "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36590083782",
+        "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36777936249",
       "scheduledRole": "Viewer"
       },
       "owner": null,
@@ -102,7 +102,7 @@
       "recordedIn": [
         "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
       ],
-    "note": "Direct GA4 UI access is verified and returned live, 28-day and 90-day reports. The first 90-day baseline found 560,394 sessions, existing video/form/click events, zero key events, and strong traffic-quality anomalies. On 2026-09-29, property 452530593 granted the dedicated measurement service account Viewer; the scheduled AEO integrity lane then completed a real GA4 Data API read and returned 58,204 sessions, 45,940 active users, and 297,520 events for the last seven complete days. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
+      "note": "Direct GA4 UI access is verified. The unattended AEO path now produces seven-, 28-, and 90-day synthesis packets with acquisition, landing-page, device, page-attention, CTA-start, video, city, and equal-window trend evidence. Production runs 36776831844 and 36777936249 proved the 90-day and post-merge seven-day paths. The governed CTA-start taxonomy was deployed on 2026-09-29, so longer windows explicitly report partial start-event coverage. No GA4 key event is approved. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
     },
     {
       "id": "search-console",
@@ -111,7 +111,7 @@
       "answers": [
         "queries by page",
         "impressions and clicks per campus",
-        "which cities search for Alpha"
+        "search demand by country and device"
       ],
       "access": {
         "siteUrl": "sc-domain:alpha.school",
@@ -119,7 +119,7 @@
         "observerActions": "AEO now exchanges the dedicated measurement service account for webmasters.readonly and performs a real searchAnalytics query",
         "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "directUiAccess": false,
+        "directUiAccess": true,
         "verifiedAt": "2026-09-30",
         "scheduledReadAccess": true,
         "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420"
@@ -129,7 +129,7 @@
       "recordedIn": [
         "aeo alpha-site-system/src/sources.mjs"
       ],
-    "note": "The durable API path is healthy. On 2026-09-30 AEO run 36724689420 exchanged the service-account credential for webmasters.readonly and completed a real searchAnalytics query for sc-domain:alpha.school. Site Kit's shared-owner connection and human browser access remain separate paths."
+      "note": "The human and durable API paths are healthy. AEO run 36777936249 completed a final-data searchAnalytics read for sc-domain:alpha.school. The synthesis marks query shares as captured-row evidence when Search Console reaches the configured row limit. Site Kit's shared-owner connection, human browser access, and scheduled access remain separate paths."
     },
     {
       "id": "site-kit",
@@ -196,7 +196,8 @@
             "aggregate governed public/embedded meeting bookings",
             "aggregate public-website marketing-event totals"
           ],
-          "blockedProbe": "legacy traffic analytics returned HTTP 403 despite reporting.full.read"
+          "narrowCredentialBlockedProbe": "legacy traffic analytics returns HTTP 403 despite reporting.full.read",
+          "safeTrafficFallback": "AEO retries read-only legacy traffic analytics with HUBSPOT_PRIVATE_APP_TOKEN only after the purpose-scoped key returns 401 or 403; no write endpoint is called"
         },
         "readsWith": {
           "analytics (/analytics/v2/reports/{breakdown}/{period}: totals, sessions, sources, geolocation, utm-campaigns, standard-pages)": [
@@ -231,7 +232,7 @@
         "marketingsupport/work-assets/website-as-a-funnel/hubspot-source-preservation-audit-2026-09-29.json",
         "superbuilders/aeo actions run 36600633639"
       ],
-    "note": "Existing held tokens produced the baseline traffic analytics, forms, submissions, marketing events, meetings and contacts. Post-merge AEO main run 36664885513 independently proved contacts, forms, marketing events, appointments, meeting links, 175 aggregate governed public/embedded bookings, and separate aggregate event authority in one scheduled runtime; the legacy traffic-analytics endpoint still returned 403. The same run audited the rolling integration cohort without writing contact rows: Program was populated on 94.35 percent and utm_source on 0.10 percent. First baseline read for 2026-09-01 to 09-27: 215,090 visits, 150,443 visitors, 378,684 pageviews, 4,926 leads, 62 customers, bounce 63 percent, 80 s per session. HubSpot has no per-URL data for WordPress pages; page-level paths remain GA4 territory."
+      "note": "AEO uses the purpose-scoped reporting key first and a distinct held private-app credential only as a read-only fallback after legacy traffic analytics returns 401 or 403. Runs 36774252259, 36776010659, 36776831844, and 36777936249 proved aggregate contacts, traffic, forms, marketing events, meetings, and booking authorities without exporting contact rows. The seven-day synthesis returned 44,090 tracked visits and 1,756 created contacts; the 90-day synthesis returned 554,976 tracked visits, 21,904 created contacts, 2,273 governed bookings, and 71 public-website events. Ninety-day contact-source detail exceeded the 10,000-row safe cap and is explicitly labeled partial. HubSpot tracked traffic covers every portal-tracked domain unless a HubSpot analytics view narrows it; page-level alpha.school paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
@@ -382,11 +383,11 @@
         "packets": "site-runtime-state branch and run artifacts",
         "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
         "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843",
-        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
+        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36774252259",
         "latestVerifiedSummary": {
-          "healthy": 12,
+          "healthy": 13,
           "unknown": 1,
-          "blocked": 5,
+          "blocked": 4,
           "degraded": 5,
           "failed": 0
         }
@@ -396,7 +397,46 @@
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO main run 36724689420 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, a real Search Console query, and live GTM version 6 with all five governed start-event names. Destination continuity, Community coverage, outcome joins, and legacy HubSpot traffic analytics remain blocked or degraded; no provider failure occurred."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO main run 36774252259 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 6. Destination continuity, Community coverage, and outcome joins remain blocked or degraded; no provider failed."
+    },
+    {
+      "id": "funnel-synthesis",
+      "name": "Alpha Website as a Funnel synthesis",
+      "kind": "aggregate-report",
+      "answers": [
+        "weekly and 90-day traffic and acquisition baselines",
+        "mobile versus desktop landing-page gaps",
+        "high-volume low-engagement landing pages",
+        "page-level views and engaged time",
+        "CTA starts by page, channel, and device",
+        "search-demand lower-bound signals",
+        "aggregate booking and public-event authorities",
+        "equal-window trend changes"
+      ],
+      "access": {
+        "repository": "superbuilders/aeo",
+        "workflow": ".github/workflows/funnel-weekly-synthesis.yml",
+        "schedule": "Mondays at 14:23 UTC",
+        "manualWindowsDays": [
+          7,
+          28,
+          90
+        ],
+        "firstProductionRun": "https://github.com/superbuilders/aeo/actions/runs/36776010659",
+        "firstNinetyDayRun": "https://github.com/superbuilders/aeo/actions/runs/36776831844",
+        "latestVerifiedRun": "https://github.com/superbuilders/aeo/actions/runs/36777936249",
+        "artifacts": [
+          "website-funnel-weekly-synthesis.json",
+          "website-funnel-weekly-synthesis.md"
+        ]
+      },
+      "owner": "website-operations",
+      "status": "held",
+      "recordedIn": [
+        "superbuilders/aeo docs/operations/alpha-website-funnel-weekly-synthesis.md",
+        "marketingsupport/docs/website-as-a-funnel-project-home.md"
+      ],
+      "note": "Aggregate-only and privacy-safe. It never divides GA4 sessions by HubSpot contacts, promotes a click to a conversion, exports a person, or configures a GA4 key event. It labels partial CTA-start coverage, capped HubSpot contact-source detail, and capped Search Console rows. The aggregate GA4 Data API does not expose exits or ordered user paths; those require an approved BigQuery export."
     },
     {
       "id": "cta-inventory",
