@@ -410,6 +410,9 @@
         "page-level views and engaged time",
         "CTA starts by page, channel, and device",
         "search-demand lower-bound signals",
+        "privacy-safe search-intent clusters with clicks, impressions, CTR, and landing pages",
+        "HubSpot form views and submissions joined to the current form catalog and grouped by diagnostic purpose",
+        "campus-page traffic, search demand, and CTA starts joined to public HubSpot Program lifecycle",
         "aggregate booking and public-event authorities",
         "equal-window trend changes"
       ],
@@ -424,7 +427,7 @@
         ],
         "firstProductionRun": "https://github.com/superbuilders/aeo/actions/runs/36776010659",
         "firstNinetyDayRun": "https://github.com/superbuilders/aeo/actions/runs/36776831844",
-        "latestVerifiedRun": "https://github.com/superbuilders/aeo/actions/runs/36777936249",
+        "latestVerifiedRun": "https://github.com/superbuilders/aeo/actions/runs/36780252327",
         "artifacts": [
           "website-funnel-weekly-synthesis.json",
           "website-funnel-weekly-synthesis.md"
@@ -436,7 +439,7 @@
         "superbuilders/aeo docs/operations/alpha-website-funnel-weekly-synthesis.md",
         "marketingsupport/docs/website-as-a-funnel-project-home.md"
       ],
-      "note": "Aggregate-only and privacy-safe. It never divides GA4 sessions by HubSpot contacts, promotes a click to a conversion, exports a person, or configures a GA4 key event. It labels partial CTA-start coverage, capped HubSpot contact-source detail, and capped Search Console rows. The aggregate GA4 Data API does not expose exits or ordered user paths; those require an approved BigQuery export."
+      "note": "Aggregate-only and privacy-safe. It never divides GA4 sessions by HubSpot contacts, promotes a click or form submission to a conversion, exports a person, or configures a GA4 key event. It labels partial CTA-start coverage, capped HubSpot contact-source detail, and capped Search Console rows. Form purposes are name-based diagnostics across all portal-tracked domains. Campus demand includes only Open and Announced Programs with a non-root alpha.school route; excluded source rows and duplicate routes remain visible. The aggregate GA4 Data API does not expose exits or ordered user paths; those require an approved BigQuery export."
     },
     {
       "id": "cta-inventory",
