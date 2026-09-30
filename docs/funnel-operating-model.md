@@ -57,6 +57,10 @@ The contract is versioned. A dashboard always names the contract version and dat
 
 The machine-readable working contract is `registry/website-measurement-contract.json`. It records the observed events and their evidence-window counts, the five outcome authorities, required dimensions, public health markers, cross-domain requirements, and every explicit gap. It is intentionally nonbinding while the analytics owner and primary outcome are undecided. A null event name, join key, attribution window, owner, or completion count is a blocker to resolve, not a blank for an agent to complete from intuition.
 
+As of 2026-09-29, production GTM version 6 emits five diagnostic CTA-start events. Four were observed in GA4 DebugView; the primary Community controls remain inside a cross-origin iframe. The contract's approved-key-event list is intentionally empty. Public inspection found that the primary Alpha GA4 measurement ID runs on `alpha.school` but not on `go.alpha.school`, `events.alpha.school`, or `map.app.alpha.school`. `go.alpha.school` runs a separate container and separate GA4 properties. Therefore, adding linker domains to the main site alone is not a cross-domain repair: each governed destination must first run the agreed property, then a controlled journey must prove client/session continuity. Community requires direct app instrumentation or an approved origin-checked `postMessage` bridge; iframe focus is not a valid proxy for an internal CTA.
+
+The contract also defines aggregate-only HubSpot authority snapshots for public/embedded scheduling-page bookings and public Marketing Events. These establish downstream totals, not attributed website conversions. They remain separate from CTA starts until the analytics-and-consent owner approves a privacy-safe join key and attribution window.
+
 ## 4. Prove instrumentation with journeys, not tag presence
 
 For each page family and each lifecycle-specific CTA path:

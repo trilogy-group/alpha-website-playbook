@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. This is a working, nonbinding inventory of what is observed, what each signal may mean, what completion system is authoritative, and what remains unproven. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.4",
+  "version": "0.5",
   "status": "working-nonbinding",
   "asOf": "2026-09-29",
   "evidenceWindow": {
@@ -12,6 +12,7 @@
     "analyticsAndConsentOwner": null,
     "primaryProspectiveParentOutcome": null,
     "primaryOutcomeDecision": "docs/questions-for-staff-2026-09-17.md Q-01",
+    "approvedKeyEvents": [],
     "meaning": "Observed events and downstream records may be reported separately. None may be promoted to a governed conversion or GA4 key event until its firing contract, parameters, owner, and completion reconciliation are approved."
   },
   "productionStartInstrumentation": {
@@ -53,6 +54,8 @@
     "searchConsoleSiteUrl": "sc-domain:alpha.school",
     "expectedPublicMarkers": {
       "gtmContainer": "GTM-5W56ZLQJ",
+      "gtmContainerVersion": 6,
+      "ga4MeasurementId": "G-G7M04CYHH0",
       "hubspotPortal": "40051392",
       "metaPixel": "5961380957279503"
     },
@@ -61,10 +64,60 @@
       "go.alpha.school",
       "events.alpha.school"
     ],
+    "conversionDestinations": [
+      {
+        "id": "book-call",
+        "host": "go.alpha.school",
+        "url": "https://go.alpha.school/"
+      },
+      {
+        "id": "info-session",
+        "host": "events.alpha.school",
+        "url": "https://events.alpha.school/"
+      }
+    ],
+    "communitySurface": {
+      "host": "map.app.alpha.school",
+      "url": "https://map.app.alpha.school/"
+    },
     "provisionalTrafficQualityThresholds": {
       "activeUsersGreaterThan": 1000,
       "engagementRateBelow": 0.1,
       "averageSessionDurationSecondsBelow": 10
+    }
+  },
+  "completionAuthoritySnapshots": {
+    "status": "aggregate-authority-only",
+    "meaning": "These reads establish separate privacy-safe totals in the authoritative downstream systems. They are not website conversions and may not be divided by CTA starts until a governed join and attribution window are approved.",
+    "reportingTimeZone": "UTC",
+    "window": {
+      "lookbackDays": 7,
+      "lagDays": 1
+    },
+    "bookCall": {
+      "system": "HubSpot CRM meetings",
+      "recordType": "0-47",
+      "dateProperty": "hs_createdate",
+      "sourceProperty": "hs_meeting_source",
+      "meetingSources": [
+        "MEETINGS_PUBLIC",
+        "MEETINGS_EMBEDDED"
+      ],
+      "joinedToWebsiteStarts": false
+    },
+    "infoSession": {
+      "system": "HubSpot Marketing Events",
+      "dateProperty": "startDateTime",
+      "publicFlagProperties": [
+        "simpleevents_public_event",
+        "display_on_website"
+      ],
+      "joinedToWebsiteStarts": false
+    },
+    "privacy": {
+      "aggregateOnly": true,
+      "personalFieldsRequested": false,
+      "contactRowsWritten": false
     }
   },
   "sourcePreservation": {
@@ -370,6 +423,8 @@
     "Supervised human GTM access is verified, but the scheduled measurement identity cannot read the container, so automated configuration-drift monitoring remains blocked.",
     "The main-document listener cannot observe the primary Community controls inside the cross-origin map.app.alpha.school iframe.",
     "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
+    "The primary GA4 measurement ID G-G7M04CYHH0 is not present on go.alpha.school or events.alpha.school. go.alpha.school runs a different GTM container and GA4 properties; events.alpha.school exposed no Google measurement ID in the 2026-09-29 public inspection. Adding linker domains on alpha.school alone cannot create continuity.",
+    "map.app.alpha.school exposed no primary GA4 measurement ID in the 2026-09-29 public inspection. Its primary Community controls require direct instrumentation or an approved origin-checked postMessage bridge; iframe focus is not sufficient evidence.",
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
     "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
     "No downstream completion has an approved site-to-system join key or attribution window.",

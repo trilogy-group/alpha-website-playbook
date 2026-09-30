@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "0.8",
+  "version": "0.9",
   "asOf": "2026-09-29",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -59,7 +59,7 @@
       "recordedIn": [
         "registry/global-runtime.json"
       ],
-      "note": "Read from Site Kit settings 2026-09-28. Cross-domain linker lists alpha.school only; go., events. and apply. subdomains are not linked, so sessions break at every conversion click."
+      "note": "Read from Site Kit settings 2026-09-28. Public inspection 2026-09-29 found the linker lists alpha.school only. The primary measurement ID G-G7M04CYHH0 is absent from go.alpha.school and events.alpha.school; go.alpha.school instead exposes GTM-KNSZSMLS, G-MEGFC9EQC5, and G-YR6DEPVYYN, while events.alpha.school exposed no Google measurement ID. Cross-domain continuity is therefore unverified and cannot be repaired by adding linker domains on alpha.school alone."
     },
     {
       "id": "ga4",
@@ -736,14 +736,17 @@
       ],
       "access": {
         "url": "https://www.community.alpha.school/",
-        "analytics": "PostHog"
+        "embeddedMapUrl": "https://map.app.alpha.school/",
+        "analytics": "PostHog",
+        "primaryGa4MeasurementObservedOnEmbeddedMap": false,
+        "verifiedAt": "2026-09-29"
       },
       "owner": "community-app-owner",
       "status": "present",
       "recordedIn": [
         "registry/sources.json"
       ],
-      "note": ""
+      "note": "The homepage embeds map.app.alpha.school cross-origin. The parent page can observe iframe activation and approved origin-checked messages, but not CTA controls inside the iframe. Public inspection found no G-G7M04CYHH0 on the embedded app. Community funnel coverage requires direct app instrumentation or an approved postMessage bridge plus an authoritative interest/join read; iframe focus is not an outcome signal."
     },
     {
       "id": "youtube-studio",
