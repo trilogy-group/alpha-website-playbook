@@ -156,8 +156,16 @@ export function measureTeamCardsInPage({ timeoutMs = 15000 } = {}) {
   }
   const list = [...cards.values()]
   for (const { img } of list) { if (img.loading === 'lazy') img.loading = 'eager' }
+  // The slide index is read here, before any await, and never after one. A looped carousel reorders its slides while
+  // the decodes are in flight, so an index read afterwards names a different card - the same class of mistake that
+  // made section-shot.mjs capture the wrong person on 2026-10-01. The name/image binding itself is safe, because the
+  // card is a live node reference, not a selector; it is only the positional index that goes stale.
+  for (const card of list) {
+    card.slide = card.container?.classList?.contains('swiper-slide') ? card.container : null
+    card.slideIndex = card.slide ? [...card.slide.parentElement.children].indexOf(card.slide) : null
+  }
   const deadline = Date.now() + timeoutMs
-  return Promise.all(list.map(async ({ img, name, kind, container }) => {
+  return Promise.all(list.map(async ({ img, name, kind, slide, slideIndex }) => {
     let decoded = true, reason = null
     const remaining = Math.max(0, deadline - Date.now())
     let timer
@@ -165,8 +173,6 @@ export function measureTeamCardsInPage({ timeoutMs = 15000 } = {}) {
     try { if (!img.currentSrc && !img.src) throw new Error('no src'); await Promise.race([img.decode(), timeout]) } catch (e) { decoded = false; reason = e.message || String(e) } finally { clearTimeout(timer) }
     const r = img.getBoundingClientRect()
     const cs = getComputedStyle(img)
-    const slide = container.classList?.contains('swiper-slide') ? container : null
-    const slideIndex = slide ? [...slide.parentElement.children].indexOf(slide) : null
     const widget = img.closest('.elementor-widget')
     return {
       name, kind, decoded, ...(reason ? { reason } : {}),
@@ -175,7 +181,12 @@ export function measureTeamCardsInPage({ timeoutMs = 15000 } = {}) {
       boxWidth: Math.round(r.width * 100) / 100, boxHeight: Math.round(r.height * 100) / 100,
       objectFit: cs.objectFit, objectPosition: cs.objectPosition,
       widgetId: widget?.id || null, widgetElement: (widget?.className.match(/elementor-element-([a-z0-9]+)/) || [])[1] || null,
-      slideIndex, selector: slide ? `#team_carousel .swiper-slide:nth-child(${slideIndex + 1})` : (widget?.id ? `#${widget.id}` : null),
+      slideIndex,
+      // A positional carousel selector is a measurement artefact, not an address: on a looped carousel the slide at
+      // :nth-child(n) changes. Downstream tools that take --selector should prefer widgetId, and anything that
+      // captures a card must pick it by its heading (tests/section-shot.mjs --slide-containing).
+      selector: slide ? `#team_carousel .swiper-slide:nth-child(${slideIndex + 1})` : (widget?.id ? `#${widget.id}` : null),
+      ...(slide ? { selectorStable: false } : {}),
     }
   }))
 }

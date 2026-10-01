@@ -11,16 +11,34 @@
  * look at the element "Look for" names, at a legible size, with its images painted.
  *
  * Usage: node tests/section-shot.mjs --url <page> --selector <css> [--name <section name>] [--out <dir>]
- *        [--slide-containing "<text>"] [--viewports desktop,mobile] [--json out.json] [--timeout <ms, default 15000>]
- *        [--playwright <dir>]
+ *        [--slide-containing "<text>"] [--allow-first-match] [--viewports desktop,mobile] [--json out.json]
+ *        [--timeout <ms, default 15000>] [--playwright <dir>]
  * Writes <out>/<slug>-desktop.png and <out>/<slug>-mobile.png where <slug> is the section name slugified (default:
  * the selector). Exit 0 when every image decoded; 1 when some never decoded (the capture is still written and the
- * report names each image); 2 when the selector matched nothing, the page did not load, or Playwright is missing.
+ * report names each image); 2 when the selector matched nothing, the chosen slide was no longer the one named at the
+ * moment of the shot, the page did not load, or Playwright is missing.
  *
  * Carousel cards: `--slide-containing "Jason Tan"` picks, among the selector's matches, the one whose text contains
  * that string (so `--selector "#team_carousel .swiper-slide" --slide-containing "Jason Tan"` is the card itself), and
  * when the chosen element sits in a Swiper carousel the tool calls slideTo on its index first, so a card past the
  * visible slides is on screen and painted before the capture. `--scroll-to-text` is the same option.
+ *
+ * Why the chosen card is an ElementHandle and the identity is asserted (run framing-2026-10-01-B, Southlake 8621 and
+ * Palm Beach 6545): this tool used to keep the match as a lazy Playwright locator, re-resolved on every use, and the
+ * carousel kept moving under it - autoplay translating the track, Swiper's loop handling reordering the slide DOM -
+ * between the slideTo and the boundingBox the clip is computed from. `--slide-containing "Katherine Phelps"` wrote a
+ * capture of Coach KeJuan Weaver, `--slide-containing "Sean McKenna"` one of Erin Colucci, both exit 0 with a clean
+ * report whose own images[0].alt contradicted the file name: wrong evidence on a staff ticket, silently. So the match
+ * is resolved to one ElementHandle that is held for the slideTo, the scroll, the decode wait, the box and the clip;
+ * carousel autoplay is stopped before the slideTo; and immediately before the screenshot the element is re-read in
+ * the page and must still contain the `--slide-containing` text, with the clip's centre still over the same slide.
+ * A mismatch is SLIDE_IDENTITY_MISMATCH, exit 2, and no file is written.
+ *
+ * And the way the wrong evidence was actually produced on 2026-10-01: `--selector "#team_carousel .swiper-slide"`
+ * with NO `--slide-containing`, named `--name "team carousel: Katherine Phelps card"`. The selector matched eleven
+ * slides, the tool took the first, and the file carried her name over a capture of whoever was on slide 1. So a
+ * carousel selector matching more than one slide without `--slide-containing` is now AMBIGUOUS_SLIDE, exit 2, with
+ * the headings listed; `--allow-first-match` is the explicit opt-out for a deliberate "whatever is on slide 1" shot.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -33,7 +51,7 @@ export const PADDING_PX = 16
 export const DEFAULT_DECODE_TIMEOUT_MS = 15_000
 
 export class SectionShotError extends Error {
-  /** @param {'MISSING_ARG'|'BAD_URL'|'BAD_VIEWPORT'|'PLAYWRIGHT_NOT_FOUND'|'NAV_FAILED'|'SELECTOR_NOT_FOUND'|'IMAGES_NOT_DECODED'} code */
+  /** @param {'MISSING_ARG'|'BAD_URL'|'BAD_VIEWPORT'|'PLAYWRIGHT_NOT_FOUND'|'NAV_FAILED'|'SELECTOR_NOT_FOUND'|'AMBIGUOUS_SLIDE'|'SLIDE_IDENTITY_MISMATCH'|'IMAGES_NOT_DECODED'} code */
   constructor(code, message, extra = {}) { super(message); this.name = 'SectionShotError'; this.code = code; Object.assign(this, extra) }
 }
 
@@ -75,7 +93,8 @@ export function planSectionShot(args) {
   const containing = args['slide-containing'] ?? args['scroll-to-text']
   if (containing === true || (containing !== undefined && !String(containing).trim())) throw new SectionShotError('MISSING_ARG', '--slide-containing needs the text the card shows, for example the person name')
   const slideContaining = containing === undefined ? null : String(containing).trim()
-  return { url: url.toString(), selector, name, out, viewports, timeoutMs, files, slideContaining, json: args.json && args.json !== true ? path.resolve(String(args.json)) : null }
+  const allowFirstMatch = Boolean(args['allow-first-match'])
+  return { url: url.toString(), selector, name, out, viewports, timeoutMs, files, slideContaining, allowFirstMatch, json: args.json && args.json !== true ? path.resolve(String(args.json)) : null }
 }
 
 /** Playwright is not a dependency of the playbook; borrow it the way rendered-controls.mjs does. */
@@ -88,8 +107,10 @@ export function loadChromium(args = {}, env = process.env) {
 }
 
 /**
- * Runs inside the page on the chosen element. When it is (or sits inside) a Swiper slide, asks the carousel to show
- * that slide (Elementor keeps the instance on the .swiper element). Returns null outside a carousel.
+ * Runs inside the page on the chosen element. When it is (or sits inside) a Swiper slide, stops the carousel's
+ * autoplay and asks it to show that slide (Elementor keeps the instance on the .swiper element). Returns null
+ * outside a carousel. Autoplay is stopped first and deliberately: while it runs the track keeps translating, so the
+ * clip computed from the element's box a moment later sits over a neighbouring card.
  */
 function bringSlideIntoView(el) {
   const slide = el.closest('.swiper-slide')
@@ -97,9 +118,61 @@ function bringSlideIntoView(el) {
   if (!slide || !swiper) return null
   const index = [...slide.parentElement.children].indexOf(slide)
   const instance = swiper.swiper
-  if (!instance || typeof instance.slideTo !== 'function') return { index, moved: false, reason: 'no swiper instance on the carousel element' }
+  if (!instance || typeof instance.slideTo !== 'function') return { index, moved: false, autoplayStopped: false, reason: 'no swiper instance on the carousel element' }
+  let autoplayStopped = false
+  try {
+    if (instance.autoplay) {
+      if (typeof instance.autoplay.stop === 'function') instance.autoplay.stop()
+      if (typeof instance.autoplay.pause === 'function') instance.autoplay.pause()
+      instance.autoplay.running = false
+      autoplayStopped = true
+    }
+  } catch { autoplayStopped = false }
   instance.slideTo(index, 0)
-  return { index, moved: true, activeIndex: instance.activeIndex }
+  return { index, moved: true, autoplayStopped, activeIndex: instance.activeIndex, duplicate: slide.classList.contains('swiper-slide-duplicate') }
+}
+
+/**
+ * Runs inside the page on the element about to be captured, immediately before the screenshot, and is the guard the
+ * 2026-10-01 defect needed: the element must still hold the text that chose it, and the slide under the clip's
+ * centre must still be the element's own slide. `centre` is in viewport coordinates, the same frame boundingBox()
+ * reports in. Returns the reading; the caller decides, so a non-carousel section is never failed by a point test.
+ */
+function readSlideIdentity(root, { containing, centre }) {
+  const clean = (value) => String(value || '').replace(/\s+/g, ' ').trim()
+  const text = clean(root.textContent)
+  const headings = [...root.querySelectorAll('.elementor-heading-title, h1, h2, h3, h4, h5, h6')].map((node) => clean(node.textContent)).filter(Boolean)
+  const needle = containing ? clean(containing).toLowerCase() : null
+  const containsRequested = needle ? text.toLowerCase().includes(needle) : null
+  const ownSlide = root.closest('.swiper-slide')
+  const atPoint = centre ? document.elementFromPoint(centre.x, centre.y) : null
+  const slideAtCentre = atPoint ? atPoint.closest('.swiper-slide') : null
+  // null, not false, when the question does not apply: no carousel, or the point landed on an overlay outside it.
+  const centreOnOwnSlide = ownSlide && slideAtCentre ? slideAtCentre === ownSlide : null
+  return {
+    heading: headings[0] || null, headings: headings.slice(0, 6), text: text.slice(0, 300), containsRequested, centreOnOwnSlide,
+    inCarousel: Boolean(ownSlide), connected: root.isConnected,
+    slideAtCentreText: slideAtCentre ? clean(slideAtCentre.textContent).slice(0, 160) : null,
+  }
+}
+
+/**
+ * The one ElementHandle the whole capture is taken from. A Playwright locator is lazy: every `await` on it re-runs
+ * the selector, so a carousel that reorders its slides hands back a different element each time. Resolved once,
+ * here, preferring a real slide over a `swiper-slide-duplicate` loop clone (the clone shows the same person, but
+ * Swiper may delete and rebuild clones, which would detach the handle mid-capture).
+ */
+export async function resolveSlideHandle(locator, count) {
+  let fallback = null
+  for (let index = 0; index < count; index++) {
+    const handle = await locator.nth(index).elementHandle()
+    if (!handle) continue
+    let duplicate = false
+    try { duplicate = await handle.evaluate((el) => Boolean(el.closest('.swiper-slide')?.classList.contains('swiper-slide-duplicate'))) } catch { duplicate = false }
+    if (!duplicate) { if (fallback) await fallback.dispose().catch(() => {}); return handle }
+    if (fallback) await handle.dispose().catch(() => {}); else fallback = handle
+  }
+  return fallback
 }
 
 /**
@@ -131,9 +204,11 @@ function waitForImagesInElement(root, { timeoutMs }) {
 }
 
 /**
- * Capture one viewport: navigate, scroll the element in, wait for its images, screenshot the element with a margin.
- * Throws SELECTOR_NOT_FOUND and NAV_FAILED; an image that never decoded is reported, not thrown, and the file is
- * still written so the reviewer sees what the agent saw.
+ * Capture one viewport: navigate, resolve the match to a single ElementHandle, stop the carousel and move it to that
+ * slide, wait for the element's images, then assert the element is still the one that was asked for and screenshot
+ * it with a margin. Throws SELECTOR_NOT_FOUND, NAV_FAILED and SLIDE_IDENTITY_MISMATCH; an image that never decoded
+ * is reported, not thrown, and the file is still written so the reviewer sees what the agent saw. The handle is held
+ * across every step on purpose: see the identity note in the header.
  */
 export async function captureSection(browser, plan, viewport, { log = () => {} } = {}) {
   const context = await browser.newContext({ viewport: VIEWPORTS[viewport], deviceScaleFactor: DEVICE_SCALE_FACTOR, userAgent: 'alpha-website-playbook section-shot' })
@@ -149,9 +224,22 @@ export async function captureSection(browser, plan, viewport, { log = () => {} }
     const locator = plan.slideContaining ? all.filter({ hasText: plan.slideContaining }) : all
     const chosen = plan.slideContaining ? await locator.count() : matches
     if (chosen === 0) throw new SectionShotError('SELECTOR_NOT_FOUND', `${viewport}: ${matches} element(s) match ${plan.selector} on ${plan.url} but none contains "${plan.slideContaining}"`, { viewport, selector: plan.selector, matches, slideContaining: plan.slideContaining })
-    const element = locator.first()
-    // A card inside a Swiper carousel is translated off screen until its slide is active: move the carousel first.
+    // One handle, held through every step below. Never re-resolve the locator: that is the 2026-10-01 defect.
+    const element = await resolveSlideHandle(locator, chosen)
+    if (!element) throw new SectionShotError('SELECTOR_NOT_FOUND', `${viewport}: ${plan.selector} matched ${matches} element(s) on ${plan.url} but none could be resolved to an element`, { viewport, selector: plan.selector, matches })
+    // A card inside a Swiper carousel is translated off screen until its slide is active: stop autoplay and move the
+    // carousel first, through the handle so the slide moved is the slide captured.
     const slide = await element.evaluate(bringSlideIntoView)
+    // A carousel selector that matched several slides with nothing to pick one: the tool used to take slide 1 and let
+    // --name claim whoever the operator meant. That is how the Southlake and Palm Beach captures carried the wrong
+    // person. Refuse, and name what is on the slides so the right --slide-containing is obvious.
+    if (slide && !plan.slideContaining && matches > 1 && !plan.allowFirstMatch) {
+      const headings = await page.evaluate((selector) => [...document.querySelectorAll(selector)].slice(0, 12).map((el) => {
+        const heading = el.querySelector('.elementor-heading-title, h1, h2, h3, h4, h5, h6')
+        return heading ? heading.textContent.replace(/\s+/g, ' ').trim() : '(no heading)'
+      }), plan.selector)
+      throw new SectionShotError('AMBIGUOUS_SLIDE', `${viewport}: ${plan.selector} matches ${matches} carousel slides on ${plan.url} and nothing says which one to capture, so the file would be named "${plan.name}" over whichever slide happens to be first. Pass --slide-containing "<the person on the card>", or --allow-first-match if slide 1 really is the subject. The slides read: ${headings.join('; ')}`, { viewport, selector: plan.selector, matches, headings, name: plan.name })
+    }
     if (slide?.moved) await page.waitForTimeout(400)
     await element.scrollIntoViewIfNeeded({ timeout: 10_000 })
     await page.waitForTimeout(500)
@@ -159,16 +247,30 @@ export async function captureSection(browser, plan, viewport, { log = () => {} }
     // A settle so a just-decoded image has painted before the capture.
     await page.waitForTimeout(300)
     const box = await element.boundingBox()
-    if (!box || box.width === 0 || box.height === 0) throw new SectionShotError('SELECTOR_NOT_FOUND', `${viewport}: ${plan.selector} matches but has no rendered box on ${plan.url}`, { viewport, selector: plan.selector, matches })
+    if (!box || box.width === 0 || box.height === 0) {
+      const connected = await element.evaluate((el) => el.isConnected).catch(() => false)
+      if (!connected) throw new SectionShotError('SLIDE_IDENTITY_MISMATCH', `${viewport}: the element chosen${plan.slideContaining ? ` by "${plan.slideContaining}"` : ''} on ${plan.url} was removed from the page before the capture (a looped carousel rebuilt its slides); nothing was written, rerun`, { viewport, selector: plan.selector, matches, slideContaining: plan.slideContaining, detached: true })
+      throw new SectionShotError('SELECTOR_NOT_FOUND', `${viewport}: ${plan.selector} matches but has no rendered box on ${plan.url}`, { viewport, selector: plan.selector, matches })
+    }
     const scroll = await page.evaluate(() => ({ x: window.scrollX, y: window.scrollY, width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight }))
     const clip = clipWithPadding(box, scroll, PADDING_PX)
+    // The identity assertion, immediately before the screenshot and from inside the element being captured: it must
+    // still hold the requested text, and the clip's centre must still land on its own slide. Loud failure, no file.
+    const read = await element.evaluate(readSlideIdentity, { containing: plan.slideContaining, centre: { x: box.x + box.width / 2, y: box.y + box.height / 2 } })
+    const identity = { requested: plan.slideContaining, asserted: read.heading || read.text, heading: read.heading, headings: read.headings, containsRequested: read.containsRequested, inCarousel: read.inCarousel, centreOnOwnSlide: read.centreOnOwnSlide, slideAtCentreText: read.slideAtCentreText, ok: read.containsRequested !== false && read.centreOnOwnSlide !== false }
+    if (!identity.ok) {
+      const why = read.containsRequested === false
+        ? `the element no longer contains "${plan.slideContaining}" (it now reads "${read.heading || read.text}")`
+        : `the clip's centre lands on a different slide (that slide reads "${read.slideAtCentreText}")`
+      throw new SectionShotError('SLIDE_IDENTITY_MISMATCH', `${viewport}: ${plan.url} ${plan.selector}${plan.slideContaining ? ` --slide-containing "${plan.slideContaining}"` : ''}: ${why}. The carousel moved between choosing the card and the screenshot, so the capture would show the wrong person; nothing was written. Rerun, and if it repeats capture the card by its heading with the carousel stopped.`, { viewport, selector: plan.selector, matches, slideContaining: plan.slideContaining, identity, slide, box: { x: Math.round(box.x + scroll.x), y: Math.round(box.y + scroll.y), width: Math.round(box.width), height: Math.round(box.height) }, clip })
+    }
     fs.mkdirSync(plan.out, { recursive: true })
     const file = plan.files[viewport]
     await page.screenshot({ path: file, fullPage: true, clip })
     const images = waited.images
     const undecoded = images.filter((img) => !img.decoded)
-    const result = { viewport, file, matches, ...(plan.slideContaining ? { slideContaining: plan.slideContaining, containing: chosen } : {}), ...(slide ? { slide } : {}), box: { x: Math.round(box.x + scroll.x), y: Math.round(box.y + scroll.y), width: Math.round(box.width), height: Math.round(box.height) }, clip, deviceScaleFactor: DEVICE_SCALE_FACTOR, images, undecoded: undecoded.length, capturedAt: new Date().toISOString() }
-    log(`${viewport}: ${file} (${result.box.width}x${result.box.height} css px, ${images.length} images, ${undecoded.length} not decoded${plan.slideContaining ? `, "${plan.slideContaining}" in ${chosen} of ${matches} matches` : (matches > 1 ? `, first of ${matches} matches` : '')}${slide?.moved ? `, carousel moved to slide ${slide.index + 1}` : ''})`)
+    const result = { viewport, file, matches, ...(plan.slideContaining ? { slideContaining: plan.slideContaining, containing: chosen } : {}), ...(slide ? { slide } : {}), identity, box: { x: Math.round(box.x + scroll.x), y: Math.round(box.y + scroll.y), width: Math.round(box.width), height: Math.round(box.height) }, clip, deviceScaleFactor: DEVICE_SCALE_FACTOR, images, undecoded: undecoded.length, capturedAt: new Date().toISOString() }
+    log(`${viewport}: ${file} (${result.box.width}x${result.box.height} css px, ${images.length} images, ${undecoded.length} not decoded${plan.slideContaining ? `, "${plan.slideContaining}" in ${chosen} of ${matches} matches` : (matches > 1 ? `, first of ${matches} matches` : '')}${slide?.moved ? `, carousel moved to slide ${slide.index + 1}${slide.autoplayStopped ? ', autoplay stopped' : ''}` : ''}${identity.heading ? `, identity asserted: "${identity.heading}"` : ''})`)
     return result
   } finally {
     await context.close()
@@ -192,6 +294,13 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
   const report = { url: plan.url, selector: plan.selector, name: plan.name, ranAt: new Date().toISOString(), viewports: {} }
   try {
     for (const viewport of plan.viewports) report.viewports[viewport] = await captureSection(browser, plan, viewport, { log: io.log })
+  } catch (error) {
+    // A failed capture still gets its report written, so the operator can read what the tool saw instead of guessing.
+    if (error instanceof SectionShotError) {
+      error.report = { ...report, failed: { code: error.code, viewport: error.viewport || null, message: error.message, ...(error.identity ? { identity: error.identity } : {}) } }
+      if (plan.json) { try { fs.writeFileSync(plan.json, JSON.stringify(error.report, null, 2) + '\n') } catch { /* the thrown error is the signal, not the sidecar */ } }
+    }
+    throw error
   } finally {
     await browser.close()
   }

@@ -1,0 +1,96 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>section-shot fixture: looped team carousel</title>
+<!--
+  A stand-in for an Alpha campus team carousel, built to reproduce the 2026-10-01 evidence defect deterministically
+  and offline. The markup is the shape section-shot.mjs targets (#team_carousel.swiper > .swiper-wrapper >
+  .swiper-slide, each slide an Elementor-style heading plus one lazy image) and the carousel object on the .swiper
+  element is the slice of the Swiper API the tool touches: slideTo, activeIndex, update, autoplay.stop/pause/running.
+
+  Each slide is a flat, unique colour, image and background alike, so a capture can be judged from one pixel: if the
+  clip landed on the wrong card the colour is the wrong card's colour, whatever the report claims.
+
+  ?reflow= chooses when the carousel moves under the tool, each a real Swiper behaviour:
+    loop     (default) on a resize, and only while autoplay is running, loopFix reorders the slide DOM and leaves the
+             track where it was, so the column the clip was computed over now holds the next card. The full-page
+             screenshot resizes the emulated viewport, so this fires between the boundingBox and the capture - the
+             window the pre-fix tool could not see into. Stopping autoplay is what closes it.
+    recycle  on a scroll, every slide's contents shift one person along while the nodes stay put (Swiper's virtual
+             slides recycle their DOM). The handle is still the same element and it now holds someone else: the
+             identity assertion must catch that.
+    overlay  on a scroll, the last slide is absolutely positioned over the first visible column with a higher
+             z-index (a loop clone translated on top of the active slide). The handle's box is unchanged but the
+             clip's centre is painted by another slide: the centre test must catch that.
+-->
+<style>
+  html, body { margin: 0; background: #ffffff; font: 14px system-ui, sans-serif }
+  #spacer { height: 1200px }
+  #team { padding: 24px 40px 400px }
+  #team_carousel { position: relative; width: 660px; overflow: hidden }
+  .swiper-wrapper { display: flex; gap: 20px; transition: none; will-change: transform }
+  .swiper-slide { flex: 0 0 300px; width: 300px; position: relative }
+  .swiper-slide img { display: block; width: 300px; height: 300px; object-fit: cover }
+  .elementor-heading-title { margin: 0; padding: 8px 0; font-size: 16px; color: #110068 }
+</style>
+<div id="spacer">the carousel sits below the fold, so the tool has to scroll to it</div>
+<section id="team">
+  <h2>Meet the guides</h2>
+  <div id="team_carousel" class="swiper"><div class="swiper-wrapper"></div></div>
+</section>
+<script>
+  const PEOPLE = [
+    { name: 'Ada Lovelace', title: 'Guide', color: '#c81e1e' },
+    { name: 'Grace Hopper', title: 'Guide', color: '#1e7d32' },
+    { name: 'Katherine Johnson', title: 'Director of Admissions', color: '#0d4ad1' },
+    { name: 'Mary Jackson', title: 'Guide', color: '#f2a104' },
+  ]
+  const reflow = new URL(location.href).searchParams.get('reflow') || 'loop'
+  const swatch = (color) => 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" fill="${color}"/></svg>`)
+  const wrapper = document.querySelector('.swiper-wrapper')
+  const fill = (slide, person) => {
+    slide.style.background = person.color
+    slide.innerHTML = `<div class="elementor-widget elementor-widget-image"><img loading="lazy" decoding="async" alt="${person.name}" src="${swatch(person.color)}"></div>`
+      + `<div class="elementor-widget elementor-widget-heading"><h3 class="elementor-heading-title">${person.name} | ${person.title}</h3></div>`
+  }
+  for (const person of PEOPLE) { const slide = document.createElement('div'); slide.className = 'swiper-slide'; fill(slide, person); wrapper.append(slide) }
+
+  const SLIDE_STEP = 320
+  const carousel = document.getElementById('team_carousel')
+  const track = (index) => { wrapper.style.transform = `translateX(${-index * SLIDE_STEP}px)` }
+  let translated = 0
+  const autoplay = { running: true, stop() { this.running = false }, pause() { this.running = false }, start() { this.running = true } }
+  carousel.swiper = {
+    autoplay, activeIndex: 0, params: { loop: true },
+    update() {},
+    slideTo(index) { this.activeIndex = index; translated = index; track(index) },
+  }
+  track(0)
+
+  /** loopFix: the slide DOM is reordered and the track is left alone, so each column shows the next card along. */
+  const loopFix = () => { for (let i = 0; i < translated + 1; i++) wrapper.append(wrapper.firstElementChild) ; translated = 0; track(0) }
+  /** Virtual slides: the nodes stay, their contents move one person along. */
+  const recycle = () => {
+    const slides = [...wrapper.children]
+    const people = slides.map((slide) => PEOPLE.find((p) => slide.textContent.includes(p.name)))
+    slides.forEach((slide, i) => fill(slide, people[(i + 1) % people.length]))
+  }
+  /** A loop clone translated on top of the active slide. It moves to the body first: the wrapper's own transform
+      would otherwise be the containing block for a fixed-position child, and the offsets would not be viewport ones. */
+  const overlay = () => {
+    const active = wrapper.children[translated] || wrapper.firstElementChild
+    const box = active.getBoundingClientRect()
+    const clone = wrapper.lastElementChild
+    document.body.append(clone)
+    clone.style.position = 'fixed'
+    clone.style.left = box.left + 'px'
+    clone.style.top = box.top + 'px'
+    clone.style.zIndex = '10'
+  }
+
+  let fired = false
+  const once = (fn) => { if (fired) return; fired = true; fn() }
+  if (reflow === 'loop') addEventListener('resize', () => { if (autoplay.running) once(loopFix) })
+  if (reflow === 'recycle') addEventListener('scroll', () => once(recycle), { passive: true })
+  if (reflow === 'overlay') addEventListener('scroll', () => once(overlay), { passive: true })
+  window.__fixture = { reflow, people: PEOPLE, order: () => [...wrapper.children].map((s) => s.textContent.split('|')[0].trim()) }
+</script>
