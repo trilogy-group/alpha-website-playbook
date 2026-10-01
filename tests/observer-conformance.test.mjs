@@ -23,7 +23,10 @@ test('spec/observer-comparators.json is the list the bundle carries and every ro
   const comparators = read('spec/observer-comparators.json')
   const bundle = read('spec/check-bundle.generated.json')
   const types = Object.keys(comparators.comparators).filter((k) => !k.startsWith('$'))
-  assert.equal(types.length, 35, 'the observer publishes 35 types (aeo #37); resync with tests/sync-observer-comparators.mjs when it changes')
+  assert.equal(types.length, 36, 'the observer publishes 36 types (aeo #37, plus head-clip-risk 2026-10-01); resync with tests/sync-observer-comparators.mjs when it changes')
+  // The framing comparator states the measurement the 2026-10-01 decision chose: the top cut, not the file-to-box ratio.
+  assert.match(comparators.comparators['head-clip-risk'], /share of the image height cut from the TOP/)
+  assert.match(comparators.comparators['head-clip-risk'], /top-anchored portrait cropped only at the bottom passes/)
   assert.deepEqual(bundle.comparators, comparators.comparators, 'the bundle carries the copy verbatim')
   for (const type of types) assert.ok(typeof comparators.comparators[type] === 'string' && comparators.comparators[type].trim(), `${type} has one line of semantics`)
   for (const row of bundle.rows) assert.ok(types.includes(row.comparator.type), `${row.id} uses ${row.comparator.type}, which the observer does not implement`)
@@ -60,7 +63,7 @@ test('every observerCheck in the rows and retirements is a registered observer c
 
 test('site.loop.health.conformance is the loop-health row the observer files on a non-conforming bundle', () => {
   const bundle = read('spec/check-bundle.generated.json')
-  assert.equal(bundle.version, '1.9')
+  assert.equal(bundle.version, '1.10')
   const row = bundle.rows.find((r) => r.id === 'site.loop.health.conformance')
   assert.ok(row, 'row exists')
   assert.deepEqual([row.observerCheck, row.channel, row.ticketClass, row.ownerRole, row.pageFamily, row.entitySource, row.depth, row.dedupeScope, row.clearAfterRuns, row.severity, row.status, row.comparator.type, row.comparator.threshold, row.comparator.unit, row.grounding.kind],
@@ -82,7 +85,7 @@ test('site.loop.health.conformance is the loop-health row the observer files on 
 
 test('sync-observer-comparators: no drift against a verbatim copy, drift named against an altered one, --write brings the copy current, --checks reads checks.mjs', () => {
   const playbook = read('spec/observer-comparators.json')
-  assert.deepEqual(comparatorDrift(playbook, playbook), { ok: true, observerVersion: playbook.version, playbookVersion: playbook.version, observerCount: 35, playbookCount: 35, missingHere: [], extraHere: [], semanticsDiffer: [], orderDiffers: false })
+  assert.deepEqual(comparatorDrift(playbook, playbook), { ok: true, observerVersion: playbook.version, playbookVersion: playbook.version, observerCount: 36, playbookCount: 36, missingHere: [], extraHere: [], semanticsDiffer: [], orderDiffers: false })
   const altered = JSON.parse(JSON.stringify(playbook))
   altered.version = '2026-10-01'
   altered.comparators['pixel-ocr-equals'] = 'the words read from the pixels equal the expected words'

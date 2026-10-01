@@ -1,7 +1,7 @@
 {
   "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP. 1.3 (2026-09-25, decision by Matt Barge: check from HubSpot to the website, not only from the website to HubSpot): entitySource per row (hubspot-programs or map; campus rows default to hubspot-programs through entitySources.<id>.pageFamilies, so the observer enumerates the campuses from HubSpot Programs whose type is public and whose website is on a public host, takes the lifecycle state from type, and fetches the page at website; the map is downstream). expected.derive.onMissing (finding or skip, default skip): on finding, an in-scope entity with no registry entry is a finding of the same row with missingExpectation true, titled \"no approved <thing> recorded for <state> campus <name>\", filed Missing Info to the registry owner role with literals.missingAsk. literals per row carry the fixed values the observer and the filer read (missingAsk, missingThing, launchWords, assetPatterns, registries); the builder publishes them at row.literals and mirrors them at expected.literal next to expected.derive, which is where the observer reads them (rules.literalValue). aliases.pageCheck maps every tests/page-check.mjs check id to its row id (aliases.pageCheckUnmapped names the rest with the reason); agent/file-found-ticket.mjs writes customFields.requirementId from it. Comparator types are enumerated in spec/observer-comparators.json and the builder refuses any other. New coverage rows: site.coverage.open-campus-registries, site.coverage.program-page, site.coverage.open-campus-rendered. dedupeScope campus-registry (one ticket per campus and registry). 1.4 (2026-09-25, QC loop repair plan repair 3, bundle-versus-observer conformance): site.loop.health.conformance (observer check bundle-conformance) is the loop-health row the observer files when the loaded bundle fails its conformance assessment (a comparator, check id, entity source, registry or literal a row states that the code does not implement); the observer records the assessment in the packet manifest (conformance {ok, failures[]}) and its CI runs node alpha-site-system/src/cli.mjs conformance against the released bundle. Rows added for the loop-health checks the observer already emitted without a row: site.loop.health.comparator-unsupported (comparator-unsupported, aeo #37) and the vision-pass rows site.loop.health.vision-pass, site.loop.health.vision-pass-budget, site.loop.health.vision-pass-errors (aeo #36, repair 2). tests/observer-conformance.test.mjs asserts the comparator list and the check registry from this side; tests/sync-observer-comparators.mjs refetches the observer's published list and reports drift. 1.7 (2026-09-28, proposed by the website agent from Matt Barge's review of the 2026-09-28 status-sentence tickets, awaiting his confirmation): campus.intro.status-source carries literals.exceptions, the list of named per-campus intro-sentence exceptions read from spec/campus-lifecycle.json campuses.<slug>.introStatementException (status Proposed or Decided, wording, reason, expires); a campus with an unexpired exception whose website_campus_intro contains the wording is exempt from the row, never filed. First entry: Lexington (boston-suburbs), the pending-School-Committee-approval sentence. 1.8 (2026-09-28, decided by Matt Barge in a Slack conversation with the website agent): campus.intro.status-source reads opening_date as well as launch_date; an Announced campus with no launch_date and no opening_date reads '<name> is coming soon.' (literals.undatedAnnounced; first case Alpha Houston Heights), and the dated form applies once a date is set. The Lexington exception in literals.exceptions is Decided (Matt Barge, 2026-09-28), no longer Proposed. 1.9 (2026-09-30, decided by Matt Barge in a Slack conversation with the website agent, clarifying MacKenzie Price's 2026-09-25 decision): the team section order the campus.team rows' requirementRef (states/Open/campus.team, order per campus.team.order) points at now reads campus-present people first (Director of Admissions and Dean of Parents at the top, not ranked against each other; then the head or lead guide and every other campus-present card) and the Head of Schools who appears across many campuses (Dr. Tasha Arnold) last in the Team section; a campus whose own head of school is campus-present (Brownsville, Paige Fults) keeps that person in the leadership row. No observer row measures order yet; tests/site-truth-report.mjs grades the team cell against it (ordered means DoA and DoP first, campus staff, Tasha last; Tasha above campus staff is misordered).",
-  "version": "1.9",
-  "asOf": "2026-09-25",
+  "version": "1.10",
+  "asOf": "2026-10-01",
   "defaults": {
     "$comment": "Defaults fill any field a row leaves out. clearAfterRuns counts full observer runs: 2 means two consecutive full runs, about one day at the 06:00 and 21:00 UTC cadence (docs/sweep-runbook.md, Cadence, breadth and depth). entitySource map is the default for rows that are not about campus pages; entitySources.hubspot-programs.pageFamilies lists the families whose rows default to hubspot-programs.",
     "pageFamily": "campus",
@@ -3252,20 +3252,22 @@
     {
       "id": "site.layout.images.crop",
       "observerCheck": "campus-image-crop-risk",
-      "title": "Team portraits fit their cards without cutting faces",
+      "title": "No team card cuts the top of a portrait",
       "element": "team.cards",
       "viewports": [
         "desktop",
         "mobile"
       ],
       "expected": {
-        "literal": "at least 95% of the image height visible inside the object-fit cover box and no more than 30% cut from either side (tests/photo-framing.mjs)"
+        "literal": "the object-fit cover box takes no more than 8% of the image height off the TOP, leaves at least 40% of the height visible, and cuts no more than 30% from either side; a top-anchored portrait cropped only at the bottom passes however tall the file is (tests/photo-framing.mjs)"
       },
       "comparator": {
-        "type": "coverage-min",
-        "threshold": 0.95,
+        "type": "head-clip-risk",
+        "threshold": 0.08,
         "unit": "ratio",
-        "maxSideCut": 0.3
+        "minVisibleHeight": 0.4,
+        "maxSideCut": 0.3,
+        "minVisibleWidth": 0.5
       },
       "severity": "medium",
       "ticketClass": "observer-media-identity",
@@ -3279,7 +3281,7 @@
       ],
       "grounding": {
         "kind": "decision",
-        "ref": "docs/decisions.md 2026-09-22 (Matt Barge): team-card images are framed to the card ratio; a card fails when less than 95% of the height is visible or a side cut passes 30%"
+        "ref": "docs/decisions.md 2026-10-01 (Matt Barge, review of the 2026-10-01 reframe contact sheets): a card fails when the box plausibly clips the head, not when the file is merely larger than the box; top cut over 8% of the image height, visible height under 40%, or a side cut past 30%. Supersedes the 95% coverage threshold of 2026-09-22, which failed cards whose heads are whole: of the 22 crops it proposed on 2026-10-01, 21 changed nothing a visitor would notice"
       },
       "requirementRef": {
         "file": "spec/site-rules.json",

@@ -1,0 +1,17 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-01T20:02:38.972Z",
+  "decidedBy": "Matt Barge",
+  "source": "review of the 2026-10-01 reframe contact sheets with the website agent",
+  "date": "2026-10-01",
+  "specRefs": [
+    "spec/check-rows.json",
+    "spec/observer-comparators.json",
+    "spec/team-card-frame.json"
+  ],
+  "summary": "team-card framing is judged by whether the card box clips the head, not by how much of the file it uses: a card fails when the crop removes more than 8% of the image height from the top, or under 40% of the height is visible, or a side cut passes 30%; a top-anchored portrait cropped only at the bottom passes, superseding the 95% coverage threshold of 2026-09-22",
+  "decisionRow": "| 2026-10-01 | Decided (Matt Barge, review of the 2026-10-01 reframe contact sheets with the website agent): team-card framing is judged by whether the card box clips the head, not by how much of the file it uses: a card fails when the crop removes more than 8% of the image height from the top, or under 40% of the height is visible, or a side cut passes 30%; a top-anchored portrait cropped only at the bottom passes, superseding the 95% coverage threshold of 2026-09-22 | Matt Barge | spec/check-rows.json; spec/observer-comparators.json; spec/team-card-frame.json; tests/fixtures/decisions/recorded/2026-10-01-check-rows-1daf84d3.json |",
+  "appliedIn": "spec/check-rows.json; spec/observer-comparators.json; spec/team-card-frame.json; tests/fixtures/decisions/recorded/2026-10-01-check-rows-1daf84d3.json",
+  "textSha256": "1daf84d3117d5d72a518d59539fd154a5c3378c6bf2821618dc393c95ccc02e8",
+  "text": "Matt Barge, 2026-10-01, reviewing the contact sheets of the reframe-2026-10-01 run with the website agent:\n\n\"I approve the change that is being made to Victoria Shosh's crop and the framing check rule.\"\n\nContext given to him before he said it: the twenty-two proposed crops were laid out as before/after panels in the\nreal card box, and on twenty-one of the twenty-two rows the two panels look identical, because those cards already\nstore object-position: top center and the crop only bakes the same window into the file. Victoria Schoch's is the\none row where the picture changes. The team-photo-framing check nonetheless failed all of them, because it compares\nthe file's aspect ratio with the card box's and fails below 95% of the file height being visible; it was failing\ncards whose heads are whole and generating about thirty cards of proposed work with one real improvement in it.\n"
+}

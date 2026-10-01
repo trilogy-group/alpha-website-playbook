@@ -1,7 +1,7 @@
 {
   "$comment": "Every comparator type a check row may use (spec/check-rows.json comparator.type), copied verbatim from the observer's published list (superbuilders/aeo alpha-site-system/spec/supported-comparators.json, aeo #37, 2026-09-25; QC loop repair plan repair 3). tests/build-checks.mjs refuses a row whose comparator is not listed here; the observer records its list in the packet manifest (supportedComparators) and files site.loop.health.comparator-unsupported when a loaded bundle names a type outside it, so the two lists must stay identical. A comparator is a pure judgement of observed against expected with the row's threshold and unit; it never carries a threshold of its own. Add a type in the observer first, then here, then use it in a row.",
-  "version": "2026-09-25",
-  "asOf": "2026-09-25",
+  "version": "2026-10-01",
+  "asOf": "2026-10-01",
   "comparators": {
     "max": "the measured number is at or under the threshold",
     "count-max": "the observed count is at or under the threshold; a count above detectAbove but under the threshold is telemetry",
@@ -11,6 +11,7 @@
     "box-overlap-max": "the measured box overlap (px, or share of the covered box) is at or under the threshold",
     "count-min": "the observed count is at or above the threshold",
     "coverage-min": "the covered count or share is at or above the threshold",
+    "head-clip-risk": "the card's object-fit cover window does not plausibly clip the subject's head: the share of the image height cut from the TOP is at or under the threshold, the visible height share is at or above minVisibleHeight, and no side cut passes maxSideCut (with at least minVisibleWidth of the width visible); a top-anchored portrait cropped only at the bottom passes however tall the file is",
     "count-equals": "the observed count equals the threshold",
     "http-status": "the response status equals the threshold",
     "lte": "numeric alias: observed <= threshold",

@@ -47,7 +47,7 @@ import {
 import { buildSyntheticPptx, syntheticImage } from './fixtures/roster-diff/build-synthetic-pptx.mjs'
 import { AttachEvidenceError, MAX_BYTES, MAX_SECTION_LENGTH, apexBases, attachEvidence, main as attachEvidenceMain, planEvidence } from '../agent/attach-evidence.mjs'
 import { DEVICE_SCALE_FACTOR, PADDING_PX, SectionShotError, VIEWPORTS as SECTION_VIEWPORTS, clipWithPadding, outputFile, parseArgs as parseSectionArgs, planSectionShot, slugify } from './section-shot.mjs'
-import { VERTICAL_MIN_COVERAGE, frameCoverage, frameForFit, judgeFraming, parseObjectPosition, scoreCards, teamPhotoFramingCheck } from './photo-framing.mjs'
+import { MAX_TOP_CUT, MIN_VISIBLE_HEIGHT, frameCoverage, frameForFit, judgeFraming, parseObjectPosition, scoreCards, teamPhotoFramingCheck } from './photo-framing.mjs'
 import { FrameHeadshotError, cropWindow, decodePng, encodePng, main as frameMain, parseFocus, parseRatio, planFrame } from '../agent/frame-headshot.mjs'
 import { BrandVisualError, backgroundVerdict, brandVisualCheck, contrastRatio, contrastVerdict, evaluateBrandVisual, fontVerdict, isLargeText, isNearWhite, loadBrandVisual, logoVerdict, normalizeHex, primaryFamily, relativeLuminance } from './brand-visual.mjs'
 import { DESCRIPTION_HEADING, LEDGER_FIELD, MAX_WORDS as NOTICE_MAX_WORDS, RequesterNoticeError, appendNoticeToDescription, askHash, checkMessage, composeBlocked, composeMissingInfo, composeShared, firstName, noticeDecision, plainTitle, requesterNoticesPatch, screenItems, unresolvedNotices } from '../agent/requester-notice-policy.mjs'
@@ -1304,10 +1304,13 @@ test('team-photo-framing math: coverage and cropped edges for cover-fit boxes', 
   assert.ok(jason.coverage > 0.56 && jason.coverage < 0.58, `57% of the height is visible, got ${jason.coverage}`)
   assert.deepEqual(jason.croppedEdges, ['top', 'bottom'], 'centred object-position cuts both edges')
   assert.equal(judgeFraming(jason).result, 'fail')
-  // The same file top-anchored keeps the head and loses the shoulders; still a framing failure, the coverage is the same.
+  assert.match(judgeFraming(jason).reason, /removes the top 22% of the image/, 'the reason names the defect, not the ratio')
+  // The same file top-anchored keeps the head and loses the shoulders, which is not a defect: the coverage is the same
+  // and it now passes (decision 2026-10-01; before that the identical coverage failed it).
   const anchored = frameCoverage({ naturalWidth: 1130, naturalHeight: 1533, boxWidth: 284.66, boxHeight: 220, objectPosition: '50% 0%' })
   assert.equal(anchored.coverage, jason.coverage)
   assert.deepEqual(anchored.croppedEdges, ['bottom'])
+  assert.equal(judgeFraming(anchored).result, 'pass', 'a top-anchored portrait cropped only at the bottom keeps its head')
   // The reframed 1130x873 file is the box ratio: nothing cut.
   const reframed = frameCoverage({ naturalWidth: 1130, naturalHeight: 873, boxWidth: 284.66, boxHeight: 220 })
   assert.ok(reframed.coverage > 0.999, String(reframed.coverage))
@@ -1324,10 +1327,33 @@ test('team-photo-framing math: coverage and cropped edges for cover-fit boxes', 
   const same = frameCoverage({ naturalWidth: 1280, naturalHeight: 1920, boxWidth: 303.47, boxHeight: 455.2 })
   assert.equal(same.croppedAxis, 'none')
   assert.equal(same.coverage, 1)
-  // Thresholds: 95% vertical is the line; 94% fails.
-  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1000, naturalHeight: 1000, boxWidth: 1000, boxHeight: 950 })).result, 'pass')
-  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1000, naturalHeight: 1000, boxWidth: 1000, boxHeight: 940 })).result, 'fail')
-  assert.equal(VERTICAL_MIN_COVERAGE, 0.95)
+  // Thresholds, against the real cards measured on 2026-10-01 (reframe-2026-10-01/measure/measure-live.json).
+  assert.equal(MAX_TOP_CUT, 0.08)
+  assert.equal(MIN_VISIBLE_HEIGHT, 0.40)
+  // Palm Beach, Dr. Tasha Arnold, desktop: the shallowest window in the whole set at 43% of the file height, and the
+  // contact sheet shows a complete, well-framed head. It passes, and a 0.55 floor would have failed it.
+  const palmBeach = frameCoverage({ naturalWidth: 1280, naturalHeight: 1920, boxWidth: 465.22, boxHeight: 300, objectPosition: '50% 0%' })
+  assert.equal(palmBeach.coverage, 0.4299)
+  assert.equal(judgeFraming(palmBeach).result, 'pass')
+  // Chantilly, Victoria Schoch, desktop (65%) and Plano, Dr. Tasha Arnold, desktop (59%): heads whole, both pass.
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1440, naturalHeight: 1920, boxWidth: 321.33, boxHeight: 280, objectPosition: '50% 0%' })).result, 'pass')
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 1280, naturalHeight: 1920, boxWidth: 465.22, boxHeight: 300, objectPosition: '50% 0%' })).result, 'pass')
+  // Fort Worth, Kimberley Dillard, stored 50% 100%: the card takes 40% off the top and her crown is gone. The one card
+  // in the 2026-10-01 set the new rule fails, on desktop and on mobile.
+  const dillard = frameCoverage({ naturalWidth: 703, naturalHeight: 1024, boxWidth: 284.66, boxHeight: 250, objectPosition: '50% 100%' })
+  assert.equal(dillard.cut.top, 0.3971)
+  assert.equal(judgeFraming(dillard).result, 'fail')
+  assert.equal(judgeFraming(frameCoverage({ naturalWidth: 390, naturalHeight: 568, boxWidth: 240, boxHeight: 250, objectPosition: '50% 100%' })).result, 'fail')
+  // New York, Jesse Moskowitz, centred with near-equal ratios: the largest hairline top cut measured (0.82%), a pass.
+  const hairline = frameCoverage({ naturalWidth: 1024, naturalHeight: 1024, boxWidth: 284.66, boxHeight: 280 })
+  assert.equal(hairline.cut.top, 0.0082)
+  assert.equal(judgeFraming(hairline).result, 'pass')
+  // 0.08 sits in the empty band between those two, so the line is not drawn through any measured card.
+  assert.ok(MAX_TOP_CUT > 0.0082 && MAX_TOP_CUT < 0.2848)
+  // The floor still catches a window too short to hold a chin: a 2:3 portrait top-anchored into a 3:1 band.
+  const band = frameCoverage({ naturalWidth: 1280, naturalHeight: 1920, boxWidth: 900, boxHeight: 300, objectPosition: '50% 0%' })
+  assert.ok(band.coverage < MIN_VISIBLE_HEIGHT)
+  assert.equal(judgeFraming(band).result, 'fail')
   // object-position keywords and asymmetric cuts.
   assert.deepEqual(parseObjectPosition('center top'), { x: 0.5, y: 0 })
   assert.deepEqual(parseObjectPosition('top left'), { x: 0, y: 0 })
@@ -1346,23 +1372,25 @@ test('team-photo-framing math: coverage and cropped edges for cover-fit boxes', 
 
 test('team-photo-framing check row names each failing card with coverage, sizes, and edges', () => {
   const card = (name, naturalWidth, naturalHeight, boxWidth, boxHeight, objectPosition = '50% 50%', extra = {}) => ({ name, kind: 'carousel', decoded: true, naturalWidth, naturalHeight, boxWidth, boxHeight, objectFit: 'cover', objectPosition, selector: '#team_carousel .swiper-slide:nth-child(1)', src: 'https://alpha.school/x.jpg', ...extra })
-  const desktop = [card('Dr. Tasha Arnold', 1280, 1920, 303.47, 455.2), card('Jason Tan', 1130, 1533, 284.66, 220), card('Ruby Holman', 1439, 1800, 284.66, 220, '50% 0%'), card('Michael Dillow', 1024, 768, 0, 0)]
+  const desktop = [card('Dr. Tasha Arnold', 1280, 1920, 303.47, 455.2), card('Jason Tan', 1130, 1533, 284.66, 220), card('Ruby Holman', 1439, 1800, 284.66, 220, '50% 0%'), card('Kimberley Dillard', 703, 1024, 284.66, 250, '50% 100%'), card('Michael Dillow', 1024, 768, 0, 0)]
   const mobile = [card('Jason Tan', 389, 528, 240, 220)]
   const measured = { url: 'https://alpha.school/san-francisco/', viewports: { desktop: { cards: desktop, failing: scoreCards(desktop) }, mobile: { cards: mobile, failing: scoreCards(mobile) } } }
   const row = teamPhotoFramingCheck(measured)
   assert.equal(row.id, 'team-photo-framing')
   assert.equal(row.result, 'fail')
-  assert.match(row.detail, /desktop Jason Tan: 57% visible, natural 1130x1533, box 285x220 css px, top and bottom cropped/)
-  assert.match(row.detail, /desktop Ruby Holman: 62% visible, natural 1439x1800, box 285x220 css px, bottom cropped/)
+  assert.match(row.detail, /desktop Jason Tan: 57% visible, natural 1130x1533, box 285x220 css px, top and bottom cropped \(the card removes the top 22% of the image, where the head sits\)/)
+  assert.match(row.detail, /desktop Kimberley Dillard: 60% visible, natural 703x1024, box 285x250 css px, top cropped \(the card removes the top 40% of the image/)
   assert.match(row.detail, /mobile Jason Tan: 68% visible/)
+  assert.doesNotMatch(row.detail, /Ruby Holman/, 'a top-anchored card cropped only at the bottom is not a defect')
   assert.doesNotMatch(row.detail, /Tasha Arnold: \d+% visible/, 'a matching ratio is not listed')
   assert.match(row.detail, /unmeasured: desktop Michael Dillow \(no rendered box/, 'a hidden slide is reported, not judged')
   assert.equal(row.viewports.desktop.cards.find((c) => c.name === 'Jason Tan').result, 'fail')
+  assert.equal(row.viewports.desktop.cards.find((c) => c.name === 'Ruby Holman').result, 'pass')
   assert.equal(row.viewports.desktop.cards.find((c) => c.name === 'Michael Dillow').result, 'unmeasured')
   const clean = [card('Jason Tan', 1130, 873, 284.66, 220)]
   const pass = teamPhotoFramingCheck({ url: 'x', viewports: { desktop: { cards: clean, failing: scoreCards(clean) } } })
   assert.equal(pass.result, 'pass')
-  assert.match(pass.detail, /desktop 1 card: every card image is inside its frame/)
+  assert.match(pass.detail, /desktop 1 card: no card cuts the top of its portrait/)
   assert.equal(teamPhotoFramingCheck({ url: 'x', viewports: { desktop: { cards: [], failing: [] } } }).detail, 'no team cards on this page')
   assert.equal(teamPhotoFramingCheck({ url: 'x', viewports: { desktop: { error: 'net::ERR_FAILED', cards: [], failing: [] } } }).result, 'fail', 'a viewport that did not load is a failure, not a pass')
   // The check is registered where staff closures read their evidence.
@@ -1374,7 +1402,9 @@ test('team-photo-framing check row names each failing card with coverage, sizes,
   assert.match(pageCheckSource, /result: 'skipped', detail: renderedSkipReason/, 'without a browser the check is skipped, never passed')
   const frameSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'team-card-frame.json'), 'utf8'))
   assert.equal(frameSpec.measured['san-francisco'].carousel.desktop.ratio, 1.2939)
-  assert.equal(frameSpec.rule.verticalMinCoverage, VERTICAL_MIN_COVERAGE)
+  assert.equal(frameSpec.rule.maxTopCut, MAX_TOP_CUT)
+  assert.equal(frameSpec.rule.minVisibleHeight, MIN_VISIBLE_HEIGHT)
+  assert.ok(!('verticalMinCoverage' in frameSpec.rule), 'the superseded coverage threshold is gone, not left beside the new one')
 })
 
 /** A tiny RGB PNG with a distinct colour per quadrant so a crop can be checked pixel by pixel. */
@@ -2425,7 +2455,7 @@ test('check bundle: the observer inventory extractor reads finding literals and 
 })
 
 test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
-  assert.equal(checkBundle.version, '1.9')
+  assert.equal(checkBundle.version, '1.10')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
   assert.deepEqual(byChannel, { ticket: 85, 'source-digest': 17, 'loop-health': 17 })
@@ -2603,7 +2633,7 @@ import { classifyTicket, ownerRuleMatches, requirementIdsFor } from '../agent/in
 import { prepareFoundPayload, requirementIdsForCheck } from '../agent/file-found-ticket.mjs'
 
 test('check bundle 1.3: entity sources, comparators, missing-expectation rows, coverage rows and page-check aliases (decision 2026-09-25: from HubSpot to the website)', () => {
-  assert.equal(checkBundle.version, '1.9')
+  assert.equal(checkBundle.version, '1.10')
   // Entity sources: the shape the observer consumes verbatim; campus rows enumerate from HubSpot Programs, the rest from the map.
   const hubspot = checkBundle.entitySources['hubspot-programs']
   assert.deepEqual([hubspot.source, hubspot.fields, hubspot.publicTypes, hubspot.publicHosts, hubspot.lifecycleField, hubspot.pageField], ['hubspot-programs', ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date'], ['Open', 'Announced'], ['alpha.school', 'www.alpha.school'], 'type', 'website'])
@@ -2621,8 +2651,9 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   const comparators = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'observer-comparators.json'), 'utf8')).comparators
   assert.deepEqual(checkBundle.comparators, comparators)
   for (const row of checkBundle.rows) assert.ok(comparators[row.comparator.type], `${row.id} comparator ${row.comparator.type} is not in spec/observer-comparators.json`)
-  // The list is the observer's published one (aeo #37 supported-comparators.json, 35 types): the numeric aliases are unused by rows today.
-  assert.equal(Object.keys(comparators).length, 35)
+  // The list is the observer's published one (aeo #37 supported-comparators.json, 35 types, plus head-clip-risk from
+  // the 2026-10-01 framing decision): the numeric aliases are unused by rows today.
+  assert.equal(Object.keys(comparators).length, 36)
   for (const type of ['lte', 'gte', 'eq', 'lt', 'gt', 'equals-approved-media', 'count-equals']) assert.ok(comparators[type], type)
   // A derive row mirrors its literals at expected.literal; a literal-object row merges them in; a string literal (the loop-health rendered row) keeps its sentence.
   for (const row of checkBundle.rows.filter((r) => r.literals)) {

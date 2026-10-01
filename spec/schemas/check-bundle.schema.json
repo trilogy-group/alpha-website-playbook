@@ -420,6 +420,7 @@
                 "age-max",
                 "ratio-max",
                 "coverage-min",
+                "head-clip-risk",
                 "box-overlap-max",
                 "http-2xx",
                 "http-2xx-after-redirects",
