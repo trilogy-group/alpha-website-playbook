@@ -1,6 +1,6 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "1.1",
+  "version": "1.2",
   "asOf": "2026-10-01",
   "owner": {
     "role": "analytics-and-consent-owner",
@@ -41,7 +41,7 @@
         "registry/global-runtime.json",
         "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-      "note": "On every page through Site Kit; noscript iframe emitted twice per page. Version 7 emits five named diagnostic CTA-start events with seven governed parameters, including the privacy-safe destination_key. GA4 DebugView verified Book a Call, Info Session, Info Packet, and Apply ingestion; controlled preview and a post-publish canary verified destination_key on representative routes. The parameter is not yet registered as a GA4 custom dimension or approved as a completion join. No release event is a GA4 key event. Primary Community controls remain outside coverage in the cross-origin map.app.alpha.school iframe."
+      "note": "On every page through Site Kit; noscript iframe emitted twice per page. Version 7 emits five named diagnostic CTA-start events with seven governed parameters, including the privacy-safe destination_key. GA4 DebugView verified Book a Call, Info Session, Info Packet, and Apply ingestion; controlled preview and a post-publish canary verified destination_key on representative routes. The parameter is registered as an event-scoped GA4 custom dimension, but the first post-registration Data API read returned no processed keys; allow 24 to 48 hours before grading population. It is not an approved completion join. No release event is a GA4 key event. Primary Community controls remain outside coverage in the cross-origin map.app.alpha.school iframe."
     },
     {
       "id": "google-tag",
@@ -89,6 +89,14 @@
         "measurementId": "G-G7M04CYHH0",
         "propertyCreated": "2024-08-01",
         "adsLinked": true,
+        "destinationKeyCustomDimension": {
+          "displayName": "Destination key",
+          "parameter": "destination_key",
+          "scope": "EVENT",
+          "registeredAt": "2026-10-01",
+          "verificationEvidence": "https://github.com/superbuilders/aeo/actions/runs/36909740628",
+          "populationStatus": "processing-unverified"
+        },
         "siteKitOwner": "WordPress admin \"Alpha School\" (info@alpha.school, user 9)",
         "readPaths": [
           "Direct Google Analytics UI with matthew.barge@superbuilders.school (verified 2026-09-28)",
@@ -106,7 +114,7 @@
       "recordedIn": [
         "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
       ],
-      "note": "Direct GA4 UI access is verified. The unattended AEO path now produces seven-, 28-, and 90-day synthesis packets with acquisition, landing-page, device, page-attention, CTA-start, video, city, and equal-window trend evidence. Production runs 36776831844 and 36777936249 proved the 90-day and post-merge seven-day paths. The governed CTA-start taxonomy was deployed on 2026-09-29, so longer windows explicitly report partial start-event coverage. No GA4 key event is approved. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
+      "note": "Direct GA4 UI access is verified. The unattended AEO path now produces seven-, 28-, and 90-day synthesis packets with acquisition, landing-page, device, page-attention, CTA-start, video, city, and equal-window trend evidence. Production runs 36776831844 and 36910071665 proved the 90-day and current seven-day paths. The governed CTA-start taxonomy was deployed on 2026-09-29, so longer windows explicitly report partial start-event coverage. The destination_key custom dimension was registered on 2026-10-01 and verified by the Admin API in run 36909740628; its first Data API population check correctly remained degraded at zero because the definition is non-retroactive and newly registered. No GA4 key event is approved. Matt's WordPress Site Kit user remains a separate per-user Google authorization."
     },
     {
       "id": "search-console",
@@ -387,12 +395,12 @@
         "packets": "site-runtime-state branch and run artifacts",
         "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
         "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843",
-        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
+        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36909740628",
         "latestVerifiedSummary": {
-          "healthy": 17,
+          "healthy": 18,
           "unknown": 1,
           "blocked": 9,
-          "degraded": 7,
+          "degraded": 9,
           "failed": 0
         }
       },
@@ -401,7 +409,7 @@
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO run 36899672472 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 7. Contract 0.9 discovers and tests the actual published booking and registration routes, audits aggregate non-personal authority identity coverage, and records the live dk1 destination parameter. Destination continuity, GA4 destination-key reporting registration, Community coverage, and outcome joins remain blocked or degraded."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO run 36909740628 passed against production credentials and proved GA4 freshness, recent governed starts, the registered event-scoped destination_key definition, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 7. Contract 1.0 keeps definition, processed population, and authority reconciliation as separate checks. Destination-key population is still processing; destination continuity, controlled reconciliation, Community coverage, and outcome joins remain blocked or degraded."
     },
     {
       "id": "funnel-synthesis",
@@ -431,7 +439,7 @@
         ],
         "firstProductionRun": "https://github.com/superbuilders/aeo/actions/runs/36776010659",
         "firstNinetyDayRun": "https://github.com/superbuilders/aeo/actions/runs/36776831844",
-        "latestVerifiedRun": "https://github.com/superbuilders/aeo/actions/runs/36780252327",
+        "latestVerifiedRun": "https://github.com/superbuilders/aeo/actions/runs/36910071665",
         "artifacts": [
           "website-funnel-weekly-synthesis.json",
           "website-funnel-weekly-synthesis.md"
@@ -443,7 +451,7 @@
         "superbuilders/aeo docs/operations/alpha-website-funnel-weekly-synthesis.md",
         "marketingsupport/docs/website-as-a-funnel-project-home.md"
       ],
-      "note": "Aggregate-only and privacy-safe. It never divides GA4 sessions by HubSpot contacts, promotes a click or form submission to a conversion, exports a person, or configures a GA4 key event. It labels partial CTA-start coverage, capped HubSpot contact-source detail, and capped Search Console rows. Form purposes are name-based diagnostics across all portal-tracked domains. Campus demand includes only Open and Announced Programs with a non-root alpha.school route; excluded source rows and duplicate routes remain visible. The aggregate GA4 Data API does not expose exits or ordered user paths; those require an approved BigQuery export."
+      "note": "Aggregate-only and privacy-safe. It never divides GA4 sessions by HubSpot contacts, promotes a click or form submission to a conversion, exports a person, or configures a GA4 key event. Run 36910071665 reports destination-key definition, processed population, and candidate reconciliation separately; newly registered population remains degraded at zero without weakening the completion boundary. It labels partial CTA-start coverage, capped HubSpot contact-source detail, and capped Search Console rows. Form purposes are name-based diagnostics across all portal-tracked domains. Campus demand includes only Open and Announced Programs with a non-root alpha.school route; excluded source rows and duplicate routes remain visible. The aggregate GA4 Data API does not expose exits or ordered user paths; those require an approved BigQuery export."
     },
     {
       "id": "cta-inventory",

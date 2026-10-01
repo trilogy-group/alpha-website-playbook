@@ -1,6 +1,6 @@
 {
-  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 0.9 records the live privacy-safe destination_key on production GTM version 7 without approving it as a completion join. Destination instrumentation, verified joins, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.9",
+  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 1.0 records the live privacy-safe destination_key on production GTM version 7 and its event-scoped GA4 reporting registration without approving it as a completion join. Processed population, controlled reconciliation, destination instrumentation, verified joins, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
+  "version": "1.0",
   "status": "approved-governance-with-instrumentation-gaps",
   "asOf": "2026-10-01",
   "evidenceWindow": {
@@ -98,7 +98,7 @@
     "crossDomainContinuityVerified": false,
     "communityCoverage": "The event definition is deployed, but the primary controls inside the cross-origin map.app.alpha.school iframe are not observable by the main-document listener.",
     "destinationIdentity": {
-      "status": "live-collection-unregistered-unjoined",
+      "status": "live-collection-registered-unjoined",
       "parameter": "destination_key",
       "schemaVersion": "dk1",
       "bookCallFormat": "book_call:route:dk1:<8-character lowercase hexadecimal FNV-1a hash>",
@@ -110,10 +110,14 @@
         "infoSession": "Compare the public Goldcast UUID in info_session:event:<uuid> with the public event identity represented by externalEventId or the governed event URL. This mapping is a candidate until controlled registration evidence proves it end to end."
       },
       "ga4ReportingRegistration": {
-        "status": "not-created",
+        "status": "registered-processing-unverified",
         "requiredCustomDimension": "destination_key",
+        "displayName": "Destination key",
         "scope": "EVENT",
-        "meaning": "Production GTM now collects the parameter, but collection does not by itself make an arbitrary event parameter queryable as a GA4 Data API dimension. Create the event-scoped custom dimension, then allow for GA4 processing before testing aggregate destination-key coverage."
+        "propertyId": "452530593",
+        "registeredAt": "2026-10-01",
+        "verificationEvidence": "https://github.com/superbuilders/aeo/actions/runs/36909740628",
+        "meaning": "The event-scoped custom dimension is registered and the GA4 Admin API verifies its display name, parameter, and scope. The first post-registration Data API read returned zero processed keys, as expected for a non-retroactive definition that may need 24 to 48 hours to populate. Registration is not population, reconciliation, a completion join, or a key event."
       },
       "excludedInputs": [
         "query string",
@@ -128,7 +132,8 @@
       "blockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
       "releaseEvidence": "GTM version 7 was published through the supervised UI on 2026-10-01 after controlled preview passed for Homepage Info Session, Austin Book a Call, Austin Apply, and a legacy Goldcast registration route. Post-publish Tag Assistant showed one info_session_cta_click, one governed GA4 tag firing, and the expected info_session:event:99b076d6-61e9-4c3a-8196-2912b2bf254b destination key.",
       "postPublishIntegrityEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
-      "nextGate": "Register destination_key as an event-scoped GA4 custom dimension, verify aggregate population after processing, and reconcile controlled start keys to the authority dictionaries before approving any completion join. The reporting service account remains least-privilege Viewer."
+      "reportingRegistrationEvidence": "https://github.com/superbuilders/aeo/actions/runs/36909740628",
+      "nextGate": "Allow 24 to 48 hours for non-retroactive GA4 custom-dimension processing, verify aggregate destination-key population, and reconcile controlled start keys to the authority dictionaries before approving any completion join. The reporting service account remains least-privilege Viewer."
     },
     "evidence": "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
   },
@@ -587,7 +592,7 @@
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
     "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
     "The 30-day first-touch and latest-meaningful-touch views are approved, but no downstream completion has an approved site-to-system join key.",
-    "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates. Production GTM version 7 now carries the governed destination_key on CTA starts, but the event-scoped GA4 custom dimension, aggregate population check, and controlled authority reconciliation are still incomplete. destination_key is live as a diagnostic parameter and is not approved as a completion join key.",
+    "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates. Production GTM version 7 carries the governed destination_key on CTA starts, and the event-scoped GA4 custom dimension is registered. The first post-registration read returned zero processed keys because registration is non-retroactive and may need 24 to 48 hours; aggregate population and controlled authority reconciliation remain incomplete. destination_key is live as a diagnostic parameter and is not approved as a completion join key.",
     "Matt Barge is the interim analytics owner; the consent owner and primary prospective-parent outcome remain undecided.",
     "The raw-plus-screened reporting policy is approved, but the first versioned internal, bot, and anomaly screening rule is not yet approved."
   ]
