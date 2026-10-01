@@ -1,7 +1,7 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "1.0",
-  "asOf": "2026-09-30",
+  "version": "1.1",
+  "asOf": "2026-10-01",
   "owner": {
     "role": "analytics-and-consent-owner",
     "person": null,
@@ -26,13 +26,14 @@
         "scheduledWriteAccess": false,
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "verifiedAt": "2026-09-30",
+        "verifiedAt": "2026-10-01",
         "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
-        "productionVersion": 6,
-        "productionVersionName": "Add Alpha funnel CTA listener and GA4 event tracking tags",
-        "verification": "Supervised human admin/read-write access is verified. Production version 6 was published and tested on 2026-09-29. On 2026-09-30 the scheduled identity read the existing container and live version 6 through the GTM API, including all five governed start-event names. On 2026-10-01 the guarded destination-identity plan passed against version 6, but GTM denied the identity's attempt to create an unpublished workspace. Treat the identity as read-only until it is explicitly granted container Edit access and a staged run succeeds.",
+        "productionVersion": 7,
+        "productionVersionName": "Add destination key parameter to funnel CTA listener and GA4 tag",
+        "verification": "Supervised human admin/read-write access is verified. Production version 7 was published on 2026-10-01 after controlled preview passed for Homepage Info Session, Austin Book a Call, Austin Apply, and legacy Goldcast registration. Post-publish Tag Assistant observed one info_session_cta_click, one governed GA4 tag firing, and the expected public Goldcast destination key. AEO run 36899672472 then read live version 7 and all five governed start-event names through the GTM API. The dedicated identity remains documented as read-only; the release was supervised through the UI.",
         "destinationIdentityPlanEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
-        "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486"
+        "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
+        "destinationIdentityReleaseEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472"
       },
       "owner": null,
       "status": "held",
@@ -40,7 +41,7 @@
         "registry/global-runtime.json",
         "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-      "note": "On every page through Site Kit; noscript iframe emitted twice per page. Version 6 emits five named diagnostic CTA-start events with six non-personal parameters. GA4 DebugView verified Book a Call, Info Session, Info Packet, and Apply ingestion. A seventh privacy-safe destination_key is governed in measurement contract 0.8 but is not live; its first unpublished stage is blocked on scheduled-identity Edit access. No release event is a GA4 key event. Primary Community controls remain outside coverage in the cross-origin map.app.alpha.school iframe."
+      "note": "On every page through Site Kit; noscript iframe emitted twice per page. Version 7 emits five named diagnostic CTA-start events with seven governed parameters, including the privacy-safe destination_key. GA4 DebugView verified Book a Call, Info Session, Info Packet, and Apply ingestion; controlled preview and a post-publish canary verified destination_key on representative routes. The parameter is not yet registered as a GA4 custom dimension or approved as a completion join. No release event is a GA4 key event. Primary Community controls remain outside coverage in the cross-origin map.app.alpha.school iframe."
     },
     {
       "id": "google-tag",
@@ -386,12 +387,12 @@
         "packets": "site-runtime-state branch and run artifacts",
         "measurementIntegrityWorkflow": "superbuilders/aeo .github/workflows/measurement-integrity.yml",
         "firstMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36481408843",
-        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36774252259",
+        "latestVerifiedMeasurementIntegrityRun": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
         "latestVerifiedSummary": {
-          "healthy": 13,
+          "healthy": 17,
           "unknown": 1,
-          "blocked": 4,
-          "degraded": 5,
+          "blocked": 9,
+          "degraded": 7,
           "failed": 0
         }
       },
@@ -400,7 +401,7 @@
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO main run 36774252259 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 6. Contract 0.8 discovers and tests the actual published booking and registration routes, audits aggregate non-personal authority identity coverage, and governs the not-yet-live dk1 destination schema. Destination continuity, Community coverage, and outcome joins remain blocked or degraded."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO run 36899672472 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 7. Contract 0.9 discovers and tests the actual published booking and registration routes, audits aggregate non-personal authority identity coverage, and records the live dk1 destination parameter. Destination continuity, GA4 destination-key reporting registration, Community coverage, and outcome joins remain blocked or degraded."
     },
     {
       "id": "funnel-synthesis",
@@ -662,7 +663,7 @@
         "productGrants": {
           "ga4": "healthy: Viewer on property 452530593; real Data API read verified",
           "searchConsole": "healthy: read access on sc-domain:alpha.school; real searchAnalytics read verified",
-          "gtm": "healthy: Read on GTM-5W56ZLQJ; existing container and live version 6 verified"
+          "gtm": "healthy: Read on GTM-5W56ZLQJ; existing container and live version 7 verified"
         }
       },
       "owner": "website-operations",
@@ -670,7 +671,7 @@
       "recordedIn": [
         "aeo .github/workflows/measurement-integrity.yml"
       ],
-      "note": "The durable credential exists and the downloaded local key was removed. GA4, Search Console, and GTM each completed a real product API read by 2026-09-30; latest combined evidence is AEO run 36724689420."
+      "note": "The durable credential exists and the downloaded local key was removed. GA4, Search Console, and GTM each completed a real product API read by 2026-09-30; GTM version 7 was read successfully in AEO run 36899672472."
     },
     {
       "id": "superbuilders-context",
