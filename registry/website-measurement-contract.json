@@ -1,8 +1,8 @@
 {
-  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Instrumentation, join keys, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.6",
+  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 0.7 makes health checks discover and inspect the real Book a Call and Info Session routes and records privacy-safe authority identity candidates without approving a join. Instrumentation, join keys, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
+  "version": "0.7",
   "status": "approved-governance-with-instrumentation-gaps",
-  "asOf": "2026-09-30",
+  "asOf": "2026-10-01",
   "evidenceWindow": {
     "start": "2026-06-30",
     "end": "2026-09-27",
@@ -118,12 +118,18 @@
       {
         "id": "book-call",
         "host": "go.alpha.school",
-        "url": "https://go.alpha.school/"
+        "url": "https://go.alpha.school/",
+        "discoveryUrl": "https://alpha.school/austin/",
+        "pathPrefix": "/meetings/",
+        "meaning": "Discover a currently published governed Book a Call route from a canonical campus page, strip query and fragment data, and inspect that rendered destination rather than the domain homepage."
       },
       {
         "id": "info-session",
         "host": "events.alpha.school",
-        "url": "https://events.alpha.school/"
+        "url": "https://events.alpha.school/",
+        "discoveryUrl": "https://alpha.school/upcoming-events/",
+        "pathPrefix": "/register/",
+        "meaning": "Discover a currently published public registration route from the canonical events listing, strip query and fragment data, and inspect that rendered destination rather than the domain homepage."
       }
     ],
     "communitySurface": {
@@ -153,6 +159,14 @@
         "MEETINGS_PUBLIC",
         "MEETINGS_EMBEDDED"
       ],
+      "authorityIdentityCandidates": [
+        {
+          "field": "hs_meeting_created_from_link_id",
+          "classification": "non-personal-scheduling-link-identity",
+          "status": "observed-populated-not-approved-as-join-key",
+          "meaning": "Distinguishes the governed HubSpot scheduling link that produced a booking. It becomes useful only if the same governed identity is carried by the website start or the primary property observes the verified completion."
+        }
+      ],
       "joinedToWebsiteStarts": false
     },
     "infoSession": {
@@ -161,6 +175,18 @@
       "publicFlagProperties": [
         "simpleevents_public_event",
         "display_on_website"
+      ],
+      "authorityIdentityCandidates": [
+        {
+          "field": "externalEventId",
+          "classification": "non-personal-event-identity",
+          "status": "observed-not-approved-as-join-key"
+        },
+        {
+          "field": "eventUrl",
+          "classification": "non-personal-event-destination",
+          "status": "observed-not-approved-as-join-key"
+        }
       ],
       "joinedToWebsiteStarts": false
     },
@@ -260,6 +286,7 @@
     "cta_type",
     "cta_position",
     "destination_host",
+    "destination_key",
     "landing_page",
     "source",
     "medium",
@@ -407,6 +434,9 @@
       "definitionStatus": "approved-2026-09-30",
       "completionReadable": true,
       "evidenceCompletionCount": 1912,
+      "authorityIdentityCandidates": [
+        "hs_meeting_created_from_link_id"
+      ],
       "joinKey": null,
       "attributionWindow": {
         "days": 30,
@@ -430,6 +460,10 @@
       "definitionStatus": "approved-2026-09-30",
       "completionReadable": true,
       "evidenceCompletionCount": 17728,
+      "authorityIdentityCandidates": [
+        "externalEventId",
+        "eventUrl"
+      ],
       "joinKey": null,
       "attributionWindow": {
         "days": 30,
@@ -512,11 +546,12 @@
     "No observed GA4 event is configured as a key event.",
     "The main-document listener cannot observe the primary Community controls inside the cross-origin map.app.alpha.school iframe.",
     "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
-    "The primary GA4 measurement ID G-G7M04CYHH0 is not present on go.alpha.school or events.alpha.school. go.alpha.school runs a different GTM container and GA4 properties; events.alpha.school exposed no Google measurement ID in the 2026-09-29 public inspection. Adding linker domains on alpha.school alone cannot create continuity.",
+    "The primary GA4 measurement ID G-G7M04CYHH0 is not present on the real governed booking or registration routes. The inspected HubSpot booking route runs AW-11219766583 without the Alpha GA4 property; the inspected Goldcast registration route exposed no Google measurement. The outbound alpha.school links carried no _gl linker value. Adding linker domains on alpha.school alone cannot create continuity.",
     "map.app.alpha.school exposed no primary GA4 measurement ID in the 2026-09-29 public inspection. Its primary Community controls require direct instrumentation or an approved origin-checked postMessage bridge; iframe focus is not sufficient evidence.",
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
     "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
     "The 30-day first-touch and latest-meaningful-touch views are approved, but no downstream completion has an approved site-to-system join key.",
+    "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates, but the current CTA starts carry only destination_host. No governed destination_key is deployed or approved as a join key.",
     "Matt Barge is the interim analytics owner; the consent owner and primary prospective-parent outcome remain undecided.",
     "The raw-plus-screened reporting policy is approved, but the first versioned internal, bot, and anomaly screening rule is not yet approved."
   ]

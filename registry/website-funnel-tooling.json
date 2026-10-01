@@ -232,7 +232,7 @@
         "marketingsupport/work-assets/website-as-a-funnel/hubspot-source-preservation-audit-2026-09-29.json",
         "superbuilders/aeo actions run 36600633639"
       ],
-      "note": "AEO uses the purpose-scoped reporting key first and a distinct held private-app credential only as a read-only fallback after legacy traffic analytics returns 401 or 403. Runs 36774252259, 36776010659, 36776831844, and 36777936249 proved aggregate contacts, traffic, forms, marketing events, meetings, and booking authorities without exporting contact rows. The seven-day synthesis returned 44,090 tracked visits and 1,756 created contacts; the 90-day synthesis returned 554,976 tracked visits, 21,904 created contacts, 2,273 governed bookings, and 71 public-website events. Ninety-day contact-source detail exceeded the 10,000-row safe cap and is explicitly labeled partial. HubSpot tracked traffic covers every portal-tracked domain unless a HubSpot analytics view narrows it; page-level alpha.school paths remain GA4 territory."
+      "note": "AEO uses the purpose-scoped reporting key first and a distinct held private-app credential only as a read-only fallback after legacy traffic analytics returns 401 or 403. Runs 36774252259, 36776010659, 36776831844, and 36777936249 proved aggregate contacts, traffic, forms, marketing events, meetings, and booking authorities without exporting contact rows. The seven-day synthesis returned 44,090 tracked visits and 1,756 created contacts; the 90-day synthesis returned 554,976 tracked visits, 21,904 created contacts, 2,273 governed bookings, and 71 public-website events. Ninety-day contact-source detail exceeded the 10,000-row safe cap and is explicitly labeled partial. Read-only authority inspection also found hs_meeting_created_from_link_id on governed bookings and externalEventId or eventUrl on Marketing Events; these are non-personal reconciliation candidates, not approved join keys. HubSpot tracked traffic covers every portal-tracked domain unless a HubSpot analytics view narrows it; page-level alpha.school paths remain GA4 territory."
     },
     {
       "id": "hubspot-programs",
@@ -397,7 +397,7 @@
       "recordedIn": [
         "spec/check-bundle.generated.json"
       ],
-      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO main run 36774252259 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 6. Destination continuity, Community coverage, and outcome joins remain blocked or degraded; no provider failed."
+      "note": "The site observer measures rendered conformance. Its separate read-only measurement-integrity workflow runs daily/on demand from the playbook contract. AEO main run 36774252259 passed against production credentials and proved GA4 freshness, recent governed starts, both aggregate HubSpot authorities, legacy traffic aggregates through the bounded fallback, a real Search Console query, and live GTM version 6. Contract 0.7 discovers and tests the actual published booking and registration routes and audits aggregate non-personal authority identity coverage. Destination continuity, Community coverage, and outcome joins remain blocked or degraded; no provider failed."
     },
     {
       "id": "funnel-synthesis",
