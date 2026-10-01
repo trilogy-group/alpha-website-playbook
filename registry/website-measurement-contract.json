@@ -104,6 +104,16 @@
       "infoSessionEventFormat": "info_session:event:<lowercase public Goldcast registration UUID>",
       "fallbackFormat": "<outcome_type>:route:dk1:<8-character lowercase hexadecimal FNV-1a hash>",
       "routeHashInput": "lowercase destination host without leading www plus normalized lowercase path without a trailing slash except root",
+      "authorityMappingCandidates": {
+        "bookCall": "Build an aggregate route dictionary from the governed HubSpot scheduling-link catalog by computing the same dk1 route hash for each public booking URL, then compare destination-key totals with booking totals grouped by hs_meeting_created_from_link_id. This mapping is a candidate until uniqueness and full catalog coverage are proven.",
+        "infoSession": "Compare the public Goldcast UUID in info_session:event:<uuid> with the public event identity represented by externalEventId or the governed event URL. This mapping is a candidate until controlled registration evidence proves it end to end."
+      },
+      "ga4ReportingRegistration": {
+        "status": "not-created",
+        "requiredCustomDimension": "destination_key",
+        "scope": "EVENT",
+        "meaning": "Collection in GTM does not by itself make an event parameter queryable as a GA4 Data API dimension. Create the event-scoped custom dimension only after staged preview verifies the parameter and immediately before or with the controlled production canary."
+      },
       "excludedInputs": [
         "query string",
         "fragment",
@@ -115,7 +125,7 @@
       "approvalBoundary": "Approved for an unpublished GTM workspace and controlled preview only. It is not yet a live event parameter, an approved completion join key, a person identifier, or a GA4 key event.",
       "planEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
       "blockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883890999",
-      "blocker": "The dedicated measurement service account can read GTM-5W56ZLQJ and live version 6 but GTM denied creation of an unpublished workspace. Grant that identity container Edit access, then rerun the guarded stage workflow; the gate must return to false afterward."
+      "blocker": "The dedicated measurement service account can read GTM-5W56ZLQJ and live version 6 but GTM denied creation of an unpublished workspace. Grant that identity container Edit access, then rerun the guarded stage workflow and return the gate to false. Before the production canary, a GA4 administrator must also create the event-scoped destination_key custom dimension; the reporting service account remains least-privilege Viewer."
     },
     "evidence": "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
   },
