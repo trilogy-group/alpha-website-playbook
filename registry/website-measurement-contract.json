@@ -1,6 +1,6 @@
 {
-  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 0.7 makes health checks discover and inspect the real Book a Call and Info Session routes and records privacy-safe authority identity candidates without approving a join. Instrumentation, join keys, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.7",
+  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 0.8 governs a privacy-safe destination_key candidate and its guarded GTM release without claiming it is live or approving it as a completion join. Destination instrumentation, verified joins, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
+  "version": "0.8",
   "status": "approved-governance-with-instrumentation-gaps",
   "asOf": "2026-10-01",
   "evidenceWindow": {
@@ -96,6 +96,37 @@
     "completionEventsCreated": false,
     "crossDomainContinuityVerified": false,
     "communityCoverage": "The event definition is deployed, but the primary controls inside the cross-origin map.app.alpha.school iframe are not observable by the main-document listener.",
+    "plannedDestinationIdentity": {
+      "status": "release-plan-passed-stage-blocked-on-gtm-edit-access",
+      "parameter": "destination_key",
+      "schemaVersion": "dk1",
+      "bookCallFormat": "book_call:route:dk1:<8-character lowercase hexadecimal FNV-1a hash>",
+      "infoSessionEventFormat": "info_session:event:<lowercase public Goldcast registration UUID>",
+      "fallbackFormat": "<outcome_type>:route:dk1:<8-character lowercase hexadecimal FNV-1a hash>",
+      "routeHashInput": "lowercase destination host without leading www plus normalized lowercase path without a trailing slash except root",
+      "authorityMappingCandidates": {
+        "bookCall": "Build an aggregate route dictionary from the governed HubSpot scheduling-link catalog by computing the same dk1 route hash for each public booking URL, then compare destination-key totals with booking totals grouped by hs_meeting_created_from_link_id. This mapping is a candidate until uniqueness and full catalog coverage are proven.",
+        "infoSession": "Compare the public Goldcast UUID in info_session:event:<uuid> with the public event identity represented by externalEventId or the governed event URL. This mapping is a candidate until controlled registration evidence proves it end to end."
+      },
+      "ga4ReportingRegistration": {
+        "status": "not-created",
+        "requiredCustomDimension": "destination_key",
+        "scope": "EVENT",
+        "meaning": "Collection in GTM does not by itself make an event parameter queryable as a GA4 Data API dimension. Create the event-scoped custom dimension only after staged preview verifies the parameter and immediately before or with the controlled production canary."
+      },
+      "excludedInputs": [
+        "query string",
+        "fragment",
+        "email",
+        "phone",
+        "name",
+        "free text"
+      ],
+      "approvalBoundary": "Approved for an unpublished GTM workspace and controlled preview only. It is not yet a live event parameter, an approved completion join key, a person identifier, or a GA4 key event.",
+      "planEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
+      "blockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
+      "blocker": "The dedicated measurement service account can read GTM-5W56ZLQJ and live version 6, but workspace creation returned NOT_FOUND: Not found or permission denied. Grant that identity container Edit access, then rerun the guarded stage workflow and return the gate to false. Before the production canary, a GA4 administrator must also create the event-scoped destination_key custom dimension; the reporting service account remains least-privilege Viewer."
+    },
     "evidence": "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
   },
   "healthConfig": {
@@ -121,6 +152,7 @@
         "url": "https://go.alpha.school/",
         "discoveryUrl": "https://alpha.school/austin/",
         "pathPrefix": "/meetings/",
+        "instrumentationPathCandidate": "HubSpot Settings > Content > Pages > go.alpha.school > Integrations > Tracking integrations. HubSpot documents domain-level inheritance for hosted pages, but the specialized Meetings surface must be proven on one governed test scheduling page before release.",
         "meaning": "Discover a currently published governed Book a Call route from a canonical campus page, strip query and fragment data, and inspect that rendered destination rather than the domain homepage."
       },
       {
@@ -129,6 +161,7 @@
         "url": "https://events.alpha.school/",
         "discoveryUrl": "https://alpha.school/upcoming-events/",
         "pathPrefix": "/register/",
+        "instrumentationPathCandidate": "Goldcast organization-level Integrations > Google Analytics. Goldcast documents registration-page visits plus Open Registration and Submit Registration events; organization-level coverage must be canaried on a controlled test route and must not be duplicated with event-level scripts.",
         "meaning": "Discover a currently published public registration route from the canonical events listing, strip query and fragment data, and inspect that rendered destination rather than the domain homepage."
       }
     ],
@@ -551,7 +584,7 @@
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
     "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
     "The 30-day first-touch and latest-meaningful-touch views are approved, but no downstream completion has an approved site-to-system join key.",
-    "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates, but the current CTA starts carry only destination_host. No governed destination_key is deployed or approved as a join key.",
+    "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates. A governed destination_key schema and guarded release now exist, but the first unpublished GTM stage is blocked until the dedicated measurement identity receives container Edit access. The live version 6 CTA starts therefore still carry only destination_host; destination_key is not deployed or approved as a completion join key.",
     "Matt Barge is the interim analytics owner; the consent owner and primary prospective-parent outcome remain undecided.",
     "The raw-plus-screened reporting policy is approved, but the first versioned internal, bot, and anomaly screening rule is not yet approved."
   ]
