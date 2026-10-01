@@ -152,6 +152,7 @@
         "url": "https://go.alpha.school/",
         "discoveryUrl": "https://alpha.school/austin/",
         "pathPrefix": "/meetings/",
+        "instrumentationPathCandidate": "HubSpot Settings > Content > Pages > go.alpha.school > Integrations > Tracking integrations. HubSpot documents domain-level inheritance for hosted pages, but the specialized Meetings surface must be proven on one governed test scheduling page before release.",
         "meaning": "Discover a currently published governed Book a Call route from a canonical campus page, strip query and fragment data, and inspect that rendered destination rather than the domain homepage."
       },
       {
@@ -160,6 +161,7 @@
         "url": "https://events.alpha.school/",
         "discoveryUrl": "https://alpha.school/upcoming-events/",
         "pathPrefix": "/register/",
+        "instrumentationPathCandidate": "Goldcast organization-level Integrations > Google Analytics. Goldcast documents registration-page visits plus Open Registration and Submit Registration events; organization-level coverage must be canaried on a controlled test route and must not be duplicated with event-level scripts.",
         "meaning": "Discover a currently published public registration route from the canonical events listing, strip query and fragment data, and inspect that rendered destination rather than the domain homepage."
       }
     ],
