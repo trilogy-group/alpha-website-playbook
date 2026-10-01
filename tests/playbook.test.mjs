@@ -1475,9 +1475,23 @@ test('section-shot --slide-containing picks the card by its text and is planned 
   const shotError = (fn, code) => { try { fn() } catch (error) { assert.ok(error instanceof SectionShotError, error.stack); assert.equal(error.code, code); return error } assert.fail(`expected ${code}`) }
   shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: '#x', 'slide-containing': true }), 'MISSING_ARG')
   shotError(() => planSectionShot({ url: 'https://alpha.school/', selector: '#x', 'slide-containing': '  ' }), 'MISSING_ARG')
+  assert.equal(planSectionShot({ url: 'https://alpha.school/', selector: '#x' }).allowFirstMatch, false)
+  assert.equal(planSectionShot({ url: 'https://alpha.school/', selector: '#x', 'allow-first-match': true }).allowFirstMatch, true)
   const source = fs.readFileSync(path.join(root, 'tests', 'section-shot.mjs'), 'utf8')
   assert.match(source, /filter\(\{ hasText: plan\.slideContaining \}\)/, 'the match is chosen by its text')
   assert.match(source, /instance\.slideTo\(index, 0\)/, 'a Swiper slide is brought into view before the capture')
+  // The 2026-10-01 defect, in the shape of the source: run framing-2026-10-01-B captured Coach KeJuan Weaver into a
+  // file named for Katherine Phelps, exit 0. tests/section-shot.browser.test.mjs proves the behaviour against a
+  // looped-carousel fixture; these four lines keep the structure that makes it impossible, with no browser.
+  assert.match(source, /await resolveSlideHandle\(locator, chosen\)/, 'the match is resolved to one ElementHandle, held for the whole capture')
+  assert.match(source, /\.elementHandle\(\)/, 'an element handle, not a lazy locator re-resolved after the carousel moves')
+  assert.doesNotMatch(source, /locator\.first\(\)/, 'a lazy locator.first() is how the wrong card got captured')
+  assert.match(source, /instance\.autoplay\.stop\(\)/, 'carousel autoplay is stopped so nothing moves under the clip')
+  assert.match(source, /await element\.evaluate\(readSlideIdentity/, 'the identity is read from inside the element about to be captured')
+  assert.match(source, /SLIDE_IDENTITY_MISMATCH/, 'a mismatch is a typed, loud failure')
+  assert.match(source, /AMBIGUOUS_SLIDE/, 'a carousel selector with nothing to pick a slide is refused')
+  const identityIndex = source.indexOf('readSlideIdentity, { containing: plan.slideContaining')
+  assert.ok(identityIndex > 0 && identityIndex < source.indexOf('await page.screenshot('), 'the identity assertion runs immediately before the screenshot, not after it')
 })
 
 test('brand-visual spec loads, matches the brand guide values, and a malformed file is a typed error', () => {
