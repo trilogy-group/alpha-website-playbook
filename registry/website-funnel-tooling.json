@@ -32,7 +32,7 @@
         "productionVersionName": "Add Alpha funnel CTA listener and GA4 event tracking tags",
         "verification": "Supervised human admin/read-write access is verified. Production version 6 was published and tested on 2026-09-29. On 2026-09-30 the scheduled identity read the existing container and live version 6 through the GTM API, including all five governed start-event names. On 2026-10-01 the guarded destination-identity plan passed against version 6, but GTM denied the identity's attempt to create an unpublished workspace. Treat the identity as read-only until it is explicitly granted container Edit access and a staged run succeeds.",
         "destinationIdentityPlanEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
-        "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883890999"
+        "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486"
       },
       "owner": null,
       "status": "held",

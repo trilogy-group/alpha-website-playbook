@@ -124,8 +124,8 @@
       ],
       "approvalBoundary": "Approved for an unpublished GTM workspace and controlled preview only. It is not yet a live event parameter, an approved completion join key, a person identifier, or a GA4 key event.",
       "planEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
-      "blockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883890999",
-      "blocker": "The dedicated measurement service account can read GTM-5W56ZLQJ and live version 6 but GTM denied creation of an unpublished workspace. Grant that identity container Edit access, then rerun the guarded stage workflow and return the gate to false. Before the production canary, a GA4 administrator must also create the event-scoped destination_key custom dimension; the reporting service account remains least-privilege Viewer."
+      "blockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
+      "blocker": "The dedicated measurement service account can read GTM-5W56ZLQJ and live version 6, but workspace creation returned NOT_FOUND: Not found or permission denied. Grant that identity container Edit access, then rerun the guarded stage workflow and return the gate to false. Before the production canary, a GA4 administrator must also create the event-scoped destination_key custom dimension; the reporting service account remains least-privilege Viewer."
     },
     "evidence": "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
   },
