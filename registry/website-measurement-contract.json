@@ -1,18 +1,102 @@
 {
-  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. This is a working, nonbinding inventory of what is observed, what each signal may mean, what completion system is authoritative, and what remains unproven. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "0.3",
-  "status": "working-nonbinding",
-  "asOf": "2026-09-29",
+  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Instrumentation, join keys, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
+  "version": "0.6",
+  "status": "approved-governance-with-instrumentation-gaps",
+  "asOf": "2026-09-30",
   "evidenceWindow": {
     "start": "2026-06-30",
     "end": "2026-09-27",
     "source": "marketingsupport/docs/Website as a Funnel Baseline and Build Plan 2026-09-28.md"
   },
   "governance": {
+    "analyticsOwner": {
+      "name": "Matt Barge",
+      "status": "interim-approved",
+      "scope": "measurement definitions, access, reporting policy, and attribution governance",
+      "decidedOn": "2026-09-30",
+      "source": "Matt Barge approval in the Website as a Funnel agent session"
+    },
+    "consentOwner": null,
     "analyticsAndConsentOwner": null,
     "primaryProspectiveParentOutcome": null,
     "primaryOutcomeDecision": "docs/questions-for-staff-2026-09-17.md Q-01",
-    "meaning": "Observed events and downstream records may be reported separately. None may be promoted to a governed conversion or GA4 key event until its firing contract, parameters, owner, and completion reconciliation are approved."
+    "outcomeDefinitionsStatus": "approved-2026-09-30",
+    "approvedKeyEvents": [],
+    "meaning": "The five completion meanings, attribution views, and raw-plus-screened reporting policy are approved. Observed events and downstream records remain separate until their join keys and instrumentation are verified. No event may be promoted to a GA4 key event without a separate approval after reconciliation."
+  },
+  "attributionPolicy": {
+    "status": "approved-2026-09-30",
+    "windowDays": 30,
+    "views": [
+      {
+        "id": "first-touch",
+        "meaning": "Credit the earliest attributable eligible touch observed within the 30-day window."
+      },
+      {
+        "id": "latest-meaningful-touch",
+        "meaning": "Credit the latest eligible meaningful touch before the completion within the 30-day window. Direct-traffic handling remains part of the versioned screening and attribution implementation."
+      }
+    ],
+    "reportTogether": true,
+    "joinedReportingReady": false,
+    "boundary": "Approval defines the reporting views and window. It does not supply a join key, repair cross-domain continuity, identify a person, or authorize a key event."
+  },
+  "trafficReportingPolicy": {
+    "status": "approved-2026-09-30",
+    "publishRawTotals": true,
+    "publishScreenedTotalsSeparately": true,
+    "retainExcludedRowsAndRuleVersion": true,
+    "screeningRuleStatus": "candidate-rules-only",
+    "boundary": "No traffic is removed from the raw view. Internal, automated, anomalous, consent-limited, or otherwise screened traffic is reported separately only after a versioned rule is approved and the excluded aggregate remains reproducible."
+  },
+  "productionStartInstrumentation": {
+    "status": "live-diagnostic-only",
+    "containerId": "GTM-5W56ZLQJ",
+    "containerVersion": 6,
+    "publishedAt": "2026-09-29T15:51:00-07:00",
+    "versionName": "Add Alpha funnel CTA listener and GA4 event tracking tags",
+    "events": [
+      "book_call_cta_click",
+      "info_session_cta_click",
+      "info_packet_cta_click",
+      "application_cta_click",
+      "community_cta_click"
+    ],
+    "parameters": [
+      "outcome_type",
+      "campus_slug",
+      "page_family",
+      "cta_type",
+      "cta_position",
+      "destination_host"
+    ],
+    "ga4IngestionVerified": [
+      "book_call_cta_click",
+      "info_session_cta_click",
+      "info_packet_cta_click",
+      "application_cta_click"
+    ],
+    "scheduledIngestionEvidence": {
+      "run": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
+      "generatedAt": "2026-09-30T13:51:30.533Z",
+      "window": {
+        "startDate": "2daysAgo",
+        "endDate": "today"
+      },
+      "counts": {
+        "book_call_cta_click": 5,
+        "info_session_cta_click": 257,
+        "info_packet_cta_click": 13,
+        "application_cta_click": 61,
+        "community_cta_click": 0
+      },
+      "meaning": "Recent ingestion health only. Counts are starts, not unique people or completed outcomes."
+    },
+    "ga4KeyEventsCreated": false,
+    "completionEventsCreated": false,
+    "crossDomainContinuityVerified": false,
+    "communityCoverage": "The event definition is deployed, but the primary controls inside the cross-origin map.app.alpha.school iframe are not observable by the main-document listener.",
+    "evidence": "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
   },
   "healthConfig": {
     "homepageUrl": "https://alpha.school/",
@@ -20,6 +104,8 @@
     "searchConsoleSiteUrl": "sc-domain:alpha.school",
     "expectedPublicMarkers": {
       "gtmContainer": "GTM-5W56ZLQJ",
+      "gtmContainerVersion": 6,
+      "ga4MeasurementId": "G-G7M04CYHH0",
       "hubspotPortal": "40051392",
       "metaPixel": "5961380957279503"
     },
@@ -28,10 +114,60 @@
       "go.alpha.school",
       "events.alpha.school"
     ],
+    "conversionDestinations": [
+      {
+        "id": "book-call",
+        "host": "go.alpha.school",
+        "url": "https://go.alpha.school/"
+      },
+      {
+        "id": "info-session",
+        "host": "events.alpha.school",
+        "url": "https://events.alpha.school/"
+      }
+    ],
+    "communitySurface": {
+      "host": "map.app.alpha.school",
+      "url": "https://map.app.alpha.school/"
+    },
     "provisionalTrafficQualityThresholds": {
       "activeUsersGreaterThan": 1000,
       "engagementRateBelow": 0.1,
       "averageSessionDurationSecondsBelow": 10
+    }
+  },
+  "completionAuthoritySnapshots": {
+    "status": "aggregate-authority-only",
+    "meaning": "These reads establish separate privacy-safe totals in the authoritative downstream systems. They are not website conversions and may not be divided by CTA starts until a governed join and attribution window are approved.",
+    "reportingTimeZone": "UTC",
+    "window": {
+      "lookbackDays": 7,
+      "lagDays": 1
+    },
+    "bookCall": {
+      "system": "HubSpot CRM meetings",
+      "recordType": "0-47",
+      "dateProperty": "hs_createdate",
+      "sourceProperty": "hs_meeting_source",
+      "meetingSources": [
+        "MEETINGS_PUBLIC",
+        "MEETINGS_EMBEDDED"
+      ],
+      "joinedToWebsiteStarts": false
+    },
+    "infoSession": {
+      "system": "HubSpot Marketing Events",
+      "dateProperty": "startDateTime",
+      "publicFlagProperties": [
+        "simpleevents_public_event",
+        "display_on_website"
+      ],
+      "joinedToWebsiteStarts": false
+    },
+    "privacy": {
+      "aggregateOnly": true,
+      "personalFieldsRequested": false,
+      "contactRowsWritten": false
     }
   },
   "sourcePreservation": {
@@ -116,12 +252,14 @@
     "privacyBoundary": "The scheduled audit requests aggregate totals only and writes no contact rows or personal fields. Passing GA client IDs, session IDs, raw email exports, or cross-system personal joins requires analytics-and-consent owner approval."
   },
   "requiredDimensions": [
+    "outcome_type",
     "campus_program_id",
     "campus_slug",
     "campus_lifecycle_at_event_time",
     "page_family",
     "cta_type",
     "cta_position",
+    "destination_host",
     "landing_page",
     "source",
     "medium",
@@ -131,6 +269,51 @@
     "experiment_variant"
   ],
   "observedEvents": {
+    "book_call_cta_click": {
+      "status": "live-diagnostic-start",
+      "ga4KeyEvent": false,
+      "evidenceCount": 5,
+      "debugEvidenceCount": 1,
+      "currentMeaning": "A governed main-document CTA leading toward a public call-booking surface was clicked.",
+      "requiredParametersVerified": false,
+      "nextStep": "Reconcile clicks to HubSpot meeting bookings and prove cross-domain continuity before defining a completion or key event."
+    },
+    "info_session_cta_click": {
+      "status": "live-diagnostic-start",
+      "ga4KeyEvent": false,
+      "evidenceCount": 257,
+      "debugEvidenceCount": 6,
+      "currentMeaning": "A governed main-document CTA leading toward an information-session or public event registration surface was clicked.",
+      "requiredParametersVerified": false,
+      "nextStep": "Reconcile clicks to event registrations and prove cross-domain continuity before defining a completion or key event."
+    },
+    "info_packet_cta_click": {
+      "status": "live-diagnostic-start",
+      "ga4KeyEvent": false,
+      "evidenceCount": 13,
+      "debugEvidenceCount": 1,
+      "currentMeaning": "A governed main-document information-packet CTA was clicked.",
+      "requiredParametersVerified": false,
+      "nextStep": "Define the authoritative packet outcome and separate a click, a served packet, a read, and later progression."
+    },
+    "application_cta_click": {
+      "status": "live-diagnostic-start",
+      "ga4KeyEvent": false,
+      "evidenceCount": 61,
+      "debugEvidenceCount": 1,
+      "currentMeaning": "A governed main-document application CTA was clicked.",
+      "requiredParametersVerified": false,
+      "nextStep": "Identify the governed admissions destination and reconcile the click separately to application start and application submit."
+    },
+    "community_cta_click": {
+      "status": "configured-primary-surface-unobservable",
+      "ga4KeyEvent": false,
+      "evidenceCount": 0,
+      "debugEvidenceCount": 0,
+      "currentMeaning": "An eligible main-document Community CTA was clicked; this does not cover the primary controls inside the map app iframe.",
+      "requiredParametersVerified": false,
+      "nextStep": "Instrument the map app directly or approve a postMessage bridge, then reconcile the start to a Community interest or join record."
+    },
     "video_start": {
       "status": "observed-ungoverned",
       "ga4KeyEvent": false,
@@ -217,14 +400,22 @@
       "ctaControls": [
         "spec/campus-page-controls.json hero.book-a-call"
       ],
-      "siteStartEvent": null,
+      "siteStartEvent": "book_call_cta_click",
       "destinationHost": "go.alpha.school",
       "completionAuthority": "HubSpot public scheduling-page booking",
+      "completionDefinition": "A governed public or embedded HubSpot scheduling-page booking record is created.",
+      "definitionStatus": "approved-2026-09-30",
       "completionReadable": true,
       "evidenceCompletionCount": 1912,
       "joinKey": null,
-      "attributionWindow": null,
-      "status": "completion-readable-origin-unjoined",
+      "attributionWindow": {
+        "days": 30,
+        "views": [
+          "first-touch",
+          "latest-meaningful-touch"
+        ]
+      },
+      "status": "definition-approved-start-live-completion-readable-origin-unjoined",
       "doNotInfer": "A CTA click, scheduling-page view, or scheduling-form analytics record is not a booked meeting."
     },
     "info-session": {
@@ -232,66 +423,101 @@
         "public website event card",
         "campus event strip"
       ],
-      "siteStartEvent": null,
+      "siteStartEvent": "info_session_cta_click",
       "destinationHost": "events.alpha.school",
       "completionAuthority": "Event registration system and HubSpot Marketing Event registration",
+      "completionDefinition": "A governed registration record is created in the event authority and represented through the HubSpot Marketing Event path.",
+      "definitionStatus": "approved-2026-09-30",
       "completionReadable": true,
       "evidenceCompletionCount": 17728,
       "joinKey": null,
-      "attributionWindow": null,
-      "status": "completion-readable-origin-unjoined",
+      "attributionWindow": {
+        "days": 30,
+        "views": [
+          "first-touch",
+          "latest-meaningful-touch"
+        ]
+      },
+      "status": "definition-approved-start-live-completion-readable-origin-unjoined",
       "doNotInfer": "An event-card click or registration-page view is not a registration; integrations and event types must be classified before totals are compared."
     },
     "info-packet": {
       "ctaControls": [
         "spec/campus-page-controls.json resources packet control"
       ],
-      "siteStartEvent": null,
+      "siteStartEvent": "info_packet_cta_click",
       "destinationHost": null,
-      "completionAuthority": null,
+      "completionAuthority": "Governed packet delivery system capable of confirming successful delivery",
+      "completionDefinition": "The correct governed campus packet is successfully delivered to the requester or visitor.",
+      "definitionStatus": "approved-2026-09-30",
       "completionReadable": false,
       "evidenceCompletionCount": null,
       "joinKey": null,
-      "attributionWindow": null,
-      "status": "definition-blocked",
+      "attributionWindow": {
+        "days": 30,
+        "views": [
+          "first-touch",
+          "latest-meaningful-touch"
+        ]
+      },
+      "status": "definition-approved-start-live-completion-authority-unreadable",
       "doNotInfer": "A generic file_download is not proof that an approved packet was requested, read, or acted on."
     },
     "application": {
       "ctaControls": [
         "spec/campus-page-controls.json resources apply control"
       ],
-      "siteStartEvent": null,
+      "siteStartEvent": "application_cta_click",
       "destinationHost": null,
-      "completionAuthority": "Finalsite or the campus admissions system named by the governed destination",
+      "completionAuthority": "Finalsite submitted-application record or the equivalent submitted record in the governed campus admissions system",
+      "completionDefinition": "A governed application is submitted in Finalsite or the campus admissions system named by the approved destination.",
+      "definitionStatus": "approved-2026-09-30",
       "completionReadable": false,
       "evidenceCompletionCount": null,
       "joinKey": null,
-      "attributionWindow": null,
-      "status": "destination-and-completion-blocked",
+      "attributionWindow": {
+        "days": 30,
+        "views": [
+          "first-touch",
+          "latest-meaningful-touch"
+        ]
+      },
+      "status": "definition-approved-start-live-destination-and-completion-blocked",
       "doNotInfer": "A HubSpot redirect-form submission, application-page view, application start, and submitted application are separate stages."
     },
     "join-community": {
       "ctaControls": [
         "spec/campus-page-controls.json community control"
       ],
-      "siteStartEvent": "community_button_click",
+      "siteStartEvent": "community_cta_click",
       "destinationHost": null,
-      "completionAuthority": "Community join or interest submission",
+      "completionAuthority": "Community interest or join record",
+      "completionDefinition": "A governed Community interest or join record is created in the Community system.",
+      "definitionStatus": "approved-2026-09-30",
       "completionReadable": false,
       "evidenceCompletionCount": null,
       "joinKey": null,
-      "attributionWindow": null,
-      "status": "start-observed-completion-blocked",
+      "attributionWindow": {
+        "days": 30,
+        "views": [
+          "first-touch",
+          "latest-meaningful-touch"
+        ]
+      },
+      "status": "definition-approved-start-configured-primary-surface-unobservable-completion-blocked",
       "doNotInfer": "A Community button click is not a completed join or interest submission."
     }
   },
   "knownGaps": [
     "No observed GA4 event is configured as a key event.",
-    "The GTM container cannot be read by the tested Google account, so firing contracts and parameters remain unverified.",
+    "The main-document listener cannot observe the primary Community controls inside the cross-origin map.app.alpha.school iframe.",
     "The Google linker currently lists alpha.school only; go.alpha.school and events.alpha.school are missing.",
+    "The primary GA4 measurement ID G-G7M04CYHH0 is not present on go.alpha.school or events.alpha.school. go.alpha.school runs a different GTM container and GA4 properties; events.alpha.school exposed no Google measurement ID in the 2026-09-29 public inspection. Adding linker domains on alpha.school alone cannot create continuity.",
+    "map.app.alpha.school exposed no primary GA4 measurement ID in the 2026-09-29 public inspection. Its primary Community controls require direct instrumentation or an approved origin-checked postMessage bridge; iframe focus is not sufficient evidence.",
     "GA4 hubspot_form_submit volume is not reconciled with HubSpot submissions by host, form ID, purpose, and date.",
     "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
-    "No downstream completion has an approved site-to-system join key or attribution window.",
-    "The analytics-and-consent owner and primary prospective-parent outcome are undecided."
+    "The 30-day first-touch and latest-meaningful-touch views are approved, but no downstream completion has an approved site-to-system join key.",
+    "Matt Barge is the interim analytics owner; the consent owner and primary prospective-parent outcome remain undecided.",
+    "The raw-plus-screened reporting policy is approved, but the first versioned internal, bot, and anomaly screening rule is not yet approved."
   ]
 }

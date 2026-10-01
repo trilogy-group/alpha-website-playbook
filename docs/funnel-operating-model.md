@@ -1,6 +1,6 @@
 # Funnel Measurement and Experiment Operating Model
 
-Status: **Working plan, not an adopted requirement.** Written 2026-09-25 from Matt Barge's request to treat alpha.school as a funnel and the MacKenzie Price website strategy meeting that day. The website charter defines the stages and purpose; this document defines the order of operations. It does not choose Alpha's primary conversion, approve copy, or authorize an experiment.
+Status: **Working operating model with adopted measurement governance.** Written 2026-09-25 from Matt Barge's request to treat alpha.school as a funnel and the MacKenzie Price website strategy meeting that day. On 2026-09-30 Matt approved the interim analytics owner, five completion definitions, a 30-day dual-view attribution policy, and raw-plus-screened reporting. The website charter defines the stages and purpose; this document defines the order of operations. It does not choose Alpha's primary conversion, approve copy, authorize an experiment, or promote a GA4 key event.
 
 ## 1. Run three loops, in this order
 
@@ -33,8 +33,8 @@ The completion systems are different, so do not collapse them into a single unwe
 | --- | --- | --- | --- |
 | Book a Call | approved meetings CTA click | HubSpot meeting booked | a click or meetings page load is not a booking |
 | Info Session | approved event CTA click | registration in the event system / HubSpot Marketing Event path | registration must retain campus and source |
-| Info Packet | approved packet CTA click | approved request or download behavior, once the owner defines it | an unavailable or unapproved packet is an integrity defect |
-| Application | application CTA click | application start and application submit in the admissions system | report starts and submits separately |
+| Info Packet | approved packet CTA click | successful delivery of the correct governed campus packet | a request, click, generic download, and successful delivery are separate stages |
+| Application | application CTA click | submitted application in Finalsite or the governed campus admissions system | report starts and submits separately; only submit is the approved completion |
 | Community | approved Community CTA click | Community join or interest submission | valid primarily for the lifecycle states named in the campus controls |
 
 Until the product owner chooses the primary outcome and its value by campus lifecycle, report each outcome separately. Do not create a blended score that silently values an application, an event registration, and a packet click as equivalent.
@@ -55,7 +55,26 @@ The read-only instrumentation audit must identify:
 
 The contract is versioned. A dashboard always names the contract version and data-through date. A changed event name, CTA route, consent rule, campus identity, or attribution window is a measurement change and must not rewrite historical meaning silently.
 
-The machine-readable working contract is `registry/website-measurement-contract.json`. It records the observed events and their evidence-window counts, the five outcome authorities, required dimensions, public health markers, cross-domain requirements, and every explicit gap. It is intentionally nonbinding while the analytics owner and primary outcome are undecided. A null event name, join key, attribution window, owner, or completion count is a blocker to resolve, not a blank for an agent to complete from intuition.
+The machine-readable contract is `registry/website-measurement-contract.json`. It records the observed events and their evidence-window counts, the five outcome authorities, required dimensions, public health markers, cross-domain requirements, adopted governance, and every explicit gap. Its approved definitions do not turn a start into a completion: a null event name, join key, consent owner, or completion count remains a blocker to resolve, not a blank for an agent to complete from intuition.
+
+Matt Barge approved the following on 2026-09-30:
+
+- Matt is the interim analytics owner for measurement definitions, access, reporting policy, and attribution governance. Consent ownership remains open.
+- Book a Call completes when a governed HubSpot scheduling-page booking record is created.
+- Info Session completes when a governed event-registration record is created and represented through the HubSpot Marketing Event path.
+- Info Packet completes when the correct governed campus packet is successfully delivered.
+- Apply completes when the governed application is submitted in Finalsite or the approved campus admissions system.
+- Community completes when a governed interest or join record is created in the Community system.
+- Attribution reports first touch and latest meaningful touch side by side over a 30-day window. Direct-traffic handling remains part of the versioned implementation rule.
+- Reports always retain raw totals and publish any approved screened view separately, with excluded aggregate evidence and the screening-rule version retained.
+
+These decisions approve meaning, not instrumentation. Cross-domain continuity, privacy-safe join keys, downstream read access, consent ownership, screening-rule thresholds, and GA4 key-event promotion remain separate gates.
+
+As of 2026-09-29, production GTM version 6 emits five diagnostic CTA-start events. Four were observed in GA4 DebugView; the primary Community controls remain inside a cross-origin iframe. The contract's approved-key-event list is intentionally empty. Public inspection found that the primary Alpha GA4 measurement ID runs on `alpha.school` but not on `go.alpha.school`, `events.alpha.school`, or `map.app.alpha.school`. `go.alpha.school` runs a separate container and separate GA4 properties. Therefore, adding linker domains to the main site alone is not a cross-domain repair: each governed destination must first run the agreed property, then a controlled journey must prove client/session continuity. Community requires direct app instrumentation or an approved origin-checked `postMessage` bridge; iframe focus is not a valid proxy for an internal CTA.
+
+The contract also defines aggregate-only HubSpot authority snapshots for public/embedded scheduling-page bookings and public Marketing Events. These establish downstream totals, not attributed website conversions. The 30-day attribution views are approved, but the totals remain separate from CTA starts until each privacy-safe join key and cross-domain path are verified.
+
+As of 2026-09-30, the read-only `superbuilders/aeo` synthesis operationalizes the evidence layer on seven-, 28-, and 90-day windows. It keeps GA4 sessions, HubSpot tracked visits, HubSpot contacts, CTA-start clicks, bookings, and event registrations separate; publishes transparent traffic-quality, landing-page, mobile, page-attention, search, city, and trend review candidates; and labels partial instrumentation or row-cap coverage. The aggregate GA4 Data API does not expose exits or ordered user paths. Those require an approved BigQuery export. None of this adopts a primary outcome, joins a person, or authorizes a site change.
 
 ## 4. Prove instrumentation with journeys, not tag presence
 
@@ -129,9 +148,9 @@ The observer protects the adopted state; it does not decide which variant conver
 
 ## 8. First implementation sequence
 
-1. Name the analytics-and-consent owner and grant read access to GA4/GTM and the completion sources. This is the current owner gap in `registry/owners.json`.
-2. Decide the primary and secondary outcomes by campus lifecycle. Keep every outcome separate until then.
-3. Produce the CTA-to-completion inventory and measurement contract.
+1. Completed 2026-09-30: Matt Barge is the interim analytics owner. Name the separate consent owner and grant read access to the remaining completion sources.
+2. Decide the primary and secondary outcomes by campus lifecycle. The five completion meanings are approved, but their relative priority is still open; keep every outcome separate until then.
+3. Completed: produce the CTA-to-completion inventory and measurement contract. Next, add the destination instrumentation and privacy-safe join keys the contract names.
 4. Run the desktop/mobile synthetic journey audit and repair instrumentation gaps.
 5. Publish the baseline dashboard with its data-quality panel.
 6. Review the largest three evidenced leaks with Matt, Yash, MacKenzie, and Haven as their authority applies.
@@ -149,4 +168,4 @@ The first useful deliverable is therefore not a redesign or an AI list of copy c
 - `protocols/recipes/forms-admissions.md`: form and admissions verification.
 - MacKenzie Price website strategy meeting, 2026-09-25 (Granola transcript held in the marketing-support workspace): request to analyze the site as a funnel, with messaging remaining subject to human authority.
 
-Open decisions remain open. This document does not resolve website charter Q-01 (primary next step), Q-03 (outcome measure), Q-04 (product owner), or the analytics-and-consent owner gap.
+Open decisions remain open. This document does not resolve website charter Q-01 (primary next step), Q-04 (product owner), the consent-owner gap, the join keys, screening thresholds, or GA4 key-event promotion. It does resolve the interim analytics owner, completion meanings, 30-day attribution views, and raw-plus-screened reporting policy.
