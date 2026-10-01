@@ -4,27 +4,53 @@
  *
  * Why: a team-card image box on a campus page is a fixed-height landscape (carousel slides: 220 css px tall, width
  * from the column) rendered with object-fit: cover. A portrait bound at its native ratio is scaled to the box width
- * and the browser throws away the rest: Jason Tan's 1130x1533 headshot on San Francisco showed 57% of its height and
- * the top of his head was gone (2026-09-22). "Image present and decoded" never saw it. This module measures what the
- * visitor sees and says how much of the bound file is inside the frame, and on which edges the rest was cut.
+ * and the browser throws away the rest. "Image present and decoded" never saw it. This module measures what the
+ * visitor sees: how much of the bound file is inside the frame, and, which is the part that matters, on which edges
+ * the rest was taken.
+ *
+ * What it judges, and what it used to judge (decision 2026-10-01, Matt Barge, superseding 2026-09-22). Until
+ * 2026-10-01 a card failed when less than 95% of the image height was visible. That is a measurement of how much of
+ * the FILE the box uses, not of whether a face is cut, and after the cards were anchored to the top
+ * (`object-position: top center`, applied 2026-09-23 and 2026-10-01) the part being removed was shoulders and chest.
+ * The check still failed, and the tickets it produced still said "cut heads on desktop", which was no longer true: of
+ * the 22 crops it proposed in the 2026-10-01 reframe run, 21 changed nothing a visitor would notice.
+ *
+ * So the measurement is now the TOP cut: the share of the image height the box removes above the visible window,
+ * which follows from the two ratios and the stored `object-position`. A head sits at the top of a portrait, so that is
+ * where clipping it shows. A top-anchored portrait has a top cut of zero and passes however tall the file is.
  *
  * Coverage = min(imageRatio, boxRatio) / max(imageRatio, boxRatio), the fraction of the image that is visible along
- * the cropped axis (1 when the ratios match). The cropped axis is vertical when the image is taller than the box
- * (top and/or bottom cut, the head-cutting case) and horizontal when it is wider (sides cut). Which edges are cut
- * follows the image's object-position: 50% 0% cuts only the bottom, 50% 50% cuts both edges evenly.
+ * the cropped axis (1 when the ratios match). The cropped axis is vertical when the image is taller than the box and
+ * horizontal when it is wider. Which edges are cut follows the image's object-position: 50% 0% cuts only the bottom,
+ * 50% 50% cuts both edges evenly, 50% 100% cuts only the top.
  *
- * Thresholds. A vertical crop fails below VERTICAL_MIN_COVERAGE (0.95): five percent is a hairline, more is a head or
- * a chin. A horizontal crop is judged by the head band, not by coverage alone: the card box is a fixed height whose
- * width follows the column, so it is wider on desktop (San Francisco 1.29:1 at 1440 px, Santa Barbara 1.61:1) than
- * on mobile (1.09:1 and 0.91:1 at 390 px), and a file framed to the desktop box necessarily loses width on mobile,
- * symmetrically, with the face still in the middle. That is the layout's doing. It fails only when more than
- * HORIZONTAL_MAX_EDGE_CUT (0.30) is cut from either side (the visible window no longer holds the middle 40% of the
- * image, where a framed headshot's head is) or less than HORIZONTAL_MIN_COVERAGE (0.50) of the width is visible.
+ * Thresholds, taken from 112 card-viewport measurements read live on the seven campus pages of the 2026-10-01 run
+ * (marketingsupport work-assets/apex-website-tickets/reframe-2026-10-01/measure/measure-live.json):
+ *
+ *   MAX_TOP_CUT (0.08). Every top cut in that set is 0 (top-anchored), 0.0082 (two New York cards at `50% 50%` whose
+ *   ratios nearly match, visually fine), or 0.2848 / 0.3971 (Fort Worth's Kimberley Dillard, stored `50% 100%`, whose
+ *   crown and hair are genuinely gone from the card). 0.08 sits in the empty band between 0.0082 and 0.2848.
+ *
+ *   MIN_VISIBLE_HEIGHT (0.40). A floor for the case the top cut cannot see: a top-anchored window so short that it
+ *   ends above the chin. It is deliberately not 0.55. The shallowest window measured is 0.4299 (Palm Beach, Dr. Tasha
+ *   Arnold, desktop, top-anchored) and that card renders a complete, well-framed head; 0.5911 (Plano) and 0.6535
+ *   (Chantilly, Victoria Schoch) likewise. A 0.55 floor would fail all three, which is the false positive this rule
+ *   exists to remove. 0.40 is below every card the contact sheets confirmed correct and still catches an extreme box
+ *   (a 2:3 portrait in a 3:1 band shows 22% of its height: forehead only).
+ *
+ *   HORIZONTAL_MAX_EDGE_CUT (0.30) and HORIZONTAL_MIN_COVERAGE (0.50) are unchanged from 2026-09-22. The card box is a
+ *   fixed height whose width follows the column, so it is wider on desktop than on mobile, and a file framed to the
+ *   desktop box necessarily loses width on mobile, symmetrically, with the face still in the middle. That is the
+ *   layout's doing. It fails only when an edge takes more than 30%, or under half the width survives.
+ *
  * object-fit contain or scale-down never crops (pass, letterboxed); fill stretches, and fails when the ratios differ
  * by more than five percent.
  */
 
-export const VERTICAL_MIN_COVERAGE = 0.95
+/** The share of the image height the card may take off the TOP before the head is at risk (decision 2026-10-01). */
+export const MAX_TOP_CUT = 0.08
+/** The shortest visible window a top-anchored portrait may have before even a tight headshot risks losing its chin. */
+export const MIN_VISIBLE_HEIGHT = 0.40
 export const HORIZONTAL_MIN_COVERAGE = 0.50
 export const HORIZONTAL_MAX_EDGE_CUT = 0.30
 export const FILL_MAX_DISTORTION = 0.05
@@ -78,13 +104,18 @@ export function frameCoverage({ naturalWidth, naturalHeight, boxWidth, boxHeight
 export function judgeFraming(frame) {
   if (frame.coverage === null) return { result: 'unmeasured', reason: frame.boxRatio === null ? 'no rendered box (hidden or zero-size image)' : 'no natural size (image never loaded)' }
   const pct = Math.round(frame.coverage * 100)
+  const topCut = frame.cut?.top || 0
   if (frame.croppedAxis === 'stretched') return { result: 'fail', reason: `object-fit fill stretches the image by ${Math.round(frame.distortion * 100)}%` }
-  if (frame.croppedAxis === 'vertical' && frame.coverage < VERTICAL_MIN_COVERAGE) return { result: 'fail', reason: `${pct}% of the image height is visible; ${frame.croppedEdges.join(' and ')} cut` }
+  // The defect a visitor sees: the window starts below the top of the file, where the head is.
+  if (topCut > MAX_TOP_CUT) return { result: 'fail', reason: `the card removes the top ${Math.round(topCut * 100)}% of the image, where the head sits` }
+  if (frame.croppedAxis === 'vertical' && frame.coverage < MIN_VISIBLE_HEIGHT) return { result: 'fail', reason: `only ${pct}% of the image height is inside the card, short enough to cut the chin` }
   if (frame.croppedAxis === 'horizontal') {
     const worst = Math.max(frame.cut.left || 0, frame.cut.right || 0)
     if (frame.coverage < HORIZONTAL_MIN_COVERAGE || worst > HORIZONTAL_MAX_EDGE_CUT) return { result: 'fail', reason: `${pct}% of the image width is visible (${Math.round((frame.cut.left || 0) * 100)}% cut left, ${Math.round((frame.cut.right || 0) * 100)}% cut right); the head band is not inside the frame` }
   }
-  return { result: 'pass', reason: frame.croppedAxis === 'none' ? (frame.note || 'ratios match') : `${pct}% visible along the ${frame.croppedAxis} axis, within tolerance` }
+  if (frame.croppedAxis === 'none') return { result: 'pass', reason: frame.note || 'ratios match' }
+  if (frame.croppedAxis === 'vertical') return { result: 'pass', reason: `${pct}% of the image height is visible, cut ${frame.croppedEdges.join(' and ') || 'nowhere'}; the top of the image is inside the card` }
+  return { result: 'pass', reason: `${pct}% visible along the ${frame.croppedAxis} axis, within tolerance` }
 }
 
 /** frameCoverage with the image's object-fit taken into account: contain never crops, fill distorts, cover crops. */
@@ -239,7 +270,7 @@ export function teamPhotoFramingCheck(measured) {
   for (const [viewport, v] of Object.entries(measured.viewports)) {
     if (v.error) { problems.push(`${viewport}: ${v.error}`); continue }
     summary.push(`${viewport} ${v.cards.length} card${v.cards.length === 1 ? '' : 's'}`)
-    for (const card of v.failing) problems.push(`${viewport} ${describeFrame(card)}${card.frame.croppedAxis === 'vertical' || card.frame.croppedAxis === 'horizontal' ? '' : ` (${card.verdict.reason})`}`)
+    for (const card of v.failing) problems.push(`${viewport} ${describeFrame(card)} (${card.verdict.reason})`)
     for (const card of v.cards.filter((c) => c.verdict.result === 'unmeasured')) unmeasured.push(`${viewport} ${card.name} (${card.verdict.reason})`)
   }
   const total = Object.values(measured.viewports).reduce((n, v) => n + (v.cards?.length || 0), 0)
@@ -247,7 +278,7 @@ export function teamPhotoFramingCheck(measured) {
   return {
     id: 'team-photo-framing',
     result: problems.length ? 'fail' : 'pass',
-    detail: (problems.length ? problems.join('; ') : (total ? `${summary.join(', ')}: every card image is inside its frame (vertical coverage >= ${VERTICAL_MIN_COVERAGE}; side cut <= ${HORIZONTAL_MAX_EDGE_CUT} per edge)` : 'no team cards on this page')) + tail,
+    detail: (problems.length ? problems.join('; ') : (total ? `${summary.join(', ')}: no card cuts the top of its portrait (top cut <= ${MAX_TOP_CUT}; visible height >= ${MIN_VISIBLE_HEIGHT}; side cut <= ${HORIZONTAL_MAX_EDGE_CUT} per edge)` : 'no team cards on this page')) + tail,
     viewports: Object.fromEntries(Object.entries(measured.viewports).map(([name, v]) => [name, v.error ? { error: v.error } : { cards: v.cards.map(({ name: n, kind, decoded, naturalWidth, naturalHeight, boxWidth, boxHeight, objectFit, objectPosition, frame, verdict, selector, src }) => ({ name: n, kind, decoded, naturalWidth, naturalHeight, boxWidth, boxHeight, objectFit, objectPosition, coverage: frame.coverage, croppedAxis: frame.croppedAxis, croppedEdges: frame.croppedEdges, cut: frame.cut, result: verdict.result, reason: verdict.reason, selector, src })) }])),
   }
 }

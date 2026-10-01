@@ -16,9 +16,11 @@
  *   media      intro card slot is an approved card, a video, or flagged
  *   sync       the CSS IDs the n8n workflow writes are still present (a layout change that drops one breaks the daily sync)
  * Then one rendered check in a real browser on desktop (1440x1000) and mobile (390x844):
- *   framing    team-photo-framing: every team-card image (leadership row and carousel slides, lazy loading forced
- *              eager) is inside its object-fit: cover box; a portrait bound at its native ratio into the landscape
- *              card box loses its head (Jason Tan, San Francisco, 2026-09-22). Math in tests/photo-framing.mjs.
+ *   framing    team-photo-framing: no team-card image (leadership row and carousel slides, lazy loading forced
+ *              eager) has the top of its portrait cut off by its object-fit: cover box, which is where a head sits
+ *              (Jason Tan, San Francisco, 2026-09-22). A top-anchored portrait cropped only at the bottom passes;
+ *              the check stopped judging how much of the file the box uses on 2026-10-01. Math in
+ *              tests/photo-framing.mjs.
  *              Playwright is borrowed like rendered-controls.mjs does (--playwright <dir>, PLAYWRIGHT_ROOT, or the
  *              sibling aeo checkout); without it the check is reported as skipped, never as passed. --skip-rendered
  *              skips it on purpose (ring 3 header and footer checks on untouched pages do not need a browser).
