@@ -39,6 +39,7 @@ import { loadChromium, SectionShotError } from './section-shot.mjs'
 import { measureTeamCards, teamPhotoFramingCheck } from './photo-framing.mjs'
 import { CHECK_ID as BRAND_CHECK_ID, brandVisualCheck, loadBrandVisual, measureBrandVisual } from './brand-visual.mjs'
 import { announcedStatusCheck, hubspotProgramIdFor, readHubSpotProgramDates } from './announced-status.mjs'
+import { APPROVED_WAITLIST_WORDING, WAITLIST_LABEL, applyControlLabels, enrollmentStateControlsCheck, openStatusCheck } from './open-status.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const brandVisual = loadBrandVisual()
@@ -46,6 +47,9 @@ const lifecycle = JSON.parse(fs.readFileSync(path.join(here, '../spec/campus-lif
 const media = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-open-media.json'), 'utf8'))
 const campusPages = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-pages.json'), 'utf8')).campuses
 const syncedTargets = JSON.parse(fs.readFileSync(path.join(here, '../spec/synced-targets.json'), 'utf8'))
+// Bundle 1.11 row campus.enrollment-state.controls: which Open campuses are on the waitlist, from MacKenzie Price's
+// 2026-10-05 named list. The checks measure each page against this list, never against the copy on the page itself.
+const enrollmentStates = JSON.parse(fs.readFileSync(path.join(here, '../registry/campus-enrollment-state.json'), 'utf8'))
 
 const brandExceptions = fs.existsSync(path.join(here, '..', 'registry', 'sister-brand-exceptions.json')) ? JSON.parse(fs.readFileSync(path.join(here, '..', 'registry', 'sister-brand-exceptions.json'), 'utf8')) : { properNouns: [], campuses: {} }
 const SISTER_BRANDS = [/\bNova\b/, /\bNextGen(?:\s+Academy)?\b/, /\bWaypoint(?:\s+Academy)?\b/, /\b(?:Texas\s+Sports\s+Academy|TSA)\b/]
@@ -123,7 +127,15 @@ async function checkPage(url, stateOverride) {
   const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [])[1]
   add('h1-present', Boolean(h1), h1 ? visibleText(h1).slice(0, 80) : 'no H1')
   if (h1 && campus) add('h1-names-campus', (campusPages[slug]?.names || [slug.replace(/-/g, ' ')]).some((n) => new RegExp(n.replace('Alpha ', '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(visibleText(h1))), visibleText(h1).slice(0, 80))
-  for (const label of ['STAY IN-THE-KNOW', 'Attend an Info Session', 'Apply now']) add(`cta-${label.toLowerCase().replace(/[^a-z]+/g, '-')}`, new RegExp(label.replace(/[-\s]+/g, '[\\s-]+'), 'i').test(text), label)
+  // Bundle 1.11 (MacKenzie Price, 2026-10-05): on a waitlist campus the apply control reads "Apply for [segment]
+  // waitlist", so the Apply control is present under that label instead. The control's presence is what this check
+  // measures; whether the label is the right one for the recorded state is open-enrollment-state-controls.
+  const recordedEnrollmentState = enrollmentStates.campuses?.[slug]?.enrollmentState ?? (campus ? enrollmentStates.default : null)
+  const applyLabels = applyControlLabels(mainHtml, visibleText)
+  const ctaPresent = (label) => new RegExp(label.replace(/[-\s]+/g, '[\\s-]+'), 'i').test(text)
+    || (label === 'Apply now' && recordedEnrollmentState === 'waitlist' && applyLabels.some((l) => WAITLIST_LABEL.test(l)))
+  const ctaLabelNote = (label) => (label === 'Apply now' && recordedEnrollmentState === 'waitlist' ? `${label} (or the recorded waitlist label)` : label)
+  for (const label of ['STAY IN-THE-KNOW', 'Attend an Info Session', 'Apply now']) add(`cta-${label.toLowerCase().replace(/[^a-z]+/g, '-')}`, ctaPresent(label), ctaLabelNote(label))
   add('intro-section-present', /Join us for an info session/i.test(text), 'intro paragraph "Join us for an info session"')
   add('canonical-tag', new RegExp(`<link[^>]+rel=["']canonical["'][^>]+href=["']${url.replace(/\/$/, '')}/?["']`, 'i').test(html) || new RegExp(`href=["']${url.replace(/\/$/, '')}/?["'][^>]+rel=["']canonical["']`, 'i').test(html), 'rel=canonical matches the URL')
 
@@ -131,12 +143,16 @@ async function checkPage(url, stateOverride) {
   const launchHits = LAUNCH_WORDS.map((re) => mainText.match(re)?.[0]).filter(Boolean)
   if (state === 'Open') {
     add('open-no-launch-words', launchHits.length === 0, launchHits.length ? `found: ${launchHits.join(', ')}` : '')
-    // The sentence must name this campus: Greenwich passed with "Alpha Greenwich Port Chester is open and enrolling."
-    // after the rename to Armonk (sweep 2026-09-21).
-    const sentence = mainText.match(/((?:Alpha|Nova|NextGen)[A-Za-z .'-]{0,60}?) (?:is open and enrolling\.|is now open|is open K-|open and enrolling for the)/i)
-    const campusNames = [...(campus?.names || []), ...(campusPages[slug]?.names || [])]
-    const namesThisCampus = sentence ? campusNames.some((n) => sentence[1].trim().toLowerCase() === n.toLowerCase()) : false
-    add('open-status-sentence', Boolean(sentence) && namesThisCampus, sentence ? (namesThisCampus ? sentence[0] : `sentence names "${sentence[1].trim()}", not this campus (${campusNames.join(' / ')})`) : 'expects "Alpha <Campus> is open and enrolling."')
+    // Bundle 1.11 row campus.intro.status-source (MacKenzie Price, 2026-10-05): an Open campus reads either the
+    // enrolling sentence or the approved waitlist sentence, verbatim. The sentence must still name this campus:
+    // Greenwich passed with "Alpha Greenwich Port Chester is open and enrolling." after the rename to Armonk
+    // (sweep 2026-09-21). Waitlist language that is not the approved wording, and a page claiming both states, fail.
+    const campusNames = [...new Set([...(campus?.names || []), ...(campus?.mapPrograms || []).map((p) => p?.name).filter(Boolean), ...(campusPages[slug]?.names || [])])]
+    const statusVerdict = openStatusCheck({ mainText, campusNames, waitlistWording: APPROVED_WAITLIST_WORDING })
+    add('open-status-sentence', statusVerdict.result === 'pass', statusVerdict.detail)
+    // The rest of the coordinated state: the top banner and resources-section application buttons, in both directions.
+    const controls = enrollmentStateControlsCheck({ recordedState: recordedEnrollmentState, labels: applyLabels, mainText })
+    checks.push({ id: 'open-enrollment-state-controls', ...controls }) // CONTROLS_CHECK_ID; the literal keeps tests/build-checks.mjs pageCheckIds able to see it
   } else if (state === 'Announced') {
     // Bundle 1.8 campus.intro.status-source (2026-09-28): dated Program (launch_date or opening_date) names a month or
     // season and year; undated Program reads "<name> is coming soon."; no HubSpot read makes "coming soon" a warn.
@@ -189,9 +205,16 @@ async function checkPage(url, stateOverride) {
 
   // media
   const entry = media.campuses[slug]
-  const hasCard = /Open-and-Enrolling\.png/.test(mainHtml)
+  // The approved card is the one the registry records. A waitlist campus's card is "<slug>-waitlist-2026-27.png"
+  // (bundle 1.11, MacKenzie Price 2026-10-05); an enrolling campus's is the Open and Enrolling card. Either the
+  // recorded attachment id or the state's card filename counts, so the check never passes on an unrecorded asset.
+  const cardPattern = entry?.cardVariant === 'waitlist-2026-27'
+    ? new RegExp(`${slug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-waitlist-2026-27(?:-\\d+x\\d+)?\\.png`, 'i')
+    : /Open-and-Enrolling\.png/
+  const hasCard = entry?.openMedia === 'card'
+    && (cardPattern.test(mainHtml) || (entry.attachmentId ? new RegExp(`wp-image-${entry.attachmentId}\\b`).test(mainHtml) : false))
   const hasVideo = /elementor-widget-video|youtube\.com\/embed|youtu\.be/.test(mainHtml)
-  if (state === 'Open') add('open-intro-media-approved', hasCard || (entry?.openMedia === 'video' && hasVideo), hasCard ? 'Open and Enrolling card' : (entry?.openMedia === 'video' ? 'approved video' : (entry ? `registry: ${entry.status}` : 'no registry entry')))
+  if (state === 'Open') add('open-intro-media-approved', hasCard || (entry?.openMedia === 'video' && hasVideo), hasCard ? `approved ${entry.cardVariant || 'open-and-enrolling'} card (attachment ${entry.attachmentId})` : (entry?.openMedia === 'video' ? 'approved video' : (entry ? `registry: ${entry.status}${entry.openMedia === 'card' ? `, approved attachment ${entry.attachmentId} not in the slot` : ''}` : 'no registry entry')))
 
   // synced targets: every CSS ID the n8n workflow expects must still exist on an Open or Announced campus page
   if (state === 'Open' || state === 'Announced') {

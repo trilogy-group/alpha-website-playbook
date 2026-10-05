@@ -14,6 +14,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { renderTemplate, renderTitle } from '../agent/ticket-templates.mjs'
+import { APPROVED_WAITLIST_WORDING } from './open-status.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const read = (p) => JSON.parse(fs.readFileSync(path.join(here, '..', p), 'utf8'))
@@ -113,7 +114,8 @@ function buildTicket() {
 function expectedFor(key, state, map, hubspot) {
   const name = (map?.name || slug).replace(/^Alpha School /, 'Alpha ')
   if (key === 'intro.status-sentence') {
-    if (state === 'Open') return { value: `${name} is open and enrolling.`, pattern: '^\\s*Alpha [A-Za-z .]+? is open and enrolling\\.', rule: 'spec/campus-page-requirements.json Open campus.intro.status-sentence' }
+    // Bundle 1.11 (MacKenzie Price, 2026-10-05): an Open campus reads either the enrolling sentence or the approved waitlist sentence.
+    if (state === 'Open') return { value: `${name} is open and enrolling.`, alternative: APPROVED_WAITLIST_WORDING.replace('<name>', name), pattern: '^\\s*Alpha [A-Za-z .]+? is open(?: and enrolling\\.|, and we\u2019re accepting applications for our 2026\u201327 waitlist\\.)', rule: 'spec/campus-page-requirements.json Open campus.intro.status-sentence; registry/campus-enrollment-state.json for which of the two applies' }
     if (state === 'Announced') return { value: null, rule: 'Announced: a launch statement naming month or season and year', pattern: '(opens|opening|launching) (in )?(January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Summer|Winter) \\d{4}' }
     return { value: null, rule: `no public sentence rule for state ${state}` }
   }

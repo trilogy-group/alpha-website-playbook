@@ -1,12 +1,39 @@
 {
-  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`. Counts and the jamaica-plain entry refreshed by hand from the growth map API and HubSpot on 2026-09-25 (no generator script exists in the playbook; generatedAt is the original 2026-09-15 capture).",
+  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`. Counts and the jamaica-plain entry refreshed by hand from the growth map API and HubSpot on 2026-09-25 (no generator script exists in the playbook; generatedAt is the original 2026-09-15 capture). 2026-10-05 (MacKenzie Price, relayed and confirmed by Matt Barge; tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): an Open campus has a named enrollment state, enrolling or waitlist, and `type` stays Open for both. states.Open.enrollmentStates carries the two wordings; registry/campus-enrollment-state.json carries which campus is in which state and is the versioned membership list until a HubSpot Program property exists. The 12 alpha.school waitlist campuses' introStatement below was re-read from the live pages on 2026-10-05.",
   "generatedAt": "2026-09-15T19:30:26.872237+00:00",
   "states": {
     "Open": {
       "source": "HubSpot Programs property `type` as published by the growth map API (programType)",
       "meaning": "Public campus page is a live destination; open-campus requirements apply.",
       "count": 38,
-      "introSentence": "'<name> is open and enrolling.' (check row campus.intro.status-source)"
+      "introSentence": "by enrollment state (registry/campus-enrollment-state.json; check row campus.intro.status-source): enrolling -> '<name> is open and enrolling.'; waitlist -> the approved sentence in enrollmentStates.waitlist.statusSentence, verbatim. Decided by MacKenzie Price 2026-10-05, relayed and confirmed by Matt Barge (tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json).",
+      "enrollmentStates": {
+        "$comment": "Named enrollment states of an Open campus. Not lifecycle types: `type` is Open for both, the open-campus requirements apply to both, and nothing about the page family changes. Membership and the full wording contract live in registry/campus-enrollment-state.json.",
+        "decidedBy": "MacKenzie Price",
+        "decidedOn": "2026-10-05",
+        "relayedAndConfirmedBy": "Matt Barge",
+        "source": "MacKenzie Price's 10:19 AM Slack instruction of 2026-10-05 naming the 13 campuses, Rachel Goodlad's admissions policy in the same thread, Yash Chitneni's four page elements; relayed and confirmed to the website agent by Matt Barge",
+        "decisionFixture": "tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json",
+        "default": "enrolling",
+        "registry": "registry/campus-enrollment-state.json",
+        "enrolling": {
+          "statusSentence": "<name> is open and enrolling.",
+          "count": 33,
+          "countAsOf": "2026-10-05",
+          "applyControls": "no waitlist wording on any apply control, and no waitlist card"
+        },
+        "waitlist": {
+          "statusSentence": "<name> is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+          "match": "verbatim, subject wildcard, typography folded; the school year is part of the wording",
+          "count": 13,
+          "countNote": "12 alpha.school campus pages plus Alpha High School, which is on https://alphahigh.school and has no campus-page row (registry/campus-enrollment-state.json offSite).",
+          "countAsOf": "2026-10-05",
+          "applyControls": "every apply control reads \"Apply for [<segment> ]waitlist\"",
+          "introCard": "the <slug>-waitlist-2026-27 card, alt \"Apply for Waitlist — 2026–27 school year\"; the approved attachment id per campus is in registry/campus-open-media.json",
+          "schoolYear": "2026–27",
+          "notDerivable": "No HubSpot Program property records this state. campuspipelinestatus and student_capacity both cut across the two groups (read 2026-10-05: Transitioned on 5 waitlist and 10 enrolling campuses, Build Mode on 5 and 12; capacity 21-195 against 10-193), so the only signal on the source side is the hand-typed sentence itself. See registry/sources.json hubspotPrograms.enrollmentStateField, null with the ask."
+        }
+      }
     },
     "Announced": {
       "source": "same",
@@ -126,7 +153,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Boca Raton is open and enrolling."
+      "introStatement": "Alpha Boca Raton is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.boca-raton"
     },
     "boston": {
       "url": "https://alpha.school/boston/",
@@ -145,7 +175,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Boston is open and enrolling."
+      "introStatement": "Alpha Boston is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.boston"
     },
     "boston-suburbs": {
       "url": "https://alpha.school/boston-suburbs/",
@@ -318,7 +351,10 @@
       "conflicts": [
         "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
-      "introStatement": "Alpha Dorado is open and enrolling."
+      "introStatement": "Alpha Dorado is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.dorado"
     },
     "east-bay": {
       "url": "https://alpha.school/east-bay/",
@@ -626,7 +662,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Join us for an info session at our 180 Maiden Lane location, in Lower Manhattan’"
+      "introStatement": "Alpha New York is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.new-york-city"
     },
     "oklahoma-city": {
       "url": "https://alpha.school/oklahoma-city/",
@@ -704,7 +743,10 @@
       "conflicts": [
         "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
-      "introStatement": "Alpha Palo Alto is open and enrolling."
+      "introStatement": "Alpha Palo Alto is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.palo-alto"
     },
     "park-city": {
       "url": "https://alpha.school/park-city/",
@@ -723,7 +765,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Park City is open and enrolling."
+      "introStatement": "Alpha Park City is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.park-city"
     },
     "plano": {
       "url": "https://alpha.school/plano/",
@@ -742,7 +787,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Plano is open and enrolling."
+      "introStatement": "Alpha Plano is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.plano"
     },
     "raleigh": {
       "url": "https://alpha.school/raleigh/",
@@ -763,7 +811,10 @@
       "conflicts": [
         "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
-      "introStatement": "Alpha Raleigh is open and enrolling."
+      "introStatement": "Alpha Raleigh is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.raleigh"
     },
     "san-francisco": {
       "url": "https://alpha.school/san-francisco/",
@@ -782,7 +833,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha San Francisco is open and enrolling."
+      "introStatement": "Alpha San Francisco is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.san-francisco"
     },
     "san-juan": {
       "url": "https://alpha.school/san-juan/",
@@ -860,7 +914,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Scottsdale is open and enrolling."
+      "introStatement": "Alpha Scottsdale is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.scottsdale"
     },
     "south-bay-la": {
       "url": "https://alpha.school/south-bay-la/",
@@ -919,7 +976,10 @@
       "conflicts": [
         "programType Open but launchDate Fall 2026 (HubSpot wins: website must read open; clear launchDate in HubSpot)"
       ],
-      "introStatement": "Alpha The Woodlands is open and enrolling."
+      "introStatement": "Alpha The Woodlands is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.the-woodlands"
     },
     "tulsa": {
       "url": "https://alpha.school/tulsa/",
@@ -938,7 +998,10 @@
       ],
       "lifecycle": "Open",
       "conflicts": [],
-      "introStatement": "Alpha Tulsa is open and enrolling."
+      "introStatement": "Alpha Tulsa is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "enrollmentState": "waitlist",
+      "enrollmentStateSince": "2026-10-02",
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.tulsa"
     }
   },
   "precedence": {

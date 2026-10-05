@@ -36,7 +36,7 @@
       },
       "campus.intro.status-sentence": {
         "required": true,
-        "content": "\"Alpha <Campus> is open and enrolling.\" as the first sentence of the intro text widget, followed by the \"Join us for an info session\" paragraph. No launch-era wording anywhere on the page: Coming Soon, Coming Fall, Launching, Opening <season>.",
+        "content": "The campus's enrollment-state sentence as the first sentence of the intro text widget, followed by the \"Join us for an info session\" paragraph. Enrolling: \"Alpha <Campus> is open and enrolling.\" Waitlist (the campuses named in registry/campus-enrollment-state.json; MacKenzie Price, 2026-10-05): \"Alpha <Campus> is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.\" verbatim. No other waitlist wording, and never both states at once. No launch-era wording anywhere on the page: Coming Soon, Coming Fall, Launching, Opening <season>.",
         "source": "HubSpot state Open (decision 2026-09-15); wording from exemplars Plano and Scottsdale; requirement catalog rule on stale launch copy",
         "ownerWhenMissing": "none needed: wording is fixed",
         "checks": [
@@ -112,7 +112,9 @@
         "content": "Optional. Its absence alone is not a defect. Visible content still follows source, brand and seasonal rules.",
         "source": "Live inventory: present on 29 of 44 campus pages",
         "ownerWhenMissing": "content owner",
-        "checks": ["whole-page seasonal and brand checks"],
+        "checks": [
+          "whole-page seasonal and brand checks"
+        ],
         "exemplars": [],
         "status": "observed_baseline"
       },
@@ -121,7 +123,11 @@
         "content": "Parent-proof section remains present when the approved template includes it; videos and claims are approved and playable.",
         "source": "Live inventory: present on 44 of 44 campus pages",
         "ownerWhenMissing": "brand authority and website operations",
-        "checks": ["media render", "link reachability", "claim evidence"],
+        "checks": [
+          "media render",
+          "link reachability",
+          "claim evidence"
+        ],
         "exemplars": [],
         "status": "observed_baseline"
       },
@@ -130,7 +136,10 @@
         "content": "Campus event strip is scoped to the exact HubSpot program-interest label and public events match HubSpot.",
         "source": "HubSpot event-import contract and live page model",
         "ownerWhenMissing": "events-plugin-owner",
-        "checks": ["observer public-event-sync", "observer campus-event-filter"],
+        "checks": [
+          "observer public-event-sync",
+          "observer campus-event-filter"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -139,7 +148,12 @@
         "content": "Address, phone, email, map and CTAs come from their field-specific source; optional controls appear only with a verified destination.",
         "source": "spec/campus-page-field-map.json and spec/source-authority.json",
         "ownerWhenMissing": "field-specific owner",
-        "checks": ["source diagnosis", "link reachability", "schema", "map"],
+        "checks": [
+          "source diagnosis",
+          "link reachability",
+          "schema",
+          "map"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -148,7 +162,12 @@
         "content": "Only approved current staff cards with exact name, public title, biography, photo and order. No placeholders or crossed photos. Order per campus.team.order.",
         "source": "APEX staff request, campus role owner and staff-card safety contract",
         "ownerWhenMissing": "dean-of-parents, then head-of-schools",
-        "checks": ["same-card verification", "placeholder check", "desktop and mobile", "page-check team-photo-framing"],
+        "checks": [
+          "same-card verification",
+          "placeholder check",
+          "desktop and mobile",
+          "page-check team-photo-framing"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -193,7 +212,12 @@
         "content": "Approved Alpha and campus-relevant records imported from Airtable; no wrong-campus or sister-brand content.",
         "source": "Airtable video pipeline and identity rules",
         "ownerWhenMissing": "website-operations",
-        "checks": ["import", "media", "identity", "links"],
+        "checks": [
+          "import",
+          "media",
+          "identity",
+          "links"
+        ],
         "exemplars": [],
         "status": "observed_baseline"
       },
@@ -202,7 +226,12 @@
         "content": "Visible images have rights, campus identity, alt text and an acceptable crop.",
         "source": "approved media source and proposed media standard",
         "ownerWhenMissing": "photography and website-operations",
-        "checks": ["image render", "identity", "crop", "desktop and mobile"],
+        "checks": [
+          "image render",
+          "identity",
+          "crop",
+          "desktop and mobile"
+        ],
         "exemplars": [],
         "status": "observed_baseline"
       },
@@ -211,7 +240,12 @@
         "content": "Approved template structure with no stale launch, seasonal, cross-brand or unapproved claim content.",
         "source": "Live inventory: present on 42 of 44 pages; site rules",
         "ownerWhenMissing": "elementor-owner and content owner",
-        "checks": ["whole-page", "brand", "seasonal", "claim"],
+        "checks": [
+          "whole-page",
+          "brand",
+          "seasonal",
+          "claim"
+        ],
         "exemplars": [],
         "status": "observed_baseline"
       },
@@ -220,7 +254,11 @@
         "content": "Candidate and accredited badge states reflect cognia_accredited and cannot be visibly inconsistent.",
         "source": "HubSpot Programs through n8n",
         "ownerWhenMissing": "hubspot-program-admin and n8n-sync-owner",
-        "checks": ["source read", "synced CSS IDs", "screenshot"],
+        "checks": [
+          "source read",
+          "synced CSS IDs",
+          "screenshot"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -229,9 +267,22 @@
         "content": "Unique title and description, canonical, semantic H1, indexable state, School schema matching source facts, sitemap entry and approved Markdown and LLM behavior.",
         "source": "site search rules and HubSpot campus facts",
         "ownerWhenMissing": "website-operations or n8n-sync-owner by field",
-        "checks": ["metadata", "canonical", "schema", "sitemap", "Googlebot parity"],
+        "checks": [
+          "metadata",
+          "canonical",
+          "schema",
+          "sitemap",
+          "Googlebot parity"
+        ],
         "exemplars": [],
         "status": "active"
+      },
+      "campus.enrollment-state": {
+        "content": "Every apply control on the page agrees with the campus's recorded enrollment state. Waitlist: the top banner application button and the resources-section application buttons all read \"Apply for [<segment>] waitlist\". Enrolling: no apply control label and no page-owned copy mentions a waitlist. The intro card is the matching card (campus.intro.media).",
+        "source": "MacKenzie Price 2026-10-05 (the 13 campuses); Yash Chitneni, same thread, the four coordinated page elements; registry/campus-enrollment-state.json",
+        "ownerWhenMissing": "Website operations (Elementor copy); Yash Chitneni for the card",
+        "checks": "page-check open-enrollment-state-controls; observer campus-enrollment-state-controls; campus.intro.media.current for the card",
+        "note": "Measured in both directions. The state is four elements together: the intro sentence, the hero apply control, the resources apply controls and the intro card; a page carrying some and not others is a finding. Membership comes from the registry, not from the copy, because no HubSpot Program property records it yet."
       }
     },
     "Announced": {
@@ -253,8 +304,15 @@
         "content": "Any published page is canonical, intentionally indexable and complete enough for parents. A public page is not required solely because the Program is Announced.",
         "source": "HubSpot lifecycle meaning and launch owner",
         "ownerWhenMissing": "expansion and website-operations",
-        "checks": ["status", "canonical", "sitemap", "noindex"],
-        "exemplars": ["https://alpha.school/bethesda/"],
+        "checks": [
+          "status",
+          "canonical",
+          "sitemap",
+          "noindex"
+        ],
+        "exemplars": [
+          "https://alpha.school/bethesda/"
+        ],
         "status": "active"
       },
       "campus.hero.identity": {
@@ -262,8 +320,14 @@
         "content": "H1, grade and location identity match the exact HubSpot Program.",
         "source": "HubSpot Programs",
         "ownerWhenMissing": "hubspot-program-admin",
-        "checks": ["h1", "identity", "grade source"],
-        "exemplars": ["https://alpha.school/bethesda/"],
+        "checks": [
+          "h1",
+          "identity",
+          "grade source"
+        ],
+        "exemplars": [
+          "https://alpha.school/bethesda/"
+        ],
         "status": "active"
       },
       "campus.hero.ctas": {
@@ -271,7 +335,10 @@
         "content": "Only approved destinations appear. Apply, booking, event, packet and Community controls are conditional on verified routes.",
         "source": "spec/source-authority.json",
         "ownerWhenMissing": "field-specific owner",
-        "checks": ["logged-out destination", "campus identity"],
+        "checks": [
+          "logged-out destination",
+          "campus identity"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -280,7 +347,12 @@
         "content": "Approved launch-stage media for this campus and date; no other campus, expired season or open-state claim.",
         "source": "approved media registry",
         "ownerWhenMissing": "website-operations",
-        "checks": ["media identity", "seasonal", "crop", "screenshot"],
+        "checks": [
+          "media identity",
+          "seasonal",
+          "crop",
+          "screenshot"
+        ],
         "exemplars": [],
         "status": "approval_needed"
       },
@@ -289,7 +361,10 @@
         "content": "If present, the strip is scoped to the exact HubSpot program-interest label.",
         "source": "HubSpot event-import contract",
         "ownerWhenMissing": "events-plugin-owner",
-        "checks": ["event filter", "source sync"],
+        "checks": [
+          "event filter",
+          "source sync"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -298,7 +373,12 @@
         "content": "Only verified public facts and destinations are shown. Missing values are not invented.",
         "source": "HubSpot and owner registries",
         "ownerWhenMissing": "field-specific owner",
-        "checks": ["source", "link", "schema", "map"],
+        "checks": [
+          "source",
+          "link",
+          "schema",
+          "map"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -307,7 +387,11 @@
         "content": "Any visible person has an approved name, public title, biography, photo and effective date.",
         "source": "APEX staff request and campus owner",
         "ownerWhenMissing": "expansion or campus role owner",
-        "checks": ["same-card", "placeholder", "page-check team-photo-framing"],
+        "checks": [
+          "same-card",
+          "placeholder",
+          "page-check team-photo-framing"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -331,7 +415,9 @@
         "content": "Canonical, metadata, H1, indexability, schema, sitemap, Markdown and LLM behavior are explicit for the launch page.",
         "source": "SEO and LLM publishing rules",
         "ownerWhenMissing": "website-operations",
-        "checks": ["discovery-surface checks"],
+        "checks": [
+          "discovery-surface checks"
+        ],
         "exemplars": [],
         "status": "active"
       }
@@ -342,7 +428,12 @@
         "content": "No public campus WordPress page is required. Any internal draft stays unpublished, noindex and absent from sitemap, Markdown and LLM exports.",
         "source": "spec/campus-lifecycle.json Pre-Announcement meaning",
         "ownerWhenMissing": "expansion and website-operations",
-        "checks": ["WordPress status", "robots", "sitemap", "LLM exports"],
+        "checks": [
+          "WordPress status",
+          "robots",
+          "sitemap",
+          "LLM exports"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -351,7 +442,11 @@
         "content": "One approved map pin for the exact Program routes to a visible Community program through https://www.community.alpha.school/?campus=<slug>.",
         "source": "HubSpot lifecycle and spec/community-routing.json",
         "ownerWhenMissing": "growth-map-owner or community-app-owner by failing surface",
-        "checks": ["map identity", "program ID join", "Community route"],
+        "checks": [
+          "map identity",
+          "program ID join",
+          "Community route"
+        ],
         "exemplars": [],
         "status": "active"
       },
@@ -360,7 +455,10 @@
         "content": "Do not publish Apply, booking, packet, event, tuition, grade, opening-date or staff claims without an approved source and launch-stage rule.",
         "source": "source authority and fail-closed policy",
         "ownerWhenMissing": "field-specific owner",
-        "checks": ["public route inventory", "claim and source checks"],
+        "checks": [
+          "public route inventory",
+          "claim and source checks"
+        ],
         "exemplars": [],
         "status": "active"
       }

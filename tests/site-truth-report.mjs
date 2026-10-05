@@ -32,7 +32,8 @@
  * Columns and the reason words:
  *   state     HubSpot type vs growth-map programType vs page sentence: agree | map:<type> | page:launch | page:open |
  *             no-map | unfetched
- *   sentence  Open: open (the decided sentence "<Campus> is open and enrolling.") | open-variant (amber: an open-state
+ *   sentence  Open: open (the enrolling sentence "<Campus> is open and enrolling.") | waitlist (the approved
+ *             2026-27 waitlist sentence; bundle 1.11) | waitlist-unapproved | both-states | open-variant (amber: an open-state
  *             sentence in other words, "is open K-8 for Fall 2026", "is now open with rolling admissions") | launch
  *             (launching, coming or opening-in wording on an Open page) | absent | unfetched.
  *             Announced: dated | undated | open-wording | absent | unfetched
@@ -66,6 +67,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { openEnrollmentState } from './open-status.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 export const REPORT_VERSION = '0.2'
@@ -98,6 +100,10 @@ export const LAUNCH_WORDS = [/\bComing\s+Soon\b/i, /\bComing\s+(?:in\s+|this\s+)
 export const SLOT_LAUNCH_WORDS = [...LAUNCH_WORDS, /\bOpening\s+Soon\b/i, /\b(?:Now\s+)?Enrolling\s+(?:Fall|Spring|Winter|Summer)\b/i, /\bLaunching\b/i, /\b(?:Fall|Spring|Winter|Summer)\s*[.,]?\s*20\d\d\b/i]
 /** The decided open sentence (docs/decisions.md: "<Campus> is open and enrolling."). */
 export const OPEN_SENTENCE = /\bis\s+(?:now\s+)?open\s+and\s+enrolling\b/i
+/**
+ * The approved waitlist sentence (check bundle 1.11, MacKenzie Price 2026-10-05): the second decided Open wording.
+ * Matched through tests/open-status.mjs so the report, page-check and the bundle literal cannot drift apart.
+ */
 /** Any other open-state sentence about the campus: "Alpha Charlotte is open K-8 for Fall 2026", "Alpha Kirkland is now open with rolling admissions". */
 export const OPEN_VARIANT = /\bAlpha\s+[A-Z][^.!?\n]{0,60}?\b(?:is|are)\s+(?:now\s+)?open\b[^.!?\n]*/
 export const DATED_LAUNCH = /(?:opens|launching|opening|coming)\s+(?:in\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Fall|Spring|Winter|Summer)\s+20\d\d/i
@@ -284,12 +290,16 @@ function cell(color, reason, detail = null) {
 export function sentenceCell(page, state) {
   if (!page) return cell('grey', 'unfetched', 'page not in the packet')
   const text = String(page.pageOwnedText || page.text || '')
-  const open = text.match(OPEN_SENTENCE)
-  const variant = open ? null : text.match(OPEN_VARIANT)
+  const enrollment = openEnrollmentState(text)
+  const open = enrollment.state === 'waitlist' ? null : text.match(OPEN_SENTENCE)
+  const variant = open || enrollment.state === 'waitlist' ? null : text.match(OPEN_VARIANT)
   const launch = LAUNCH_WORDS.map((re) => text.match(re)?.[0]).filter(Boolean)
   if (state === 'Open') {
     if (launch.length && !open && !variant) return cell('red', 'launch', `launch wording on an Open page: ${launch.join(', ')}`)
     if (launch.length) return cell('red', 'launch', `open sentence present but launch wording remains: ${launch.join(', ')}`)
+    if (enrollment.state === 'waitlist') return cell('green', 'waitlist', 'the approved 2026\u201327 waitlist sentence (MacKenzie Price, 2026-10-05)')
+    if (enrollment.state === 'waitlist-unapproved') return cell('red', 'waitlist-unapproved', 'waitlist wording that is not the approved waitlist sentence')
+    if (enrollment.state === 'contradiction') return cell('red', 'both-states', 'the intro claims both the enrolling state and the waitlist state')
     if (open) return cell('green', 'open', open[0])
     if (variant) {
       const sentence = variant[0].trim()
@@ -738,7 +748,7 @@ export function renderMarkdown(report) {
     `- Needs approval by column (Open only, amber): ${COLUMNS.map((c) => `${COLUMN_LABELS[c]} ${counts.openAmberByColumn[c]}`).join(', ')}.`,
     `- All rows by column: ${COLUMNS.map((c) => `${COLUMN_LABELS[c]} ${COLOR_MARK.green}${counts.byColumn[c].green} ${COLOR_MARK.amber}${counts.byColumn[c].amber} ${COLOR_MARK.red}${counts.byColumn[c].red} ${COLOR_MARK.grey}${counts.byColumn[c].grey}`).join('; ')}.`,
     '',
-    'Reason words: state agree | map:<type> | page:launch | page:open | no-map | unfetched. Sentence (Open) open | open-variant (amber: open-state wording other than "<Campus> is open and enrolling.") | launch | absent; (Announced) dated | undated | open-wording | absent. Card (from the observed slot) launch | other-campus | placeholder | empty | mismatch (red) | unapproved (amber: plausible media with no registry approval) | placed | video (green) | unobserved | not-open (grey). Team ordered | misordered | missing | no-cards | unrecorded | no-leadership. Packet visible | interim | placeholder | drift | absent | unrecorded. CTAs present | missing | conditional. Guide present | absent (advisory).',
+    'Reason words: state agree | map:<type> | page:launch | page:open | no-map | unfetched. Sentence (Open) open | waitlist (the approved 2026-27 waitlist sentence) | open-variant (amber: open-state wording other than "<Campus> is open and enrolling.") | waitlist-unapproved | both-states | launch | absent; (Announced) dated | undated | open-wording | absent. Card (from the observed slot) launch | other-campus | placeholder | empty | mismatch (red) | unapproved (amber: plausible media with no registry approval) | placed | video (green) | unobserved | not-open (grey). Team ordered | misordered | missing | no-cards | unrecorded | no-leadership. Packet visible | interim | placeholder | drift | absent | unrecorded. CTAs present | missing | conditional. Guide present | absent (advisory).',
     '',
   ]
   return lines.join('\n')
