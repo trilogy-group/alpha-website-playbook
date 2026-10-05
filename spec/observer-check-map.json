@@ -19,7 +19,7 @@
     "site.community.routing": "Community destinations use campus=<verified Community slug>, joined by exact HubSpot program id to a visible Community record; unknown or ambiguous mappings fail closed.",
     "site.loop.health": "Source providers and snapshots healthy (not a website change).",
     "campus.hero.identity": "H1 and subtitle name this campus; page title, schema, nav, sitemap agree.",
-    "campus.intro.status-sentence": "Intro status sentence matches the lifecycle state (Open: \"is open and enrolling.\"; Announced: named month/season and year).",
+    "campus.intro.status-sentence": "Intro status sentence matches the lifecycle state and, for Open, the recorded enrollment state (Open + enrolling: \"is open and enrolling.\"; Open + waitlist: the approved 2026–27 waitlist sentence, verbatim; Announced: named month/season and year).",
     "campus.intro.media": "Intro card slot shows approved open-state media (card or video) for Open campuses; no launch-era media on Open campuses.",
     "campus.facts.grades": "Grade range on hero, intro, Locations card, schema, meta matches HubSpot/Operations.",
     "campus.facts.contact": "Phone, address, email, coordinates match the source.",
@@ -32,7 +32,8 @@
     "campus.events.strip": "Only this campus's events (plus approved national events) render; canceled/private accept no registration.",
     "campus.page.reachable": "Canonical URL loads 200, in sitemap, canonical tag matches, no redirect to another campus.",
     "site.brand.visual": "Official Alpha visual brand (spec/brand-visual.json): Montserrat on every text element, no never-row contrast pair, backgrounds and headlines from the palette, an unmodified canonical logo file; word rules stay MacKenzie's.",
-    "site.coverage": "Every Open or Announced HubSpot Program on a public host has a public page naming the campus that the map lists, its registry rows (open media, leadership, packets), and a render in every full run; enumerated from HubSpot to the website, never only from the website to HubSpot."
+    "site.coverage": "Every Open or Announced HubSpot Program on a public host has a public page naming the campus that the map lists, its registry rows (open media, leadership, packets), and a render in every full run; enumerated from HubSpot to the website, never only from the website to HubSpot.",
+    "campus.enrollment-state": "Open campus apply controls and page copy match the campus's recorded enrollment state (registry/campus-enrollment-state.json), in both directions."
   },
   "checks": {
     "community-destination": {
@@ -176,6 +177,10 @@
     },
     "campus-page-status-sentence": {
       "requirement": "campus.intro.status-sentence",
+      "status": "enforced"
+    },
+    "campus-enrollment-state-controls": {
+      "requirement": "campus.enrollment-state",
       "status": "enforced"
     },
     "campus-page-stale-launch-media": {
@@ -581,13 +586,14 @@
   "coverageOutsideObserver": {
     "site.brand.copy": "marketingsupport npm run website:brand-qc (scripts/lib/alpha-brand-rules.mjs); observer font-family is advisory only",
     "site.community.routing": "tests/validate-community-routing.mjs validates the current URL contract and verified identity crosswalk; observer parameter coverage remains advisory until updated",
-    "campus.intro.status-sentence": "playbook tests/page-check.mjs open-status-sentence / announced-names-launch-date",
+    "campus.intro.status-sentence": "playbook tests/page-check.mjs open-status-sentence / announced-names-launch-date (open-status-sentence reads the approved wordings from tests/open-status.mjs, pinned to the bundle literal by tests/open-status.test.mjs)",
     "campus.facts.tuition": "observer campus-page-tuition-source-sync plus marketingsupport website:campus-facts-qc (Locations card vs page)",
     "campus.resources.apply": "observer routing rule campus-application-* checks (not emitted as finding() literals in checks.mjs; confirm names) plus page-check cta-links-resolve",
     "campus.team.roster": "no roster source configured; requester is the source until one exists",
     "campus.events.strip": "observer campus-event-filter and public-event-sync (routing rules) plus HubSpot events source",
     "site.layout.images": "playbook tests/page-check.mjs team-photo-framing (rendered, desktop and mobile: every team-card image inside its object-fit cover box; tests/photo-framing.mjs, spec/team-card-frame.json); the observer's campus-image-crop-risk stays the dispatching check",
-    "site.brand.visual": "playbook tests/page-check.mjs brand-visual (rendered, desktop: computed font-family, never-row contrast pairs, off-palette fields and headlines, logo file hash against playbook/brand/assets; tests/brand-visual.mjs, spec/brand-visual.json); the observer font-family check stays advisory telemetry"
+    "site.brand.visual": "playbook tests/page-check.mjs brand-visual (rendered, desktop: computed font-family, never-row contrast pairs, off-palette fields and headlines, logo file hash against playbook/brand/assets; tests/brand-visual.mjs, spec/brand-visual.json); the observer font-family check stays advisory telemetry",
+    "campus.enrollment-state": "playbook tests/page-check.mjs open-enrollment-state-controls (tests/open-status.mjs)"
   },
   "checkToElement": {
     "$comment": "observer check -> field-map element for tests/diagnose-field.mjs",
@@ -613,7 +619,8 @@
     "campus-event-filter": "events.strip",
     "campus-schema-coordinates": "schema.school",
     "campus-schema-name": "schema.school",
-    "operations-map-address-conflict": "contact.address"
+    "operations-map-address-conflict": "contact.address",
+    "campus-enrollment-state-controls": "page.enrollment-state"
   },
   "dedupeAliases": {
     "$comment": "Older ticket ids and title shapes for the same defect on the same page, per observer check. checkIds are matched exactly (case-insensitive) against a ticket's customFields.checkId, check and observerCheck; titlePatterns are case-insensitive regular expressions against the ticket title. A match counts only on one of the group's pages (ticket url, customFields.pageUrl, or an alpha.school URL in the description).",

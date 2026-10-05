@@ -1,7 +1,7 @@
 {
-  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP. 1.3 (2026-09-25, decision by Matt Barge: check from HubSpot to the website, not only from the website to HubSpot): entitySource per row (hubspot-programs or map; campus rows default to hubspot-programs through entitySources.<id>.pageFamilies, so the observer enumerates the campuses from HubSpot Programs whose type is public and whose website is on a public host, takes the lifecycle state from type, and fetches the page at website; the map is downstream). expected.derive.onMissing (finding or skip, default skip): on finding, an in-scope entity with no registry entry is a finding of the same row with missingExpectation true, titled \"no approved <thing> recorded for <state> campus <name>\", filed Missing Info to the registry owner role with literals.missingAsk. literals per row carry the fixed values the observer and the filer read (missingAsk, missingThing, launchWords, assetPatterns, registries); the builder publishes them at row.literals and mirrors them at expected.literal next to expected.derive, which is where the observer reads them (rules.literalValue). aliases.pageCheck maps every tests/page-check.mjs check id to its row id (aliases.pageCheckUnmapped names the rest with the reason); agent/file-found-ticket.mjs writes customFields.requirementId from it. Comparator types are enumerated in spec/observer-comparators.json and the builder refuses any other. New coverage rows: site.coverage.open-campus-registries, site.coverage.program-page, site.coverage.open-campus-rendered. dedupeScope campus-registry (one ticket per campus and registry). 1.4 (2026-09-25, QC loop repair plan repair 3, bundle-versus-observer conformance): site.loop.health.conformance (observer check bundle-conformance) is the loop-health row the observer files when the loaded bundle fails its conformance assessment (a comparator, check id, entity source, registry or literal a row states that the code does not implement); the observer records the assessment in the packet manifest (conformance {ok, failures[]}) and its CI runs node alpha-site-system/src/cli.mjs conformance against the released bundle. Rows added for the loop-health checks the observer already emitted without a row: site.loop.health.comparator-unsupported (comparator-unsupported, aeo #37) and the vision-pass rows site.loop.health.vision-pass, site.loop.health.vision-pass-budget, site.loop.health.vision-pass-errors (aeo #36, repair 2). tests/observer-conformance.test.mjs asserts the comparator list and the check registry from this side; tests/sync-observer-comparators.mjs refetches the observer's published list and reports drift. 1.7 (2026-09-28, proposed by the website agent from Matt Barge's review of the 2026-09-28 status-sentence tickets, awaiting his confirmation): campus.intro.status-source carries literals.exceptions, the list of named per-campus intro-sentence exceptions read from spec/campus-lifecycle.json campuses.<slug>.introStatementException (status Proposed or Decided, wording, reason, expires); a campus with an unexpired exception whose website_campus_intro contains the wording is exempt from the row, never filed. First entry: Lexington (boston-suburbs), the pending-School-Committee-approval sentence. 1.8 (2026-09-28, decided by Matt Barge in a Slack conversation with the website agent): campus.intro.status-source reads opening_date as well as launch_date; an Announced campus with no launch_date and no opening_date reads '<name> is coming soon.' (literals.undatedAnnounced; first case Alpha Houston Heights), and the dated form applies once a date is set. The Lexington exception in literals.exceptions is Decided (Matt Barge, 2026-09-28), no longer Proposed. 1.9 (2026-09-30, decided by Matt Barge in a Slack conversation with the website agent, clarifying MacKenzie Price's 2026-09-25 decision): the team section order the campus.team rows' requirementRef (states/Open/campus.team, order per campus.team.order) points at now reads campus-present people first (Director of Admissions and Dean of Parents at the top, not ranked against each other; then the head or lead guide and every other campus-present card) and the Head of Schools who appears across many campuses (Dr. Tasha Arnold) last in the Team section; a campus whose own head of school is campus-present (Brownsville, Paige Fults) keeps that person in the leadership row. No observer row measures order yet; tests/site-truth-report.mjs grades the team cell against it (ordered means DoA and DoP first, campus staff, Tasha last; Tasha above campus staff is misordered).",
-  "version": "1.10",
-  "asOf": "2026-10-01",
+  "$comment": "Source rows for the check bundle (QC loop redesign 2026-09-24, workstreams 1 and 2). One row per requirement the observer measures: what to check, on which pages and states, against which source field, with which comparator and threshold, and how a finding becomes a ticket. tests/build-checks.mjs compiles these with the policy bundle (ticket class -> owner role and evidence profile), the field map, the lifecycle spec and the registries into spec/check-bundle.generated.json; the observer loads that bundle and the filer applies it. Thresholds, host lists, exemptions and grace periods live here and in the registries, never in the observer's config. Defaults below fill any field a row leaves out. A row's expected value is either a literal or a derivation (source id from sourceHealth, field, transform). decisionPending names the APEX ticket whose decision can change the row; the row carries the recommended value until then. Rows and retirements must together cover every name in registry/observer-checks.json. 1.1 (2026-09-24): exemptionsRef may be a string or an array of strings; the campus CTA rows read registry/campus-cta-exceptions.json (named, dated, expiring exceptions per campus and CTA) and the identity rows read registry/campus-leadership.json groups (shared leadership across sibling campuses). 1.2 (2026-09-25, decisions by Matt Barge): channel source-digest for source-versus-source comparisons that are not website defects (the map-source rows comparing the Operations sheet, the growth map API and HubSpot, and the Community record, URL form and host rows); the filer never files them and writes them to source-digest.md grouped by owner role (sourceDigest.ownerRoles). grounding {kind, ref} on every row (complaint, source-contract, exemplar, decision, none; the 2026-09-15 precedence order): the builder sets status advisory on any enforced row whose grounding is none (promotion rule, docs/observer-requirements.md). depth (render or http) per row, defaulted from pageFamily through depthDefaults; the observer renders only render rows and fetches http rows over HTTP. 1.3 (2026-09-25, decision by Matt Barge: check from HubSpot to the website, not only from the website to HubSpot): entitySource per row (hubspot-programs or map; campus rows default to hubspot-programs through entitySources.<id>.pageFamilies, so the observer enumerates the campuses from HubSpot Programs whose type is public and whose website is on a public host, takes the lifecycle state from type, and fetches the page at website; the map is downstream). expected.derive.onMissing (finding or skip, default skip): on finding, an in-scope entity with no registry entry is a finding of the same row with missingExpectation true, titled \"no approved <thing> recorded for <state> campus <name>\", filed Missing Info to the registry owner role with literals.missingAsk. literals per row carry the fixed values the observer and the filer read (missingAsk, missingThing, launchWords, assetPatterns, registries); the builder publishes them at row.literals and mirrors them at expected.literal next to expected.derive, which is where the observer reads them (rules.literalValue). aliases.pageCheck maps every tests/page-check.mjs check id to its row id (aliases.pageCheckUnmapped names the rest with the reason); agent/file-found-ticket.mjs writes customFields.requirementId from it. Comparator types are enumerated in spec/observer-comparators.json and the builder refuses any other. New coverage rows: site.coverage.open-campus-registries, site.coverage.program-page, site.coverage.open-campus-rendered. dedupeScope campus-registry (one ticket per campus and registry). 1.4 (2026-09-25, QC loop repair plan repair 3, bundle-versus-observer conformance): site.loop.health.conformance (observer check bundle-conformance) is the loop-health row the observer files when the loaded bundle fails its conformance assessment (a comparator, check id, entity source, registry or literal a row states that the code does not implement); the observer records the assessment in the packet manifest (conformance {ok, failures[]}) and its CI runs node alpha-site-system/src/cli.mjs conformance against the released bundle. Rows added for the loop-health checks the observer already emitted without a row: site.loop.health.comparator-unsupported (comparator-unsupported, aeo #37) and the vision-pass rows site.loop.health.vision-pass, site.loop.health.vision-pass-budget, site.loop.health.vision-pass-errors (aeo #36, repair 2). tests/observer-conformance.test.mjs asserts the comparator list and the check registry from this side; tests/sync-observer-comparators.mjs refetches the observer's published list and reports drift. 1.7 (2026-09-28, proposed by the website agent from Matt Barge's review of the 2026-09-28 status-sentence tickets, awaiting his confirmation): campus.intro.status-source carries literals.exceptions, the list of named per-campus intro-sentence exceptions read from spec/campus-lifecycle.json campuses.<slug>.introStatementException (status Proposed or Decided, wording, reason, expires); a campus with an unexpired exception whose website_campus_intro contains the wording is exempt from the row, never filed. First entry: Lexington (boston-suburbs), the pending-School-Committee-approval sentence. 1.8 (2026-09-28, decided by Matt Barge in a Slack conversation with the website agent): campus.intro.status-source reads opening_date as well as launch_date; an Announced campus with no launch_date and no opening_date reads '<name> is coming soon.' (literals.undatedAnnounced; first case Alpha Houston Heights), and the dated form applies once a date is set. The Lexington exception in literals.exceptions is Decided (Matt Barge, 2026-09-28), no longer Proposed. 1.9 (2026-09-30, decided by Matt Barge in a Slack conversation with the website agent, clarifying MacKenzie Price's 2026-09-25 decision): the team section order the campus.team rows' requirementRef (states/Open/campus.team, order per campus.team.order) points at now reads campus-present people first (Director of Admissions and Dean of Parents at the top, not ranked against each other; then the head or lead guide and every other campus-present card) and the Head of Schools who appears across many campuses (Dr. Tasha Arnold) last in the Team section; a campus whose own head of school is campus-present (Brownsville, Paige Fults) keeps that person in the leadership row. No observer row measures order yet; tests/site-truth-report.mjs grades the team cell against it (ordered means DoA and DoP first, campus staff, Tasha last; Tasha above campus staff is misordered). 1.11 (2026-10-05, decided by MacKenzie Price, relayed and confirmed by Matt Barge; tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): an Open campus has a named enrollment state, enrolling or waitlist, and `type` stays Open for both. campus.intro.status-source and campus.intro.status-sentence accept either the enrolling sentence or the approved waitlist sentence, read from literals.openEnrollmentStates; the waitlist sentence is matched verbatim (subject wildcard, typography folded), never by the word \"waitlist\", so a hand-written waitlist sentence or a stale school year is still a finding, and a page that claims both states at once is a finding. literals.openEnrollmentStates.campuses mirrors registry/campus-enrollment-state.json, the versioned membership list that exists because NO HubSpot Program property records enrollment state (campuspipelinestatus and student_capacity both cut across the two groups), so the rule is measured against the recorded list rather than against the copy it is checking. New row campus.enrollment-state.controls (observer check campus-enrollment-state-controls) measures the rest of the coordinated state Yash Chitneni changed with the sentence: the hero apply control, the resources apply controls and page-owned waitlist language, in BOTH directions (a waitlist campus must carry the waitlist labels; an enrolling campus must carry none). The intro card stays with campus.intro.media.current, which now reads the waitlist card attachment ids from registry/campus-open-media.json.",
+  "version": "1.11",
+  "asOf": "2026-10-05",
   "defaults": {
     "$comment": "Defaults fill any field a row leaves out. clearAfterRuns counts full observer runs: 2 means two consecutive full runs, about one day at the 06:00 and 21:00 UTC cadence (docs/sweep-runbook.md, Cadence, breadth and depth). entitySource map is the default for rows that are not about campus pages; entitySources.hubspot-programs.pageFamilies lists the families whose rows default to hubspot-programs.",
     "pageFamily": "campus",
@@ -120,7 +120,8 @@
         "campus.resources.packet.present"
       ],
       "book-a-call-consistency": "campus.resources.booking.present",
-      "brand-visual": "site.brand.visual.font"
+      "brand-visual": "site.brand.visual.font",
+      "open-enrollment-state-controls": "campus.enrollment-state.controls"
     },
     "pageCheckUnmapped": {
       "edge-cache-current": "compares the cached and fresh copies of one page after an edit; a ring-2 verification step, not a standing requirement",
@@ -366,7 +367,7 @@
     {
       "id": "campus.intro.status-source",
       "observerCheck": "campus-source-status-sentence",
-      "title": "HubSpot campus intro status sentence matches the Program lifecycle",
+      "title": "HubSpot campus intro status sentence matches the Program lifecycle and the campus's enrollment state",
       "lifecycleStates": [
         "Open",
         "Announced"
@@ -381,7 +382,7 @@
             "launch_date",
             "opening_date"
           ],
-          "transform": "Open -> '<name> is open and enrolling.'; Announced with launch_date or opening_date -> named month or season and year supported by that date; Announced with no launch_date or opening_date -> '<name> is coming soon.' (Matt Barge, 2026-09-28)"
+          "transform": "Open -> the wording of the campus's recorded enrollment state (literals.openEnrollmentStates): enrolling -> '<name> is open and enrolling.'; waitlist -> the approved waitlist sentence verbatim (MacKenzie Price, 2026-10-05). Waitlist language that is not the approved wording, or both states claimed at once, is a finding either way. Announced with launch_date or opening_date -> named month or season and year supported by that date; Announced with no launch_date or opening_date -> '<name> is coming soon.' (Matt Barge, 2026-09-28)"
         }
       },
       "comparator": {
@@ -395,7 +396,7 @@
       ],
       "grounding": {
         "kind": "decision",
-        "ref": "docs/decisions.md 2026-09-15: HubSpot Program type is authoritative; spec/campus-page-field-map.json elements/intro.status-sentence defines the lifecycle wording"
+        "ref": "docs/decisions.md 2026-09-15: HubSpot Program type is authoritative; spec/campus-page-field-map.json elements/intro.status-sentence defines the lifecycle wording; docs/decisions.md 2026-10-05 (MacKenzie Price, relayed and confirmed by Matt Barge): an Open campus reads either the enrolling sentence or the approved waitlist sentence"
       },
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
@@ -428,13 +429,83 @@
           "firstCase": "Alpha Houston Heights (HubSpot Program 26459919662, https://alpha.school/houston/), website_campus_intro written 2026-09-28",
           "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json",
           "note": "The observer and the filer read this at expected.literal.undatedAnnounced: an undated Announced campus whose website_campus_intro carries this wording (with the campus name in place of <name>) matches the row; launch wording with no date behind it is still a finding."
+        },
+        "openEnrollmentStates": {
+          "$comment": "The two named enrollment states of an Open campus. Read by the observer and the filer at expected.literal.openEnrollmentStates; `type` stays Open for both.",
+          "decidedBy": "MacKenzie Price",
+          "decidedOn": "2026-10-05",
+          "relayedAndConfirmedBy": "Matt Barge",
+          "source": "MacKenzie Price's 10:19 AM Slack instruction of 2026-10-05 naming the 13 campuses, Rachel Goodlad's admissions policy in the same thread, Yash Chitneni's four page elements; relayed and confirmed to the website agent by Matt Barge",
+          "decisionFixture": "tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json",
+          "registry": "registry/campus-enrollment-state.json",
+          "default": "enrolling",
+          "schoolYear": "2026–27",
+          "states": {
+            "enrolling": {
+              "wording": "<name> is open and enrolling.",
+              "match": "clause",
+              "clause": "is open and enrolling",
+              "note": "Unchanged by this decision. The pre-2026-10 page-check variants (\"is now open\", \"is open K-8\", \"open and enrolling for the <year> school year\") are neither loosened nor tightened here."
+            },
+            "waitlist": {
+              "wording": "<name> is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+              "match": "verbatim",
+              "matchNote": "The whole wording, verbatim: subject wildcard (HubSpot stores [DISPLAY_NAME], the page renders the campus name) and typography folded (curly quotes, dashes, non-breaking spaces, collapsed whitespace, case) so a HTML round trip cannot break the match. Nothing substantive is folded: the school year 2026–27 is part of the wording, so a stale year is a finding, and a hand-written waitlist sentence that is not this one is a finding. Accepting any sentence containing \"waitlist\" would have made the check blind in both directions.",
+              "schoolYear": "2026–27",
+              "writtenOn": "2026-10-02",
+              "writtenBy": "HubSpot integration 46546260, two passes (18:16Z, 19:25Z)"
+            }
+          },
+          "exclusive": true,
+          "exclusiveNote": "An Open campus is in exactly one state. Text that carries the approved waitlist wording AND an enrolling claim is a finding (contradiction), and so is waitlist language beside an enrolling sentence.",
+          "mentionWords": [
+            "waitlist",
+            "wait list",
+            "wait-list",
+            "waitlisted",
+            "waitlisting"
+          ],
+          "mentionWordsNote": "Any waitlist language at all. Present without the approved wording, it is a finding, never a pass: that is what stops a campus inventing its own waitlist sentence.",
+          "campuses": {
+            "waitlist": [
+              "boca-raton",
+              "boston",
+              "dorado",
+              "new-york-city",
+              "palo-alto",
+              "park-city",
+              "plano",
+              "raleigh",
+              "san-francisco",
+              "scottsdale",
+              "the-woodlands",
+              "tulsa"
+            ],
+            "waitlistNote": "MacKenzie Price's named list, as campus slugs; mirrors registry/campus-enrollment-state.json campuses. Alpha High School is the 13th name on her list and is on https://alphahigh.school, so it has no campus-page row and no observer coverage (registry/campus-enrollment-state.json offSite).",
+            "default": "enrolling",
+            "onUnlistedCampus": "enrolling: the campus must carry the enrolling sentence and no waitlist language"
+          },
+          "notDerivable": {
+            "$comment": "Stated on the row deliberately, because it bounds what this check can promise.",
+            "problem": "No HubSpot Program property records enrollment state, so on the source side the only signal that a campus is full is the sentence a person typed. Against the copy alone the check cannot catch a full campus still advertising enrolment, nor a campus that reopens and still says waitlist. That is the 2026-09-28 defect class again: a hand-typed field silently contradicting the Program state.",
+            "evidence": "Read 2026-10-05 over all 56 Open Programs: campuspipelinestatus Transitioned covers 5 waitlist and 10 enrolling campuses and Build Mode covers 5 and 12; student_capacity runs 21-195 on waitlist against 10-193 on enrolling; none of the 151 Program properties is about enrollment state.",
+            "mitigation": "registry/campus-enrollment-state.json is a second, versioned source of membership, so the page is measured against a recorded list and not against itself. It is a hand-maintained stopgap and says so.",
+            "ask": "registry/sources.json hubspotPrograms.enrollmentStateField is null with the exact ask (a single-select enrollment_state on Programs, values enrolling and waitlist). Yash Chitneni already put that ask to Rachel Goodlad on 2026-10-05 and it is unanswered."
+          }
         }
+      },
+      "findingWording": {
+        "title": "<name> HubSpot intro does not match its lifecycle state and enrollment state",
+        "waitlistUnapproved": "<name> is recorded enrolling, but website_campus_intro carries waitlist language that is not the approved waitlist sentence",
+        "contradiction": "<name> website_campus_intro claims both the enrolling state and the waitlist state",
+        "stateMismatch": "<name> is recorded <expectedState>, but website_campus_intro reads the <observedState> sentence",
+        "note": "The wording names the enrollment state as well as the lifecycle state, so the ticket says which of the two sentences was expected and why."
       }
     },
     {
       "id": "campus.intro.status-sentence",
       "observerCheck": "campus-page-status-sentence",
-      "title": "Rendered campus intro status sentence matches HubSpot and the Program lifecycle",
+      "title": "Rendered campus intro status sentence matches HubSpot, the Program lifecycle and the enrollment state",
       "lifecycleStates": [
         "Open",
         "Announced"
@@ -446,9 +517,10 @@
           "field": [
             "type",
             "website_campus_intro",
-            "launch_date"
+            "launch_date",
+            "opening_date"
           ],
-          "transform": "rendered content_body_4 contains the lifecycle-valid website_campus_intro status sentence"
+          "transform": "rendered content_body_4 contains the lifecycle-valid and enrollment-state-valid website_campus_intro status sentence, and claims the same enrollment state the source does: a page still reading 'is open and enrolling' after HubSpot moved the campus to the waitlist sentence is a delivery finding, and so is the reverse"
         }
       },
       "comparator": {
@@ -468,6 +540,90 @@
       "requirementRef": {
         "file": "spec/campus-page-field-map.json",
         "key": "elements/intro.status-sentence"
+      },
+      "literals": {
+        "openEnrollmentStatesRef": "campus.intro.status-source literals.openEnrollmentStates (the observer and the filer read the page row's literals from there when it carries none of its own, so the two checks cannot disagree)"
+      },
+      "findingWording": {
+        "title": "<name> page did not render its lifecycle-valid and enrollment-state-valid HubSpot intro",
+        "stateDrift": "HubSpot says the <sourceState> sentence and the public intro says the <pageState> sentence"
+      }
+    },
+    {
+      "id": "campus.enrollment-state.controls",
+      "observerCheck": "campus-enrollment-state-controls",
+      "title": "Open campus apply controls and page copy match the campus's recorded enrollment state",
+      "lifecycleStates": [
+        "Open"
+      ],
+      "element": "page.enrollment-state",
+      "expected": {
+        "derive": {
+          "source": "registry",
+          "field": "registry/campus-enrollment-state.json campuses[slug].enrollmentState, default enrolling",
+          "transform": "waitlist -> every apply control label on the page (the top banner button and the application buttons in the resources section near tuition and contact) matches literals.waitlistLabelPattern, and at least one does; enrolling -> no apply control label and no page-owned copy carries any of literals.mentionWords. Measured in both directions: a waitlist campus with an \"Apply now\" control is a finding, and an enrolling campus with a waitlist control or waitlist copy is a finding.",
+          "onMissing": "skip"
+        }
+      },
+      "literals": {
+        "$comment": "The rest of the coordinated waitlist state Yash Chitneni changed with the sentence (Slack, 2026-10-05): the top banner application button, the resources-section application buttons, and page-owned waitlist language. The fourth element, the intro card, stays with campus.intro.media.current, which reads the approved waitlist card attachment id from registry/campus-open-media.json; splitting them keeps one owner per ticket (Elementor copy here, media governance there).",
+        "registry": "registry/campus-enrollment-state.json",
+        "default": "enrolling",
+        "waitlistLabelPattern": "^\\s*apply\\s+for\\s+(?:[A-Za-z0-9–—/&+.’' -]{1,32}\\s+)?waitlist\\s*$",
+        "waitlistLabelsObserved": [
+          "Apply for waitlist",
+          "Apply for K–8 waitlist",
+          "Apply for high school waitlist",
+          "Apply for 9th grade waitlist"
+        ],
+        "waitlistLabelNote": "Read from the 12 alpha.school waitlist pages on 2026-10-05. A multi-program campus names the segment (K–8, high school, 9th grade), so the pattern allows one and requires the word waitlist; it does not accept a bare \"Apply now\" on a waitlist campus.",
+        "enrollingLabelsObserved": [
+          "Apply now",
+          "APPLY TODAY!",
+          "APPLY NOW",
+          "Apply for K–8",
+          "Apply for High School",
+          "APPLY TO HIGH SCHOOL",
+          "Apply for Nova High School"
+        ],
+        "enrollingLabelNote": "Heterogeneous on the 33 enrolling campuses, so the row does not require a particular enrolling label. What it enforces on an enrolling campus is the absence of waitlist language, which is the drift that would otherwise go unseen.",
+        "mentionWords": [
+          "waitlist",
+          "wait list",
+          "wait-list",
+          "waitlisted",
+          "waitlisting"
+        ],
+        "elements": [
+          "hero.ctas",
+          "resources.apply"
+        ],
+        "cardElsewhere": "campus.intro.media.current (registry/campus-open-media.json cardVariant waitlist-2026-27, attachments 12506-12511)",
+        "baseline": "Read 2026-10-05: all 12 alpha.school waitlist pages carry 2 or 3 waitlist apply controls and no \"Apply now\"; all 33 enrolling pages carry 0 waitlist controls and no waitlist copy. The row starts green in both directions, which is the point: it is there to catch the next change that moves one element and not the others.",
+        "whyBothDirections": "Membership comes from a hand-maintained registry, not from a HubSpot property, so the rule has to be able to disagree with the page in either direction or it adds nothing over reading the copy."
+      },
+      "comparator": {
+        "type": "count-max",
+        "threshold": 0,
+        "unit": "controls-disagreeing-with-the-recorded-enrollment-state",
+        "note": "Each apply control whose label contradicts the recorded state counts once, as does page-owned waitlist copy on an enrolling campus and a waitlist campus with no waitlist control at all."
+      },
+      "ticketClass": "observer-link-cta",
+      "entitySource": "hubspot-programs",
+      "sourceHealthDependency": [
+        "hubspot-programs",
+        "wordpress-rest"
+      ],
+      "suppressWhen": [
+        "hidden-on-all-viewports"
+      ],
+      "grounding": {
+        "kind": "decision",
+        "ref": "docs/decisions.md 2026-10-05 (MacKenzie Price, relayed and confirmed by Matt Barge; tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): the waitlist state is four coordinated page elements, listed by Yash Chitneni in the same thread, not the intro sentence alone"
+      },
+      "requirementRef": {
+        "file": "spec/campus-page-requirements.json",
+        "key": "states/Open/campus.enrollment-state"
       }
     },
     {

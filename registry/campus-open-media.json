@@ -1,5 +1,5 @@
 {
-  "$comment": "Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-Enrolling.png\" made by Yash Chitneni from one template (uploaded 2026-09-07). A row records the approval only: openMedia (card, video or null = no approved asset yet; ask the owner, never substitute), attachmentId, status (placed or missing), owner, state, evidence and addedBy. What the slot shows today is never written here: free-text descriptions rot (the Atlanta note of 2026-09-15 outlived the asset it described); the observer packet (sources.json media, vision.json) describes the slot and tests/site-truth-report.mjs grades it from that observation, with this registry contributing the approval alone.",
+  "$comment": "Approved open-campus intro media on alpha.school campus pages. The intro card slot is Elementor path /2/elements/1/elements/1 (image) or the video widget beside it. Cards are \"<id>-<Campus>-Open-and-Enrolling.png\" made by Yash Chitneni from one template (uploaded 2026-09-07). A row records the approval only: openMedia (card, video or null = no approved asset yet; ask the owner, never substitute), attachmentId, status (placed or missing), owner, state, evidence and addedBy. What the slot shows today is never written here: free-text descriptions rot (the Atlanta note of 2026-09-15 outlived the asset it described); the observer packet (sources.json media, vision.json) describes the slot and tests/site-truth-report.mjs grades it from that observation, with this registry contributing the approval alone. Waitlist cards (MacKenzie Price 2026-10-05, tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): a waitlist campus's intro card is \"<slug>-waitlist-2026-27.png\", alt \"Apply for Waitlist — 2026–27 school year\", made by Yash Chitneni and uploaded 2026-10 (attachments 12506-12511). cardVariant names which card a row approves (open-and-enrolling or waitlist-2026-27) so the two are never confused; the enrollment state itself lives in registry/campus-enrollment-state.json, not here.",
   "owner": "Yash Chitneni (WordPress user 30) produces Open and Enrolling cards; Matt/Yash approve campus videos",
   "template": {
     "$comment": "The one master every Open and Enrolling card is generated from (QC loop repair plan 2026-09-25, repair 5). source is the file Yash supplies (an APEX asset id or a path under tests/fixtures is fine); format is svg or png+layout; null = not supplied yet, so nothing can be generated for production and every missing card stays a Missing Info ask to the owner. The generator is agent/generate-open-card.mjs, the only production path is protocols/recipes/open-card.md, and the fixture is a plain placeholder for the tests, never a card for a page.",
@@ -13,88 +13,6 @@
     "recipe": "protocols/recipes/open-card.md"
   },
   "campuses": {
-    "boca-raton": {
-      "openMedia": "card",
-      "attachmentId": 9822,
-      "status": "placed"
-    },
-    "boston": {
-      "openMedia": "card",
-      "attachmentId": 9826,
-      "status": "placed"
-    },
-    "denver": {
-      "openMedia": "card",
-      "attachmentId": 9813,
-      "status": "placed"
-    },
-    "greenwich": {
-      "openMedia": "card",
-      "attachmentId": 9821,
-      "status": "placed"
-    },
-    "highland-park": {
-      "openMedia": "card",
-      "attachmentId": 9816,
-      "status": "placed"
-    },
-    "kirkland": {
-      "openMedia": "card",
-      "attachmentId": 9818,
-      "status": "placed"
-    },
-    "malibu": {
-      "openMedia": "card",
-      "attachmentId": 9820,
-      "status": "placed"
-    },
-    "miami-beach": {
-      "openMedia": "card",
-      "attachmentId": 9817,
-      "status": "placed"
-    },
-    "nashville": {
-      "openMedia": "card",
-      "attachmentId": 9815,
-      "status": "placed"
-    },
-    "oklahoma-city": {
-      "openMedia": "card",
-      "attachmentId": 9825,
-      "status": "placed"
-    },
-    "palo-alto": {
-      "openMedia": "card",
-      "attachmentId": 9814,
-      "status": "placed"
-    },
-    "park-city": {
-      "openMedia": "card",
-      "attachmentId": 9823,
-      "status": "placed"
-    },
-    "south-bay-la": {
-      "openMedia": "card",
-      "attachmentId": 9824,
-      "status": "placed"
-    },
-    "tulsa": {
-      "openMedia": "card",
-      "attachmentId": 9819,
-      "status": "placed"
-    },
-    "raleigh": {
-      "openMedia": "video",
-      "attachmentId": null,
-      "status": "placed",
-      "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot)"
-    },
-    "dorado": {
-      "openMedia": "video",
-      "attachmentId": null,
-      "status": "placed",
-      "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot)"
-    },
     "atlanta": {
       "openMedia": "card",
       "attachmentId": 12145,
@@ -106,67 +24,31 @@
       "evidence": "verify_public_page verified_pass 2026-09-28T18:10:40Z on https://alpha.school/atlanta/ (8630-Atlanta-Open-and-Enrolling-1024x704.png in widget 4edf185, wp-image-8790 and the skyline photo absent); apply receipt 12154, flush 12160; replaced 8790 (Best-things-to-do-in-Atlanta-Header-scaled.webp; the earlier note naming 8630 atlanta.png was stale)",
       "addedBy": "open-cards-2026-09-28 (Matt Barge instruction 2026-09-28)"
     },
-    "la-jolla": {
+    "boca-raton": {
       "openMedia": "card",
-      "attachmentId": 12171,
+      "attachmentId": 12506,
       "status": "placed",
+      "cardVariant": "waitlist-2026-27",
       "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
       "state": "Open",
-      "placedOn": "2026-09-29",
-      "ticket": "cmuep7sgx00060agmcihyrdkw",
-      "evidence": "verify_public_page verified_pass 2026-09-29T18:23:31Z on https://alpha.school/la-jolla/ (9226-LaJolla-Open-and-Enrolling-1024x704.png in widget 4edf185 at /2/elements/1/elements/1, wp-image-9226 and Subtitle-8 absent); apply receipt 12177, flush 12181; replaced launch card 9226 (Subtitle-8.png, Coming Fall 2026 To San Diego)",
-      "addedBy": "open-cards-2026-09-29 (Garbhit Sharma backdrops, Matt Barge instruction 2026-09-28)"
+      "enrollmentState": "waitlist",
+      "placedOn": "2026-10-05 or earlier",
+      "evidence": "read from the live page 2026-10-05: <img> wp-image-12506, src /wp-content/uploads/2026/10/boca-raton-waitlist-2026-27-1024x704.png, alt \"Apply for Waitlist — 2026–27 school year\" in the intro slot. Replaces the Open and Enrolling card (attachment 9822), which this registry still named until today; that staleness is why the 2026-10-02 observer run filed a campus.intro.media.current finding on this campus.",
+      "addedBy": "waitlist-rule-2026-10-05 (MacKenzie Price instruction 2026-10-05, cards by Yash Chitneni)",
+      "previousAttachmentId": 9822
     },
-    "santa-monica": {
+    "boston": {
       "openMedia": "card",
-      "attachmentId": 12148,
+      "attachmentId": 12507,
       "status": "placed",
+      "cardVariant": "waitlist-2026-27",
       "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
       "state": "Open",
-      "placedOn": "2026-09-28",
-      "ticket": "cmuep7uen00000agmydzocoqv",
-      "evidence": "verify_public_page verified_pass 2026-09-28T18:10:49Z on https://alpha.school/santa-monica/ (8465-SantaMonica-Open-and-Enrolling-1024x704.png in widget 4edf185 at /1/elements/1/elements/1, wp-image-8465 and Santa-Monica.png absent); apply receipt 12156, flush 12160; replaced launch card 8465 (Santa-Monica.png)",
-      "addedBy": "open-cards-2026-09-28 (Matt Barge instruction 2026-09-28)"
-    },
-    "southlake": {
-      "openMedia": null,
-      "attachmentId": null,
-      "status": "missing",
-      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
-      "state": "Open",
-      "addedBy": "sweep-2026-09-21 partition C"
-    },
-    "lake-travis": {
-      "openMedia": null,
-      "attachmentId": null,
-      "status": "missing",
-      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
-      "state": "Announced",
-      "addedBy": "sweep-2026-09-21 partition C"
-    },
-    "miami": {
-      "openMedia": null,
-      "attachmentId": null,
-      "status": "missing",
-      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
-      "state": "Open",
-      "addedBy": "sweep-2026-09-21 partition A"
-    },
-    "santa-barbara": {
-      "openMedia": null,
-      "attachmentId": null,
-      "status": "missing",
-      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
-      "state": "Open",
-      "addedBy": "sweep-2026-09-21 partition A"
-    },
-    "plano": {
-      "openMedia": null,
-      "attachmentId": null,
-      "status": "missing",
-      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
-      "state": "Open",
-      "addedBy": "sweep-2026-09-21 partition A"
+      "enrollmentState": "waitlist",
+      "placedOn": "2026-10-05 or earlier",
+      "evidence": "read from the live page 2026-10-05: <img> wp-image-12507, src /wp-content/uploads/2026/10/boston-waitlist-2026-27-1024x704.png, alt \"Apply for Waitlist — 2026–27 school year\" in the intro slot. Replaces the Open and Enrolling card (attachment 9826), which this registry still named until today; that staleness is why the 2026-10-02 observer run filed a campus.intro.media.current finding on this campus.",
+      "addedBy": "waitlist-rule-2026-10-05 (MacKenzie Price instruction 2026-10-05, cards by Yash Chitneni)",
+      "previousAttachmentId": 9826
     },
     "chicago": {
       "openMedia": "video",
@@ -176,13 +58,17 @@
       "state": "Open",
       "addedBy": "loose-ends-2026-09-23"
     },
-    "jamaica-plain": {
-      "openMedia": null,
+    "denver": {
+      "openMedia": "card",
+      "attachmentId": 9813,
+      "status": "placed"
+    },
+    "dorado": {
+      "openMedia": "video",
       "attachmentId": null,
-      "status": "missing",
-      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
-      "state": "Open",
-      "addedBy": "loose-ends-2026-09-23"
+      "status": "placed",
+      "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot); on the 2026-10-05 waitlist list: the approved campus video stays in the intro slot, so no waitlist card is expected and none was placed (read 2026-10-05)",
+      "enrollmentState": "waitlist"
     },
     "east-bay": {
       "openMedia": "card",
@@ -195,16 +81,207 @@
       "placedOn": "2026-09-28",
       "ticket": "cmubrkkm800000agmvukxsioc"
     },
-    "the-woodlands": {
+    "greenwich": {
       "openMedia": "card",
-      "attachmentId": 12173,
+      "attachmentId": 9821,
+      "status": "placed"
+    },
+    "highland-park": {
+      "openMedia": "card",
+      "attachmentId": 9816,
+      "status": "placed"
+    },
+    "jamaica-plain": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "loose-ends-2026-09-23"
+    },
+    "kirkland": {
+      "openMedia": "card",
+      "attachmentId": 9818,
+      "status": "placed"
+    },
+    "la-jolla": {
+      "openMedia": "card",
+      "attachmentId": 12171,
       "status": "placed",
       "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
       "state": "Open",
       "placedOn": "2026-09-29",
-      "ticket": "cmulj7rm1000609gm0leybuc5",
-      "evidence": "verify_public_page verified_pass 2026-09-29T18:23:36Z on https://alpha.school/the-woodlands/ (7694-TheWoodlands-Open-and-Enrolling-1024x704.png in widget 4edf185 at /1/elements/1/elements/1, wp-image-7694 and The-Woodlands-TX.png absent); apply receipt 12178, flush 12181; replaced launch card 7694 (The-Woodlands-TX.png, Coming in Fall 2026 to The Woodlands!)",
+      "ticket": "cmuep7sgx00060agmcihyrdkw",
+      "evidence": "verify_public_page verified_pass 2026-09-29T18:23:31Z on https://alpha.school/la-jolla/ (9226-LaJolla-Open-and-Enrolling-1024x704.png in widget 4edf185 at /2/elements/1/elements/1, wp-image-9226 and Subtitle-8 absent); apply receipt 12177, flush 12181; replaced launch card 9226 (Subtitle-8.png, Coming Fall 2026 To San Diego)",
       "addedBy": "open-cards-2026-09-29 (Garbhit Sharma backdrops, Matt Barge instruction 2026-09-28)"
+    },
+    "lake-travis": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Announced",
+      "addedBy": "sweep-2026-09-21 partition C"
+    },
+    "malibu": {
+      "openMedia": "card",
+      "attachmentId": 9820,
+      "status": "placed"
+    },
+    "miami": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition A"
+    },
+    "miami-beach": {
+      "openMedia": "card",
+      "attachmentId": 9817,
+      "status": "placed"
+    },
+    "nashville": {
+      "openMedia": "card",
+      "attachmentId": 9815,
+      "status": "placed"
+    },
+    "new-york-city": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "enrollmentState": "waitlist",
+      "note": "On MacKenzie Price's 2026-10-05 waitlist list, and the page carries the waitlist sentence and the waitlist apply controls, but the intro slot had no waitlist card when it was read on 2026-10-05. The card is a Missing Info ask to Yash Chitneni; the page keeps whatever it shows until he supplies one.",
+      "addedBy": "waitlist-rule-2026-10-05"
+    },
+    "oklahoma-city": {
+      "openMedia": "card",
+      "attachmentId": 9825,
+      "status": "placed"
+    },
+    "palo-alto": {
+      "openMedia": "card",
+      "attachmentId": 12508,
+      "status": "placed",
+      "cardVariant": "waitlist-2026-27",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "enrollmentState": "waitlist",
+      "placedOn": "2026-10-05 or earlier",
+      "evidence": "read from the live page 2026-10-05: <img> wp-image-12508, src /wp-content/uploads/2026/10/palo-alto-waitlist-2026-27-1024x704.png, alt \"Apply for Waitlist — 2026–27 school year\" in the intro slot. Replaces the Open and Enrolling card (attachment 9814), which this registry still named until today; that staleness is why the 2026-10-02 observer run filed a campus.intro.media.current finding on this campus.",
+      "addedBy": "waitlist-rule-2026-10-05 (MacKenzie Price instruction 2026-10-05, cards by Yash Chitneni)",
+      "previousAttachmentId": 9814
+    },
+    "park-city": {
+      "openMedia": "card",
+      "attachmentId": 12509,
+      "status": "placed",
+      "cardVariant": "waitlist-2026-27",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "enrollmentState": "waitlist",
+      "placedOn": "2026-10-05 or earlier",
+      "evidence": "read from the live page 2026-10-05: <img> wp-image-12509, src /wp-content/uploads/2026/10/park-city-waitlist-2026-27-1024x704.png, alt \"Apply for Waitlist — 2026–27 school year\" in the intro slot. Replaces the Open and Enrolling card (attachment 9823), which this registry still named until today; that staleness is why the 2026-10-02 observer run filed a campus.intro.media.current finding on this campus.",
+      "addedBy": "waitlist-rule-2026-10-05 (MacKenzie Price instruction 2026-10-05, cards by Yash Chitneni)",
+      "previousAttachmentId": 9823
+    },
+    "plano": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition A",
+      "enrollmentState": "waitlist",
+      "note": "On MacKenzie Price's 2026-10-05 waitlist list, and the page carries the waitlist sentence and the waitlist apply controls, but the intro slot had no waitlist card when it was read on 2026-10-05. The card is a Missing Info ask to Yash Chitneni; the page keeps whatever it shows until he supplies one. Already recorded null by sweep-2026-09-21 partition A; the waitlist card is the same open ask."
+    },
+    "raleigh": {
+      "openMedia": "video",
+      "attachmentId": null,
+      "status": "placed",
+      "note": "approved YouTube campus video in the intro card slot (2026-09-15 screenshot); on the 2026-10-05 waitlist list: the approved campus video stays in the intro slot, so no waitlist card is expected and none was placed (read 2026-10-05)",
+      "enrollmentState": "waitlist"
+    },
+    "san-francisco": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "enrollmentState": "waitlist",
+      "note": "On MacKenzie Price's 2026-10-05 waitlist list, and the page carries the waitlist sentence and the waitlist apply controls, but the intro slot had no waitlist card when it was read on 2026-10-05. The card is a Missing Info ask to Yash Chitneni; the page keeps whatever it shows until he supplies one.",
+      "addedBy": "waitlist-rule-2026-10-05"
+    },
+    "santa-barbara": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition A"
+    },
+    "santa-monica": {
+      "openMedia": "card",
+      "attachmentId": 12148,
+      "status": "placed",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "placedOn": "2026-09-28",
+      "ticket": "cmuep7uen00000agmydzocoqv",
+      "evidence": "verify_public_page verified_pass 2026-09-28T18:10:49Z on https://alpha.school/santa-monica/ (8465-SantaMonica-Open-and-Enrolling-1024x704.png in widget 4edf185 at /1/elements/1/elements/1, wp-image-8465 and Santa-Monica.png absent); apply receipt 12156, flush 12160; replaced launch card 8465 (Santa-Monica.png)",
+      "addedBy": "open-cards-2026-09-28 (Matt Barge instruction 2026-09-28)"
+    },
+    "scottsdale": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "enrollmentState": "waitlist",
+      "note": "On MacKenzie Price's 2026-10-05 waitlist list, and the page carries the waitlist sentence and the waitlist apply controls, but the intro slot had no waitlist card when it was read on 2026-10-05. The card is a Missing Info ask to Yash Chitneni; the page keeps whatever it shows until he supplies one.",
+      "addedBy": "waitlist-rule-2026-10-05"
+    },
+    "south-bay-la": {
+      "openMedia": "card",
+      "attachmentId": 9824,
+      "status": "placed"
+    },
+    "southlake": {
+      "openMedia": null,
+      "attachmentId": null,
+      "status": "missing",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "addedBy": "sweep-2026-09-21 partition C"
+    },
+    "the-woodlands": {
+      "openMedia": "card",
+      "attachmentId": 12510,
+      "status": "placed",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "placedOn": "2026-10-05 or earlier",
+      "ticket": "cmulj7rm1000609gm0leybuc5",
+      "evidence": "read from the live page 2026-10-05: <img> wp-image-12510, src /wp-content/uploads/2026/10/the-woodlands-waitlist-2026-27-1024x704.png, alt \"Apply for Waitlist — 2026–27 school year\" in the intro slot. Replaces the Open and Enrolling card (attachment 12173), which this registry still named until today; that staleness is why the 2026-10-02 observer run filed a campus.intro.media.current finding on this campus.",
+      "addedBy": "waitlist-rule-2026-10-05 (MacKenzie Price instruction 2026-10-05, cards by Yash Chitneni)",
+      "cardVariant": "waitlist-2026-27",
+      "enrollmentState": "waitlist",
+      "previousAttachmentId": 12173
+    },
+    "tulsa": {
+      "openMedia": "card",
+      "attachmentId": 12511,
+      "status": "placed",
+      "cardVariant": "waitlist-2026-27",
+      "owner": "Yash Chitneni produces the cards; Matt or Yash approves a campus video",
+      "state": "Open",
+      "enrollmentState": "waitlist",
+      "placedOn": "2026-10-05 or earlier",
+      "evidence": "read from the live page 2026-10-05: <img> wp-image-12511, src /wp-content/uploads/2026/10/tulsa-waitlist-2026-27-1024x704.png, alt \"Apply for Waitlist — 2026–27 school year\" in the intro slot. Replaces the Open and Enrolling card (attachment 9819), which this registry still named until today; that staleness is why the 2026-10-02 observer run filed a campus.intro.media.current finding on this campus.",
+      "addedBy": "waitlist-rule-2026-10-05 (MacKenzie Price instruction 2026-10-05, cards by Yash Chitneni)",
+      "previousAttachmentId": 9819
     }
   }
 }

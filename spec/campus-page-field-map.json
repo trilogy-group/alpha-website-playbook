@@ -129,24 +129,39 @@
           "type"
         ]
       },
-      "derivation": "website_campus_intro verbatim with substitutions today. The status sentence inside it is hand-typed; it is NOT yet derived from the status field 'type'. Decided 2026-09-25 (MacKenzie Price): it is to be derived from 'type' in the n8n workflow so the text field cannot contradict the status; the workflow change is pending with the n8n-sync-owner and this entry is updated to writer n8n-derived when it lands. Undated Announced (decided 2026-09-28, Matt Barge, Slack conversation with the website agent; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json): with no launch_date or opening_date the status sentence is '<name> is coming soon.'; the dated form applies once a date is set. First case Alpha Houston Heights, written in website_campus_intro on 2026-09-28.",
-      "expectedFrom": "requirement by lifecycle state: Open -> '<name> is open and enrolling.'; Announced with launch_date or opening_date -> '<name> opens <Month or Season> <Year>.' (named month or season and year supported by the date); Announced with no launch_date or opening_date -> '<name> is coming soon.' (decided by Matt Barge, 2026-09-28); Pre-Announcement -> no public page",
+      "derivation": "website_campus_intro verbatim with substitutions today. The status sentence inside it is hand-typed; it is NOT yet derived from the status field 'type'. Decided 2026-09-25 (MacKenzie Price): it is to be derived from 'type' in the n8n workflow so the text field cannot contradict the status; the workflow change is pending with the n8n-sync-owner and this entry is updated to writer n8n-derived when it lands. Undated Announced (decided 2026-09-28, Matt Barge, Slack conversation with the website agent; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json): with no launch_date or opening_date the status sentence is '<name> is coming soon.'; the dated form applies once a date is set. First case Alpha Houston Heights, written in website_campus_intro on 2026-09-28. Waitlist (decided 2026-10-05 by MacKenzie Price, relayed and confirmed by Matt Barge; tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): an Open campus has a named enrollment state, enrolling or waitlist, and `type` stays Open for both. A waitlist campus's website_campus_intro opens with the approved waitlist sentence verbatim. Which campus is in which state is not in HubSpot at all: registry/campus-enrollment-state.json is the versioned membership list until the Program property exists (registry/sources.json hubspotPrograms.enrollmentStateField).",
+      "expectedFrom": "requirement by lifecycle state and, for Open, enrollment state: Open + enrolling -> '<name> is open and enrolling.'; Open + waitlist -> '<name> is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.' verbatim (MacKenzie Price, 2026-10-05); Announced with launch_date or opening_date -> '<name> opens <Month or Season> <Year>.' (named month or season and year supported by the date); Announced with no launch_date or opening_date -> '<name> is coming soon.' (decided by Matt Barge, 2026-09-28); Pre-Announcement -> no public page",
       "compare": [
-        "page sentence vs requirement for Program type",
-        "website_campus_intro vs requirement for Program type"
+        "page sentence vs requirement for Program type and the recorded enrollment state",
+        "website_campus_intro vs requirement for Program type and the recorded enrollment state"
       ],
       "onMismatch": {
         "ifSourceWrong": "hubspot-data (website_campus_intro contradicts type)",
         "ifDerivationWrong": "sync-mapping (decided 2026-09-25, MacKenzie Price: derive the sentence from type in the workflow so the text field cannot contradict the status; the n8n change is pending with the n8n-sync-owner)",
         "ifPageOnly": "sync-delivery (HubSpot right, page stale: run not applied)"
       },
-      "knownDefect": "2026-09-16: 13 Open campuses carry launch wording in website_campus_intro",
+      "knownDefect": "2026-09-16: 13 Open campuses carry launch wording in website_campus_intro; 2026-10-02: the waitlist rollout rewrote website_campus_intro on 13 Open Programs and the observer filed 12 false positives against bundle 1.10 (the 13th, Alpha High School, is off alpha.school and was never observed)",
       "decision": {
         "date": "2026-09-25",
         "decidedBy": "MacKenzie Price",
         "summary": "lifecycle and staff changes propagate from the source of truth without a person reporting them; derive the status sentence from the Program type",
         "fixture": "tests/fixtures/decisions/recorded/2026-09-25-campus-page-field-map-66bca81f.json",
         "pending": "n8n workflow ORgdHC71YJ5RawBy change by the n8n-sync-owner; not changed by this record"
+      },
+      "enrollmentState": {
+        "$comment": "The waitlist state is four coordinated page elements, not this one sentence (Yash Chitneni, 2026-10-05): intro.status-sentence, hero.apply, resources.apply and intro.media. Check row campus.enrollment-state.controls measures the other three against the recorded state, in both directions.",
+        "source": "registry/campus-enrollment-state.json",
+        "states": [
+          "enrolling",
+          "waitlist"
+        ],
+        "lifecycleTypeUnchanged": true,
+        "elements": [
+          "intro.status-sentence",
+          "hero.apply",
+          "resources.apply",
+          "intro.media"
+        ]
       }
     },
     "intro.attend-cta": {

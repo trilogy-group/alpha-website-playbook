@@ -1,0 +1,204 @@
+{
+  "$comment": "Which Open campuses are on the waitlist and which are enrolling, and the wording each state uses. A stopgap, and deliberately so: no HubSpot Program property records enrollment state, so the only signal today that a campus is full is the hand-typed copy on its own page, and a check that trusted the copy could not catch a campus whose copy is wrong in either direction (a full campus still advertising enrolment, or a reopened campus still saying waitlist). This file is the versioned membership list that breaks that circularity: campuses[slug].enrollmentState is the recorded state, and the checks measure the page against it, not against itself. Membership comes from MacKenzie Price's named list, not from reading the site. Retire this file and read derivedFrom instead once the Program property exists (registry/sources.json hubspotPrograms.enrollmentStateField, null with the ask). Lifecycle `type` stays Open for both states: waitlist is an enrollment state of an Open campus, never a lifecycle type (spec/campus-lifecycle.json states.Open.enrollmentStates).",
+  "version": "1.0",
+  "asOf": "2026-10-05",
+  "schoolYear": "2026–27",
+  "default": "enrolling",
+  "defaultNote": "An Open campus with no entry here is enrolling. Every Open campus not named below must carry the enrolling sentence and must carry no waitlist wording on any apply control and no waitlist card; drift in that direction is a finding too (check row campus.enrollment-state.controls).",
+  "decision": {
+    "decidedBy": "MacKenzie Price",
+    "decidedOn": "2026-10-05",
+    "relayedAndConfirmedBy": "Matt Barge",
+    "instruction": "Please update the website with the following locations now on Waitlist: Austin High School, Boca Raton, Boston, Dorado, New York, Palo Alto, Park City, Plano, Raleigh, San Francisco, Scottsdale, The Woodlands, Tulsa.",
+    "source": "Slack, 2026-10-05 10:19 AM; Matt Barge relayed and confirmed it to the website agent the same day",
+    "fixture": "tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json",
+    "admissionsPolicy": {
+      "setBy": "Rachel Goodlad",
+      "on": "2026-10-05",
+      "processUnchanged": "Families still complete the existing admissions application; the only change is that they know there is no immediate enrolment. \"Basically you should announce this but I do not believe the process should change.\"",
+      "schoolYear": "2026–27",
+      "campusLevelOnly": "A campus-level announcement, never a per-family state shown on the site: \"There are plenty on a waitlist for various reasons and we don't distinguish online.\"",
+      "wordingHistory": "She rejected the first draft as negative: \"apply for future enrollment\" replaces \"immediate enrollment is unavailable\", and the word \"basis\" was dropped. She approved the final wording: \"Sounds awkward but I think this is ok right now.\""
+    },
+    "stopgap": "This list is a stopgap for a HubSpot Program property that does not exist yet. Yash Chitneni already asked Rachel Goodlad for it in the same thread (\"We found 'Waitlisted' on individual admissions records, but no dedicated campus waitlist switch. Should we add a campus-level setting in HubSpot to manage this consistently?\"); she answered his other questions and left that one unanswered, so the ask is live with admissions and outstanding. While it is outstanding, membership is changed here, by hand, with the name and date of whoever decided it, and never inferred from the copy on a page."
+  },
+  "derivedFrom": null,
+  "derivedFromNote": "The HubSpot Programs property that should drive this, once it exists: registry/sources.json hubspotPrograms.enrollmentStateField carries the ask. Set this to the property name, change the rows to read it, and this registry becomes the exception list rather than the source.",
+  "wordings": {
+    "enrolling": {
+      "statusSentence": "<name> is open and enrolling.",
+      "match": "clause",
+      "matchNote": "The clause \"is open and enrolling\" plus the pre-2026-10 page-check variants (\"is now open\", \"is open K-8\", \"open and enrolling for the <year> school year\"). Unchanged by this decision.",
+      "applyControlLabels": "heterogeneous today (\"Apply now\", \"APPLY TODAY!\", \"Apply for K–8\", \"Apply for High School\"); the enforceable clause is that no apply control label and no page-owned copy carries waitlist language"
+    },
+    "waitlist": {
+      "statusSentence": "<name> is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
+      "match": "verbatim",
+      "matchNote": "Matched verbatim, subject wildcard, typography folded (curly quotes, dashes, non-breaking spaces, whitespace, case) and nothing else: the school year is part of the wording, so a stale year is a finding, and a hand-written waitlist sentence that is not this one is a finding. Accepting any sentence containing \"waitlist\" would have left the check unable to catch either direction of drift.",
+      "applyControlLabelPattern": "^\\s*apply\\s+for\\s+(?:[A-Za-z0-9–—/&+.’' -]{1,32}\\s+)?waitlist\\s*$",
+      "applyControlLabelsObserved": [
+        "Apply for waitlist",
+        "Apply for K–8 waitlist",
+        "Apply for high school waitlist",
+        "Apply for 9th grade waitlist"
+      ],
+      "applyControlLabelNote": "Observed on the 12 alpha.school waitlist pages on 2026-10-05. A multi-program campus names the segment (K–8, high school, 9th grade); the pattern allows the segment and requires the word waitlist.",
+      "cardFilenamePattern": "^<slug>-waitlist-2026-27(?:-\\d+x\\d+)?\\.png$",
+      "cardAlt": "Apply for Waitlist — 2026–27 school year",
+      "cardNote": "The intro card (the enrolment graphic at the top of the page). The approved attachment id per campus is recorded in registry/campus-open-media.json, which the campus.intro.media.current row reads; this file records only which state the campus is in."
+    }
+  },
+  "pageElements": {
+    "$comment": "The four coordinated elements Yash Chitneni changed on each waitlist page (Slack, 2026-10-05). The state is all four together, not the sentence alone; a page carrying some of them and not others is a finding.",
+    "intro.status-sentence": "the introductory copy carries the state's status sentence",
+    "hero.apply": "the top banner application button carries the state's label",
+    "resources.apply": "the application buttons in the resources section near tuition and contact carry the state's label",
+    "intro.media": "the enrolment graphic at the top of the page is the state's card"
+  },
+  "campuses": {
+    "boca-raton": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Boca Raton",
+      "hubspotProgramId": "51219627099",
+      "url": "https://alpha.school/boca-raton/",
+      "listedAs": "Boca Raton",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "waitlist-card",
+      "introMediaAttachmentId": 12506
+    },
+    "boston": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Boston",
+      "hubspotProgramId": "42820568924",
+      "url": "https://alpha.school/boston/",
+      "listedAs": "Boston",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "waitlist-card",
+      "introMediaAttachmentId": 12507
+    },
+    "dorado": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Dorado",
+      "hubspotProgramId": "29330581557",
+      "url": "https://alpha.school/dorado/",
+      "listedAs": "Dorado",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "video",
+      "introMediaNote": "The intro slot carries the approved campus video (registry/campus-open-media.json openMedia video), so no card is expected; the sentence and the apply controls carry the waitlist state."
+    },
+    "new-york-city": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Anywhere Center",
+      "hubspotProgramId": "26463204876",
+      "url": "https://alpha.school/new-york-city/",
+      "listedAs": "New York",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "none",
+      "introMediaNote": "No waitlist card in the intro slot on 2026-10-05, and no entry in registry/campus-open-media.json; the card is a Missing Info ask to Yash Chitneni."
+    },
+    "palo-alto": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Palo Alto",
+      "hubspotProgramId": "40674858575",
+      "url": "https://alpha.school/palo-alto/",
+      "listedAs": "Palo Alto",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "waitlist-card",
+      "introMediaAttachmentId": 12508
+    },
+    "park-city": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Park City",
+      "hubspotProgramId": "50160852349",
+      "url": "https://alpha.school/park-city/",
+      "listedAs": "Park City",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "waitlist-card",
+      "introMediaAttachmentId": 12509
+    },
+    "plano": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Plano",
+      "hubspotProgramId": "29737764355",
+      "url": "https://alpha.school/plano/",
+      "listedAs": "Plano",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "none",
+      "introMediaNote": "No card in the intro slot on 2026-10-05; registry/campus-open-media.json already records plano openMedia null, status missing (sweep 2026-09-21). The waitlist card is the same open ask."
+    },
+    "raleigh": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Raleigh",
+      "hubspotProgramId": "29735717555",
+      "url": "https://alpha.school/raleigh/",
+      "listedAs": "Raleigh",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "video",
+      "introMediaNote": "The intro slot carries the approved campus video (registry/campus-open-media.json openMedia video), so no card is expected; the sentence and the apply controls carry the waitlist state."
+    },
+    "san-francisco": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha San Francisco",
+      "hubspotProgramId": "30202737671",
+      "url": "https://alpha.school/san-francisco/",
+      "listedAs": "San Francisco",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "none",
+      "introMediaNote": "No waitlist card in the intro slot on 2026-10-05, and no entry in registry/campus-open-media.json; the card is a Missing Info ask to Yash Chitneni."
+    },
+    "scottsdale": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Scottsdale",
+      "hubspotProgramId": "26463204914",
+      "url": "https://alpha.school/scottsdale/",
+      "listedAs": "Scottsdale",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "none",
+      "introMediaNote": "No waitlist card in the intro slot on 2026-10-05, and no entry in registry/campus-open-media.json; the card is a Missing Info ask to Yash Chitneni."
+    },
+    "the-woodlands": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha The Woodlands",
+      "hubspotProgramId": "38325891178",
+      "url": "https://alpha.school/the-woodlands/",
+      "listedAs": "The Woodlands",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "waitlist-card",
+      "introMediaAttachmentId": 12510
+    },
+    "tulsa": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Tulsa",
+      "hubspotProgramId": "51235904680",
+      "url": "https://alpha.school/tulsa/",
+      "listedAs": "Tulsa",
+      "since": "2026-10-02",
+      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "introMedia": "waitlist-card",
+      "introMediaAttachmentId": 12511
+    }
+  },
+  "offSite": {
+    "$comment": "On MacKenzie's list but not an alpha.school campus page, so outside the campus page family and outside the observer's web:alpha.school scope. Recorded so the membership list is complete and the gap is visible, not so a check fires.",
+    "alpha-high-school": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha High School",
+      "hubspotProgramId": "26445615147",
+      "listedAs": "Austin High School",
+      "site": "https://alphahigh.school",
+      "wordpressPostId": null,
+      "finding": "HubSpot website_campus_intro on Program 26445615147 carries the approved waitlist sentence, but https://alphahigh.school read 2026-10-05 contains no waitlist wording at all (0 occurrences) and no \"is open\" sentence: the intro the Program publishes is not on that site. It is a separate domain with no campus-page row and no n8n campus-page delivery, so neither the old rule nor the new one observed it, and no observer ticket was ever filed for it. Report to Matt and Yash; the fix is not a rule change."
+    }
+  }
+}

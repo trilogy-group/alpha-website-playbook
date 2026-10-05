@@ -50,7 +50,7 @@
     "object": "HubSpot custom object Programs (p_programs, objectTypeId 2-43470849), portal 40051392",
     "propertiesUsedByTheSite": "spec/campus-page-field-map.json hubspotProgramProperties",
     "stateField": "type (Open | Announced | Pre-Announcement)",
-    "copyField": "website_campus_intro (the intro block on the page; hand-typed today)",
+    "copyField": "website_campus_intro (the intro block on the page; hand-typed today, and the only place the enrolling-versus-waitlist state is recorded until enrollmentStateField exists)",
     "scopesNeeded": [
       "crm.objects.custom.read",
       "crm.schemas.custom.read"
@@ -62,7 +62,20 @@
       "n8n": "sub-workflow 6HvmvgkzPkFikc40 reads Programs and marketing events for the campus-page workflow"
     },
     "writePath": "APEX campus Program editor (human approval; HUBSPOT_PROGRAM_WRITE_TOKEN); never direct",
-    "note": "Agents read HubSpot live when they can; the field map tells them which property to read. A cached value is never the basis for a ticket without the read timestamp."
+    "note": "Agents read HubSpot live when they can; the field map tells them which property to read. A cached value is never the basis for a ticket without the read timestamp.",
+    "enrollmentStateField": null,
+    "enrollmentStateFieldAsk": {
+      "$comment": "The property that should drive the enrolling-versus-waitlist distinction on an Open campus. null means it does not exist yet; never guess one, and never infer the state from the copy on the page.",
+      "why": "No property records it today. campuspipelinestatus (Build Mode, Near Handoff-Ready, Constrained, Transitioning, Transitioned) and student_capacity both cut straight across the two groups: read 2026-10-05, Transitioned covers 5 waitlist and 10 enrolling campuses, Build Mode 5 and 12, and capacity runs 21-195 on waitlist against 10-193 on enrolling. 151 Program properties, none of them about enrollment state. So the only signal that a campus is full is the sentence a person typed, which is the same shape of defect as 2026-09-28: a hand-typed field silently contradicting the Program state, with no second source to catch it.",
+      "askedBy": "Yash Chitneni",
+      "askedOn": "2026-10-05",
+      "askedOf": "Rachel Goodlad (admissions)",
+      "askVerbatim": "We found 'Waitlisted' on individual admissions records, but no dedicated campus waitlist switch. Should we add a campus-level setting in HubSpot to manage this consistently?",
+      "status": "outstanding: she answered his other questions in the same thread and left this one unanswered",
+      "ask": "Add a HubSpot Programs property `enrollment_state`, a single-select on the Programs object (2-43470849) with the values `enrolling` and `waitlist` and a default of `enrolling`, owned by admissions and set per campus. The website then derives the intro sentence, the apply button labels and the intro card from it instead of each being typed, and the QC check can tell a campus whose copy is wrong in either direction, which it cannot do today.",
+      "interim": "registry/campus-enrollment-state.json, the versioned membership list from MacKenzie Price's 2026-10-05 named list",
+      "draft": "The follow-up to send Rachel Goodlad is drafted in the website agent's work folder; Matt sends it."
+    }
   },
   "operationsSheet": {
     "name": "Alpha & Specialty Schools National Growth Map",
