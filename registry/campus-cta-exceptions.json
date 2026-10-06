@@ -1,7 +1,7 @@
 {
   "$comment": "Named exceptions to the campus CTA rows of the check bundle (campus.resources.booking.*, campus.resources.calendar.*, campus.resources.packet.*, campus.resources.apply.*, and the Join the Community CTA row), keyed by campus slug (registry/campus-pages.json) and CTA. An entry records a decision a person made about one CTA on one campus page: who decided, where it was said (channel and date), when it ends, and why. agent/file-observer-findings.mjs reads this file through each row's exemptionsRef: a finding whose campus and CTA carry an unexpired entry is reported as exempted and never filed. Rules: hidden (the CTA is intentionally not shown; every row of that CTA is exempt), present (the CTA is intentionally shown although the requirement would not call for it; only the CTA's present rows are exempt, reachability and destination still apply), destination (the CTA points at a decided non-standard destination; only the destination rows named under rules.destination are exempt, presence and reachability still apply). expires is an ISO date (the exception ends at the start of that day, UTC), lifecycle:Open (it ends when the HubSpot Program type becomes Open, read from the finding, else spec/campus-lifecycle.json), or null (standing until a recorded decision revokes it). Add or change an entry with agent/record-decision.mjs, which also writes the docs/decisions.md row; never by hand without the decision row. Schema: spec/schemas/campus-cta-exceptions.schema.json; validated by npm run validate.",
   "version": "1.0",
-  "asOf": "2026-09-24",
+  "asOf": "2026-10-06",
   "ctas": {
     "book-a-call": {
       "label": "Book a Call",
@@ -85,8 +85,8 @@
         "decidedBy": "Matt Barge",
         "source": "email relayed 2026-09-24",
         "decidedOn": "2026-09-24",
-        "expires": "lifecycle:Open",
-        "note": "Lexington (Alpha Boston Suburbs Program) is Announced; the observer's campus.resources.booking.present row applies to Open pages only, and the reachable and destination rows stay exempt while the button is hidden by decision.",
+        "expires": "2026-10-06",
+        "note": "Expired 2026-10-06: Rachel Goodlad (Slack 2026-10-06 14:40, in answer to Matt Barge) decided every Announced campus shows Book a Call with its own call_scheduling_link, which revokes this hidden exception (tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-2cd27dff.json; docs/decisions.md 2026-10-06). Kept for the audit trail; an expired entry exempts nothing. Original note: Lexington (Alpha Boston Suburbs Program) is Announced; the reachable and destination rows stayed exempt while the button was hidden by decision.",
         "decisionFixture": "tests/fixtures/decisions/recorded/2026-09-24-boston-suburbs-book-a-call.json"
       }
     }

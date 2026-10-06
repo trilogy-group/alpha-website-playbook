@@ -129,7 +129,16 @@ test('record-decision: the CLI is a dry run by default and --write appends the r
 test('record-decision: the committed Lexington decision replays from its fixture and the validator rule holds', () => {
   const fixture = JSON.parse(fs.readFileSync(path.join(root, FIXTURE_DIR, '2026-09-24-boston-suburbs-book-a-call.json'), 'utf8'))
   const registry = JSON.parse(fs.readFileSync(path.join(root, CTA_REGISTRY), 'utf8'))
-  assert.deepEqual(registry.campuses['boston-suburbs']['book-a-call'], fixture.registryEntry)
+  // The 2026-09-24 entry is kept for the audit trail but expired on 2026-10-06 (Rachel Goodlad's decision, recorded with --spec-ref).
+  const { expires, note, ...kept } = registry.campuses['boston-suburbs']['book-a-call']
+  const { expires: fixtureExpires, note: _fixtureNote, ...recorded } = fixture.registryEntry
+  assert.deepEqual(kept, recorded)
+  assert.equal(fixtureExpires, 'lifecycle:Open')
+  assert.equal(expires, '2026-10-06')
+  assert.match(note, /^Expired 2026-10-06: Rachel Goodlad/)
+  const revoking = JSON.parse(fs.readFileSync(path.join(root, FIXTURE_DIR, '2026-10-06-campus-page-requirements-2cd27dff.json'), 'utf8'))
+  assert.equal(revoking.decidedBy, 'Rachel Goodlad')
+  assert.ok(revoking.specRefs.includes('registry/campus-cta-exceptions.json'))
   assert.deepEqual([fixture.decidedBy, fixture.source, fixture.rule, fixture.expires], ['Matt Barge', 'email relayed 2026-09-24', 'hidden', 'lifecycle:Open'])
   const decisions = fs.readFileSync(path.join(root, DECISIONS), 'utf8')
   assert.ok(decisions.includes(fixture.decisionRow), 'the row is in docs/decisions.md')

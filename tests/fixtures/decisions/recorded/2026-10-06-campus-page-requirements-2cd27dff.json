@@ -1,0 +1,17 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-06T21:43:25.114Z",
+  "decidedBy": "Rachel Goodlad",
+  "source": "Slack 2026-10-06 14:40, in answer to Matt Barge",
+  "date": "2026-10-06",
+  "specRefs": [
+    "spec/campus-page-requirements.json",
+    "spec/check-rows.json",
+    "registry/campus-cta-exceptions.json"
+  ],
+  "summary": "Every campus page whose HubSpot Program type is Open or Announced shows a visible Book a Call (desktop, tablet, mobile) linking to that campus's own HubSpot call_scheduling_link; a hidden or missing Book a Call, or a link other than the Program's call_scheduling_link, is a finding on Open and Announced pages. Supersedes the unmerged 2026-10-06 no-Book-a-Call-while-Announced proposal (PR 81) and retires the 2026-09-24 Lexington (boston-suburbs) hidden exception. Pre-Announcement unchanged (no booking). If HubSpot has no call_scheduling_link the ask goes to the HubSpot Program owner",
+  "decisionRow": "| 2026-10-06 | Decided (Rachel Goodlad, Slack 2026-10-06 14:40, in answer to Matt Barge): Every campus page whose HubSpot Program type is Open or Announced shows a visible Book a Call (desktop, tablet, mobile) linking to that campus's own HubSpot call_scheduling_link; a hidden or missing Book a Call, or a link other than the Program's call_scheduling_link, is a finding on Open and Announced pages. Supersedes the unmerged 2026-10-06 no-Book-a-Call-while-Announced proposal (PR 81) and retires the 2026-09-24 Lexington (boston-suburbs) hidden exception. Pre-Announcement unchanged (no booking). If HubSpot has no call_scheduling_link the ask goes to the HubSpot Program owner | Rachel Goodlad | spec/campus-page-requirements.json; spec/check-rows.json; registry/campus-cta-exceptions.json; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-2cd27dff.json |",
+  "appliedIn": "spec/campus-page-requirements.json; spec/check-rows.json; registry/campus-cta-exceptions.json; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-2cd27dff.json",
+  "textSha256": "2cd27dff8a6a1165cae82d6010d27c785108b71049f8c65518e5d38ebfa78ecb",
+  "text": "Slack, 2026-10-06\nMatt Barge (2:37 PM): Hi @Rachel Goodlad Should Announced campuses have a Book a Call button?\nRachel Goodlad (2:40 PM): Yes, they should all have their own links\nMatt Barge (to the website agent): put that into the website playbook and update all the campus locations that are relevant.\n"
+}
