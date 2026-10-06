@@ -63,7 +63,7 @@ test('every observerCheck in the rows and retirements is a registered observer c
 
 test('site.loop.health.conformance is the loop-health row the observer files on a non-conforming bundle', () => {
   const bundle = read('spec/check-bundle.generated.json')
-  assert.equal(bundle.version, '1.11')
+  assert.equal(bundle.version, '1.12')
   const row = bundle.rows.find((r) => r.id === 'site.loop.health.conformance')
   assert.ok(row, 'row exists')
   assert.deepEqual([row.observerCheck, row.channel, row.ticketClass, row.ownerRole, row.pageFamily, row.entitySource, row.depth, row.dedupeScope, row.clearAfterRuns, row.severity, row.status, row.comparator.type, row.comparator.threshold, row.comparator.unit, row.grounding.kind],
