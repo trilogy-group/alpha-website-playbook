@@ -81,8 +81,8 @@ for (const url of urls) {
     for (const b of bookIds) {
       const repurposed = b.text && !/^book a call$/i.test(b.text)
       // Open: a hidden widget that carries a link is the defect. Announced / Pre-Announcement: a visible widget is the defect.
-      const wrongVisibility = bookingHidden ? !b.hidden : (b.hidden && /^https?:\/\//.test(b.href))
-      page.checks.push({ viewport: name, control: `widget.${b.id}`, result: repurposed || wrongVisibility ? 'fail' : 'pass', detail: `${b.hidden ? 'hidden' : 'visible'}; label "${b.text}"; link ${b.href || 'none'}${repurposed ? '; repurposed away from Book a Call' : ''}${bookingHidden && !b.hidden ? `; visible while ${state} (no Book a Call before Open, 2026-10-06)` : ''}` })
+      const wrongVisibility = bookingHidden ? (!b.hidden && !repurposed) : (b.hidden && /^https?:\/\//.test(b.href))
+      page.checks.push({ viewport: name, control: `widget.${b.id}`, result: repurposed || wrongVisibility ? 'fail' : 'pass', detail: `${b.hidden ? 'hidden' : 'visible'}; label "${b.text}"; link ${b.href || 'none'}${repurposed ? '; repurposed away from Book a Call' : ''}${bookingHidden && !b.hidden && !repurposed ? `; visible while ${state} (no Book a Call before Open, 2026-10-06)` : ''}` })
     }
     for (const L of LABELS) {
       const hits = anchors.filter((a) => L.re.test(a.text))
