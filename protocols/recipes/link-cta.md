@@ -36,13 +36,15 @@ If n8n writes the target, change the source and verify delivery instead of patch
 5. Prepare a field-scoped `link.url` edit with the exact current URL.
 6. Review snapshot, diff, proposed hash, and expected public link.
 
+Book a Call depends on lifecycle first. While the HubSpot Program type is Announced or Pre-Announcement, Book a Call stays hidden on every breakpoint: never unhide it, never add it, and never close a ticket by making it visible. A request to show Book a Call on a campus that is not Open goes to Blocked on the website agent operator with this rule named; it appears when the Program type becomes Open (Matt Barge, 2026-10-06, `docs/decisions.md`; `spec/campus-page-requirements.json` states/Announced/campus.hero.book-a-call; check row `campus.resources.booking.absent-before-open`). Correcting the hidden widget's link to the campus's `call_scheduling_link` is allowed; it stays hidden.
+
 An absent CTA widget is structural work and routes to the Elementor owner. A 401, login wall, wrong campus, expired packet, unknown Program, or guessed Community slug is Missing Info.
 
 ## Apply and verify
 
 Apply the exact approved preparation, read back, recover CSS and caches, then verify:
 
-- Correct visible label
+- Correct visible label, and Book a Call hidden on every breakpoint when the Program type is Announced or Pre-Announcement
 - Correct base destination and permitted parameters
 - Logged-out reachability
 - Exact campus, Program, packet year, event, or application identity

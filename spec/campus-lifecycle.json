@@ -33,18 +33,21 @@
           "schoolYear": "2026–27",
           "notDerivable": "No HubSpot Program property records this state. campuspipelinestatus and student_capacity both cut across the two groups (read 2026-10-05: Transitioned on 5 waitlist and 10 enrolling campuses, Build Mode on 5 and 12; capacity 21-195 against 10-193), so the only signal on the source side is the hand-typed sentence itself. See registry/sources.json hubspotPrograms.enrollmentStateField, null with the ask."
         }
-      }
+      },
+      "bookACall": "present: visible Book a Call linking the campus's HubSpot call_scheduling_link (check row campus.resources.booking.present), unless registry/campus-cta-exceptions.json records otherwise."
     },
     "Announced": {
       "source": "same",
       "meaning": "Public page may exist; launch language allowed only when the source status and date support it; announced-campus requirements apply.",
       "count": 7,
-      "introSentence": "dated (launch_date or opening_date set): named month or season and year supported by that date, e.g. '<name> is launching in Fall 2027.'; undated (no launch_date and no opening_date): '<name> is coming soon.' Decided by Matt Barge on 2026-09-28 (Slack conversation with the website agent; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json); check row campus.intro.status-source literals.undatedAnnounced."
+      "introSentence": "dated (launch_date or opening_date set): named month or season and year supported by that date, e.g. '<name> is launching in Fall 2027.'; undated (no launch_date and no opening_date): '<name> is coming soon.' Decided by Matt Barge on 2026-09-28 (Slack conversation with the website agent; tests/fixtures/decisions/recorded/2026-09-28-check-rows-7db3cda2.json); check row campus.intro.status-source literals.undatedAnnounced.",
+      "bookACall": "absent: no Book a Call control visible on any breakpoint; it appears when the Program type becomes Open. Decided by Matt Barge on 2026-10-06 (tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-d6fdc85f.json); check row campus.resources.booking.absent-before-open."
     },
     "Pre-Announcement": {
       "source": "same",
       "meaning": "No public campus page; map pin must route to a campus-specific Community destination.",
-      "count": 31
+      "count": 31,
+      "bookACall": "absent: no Book a Call control visible on any breakpoint; it appears when the Program type becomes Open. Decided by Matt Barge on 2026-10-06 (tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-d6fdc85f.json); check row campus.resources.booking.absent-before-open."
     }
   },
   "operationsSheetStatuses": {

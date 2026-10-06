@@ -11,6 +11,7 @@ State: Pre-Announcement, as decided by HubSpot Programs.
 - The Community slug comes from an exact HubSpot Program ID join to a visible Community program record. It is never derived from the campus name.
 - Public map identity, location, coordinates, and lifecycle match HubSpot and approved Operations data.
 - No Apply, booking, packet, event, tuition, grade, opening-date, or staffing claim is published without an approved source and launch-stage rule.
+- No Book a Call control is shown on any breakpoint; a draft or page keeps the `book_a_call_*` widgets hidden until the Program type is Open (Matt Barge, 2026-10-06, `docs/decisions.md`; `spec/campus-page-requirements.json` states/Announced/campus.hero.book-a-call; check row `campus.resources.booking.absent-before-open`).
 
 ## Internal draft
 

@@ -1,6 +1,6 @@
 {
   "$comment": "Per-state, per-section requirements. Rows marked observed_baseline need owner approval before they justify restructuring a page. Each row names its source, owner, checks and exemplar status.",
-  "version": "0.3",
+  "version": "0.4",
   "states": {
     "Open": {
       "campus.hero.identity": {
@@ -332,14 +332,30 @@
       },
       "campus.hero.ctas": {
         "required": "source dependent",
-        "content": "Only approved destinations appear. Apply, booking, event, packet and Community controls are conditional on verified routes.",
+        "content": "Only approved destinations appear. Apply, event, packet and Community controls are conditional on verified routes. Book a Call is never shown while the campus is Announced (campus.hero.book-a-call).",
         "source": "spec/source-authority.json",
         "ownerWhenMissing": "field-specific owner",
         "checks": [
           "logged-out destination",
-          "campus identity"
+          "campus identity",
+          "observer campus-book-call-visible-before-open"
         ],
         "exemplars": [],
+        "status": "active"
+      },
+      "campus.hero.book-a-call": {
+        "required": false,
+        "content": "No Book a Call control is visible on any breakpoint (desktop, tablet, mobile) while the HubSpot Program type is Announced. The book_a_call_* widgets may stay on the page with their call_scheduling_link but are hidden on all three breakpoints; an agent never unhides them. The control appears when the Program type becomes Open (states.Open campus.hero.ctas).",
+        "source": "docs/decisions.md 2026-10-06 (Matt Barge, Claude Code coordinating session: \"I don't think [a campus] should be able to book a call while it's only announced.\"; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-d6fdc85f.json)",
+        "ownerWhenMissing": "website-agent-operator (widget visibility, wordpress-direct)",
+        "checks": [
+          "observer campus-book-call-visible-before-open",
+          "tests/rendered-controls.mjs hero.book-a-call (Announced: fail when visible)",
+          "page-check book-a-call-consistency (Announced: fail when visible)"
+        ],
+        "exemplars": [
+          "https://alpha.school/boston-suburbs/"
+        ],
         "status": "active"
       },
       "campus.intro.media": {
@@ -458,6 +474,17 @@
         "checks": [
           "public route inventory",
           "claim and source checks"
+        ],
+        "exemplars": [],
+        "status": "active"
+      },
+      "campus.hero.book-a-call": {
+        "required": false,
+        "content": "No Book a Call control on any public surface for the campus while the HubSpot Program type is Pre-Announcement; any draft or published page keeps the book_a_call_* widgets hidden on every breakpoint. The control appears when the Program type becomes Open.",
+        "source": "docs/decisions.md 2026-10-06 (Matt Barge, Claude Code coordinating session: \"I don't think [a campus] should be able to book a call while it's only announced.\"; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-d6fdc85f.json)",
+        "ownerWhenMissing": "website-agent-operator (widget visibility, wordpress-direct)",
+        "checks": [
+          "observer campus-book-call-visible-before-open"
         ],
         "exemplars": [],
         "status": "active"

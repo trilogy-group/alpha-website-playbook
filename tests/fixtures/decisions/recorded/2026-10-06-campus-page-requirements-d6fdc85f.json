@@ -1,0 +1,17 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-06T20:42:44.993Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code coordinating session, 2026-10-06",
+  "date": "2026-10-06",
+  "specRefs": [
+    "spec/campus-page-requirements.json",
+    "spec/check-rows.json",
+    "spec/campus-lifecycle.json"
+  ],
+  "summary": "No Book a Call while a campus is not Open: a campus page whose HubSpot Program type is Announced or Pre-Announcement shows no Book a Call control on any breakpoint (the widgets may keep their link but stay hidden on desktop, tablet and mobile); the control appears when the Program type becomes Open, where states.Open campus.hero.ctas is unchanged (present, campus-specific call_scheduling_link destination). A visible Book a Call on an Announced or Pre-Announcement page is a finding (check row campus.resources.booking.absent-before-open); the 2026-09-24 Lexington entry in registry/campus-cta-exceptions.json is kept and is now an instance of this rule",
+  "decisionRow": "| 2026-10-06 | Decided (Matt Barge, Claude Code coordinating session, 2026-10-06): No Book a Call while a campus is not Open: a campus page whose HubSpot Program type is Announced or Pre-Announcement shows no Book a Call control on any breakpoint (the widgets may keep their link but stay hidden on desktop, tablet and mobile); the control appears when the Program type becomes Open, where states.Open campus.hero.ctas is unchanged (present, campus-specific call_scheduling_link destination). A visible Book a Call on an Announced or Pre-Announcement page is a finding (check row campus.resources.booking.absent-before-open); the 2026-09-24 Lexington entry in registry/campus-cta-exceptions.json is kept and is now an instance of this rule | Matt Barge | spec/campus-page-requirements.json; spec/check-rows.json; spec/campus-lifecycle.json; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-d6fdc85f.json |",
+  "appliedIn": "spec/campus-page-requirements.json; spec/check-rows.json; spec/campus-lifecycle.json; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-d6fdc85f.json",
+  "textSha256": "d6fdc85f71521ff94a819daedac3ac89bbc8c57207f4222b3cca70c21e04537e",
+  "text": "Matt Barge, 2026-10-06, Claude Code coordinating session: \"I don't think [a campus] should be able to book a call while it's only announced.\"\n\nRule as relayed to the website agent (run sweep-2026-10-06-D): a campus page whose HubSpot Program type is Announced (or Pre-Announcement) shows NO Book a Call CTA; it appears when the Program type becomes Open. Generalises the one-campus Lexington exception of 2026-09-24 (registry/campus-cta-exceptions.json campuses.boston-suburbs.book-a-call).\n"
+}

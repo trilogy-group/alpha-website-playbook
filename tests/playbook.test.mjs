@@ -2455,15 +2455,15 @@ test('check bundle: the observer inventory extractor reads finding literals and 
 })
 
 test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promotion rule, and depth (decisions 2026-09-25)', () => {
-  assert.equal(checkBundle.version, '1.11')
+  assert.equal(checkBundle.version, '1.12')
   const byChannel = {}
   for (const row of checkBundle.rows) byChannel[row.channel] = (byChannel[row.channel] || 0) + 1
-  assert.deepEqual(byChannel, { ticket: 86, 'source-digest': 17, 'loop-health': 17 })
+  assert.deepEqual(byChannel, { ticket: 87, 'source-digest': 17, 'loop-health': 17 })
   const byGrounding = {}
   for (const row of checkBundle.rows) byGrounding[row.grounding.kind] = (byGrounding[row.grounding.kind] || 0) + 1
   // Grounding restore (2026-09-25, bundle 2c8a5aeb): 20 rows regained a complaint, decision or source-contract ref, so only 5 stay ungrounded.
   // 1.3: the media row is grounded on the 2026-09-25 decision (from source-contract) and the three coverage rows on the same decision.
-  assert.deepEqual(byGrounding, { 'source-contract': 55, decision: 45, complaint: 13, exemplar: 2, none: 5 })
+  assert.deepEqual(byGrounding, { 'source-contract': 55, decision: 46, complaint: 13, exemplar: 2, none: 5 })
   assert.deepEqual(checkBundle.sourceDigest, { ownerRoles: ['growth-map-owner', 'hubspot-program-admin', 'operations-sheet-owner', 'community-app-owner'], reportFile: 'source-digest.md' })
   // Breadth: every map-source row and the Community record, URL form and host rows are source-digest; rows on a WordPress element stay ticket.
   for (const row of checkBundle.rows.filter((r) => r.pageFamily === 'map-source')) assert.notEqual(row.channel, 'ticket', `${row.id} compares sources, never a page`)
@@ -2500,7 +2500,7 @@ test('check bundle 1.2 and 1.3: source-digest breadth, grounding with the promot
   for (const family of Object.keys(checkBundle.pageFamilies)) assert.ok(checkBundle.depthDefaults.render.includes(family) || checkBundle.depthDefaults.http.includes(family), `${family} has a depth`)
   const byDepth = {}
   for (const row of checkBundle.rows) byDepth[row.depth] = (byDepth[row.depth] || 0) + 1
-  assert.deepEqual(byDepth, { render: 90, http: 30 })
+  assert.deepEqual(byDepth, { render: 91, http: 30 })
   for (const row of checkBundle.rows) {
     assert.ok(['render', 'http'].includes(row.depth), row.id)
     if ((row.viewports || []).length || row.sourceHealthDependency.includes('browser') || /-rendered$/.test(row.comparator.type)) assert.equal(row.depth, 'render', row.id)
@@ -2633,7 +2633,7 @@ import { classifyTicket, ownerRuleMatches, requirementIdsFor } from '../agent/in
 import { prepareFoundPayload, requirementIdsForCheck } from '../agent/file-found-ticket.mjs'
 
 test('check bundle 1.3: entity sources, comparators, missing-expectation rows, coverage rows and page-check aliases (decision 2026-09-25: from HubSpot to the website)', () => {
-  assert.equal(checkBundle.version, '1.11')
+  assert.equal(checkBundle.version, '1.12')
   // Entity sources: the shape the observer consumes verbatim; campus rows enumerate from HubSpot Programs, the rest from the map.
   const hubspot = checkBundle.entitySources['hubspot-programs']
   assert.deepEqual([hubspot.source, hubspot.fields, hubspot.publicTypes, hubspot.publicHosts, hubspot.lifecycleField, hubspot.pageField], ['hubspot-programs', ['type', 'website', 'display_name', 'wordpress_post_id', 'opening_date'], ['Open', 'Announced'], ['alpha.school', 'www.alpha.school'], 'type', 'website'])
@@ -2646,7 +2646,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   }
   const byEntitySource = {}
   for (const row of checkBundle.rows) byEntitySource[row.entitySource] = (byEntitySource[row.entitySource] || 0) + 1
-  assert.deepEqual(byEntitySource, { 'hubspot-programs': 55, map: 65 })
+  assert.deepEqual(byEntitySource, { 'hubspot-programs': 56, map: 65 })
   // Comparators: the bundle carries spec/observer-comparators.json and every row uses one of them.
   const comparators = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'observer-comparators.json'), 'utf8')).comparators
   assert.deepEqual(checkBundle.comparators, comparators)
@@ -2697,7 +2697,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
   assert.match(decisions, /\| 2026-09-25 \| Decided \(Matt Barge, Slack message to the website agent 2026-09-25: 'not only go from viewing the website and then checking HubSpot, but go from HubSpot to checking the website'\): /)
   const observerChecks = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'observer-checks.json'), 'utf8'))
   assert.deepEqual(observerChecks.families.coverage, ['campus-page-rendered', 'campus-registry-coverage', 'program-page-present'])
-  assert.deepEqual(Object.keys(observerChecks.pendingInObserver).filter((k) => !k.startsWith('$')).sort(), ['bundle-conformance'], 'the coverage family is emitted since aeo #37; only the conformance check waits on the observer')
+  assert.deepEqual(Object.keys(observerChecks.pendingInObserver).filter((k) => !k.startsWith('$')).sort(), ['bundle-conformance', 'campus-book-call-visible-before-open'], 'the coverage family is emitted since aeo #37; the conformance check and the 2026-10-06 Book a Call absence check wait on the observer')
   // Aliases: every tests/page-check.mjs id is mapped to a row or named as unmapped, and nothing else is listed.
   const ids = pageCheckIds()
   assert.deepEqual(ids, ['announced-names-launch-date', 'book-a-call-consistency', 'brand-visual', 'canonical-tag', 'cta-apply-now', 'cta-attend-an-info-session', 'cta-hidden-everywhere', 'cta-links-resolve', 'cta-stay-in-the-know', 'edge-cache-current', 'footer-template-present', 'h1-names-campus', 'h1-present', 'header-stylesheet-linked', 'header-template-present', 'intro-section-present', 'n8n-override-recorded', 'n8n-synced-elements-present', 'no-other-campus-in-image-names', 'no-sister-brand-words', 'open-enrollment-state-controls', 'open-intro-media-approved', 'open-no-launch-words', 'open-status-sentence', 'page-reachable', 'team-photo-framing'])
@@ -2810,4 +2810,45 @@ test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before
   const unknown = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-policy.mjs'), '--check'], { encoding: 'utf8' })
   assert.match(unknown.stderr, /ticket class observer-brand-leak: matchRequirementIds names campus\.no\.such\.row, which is not a row id in spec\/check-rows\.json/)
   fs.rmSync(dir, { recursive: true, force: true })
+})
+
+test('check bundle 1.12: no Book a Call while a campus is Announced or Pre-Announcement (Matt Barge, 2026-10-06)', () => {
+  const requirements = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'campus-page-requirements.json'), 'utf8'))
+  const lifecycleSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'campus-lifecycle.json'), 'utf8'))
+  const rowsSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'check-rows.json'), 'utf8'))
+  // The requirement says it, in both pre-open states; Open is unchanged.
+  for (const state of ['Announced', 'Pre-Announcement']) {
+    const req = requirements.states[state]['campus.hero.book-a-call']
+    assert.ok(req, `${state} has campus.hero.book-a-call`)
+    assert.equal(req.required, false)
+    assert.match(req.content, /No Book a Call control/)
+    assert.match(req.content, /becomes Open/)
+    assert.match(lifecycleSpec.states[state].bookACall, /^absent: /)
+  }
+  assert.doesNotMatch(requirements.states.Announced['campus.hero.ctas'].content, /booking/)
+  assert.match(requirements.states.Open['campus.hero.ctas'].content, /Book a Call/)
+  // The presence row stays Open-only; the absence row covers the two pre-open states and reads no CTA exceptions.
+  const present = rowsSpec.rows.find((r) => r.id === 'campus.resources.booking.present')
+  assert.deepEqual(present.lifecycleStates, ['Open'])
+  const absent = checkBundle.rows.find((r) => r.id === 'campus.resources.booking.absent-before-open')
+  assert.ok(absent, 'absence row exists')
+  assert.deepEqual([absent.observerCheck, absent.lifecycleStates, absent.comparator.type, absent.comparator.threshold, absent.channel, absent.entitySource, absent.grounding.kind],
+    ['campus-book-call-visible-before-open', ['Announced', 'Pre-Announcement'], 'count-max', 0, 'ticket', 'hubspot-programs', 'decision'])
+  assert.equal(absent.exemptionsRef, undefined, 'a hidden CTA exception must never exempt a visible Book a Call before Open')
+  assert.deepEqual(absent.requirementRef, { file: 'spec/campus-page-requirements.json', key: 'states/Announced/campus.hero.book-a-call' })
+  assert.match(absent.grounding.ref, /docs\/decisions\.md 2026-10-06 \(Matt Barge/)
+  const decisions = fs.readFileSync(path.join(root, 'docs', 'decisions.md'), 'utf8')
+  assert.match(decisions, /\| 2026-10-06 \| Decided \(Matt Barge, Claude Code coordinating session, 2026-10-06\): No Book a Call while a campus is not Open: /)
+  // Lexington's 2026-09-24 hidden entry is kept unchanged: it is an instance of the rule and still exempts the booking rows.
+  const exceptions = JSON.parse(fs.readFileSync(path.join(root, 'registry', 'campus-cta-exceptions.json'), 'utf8'))
+  assert.deepEqual([exceptions.campuses['boston-suburbs']['book-a-call'].rule, exceptions.campuses['boston-suburbs']['book-a-call'].expires], ['hidden', 'lifecycle:Open'])
+  // The recipes tell an agent never to unhide Book a Call before Open.
+  for (const recipe of ['link-cta.md', 'media-copy-links.md']) {
+    const text = fs.readFileSync(path.join(root, 'protocols', 'recipes', recipe), 'utf8')
+    assert.match(text, /Announced or Pre-Announcement/, recipe)
+    assert.match(text, /never unhide/i, recipe)
+  }
+  // The rendered and static page checks treat a visible Book a Call as the failure on those states.
+  assert.match(fs.readFileSync(path.join(root, 'tests', 'rendered-controls.mjs'), 'utf8'), /const BOOKING_HIDDEN_STATES = \['Announced', 'Pre-Announcement'\]/)
+  assert.match(fs.readFileSync(path.join(root, 'tests', 'page-check.mjs'), 'utf8'), /bookingHiddenState \? .*|if \(bookingHiddenState\) add\('book-a-call-consistency', bookACall\.visible === 0/)
 })

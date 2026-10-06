@@ -264,9 +264,15 @@ async function checkPage(url, stateOverride) {
   const visibleYears = [...mainHtml.matchAll(wrapperRe)].filter((m) => !(/elementor-hidden-desktop/.test(m[1]) && /elementor-hidden-tablet/.test(m[1]) && /elementor-hidden-mobile/.test(m[1]))).flatMap((m) => [...visibleText(m[2]).matchAll(/\b(20\d\d)\s*[/-]\s*(?:20)?(\d\d)\b/g)].map((y) => Number(y[1])))
   const newestVisible = visibleYears.length ? Math.max(...visibleYears) : null
   const retired = (entry) => { const y = entry.match(/\b(20\d\d)\s*[/-]\s*(?:20)?\d\d\b/); return Boolean(y && newestVisible && Number(y[1]) < newestVisible && /info packet|calendar/i.test(entry)) }
-  const stillHidden = hiddenEverywhere.filter((entry) => !retired(entry))
+  // No Book a Call while Announced or Pre-Announcement (Matt Barge, 2026-10-06): a hidden Book a Call that keeps its link is
+  // the decided state there, and a visible one is the defect.
+  const bookingHiddenState = state === 'Announced' || state === 'Pre-Announcement'
+  const stillHidden = hiddenEverywhere.filter((entry) => !retired(entry) && !(bookingHiddenState && /^book a (call|tour)\b/i.test(entry)))
   add('cta-hidden-everywhere', stillHidden.length === 0, stillHidden.length ? stillHidden.join('; ') : (hiddenEverywhere.length ? `only retired prior-year packets or calendars are hidden (${hiddenEverywhere.length})` : 'no linked CTA is hidden on every breakpoint'))
-  if (bookACall.visible + bookACall.hiddenWithLink + bookACall.hiddenNoLink > 0) add('book-a-call-consistency', bookACall.hiddenWithLink === 0, `visible ${bookACall.visible}, hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)
+  if (bookACall.visible + bookACall.hiddenWithLink + bookACall.hiddenNoLink > 0) {
+    if (bookingHiddenState) add('book-a-call-consistency', bookACall.visible === 0, `${state}: visible ${bookACall.visible} (must be 0 until the Program type is Open, decision 2026-10-06), hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)
+    else add('book-a-call-consistency', bookACall.hiddenWithLink === 0, `visible ${bookACall.visible}, hidden with link ${bookACall.hiddenWithLink}, hidden without link ${bookACall.hiddenNoLink}`)
+  }
 
   // rendered: team-photo-framing (desktop and mobile). Static HTML cannot see the box a headshot is squeezed into.
   if (chromium) {

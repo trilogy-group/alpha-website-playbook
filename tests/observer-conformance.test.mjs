@@ -51,7 +51,7 @@ test('every observerCheck in the rows and retirements is a registered observer c
   for (const [family, list] of Object.entries(registry.families)) for (const name of list) { assert.ok(!seen.has(name), `${name} is in both ${seen.get(name)} and ${family}`); seen.set(name, family) }
   // Contract-first names (pendingInObserver) each have a row and are registered; the coverage family is emitted since aeo #37.
   const pending = Object.keys(registry.pendingInObserver).filter((k) => !k.startsWith('$'))
-  assert.deepEqual(pending, ['bundle-conformance'], 'only the conformance check waits on the observer')
+  assert.deepEqual(pending, ['bundle-conformance', 'campus-book-call-visible-before-open'], 'the conformance check and the 2026-10-06 Book a Call absence check wait on the observer')
   for (const name of pending) {
     assert.ok(names.includes(name), `${name} pending but not registered`)
     assert.ok(bundle.rows.some((r) => r.observerCheck === name), `${name} pending but has no row`)
@@ -63,7 +63,7 @@ test('every observerCheck in the rows and retirements is a registered observer c
 
 test('site.loop.health.conformance is the loop-health row the observer files on a non-conforming bundle', () => {
   const bundle = read('spec/check-bundle.generated.json')
-  assert.equal(bundle.version, '1.11')
+  assert.equal(bundle.version, '1.12')
   const row = bundle.rows.find((r) => r.id === 'site.loop.health.conformance')
   assert.ok(row, 'row exists')
   assert.deepEqual([row.observerCheck, row.channel, row.ticketClass, row.ownerRole, row.pageFamily, row.entitySource, row.depth, row.dedupeScope, row.clearAfterRuns, row.severity, row.status, row.comparator.type, row.comparator.threshold, row.comparator.unit, row.grounding.kind],

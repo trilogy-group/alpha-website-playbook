@@ -41,7 +41,8 @@
         "cta-links-resolve"
       ],
       "exceptions": "registry/campus-cta-exceptions.json campuses.<slug>.book-a-call (Dorado moved there 2026-09-24; add or change an entry with agent/record-decision.mjs)",
-      "visibility": "Elementor hide_desktop / hide_tablet / hide_mobile on widgets book_a_call_1 (hero) and book_a_call_2 (CTA row). Scan 2026-09-17 of 44 campus pages: 15 visible, 7 hidden with no link (correct), 3 hidden with a link (Oklahoma City, Tulsa, South Bay LA: defects), 19 older-template pages use unnamed widgets."
+      "visibility": "Elementor hide_desktop / hide_tablet / hide_mobile on widgets book_a_call_1 (hero) and book_a_call_2 (CTA row). Scan 2026-09-17 of 44 campus pages: 15 visible, 7 hidden with no link (correct), 3 hidden with a link (Oklahoma City, Tulsa, South Bay LA: defects), 19 older-template pages use unnamed widgets.",
+      "lifecycle": "Open: visible, linking the campus's call_scheduling_link. Announced and Pre-Announcement: hidden on desktop, tablet and mobile (the widget may keep its link); never unhidden before the Program type is Open. Decided by Matt Barge on 2026-10-06 (docs/decisions.md; check row campus.resources.booking.absent-before-open)."
     },
     "hero.apply-now": {
       "label": "Apply now",
