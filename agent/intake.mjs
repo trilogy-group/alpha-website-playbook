@@ -48,6 +48,7 @@ import {
 import { NotifyRequesterError, runNotice } from './notify-requester.mjs'
 import { isFilerOwnedConflict } from './apex-errors.mjs'
 import { RequesterNoticeError } from './requester-notice-policy.mjs'
+import { renderTemplate } from './ticket-templates.mjs'
 
 const here = path.dirname(new URL(import.meta.url).pathname)
 const root = path.join(here, '..')
@@ -261,6 +262,13 @@ async function applyDecision(ticket, result) {
   // PR 409) the answer is the same skip: no error, no retry, no v1 fallback.
   if (observerFilerOwned(preflight)) return { ok: false, skipped: OBSERVER_FILER_OWNED, api: null, status: preflight.status, filerRunId: preflight.customFields?.filerRunId || null }
   if (result.action.kind === 'execution-ready') assertExecutionRelease()
+  // Render and validate the complete status request before any write or claim. A local
+  // template failure must never reserve the website or leave partial intake state.
+  const informationRequest = result.action.kind === 'request-clarification'
+    ? { note: clarificationNote(bundle, result), requirements: clarificationRequirements(bundle, result) }
+    : result.action.kind === 'registry-missing-info'
+      ? { note: registryMissingNote(bundle, result) }
+      : null
   const pendingCustomFields = intakeCustomFieldsPatch(preflight.customFields, {
     ownerRole: result.ownerRole,
     intakePendingHash: result.decisionSha256,
@@ -294,29 +302,29 @@ async function applyDecision(ticket, result) {
   })
 
   let actionResult
-  if (result.action.kind === 'request-clarification') {
+  if (informationRequest) {
     const runId = `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`
     await agent(`/tasks/${ticket.id}/claim`, 'POST', { agentRunId: runId })
-    const response = await agent(`/tasks/${ticket.id}/status`, 'POST', {
-      status: 'MISSING_INFO',
-      agentStatus: 'MISSING_INFO',
-      agentRunId: runId,
-      note: clarificationNote(bundle, result),
-      requirements: clarificationRequirements(bundle, result),
-    })
-    actionResult = { api: 'agent-status', status: response.status, clarificationDelivery: response.clarificationDelivery?.status || null }
-  } else if (result.action.kind === 'registry-missing-info') {
-    // Presence, not absence (repair plan 2026-09-25): the registry the class derives from has no entry for the campus; the
-    // ticket waits on the registry owner (assigned above), with the exact ask in the missingInfo note, not on the requester.
-    const runId = `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`
-    await agent(`/tasks/${ticket.id}/claim`, 'POST', { agentRunId: runId })
-    const response = await agent(`/tasks/${ticket.id}/status`, 'POST', {
-      status: 'MISSING_INFO',
-      agentStatus: 'MISSING_INFO',
-      agentRunId: runId,
-      note: registryMissingNote(bundle, result),
-    })
-    actionResult = { api: 'agent-status', status: response.status, registryOwner: result.owner || null }
+    let response
+    try {
+      response = await agent(`/tasks/${ticket.id}/status`, 'POST', {
+        status: 'MISSING_INFO', agentStatus: 'MISSING_INFO', agentRunId: runId, ...informationRequest,
+      })
+    } catch (error) {
+      // Only clean up after our claim succeeded. APEX atomically checks this exact
+      // run and actor; never force or release an unrelated/changed claim.
+      try {
+        const released = await agent(`/tasks/${ticket.id}/release`, 'POST', { agentRunId: runId })
+        if (released.released !== true) throw new Error('APEX did not confirm release')
+      } catch (cleanupError) {
+        error.message += `; claim cleanup failed for ${runId}: ${cleanupError.message}`
+      }
+      throw error
+    }
+    actionResult = { api: 'agent-status', status: response.status,
+      ...(result.action.kind === 'registry-missing-info'
+        ? { registryOwner: result.owner || null }
+        : { clarificationDelivery: response.clarificationDelivery?.status || null }) }
   } else if (result.action.kind === 'execution-ready') {
     const current = await agent(`/tasks/${ticket.id}`)
     const pending = pendingClarificationReviews(current)

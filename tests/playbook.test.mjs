@@ -301,6 +301,41 @@ test('a human route to an APEX agent operator stays out of the execution queue',
   assert.equal(routed.task.assignees[0].id, bundle.roleOwners['website-agent-operator'][0].apexUserId)
 })
 
+test('registry missing media reaches Missing Info without stranding a website claim', async () => {
+  const task = JSON.parse(JSON.stringify(decisionFixture('cmubrkkm800000agmvukxsioc.json').task)
+    .replaceAll('East Bay', 'Brownsville').replaceAll('east-bay', 'brownsville'))
+  task.id = 'brownsville-missing-media-regression'
+  const result = await runMockApply({ failStatus: false, taskOverride: task })
+  assert.equal(result.report.results[0].action.kind, 'registry-missing-info')
+  assert.equal(result.report.results[0].applied.ok, true)
+  assert.equal(result.task.agentStatus, 'MISSING_INFO')
+  assert.match(result.statusBodies[0].note, /approved|registry/i)
+  assert.equal(result.leaseHeld, false)
+  assert.equal(result.releases.length, 0, 'successful status update releases its lease itself')
+})
+
+test('failed administrative status releases only the claim acquired by this run', async () => {
+  const failed = await runMockApply({ failStatus: true })
+  assert.equal(failed.report.results[0].applied.ok, false)
+  assert.match(failed.report.results[0].applied.error, /simulated status failure/)
+  assert.deepEqual(failed.releases, [{ agentRunId: failed.task.agentRunId }])
+  assert.equal(failed.leaseHeld, false)
+  assert.equal(failed.task.customFields.intakeHash, undefined)
+
+  const refused = await runMockApply({ failClaim: true })
+  assert.equal(refused.report.results[0].applied.ok, false)
+  assert.equal(refused.releases.length, 0, 'a rejected claim must never release another run')
+  assert.equal(refused.statusBodies.length, 0)
+})
+
+test('claim cleanup failure remains explicit and does not finalize the intake decision', async () => {
+  const failed = await runMockApply({ failStatus: true, failRelease: true })
+  assert.match(failed.report.results[0].applied.error, /simulated status failure/)
+  assert.match(failed.report.results[0].applied.error, /claim cleanup failed/i)
+  assert.equal(failed.leaseHeld, true)
+  assert.equal(failed.task.customFields.intakeHash, undefined)
+})
+
 test('an execution-ready ticket is untouched when Alpha MCP release attestation fails', async () => {
   const held = await runMockApply({ failStatus: false, mode: 'execution-ready', skipReleaseCheck: false })
   assert.equal(held.run.code, 0, held.run.stderr)
@@ -333,12 +368,15 @@ function actionKindForOutcome(outcome) {
   return 'blocked-review'
 }
 
-async function runMockApply({ failStatus, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null, reconcileRefusal = null, apply = true }) {
+async function runMockApply({ failStatus, failClaim = false, failRelease = false, mode = 'clarification', skipReleaseCheck = true, releaseAttested = false, taskOverride = null, reconcileRefusal = null, apply = true }) {
   const operatorRoute = mode === 'operator-route'
   const executionReady = mode === 'execution-ready'
   const task = taskOverride ? { ...baseMockTask(operatorRoute, executionReady, failStatus), ...taskOverride } : baseMockTask(operatorRoute, executionReady, failStatus)
   const patches = []
   const reconciles = []
+  const releases = []
+  const statusBodies = []
+  let leaseHeld = false
   const server = http.createServer(async (request, response) => {
     const body = await readRequestJson(request)
     const send = (status, value) => {
@@ -356,12 +394,16 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
       return send(200, { task })
     }
     if (request.method === 'POST' && request.url === `/api/agent/tasks/${task.id}/claim`) {
+      if (failClaim) return send(409, { error: 'website resource busy' })
+      leaseHeld = true
       task.agentStatus = 'CLAIMED'
       task.agentRunId = body.agentRunId
       return send(200, { task })
     }
     if (request.method === 'POST' && request.url === `/api/agent/tasks/${task.id}/status`) {
+      statusBodies.push(body)
       if (failStatus) return send(500, { error: 'simulated status failure' })
+      leaseHeld = false
       task.status = 'MISSING_INFO'
       task.agentStatus = 'MISSING_INFO'
       task.clarifications.push({ id: 'clarification-1', kind: 'INFORMATION_REQUEST', status: 'OPEN', message: body.note })
@@ -369,6 +411,14 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
       task.activityLog.push({ meta: { commentId: 'agent-comment-1' } })
       task.updatedAt = new Date(new Date(task.updatedAt).getTime() + 1000).toISOString()
       return send(200, { ...task, clarificationDelivery: { status: 'sent' } })
+    }
+    if (request.method === 'POST' && request.url === `/api/agent/tasks/${task.id}/release`) {
+      releases.push(body)
+      if (failRelease) return send(409, { released: false })
+      assert.equal(body.agentRunId, task.agentRunId)
+      leaseHeld = false
+      task.agentStatus = 'FAILED'
+      return send(200, { released: true })
     }
     if (request.method === 'POST' && request.url === `/api/agent/tasks/${task.id}/reconcile`) {
       reconciles.push(structuredClone(body))
@@ -421,7 +471,7 @@ async function runMockApply({ failStatus, mode = 'clarification', skipReleaseChe
     ...(releaseAttested ? { ALPHA_MCP_HEALTH_JSON: healthPath } : {}),
   })
   await new Promise((resolve) => server.close(resolve))
-  return { run, patches, reconciles, task, report: JSON.parse(fs.readFileSync(reportPath, 'utf8')) }
+  return { run, patches, reconciles, releases, statusBodies, leaseHeld, task, report: JSON.parse(fs.readFileSync(reportPath, 'utf8')) }
 }
 
 function baseMockTask(operatorRoute, executionReady, failStatus) {

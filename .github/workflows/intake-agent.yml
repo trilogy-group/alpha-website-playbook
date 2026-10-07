@@ -55,6 +55,17 @@ jobs:
           if [ -n "$INPUT_TASK_ID" ]; then TASK_ARGS=(--ticket "$INPUT_TASK_ID"); fi
           mkdir -p out
           if [ "$APPLY" = "true" ]; then node agent/intake.mjs --since "$SINCE" "${TASK_ARGS[@]}" --apply --report out/intake.json; else node agent/intake.mjs --since "$SINCE" "${TASK_ARGS[@]}" --report out/intake.json; fi
+      - name: Fail when intake actions fail
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const report = JSON.parse(fs.readFileSync('out/intake.json', 'utf8'));
+          const errors = report.summary.errors || [];
+          if (errors.length) {
+            console.error(`${errors.length} intake action(s) failed; see the intake report artifact.`);
+            process.exitCode = 1;
+          }
+          JS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
