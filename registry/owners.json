@@ -1,7 +1,7 @@
 {
   "$comment": "Owner-registry index. Person records remain in people.json; campus assignments are resolved live. This file records completeness and review paths without duplicating personal data.",
-  "version": "1.0",
-  "asOf": "2026-09-17",
+  "version": "1.1",
+  "asOf": "2026-10-07",
   "sources": {
     "departmentRoles": "registry/people.json",
     "responsibilities": "spec/responsibilities.json",
@@ -15,7 +15,6 @@
     "hubspot-owner",
     "hubspot-program-admin",
     "hubspot-admin",
-    "n8n-sync-owner",
     "events-plugin-owner",
     "events",
     "brand-authority",
@@ -35,11 +34,19 @@
     "packet-owner",
     "Admissions Hub editor",
     "legal-content-owner",
-    "analytics-and-consent-owner"
+    "analytics-and-consent-owner",
+    "n8n-sync-owner"
   ],
   "reviewCadence": {
     "campusRoles": "live lookup; cached snapshot stale after seven days",
     "departmentRoles": "monthly and after an announced ownership change",
     "systemOwners": "quarterly and after an incident or deployment"
+  },
+  "n8nOwnershipGap": {
+    "asOf": "2026-10-07",
+    "role": "n8n-sync-owner",
+    "confirmedPerson": null,
+    "evidence": "docs/findings-2026-10-07-program-reader-duplicates.md",
+    "resolution": "Protocol 1d: preserve the source/workflow route and ask the website agent operator to resolve the missing owner. This is coordination, not an assignment of n8n technical ownership."
   }
 }

@@ -7,7 +7,7 @@
       "name": "alpha.school website: Update school pages",
       "direction": "HubSpot Programs -> n8n -> WordPress campus pages (Elementor)",
       "platform": "n8n cloud, trilogyinc.app.n8n.cloud, workflow ORgdHC71YJ5RawBy (folder Alpha School > SEO > Alpha School Website)",
-      "schedule": "daily at 00:15 Central (n8n schedule trigger, triggerAtMinute 15); pages show modified 05:18 UTC on 2026-09-16; manual run on demand by anyone with n8n access (Cristi; Yash can add users)",
+      "schedule": "daily at 00:15 Central (n8n schedule trigger, triggerAtMinute 15); pages show modified 05:18 UTC on 2026-09-16; manual run only under the existing owner/actor and task approval rules; October 7 ownership gap recorded in registry/owners.json",
       "ownerRole": "n8n-sync-owner",
       "sourceOfTruth": "HubSpot Programs record; HubDB for program-interest mappings",
       "creates": "a draft campus page when Program status is Announced, WordPress Post ID is -1, and the campus is in the workflow's own program-interest allowlist; writes the new post id back to HubSpot",
@@ -93,7 +93,8 @@
         "nichecom_profile",
         "great_schools_profile",
         "winnie_profile"
-      ]
+      ],
+      "readerContract": "spec/program-data-reliability.json"
     },
     "n8n-locations-list": {
       "name": "Locations page List tab",
@@ -201,10 +202,12 @@
     },
     "google-business-profiles": {
       "name": "Google Business Profile events push",
-      "direction": "HubSpot Marketing Events -> n8n (RioSEO workflow giviJTDi7Q3uM4HM) -> Google Business Profiles per school",
+      "direction": "HubSpot Marketing Events -> shared Programs/events reader -> n8n Rio SEO create or update events (tq6IV3TeqlBaoWlg_dLkj) -> Google Business Profiles per school",
       "ownerRole": "n8n-sync-owner",
       "since": "2026-08-28",
-      "agentRule": "Not a website surface, but the same HubSpot event data. A public-flag change reaches Google too."
+      "agentRule": "Not a website surface, but the same HubSpot event data. A public-flag change reaches Google too.",
+      "workflowIdVerifiedOn": "2026-10-07",
+      "evidence": "registry/sources.json n8n.sharedProgramReader; docs/findings-2026-10-07-program-reader-duplicates.md"
     },
     "video-library": {
       "name": "Alpha Answers video resources",
@@ -262,6 +265,15 @@
       "gate": "HUBSPOT_PROGRAM_WRITE_TOKEN, no fallback; optimistic concurrency against the last snapshot; read-back verification; wordpress_post_id mismatch is a hard conflict",
       "ownerRole": "hubspot-program-admin",
       "agentRule": "This is the sanctioned way to change a campus fact: APEX program change -> HubSpot -> n8n -> page. The playbook agent does not write HubSpot itself; it files or advances the APEX program change and verifies the page after the n8n run. The 30-minute HubSpot-to-APEX import is also a readable mirror of Programs for agents that lack HubSpot scopes."
+    },
+    "rio-seo-locations": {
+      "name": "Rio SEO Locations Data Push",
+      "direction": "Shared HubSpot Programs/events reader -> n8n giviJTDi7Q3uM4HM -> Rio location listing import",
+      "ownerRole": "n8n-sync-owner",
+      "verifiedOn": "2026-10-07",
+      "readerContract": "spec/program-data-reliability.json",
+      "agentRule": "Validate final rendered fields. A failed execution can have already submitted valid rows; inspect import acceptance and completion before retry. Source-reader recovery is separate from this consumer.",
+      "evidence": "docs/findings-2026-10-07-program-reader-duplicates.md"
     }
   },
   "notAutomated": [

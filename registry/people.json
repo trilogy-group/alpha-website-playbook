@@ -628,51 +628,34 @@
       "name": "Cristi Constantin",
       "email": "cristi.constantin@trilogy.com",
       "slackId": "U08MSRYPGH2",
-      "roles": [
-        {
-          "role": "n8n-sync-owner",
-          "title": "HubSpot Program to n8n to WordPress sync; wordpress_post_id; Locations List automation; overwrite exceptions",
-          "campus": "all",
-          "source": "Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation; Greenwich sync overwrite 2026-09-15",
-          "asOf": "2026-09-15"
-        }
-      ],
+      "roles": [],
       "sources": [
         "Slack U08MSRYPGH2",
         "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
         "#admin-websites Locations List fully n8n-automated",
         "#admin-websites 2025-09 to 2026-08 (Locations List automation 2025-11-27, daily flow 2025-12, Book a call 2026-03, GBP events 2026-08-28); APEX topology doc",
-        "APEX users API (2026-09-16)"
+        "APEX users API (2026-09-16)",
+        "Ownership correction: docs/findings-2026-10-07-program-reader-duplicates.md (2026-10-07)"
       ],
       "title": "Technical Product Owner @ Trilogy",
-      "apexUserId": "cmp3p9y58000004kyn3aqt3ys"
+      "apexUserId": "cmp3p9y58000004kyn3aqt3ys",
+      "formerRoles": [
+        {
+          "role": "n8n-sync-owner",
+          "title": "HubSpot Program to n8n to WordPress sync; wordpress_post_id; Locations List automation; overwrite exceptions",
+          "campus": "all",
+          "source": "Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation; Greenwich sync overwrite 2026-09-15",
+          "asOf": "2026-09-15",
+          "withdrawalRecordedOn": "2026-10-07",
+          "withdrawalSource": "Cristi stated on October 5 that he is no longer part of Alpha website/n8n automations; statement supplied by Matt in this incident."
+        }
+      ],
+      "note": "Cristi stated on October 5 that he is no longer part of Alpha website/n8n automations; statement supplied by Matt in this incident. Historical roles are not current routing assignments."
     },
     "dmitrybakaev": {
       "name": "Dmitry Bakaev",
       "email": "dmitry.bakaev@trilogy.com",
-      "roles": [
-        {
-          "role": "hubspot-admin",
-          "title": "HubSpot Admin and Operations team; HubSpot push rights in APEX",
-          "campus": "all",
-          "source": "APEX request-type routing (projects/alpha-event-task-management)",
-          "asOf": "2026-09-15"
-        },
-        {
-          "role": "n8n-sync-owner",
-          "title": "HubSpot Program governance and n8n sync partner with Cristi Constantin; sync exceptions and wordpress_post_id",
-          "campus": "all",
-          "source": "Cristi GDM with Matt/Yash/Dmitry; HubSpot Program governance practice 2026-09-15",
-          "asOf": "2026-09-15"
-        },
-        {
-          "role": "events",
-          "title": "Events HubSpot to site sync reliability (with Garbhit Sharma); not Website APEX",
-          "campus": "all",
-          "source": "Matt #admin-websites Aug 2026 guidance; Hailey content then Garbhit/Dmitry sync",
-          "asOf": "2026-09-15"
-        }
-      ],
+      "roles": [],
       "sources": [
         "observer routing rules",
         "HubSpot owner 55961534 (Admin, Operations teams)",
@@ -680,12 +663,42 @@
         "Slack U08E0UGUA5D",
         "GDM Matt+Yash+Cristi+Dmitry on HubSpot/n8n/WP",
         "Matt #admin-websites Aug 2026 events sync guidance",
-        "APEX users API (2026-09-16)"
+        "APEX users API (2026-09-16)",
+        "Ownership correction: docs/findings-2026-10-07-program-reader-duplicates.md (2026-10-07)"
       ],
       "hubspotOwnerId": "55961534",
       "slackId": "U08E0UGUA5D",
-      "note": "Not the info-packet Canva owner; that is marketing collateral / brand / website ops.",
-      "apexUserId": "cmot2zeec000104laqrktzrkq"
+      "note": "Not the info-packet Canva owner; that is marketing collateral / brand / website ops. Matt directly reports Dmitry no longer works for Alpha; no replacement assignment was supplied. Historical roles are not current routing assignments.",
+      "apexUserId": "cmot2zeec000104laqrktzrkq",
+      "formerRoles": [
+        {
+          "role": "hubspot-admin",
+          "title": "HubSpot Admin and Operations team; HubSpot push rights in APEX",
+          "campus": "all",
+          "source": "APEX request-type routing (projects/alpha-event-task-management)",
+          "asOf": "2026-09-15",
+          "withdrawalRecordedOn": "2026-10-07",
+          "withdrawalSource": "Matt directly reports Dmitry no longer works for Alpha; no replacement assignment was supplied."
+        },
+        {
+          "role": "n8n-sync-owner",
+          "title": "HubSpot Program governance and n8n sync partner with Cristi Constantin; sync exceptions and wordpress_post_id",
+          "campus": "all",
+          "source": "Cristi GDM with Matt/Yash/Dmitry; HubSpot Program governance practice 2026-09-15",
+          "asOf": "2026-09-15",
+          "withdrawalRecordedOn": "2026-10-07",
+          "withdrawalSource": "Matt directly reports Dmitry no longer works for Alpha; no replacement assignment was supplied."
+        },
+        {
+          "role": "events",
+          "title": "Events HubSpot to site sync reliability (with Garbhit Sharma); not Website APEX",
+          "campus": "all",
+          "source": "Matt #admin-websites Aug 2026 guidance; Hailey content then Garbhit/Dmitry sync",
+          "asOf": "2026-09-15",
+          "withdrawalRecordedOn": "2026-10-07",
+          "withdrawalSource": "Matt directly reports Dmitry no longer works for Alpha; no replacement assignment was supplied."
+        }
+      ]
     },
     "drewcasebier": {
       "name": "Drew Casebier",

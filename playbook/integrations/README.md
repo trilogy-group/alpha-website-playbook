@@ -3,6 +3,7 @@
 Use these pages after source diagnosis identifies the system that owns or delivers the requested value.
 
 - `hubspot-and-n8n.md`: Program fields, APEX editor, HubSpot readback, n8n mapping, execution, recovery, and verification.
+- `program-data-reliability.md`: shared reader pagination versus mapping duplicates, HubDB primary aliases, isolated publication, fresh execution proof, downstream validation and partial imports. Contract: `spec/program-data-reliability.json`; new automated safeguards are not yet deployed.
 - `wordpress-elementor-alpha-mcp.md`: WordPress object resolution, Elementor, Alpha MCP, overlapping writers, and bounded mutations.
 - `cache-and-public-verification.md`: Elementor CSS, WP Engine, Cloudflare, canonical verification, and batches.
 - `forms-and-admissions.md`: HubSpot forms, `submission_campus`, Finalsite, payments, UTM behavior, and safe QA.

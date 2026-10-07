@@ -56,7 +56,7 @@
       "crm.schemas.custom.read"
     ],
     "readPaths": {
-      "direct": "GET https://api.hubapi.com/crm/v3/objects/2-43470849/{id}?properties=type,website_campus_intro,... with a token that has the scopes (ask Hailey McSpadden or a HubSpot admin: Dmitry Bakaev, Farhan Raja, Fernando Pina dos Santos)",
+      "direct": "GET https://api.hubapi.com/crm/v3/objects/2-43470849/{id}?properties=type,website_campus_intro,... with a token that has the scopes (resolve the current hubspot-owner or hubspot-admin in registry/people.json)",
       "publicMirror": "growth map API for type, name, address, city, state, url, communityUrl, coordinates, gradeRange, launchDate, photoUrl",
       "apexMirror": "APEX imports Programs every 30 minutes (cron campus-hubspot-sync into CampusMapping and CampusPacketProfile.hubspotSnapshot); not exposed on the v1 API yet",
       "n8n": "sub-workflow 6HvmvgkzPkFikc40 reads Programs and marketing events for the campus-page workflow"
@@ -146,7 +146,7 @@
   },
   "n8nHubspotSync": {
     "name": "HubSpot Program to n8n to WordPress sync",
-    "owners": "n8n-sync-owner role (registry/people.json)",
+    "owners": "n8n-sync-owner role; replacement holder unconfirmed. Former Cristi/Dmitry assignments withdrawn; see registry/people.json and registry/owners.json.",
     "channels": [
       "HubSpot/n8n GDM with website-operations",
       "#admin-websites (Locations List automation)"
@@ -154,9 +154,10 @@
     "evidence": [
       "Cristi GDM with Matt/Yash/Dmitry on HubSpot/n8n/WP",
       "#admin-websites Locations List fully n8n-automated",
-      "Greenwich sync overwrite 2026-09-15"
+      "Greenwich sync overwrite 2026-09-15",
+      "October 7 investigation and ownership correction: docs/findings-2026-10-07-program-reader-duplicates.md"
     ],
-    "asOf": "2026-09-15",
+    "asOf": "2026-10-07",
     "note": "Synced campus facts must be corrected in HubSpot, not by hand-editing WordPress fields that n8n overwrites."
   },
   "missingInfoRouting": {
@@ -175,12 +176,88 @@
     "instance": "https://trilogyinc.app.n8n.cloud",
     "workflows": {
       "campus pages": "ORgdHC71YJ5RawBy (alpha.school website: Update school pages)",
-      "locations list": "id not recorded",
-      "google business profile events": "giviJTDi7Q3uM4HM (RioSEO)",
-      "staff source reader": "c8Iz4SLpMlswe0RQ (webhook apex-staff-source, header x-apex-staff-key)"
+      "locations list": "RqP1lPvDKvHDxTus (alpha.school website: Update the 'Locations' Page)",
+      "google business profile events": "tq6IV3TeqlBaoWlg_dLkj (Rio SEO create or update events)",
+      "staff source reader": "c8Iz4SLpMlswe0RQ (webhook apex-staff-source, header x-apex-staff-key)",
+      "shared programs and marketing events reader": "6HvmvgkzPkFikc40 (Read programs and their marketing events)",
+      "rio SEO locations": "giviJTDi7Q3uM4HM (Rio SEO Locations Data Push)",
+      "KB campus info": "soVfr5lKTr5spDr3 (Email - Update KB Campus Info)"
     },
-    "access": "operators only (Cristi Constantin); no agent access",
-    "fieldMap": "spec/content-pipelines.json pipelines.n8n-campus-pages.targets"
+    "access": "Authenticated operator/API access verified in the October 7 investigation. Cristi also confirmed the requested users have access. Access is not ownership or authorization for arbitrary writes; follow actor and task approvals. Credentials remain in private storage, never this registry.",
+    "fieldMap": "spec/content-pipelines.json pipelines.n8n-campus-pages.targets",
+    "sharedProgramReader": {
+      "asOf": "2026-10-07",
+      "workflowId": "6HvmvgkzPkFikc40",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/6HvmvgkzPkFikc40",
+      "contract": "spec/program-data-reliability.json",
+      "runbook": "playbook/integrations/program-data-reliability.md",
+      "evidence": "docs/findings-2026-10-07-program-reader-duplicates.md",
+      "hubspotPortalId": "40051392",
+      "hubDb": {
+        "tableId": "119932418",
+        "name": "FormProgramInterestToInterestAndCampusMapping",
+        "join": "hubspot_program_interest = program.properties.program_interest",
+        "primaryField": "is_primary"
+      },
+      "observedRead": {
+        "api": "HubSpot Search",
+        "limit": 200,
+        "nextCursor": "{{$response.body.paging?.next?.after}}",
+        "completion": "next cursor is undefined",
+        "scope": "Visible, non-online, Announced/Open Programs plus explicitly included IDs. Do not remove these business filters to match the all-Program total."
+      },
+      "ownership": {
+        "role": "n8n-sync-owner",
+        "confirmedPerson": null,
+        "status": "replacement-owner-unconfirmed",
+        "resolution": "Protocol 1d; do not assign technical ownership from access or historical authorship."
+      },
+      "dependencyInventory": {
+        "accessibleWorkflowsInspected": 36,
+        "scope": "Enabled call nodes in active workflows observed October 7; recheck before each change, not an organization-wide completeness guarantee.",
+        "activeConsumers": [
+          {
+            "workflowId": "ORgdHC71YJ5RawBy",
+            "name": "alpha.school website: Update school pages"
+          },
+          {
+            "workflowId": "RqP1lPvDKvHDxTus",
+            "name": "alpha.school website: Update the 'Locations' Page"
+          },
+          {
+            "workflowId": "giviJTDi7Q3uM4HM",
+            "name": "Rio SEO Locations Data Push"
+          },
+          {
+            "workflowId": "tq6IV3TeqlBaoWlg_dLkj",
+            "name": "Rio SEO create or update events"
+          },
+          {
+            "workflowId": "soVfr5lKTr5spDr3",
+            "name": "Email - Update KB Campus Info"
+          },
+          {
+            "workflowId": "ZILFueBWbQamke8o",
+            "name": "Reddit subflow - propose replies"
+          }
+        ],
+        "excludedFromActiveConsumers": [
+          {
+            "workflowId": "sJSwrsEkSmQVOMT2",
+            "reason": "Reader call node disabled; workflow itself active"
+          },
+          {
+            "workflowId": "e7mOjQEhXPQrWCa0",
+            "reason": "LLM check workflow inactive"
+          },
+          {
+            "workflowId": "nTAYonLwV2E9JKZc",
+            "reason": "LLM check workflow inactive"
+          }
+        ],
+        "impact": "Reader repair permits normal scheduled consumers to resume. Reader success is not proof of consumer validation, completed import or public correctness."
+      }
+    }
   },
   "onboardingSheet": {
     "name": "School onboarding - single file for all schools",

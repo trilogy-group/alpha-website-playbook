@@ -3,6 +3,8 @@
 Last verified: September 17, 2026  
 Primary campus workflow: `ORgdHC71YJ5RawBy` on `trilogyinc.app.n8n.cloud`
 
+Shared-reader incident and ownership update: October 7, 2026. For duplicate Program IDs, HubDB aliases, source freshness or downstream quality alerts, use [Shared Program data: diagnosis, prevention and recovery](program-data-reliability.md) and `spec/program-data-reliability.json`. Other field mappings below retain their existing verification dates.
+
 ## Boundary
 
 HubSpot Programs is authoritative for campus lifecycle and website-driven campus facts. n8n delivers those values to specific Elementor targets. APEX owns the request, approval, and evidence. WordPress is downstream for synchronized values.
@@ -108,6 +110,8 @@ Attach the run ID and relevant node evidence to APEX. Do not attach secrets or f
 - If a subset of fields saved, keep the ticket open and classify the incomplete fields separately.
 - If a workflow can write several pages, verify every affected object named in its execution, not only the ticketed page.
 - A retry that would overwrite a newer human change requires owner review.
+- A retry with `loadWorkflow:true` may reuse upstream source outputs. Prove source-node timestamps and values are fresh before declaring a source repair verified; see the shared Program data runbook.
+- Check non-WordPress consumers too: a failed Rio run may already have accepted valid rows for import. Inspect the receipt and completion state before resubmitting.
 
 ## Safe disable and recovery
 
@@ -156,9 +160,9 @@ A changed export hash, field list, CSS ID list, schedule, or owner is drift and 
 
 ## Owners and unresolved items
 
-- n8n campus workflow: Cristi Constantin, with Dmitry Bakaev as partner in the current registry
+- n8n workflows: replacement owner unconfirmed as of October 7. Cristi disclaimed current website/n8n ownership on October 5; Matt reports Dmitry no longer works for Alpha. Historical roles are retained in the registry but removed from active routing. Follow protocol 1d to resolve ownership; do not infer it from access or former authorship.
 - HubSpot Program administration: Farhan Raja
-- HubSpot governance: Hailey McSpadden and Dmitry Bakaev according to the responsibility registry
+- HubSpot governance: resolve the current `hubspot-owner` and `hubspot-admin` holders in `registry/people.json`; do not route to former holders.
 - Website operations: Matt Barge and Yash Chitneni
 - Protected Program-name process: owner path documented, but exact request procedure still needs confirmation
 - Exact APEX campus-editor field list: must be exported and added to the source registry

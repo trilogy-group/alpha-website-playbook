@@ -1,6 +1,6 @@
 {
   "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
-  "version": "0.4",
+  "version": "0.5",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
@@ -645,7 +645,7 @@
     "n8n-sync-owner": {
       "department": "hubspot",
       "owns": [
-        "n8n workflows that push HubSpot Program fields to WordPress (campus pages ORgdHC71YJ5RawBy; Locations List; Google Business Profile events giviJTDi7Q3uM4HM; staff-source reader c8Iz4SLpMlswe0RQ)",
+        "n8n shared Programs reader 6HvmvgkzPkFikc40 and downstream workflows: campus pages ORgdHC71YJ5RawBy, Locations RqP1lPvDKvHDxTus, Rio SEO Locations giviJTDi7Q3uM4HM, Rio events tq6IV3TeqlBaoWlg_dLkj, staff reader c8Iz4SLpMlswe0RQ; current reader dependencies in registry/sources.json",
         "wordpress_post_id mapping",
         "the CSS ID field map in spec/content-pipelines.json",
         "sync overwrite exceptions"
@@ -946,7 +946,7 @@
     "The Admissions Hub org chart has no owner named on the page; Hailey confirms roster corrections today. Confirm who edits the chart and how often",
     "HubSpot owner records are missing or personal for several roster names (Gaby Sullivan present; Samantha Kravitz, Morgan Petek, Q Tang, Crystal Cybulski, Nancy Wisniewski Torvund absent; Haven Mass under a personal address); the resolver reports email null for them",
     "Elementor owner, Operations sheet owner, and growth map owner are still not named",
-    "n8n-sync-owner holders registered (Cristi Constantin primary; Dmitry Bakaev partner). Confirm whether Yash also holds the role for day-to-day sync ops. Sources for Cristi Constantin, Patrick Skinner, and the Dmitry packet-owner removal are a group DM and an ops brief that are not in any repo; confirm with Matt",
+    "n8n-sync-owner replacement unconfirmed as of 2026-10-07. Cristi disclaimed current website/n8n ownership on October 5; Matt reports Dmitry no longer works for Alpha. Historical roles retained in registry/people.json formerRoles; resolve the missing holder under protocol 1d, not by assuming access or authorship establishes ownership.",
     "The n8n field map recorded in spec/content-pipelines.json comes from an export inspected 2026-09-09; confirm with the n8n-sync-owner that the current campus template still carries those CSS IDs, and whether the group A launch-copy sentence sits in an n8n-controlled content body block",
     "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner",
     "packet-owner: Matt Barge took info packets on 2026-08-27 pending Canva team setup and the current 2026-27 template from Yash; Chris Davidson holds the collateral tickets. Confirm the split (packet document vs flyers) and record it.",
@@ -1149,7 +1149,7 @@
       "needs": {
         "current derivation": "spec/campus-page-field-map.json and the n8n export",
         "proposed derivation": "the ticket",
-        "owner": "n8n-sync-owner (registry: Cristi Constantin)"
+        "owner": "n8n-sync-owner (resolve current holder in registry/people.json; ownership gap as of 2026-10-07)"
       },
       "missingInfoGoesTo": "n8n-sync-owner"
     },

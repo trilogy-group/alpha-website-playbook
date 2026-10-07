@@ -1,0 +1,69 @@
+{
+  "$comment": "Operational acceptance contract, backed by the October 7 incident. This file documents checks; no n8n workflow or scheduled observer consumes it yet. New automated safeguards require a separate reviewed implementation.",
+  "version": "1.0",
+  "asOf": "2026-10-07",
+  "scope": "Shared HubSpot Programs/HubDB reader and its downstream publishing jobs",
+  "sourceRef": "registry/sources.json#n8n",
+  "runbook": "playbook/integrations/program-data-reliability.md",
+  "evidence": "docs/findings-2026-10-07-program-reader-duplicates.md",
+  "authorization": "Existing actor, ticket, source-owner and workflow-owner approval rules still apply. This contract does not authorize mutations or automatic retries.",
+  "checks": [
+    {
+      "id": "program-read-coverage",
+      "stage": "raw-read",
+      "requirement": "Return each eligible Program ID exactly once; preserve intentional visibility, lifecycle and online filters plus any explicitly requested IDs.",
+      "evidence": ["query and filters", "per-page counts and next cursors", "returned ID set and unique count", "independent same-scope coverage check", "source read timestamp"],
+      "paginationTest": "Exercise more than one page using a bounded lower page size when needed. Follow the returned cursor, reject repeated cursors/overlapping ID sets, and compare full ID sets. A total above 100 alone does not prove a pagination defect.",
+      "enforcement": "Cursor pagination observed in production; independent coverage and uniqueness checks performed during incident investigation. Recurring preflight not deployed by this change."
+    },
+    {
+      "id": "program-mapping-primary",
+      "stage": "hubdb-before-publish",
+      "requirement": "For every hubspot_program_interest group with multiple aliases, exactly one approved row must have is_primary=1. A single-row group may have is_primary=0 under the existing reader. Check the entire proposed table, including currently ineligible Programs.",
+      "evidence": ["group key", "row IDs and aliases", "primary count", "approved canonical alias", "event associations before and after"],
+      "onFailure": "Identify ambiguous groups and obtain a canonical mapping decision. Do not choose the first row, delete aliases, suppress duplicate IDs, or change Program identities to force a pass.",
+      "enforcement": "Operator prepublication check documented here; automated HubDB prepublication guard not deployed. Known out-of-scope ambiguous groups remain in the incident follow-up."
+    },
+    {
+      "id": "program-join-cardinality",
+      "stage": "joined-output",
+      "requirement": "Joined Program IDs must equal the raw eligible ID set and appear exactly once. Compare selected aliases and full event associations with the approved expected diff, not just row counts.",
+      "evidence": ["counts and ID sets before/after each join", "duplicate IDs and contributing HubDB rows", "missing or extra IDs", "mapping/event regression result"],
+      "enforcement": "Existing production duplicate-ID guard retained. Set-equality and regression checks were run during incident recovery; continuous enforcement not added."
+    },
+    {
+      "id": "hubdb-publish-isolation",
+      "stage": "source-change",
+      "requirement": "Compare draft and published tables before editing; do not publish unrelated draft changes. Back up, approve a minimal diff, recheck for concurrent changes, publish, read back and verify the exact diff. Roll back only the changed fields after checking for newer edits.",
+      "evidence": ["before snapshot reference", "approved row/field diff", "draft/published comparison", "publish receipt and UTC time", "readback", "field-level rollback plan"],
+      "enforcement": "Operator procedure; completed for the October 7 two-flag repair. No new automatic publisher."
+    },
+    {
+      "id": "fresh-reader-verification",
+      "stage": "recovery",
+      "requirement": "A source correction is verified by a new reader invocation with fresh source nodes and cache refresh. A retry ID or loadWorkflow=true does not prove upstream nodes were reread.",
+      "evidence": ["workflow version and execution ID", "execution start", "source-node timestamps at or after start", "corrected source values read", "duplicate guard result", "cache write result"],
+      "enforcement": "Operator recovery procedure; not an automated retry policy."
+    },
+    {
+      "id": "rendered-rio-description-limits",
+      "stage": "downstream-prewrite",
+      "requirement": "Validate the final rendered payload for every listing after all substitutions and whitespace normalization. Preserve approved lifecycle/enrollment meaning; no blind truncation or disabling validators.",
+      "maximumCharacters": {"shortDescription": 140, "googleServiceDescriptionEachBaseAnd01Through06": 300, "appleDescription": 500, "longDescription": 750},
+      "evidence": ["template version", "final field lengths per listing", "status/copy approval", "validation output"],
+      "enforcement": "Existing Rio quality gates observed in production. The October 7 overlength template correction remains outstanding."
+    },
+    {
+      "id": "downstream-recovery-and-alerts",
+      "stage": "delivery",
+      "requirement": "Track reader recovery separately from each consumer. Attribute alerts to workflow, execution, failed node and error class. Before retrying a writer, inspect completed writes and import receipts. HTTP acceptance is not proof of completed import or public correctness.",
+      "evidence": ["consumer workflow and execution IDs", "cached/fresh reader result", "failed node and error signature", "accepted/rejected row counts", "write/import receipts", "completion readback", "next normal run and public verification when applicable"],
+      "enforcement": "Operator triage/closure procedure. Automated incident grouping and recovery notifications are proposed, not deployed."
+    }
+  ],
+  "followUpAutomation": [
+    {"id": "mapping-preflight", "status": "not-implemented", "ownerRole": "n8n-sync-owner", "action": "Add the primary-selection and join-coverage checks before publishing/consuming mapping changes; include inactive groups in an audit so newly eligible campuses cannot expose latent ambiguity."},
+    {"id": "pagination-regression", "status": "not-implemented", "ownerRole": "n8n-sync-owner", "action": "Add a multi-page regression case with overlapping-page failure and exact ID-set coverage; keep production business filters."},
+    {"id": "actionable-alerts", "status": "not-implemented", "ownerRole": "n8n-sync-owner", "action": "Group repeats by root workflow and error signature, retain per-execution evidence and notify on first failure, meaningful change and recovery. Do not globally suppress unrelated errors."}
+  ]
+}

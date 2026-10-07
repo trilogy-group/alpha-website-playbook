@@ -23,7 +23,7 @@ A snapshot older than seven days is stale: the validator should re-resolve befor
 | --- | --- | --- |
 | Campus leadership (one per campus) | Who is on the campus page, their bios, photos, titles; the campus's admissions facts and links | Head of Schools, Dean of Parents, Director of Admissions, Head Guide, Lead Guide, Campus Coordinator |
 | Marketing | Website changes, approved media, packets, events, PR, brand | website operations (Yash), website agent operator (Matt), packet owner, events, PR and comms, brand authority (MacKenzie) |
-| HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email; HubSpot to WordPress n8n sync | HubSpot owner (Hailey McSpadden); HubSpot admin; n8n sync owner (Cristi Constantin primary, Dmitry Bakaev partner) |
+| HubSpot | The Programs records that are the source of truth for campus state and facts; marketing events; email; HubSpot to WordPress n8n sync | HubSpot owner (Hailey McSpadden); current HubSpot admins from the registry; n8n sync owner unconfirmed as of 2026-10-07 |
 | Expansion | Pre-announcement and announced campuses, launch dates, community destinations | new programs (Ashley Rahr), founding (rachel@alpha.school) |
 | Web platform | Header and footer templates, layout, CSS, structural changes, WordPress admin, the events plugin stack, Community app program routing | Elementor owner (not yet named), events plugin owner (Garbhit), WordPress admin, GitHub admin (Fernando), Community app owner (not yet named) |
 | Operations | The National Growth Map sheet and the map API | not yet named |
@@ -72,8 +72,8 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Jeremy Williams | Dean of Parents for Expansion (fallback DoP) | jeremy.williams@2hourlearning.com | Admissions Hub, HubSpot DoPs team |
 | Garbhit Sharma | Events plugin owner; WordPress and Elementor finishing; HubSpot push rights | garbhit.sharma@alpha.school | #admin-websites, APEX topology doc, observer routing |
 | Farhan Raja | HubSpot program admin: Program records, Finalsite and form routing; HubSpot push rights | farhan.raja@trilogy.com | APEX topology doc, #admin-websites |
-| Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions) | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation |
-| Dmitry Bakaev | HubSpot admin; n8n sync owner partner; events HubSpot to site sync reliability (with Garbhit). Not info-packet Canva owner | dmitry.bakaev@trilogy.com | APEX HubSpot push; Cristi GDM; Matt #admin-websites Aug 2026 |
+| Cristi Constantin | Historical n8n author; no current website/n8n ownership assignment | cristi.constantin@trilogy.com | October 5 ownership disclaimer supplied by Matt; `registry/people.json` formerRoles |
+| Dmitry Bakaev | Former Alpha roles; do not route current tickets here | dmitry.bakaev@trilogy.com | Matt reports he no longer works for Alpha; recorded 2026-10-07 in `registry/people.json` formerRoles |
 
 Emails come only from HubSpot owner records, APEX permission files, or the person. Never derive one from a name: the roster carries nicknames and other surnames, and two Deans are on a different domain.
 

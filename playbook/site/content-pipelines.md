@@ -75,11 +75,13 @@ Besides the Alpha WordPress MCP, the APEX hosted agent writes to alpha.school on
 
 ## Who to ask
 
-| Question | Role | Person on 2026-09-15 |
+| Question | Role | Person (n8n/former-role correction 2026-10-07; other entries 2026-09-15) |
 | --- | --- | --- |
-| Run or inspect the n8n campus or Locations workflow; which CSS IDs are controlled | n8n sync owner | Cristi Constantin |
+| Run or inspect the n8n campus or Locations workflow; which CSS IDs are controlled | n8n sync owner | Replacement unconfirmed; see `registry/owners.json` and protocol 1d |
 | Events plugin settings, debug log, manual sync, WordPress and Elementor finishing | events plugin owner | Garbhit Sharma |
 | HubSpot Program creation and properties; Finalsite and HubSpot form routing | HubSpot program admin | Farhan Raja |
 | Event content, public flag, APEX to HubSpot event automation | HubSpot owner | Hailey McSpadden |
-| Campus data defaults, HubSpot governance | HubSpot admin | Dmitry Bakaev |
+| Campus data defaults, HubSpot governance | HubSpot admin | Resolve current holders from `registry/people.json`; Dmitry is no longer active |
 | Map API and map app | growth map owner | not named |
+
+Shared-reader recovery and downstream validation follow `playbook/integrations/program-data-reliability.md`. Rio Locations (`giviJTDi7Q3uM4HM`) and Rio events (`tq6IV3TeqlBaoWlg_dLkj`) are separate workflows; IDs verified October 7 in `registry/sources.json`.
