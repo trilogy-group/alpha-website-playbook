@@ -4,6 +4,10 @@ State: Announced, as decided by HubSpot Programs. Machine form: `spec/campus-pag
 
 HubSpot determines whether the campus is Announced. A public page may exist, but it must not imply that the campus is already open. Requirements based only on observed structure remain baselines until approved.
 
+## Creating the first page
+
+When HubSpot is Announced (or Open) and no WordPress page exists yet, follow `create-from-hubspot.md` before treating the page as a normal content ticket.
+
 | Section | Requirement | Source | Owner when missing | Checks |
 | --- | --- | --- | --- | --- |
 | Page existence | A public page is optional until the launch owner approves it. Any published page must be canonical, complete enough for parents, and intentionally indexable | HubSpot lifecycle and launch owner | Expansion and website operations | Status, canonical, sitemap, noindex |

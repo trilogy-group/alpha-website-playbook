@@ -72,7 +72,7 @@ Machine form: `spec/responsibilities.json` `registryByTicketClass`. Examples:
 | Jeremy Williams | Dean of Parents for Expansion (fallback DoP) | jeremy.williams@2hourlearning.com | Admissions Hub, HubSpot DoPs team |
 | Garbhit Sharma | Events plugin owner; WordPress and Elementor finishing; HubSpot push rights | garbhit.sharma@alpha.school | #admin-websites, APEX topology doc, observer routing |
 | Farhan Raja | HubSpot program admin: Program records, Finalsite and form routing; HubSpot push rights | farhan.raja@trilogy.com | APEX topology doc, #admin-websites |
-| Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions) | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Dmitry; #admin-websites Locations List n8n automation |
+| Cristi Constantin | n8n sync owner (HubSpot Program to WordPress; wordpress_post_id; Locations List; overwrite exceptions). As of 2026-10-05 he is stepping back from Alpha website/n8n day-to-day: check AI and HubSpot admins first, ping Cristi only when stuck | cristi.constantin@trilogy.com | Cristi GDM with Matt/Yash/Farhan; #admin-websites; 2026-10-05 handoff note |
 | Dmitry Bakaev | HubSpot admin; n8n sync owner partner; events HubSpot to site sync reliability (with Garbhit). Not info-packet Canva owner | dmitry.bakaev@trilogy.com | APEX HubSpot push; Cristi GDM; Matt #admin-websites Aug 2026 |
 
 Emails come only from HubSpot owner records, APEX permission files, or the person. Never derive one from a name: the roster carries nicknames and other surnames, and two Deans are on a different domain.
