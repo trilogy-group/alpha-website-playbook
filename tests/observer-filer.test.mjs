@@ -425,10 +425,17 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   const split = planObserverFindings({ run: loadRunFolder(twoRows.dir), bundle: bundle(), queue: [], now: NOW })
   assert.equal(split.counts.groups, 2)
   assert.equal(split.counts.files, 2)
-  assert.deepEqual(split.files.map((f) => [f.key, f.payload.customFields.triagedClass, f.owner.role]).sort(), [
+  assert.deepEqual(split.files.map((f) => [f.key, f.payload.customFields.triagedClass, f.payload.customFields.ownerRole]).sort(), [
     ['observer:campus.facts.email:page:campus-0', 'sync-delivery', 'n8n-sync-owner'],
     ['observer:campus.facts.phone:page:campus-0', 'observer-fact-sync', 'website-agent-operator'],
   ])
+  // October 7 ownership correction: preserve the technical route, but block execution and ask the operator
+  // to resolve the missing holder. Historical Cristi/Dmitry assignments must not be used as current owners.
+  const unownedSync = split.files.find((f) => f.payload.customFields.triagedClass === 'sync-delivery')
+  assert.equal(unownedSync.payload.status, 'BLOCKED')
+  assert.equal(unownedSync.owner.escalated, true)
+  assert.equal(unownedSync.owner.via, 'n8n-sync-owner -> website-agent-operator')
+  assert.match(unownedSync.payload.description, /role n8n-sync-owner has no registered APEX user/)
   assert.ok(split.files.every((f) => f.payload.customFields.requirementId === rowKeyFor(rowForCheck(bundle(), f.check))))
   // While a ticket is open on one key, the other row on the same scope still files.
   const oneOpen = planObserverFindings({ run: loadRunFolder(twoRows.dir), bundle: bundle(), queue: [{ id: 'cmphone1', status: 'NOT_STARTED', title: 'Alpha Campus 0: fails "Phone matches HubSpot"', url: page, customFields: { source: 'agent-found', filerRunId: 'earlier', idempotencyKey: 'observer:campus.facts.phone:page:campus-0', observerIds: [oid('F0E0000001')] } }], now: NOW })

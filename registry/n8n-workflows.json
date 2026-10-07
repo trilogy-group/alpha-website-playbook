@@ -1,0 +1,719 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-07T17:26:15.833Z",
+  "instance": "https://trilogyinc.app.n8n.cloud",
+  "scope": {
+    "accessibleWorkflowCount": 37,
+    "selectedWorkflowCount": 17,
+    "method": "Read-only GET exports. Active-version nodes when available; current-record workflow settings. No live execution or publication verification in this snapshot.",
+    "completeness": "Selected website-related workflows and dependencies, not all Alpha workflows.",
+    "rawExports": "Private, gitignored Marketing Support storage; never commit raw exports.",
+    "runbook": "playbook/integrations/n8n-workflow-map.md"
+  },
+  "ownership": {
+    "role": "n8n-sync-owner",
+    "confirmedPerson": null,
+    "adminAndRotationOwner": null,
+    "accessIsOwnership": false
+  },
+  "sourceGuide": {
+    "url": "https://docs.google.com/document/d/1sVsLqyF0os_zOUjdAy8OcOULyASQttwAj5cBlX7uRY4/edit",
+    "title": "Create an https://alpha.school/[campus] page for a HubSpot program",
+    "modifiedTime": "2026-07-01T10:58:02.109Z",
+    "checkedOn": "2026-10-07",
+    "scope": "alpha.school campus creation; not alphahigh.school",
+    "runbook": "playbook/integrations/campus-page-creation.md"
+  },
+  "access": {
+    "baseUrlEnvironmentVariable": "N8N_BASE_URL",
+    "apiKeyEnvironmentVariable": "N8N_API_KEY",
+    "header": "X-N8N-API-KEY",
+    "localBundle": "secrets/reusable.env (gitignored, mode 0600)",
+    "operatorGuide": "marketingsupport/docs/N8N Access and Workflow Documentation.md",
+    "reusableContextGuide": "mattbarge-superbuilderscontext/accounts/credential-access.md",
+    "verifiedCapability": "Workflow API list and selected GET exports; not admin or write authorization"
+  },
+  "workflows": [
+    {
+      "id": "46faGjSCditoShk3",
+      "name": "Set Cache Data",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/46faGjSCditoShk3",
+      "active": true,
+      "updatedAt": "2026-03-02T15:26:13.129Z",
+      "versionId": "d952624d-9b86-4cfb-8817-dd6fb1eb992f",
+      "activeVersionId": "d952624d-9b86-4cfb-8817-dd6fb1eb992f",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "f2f5b50cb342523f2c40d8f45663eadc42085667c7f7f4382fd7544e36eb279e",
+      "nodeCount": 3,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [],
+      "disabledNodes": []
+    },
+    {
+      "id": "6HvmvgkzPkFikc40",
+      "name": "Read programs and their marketing events",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/6HvmvgkzPkFikc40",
+      "active": true,
+      "updatedAt": "2026-08-08T05:50:38.275Z",
+      "versionId": "081ac70c-589d-4613-8739-4c09ad2ffdb4",
+      "activeVersionId": "081ac70c-589d-4613-8739-4c09ad2ffdb4",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "e509d785793ecdc40f4661c31198f81524825f4616d7ac2c6a0076d930e12c41",
+      "nodeCount": 54,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [
+        {
+          "node": "Call 'Get Cache Data'",
+          "workflowId": "AxGTGInFH5aOlQgr",
+          "disabled": false
+        },
+        {
+          "node": "Call 'Get Cache Lock'",
+          "workflowId": "QCtBaW8ZUDH2rg0m",
+          "disabled": false
+        },
+        {
+          "node": "Call 'Set Cache Data'",
+          "workflowId": "46faGjSCditoShk3",
+          "disabled": false
+        }
+      ],
+      "credentialTypes": [
+        "hubspotAppToken"
+      ],
+      "disabledNodes": [
+        "Remove Duplicate HubDB rows",
+        "Filter out known, specific duplicates",
+        "Correct data issues",
+        "Dev filter 1",
+        "Dev filter 2",
+        "Dev filter 3"
+      ]
+    },
+    {
+      "id": "6Lf8sZVWLAivmJ1l23udy",
+      "name": "Rio SEO Prepare Photo Set",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/6Lf8sZVWLAivmJ1l23udy",
+      "active": true,
+      "updatedAt": "2026-08-29T16:16:25.294Z",
+      "versionId": "3e6148de-afb8-44ea-9084-3c868b26dfe9",
+      "activeVersionId": "3e6148de-afb8-44ea-9084-3c868b26dfe9",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "01f0f7d1564eff6978d31f651e006589291e4d5acfd17f56ba923f7e6ad2eb7e",
+      "nodeCount": 43,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "googleDriveOAuth2Api",
+        "httpQueryAuth",
+        "sftp"
+      ],
+      "disabledNodes": [
+        "DEV Filter"
+      ]
+    },
+    {
+      "id": "AxGTGInFH5aOlQgr",
+      "name": "Get Cache Data",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/AxGTGInFH5aOlQgr",
+      "active": true,
+      "updatedAt": "2026-03-02T14:57:21.365Z",
+      "versionId": "75858a3a-4f83-4c1e-bd38-0be3469fd377",
+      "activeVersionId": "75858a3a-4f83-4c1e-bd38-0be3469fd377",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "69563fdd6385472e0bcd90213effff02eb3cb8f9addeb4d10574f418e702969f",
+      "nodeCount": 3,
+      "timezone": null,
+      "errorWorkflowId": null,
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [],
+      "disabledNodes": []
+    },
+    {
+      "id": "MCqoBXpnbYzbMbYa",
+      "name": "Email error workflow",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/MCqoBXpnbYzbMbYa",
+      "active": true,
+      "updatedAt": "2026-09-17T12:25:33.815Z",
+      "versionId": "2bf26c81-cc73-4a23-9fd6-a4397af1f45e",
+      "activeVersionId": "2bf26c81-cc73-4a23-9fd6-a4397af1f45e",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "aa2e937ccf8244819b39b1f009c035122ff9b8cefb9f41160e0c3a255a543432",
+      "nodeCount": 12,
+      "timezone": null,
+      "errorWorkflowId": null,
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Error Trigger",
+          "type": "n8n-nodes-base.errorTrigger",
+          "disabled": false
+        },
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "airtableTokenApi",
+        "gmailOAuth2",
+        "n8nApi"
+      ],
+      "disabledNodes": []
+    },
+    {
+      "id": "ORgdHC71YJ5RawBy",
+      "name": "alpha.school website: Update school pages",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/ORgdHC71YJ5RawBy",
+      "active": true,
+      "updatedAt": "2026-10-06T15:29:44.905Z",
+      "versionId": "94b04de5-8983-4daa-804e-4e8d53bf5387",
+      "activeVersionId": "94b04de5-8983-4daa-804e-4e8d53bf5387",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "32771d90a4c4b4b5a8751e5e713e4c6cbcc7c1c9c10a53e98f5cbad5cf150594",
+      "nodeCount": 36,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {
+                "triggerAtMinute": 15
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "node": "Read HubSpot programs and marketing events",
+          "workflowId": "6HvmvgkzPkFikc40",
+          "disabled": false
+        }
+      ],
+      "credentialTypes": [
+        "googleSheetsOAuth2Api",
+        "hubspotAppToken",
+        "wordpressApi"
+      ],
+      "disabledNodes": [
+        "Get Website Copy Dynamic",
+        "Merge Website Copy Dynamic with each program",
+        "Filter for DEV purposes",
+        "Keep Rows With a HubSpot Program ID",
+        "Extract Relevant Dynamic Attributes",
+        "Update Elementor page content (Run Once for Each Item)"
+      ]
+    },
+    {
+      "id": "PvvXhs6AYYDmA03T",
+      "name": "Redirect URL for past marketing events",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/PvvXhs6AYYDmA03T",
+      "active": false,
+      "updatedAt": "2025-10-23T11:21:35.000Z",
+      "versionId": "094ba398-4a28-48f6-b8e0-31160a77d659",
+      "activeVersionId": null,
+      "definitionBasis": "saved",
+      "savedDefinitionDiffersFromActive": null,
+      "exportSha256": "6cfba9d2235b6dd41588e146c2148842c2af3ceef5d82c38f119593eadab7fcf",
+      "nodeCount": 20,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {}
+            ]
+          }
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "hubspotAppToken"
+      ],
+      "disabledNodes": []
+    },
+    {
+      "id": "QCtBaW8ZUDH2rg0m",
+      "name": "Get Cache Lock",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/QCtBaW8ZUDH2rg0m",
+      "active": true,
+      "updatedAt": "2026-03-02T12:51:06.692Z",
+      "versionId": "e64e052c-9c51-4c91-8489-7afa6e6e7838",
+      "activeVersionId": "e64e052c-9c51-4c91-8489-7afa6e6e7838",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "293ac97f36e5db62407eb683f7994a4f9a863fec35ff0c27712fbc514635d50a",
+      "nodeCount": 12,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [],
+      "disabledNodes": []
+    },
+    {
+      "id": "RqP1lPvDKvHDxTus",
+      "name": "alpha.school website: Update the 'Locations' Page",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/RqP1lPvDKvHDxTus",
+      "active": true,
+      "updatedAt": "2026-10-06T15:29:46.161Z",
+      "versionId": "dfea115d-528f-45c6-abca-1784bedd033e",
+      "activeVersionId": "dfea115d-528f-45c6-abca-1784bedd033e",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "f33edbb935d0757367586f3d971023b3c40d7875a6fdd607ef76b5d59f8e5913",
+      "nodeCount": 15,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {
+                "triggerAtMinute": 2
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "node": "Read HubSpot programs and marketing events",
+          "workflowId": "6HvmvgkzPkFikc40",
+          "disabled": false
+        }
+      ],
+      "credentialTypes": [
+        "wordpressApi"
+      ],
+      "disabledNodes": [
+        "Data quality corrections"
+      ]
+    },
+    {
+      "id": "b65cZotoEHvoWlNw",
+      "name": "Redirect URL for past marketing events V2",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/b65cZotoEHvoWlNw",
+      "active": true,
+      "updatedAt": "2026-05-29T09:52:35.131Z",
+      "versionId": "c124ea60-5907-4256-af7b-5f470ad65adf",
+      "activeVersionId": "44a863f5-5080-40b4-a355-df43c5bc4829",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "3fc71a3f2800aba7f8da24c6aac6ee8596f01b5640906f52b0ae0664a6b3f32e",
+      "nodeCount": 24,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {}
+            ]
+          }
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "hubspotAppToken"
+      ],
+      "disabledNodes": [
+        "Debug Node",
+        "Debug Node1"
+      ]
+    },
+    {
+      "id": "c8Iz4SLpMlswe0RQ",
+      "name": "APEX staff source \u2014 read-only",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/c8Iz4SLpMlswe0RQ",
+      "active": true,
+      "updatedAt": "2026-09-10T01:27:24.373Z",
+      "versionId": "ba8494ca-d3c7-48eb-a8dc-09fd00fce6d3",
+      "activeVersionId": "ba8494ca-d3c7-48eb-a8dc-09fd00fce6d3",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "f189c7d30de9f21a9505e95c3af512adfc0da999d9d58c21932f8c4c6c46f6eb",
+      "nodeCount": 4,
+      "timezone": null,
+      "errorWorkflowId": null,
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Authenticated staff lookup",
+          "type": "n8n-nodes-base.webhook",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "googleSheetsOAuth2Api",
+        "httpHeaderAuth"
+      ],
+      "disabledNodes": []
+    },
+    {
+      "id": "giviJTDi7Q3uM4HM",
+      "name": "Rio SEO Locations Data Push",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/giviJTDi7Q3uM4HM",
+      "active": true,
+      "updatedAt": "2026-07-22T08:08:22.838Z",
+      "versionId": "2cef1d1d-5b59-4775-b80b-a05ef6ec14a3",
+      "activeVersionId": "2cef1d1d-5b59-4775-b80b-a05ef6ec14a3",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "a163fe4d864ce6ea149252a0e4a8c1d21821d0ee94bf129a65edfef8a40f0009",
+      "nodeCount": 23,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 10
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "node": "Call 'Read programs and their marketing events'",
+          "workflowId": "6HvmvgkzPkFikc40",
+          "disabled": false
+        },
+        {
+          "node": "Call 'Rio SEO Prepare Photo Set'",
+          "workflowId": "6Lf8sZVWLAivmJ1l23udy",
+          "disabled": false
+        }
+      ],
+      "credentialTypes": [
+        "httpQueryAuth",
+        "oAuth2Api"
+      ],
+      "disabledNodes": [
+        "DEV testing"
+      ]
+    },
+    {
+      "id": "gsQBTQQICNDCkJB7",
+      "name": "Update Voiceflow chatbot KB",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/gsQBTQQICNDCkJB7",
+      "active": true,
+      "updatedAt": "2026-02-09T07:54:55.508Z",
+      "versionId": "a3f918d1-f387-4331-9b79-aa695da12c65",
+      "activeVersionId": "1cbd375d-d865-4483-82c4-b3774d5084ca",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": true,
+      "exportSha256": "b8253c510bece6d1b3ecfa21aacd25cac7d1c800970d02e9e2674b244bdf1432",
+      "nodeCount": 7,
+      "timezone": "America/Chicago",
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {
+                "field": "hours",
+                "hoursInterval": 6
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "googleDocsOAuth2Api",
+        "httpHeaderAuth"
+      ],
+      "disabledNodes": []
+    },
+    {
+      "id": "mFdpWfLlufcylSjE",
+      "name": "Error workflow",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/mFdpWfLlufcylSjE",
+      "active": true,
+      "updatedAt": "2026-09-17T12:24:23.824Z",
+      "versionId": "a6e9ea69-62cf-440e-b7a1-c49d67d9032b",
+      "activeVersionId": "a6e9ea69-62cf-440e-b7a1-c49d67d9032b",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "4f3ad371a82a260ddfce46f854ad4491f4cc6aa9abba7e805c6b5b56e6496013",
+      "nodeCount": 9,
+      "timezone": null,
+      "errorWorkflowId": null,
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Error Trigger",
+          "type": "n8n-nodes-base.errorTrigger",
+          "disabled": false
+        },
+        {
+          "name": "When Executed by Another Workflow",
+          "type": "n8n-nodes-base.executeWorkflowTrigger",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "gmailOAuth2",
+        "n8nApi"
+      ],
+      "disabledNodes": []
+    },
+    {
+      "id": "soVfr5lKTr5spDr3",
+      "name": "Email - Update KB Campus Info",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/soVfr5lKTr5spDr3",
+      "active": true,
+      "updatedAt": "2026-08-27T15:49:33.620Z",
+      "versionId": "84c6de3d-60a6-41af-90a3-4a2a9364cc4d",
+      "activeVersionId": "84c6de3d-60a6-41af-90a3-4a2a9364cc4d",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "c263e4c9576efa4581fa6b228d14abc2b8f6327d1419d54f3f4610f756e10afc",
+      "nodeCount": 46,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 5
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "node": "Call 'Read programs and their marketing events'",
+          "workflowId": "6HvmvgkzPkFikc40",
+          "disabled": false
+        }
+      ],
+      "credentialTypes": [
+        "httpBearerAuth",
+        "hubspotAppToken"
+      ],
+      "disabledNodes": []
+    },
+    {
+      "id": "tq6IV3TeqlBaoWlg_dLkj",
+      "name": "Rio SEO create or update events",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/tq6IV3TeqlBaoWlg_dLkj",
+      "active": true,
+      "updatedAt": "2026-09-17T12:29:17.962Z",
+      "versionId": "7e6a9d05-d5ee-4644-8ad2-9ff8c3bb5efd",
+      "activeVersionId": "7e6a9d05-d5ee-4644-8ad2-9ff8c3bb5efd",
+      "definitionBasis": "activeVersion",
+      "savedDefinitionDiffersFromActive": false,
+      "exportSha256": "aabcf49313e91dc3b6af4c6989e6305dee60ef8e5150d2854d9b00abca14f114",
+      "nodeCount": 52,
+      "timezone": null,
+      "errorWorkflowId": "mFdpWfLlufcylSjE",
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "disabled": false,
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 2,
+                "triggerAtMinute": 25
+              }
+            ]
+          }
+        }
+      ],
+      "calls": [
+        {
+          "node": "Read HubSpot programs and marketing events",
+          "workflowId": "6HvmvgkzPkFikc40",
+          "disabled": false
+        }
+      ],
+      "credentialTypes": [
+        "httpCustomAuth",
+        "hubspotAppToken"
+      ],
+      "disabledNodes": [
+        "DEV filtering"
+      ]
+    },
+    {
+      "id": "v6kUqPRA5QaNs8ur",
+      "name": "APEX Drive portrait metadata \u2014 read-only",
+      "url": "https://trilogyinc.app.n8n.cloud/workflow/v6kUqPRA5QaNs8ur",
+      "active": false,
+      "updatedAt": "2026-09-10T04:10:52.950Z",
+      "versionId": "19ebc6e7-2b59-4ab6-bb31-49d8a7ea8fbd",
+      "activeVersionId": null,
+      "definitionBasis": "saved",
+      "savedDefinitionDiffersFromActive": null,
+      "exportSha256": "d5b4b8ce603d23cdce4b04e764bd9434bbde14574fba4c13967194ff821bed67",
+      "nodeCount": 5,
+      "timezone": null,
+      "errorWorkflowId": null,
+      "timezoneEvidence": "Current workflow settings; null means inherited instance timezone not verified.",
+      "triggers": [
+        {
+          "name": "Authenticated portrait request",
+          "type": "n8n-nodes-base.webhook",
+          "disabled": false
+        }
+      ],
+      "calls": [],
+      "credentialTypes": [
+        "googleDriveOAuth2Api",
+        "httpHeaderAuth"
+      ],
+      "disabledNodes": []
+    }
+  ],
+  "observations": {
+    "campusPublisher": {
+      "workflowId": "ORgdHC71YJ5RawBy",
+      "wordpressOrigin": "https://alpha.school",
+      "templatePostId": 6140,
+      "createWhenPostId": -1,
+      "updateWhenPostIdGreaterThan": 0,
+      "additionalAnnouncedOnlyCreateGateObserved": false,
+      "enabledCampusAllowlistObserved": false,
+      "separateSchoolChainGateObserved": false,
+      "cloneDefaultStatusVerified": false,
+      "websiteCopyFixedEnabled": true,
+      "websiteCopyDynamicEnabled": false,
+      "readerInvalidatesCache": true,
+      "emptyValues": "Active all-items writer skips null/undefined/empty values; a blank source does not guarantee clearing the destination.",
+      "optionalTargetIds": [
+        "address"
+      ]
+    },
+    "locationsPublisher": {
+      "workflowId": "RqP1lPvDKvHDxTus",
+      "postId": 6703,
+      "cardsContainerId": "86afe30",
+      "imageAndOrderSource": "Workflow Set Images and Set School Order nodes",
+      "lexingtonInquiryOnlyProgramId": "51223157555",
+      "lexingtonInquiryUrl": "https://alpha.school/boston-suburbs/"
+    },
+    "reader": {
+      "workflowId": "6HvmvgkzPkFikc40",
+      "cacheTtlMinutes": 240,
+      "defaultSelection": {
+        "visibility": "Visible",
+        "online": "not TRUE",
+        "type": [
+          "Announced",
+          "Open"
+        ]
+      },
+      "contract": "spec/program-data-reliability.json"
+    },
+    "voiceflow": {
+      "workflowId": "gsQBTQQICNDCkJB7",
+      "activeSchedule": {
+        "field": "hours",
+        "hoursInterval": 6
+      },
+      "savedSchedule": {
+        "triggerAtHour": 2,
+        "triggerAtMinute": 15
+      }
+    },
+    "alphaHigh": {
+      "programId": "26445615147",
+      "website": "https://alphahigh.school",
+      "verifiedRelationship": "Shared Program/Rio data; description-length incident on October 7",
+      "websitePublisherConfirmedByTheseExports": false
+    }
+  }
+}

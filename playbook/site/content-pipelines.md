@@ -2,13 +2,15 @@
 
 Machine form: `spec/content-pipelines.json`. Read this before any edit: several parts of a campus page are written by automation, and a hand edit to those parts is overwritten on the next run.
 
+October 7 active-version inventory: [n8n workflow map](../integrations/n8n-workflow-map.md). Creation steps: [campus-page creation](../integrations/campus-page-creation.md). Raw exports remain private.
+
 ## The short version
 
 | Content | Written by | From | How often | Owner role |
 | --- | --- | --- | --- | --- |
 | Campus facts on a campus page: phone, address, grade range in the hero, tuition, email, page and SEO titles, four content body blocks, attend CTA, Cognia badge, gallery, FAQ and team titles, the events shortcode, the Apply link, Book a call | n8n workflow "Update school pages" | HubSpot Programs | daily, plus manual runs | n8n sync owner |
-| New campus page draft | same workflow, create branch | HubSpot Program with status Announced and WordPress Post ID -1 | when run | n8n sync owner, then website operations finishes the draft |
-| Locations page List cards | a second n8n workflow | HubSpot Programs, with card images and a few overrides held inside n8n | nightly, midnight Central | n8n sync owner |
+| New campus page (verify draft status) | same workflow, create branch | Eligible HubSpot Program with WordPress Post ID -1; see current creation runbook | when run | n8n sync owner, then website operations finishes the draft |
+| Locations page List cards | a second n8n workflow | HubSpot Programs, with card images and a few overrides held inside n8n | schedule minute 2; inherited timezone needs confirmation | n8n sync owner |
 | Events on `/upcoming-events/` and every campus event strip | Alpha HubSpot Events plugin stack (three plugins) | HubSpot Marketing Events with Public = Yes | about every 30 minutes, plus manual sync; every event post is rewritten on each run | events plugin owner (Garbhit), event data owner (Hailey) |
 | HubSpot Marketing Events themselves | APEX "Push to HubSpot" (allowlisted users), then automatic re-push on edits; public flag switched on by hand in HubSpot, switched off by APEX on cancel | APEX events tracker, registration URL from the Goldcast push | as events are pushed or edited | HubSpot owner |
 | HubSpot Program facts themselves | APEX campus Program editor (human approval, or the hosted agent behind feature flags) | APEX program change | on approval; HubSpot is read back into APEX every 30 minutes | HubSpot program admin |
@@ -42,10 +44,10 @@ Workflow `ORgdHC71YJ5RawBy` on trilogyinc.app.n8n.cloud. It reads HubSpot Progra
 Rules that follow:
 
 - A fact that is wrong on the page is fixed in HubSpot, then the sync runs. A WordPress edit to one of these targets lasts until the next run.
-- The only accepted way to hold a temporary value is to rename the element's CSS ID (for example `address-disabled`) so the workflow cannot find it, with the ticket, element, temporary value, owner, and restore condition recorded. Raleigh's temporary location in February 2026 used this.
+- Preserve required CSS IDs: the active all-items writer throws when a nonempty update cannot find a required target. `address` is explicitly optional. Raleigh used an `address-disabled` override historically; any temporary override needs the ticket, owner and restoration condition and must not be generalized to required IDs.
 - Layout changes to a campus page must keep the CSS IDs the workflow expects. In December 2025 a new events section dropped `events_subtitle` and the daily run failed until those targets were removed from the flow. The SEO Template page must be updated with any approved layout change, because new campus drafts are cloned from it.
-- New campus pages: status Announced, Post ID -1, and the campus in n8n's own allowlist. A successful run is proven by the Post ID turning positive, not by n8n reporting success. The draft is boilerplate; website operations finishes images, staff cards, packet and calendar links, Apply route, and the menu.
-- The launch-copy sentence edited in group A sits in a content body block. Whether that block is n8n-controlled on the current template is an open question in the spec; until answered, expect the next daily run to be the test.
+- New campus pages: the October 7 active export clones template 6140 for eligible Programs with Post ID -1. No enabled campus allowlist or extra Announced-only gate was found. The run may also update existing campuses. Prove the returned positive ID, actual page status and completed content writes; Cristi describes draft creation but the export does not establish the clone endpoint default. Website operations finishes unsynchronized content under the ticket protocol.
+- The launch sentence is confirmed as `content_body_4`, supplied by Program `website_campus_intro`. Fixed-copy sheet values supply the other main intro blocks; the Dynamic-copy branch is disabled. Blank source values may be skipped, leaving old destination content. Verify actual readback and the next scheduled publication.
 
 ## The events plugin stack
 
@@ -75,11 +77,13 @@ Besides the Alpha WordPress MCP, the APEX hosted agent writes to alpha.school on
 
 ## Who to ask
 
-| Question | Role | Person on 2026-09-15 |
+| Question | Role | Person (n8n/former-role correction 2026-10-07; other entries 2026-09-15) |
 | --- | --- | --- |
-| Run or inspect the n8n campus or Locations workflow; which CSS IDs are controlled | n8n sync owner | Cristi Constantin |
+| Run or inspect the n8n campus or Locations workflow; which CSS IDs are controlled | n8n sync owner | Replacement unconfirmed; see `registry/owners.json` and protocol 1d |
 | Events plugin settings, debug log, manual sync, WordPress and Elementor finishing | events plugin owner | Garbhit Sharma |
 | HubSpot Program creation and properties; Finalsite and HubSpot form routing | HubSpot program admin | Farhan Raja |
 | Event content, public flag, APEX to HubSpot event automation | HubSpot owner | Hailey McSpadden |
-| Campus data defaults, HubSpot governance | HubSpot admin | Dmitry Bakaev |
+| Campus data defaults, HubSpot governance | HubSpot admin | Resolve current holders from `registry/people.json`; Dmitry is no longer active |
 | Map API and map app | growth map owner | not named |
+
+Shared-reader recovery and downstream validation follow `playbook/integrations/program-data-reliability.md`. Rio Locations (`giviJTDi7Q3uM4HM`) and Rio events (`tq6IV3TeqlBaoWlg_dLkj`) are separate workflows; IDs verified October 7 in `registry/sources.json`.
