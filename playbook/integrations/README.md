@@ -2,7 +2,8 @@
 
 Use these pages after source diagnosis identifies the system that owns or delivers the requested value.
 
-- `hubspot-and-n8n.md`: Program fields, APEX editor, HubSpot readback, n8n mapping, execution, recovery, and verification.
+- `hubspot-and-n8n.md`: Program fields, APEX editor, HubSpot readback, n8n mapping, execution, recovery, HubDB Is primary duplicates, n8n JSON export documentation path, and verification.
+- `../campus-page/create-from-hubspot.md`: Create a new campus WordPress page from a HubSpot Program (`wordpress_post_id` = -1, run Update school pages).
 - `wordpress-elementor-alpha-mcp.md`: WordPress object resolution, Elementor, Alpha MCP, overlapping writers, and bounded mutations.
 - `cache-and-public-verification.md`: Elementor CSS, WP Engine, Cloudflare, canonical verification, and batches.
 - `forms-and-admissions.md`: HubSpot forms, `submission_campus`, Finalsite, payments, UTM behavior, and safe QA.

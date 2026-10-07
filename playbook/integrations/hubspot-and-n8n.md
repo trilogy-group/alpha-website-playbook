@@ -1,6 +1,6 @@
 # HubSpot and n8n Runbook
 
-Last verified: September 17, 2026  
+Last verified: October 7, 2026  
 Primary campus workflow: `ORgdHC71YJ5RawBy` on `trilogyinc.app.n8n.cloud`
 
 ## Boundary
@@ -154,12 +154,46 @@ A changed export hash, field list, CSS ID list, schedule, or owner is drift and 
 10. The query-free canonical URL is checked for the new address, absence of the old address, correct schema, desktop and mobile rendering.
 11. The next normal n8n run must preserve the result before the ticket is considered durable.
 
+
+## Create a new campus page
+
+For the first WordPress draft from HubSpot, follow `campus-page/create-from-hubspot.md`. Short form: Program Visible, Type Open or Announced, School Chain Alpha School, Online FALSE, required Program Configuration and Contact fields filled, Program on the n8n allowlist, set `wordpress_post_id` to `-1`, run `ORgdHC71YJ5RawBy`, prove a positive post ID, then finish slug, publish, nav, HubSpot Website URL, and non-automated surfaces.
+
+Source recipe: Cristi Constantin Google Doc shared 2026-10-07 (`1sVsLqyF0os_zOUjdAy8OcOULyASQttwAj5cBlX7uRY4`).
+
+## Read programs failures (duplicate Program ID)
+
+Workflow: [Read programs and their marketing events](https://trilogyinc.app.n8n.cloud/workflow/6HvmvgkzPkFikc40) (`6HvmvgkzPkFikc40`). Error text often: `There is at least one duplicate Program ID`. Cascades into Update school pages, Locations, Rio SEO, KB campus info, and related scheduled flows.
+
+Diagnosis order (verified 2026-10-07):
+
+1. Confirm HubSpot Programs pagination already returns the full set (113 unique programs as of Oct 2026). Pagination alone was not the cause of the mid-September to early-October failure flood.
+2. Inspect HubDB table [119932418](https://app.hubspot.com/hubdb/40051392/table/119932418). The workflow merges Programs with HubDB mappings. Two rows for the same school with neither marked **Is primary** expand one Program into duplicate IDs after the join.
+3. Mark **Is primary** on the row that is the latest or correct mapping for that school. Keep alternate mappings intact. On 2026-10-07, `austin_k8` and `south_bay_la` were marked primary; a fresh execution returned 54 programs after filters with zero duplicate IDs and preserved Austin and South Bay events.
+4. Seattle and other schools can hit the same pattern. Check other campuses where Is primary is already set as examples.
+5. Mute or filter the error emails only after the join is fixed. Muting alone leaves campuses and events unsynced.
+
+Owner for HubDB mapping rows: HubSpot program admin (Farhan Raja) with website operations as observer. n8n workflow logic changes still go through the n8n sync owner.
+
+## Documenting n8n for agents
+
+Cristi (2026-10-07): there is no fuller written n8n/website playbook beyond the slim create-campus Doc. To capture how HubSpot, n8n, and the website interact, export the relevant n8n workflows as JSON and give those exports to an agent. He confirmed that path worked when tried before. Prefer versioned exports stored with the playbook inventory (workflow ID, name, active state, owner, schedule, export hash) under Version and drift control above.
+
+Priority workflows to export when documenting:
+
+- `ORgdHC71YJ5RawBy` Update school pages
+- `6HvmvgkzPkFikc40` Read programs and their marketing events
+- Locations List sync (owner-confirmed ID)
+- Redirect URL for past marketing events V2 (Farhan owns the Redirect URL developer role)
+- RioSEO / Google Business Profile event push
+
 ## Owners and unresolved items
 
-- n8n campus workflow: Cristi Constantin, with Dmitry Bakaev as partner in the current registry
-- HubSpot Program administration: Farhan Raja
+- n8n campus workflow: Cristi Constantin (stepping back from Alpha website/n8n day-to-day as of 2026-10-05; still the escalation contact when AI and HubSpot admins are stuck), with Dmitry Bakaev as partner in the current registry
+- HubSpot Program administration: Farhan Raja (also Redirect URL flow developer per Cristi)
 - HubSpot governance: Hailey McSpadden and Dmitry Bakaev according to the responsibility registry
 - Website operations: Matt Barge and Yash Chitneni
 - Protected Program-name process: owner path documented, but exact request procedure still needs confirmation
 - Exact APEX campus-editor field list: must be exported and added to the source registry
 - Exact n8n manual-run UI and alert destinations: must be confirmed by the n8n owner
+- Versioned n8n JSON exports for the priority workflows above: not yet checked into this repo

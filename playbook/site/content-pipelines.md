@@ -7,7 +7,7 @@ Machine form: `spec/content-pipelines.json`. Read this before any edit: several 
 | Content | Written by | From | How often | Owner role |
 | --- | --- | --- | --- | --- |
 | Campus facts on a campus page: phone, address, grade range in the hero, tuition, email, page and SEO titles, four content body blocks, attend CTA, Cognia badge, gallery, FAQ and team titles, the events shortcode, the Apply link, Book a call | n8n workflow "Update school pages" | HubSpot Programs | daily, plus manual runs | n8n sync owner |
-| New campus page draft | same workflow, create branch | HubSpot Program with status Announced and WordPress Post ID -1 | when run | n8n sync owner, then website operations finishes the draft |
+| New campus page draft | same workflow, create branch (see `campus-page/create-from-hubspot.md`) | HubSpot Program with status Announced or Open and WordPress Post ID -1 | when run | n8n sync owner, then website operations finishes the draft |
 | Locations page List cards | a second n8n workflow | HubSpot Programs, with card images and a few overrides held inside n8n | nightly, midnight Central | n8n sync owner |
 | Events on `/upcoming-events/` and every campus event strip | Alpha HubSpot Events plugin stack (three plugins) | HubSpot Marketing Events with Public = Yes | about every 30 minutes, plus manual sync; every event post is rewritten on each run | events plugin owner (Garbhit), event data owner (Hailey) |
 | HubSpot Marketing Events themselves | APEX "Push to HubSpot" (allowlisted users), then automatic re-push on edits; public flag switched on by hand in HubSpot, switched off by APEX on cancel | APEX events tracker, registration URL from the Goldcast push | as events are pushed or edited | HubSpot owner |
@@ -77,7 +77,8 @@ Besides the Alpha WordPress MCP, the APEX hosted agent writes to alpha.school on
 
 | Question | Role | Person on 2026-09-15 |
 | --- | --- | --- |
-| Run or inspect the n8n campus or Locations workflow; which CSS IDs are controlled | n8n sync owner | Cristi Constantin |
+| Run or inspect the n8n campus or Locations workflow; which CSS IDs are controlled | n8n sync owner | Cristi Constantin (escalation; day-to-day handoff in progress as of 2026-10-05) |
+| HubDB program mappings / Is primary duplicates blocking Read programs | HubSpot program admin | Farhan Raja |
 | Events plugin settings, debug log, manual sync, WordPress and Elementor finishing | events plugin owner | Garbhit Sharma |
 | HubSpot Program creation and properties; Finalsite and HubSpot form routing | HubSpot program admin | Farhan Raja |
 | Event content, public flag, APEX to HubSpot event automation | HubSpot owner | Hailey McSpadden |
