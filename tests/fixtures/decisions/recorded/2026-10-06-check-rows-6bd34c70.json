@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-06T20:30:33.028Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code coordinator session, 2026-10-06, approving the sweep-2026-10-06-B assessment",
+  "date": "2026-10-06",
+  "specRefs": [
+    "spec/check-rows.json"
+  ],
+  "summary": "A header bounding box that overlaps the title's line box while the visible logo and title glyphs keep clearance is not a defect. Evidence: sweep-2026-10-06-B measurements (mobile box overlap 12.5 to 17.6 px, visible clearance 26.5 to 29.5 px on 8 pages; header not sticky). The 48 px / 25% filing rule of 2026-09-24 stands; decisionPending cmtnl00rs000404l1ihl5ucij is removed from site.layout.header-overlap.mobile and the eight header-overlap tickets close as false positives. Follow-up, advisory, not done here: a real glyph collision on mobile would start near 43 px of box overlap, under the 48 px threshold; the observer owner should measure the header's painted logo and the title's glyph pixels rather than boxes",
+  "decisionRow": "| 2026-10-06 | Decided (Matt Barge, Claude Code coordinator session, 2026-10-06, approving the sweep-2026-10-06-B assessment): A header bounding box that overlaps the title's line box while the visible logo and title glyphs keep clearance is not a defect. Evidence: sweep-2026-10-06-B measurements (mobile box overlap 12.5 to 17.6 px, visible clearance 26.5 to 29.5 px on 8 pages; header not sticky). The 48 px / 25% filing rule of 2026-09-24 stands; decisionPending cmtnl00rs000404l1ihl5ucij is removed from site.layout.header-overlap.mobile and the eight header-overlap tickets close as false positives. Follow-up, advisory, not done here: a real glyph collision on mobile would start near 43 px of box overlap, under the 48 px threshold; the observer owner should measure the header's painted logo and the title's glyph pixels rather than boxes | Matt Barge | spec/check-rows.json; tests/fixtures/decisions/recorded/2026-10-06-check-rows-6bd34c70.json |",
+  "appliedIn": "spec/check-rows.json; tests/fixtures/decisions/recorded/2026-10-06-check-rows-6bd34c70.json",
+  "textSha256": "6bd34c70a7346c493aed640d81332c167d7d627977874e4a10d8ca6e335588cb",
+  "text": "Matt Barge, 2026-10-06, Claude Code coordinator session: \"yes\", approving the recommended single action of the read-only assessment sweep-2026-10-06-B (marketingsupport work-assets/apex-website-tickets/sweep-2026-10-06/B/run-report.md): close the header-overlap tickets as not a defect (measurement artifact), remove decisionPending cmtnl00rs000404l1ihl5ucij from site.layout.header-overlap.mobile, and record that a box overlap between the transparent absolute header and the H1 line box, with visible clearance, is not a defect; the 48 px / 25% filing rule stands. No WordPress or Elementor change.\n"
+}

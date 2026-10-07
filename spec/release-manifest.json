@@ -1,10 +1,10 @@
 {
   "$comment": "Signed release manifest (improvement plan workstream 3). What production must report for the website agent to claim or write. tests/check-release.mjs compares this with the Alpha MCP health route and the committed policy bundle; agent/intake.mjs refuses to release execution-ready tickets on a mismatch while unrelated intake administration continues. Update deliberately with each plugin upload or policy change; the policySha256 comes from spec/policy-bundle.generated.json. checkBundleSha256 and checkBundleVersion come from spec/check-bundle.generated.json (tests/build-checks.mjs); the observer cites them on every finding and a run is reproducible only against the manifest's hash.",
-  "version": "2026-10-07.3",
-  "policySha256": "5557a57dcd7a05ff159f17cd99898bcef4381e22c863a95179b24f383ab935c4",
-  "checkBundleSha256": "ba24da58d9a0d487d515adead2439a504af9dd37b31ecee3aad28d03ea02b735",
-  "checkBundleVersion": "1.11",
-  "playbookCommit": "5aaee7250e24e0b4e310cfbb2768981df1349e83",
+  "version": "2026-10-07.4",
+  "policySha256": "083f42590e4c98dc446a089af7668e1c7d8b3d2c7eeec2dedcc683ad11e4ffd4",
+  "checkBundleSha256": "8558dbda41a54f3e407121afae6a8cfb8c1a8a406fd03930c0c5509b64c92e1e",
+  "checkBundleVersion": "1.12",
+  "playbookCommit": "aaa99526df91890aff562da0f8cfbda9bf64519a",
   "bridge": {
     "package": "@alpha/wordpress-mcp",
     "version": "0.5.8",

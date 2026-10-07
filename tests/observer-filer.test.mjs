@@ -171,7 +171,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   const queue = loadQueue(path.join(fixtures, 'queue-2026-09-24.json'))
   assert.equal(queue.length, 199, 'the 180 open observer tickets the sweep worked, the open grade decision ticket the bundle names, and the 18 agent-found tickets under pre-redesign check ids')
   const checks = bundle()
-  assert.equal(checks.version, '1.11')
+  assert.equal(checks.version, '1.12')
   assert.match(checks.sha256, /^[0-9a-f]{64}$/)
   assert.equal(checks.sha256, loadCheckBundle(path.join(root, 'spec', 'check-bundle.generated.json')).sha256, 'the fixture bundle is a copy of the committed one; rebuild and copy after a row change')
   const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
@@ -258,7 +258,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lead.patch.customFields.checkId, 'SITE-4E2ADC7F5B', 'the observer check id stays on the ticket')
   assert.equal(lead.patch.customFields.filerRunId, RUN_ID)
   assert.equal(lead.patch.customFields.requirementId, 'site.layout.header-overlap', 'the row key (row id minus viewport), never the coarse requirement')
-  assert.equal(lead.patch.customFields.checkBundleVersion, '1.11')
+  assert.equal(lead.patch.customFields.checkBundleVersion, '1.12')
   assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
@@ -340,7 +340,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lexington.payload.customFields.filedBy, FILED_BY)
   assert.equal(lexington.payload.customFields.idempotencyKey, lexington.key)
   assert.equal(lexington.payload.customFields.requirementId, 'campus.resources.calendar.reachable')
-  assert.equal(lexington.payload.customFields.checkBundleVersion, '1.11')
+  assert.equal(lexington.payload.customFields.checkBundleVersion, '1.12')
   assert.equal(lexington.payload.customFields.checkBundleSha256, checks.sha256)
   assert.equal(lexington.payload.customFields.filerRunId, RUN_ID)
   assert.ok(isFilerOwnedTask({ customFields: lexington.payload.customFields }), 'what the filer files, the filer may later close')
@@ -350,7 +350,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.match(lexington.payload.description, /\nSource: [^\n]*\(read 2026-09-24T/)
   assert.match(lexington.payload.description, /\nObserved: href https:\/\/drive\.google\.com\/file\/d\/[^,]+, status 404, finalUrl /)
   assert.match(lexington.payload.description, /\nExpected: HTTP 2xx calendar destination \(campus\.resources\.calendar; http-2xx 2 status-class; severity medium\)\n/)
-  assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.11 row campus\.resources\.calendar\.reachable\n/)
+  assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.12 row campus\.resources\.calendar\.reachable\n/)
   // Grounding restore: the Raleigh image-identity finding (the packet repeats one incident id nine times) is enforced again, so it groups into one ticket, never nine.
   assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict').length, 0)
   const raleigh = plan.files.filter((f) => f.title.startsWith('Alpha Raleigh'))
@@ -376,7 +376,7 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   const plan = planObserverFindings({ run, bundle: bundle(), queue: [], now: NOW })
   assert.equal(plan.counts.findings, 24)
   assert.equal(plan.counts.groups, 1)
-  assert.equal(plan.counts.files, 1, 'the decision ticket the row names is not open, so the row files')
+  assert.equal(plan.counts.files, 1, 'nothing open on the scope, so the row files')
   const [ticket] = plan.files
   assert.equal(ticket.key, 'observer:site.layout.header-overlap:template:campus', 'keyed on the row id minus its viewport suffix')
   assert.deepEqual(ticket.rows, ['site.layout.header-overlap.desktop', 'site.layout.header-overlap.mobile'], 'the desktop and mobile rows share the key and scope')
@@ -396,8 +396,9 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.match(ticket.payload.description, /\nObserved: campus-0 \(desktop\): heading Alpha Campus 0 K-8 Private School, [^|]+ \| campus-0 \(mobile\): /)
   assert.match(ticket.payload.description, /\(\+14 more; every observer id is listed under Evidence\)/)
   assert.match(ticket.payload.description, /\nExpected: header separated from headings on desktop 1440x1000 \(site\.layout\.viewport; box-overlap-max 48 px or 0\.25 ratio-of-heading-box; severity high\)\n/)
-  assert.match(ticket.payload.description, /\nRelated: cmtnl00rs000404l1ihl5ucij \(decision recorded; this row files again\)\n/)
-  assert.match(ticket.payload.description, /check bundle 1\.11 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
+  // Decided 2026-10-06 (Matt Barge): the row no longer waits on the Atlanta lead, so the ticket names no related decision ticket.
+  assert.doesNotMatch(ticket.payload.description, /\nRelated: cmtnl00rs000404l1ihl5ucij/)
+  assert.match(ticket.payload.description, /check bundle 1\.12 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
   assert.equal(ticket.payload.customFields.triagedClass, 'observer-layout')
   assert.equal(ticket.payload.customFields.checkId, oid('00D0000000'))
   assert.equal(ticket.payload.customFields.requirementId, 'site.layout.header-overlap')
@@ -412,7 +413,10 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   const deduped = planObserverFindings({ run, bundle: bundle(), queue: [{ id: 'cmopen1', status: 'BLOCKED', title: 'Alpha Atlanta: the header overlaps on mobile', url: 'https://alpha.school/atlanta/', customFields: { source: 'alpha-site-qc', check: 'campus-layout-header-overlap', checkId: oid('03A0000000') } }], now: NOW })
   assert.equal(deduped.counts.files, 0)
   assert.equal(deduped.existing[0].existing.id, 'cmopen1')
-  const decided = planObserverFindings({ run, bundle: bundle(), queue: [{ id: 'cmtnl00rs000404l1ihl5ucij', status: 'BLOCKED', title: 'Alpha Atlanta: header overlap lead', url: 'https://alpha.school/atlanta/', customFields: { source: 'alpha-site-qc', check: 'campus-layout-header-overlap', checkId: oid('A71A47A001') } }], now: NOW })
+  // The decisionPending hold, exercised on a copy of the bundle: the committed mobile row's own hold was removed on the 2026-10-06 decision.
+  const held = bundle()
+  held.rows.find((r) => r.id === 'site.layout.header-overlap.mobile').decisionPending = 'cmtnl00rs000404l1ihl5ucij'
+  const decided = planObserverFindings({ run, bundle: held, queue: [{ id: 'cmtnl00rs000404l1ihl5ucij', status: 'BLOCKED', title: 'Alpha Atlanta: header overlap lead', url: 'https://alpha.school/atlanta/', customFields: { source: 'alpha-site-qc', check: 'campus-layout-header-overlap', checkId: oid('A71A47A001') } }], now: NOW })
   assert.equal(decided.counts.files, 0)
   assert.deepEqual(decided.decisionPending.map((d) => [d.key, d.findings, d.decisionTicket]), [['observer:site.layout.header-overlap:template:campus', 24, 'cmtnl00rs000404l1ihl5ucij']])
 
@@ -838,7 +842,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   const summary = JSON.parse(stdout)
   assert.equal(summary.mode, 'dry-run')
   assert.equal(summary.runId, RUN_ID)
-  assert.equal(summary.bundleVersion, '1.11')
+  assert.equal(summary.bundleVersion, '1.12')
   assert.equal(summary.counts.resolves, 0, 'legacy observer tickets are never the filer\'s to close (PR 26)')
   assert.equal(summary.counts.needsPerson, 0)
   assert.equal(summary.counts.unresolved, 180)
