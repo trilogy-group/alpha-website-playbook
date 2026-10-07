@@ -129,7 +129,7 @@ test('the controls row is in the bundle, enforced, and points at the registry', 
   assert.deepEqual(controlsRow.lifecycleStates, ['Open'])
   assert.equal(controlsRow.literals.registry, 'registry/campus-enrollment-state.json')
   assert.equal(controlsRow.literals.waitlistLabelPattern, WAITLIST_LABEL.source.replace(/\\\//g, '/'))
-  assert.equal(bundle.version, '1.12')
+  assert.equal(bundle.version, '1.13')
   assert.ok(read('registry/observer-checks.json').families['campus-truth'].includes('campus-enrollment-state-controls'))
 })
 

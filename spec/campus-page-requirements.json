@@ -1,6 +1,6 @@
 {
   "$comment": "Per-state, per-section requirements. Rows marked observed_baseline need owner approval before they justify restructuring a page. Each row names its source, owner, checks and exemplar status.",
-  "version": "0.3",
+  "version": "0.4",
   "states": {
     "Open": {
       "campus.hero.identity": {
@@ -33,6 +33,24 @@
         "exemplars": [
           "https://alpha.school/plano/"
         ]
+      },
+      "campus.hero.book-a-call": {
+        "required": true,
+        "content": "A Book a Call control is visible on desktop, tablet and mobile (hero CTA row; the lower CTA row too where the page has book_a_call_2) and links to this campus's own HubSpot Program call_scheduling_link. A hidden or missing Book a Call, or a link that is not the Program's call_scheduling_link, is a finding. An agent shows (never hides) the book_a_call_* widgets when HubSpot has the link; when the Program has no call_scheduling_link, nothing changes on the page and the ask goes to the HubSpot Program owner. Named exceptions live in registry/campus-cta-exceptions.json (Dorado's destination).",
+        "source": "docs/decisions.md 2026-10-06 (Rachel Goodlad, Slack 2026-10-06 14:40, in answer to Matt Barge: \"Should Announced campuses have a Book a Call button?\" \"Yes, they should all have their own links\"; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-2cd27dff.json)",
+        "ownerWhenMissing": "website-agent-operator (widget text, link and visibility, wordpress-direct); HubSpot Program owner when call_scheduling_link is empty",
+        "checks": [
+          "observer campus-book-call-present",
+          "observer campus-book-call-link-reachable",
+          "observer campus-book-call-destination-campus",
+          "observer campus-page-booking-source-sync",
+          "tests/rendered-controls.mjs hero.book-a-call",
+          "page-check book-a-call-consistency"
+        ],
+        "exemplars": [
+          "https://alpha.school/plano/"
+        ],
+        "status": "active"
       },
       "campus.intro.status-sentence": {
         "required": true,
@@ -332,7 +350,7 @@
       },
       "campus.hero.ctas": {
         "required": "source dependent",
-        "content": "Only approved destinations appear. Apply, booking, event, packet and Community controls are conditional on verified routes.",
+        "content": "Only approved destinations appear. Apply, event, packet and Community controls are conditional on verified routes. Book a Call is required with the campus's own call_scheduling_link (campus.hero.book-a-call).",
         "source": "spec/source-authority.json",
         "ownerWhenMissing": "field-specific owner",
         "checks": [
@@ -340,6 +358,24 @@
           "campus identity"
         ],
         "exemplars": [],
+        "status": "active"
+      },
+      "campus.hero.book-a-call": {
+        "required": true,
+        "content": "A Book a Call control is visible on desktop, tablet and mobile (hero CTA row; the lower CTA row too where the page has book_a_call_2) and links to this campus's own HubSpot Program call_scheduling_link. A hidden or missing Book a Call, or a link that is not the Program's call_scheduling_link, is a finding. An agent shows (never hides) the book_a_call_* widgets when HubSpot has the link; when the Program has no call_scheduling_link, nothing changes on the page and the ask goes to the HubSpot Program owner. Named exceptions live in registry/campus-cta-exceptions.json (Dorado's destination).",
+        "source": "docs/decisions.md 2026-10-06 (Rachel Goodlad, Slack 2026-10-06 14:40, in answer to Matt Barge: \"Should Announced campuses have a Book a Call button?\" \"Yes, they should all have their own links\"; tests/fixtures/decisions/recorded/2026-10-06-campus-page-requirements-2cd27dff.json)",
+        "ownerWhenMissing": "website-agent-operator (widget text, link and visibility, wordpress-direct); HubSpot Program owner when call_scheduling_link is empty",
+        "checks": [
+          "observer campus-book-call-present",
+          "observer campus-book-call-link-reachable",
+          "observer campus-book-call-destination-campus",
+          "observer campus-page-booking-source-sync",
+          "tests/rendered-controls.mjs hero.book-a-call",
+          "page-check book-a-call-consistency"
+        ],
+        "exemplars": [
+          "https://alpha.school/chicago/"
+        ],
         "status": "active"
       },
       "campus.intro.media": {

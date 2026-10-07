@@ -171,7 +171,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   const queue = loadQueue(path.join(fixtures, 'queue-2026-09-24.json'))
   assert.equal(queue.length, 199, 'the 180 open observer tickets the sweep worked, the open grade decision ticket the bundle names, and the 18 agent-found tickets under pre-redesign check ids')
   const checks = bundle()
-  assert.equal(checks.version, '1.12')
+  assert.equal(checks.version, '1.13')
   assert.match(checks.sha256, /^[0-9a-f]{64}$/)
   assert.equal(checks.sha256, loadCheckBundle(path.join(root, 'spec', 'check-bundle.generated.json')).sha256, 'the fixture bundle is a copy of the committed one; rebuild and copy after a row change')
   const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
@@ -258,7 +258,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lead.patch.customFields.checkId, 'SITE-4E2ADC7F5B', 'the observer check id stays on the ticket')
   assert.equal(lead.patch.customFields.filerRunId, RUN_ID)
   assert.equal(lead.patch.customFields.requirementId, 'site.layout.header-overlap', 'the row key (row id minus viewport), never the coarse requirement')
-  assert.equal(lead.patch.customFields.checkBundleVersion, '1.12')
+  assert.equal(lead.patch.customFields.checkBundleVersion, '1.13')
   assert.deepEqual(lead.patch.customFields.clearingRunIds, [RUN_ID])
   const original = queue.find((t) => t.id === lead.id).description
   assert.ok(lead.patch.description.startsWith(original), 'the existing text stays first')
@@ -340,7 +340,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(lexington.payload.customFields.filedBy, FILED_BY)
   assert.equal(lexington.payload.customFields.idempotencyKey, lexington.key)
   assert.equal(lexington.payload.customFields.requirementId, 'campus.resources.calendar.reachable')
-  assert.equal(lexington.payload.customFields.checkBundleVersion, '1.12')
+  assert.equal(lexington.payload.customFields.checkBundleVersion, '1.13')
   assert.equal(lexington.payload.customFields.checkBundleSha256, checks.sha256)
   assert.equal(lexington.payload.customFields.filerRunId, RUN_ID)
   assert.ok(isFilerOwnedTask({ customFields: lexington.payload.customFields }), 'what the filer files, the filer may later close')
@@ -350,7 +350,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.match(lexington.payload.description, /\nSource: [^\n]*\(read 2026-09-24T/)
   assert.match(lexington.payload.description, /\nObserved: href https:\/\/drive\.google\.com\/file\/d\/[^,]+, status 404, finalUrl /)
   assert.match(lexington.payload.description, /\nExpected: HTTP 2xx calendar destination \(campus\.resources\.calendar; http-2xx 2 status-class; severity medium\)\n/)
-  assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.12 row campus\.resources\.calendar\.reachable\n/)
+  assert.match(lexington.payload.description, /\nPlaybook: campus\.resources\.calendar\.reachable \(requirement campus\.resources\.calendar, spec\/observer-check-map\.json requirements\/campus\.resources\.calendar\); check bundle 1\.13 row campus\.resources\.calendar\.reachable\n/)
   // Grounding restore: the Raleigh image-identity finding (the packet repeats one incident id nine times) is enforced again, so it groups into one ticket, never nine.
   assert.equal(plan.advisory.filter((a) => a.check === 'campus-image-identity-conflict').length, 0)
   const raleigh = plan.files.filter((f) => f.title.startsWith('Alpha Raleigh'))
@@ -398,7 +398,7 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.match(ticket.payload.description, /\nExpected: header separated from headings on desktop 1440x1000 \(site\.layout\.viewport; box-overlap-max 48 px or 0\.25 ratio-of-heading-box; severity high\)\n/)
   // Decided 2026-10-06 (Matt Barge): the row no longer waits on the Atlanta lead, so the ticket names no related decision ticket.
   assert.doesNotMatch(ticket.payload.description, /\nRelated: cmtnl00rs000404l1ihl5ucij/)
-  assert.match(ticket.payload.description, /check bundle 1\.12 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
+  assert.match(ticket.payload.description, /check bundle 1\.13 rows site\.layout\.header-overlap\.desktop, site\.layout\.header-overlap\.mobile\n/)
   assert.equal(ticket.payload.customFields.triagedClass, 'observer-layout')
   assert.equal(ticket.payload.customFields.checkId, oid('00D0000000'))
   assert.equal(ticket.payload.customFields.requirementId, 'site.layout.header-overlap')
@@ -842,7 +842,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   const summary = JSON.parse(stdout)
   assert.equal(summary.mode, 'dry-run')
   assert.equal(summary.runId, RUN_ID)
-  assert.equal(summary.bundleVersion, '1.12')
+  assert.equal(summary.bundleVersion, '1.13')
   assert.equal(summary.counts.resolves, 0, 'legacy observer tickets are never the filer\'s to close (PR 26)')
   assert.equal(summary.counts.needsPerson, 0)
   assert.equal(summary.counts.unresolved, 180)
@@ -918,7 +918,10 @@ test('observer filer: CTA exceptions, the sister-site guard, shared leadership, 
   const registry = loadRegistry('registry/campus-cta-exceptions.json')
   assert.deepEqual(Object.keys(registry.ctas), ['book-a-call', 'calendar', 'packet', 'apply', 'community'])
   const lexington = registry.campuses['boston-suburbs']['book-a-call']
-  assert.deepEqual([lexington.rule, lexington.decidedBy, lexington.source, lexington.decidedOn, lexington.expires], ['hidden', 'Matt Barge', 'email relayed 2026-09-24', '2026-09-24', 'lifecycle:Open'])
+  // Lexington's 2026-09-24 hidden exception expired 2026-10-06 (Rachel Goodlad: every Announced campus shows Book a Call with its own link).
+  assert.deepEqual([lexington.rule, lexington.decidedBy, lexington.source, lexington.decidedOn, lexington.expires], ['hidden', 'Matt Barge', 'email relayed 2026-09-24', '2026-09-24', '2026-10-06'])
+  // The historical entry (lifecycle:Open) still pins how a hidden, lifecycle-bound exception behaves.
+  const historical = { ctas: registry.ctas, rules: registry.rules, campuses: { 'boston-suburbs': { 'book-a-call': { ...lexington, expires: 'lifecycle:Open' } } } }
   assert.equal(registry.campuses.dorado['book-a-call'].rule, 'destination', 'the Dorado one-off moved out of spec/campus-page-controls.json')
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'spec', 'campus-page-controls.json'), 'utf8')).controls['hero.book-a-call'].exceptions.split(' ')[0], 'registry/campus-cta-exceptions.json', 'the controls file points at the registry')
   // Every CTA row reads the registry through exemptionsRef (a string or an array since bundle 1.1); the identity rows read the leadership groups.
@@ -937,13 +940,13 @@ test('observer filer: CTA exceptions, the sister-site guard, shared leadership, 
   // Lexington: Book a Call hidden while Announced (lifecycle:Open). The present, reachable and destination rows are all exempt while the
   // campus is Announced (state from spec/campus-lifecycle.json when the finding carries none); once the finding says Open the exception has ended.
   const booking = (check, extra = {}) => ({ loop: 'campus-truth', check, entity: 'program-51223157555', field: 'booking', severity: 'high', title: 'Alpha Lexington has no visible booking CTA', actionable: true, url: 'https://alpha.school/boston-suburbs/', expected: 'visible Book a Call', actual: { href: null }, id: oid('B00C000001'), ...extra })
-  const hidden = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present'), now: NOW })
+  const hidden = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present'), now: NOW, registry: historical })
   assert.equal(hidden.exempt, true)
   assert.deepEqual([hidden.slug, hidden.campus, hidden.cta, hidden.rule, hidden.expires, hidden.suffix], ['boston-suburbs', 'Alpha Lexington', 'book-a-call', 'hidden', 'lifecycle:Open', 'present'])
   assert.match(hidden.expiryBasis, /^ends when the Program type becomes Open; state Announced per spec\/campus-lifecycle\.json/)
-  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-link-reachable'), finding: booking('campus-book-call-link-reachable'), now: NOW }).exempt, true, 'hidden exempts every row of the CTA')
-  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-destination-campus'), finding: booking('campus-book-call-destination-campus'), now: NOW }).exempt, true)
-  const opened = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present', { actual: { href: null, programType: 'Open' } }), now: NOW })
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-link-reachable'), finding: booking('campus-book-call-link-reachable'), now: NOW, registry: historical }).exempt, true, 'hidden exempts every row of the CTA')
+  assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-destination-campus'), finding: booking('campus-book-call-destination-campus'), now: NOW, registry: historical }).exempt, true)
+  const opened = ctaExceptionFor({ row: rowForCheck(checks, 'campus-book-call-present'), finding: booking('campus-book-call-present', { actual: { href: null, programType: 'Open' } }), now: NOW, registry: historical })
   assert.equal(opened.exempt, false)
   assert.match(opened.expired, /^campus is Open \(finding\); the exception ended/)
   assert.deepEqual(lifecycleFor(booking('x'), 'boston-suburbs').state, 'Announced')
@@ -966,15 +969,17 @@ test('observer filer: CTA exceptions, the sister-site guard, shared leadership, 
   assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-calendar-present'), finding: tulsa, now: new Date('2026-09-19T23:59:00Z'), registry: dated }).exempt, true)
   assert.equal(ctaExceptionFor({ row: rowForCheck(checks, 'campus-calendar-link-reachable'), finding: tulsa, now: new Date('2026-09-19T23:59:00Z'), registry: dated }).exempt, false, 'present exempts the present row only')
 
-  // Through the plan: the Lexington booking finding is exempted and files nothing; the same finding on an Open campus files; the report says why.
+  // Through the plan: before 2026-10-06 the Lexington booking finding is exempted and files nothing; the same finding on an Open campus files; the report says why.
   const planned = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [booking('campus-book-call-present'), booking('campus-book-call-present', { id: oid('B00C000002'), entity: 'program-26459919512', url: 'https://alpha.school/austin/', title: 'Alpha Austin has no visible booking CTA' })] }).dir), bundle: checks, queue: [], now: NOW })
   assert.equal(planned.counts.exempted, 1)
   assert.deepEqual(planned.exempted.map((e) => [e.kind, e.campus, e.cta, e.rule, e.decidedBy, e.source]), [['cta-exception', 'Alpha Lexington', 'book-a-call', 'hidden', 'Matt Barge', 'email relayed 2026-09-24']])
-  assert.deepEqual(planned.files.map((f) => f.title), ['Alpha Austin: fails "Book a Call CTA present on Open campus pages"'])
-  const ended = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [booking('campus-book-call-present', { actual: { href: null, programType: 'Open' } })] }).dir), bundle: checks, queue: [], now: NOW })
+  assert.deepEqual(planned.files.map((f) => f.title), ['Alpha Austin: fails "Book a Call CTA present on Open and Announced campus pages"'])
+  // From 2026-10-06 the exception has expired: a hidden Book a Call on Announced Lexington files like any other Open or Announced page.
+  const ended = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [booking('campus-book-call-present')] }).dir), bundle: checks, queue: [], now: new Date('2026-10-06T12:00:00Z') })
   assert.equal(ended.counts.exempted, 0)
   assert.equal(ended.counts.files, 1)
-  assert.match(ended.exceptionsNotApplied[0].expired, /the exception ended when the HubSpot Program type became Open/)
+  assert.deepEqual(ended.files.map((f) => f.title), ['Alpha Lexington: fails "Book a Call CTA present on Open and Announced campus pages"'])
+  assert.match(ended.exceptionsNotApplied[0].expired, /^expired on 2026-10-06$/)
 
   // Sister-site guard: campus rows on any other host are out-of-scope-site and never filed; site-family rows and public-host routes are unaffected.
   const tsa = booking('campus-book-call-present', { id: oid('0FF5170001'), entity: 'program-50888725544', url: 'https://sportsacademy.school/lake-travis/', title: 'Texas Sports Academy Lake Travis has no visible booking CTA' })
