@@ -7,14 +7,14 @@
       "name": "alpha.school website: Update school pages",
       "direction": "HubSpot Programs -> n8n -> WordPress campus pages (Elementor)",
       "platform": "n8n cloud, trilogyinc.app.n8n.cloud, workflow ORgdHC71YJ5RawBy (folder Alpha School > SEO > Alpha School Website)",
-      "schedule": "daily at 00:15 Central (n8n schedule trigger, triggerAtMinute 15); pages show modified 05:18 UTC on 2026-09-16; manual run only under the existing owner/actor and task approval rules; October 7 ownership gap recorded in registry/owners.json",
+      "schedule": "Schedule rule triggerAtMinute 15; workflow timezone inherited and not verified in October 7 exports. Historically described as daily 00:15 Central; confirm instance timezone/next execution before giving an ETA. Manual runs use existing actor/task approval rules.",
       "ownerRole": "n8n-sync-owner",
       "sourceOfTruth": "HubSpot Programs record; HubDB for program-interest mappings",
-      "creates": "a draft campus page when Program status is Announced, WordPress Post ID is -1, and the campus is in the workflow's own program-interest allowlist; writes the new post id back to HubSpot",
+      "creates": "October 7 active export: eligible reader output with wordpress_post_id=-1 clones template 6140 and writes the positive ID back to HubSpot. No enabled campus allowlist or additional Announced-only create gate observed. Cristi describes draft creation; current clone endpoint default status must be read back. See playbook/integrations/campus-page-creation.md.",
       "targets": {
         "$comment": "From the Code node \"Update Elementor page content\" in the 2026-09-16 export. Key is the Elementor CSS ID (_element_id); value is the field written and its source. A required ID missing from a page makes the run throw for that page.",
         "title": "title <- school name + grade levels + \"Private School in\" city, state (New York: \"Serving <grades> Grade in New York City\")",
-        "content_title": "title <- sheet Website Copy Fixed/Dynamic content_title with [CITY], [DISPLAY_REGION], [DISPLAY_NAME*] substitutions",
+        "content_title": "title <- enabled Website Copy Fixed content_title with [CITY], [DISPLAY_REGION], [DISPLAY_NAME*] substitutions; Dynamic branch disabled as of October 7",
         "content_body_1": "editor <- sheet content_body_1 (New York hardcoded in the flow)",
         "content_body_2": "editor <- sheet content_body_2",
         "content_body_3": "editor <- sheet content_body_3 (New York hardcoded in the flow)",
@@ -36,7 +36,7 @@
         "team_title": "title <- \"Meet our Team\"",
         "team_top_title": "title <- school name",
         "hubspot_events": "shortcode <- [hubspot_events school=\"<form_program_interest_label>\" show_filters=\"false\" limit=\"3\"]",
-        "resource_4": "link.url <- admission_link (optional; to be replaced by the Community link concept)",
+        "resource_4": "link.url <- nonempty admission_link; active all-items writer skips empty source values; required target when a nonempty update is present",
         "post fields": "post_title \"SEO - <name>\", seo_title, seo_description (\"Experience Alpha School's AI-powered, personalized learning at the <city> campus for <grades> grades...\"), OpenGraph and X titles and descriptions, JSON-LD School graph (name, url, email, telephone, address, geo, sameAs from Google Maps, Yelp, Niche, GreatSchools, Winnie profiles)"
       },
       "notInScope": [
@@ -56,13 +56,13 @@
         "2026-09-16 00:18 CT: the run rewrote content_body_4 on all 14 group A pages from website_campus_intro, reverting 12 to \"is launching in Fall 2026\", Dorado to \"launching in Fall 2026 and now accepting applications\", Oklahoma City to \"is now open\"; Greenwich stayed \"open and enrolling\" because its HubSpot value already says so"
       ],
       "evidenceOfRun": "n8n execution log (operators only); HubSpot Post ID change from -1; public page fields match HubSpot",
-      "agentRule": "Correct HubSpot first (website_campus_intro through the APEX campus Program editor for the intro block; the onboarding sheet Website Copy tabs for content_title, content_body_1 to 3, attend_cta_button), then run or wait for the 00:15 CT run, then verify. Never hand-edit a listed target as a durable fix.",
+      "agentRule": "Correct the source first (Program website_campus_intro for content_body_4, enabled Website Copy Fixed tab for content_title/body_1 through 3/attend CTA). Dynamic branch is disabled as of October 7. Observe or perform an approved bounded run, then verify stored/public output and source freshness; never assume blank means delete or that a manual batch selects one campus.",
       "confirmed2026-09-15": {
         "method": "find_text_occurrences through the Alpha MCP on the live Atlanta and Plano documents, plus CSS IDs read from the rendered pages",
         "result": "The intro status sentence (\"Alpha <Campus> is open and enrolling.\" and the \"Join us for an info session\" paragraph) is the text-editor widget with CSS ID content_body_4. The hero subtitle \"<grades> Private School in <City>\" is the widget with CSS ID title. Both are n8n-synced. The 14 group A sentence edits of 2026-09-15 therefore last until the next daily run unless the HubSpot website copy (website_campus_intro and the substituted copy blocks) already carries the open wording.",
         "liveIds": "Plano, Raleigh, Atlanta carry title, address (Raleigh: address-disabled), phone, email, tuition, content_title, content_body_1 to 4, attend_cta_button, cognia_yes, cognia_yes_text, cognia_candidate, cognia_candidate_text, gallery_title, faq_title, team_title, team_top_title, hubspot_events, resource_4"
       },
-      "export": "Workflow export supplied by Cristi Constantin 2026-09-16 (36 nodes, active). Read nodes: sub-workflow 6HvmvgkzPkFikc40 \"Read programs and their marketing events\" (HubSpot), Google Sheet 1gnqy32nKoReaoWKaipxg4UnQlqP916N4xsAsM_HzGoU \"School onboarding - single file for all schools\" tabs \"Website Copy Fixed\" (CSS ID -> Value, same for every campus) and \"Website Copy Dynamic\" (one row per HubSpot Program ID). Write nodes: POST custom/v1/clone-elementor-page (post_id 6140, the SEO Template) and POST custom/v1/update-elementor-page with post_id, seo_title, og_title, x_title, seo_description, og_description, x_description, json_ld, post_title, elementor_data; PATCH crm/v3/objects/p_programs/{id} to write wordpress_post_id after creation. WordPress user: n8n.",
+      "export": "Historical September 16 export documented the endpoint/field mapping. Current October 7 active export and hash: registry/n8n-workflows.json. Reads shared workflow 6HvmvgkzPkFikc40 and onboarding workbook 1gnqy32nKoReaoWKaipxg4UnQlqP916N4xsAsM_HzGoU, Website Copy Fixed tab. Dynamic branch disabled. Writes POST custom/v1/clone-elementor-page (template 6140), PATCH p_programs/{id} wordpress_post_id and POST custom/v1/update-elementor-page (Elementor and page/search/social/schema fields).",
       "programFieldsRead": [
         "id",
         "school",
@@ -94,13 +94,20 @@
         "great_schools_profile",
         "winnie_profile"
       ],
-      "readerContract": "spec/program-data-reliability.json"
+      "readerContract": "spec/program-data-reliability.json",
+      "observed2026-10-07": {
+        "inventory": "registry/n8n-workflows.json",
+        "activeVersionId": "94b04de5-8983-4daa-804e-4e8d53bf5387",
+        "copySource": "Website Copy Fixed enabled; Dynamic read/filter/extract/merge nodes disabled.",
+        "selection": "Shared reader defaults Visible/non-online/Announced-or-Open; DEV filter disabled; no separate School Chain gate observed.",
+        "writeSemantics": "Active all-items code skips empty values and treats address as optional; do not assume a blank source clears a destination."
+      }
     },
     "n8n-locations-list": {
       "name": "Locations page List tab",
       "direction": "HubSpot Programs -> n8n -> alpha.school/locations/#list cards",
       "platform": "n8n cloud workflow RqP1lPvDKvHDxTus (Cristi Constantin, 2026-09-16)",
-      "schedule": "nightly at midnight Central; on demand",
+      "schedule": "Schedule rule triggerAtMinute 2; inherited instance timezone not verified in October 7 export; previously described as nightly Central. Confirm next execution; manual runs follow actor/task rules.",
       "ownerRole": "n8n-sync-owner",
       "since": "2025-11-27",
       "targets": [
@@ -287,7 +294,7 @@
   "openQuestions": [
     "Whether the events source moves from HubSpot Marketing Events to APEX (Hailey, 2026-08-28).",
     "Who edits the onboarding sheet tabs Website Copy Fixed and Website Copy Dynamic (content_title, content_body_1 to 3, attend_cta_button)",
-    "Whether the sub-workflow 6HvmvgkzPkFikc40 filters Programs by visibility, and which campuses it returns (41 items on 2026-06-18)"
+    "Replacement n8n technical/admin owner and inherited instance timezone remain unconfirmed. Active workflow evidence: registry/n8n-workflows.json."
   ],
   "inboundToApex": {
     "alpha-experiences": "alpha-experiences.manus.space posts event requests to APEX (bearer ALPHA_EXPERIENCES_WEBHOOK_SECRET) and they become intake tasks and events",

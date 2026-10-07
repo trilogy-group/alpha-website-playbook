@@ -1,5 +1,7 @@
 # Registry
 
+- `n8n-workflows.json`: reviewed October 7 metadata for 17 selected workflows/dependencies, active versus saved versions, schedules, credential types and current publishing observations. Raw exports remain private. This is an observed inventory, not permission to execute or a complete organization inventory.
+
 - `sources.json`: where every fact and cross-system identity comes from, with access notes and authority boundaries.
   `n8n.sharedProgramReader` records the October 7 reader/HubDB contract, accessible consumer inventory and ownership gap; use `spec/program-data-reliability.json` for acceptance checks. Its observations do not certify every integration or install a monitor.
 - `campus-pages.json`: campus slug to URL, WordPress object, map program ids, and the names tickets use.

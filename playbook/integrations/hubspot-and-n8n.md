@@ -5,6 +5,8 @@ Primary campus workflow: `ORgdHC71YJ5RawBy` on `trilogyinc.app.n8n.cloud`
 
 Shared-reader incident and ownership update: October 7, 2026. For duplicate Program IDs, HubDB aliases, source freshness or downstream quality alerts, use [Shared Program data: diagnosis, prevention and recovery](program-data-reliability.md) and `spec/program-data-reliability.json`. Other field mappings below retain their existing verification dates.
 
+The [October 7 workflow map](n8n-workflow-map.md) and [campus creation guide](campus-page-creation.md) add active-version evidence: Dynamic-copy and DEV filters are disabled, no enabled campus allowlist was found, and blank source values may be skipped rather than clearing Elementor. The inventory records saved versus active versions and unverified inherited timezones. Recheck those facts before each run.
+
 ## Boundary
 
 HubSpot Programs is authoritative for campus lifecycle and website-driven campus facts. n8n delivers those values to specific Elementor targets. APEX owns the request, approval, and evidence. WordPress is downstream for synchronized values.
@@ -66,7 +68,7 @@ For a manual run, the owner must record:
 - Exact HubSpot Program object ID
 - Source values at run time
 - WordPress destination object ID
-- Whether the campus is in the workflow allowlist
+- Actual Program-selection scope, including enabled filters and any allowlist (none enabled in the October 7 campus publisher)
 - Starting `wordpress_post_id` value
 - Node that selected the Program
 - Node that transformed each ticketed field

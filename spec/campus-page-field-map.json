@@ -3,8 +3,8 @@
   "version": "0.2",
   "asOf": "2026-09-25",
   "writers": {
-    "n8n-hubspot": "n8n 'Update school pages' writes the element nightly at 00:15 CT from a HubSpot Program property. WordPress edits are overwritten. Fix path: HubSpot data (APEX campus Program editor) or the n8n derivation.",
-    "n8n-sheet": "n8n writes the element nightly from the onboarding sheet 'School onboarding - single file for all schools' tabs Website Copy Fixed (one value for all campuses) and Website Copy Dynamic (per HubSpot Program ID). Fix path: the sheet.",
+    "n8n-hubspot": "n8n 'Update school pages' writes Program values on schedule (historically 00:15 CT; October 7 export inherits an unverified instance timezone). WordPress edits may be overwritten. Fix source or approved derivation; empty values can be skipped. See registry/n8n-workflows.json.",
+    "n8n-sheet": "n8n reads onboarding workbook Website Copy Fixed. October 7 active export has Website Copy Dynamic read/filter/extract/merge disabled; a Dynamic-tab edit alone does not reach the current publisher. Fix the enabled source or approved mapping. Inventory: registry/n8n-workflows.json.",
     "n8n-derived": "n8n computes the element from Program fields with fixed wording in the workflow code. Fix path: HubSpot data for the inputs, or the n8n code for the wording.",
     "events-plugin": "The Alpha HubSpot Events plugin renders the element from hubspot_event posts imported from HubSpot Marketing Events every 30 minutes. Fix path: HubSpot event data, plugin settings, or the campus shortcode (which n8n writes).",
     "wordpress-direct": "No automation writes it. Edited through the Alpha WordPress MCP under the ticket protocol.",
@@ -68,7 +68,7 @@
       "writer": "n8n-sheet",
       "source": {
         "system": "onboarding sheet",
-        "tab": "Website Copy Fixed or Dynamic",
+        "tab": "Website Copy Fixed",
         "key": "content_title"
       },
       "derivation": "sheet value with [CITY], [DISPLAY_REGION], [DISPLAY_NAME*] substituted",
@@ -520,7 +520,7 @@
           "wordpress_post_id"
         ]
       },
-      "derivation": "page created when type is Announced and wordpress_post_id is -1 (clone of SEO Template post 6140); public when visibility on and WordPress published",
+      "derivation": "October 7 active export: eligible shared-reader Program with wordpress_post_id=-1 clones SEO Template 6140; positive Post ID updates existing page. Default reader allows Visible/non-online/Announced-or-Open. No additional Announced-only or enabled campus allowlist gate observed. Verify returned page status; a source visibility change does not itself prove an existing WordPress page was unpublished. See playbook/integrations/campus-page-creation.md.",
       "expectedFrom": "lifecycle spec",
       "onMismatch": {
         "ifSourceWrong": "hubspot-data",

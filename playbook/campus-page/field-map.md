@@ -2,12 +2,14 @@
 
 Machine form: `spec/campus-page-field-map.json`. This is the map an agent or the observer uses to turn "the page says X" into "field F in system S says Y, the derivation is D, so this is a data, mapping, delivery, or presentation defect owned by role R". Nothing on a campus page is edited until its row here has been read.
 
+October 7 active-version evidence and caveats: [n8n workflow map](../integrations/n8n-workflow-map.md). These observations do not authorize new publications or change campus lifecycle requirements.
+
 ## Four kinds of writer
 
 | Writer | What it means | Fix path |
 | --- | --- | --- |
-| n8n from HubSpot | The element is rewritten every night at 00:15 Central from a HubSpot Program property. A WordPress edit lasts one day. | The website operators change the HubSpot value through the APEX campus editor (two-way sync), or a person edits the Program in HubSpot; the n8n derivation is changed only by the n8n-sync-owner. |
-| n8n from the onboarding sheet | Same nightly run, but the value comes from the "School onboarding" Google Sheet, tabs Website Copy Fixed (one value for every campus) and Website Copy Dynamic (per Program). | Change the sheet. |
+| n8n from HubSpot | Program values are written on schedule; historically 00:15 Central, but the inherited timezone needs confirmation in the October 7 export. WordPress edits may be overwritten; empty source values may be skipped. | The website operators change the HubSpot value through the APEX campus editor (two-way sync), or a person edits the Program in HubSpot; the n8n derivation is changed only by the n8n-sync-owner. |
+| n8n from the onboarding sheet | Same run, using the "School onboarding" Google Sheet, Website Copy Fixed. The Dynamic branch is disabled in the October 7 active export. | Change the sheet. |
 | Events plugin | The campus event strip is rendered from `hubspot_event` posts imported from HubSpot Marketing Events every 30 minutes; n8n writes the shortcode that scopes it to the campus. | HubSpot event data, plugin settings, or the shortcode. |
 | WordPress direct | No automation writes it. | Alpha WordPress MCP under the ticket protocol. |
 
@@ -20,7 +22,7 @@ Shared header and footer are a fifth case: theme-builder templates, edited only 
 | Hero title and subtitle | `title` | n8n from HubSpot | name, grade_levels, city, state | "Alpha X" plus "K-8 Private School in City, State" (New York special case) | hubspot-data, or sync-mapping if the wording rule is wrong |
 | Hero CTA row | none | WordPress direct | requirement | fixed four CTAs | link-cta |
 | Campus label | `campus` | n8n from HubSpot | campus | verbatim | hubspot-data |
-| Intro title, body 1 to 3, attend CTA | `content_title`, `content_body_1` to `_3`, `attend_cta_button` | n8n from sheet | Website Copy tabs | sheet text with [CITY], [DISPLAY_REGION], [DISPLAY_NAME] substituted; New York hardcoded | sheet-data |
+| Intro title, body 1 to 3, attend CTA | `content_title`, `content_body_1` to `_3`, `attend_cta_button` | n8n from sheet | Website Copy Fixed (Dynamic disabled) | sheet text with [CITY], [DISPLAY_REGION], [DISPLAY_NAME] substituted; New York hardcoded | sheet-data |
 | Intro status sentence and info-session paragraph | `content_body_4` | n8n from HubSpot | `website_campus_intro` (hand-typed), with `type` as the state it must agree with | verbatim with substitutions. The sentence is not derived from the status field yet; decided 2026-09-25 (MacKenzie Price) that it will be, in the n8n workflow (pending with the n8n-sync-owner). | hubspot-data when the text contradicts `type`; sync-mapping for the proposal to derive it from `type` |
 | Intro card image or video | `content_image`, `content_video` | WordPress direct | media registry by state | Open card or approved video | media |
 | Address and grade line | `address` | n8n from HubSpot | school_address, grade_levels_suffixed | "K - 8th Grade" title (Austin hardcoded PreK - 5th), address text; hidden when empty; Raleigh excluded | hubspot-data; sync-mapping for the Austin hardcode |
@@ -35,7 +37,7 @@ Shared header and footer are a fifth case: theme-builder templates, edited only 
 | Gallery and FAQ titles | `gallery_title`, `faq_title` | n8n from HubSpot | name | "Alpha X Gallery", "Alpha X FAQs" | hubspot-data |
 | Gallery images, FAQ answers, blog section | various | WordPress direct | photography, brand | identity and brand rules | observer-media-identity, copy |
 | SEO title and description, social titles, JSON-LD | post fields | n8n from HubSpot | name, grades, city, state, contact, coordinates, profile links | fixed wording plus fields | hubspot-data; sync-mapping for wording |
-| Page exists and is public | page | n8n from HubSpot | type, visibility, wordpress_post_id | created when Announced and post id -1; public when visible and published | hubspot-data, sync-delivery, or status |
+| Page exists and is public | page | n8n from HubSpot | type, visibility, wordpress_post_id | eligible reader Program with post id -1 creates a page; no extra Announced-only gate observed; verify actual WordPress publication separately | hubspot-data, sync-delivery, or status |
 
 ## How the loop uses it
 

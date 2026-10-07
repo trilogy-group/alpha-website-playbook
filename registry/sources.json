@@ -257,7 +257,10 @@
         ],
         "impact": "Reader repair permits normal scheduled consumers to resume. Reader success is not proof of consumer validation, completed import or public correctness."
       }
-    }
+    },
+    "workflowInventory": "registry/n8n-workflows.json",
+    "workflowRunbook": "playbook/integrations/n8n-workflow-map.md",
+    "campusCreationRunbook": "playbook/integrations/campus-page-creation.md"
   },
   "onboardingSheet": {
     "name": "School onboarding - single file for all schools",
