@@ -1890,7 +1890,7 @@ test('blocked notice names what it waits on and a person, never a role; shared-b
   noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: 'a decision', owner: 'n8n-sync-owner' }), 'OWNER_IS_ROLE')
   noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: 'a decision', owner: '' }), 'NO_OWNER')
   noticeError(() => composeBlocked({ name: 'L', title: 't', ticketId: 'x', waitingOn: '', owner: 'Matt Barge' }), 'MISSING_ARG')
-  assert.equal(ownerForRole('packet-owner', bundle.roleOwners), 'Matt Barge')
+  assert.equal(ownerForRole('packet-owner', bundle.roleOwners), 'Yash Chitneni', 'packet-owner moved to Yash Chitneni (Matt Barge, 2026-10-07)')
   assert.equal(ownerForRole('ticket-requester', bundle.roleOwners), null, 'many registered people is no answer')
   assert.equal(ownerForRole('no-such-role', bundle.roleOwners), null)
   const shared = composeShared({ name: 'Lindsay', title: 'Website (Other) — Alpha Chicago', ticketId: 'cmu4', permalink: 'https://alpha.slack.com/archives/C09GRQ8L533/p1700000000000001' })
@@ -1984,7 +1984,7 @@ test('notify-requester dry run resolves the recipient, prints the message, and w
   // Blocked: the owner comes from the ticket's ownerRole when one person is registered; the second send is an update only on change.
   const blocked = mockSlackApex({ ticket: noticeTicket({ status: 'BLOCKED' }) })
   const b1 = await runNotice({ ticketId: 'cmnotice1', kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
-  assert.equal(b1.kind, 'blocked'); assert.match(b1.message, /Owner: Matt Barge\./)
+  assert.equal(b1.kind, 'blocked'); assert.match(b1.message, /Owner: Yash Chitneni\./)
   const b2 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the 2026-27 packet batch, none approved yet', send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })
   assert.equal(b2.decision.send, false)
   const b3 = await runNotice({ ticket: blocked.state.ticket, kind: 'blocked', blocker: 'the approved packet, link swap pending', send: true, reviewed: REVIEWED }, { env: noticeEnv, fetchImpl: blocked.fetchImpl, io: quiet().io })

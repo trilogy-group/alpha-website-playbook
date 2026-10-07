@@ -25,7 +25,7 @@
 2. **launch_copy_coming_soon** : Campus requester confirms; website-operations executes.
 3. **hubspot_campus_facts** : Confirm with director-of-admissions, edit HubSpot, then n8n-sync-owner. Not hand WP for synced fields.
 4. **events_public_sync** : events owns content/Public flag; sync reliability partners own HubSpot→site. Route in `#admin-websites`. Do not file Website APEX.
-5. **info_packet** : Campus facts + marketing-collateral (Canva) + brand-authority signoff + expansion-founding language QA + website-operations host. **packet-owner person is an open gap** (Dmitry was incorrectly sole holder).
+5. **info_packet** : Campus facts + marketing-collateral (Canva) + brand-authority signoff + expansion-founding language QA + website-operations host. packet-owner is Yash Chitneni (Matt Barge, 2026-10-07).
 6. **apply_link_admission** : hubspot-owner for `admission_link` / email; website-agent-operator for WP map.
 7. **brand_copy_voice_ux** : brand-authority SoT; brand-authority-liaison for UX feedback.
 8. **n8n_overwrite_or_sync_exception** : n8n-sync-owner. New locations: HubSpot `wordpress_post_id = -1` then run sync.
@@ -82,4 +82,4 @@ Point-in-time holders. Prefer live lookup over this appendix.
 | expansion-founding | Rachel Goodlad |
 | hubspot-owner | Hailey McSpadden |
 
-Open gap: **packet-owner** has no registered person after Dmitry was removed from that role. Packet path uses campus + marketing-collateral + brand-authority + expansion-founding + website-operations hosting.
+packet-owner: Yash Chitneni (Matt Barge, 2026-10-07, "info packets are all yash"). Packet path uses packet-owner + campus + marketing-collateral + brand-authority + expansion-founding + website-operations hosting.

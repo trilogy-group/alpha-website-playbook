@@ -1556,13 +1556,6 @@
           "asOf": "2026-09-15"
         },
         {
-          "role": "packet-owner",
-          "title": "Owns info packets (Canva 2026-27 template with Yash Chitneni; Flipsnack publishing; campus page links), pending setup and access",
-          "campus": "all",
-          "source": "Slack #support-websites thread 2026-08-27 10:48 (Matt: \"I will take the info packets\"); marketingsupport tasks/info-packet-support-2026-08-27",
-          "asOf": "2026-08-27"
-        },
-        {
           "role": "observer-owner",
           "title": "Owns the production observer (superbuilders/aeo) and its tickets",
           "campus": "all",
@@ -2727,6 +2720,13 @@
           "campus": "all",
           "source": "Matt Barge",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "packet-owner",
+          "title": "Owns info packets for all campuses (Canva 2026-27 template; Flipsnack publishing; campus page links)",
+          "campus": "all",
+          "source": "Matt Barge 2026-10-07 (\"info packets are all yash\"), superseding Slack #support-websites thread 2026-08-27 10:48 (Matt: \"I will take the info packets\")",
+          "asOf": "2026-10-07"
         }
       ],
       "sources": [

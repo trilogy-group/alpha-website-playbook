@@ -44,7 +44,7 @@ Why this matters for the playbook: the refresh was designed and built by the sam
 | Growth map API and map app | growth-map-owner | Not named ("Operations") | Gap |
 | Community app | community-app-owner | Not named | Gap |
 | Airtable (Alpha Answers, video gallery) | not defined | Not recorded | Q-18 |
-| Canva (info packets, collateral) | packet-owner, marketing-collateral | Canva team transferred to Matt Barge on 2026-08-27; Chris Davidson produces collateral | Confirmed |
+| Canva (info packets, collateral) | packet-owner, marketing-collateral | packet-owner is Yash Chitneni (Matt Barge, 2026-10-07); the Canva team was transferred to Matt Barge on 2026-08-27; Chris Davidson produces collateral | Confirmed |
 | Flipsnack (packet hosting, account BADA559BDC9) | not defined | Not recorded | Q-18 |
 | Goldcast (events registration) | events | Assumed events team | Q-18 |
 | Google Tag Manager, Site Kit, ad pixels, consent | analytics-and-consent-owner | Not named | Gap |
@@ -58,7 +58,7 @@ Why this matters for the playbook: the refresh was designed and built by the sam
 
 From `playbook/responsibilities.md`. Departments own areas; roles within them own, approve, or supply.
 
-- **Marketing** owns website changes, media, packets, events, PR, brand. Website operations (Yash), agent operator (Matt), brand authority (MacKenzie).
+- **Marketing** owns website changes, media, packets, events, PR, brand. Website operations and packet owner (Yash), agent operator (Matt), brand authority (MacKenzie).
 - **HubSpot** owns the Programs records that are the truth for campus state and facts, marketing events, and the n8n sync.
 - **Campus leadership** owns who is on the campus page and the campus facts, and supplies them. Not in charge of website choices.
 - **Expansion** owns pre-announcement and announced campuses, launch dates, Community destinations.

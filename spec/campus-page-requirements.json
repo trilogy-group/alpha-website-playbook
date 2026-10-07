@@ -97,7 +97,7 @@
         "required": "when an approved current packet exists",
         "content": "Info packet CTA links to a public, logged-out-reachable document for this campus and school year.",
         "source": "requirement catalog; group A replay found 401s on Oklahoma City, South Bay LA, Tulsa",
-        "ownerWhenMissing": "info_packet path: campus requester + marketing-collateral + brand-authority + expansion-founding + website-operations (packet-owner person is an open gap; not Dmitry Bakaev)",
+        "ownerWhenMissing": "info_packet path: packet-owner (Yash Chitneni, registry/people.json) with campus requester + marketing-collateral + brand-authority + expansion-founding + website-operations",
         "checks": [
           "page-check cta-links-resolve",
           "observer campus-info-packet-link-reachable",

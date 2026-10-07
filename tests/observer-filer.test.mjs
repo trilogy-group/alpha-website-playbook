@@ -1332,9 +1332,9 @@ test('observer filer: coverage findings file one Missing Info per campus and reg
     ['Alpha Scottsdale', 'Open', 'registry/campus-open-media.json', 'Yash Chitneni', 'website-operations', 'observer-media-identity'],
   ].sort())
   assert.equal(gaps.missingInfo.find((m) => m.file === 'registry/campus-leadership.json').title, 'no approved campus leadership recorded for Open campus Alpha East Bay')
-  // A packets gap on an Open campus files to the packet owner (Matt) as observer-packet.
+  // A packets gap on an Open campus files to the packet owner (Yash Chitneni since 2026-10-07) as observer-packet.
   const openPackets = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [{ ...run.findings.find((f) => f.id === 'SITE-C0FE000005'), url: 'https://alpha.school/east-bay/', entity: 'program-42698614786', actual: { ...run.findings.find((f) => f.id === 'SITE-C0FE000005').actual, slug: 'east-bay', campus: 'Alpha East Bay', state: 'Open', programType: 'Open', programId: 'program-42698614786' } }] }).dir), bundle: checks, queue: [], now, registries: { 'registry/campus-packets.json': { campuses: {} } } })
-  assert.deepEqual(openPackets.missingInfo.map((m) => [m.campus, m.file, m.owner, m.ticketClass, m.ownerRole]), [['Alpha East Bay', 'registry/campus-packets.json', 'Matt Barge', 'observer-packet', 'packet-owner']])
+  assert.deepEqual(openPackets.missingInfo.map((m) => [m.campus, m.file, m.owner, m.ticketClass, m.ownerRole]), [['Alpha East Bay', 'registry/campus-packets.json', 'Yash Chitneni', 'observer-packet', 'packet-owner']])
   // The missing page is critical and files to page-status (website operations); the map-only finding is a digest line under hubspot-map-sync.
   const missingPage = byKey['observer:site.coverage.program-page:program:program-99999999901']
   assert.deepEqual([missingPage.payload.status, missingPage.payload.priority, missingPage.payload.customFields.triagedClass, missingPage.owner.role], ['NOT_STARTED', 'HIGH', 'page-status', 'website-operations'])

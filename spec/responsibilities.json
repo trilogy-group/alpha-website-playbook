@@ -1,6 +1,6 @@
 {
   "$comment": "Who is responsible for what: departments, then roles, then ticket-class routing. People are in registry/people.json because people change and roles do not. Campus roles (Director of Admissions, Dean of Parents, Senior Admissions Specialist) are LIVE: resolved from the Admissions Hub org chart by tests/resolve-campus-roles.mjs, with emails from HubSpot owners; registry/campus-roles-snapshot.json is a dated cache, never the source. Department roles are REGISTERED: named in registry/people.json with a source and date. Sources: named decisions (Matt Barge 2026-09-15: Hailey McSpadden owns HubSpot), Admissions Hub, APEX request-type routing and permission files, HubSpot owner teams, website staff cards, APEX requester history, Slack titles.",
-  "version": "0.5",
+  "version": "0.6",
   "departments": {
     "campus-leadership": {
       "scope": "one campus each",
@@ -949,7 +949,7 @@
     "n8n-sync-owner replacement unconfirmed as of 2026-10-07. Cristi disclaimed current website/n8n ownership on October 5; Matt reports Dmitry no longer works for Alpha. Historical roles retained in registry/people.json formerRoles; resolve the missing holder under protocol 1d, not by assuming access or authorship establishes ownership.",
     "The n8n field map recorded in spec/content-pipelines.json comes from an export inspected 2026-09-09; confirm with the n8n-sync-owner that the current campus template still carries those CSS IDs, and whether the group A launch-copy sentence sits in an n8n-controlled content body block",
     "Which HubSpot grade property the website shows (grades_served vs start/end grade) is undecided; APEX cmu4g13kc00000agmdogkxihp, owner hubspot-program-admin with hubspot-owner",
-    "packet-owner: Matt Barge took info packets on 2026-08-27 pending Canva team setup and the current 2026-27 template from Yash; Chris Davidson holds the collateral tickets. Confirm the split (packet document vs flyers) and record it.",
+    "packet-owner is Yash Chitneni (Matt Barge, 2026-10-07: \"info packets are all yash\"); Chris Davidson holds the collateral tickets. Confirm the split (packet document vs flyers) and record it.",
     "Twenty Open campus pages show a visible 2026/27 INFO PACKET button while no 2026-27 packet is approved (Matt Barge, 2026-09-16). Decision: hide until approval, or accept as interim.",
     "Four campus calendars are Google Drive links returning 401 logged out (Boston Suburbs, Oklahoma City, South Bay LA, Tulsa); owner calendars (Zara Raheem) or the campus.",
     "Hailey McSpadden (2026-09-17): APEX notifications and edits must stay tied to web tasks; event tickets are not hers by default. Event triage sits with the website operators; per-event HubSpot asks go to her as a comment, not a reassignment.",
@@ -1067,7 +1067,7 @@
     },
     "observer-packet": {
       "needs": {
-        "packet file and owner": "packet-owner (registry; no holder as of 2026-09-15) else marketing-collateral, brand-authority, website-operations"
+        "packet file and owner": "packet-owner (registry; Yash Chitneni since 2026-10-07) else marketing-collateral, brand-authority, website-operations"
       },
       "missingInfoGoesTo": "packet-owner if registered, else marketing-collateral for the file, brand-authority for sign-off, website-operations for the hosted link"
     },
@@ -1167,7 +1167,7 @@
         "public Flipsnack or approved destination": "packet owner",
         "brand approval": "brand-authority"
       },
-      "missingInfoGoesTo": "marketing-collateral, brand-authority and website-operations until packet-owner is named"
+      "missingInfoGoesTo": "packet-owner (registered), with marketing-collateral and brand-authority for the file and sign-off"
     },
     "event-request": {
       "needs": {
