@@ -1,0 +1,16 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-07T18:39:23.737Z",
+  "decidedBy": "Matt Barge",
+  "source": "conversation with the website agent, 2026-10-07",
+  "date": "2026-10-07",
+  "specRefs": [
+    "registry/people.json",
+    "spec/responsibilities.json"
+  ],
+  "summary": "The packet-owner role (info packets for all campuses: Canva 2026-27 template, generation, Flipsnack publishing and the public packet links) moves from Matt Barge to Yash Chitneni, superseding Matt Barge's 2026-08-27 Slack #support-websites claim; packet and observer-packet tickets route to Yash Chitneni, and Matt Barge stays on a packet ticket only when its ask is his as website-agent-operator",
+  "decisionRow": "| 2026-10-07 | Decided (Matt Barge, conversation with the website agent, 2026-10-07): The packet-owner role (info packets for all campuses: Canva 2026-27 template, generation, Flipsnack publishing and the public packet links) moves from Matt Barge to Yash Chitneni, superseding Matt Barge's 2026-08-27 Slack #support-websites claim; packet and observer-packet tickets route to Yash Chitneni, and Matt Barge stays on a packet ticket only when its ask is his as website-agent-operator | Matt Barge | registry/people.json; spec/responsibilities.json; tests/fixtures/decisions/recorded/2026-10-07-people-7575ff78.json |",
+  "appliedIn": "registry/people.json; spec/responsibilities.json; tests/fixtures/decisions/recorded/2026-10-07-people-7575ff78.json",
+  "textSha256": "7575ff789caa3cc1a6a467be5d17954290612a27d3cbeb38202aaf909f3c2cf4",
+  "text": "Matt Barge, 2026-10-07, to the website agent: \"info packets are all yash\"\n"
+}

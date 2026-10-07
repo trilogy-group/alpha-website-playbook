@@ -6,7 +6,7 @@ Machine forms: `registry/campus-packets.json` (per-campus links with logged-out 
 
 | Thing | Where | Owner |
 | --- | --- | --- |
-| The 2026-27 masters | Canva, Alpha Marketing team: "WORKING COPY - APEX Autofill - Calendar A - 2026-2027" (DAHT_7CFWmY) and "MASTER - Alpha Campus Info Packet - Calendar B - 2026-2027" (DAHThjCo7Dw). Calendar A and B are the two school-year calendars (A = the San Francisco PDF, B = the Santa Barbara PDF, per the APEX template config). | packet-owner (Matt Barge, since 2026-08-27, pending Canva setup); Yash Chitneni holds the current template edits |
+| The 2026-27 masters | Canva, Alpha Marketing team: "WORKING COPY - APEX Autofill - Calendar A - 2026-2027" (DAHT_7CFWmY) and "MASTER - Alpha Campus Info Packet - Calendar B - 2026-2027" (DAHThjCo7Dw). Calendar A and B are the two school-year calendars (A = the San Francisco PDF, B = the Santa Barbara PDF, per the APEX template config). | packet-owner (Yash Chitneni, since 2026-10-07: Matt Barge, "info packets are all yash"; Matt Barge held it 2026-08-27 to 2026-10-07) |
 | The per-campus profile | APEX `CampusPacketProfile`: school year, calendar variant, currently enrolling grades, sibling discount, first payment date, rolling admissions, cover image, learn-more and apply QR destinations, Canva design URL, PDF URL, WordPress URL, status, approver and approval time, and a HubSpot snapshot refreshed every 30 minutes | packet-owner; approval recorded in APEX by a person |
 | The variable data | HubSpot Program: school_address, start and end grade, tuition, enrollment_deposit, application_fee, email, contact_number, school_year_start and end, website, admission_link | hubspot-program-admin (Farhan Raja) |
 | Generated PDFs | Supabase storage bucket (APEX), then published to alpha.school uploads or Flipsnack | packet-owner |
@@ -78,7 +78,7 @@ Findings from this read: four calendars return 401 (Boston Suburbs, Oklahoma Cit
 
 | Question | Role | Person |
 | --- | --- | --- |
-| Is this packet approved; when will the 2026-27 batch be done | packet-owner | Matt Barge |
+| Is this packet approved; when will the 2026-27 batch be done | packet-owner | Yash Chitneni |
 | Has this campus's DOP approved its 2026-27 packet (generates and publishes it) | dean-of-parents, live | the campus Dean of Parents; Yash Chitneni sends the notifications |
 | Current Canva master, template edits | website-operations | Yash Chitneni |
 | A fact in the packet (tuition, grades, address) | hubspot-program-admin | Farhan Raja |

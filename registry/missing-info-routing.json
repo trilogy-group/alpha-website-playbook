@@ -95,12 +95,11 @@
         "expansion-founding",
         "website-operations"
       ],
-      "resolutionNote": "Campus supplies facts; marketing-collateral designs Canva; brand-authority signs off; expansion-founding language QA; website-operations hosts public packet links when approved. packet-owner person is an open gap (see responsibilities gaps).",
+      "resolutionNote": "Campus supplies facts; marketing-collateral designs Canva; brand-authority signs off; expansion-founding language QA; website-operations hosts public packet links when approved. packet-owner (registered in registry/people.json) owns the packet document and its publication.",
       "channel": "support_websites",
       "doNot": [
         "publish unapproved Flipsnack"
       ],
-      "gap": "packet-owner person unclear; Dmitry was incorrectly sole holder",
       "confidence": "high"
     },
     "apply_link_admission": {
