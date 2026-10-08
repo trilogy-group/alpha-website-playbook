@@ -287,7 +287,7 @@
         "exitCondition": "the Lexington School Committee acts and the HubSpot Program type or status changes; then the normal Announced or Open rules apply, the counsel wording, inquiry-only Locations entry, Prepare website data exception and map hold are each removed by an explicit change, and introStatementException is retired",
         "knownGaps": [
           "introStatementException.wording ('Our proposed Lexington campus is pending...') is no longer on the page since counsel's text went live 2026-10-01; the exception needs updating to the current website_campus_intro before campus.intro.status-source can rely on it",
-          "hero.title is n8n-derived (spec/campus-page-field-map.json hero.title), so the header subtitle removal is not durable without an n8n Lexington exception; on 2026-10-08 the live H1, <title> and og:title read 'K-8 Private School in Boston, MA' again after the 2026-10-07 22:19 PT publish"
+          "hero.title is n8n-derived (spec/campus-page-field-map.json hero.title), so the header subtitle removal is not durable without an n8n Lexington exception; on 2026-10-08 the live H1, <title> and og:title read 'K-8 Private School in Boston, MA' again after the 2026-10-07 22:19 PT publish. The n8n exception was added 2026-10-08 08:54 PT (H1 'Alpha Lexington' only; SEO, OG and X title 'Alpha Lexington | Proposed Campus'); verify after the next nightly publish"
         ],
         "decidedBy": "J.C. Fischer (counsel wording); Robbie Forrest (search and share, Locations, admission_link, map hold request); Fernando Pina dos Santos (map hold approval)",
         "decidedOn": "2026-10-02"
