@@ -215,6 +215,82 @@
         "decidedBy": "Matt Barge",
         "decidedOn": "2026-09-28",
         "source": "Slack conversation with the website agent, 2026-09-28"
+      },
+      "proposedCampusHold": {
+        "$comment": "Alpha Lexington is a proposed campus pending Lexington School Committee action. HubSpot type stays Announced, but the public surfaces follow the counsel-approved proposed-campus wording below, not the normal Announced copy. Prose: playbook/campus-page/announced.md, section 'Proposed campus pending local approval (Lexington)'. Every rule here ends together (exitCondition); then the normal Announced or Open rules apply. Not machine-checked yet: no check row reads this block.",
+        "status": "Decided",
+        "hubspotProgramId": "51223157555",
+        "url": "https://alpha.school/boston-suburbs/",
+        "counselWording": {
+          "sourceOfTruth": "J.C. Fischer (EVP Operations, 2 Hour Learning) relaying Lexington counsel, email thread 'Alpha Lexington', 2026-10-01 and 2026-10-02",
+          "headerSubtitle": "remove 'K-8 Private School in Boston, MA' from the header (counsel: to avoid any implication of an active school; Boston is 20 miles from Lexington). The website team also removed it from the SEO and social titles on 2026-10-02 (Matt Barge's reply in the same thread), so it does not linger in the tab or share cards",
+          "approvalPhrase": {
+            "use": "not yet received approval",
+            "never": "not been approved",
+            "why": "counsel: 'the former could imply it was (or is expected to be) rejected'"
+          },
+          "operatingCampusesSentence": "Alpha operates two campuses in Greater Boston today: Alpha Beacon Hill and Alpha Jamaica Plain. Both are open for enrollment.",
+          "proposedCampusHeading": "Proposed Lexington campus",
+          "proposedCampusStatement": "Alpha has proposed a campus in Lexington, Massachusetts. The proposal is under review by the Lexington School Committee and has not yet received approval. No Lexington campus is open, and Alpha is not enrolling students for a Lexington location.",
+          "closing": "Alpha welcomes inquiries from interested families, and will update this page if and when the School Committee takes action.",
+          "closingLink": "'welcomes inquiries' links to the page's stay-in-the-know HubSpot CTA popup",
+          "removed": [
+            "Families in the Lexington area who want to learn about Alpha can visit Alpha Beacon Hill or Alpha Jamaica Plain. (replaced by the closing, counsel 2026-10-02)",
+            "We will update this page if and when the School Committee takes action. (standalone duplicate removed, Robbie Forrest 2026-10-05)",
+            "Our proposed Lexington campus is pending School Committee approval and is not yet open for enrollment. (Robbie Forrest 2026-09-24; superseded on the Lexington page by counsel's text 2026-10-01; still the regional sentence on https://alpha.school/jamaica-plain/, which counsel did not address)"
+          ],
+          "decisionFixture": "tests/fixtures/decisions/recorded/2026-10-02-campus-lifecycle-8f878d4e.json"
+        },
+        "searchAndShare": {
+          "description": "Alpha has proposed a campus in Lexington, MA. The proposal is under Lexington School Committee review. No Lexington campus is open, and Alpha is not enrolling students there.",
+          "surfaces": [
+            "meta description (Yoast)",
+            "og:description",
+            "twitter:description"
+          ],
+          "writer": "n8n 'Prepare website data - various attributes' Lexington exception; 'Complete website data' copies it to Open Graph and X (playbook/integrations/n8n-workflow-map.md caveat 6)",
+          "requestedBy": "Robbie Forrest, email 2026-10-06 (align with proposed, under School Committee review, not open or enrolling)",
+          "liveSince": "2026-10-06",
+          "decisionFixture": "tests/fixtures/decisions/recorded/2026-10-06-campus-lifecycle-bfe33c64.json"
+        },
+        "hubspotProgram": {
+          "type": "Announced",
+          "is_open": false,
+          "admission_link": "empty while proposed, so the nightly Locations publish does not restore Apply Now; cleared 2026-10-06",
+          "caveat": "a blank admission_link does not clear an existing campus-page button (n8n-workflow-map.md caveat 4); verify the destination",
+          "decisionFixture": "tests/fixtures/decisions/recorded/2026-10-06-campus-lifecycle-bfe33c64.json"
+        },
+        "locationsCard": {
+          "status": "Proposed · under School Committee review · not open or enrolling",
+          "cta": "Stay In-the-Know -> https://alpha.school/boston-suburbs/",
+          "writer": "n8n Update Locations (RqP1lPvDKvHDxTus) inquiry-only entry, registry/n8n-workflows.json locationsPublisher.lexingtonInquiryOnlyProgramId"
+        },
+        "cachePurge": "after any edit to /boston-suburbs/, purge WP Engine and Cloudflare for that URL and verify in a fresh session; on 2026-10-06 Cloudflare served a stale copy after the WordPress change",
+        "mapPinHold": {
+          "repo": "trilogy-group/educrm-city-communities",
+          "pullRequest": "https://github.com/trilogy-group/educrm-city-communities/pull/236",
+          "mergedAt": "2026-10-07T15:29:07Z",
+          "file": "backend/dashboard/constants/map-publication-holds.constant.ts (MAP_PUBLICATION_HOLDS['51223157555'], applied in backend/dashboard/services/map-locations.service.ts)",
+          "scope": "map.app.alpha.school feed and the map embedded on alpha.school only; HubSpot lifecycle and visibility, the campus page, the Locations card and other map records are unchanged",
+          "whyCode": "the map feed requests hidden programs and suppresses nothing by type, so a HubSpot visibility or Pre-Announcement change would still publish a Lexington pin",
+          "requestedBy": "Robbie Forrest, email 2026-10-06; confirmed map-only intentional 2026-10-07",
+          "approvedBy": "Fernando Pina dos Santos (PR review 2026-10-07); prefers HubSpot-managed visibility to code exceptions",
+          "revisitBy": "2026-11-06",
+          "revisitNote": "Fernando: remove within 15 days or at the latest revisit at 30 days (by 2026-11-06) with a permanent HubSpot-driven map-visibility mechanism; a follow-up ticket for that mechanism was requested on PR 236",
+          "releaseCondition": "remove the hold only after campus approval and an explicit website-operations decision to republish; a source lifecycle change alone must not restore the pin",
+          "openItems": [
+            "document the temporary map hold in HubSpot so the exception is visible there (Robbie Forrest 2026-10-07)",
+            "before changing the broader HubSpot visibility flag, list which pages, forms and systems it controls and whether it removes the inquiry path (Robbie Forrest 2026-10-07)"
+          ],
+          "decisionFixture": "tests/fixtures/decisions/recorded/2026-10-07-campus-lifecycle-e1910ee9.json"
+        },
+        "exitCondition": "the Lexington School Committee acts and the HubSpot Program type or status changes; then the normal Announced or Open rules apply, the counsel wording, inquiry-only Locations entry, Prepare website data exception and map hold are each removed by an explicit change, and introStatementException is retired",
+        "knownGaps": [
+          "introStatementException.wording ('Our proposed Lexington campus is pending...') is no longer on the page since counsel's text went live 2026-10-01; the exception needs updating to the current website_campus_intro before campus.intro.status-source can rely on it",
+          "hero.title is n8n-derived (spec/campus-page-field-map.json hero.title), so the header subtitle removal is not durable without an n8n Lexington exception; on 2026-10-08 the live H1, <title> and og:title read 'K-8 Private School in Boston, MA' again after the 2026-10-07 22:19 PT publish"
+        ],
+        "decidedBy": "J.C. Fischer (counsel wording); Robbie Forrest (search and share, Locations, admission_link, map hold request); Fernando Pina dos Santos (map hold approval)",
+        "decidedOn": "2026-10-02"
       }
     },
     "brownsville": {
