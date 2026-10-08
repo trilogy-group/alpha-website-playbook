@@ -1,6 +1,6 @@
 # Environments and Identities
 
-Last verified: September 17, 2026
+Last verified: October 8, 2026
 
 This document identifies boundaries and controls. It intentionally contains no passwords, tokens, cookies, private keys, or secret-store values.
 
@@ -103,3 +103,19 @@ Record:
 - Rollback reference
 
 A staging receipt cannot complete a production ticket. A production receipt from an unregistered key or endpoint is invalid.
+
+## GitHub access
+
+Code owners are Matt (`mattbargesuperbuilders`) and Yash (`yashchitneni`), per `.github/CODEOWNERS`. Matt is a repo admin but only a regular member of the `trilogy-group` org.
+
+Adding this repo to a GitHub App installation, for example the Cursor GitHub app that cloud agents use, needs a `trilogy-group` org owner. Repo admins cannot do it.
+
+Route access requests through Slack:
+
+- Post in `#supportcollab` asking for the request to go to SaaS-EduCentral.
+- Include the repo name, the app, and what is needed.
+
+Status as of October 8, 2026:
+
+- Access has been requested for `alpha-website-playbook`.
+- `educrm-city-communities` (the map repo) is already visible to Cursor.
