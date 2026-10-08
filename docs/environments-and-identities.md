@@ -108,12 +108,7 @@ A staging receipt cannot complete a production ticket. A production receipt from
 
 Code owners are Matt (`mattbargesuperbuilders`) and Yash (`yashchitneni`), per `.github/CODEOWNERS`. Matt is a repo admin but only a regular member of the `trilogy-group` org.
 
-Adding this repo to a GitHub App installation, for example the Cursor GitHub app that cloud agents use, needs a `trilogy-group` org owner. Repo admins cannot do it.
-
-Route access requests through Slack:
-
-- Post in `#supportcollab` asking for the request to go to SaaS-EduCentral.
-- Include the repo name, the app, and what is needed.
+Adding this repo to a GitHub App installation, for example the Cursor GitHub app that cloud agents use, needs a `trilogy-group` org owner. Repo admins cannot do it. The request route is still being confirmed. The first contact is Fernando Pina dos Santos, who got the map repo (`educrm-city-communities`) set up.
 
 Status as of October 8, 2026:
 
