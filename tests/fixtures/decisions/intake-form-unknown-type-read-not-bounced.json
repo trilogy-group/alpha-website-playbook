@@ -1,0 +1,27 @@
+{
+  "expected": {
+    "outcome": "needs-rule",
+    "class": null,
+    "ownerRole": "internal-triage",
+    "why": "a form type intake has no entry for is read from its filled fields and goes to internal triage, never bounced for a DETAIL line the form does not write"
+  },
+  "task": {
+    "id": "intake-form-unknown-type-read-not-bounced",
+    "title": "Website (Something new) — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Something new</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "brand_new_type",
+      "websiteRequestTypeLabel": "Something new",
+      "webWidgetChange": "Swap the hero widget for the new one."
+    }
+  }
+}
