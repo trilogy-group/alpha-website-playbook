@@ -1,0 +1,30 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "link-cta",
+    "ownerRole": "website-agent-operator",
+    "why": "a calendar link request from the form is link-cta for the website agent, not observer-link-cta"
+  },
+  "task": {
+    "id": "intake-form-calendar-link",
+    "title": "Website (Link, button, calendar, or info packet) — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Link, button, calendar, or info packet</p><p><strong>LINK TYPE</strong><br>Calendar</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "link_resource",
+      "websiteRequestTypeLabel": "Link, button, calendar, or info packet",
+      "webLinkType": "calendar",
+      "webLinkAction": "fix",
+      "webLinkLabel": "2026/27 Calendar",
+      "webLinkDestination": "https://alpha.school/wp-content/uploads/2026/09/2026-2027-Calendar-Austin.pdf"
+    }
+  }
+}

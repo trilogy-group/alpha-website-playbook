@@ -1,0 +1,29 @@
+{
+  "expected": {
+    "outcome": "policy-review",
+    "class": "copy",
+    "ownerRole": "website-operations",
+    "why": "the website form stores approved copy in webCopyReplacement; a complete FAQ request is never bounced for missing detail (Denver FAQ, 2026-10-09)"
+  },
+  "task": {
+    "id": "intake-form-copy-faq-complete",
+    "title": "Website (Text, FAQ, or copy) — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Text, FAQ, or copy</p><p><strong>SECTION</strong><br>Add FAQ section</p><p><strong>FINAL REPLACEMENT COPY</strong><br>Alpha Austin FAQs</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "copy_faq",
+      "websiteRequestTypeLabel": "Text, FAQ, or copy",
+      "webCopySection": "Add FAQ section",
+      "webCopyApproved": true,
+      "webCopyReplacement": "Alpha Austin FAQs\n\n1. Is there an application deadline?\nNo. Alpha Austin uses rolling admissions."
+    }
+  }
+}

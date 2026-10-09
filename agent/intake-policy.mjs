@@ -1,7 +1,7 @@
 import crypto from 'node:crypto'
 import { renderTemplate } from './ticket-templates.mjs'
 
-const INTAKE_OWNED_FIELDS = new Set(['intakeHash', 'intakePendingHash', 'intakeVersion', 'intakeDecision', 'ownerRole'])
+const INTAKE_OWNED_FIELDS = new Set(['intakeHash', 'intakePendingHash', 'intakeVersion', 'intakeDecision', 'ownerRole', 'intakeReviewUrl'])
 export const UNRESOLVED_OWNER_ROLE = 'internal-triage'
 
 /**
@@ -319,7 +319,10 @@ export function classifyTicket(bundle, ticket) {
       || ticket.customFields?.websiteRequestType
       || '',
   )
-  const detail = requestDetail(ticket)
+  const form = isWebsiteRequestForm(ticket)
+  // A form ticket is classified on what the requester typed into the form's fields, never on the form's own boilerplate
+  // ("PUBLISH TIMING Publish as soon as it's ready" sent layout, media, and press requests to page-status, 2026-10-09).
+  const detail = (form && formWebsiteDetail(ticket)) || requestDetail(ticket)
   const classes = Object.entries(bundle.classes || {}).filter(([, spec]) => urlGateOpen(spec, ticket))
   // 1. A class id recorded in customFields.checkId (a triage or an agent filing) is a decision already made.
   for (const [id, spec] of classes) {
@@ -347,13 +350,30 @@ export function classifyTicket(bundle, ticket) {
   for (const [id, spec] of classes) {
     if (spec.match?.['customFields.loop'] && ticket.customFields?.loop === spec.match['customFields.loop']) return id
   }
-  for (const [id, spec] of classes) {
+  // 4. A staff request from the APEX website form: the request type the requester picked is the decision, ahead of any
+  //    title pattern (for the typed form requests in FORM_DETAIL_FIELDS; team-member requests keep title precedence so
+//    "[just update photo]" still reaches staff-photo), and observer classes never apply (2026-10-09: the form title "Link, button, calendar, or info packet"
+  //    matched observer-link-cta's "calendar" and an info-packet request went to internal triage). The type may be
+  //    qualified by the link type ("link-resource/info-packet") so a packet link reaches the packet owner.
+  if (form && Object.hasOwn(FORM_DETAIL_FIELDS, requestType)) {
+    // "Layout, new section, or something else": the form itself routes it as a design decision for internal review.
+    // Never let its text pick a class (the Chicago Meet the Team layout request was read as a staff roster, 2026-10-09).
+    if (requestType === 'layout-other') return null
+    const linkType = normalizeRequestType(ticket.customFields?.webLinkType || ticket.originalSubmission?.webLinkType || '')
+    for (const candidate of [linkType ? `${requestType}/${linkType}` : null, requestType].filter(Boolean)) {
+      for (const [id, spec] of classes) {
+        if ((spec.match?.websiteRequestType || []).map(normalizeRequestType).includes(candidate)) return id
+      }
+    }
+  }
+  const eligible = form ? classes.filter(([id]) => !id.startsWith('observer-')) : classes
+  for (const [id, spec] of eligible) {
     if (id !== 'copy' && spec.match?.titlePattern && trustedPolicyRegex(spec.match.titlePattern).test(title)) return id
   }
-  for (const [id, spec] of classes) {
+  for (const [id, spec] of eligible) {
     if (id !== 'copy' && (spec.match?.websiteRequestType || []).map(normalizeRequestType).includes(requestType)) return id
   }
-  for (const [id, spec] of classes) {
+  for (const [id, spec] of eligible) {
     if (spec.match?.detailPattern && trustedPolicyRegex(spec.match.detailPattern).test(detail)) return id
   }
   const copy = bundle.classes?.copy
@@ -427,6 +447,16 @@ export function extractField(bundle, ticket, fieldName, context = {}) {
       if (user?.email) return String(user.email).trim()
       continue
     }
+    if (source === 'form:website-detail') {
+      const result = formWebsiteDetail(ticket)
+      if (result) return result
+      continue
+    }
+    if (source === 'form:link-destination') {
+      const result = formLinkDestination(ticket)
+      if (result) return result
+      continue
+    }
     if (source === 'program:campus-pages') {
       const result = campusUrlFromText(bundle, (ticket.program || []).join(' | '))
       if (result) return result
@@ -497,11 +527,16 @@ export function ticketInputSha256(ticket) {
     return [meta.commentId]
   }))
   const customFields = Object.fromEntries(Object.entries(ticket.customFields || {}).filter(([key]) => !INTAKE_OWNED_FIELDS.has(key)))
+  // The reviewer URL intake writes when the requester left it empty (and the targetUrl APEX derives from it) is intake's
+  // own output, not requester input. Counting it made the next run see a "new" ticket and post the same clarification
+  // again (Chicago, Bethesda/Chantilly/McLean and Denver tickets each got two identical notes, 2026-10-09).
+  const intakeUrl = ticket.customFields?.intakeReviewUrl
+  const ownUrl = (value) => Boolean(intakeUrl && value && normalizeUrl(value) === normalizeUrl(intakeUrl))
   const input = {
     title: ticket.title || null,
     description: ticket.description || null,
-    url: ticket.url || null,
-    targetUrl: ticket.targetUrl || null,
+    url: ownUrl(ticket.url) ? null : ticket.url || null,
+    targetUrl: ownUrl(ticket.targetUrl) ? null : ticket.targetUrl || null,
     requestType: ticket.requestType || null,
     program: [...(ticket.program || [])].sort(),
     requesterEmail: ticket.requesterEmail || null,
@@ -548,6 +583,14 @@ export function executionRevision(ticket) {
   }))
 }
 
+/** True when the ticket already waits on exactly this information request (same message, still unanswered). */
+export function clarificationAlreadyPending(ticket, note) {
+  if (ticket.status !== 'MISSING_INFO' || !note) return false
+  const pending = new Set(['OPEN', 'PENDING_SEND', 'RETRYING_SEND', 'SEND_FAILED', 'SENT'])
+  return (ticket.clarifications || []).some((item) => item.kind === 'INFORMATION_REQUEST' && pending.has(item.status)
+    && !item.respondedAt && !item.responseData && String(item.message || '').trim() === String(note).trim())
+}
+
 export function pendingClarificationReviews(ticket) {
   const pending = new Set(['OPEN', 'PENDING_SEND', 'RETRYING_SEND', 'SEND_FAILED'])
   return (ticket.clarifications || [])
@@ -586,6 +629,58 @@ export function applyDuplicateCandidates(results) {
     }
   }
   return results
+}
+
+function isWebsiteRequestForm(ticket) {
+  return ticket.customFields?.formSource === 'request-form'
+}
+
+// The APEX website request form stores each request type in typed web* fields, not in a DETAIL line. Before 2026-10-09
+// intake read only DETAIL, so every "Text, FAQ, or copy", link, layout, media, and press request bounced as Missing Info
+// for a change the requester had already typed. Each entry lists the labelled fields in order and the fields that carry
+// the substance: without one of those the request really is incomplete and the function returns null.
+const FORM_DETAIL_FIELDS = {
+  'copy-faq': { fields: [['Section', 'webCopySection'], ['Replacement copy', 'webCopyReplacement']], substance: ['webCopyReplacement'] },
+  'link-resource': {
+    fields: [['Action', 'webLinkAction'], ['Link type', 'webLinkType'], ['Label', 'webLinkLabel'], ['Destination', 'webLinkDestination'], ['Attachment', '$attachments']],
+    substance: ['webLinkDestination', '$attachments'],
+  },
+  'layout-other': { fields: [['Desired outcome', 'webOutcome'], ['Affected section', 'webAffectedSection']], substance: ['webOutcome'] },
+  media: {
+    fields: [['Section', 'webMediaSection'], ['Description', 'webMediaDescription'], ['Video', 'webMediaVideoUrl'], ['Attachment', '$attachments']],
+    substance: ['webMediaDescription', 'webMediaVideoUrl', '$attachments'],
+  },
+  'press-news': {
+    fields: [['Action', 'webPressAction'], ['Headline', 'webPressHeadline'], ['Outlet', 'webPressOutlet'], ['URL', 'webPressUrl'], ['Page', 'webPressPage'], ['Current wording', 'webPressCurrentWording'], ['New wording', 'webPressNewWording']],
+    substance: ['webPressUrl', 'webPressHeadline', 'webPressNewWording'],
+  },
+}
+
+function formAttachments(ticket) {
+  return (ticket.customFields?.webAttachments || [])
+    .filter((item) => item?.url && item.status !== 'REJECTED')
+    .map((item) => `${item.originalName || 'attachment'} (${item.url})`)
+    .join('; ')
+}
+
+export function formWebsiteDetail(ticket) {
+  if (!isWebsiteRequestForm(ticket)) return null
+  const fields = ticket.customFields || {}
+  const spec = FORM_DETAIL_FIELDS[normalizeRequestType(fields.websiteRequestType)]
+  if (!spec) return null
+  const value = (key) => (key === '$attachments' ? formAttachments(ticket) : fields[key])
+  if (!spec.substance.some((key) => hasValue(value(key)))) return null
+  return spec.fields
+    .filter(([, key]) => hasValue(value(key)))
+    .map(([label, key]) => `${label}: ${String(value(key)).trim()}`)
+    .join('\n')
+}
+
+function formLinkDestination(ticket) {
+  if (!isWebsiteRequestForm(ticket) || normalizeRequestType(ticket.customFields?.websiteRequestType) !== 'link-resource') return null
+  const fields = ticket.customFields || {}
+  if (hasValue(fields.webLinkDestination)) return String(fields.webLinkDestination).trim()
+  return (fields.webAttachments || []).find((item) => item?.url && item.status !== 'REJECTED')?.url || null
 }
 
 function requestDetail(ticket) {

@@ -1,6 +1,6 @@
 {
-  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22. 0.11 (2026-09-24, QC loop redesign workstream 3): every class's observerChecks list is also its intake match rule for customFields.check (the observer's own check name, glob * allowed; one class per check, tests/build-policy.mjs refuses an overlap); match.urlPattern gates every rule of a class on the ticket URL; observer-page-transient receives rendered-page timeouts, 5xx pages and all-images-failed findings on a page URL, observer-health keeps loop health on the workflow or sheet URL only, and the application-route (Finalsite redirect) findings are observer-link-cta, not observer-event. 0.13 (2026-09-25): lifecycle-media findings, including the legacy page-check id open-intro-media-approved, route to observer-media-identity so the East Bay ticket cannot fall into needs-rule or be duplicated by the observer filer. 0.14 (2026-09-25, QC loop repair plan repair 7, one id everywhere): every class may carry matchRequirementIds (check bundle row ids, spec/check-rows.json) and matchCheckIds (tests/page-check.mjs and agent-found check ids); agent/intake-policy.mjs classifyTicket and agent/file-found-ticket.mjs match customFields.requirementId and customFields.checkId against them before the observer check name and before any title pattern, and tests/build-policy.mjs refuses an id claimed by two classes. campus-page-stale-launch-media moves from observer-launch-copy to observer-media-identity, the class of its row campus.intro.media.current; the coverage checks (check bundle 1.3) are claimed by the classes of their rows. 0.15 (2026-09-25, repair 3): observer-health claims bundle-conformance, comparator-unsupported and the vision-pass checks and their check bundle 1.4 rows (site.loop.health.conformance, site.loop.health.comparator-unsupported, site.loop.health.vision-pass, site.loop.health.vision-pass-budget, site.loop.health.vision-pass-errors). 0.16 (2026-10-05): observer-link-cta claims campus.enrollment-state.controls and its page-check id open-enrollment-state-controls (bundle 1.11, the waitlist apply controls; MacKenzie Price 2026-10-05).",
-  "version": "0.16",
+  "$comment": "Intake requirements per APEX website ticket class. Used by tests/validate-ticket.mjs. Field paths refer to the APEX task JSON: originalSubmission.*, customFields.*, url, description. 0.3 added the non-website classes routed by the field map and refined Community tickets by failing surface. 0.4: every class carries doneWhen, the observer checks that file it, and its Missing Info routing label, so there is one taxonomy (observer check -> ticket class -> routing label). 0.9: the staff classes (add, update, photo, bulk) carry the framing evidence (tests/page-check.mjs team-photo-framing plus the section capture of the card) in doneWhen and evidence, decision 2026-09-22. 0.10: the copy and launch-copy classes (copy, launch-copy-request, observer-launch-copy, observer-brand-leak) name tests/page-check.mjs brand-visual in doneWhen as INFO-only (findings are recorded in the note, not blocking) and the observer-brand-visual class receives agent-found visual brand findings, decision 2026-09-22. 0.11 (2026-09-24, QC loop redesign workstream 3): every class's observerChecks list is also its intake match rule for customFields.check (the observer's own check name, glob * allowed; one class per check, tests/build-policy.mjs refuses an overlap); match.urlPattern gates every rule of a class on the ticket URL; observer-page-transient receives rendered-page timeouts, 5xx pages and all-images-failed findings on a page URL, observer-health keeps loop health on the workflow or sheet URL only, and the application-route (Finalsite redirect) findings are observer-link-cta, not observer-event. 0.13 (2026-09-25): lifecycle-media findings, including the legacy page-check id open-intro-media-approved, route to observer-media-identity so the East Bay ticket cannot fall into needs-rule or be duplicated by the observer filer. 0.14 (2026-09-25, QC loop repair plan repair 7, one id everywhere): every class may carry matchRequirementIds (check bundle row ids, spec/check-rows.json) and matchCheckIds (tests/page-check.mjs and agent-found check ids); agent/intake-policy.mjs classifyTicket and agent/file-found-ticket.mjs match customFields.requirementId and customFields.checkId against them before the observer check name and before any title pattern, and tests/build-policy.mjs refuses an id claimed by two classes. campus-page-stale-launch-media moves from observer-launch-copy to observer-media-identity, the class of its row campus.intro.media.current; the coverage checks (check bundle 1.3) are claimed by the classes of their rows. 0.15 (2026-09-25, repair 3): observer-health claims bundle-conformance, comparator-unsupported and the vision-pass checks and their check bundle 1.4 rows (site.loop.health.conformance, site.loop.health.comparator-unsupported, site.loop.health.vision-pass, site.loop.health.vision-pass-budget, site.loop.health.vision-pass-errors). 0.16 (2026-10-05): observer-link-cta claims campus.enrollment-state.controls and its page-check id open-enrollment-state-controls (bundle 1.11, the waitlist apply controls; MacKenzie Price 2026-10-05). 0.17 (2026-10-09): the APEX website request form stores requests in typed web* fields. changeDetail reads them (form:website-detail) and destinationUrl reads the link destination or the attached file (form:link-destination); form request types copy-faq, link-resource, link-resource/info-packet and update-info map to copy, link-cta, packet and program-info, and decide the class ahead of title patterns. Observer classes never match a form ticket (Denver FAQ, Denver packet and Bethesda/Chantilly copy tickets bounced or were misrouted).",
+  "version": "0.17",
   "classes": {
     "other-workflow": {
       "match": {
@@ -18,7 +18,8 @@
       "match": {
         "detailPattern": "info ?packet|flipsnack|info guide",
         "websiteRequestType": [
-          "packet"
+          "packet",
+          "link-resource/info-packet"
         ]
       },
       "required": [
@@ -326,7 +327,8 @@
     "copy": {
       "match": {
         "websiteRequestType": [
-          "other"
+          "other",
+          "copy-faq"
         ],
         "titlePattern": "Website \\(Other\\)|Website — Alpha",
         "detailPattern": "\\bFAQ\\b|questions/answers|typo|wording|rename|reword"
@@ -347,7 +349,8 @@
         "detailPattern": "application (?:page|link|route)|apply(?:ing)? (?:link|page|button|route)|book a (?:call|tour)|calendar link|info session link|community link|packet link",
         "websiteRequestType": [
           "links",
-          "cta"
+          "cta",
+          "link-resource"
         ]
       },
       "required": [
@@ -378,7 +381,8 @@
     "program-info": {
       "match": {
         "websiteRequestType": [
-          "update-program-info"
+          "update-program-info",
+          "update-info"
         ],
         "titlePattern": "Update program info",
         "detailPattern": "^(?![\\s\\S]*\\bFAQ\\b)[\\s\\S]*?(?:grade levels|tuition|address|phone number|school year)"
@@ -888,6 +892,7 @@
         "customFields.requesterFollowUp",
         "customFields.requesterResponses.details",
         "originalSubmission.requestDetail",
+        "form:website-detail",
         "description:DETAIL\\s*(.+)"
       ],
       "missingText": "the exact change requested (current value and new value)"
@@ -934,6 +939,7 @@
     },
     "destinationUrl": {
       "from": [
+        "form:link-destination",
         "description:Expected: .*?(https?://[^\\s]+)",
         "customFields.requestDetail:(https?://[^\\s]+)"
       ],

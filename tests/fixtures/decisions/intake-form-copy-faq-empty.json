@@ -1,0 +1,28 @@
+{
+  "expected": {
+    "outcome": "missing-info",
+    "class": "copy",
+    "ownerRole": "requester",
+    "why": "a copy request with no replacement copy is still Missing Info to the requester"
+  },
+  "task": {
+    "id": "intake-form-copy-faq-empty",
+    "title": "Website (Text, FAQ, or copy) — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Text, FAQ, or copy</p><p><strong>SECTION</strong><br>Hero</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "copy_faq",
+      "websiteRequestTypeLabel": "Text, FAQ, or copy",
+      "webCopySection": "Hero",
+      "webCopyReplacement": ""
+    }
+  }
+}

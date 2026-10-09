@@ -32,6 +32,7 @@ import {
   applyDuplicateCandidates,
   assigneePatch,
   intakeCustomFieldsPatch,
+  clarificationAlreadyPending,
   clarificationNote,
   clarificationRequirements,
   escalationNote,
@@ -269,7 +270,14 @@ async function applyDecision(ticket, result) {
     : result.action.kind === 'registry-missing-info'
       ? { note: registryMissingNote(bundle, result) }
       : null
+  // The ticket's own URL field is the reviewer's "go here" link in the APEX panel (decision 2026-09-22):
+  // write the derived page once when the requester left it empty; never overwrite a URL a person set.
+  // intakeReviewUrl records that intake wrote it, so the next run's input hash ignores it.
+  const reviewUrl = !preflight.url && /^https:\/\//.test(result.found?.pageUrl || '') ? { url: result.found.pageUrl } : {}
+  // Idempotent clarification: a ticket already in Missing Info on this exact request is not asked again.
+  const alreadyAsked = result.action.kind === 'request-clarification' && clarificationAlreadyPending(preflight, informationRequest?.note)
   const pendingCustomFields = intakeCustomFieldsPatch(preflight.customFields, {
+    ...(reviewUrl.url ? { intakeReviewUrl: reviewUrl.url } : {}),
     ownerRole: result.ownerRole,
     intakePendingHash: result.decisionSha256,
     intakeVersion: VERSION,
@@ -290,19 +298,18 @@ async function applyDecision(ticket, result) {
       evaluatedAt: new Date().toISOString(),
     },
   })
-  // The ticket's own URL field is the reviewer's "go here" link in the APEX panel (decision 2026-09-22):
-  // write the derived page once when the requester left it empty; never overwrite a URL a person set.
-  const reviewUrl = !preflight.url && /^https:\/\//.test(result.found?.pageUrl || '') ? { url: result.found.pageUrl } : {}
   await v1(`/tasks/${ticket.id}`, 'PATCH', {
     customFields: pendingCustomFields,
     ...assigneePatch(preflight.assignees, result.ownerUser?.id),
     ...reviewUrl,
-    agentStatus: 'BLOCKED',
+    agentStatus: alreadyAsked ? 'MISSING_INFO' : 'BLOCKED',
     agentEligible: false,
   })
 
   let actionResult
-  if (informationRequest) {
+  if (alreadyAsked) {
+    actionResult = { api: 'none', status: preflight.status, clarificationDelivery: 'already-pending' }
+  } else if (informationRequest) {
     const runId = `website-intake-${ticket.id}-${result.decisionSha256.slice(0, 12)}`
     await agent(`/tasks/${ticket.id}/claim`, 'POST', { agentRunId: runId })
     let response
@@ -389,9 +396,9 @@ async function applyDecision(ticket, result) {
   if (intakePendingHash !== result.decisionSha256) {
     throw new Error('Ticket input or intake state changed during administration; leaving the decision pending for a fresh evaluation')
   }
-  // The URL intake wrote for the reviewer is intake's own, not requester input: compare against the value the
-  // requester left (2026-09-22; L1 found finalization failing on every ticket whose requester left it empty).
-  const finalizedInput = reviewUrl.url && finalized.url === reviewUrl.url ? { ...finalized, url: preflight.url } : finalized
+  // The reviewer URL intake wrote (and the targetUrl APEX derives from it) is excluded by ticketInputSha256 through
+  // customFields.intakeReviewUrl; comparing only url left targetUrl to fail finalization (Chicago, 2026-10-09).
+  const finalizedInput = finalized
   if (ticketInputSha256(finalizedInput) !== result.inputSha256) {
     throw new Error('Ticket received new requester or human input during administration; leaving the decision pending for a fresh evaluation')
   }
