@@ -2827,7 +2827,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
 
 test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before titles, one class per id, and the East Bay launch-card ticket goes to website operations', () => {
   const classesSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'ticket-classes.json'), 'utf8'))
-  assert.equal(classesSpec.version, "0.17")
+  assert.equal(classesSpec.version, "0.18")
   assert.deepEqual(bundle.classes['observer-media-identity'].matchRequirementIds, ['campus.intro.media.current', 'site.identity.other-campus.images', 'site.layout.images.crop', 'site.coverage.open-campus-registries'])
   assert.deepEqual(bundle.classes['observer-media-identity'].matchCheckIds, ['open-intro-media-approved', 'no-other-campus-in-image-names'])
   assert.ok(bundle.classes['observer-media-identity'].observerChecks.includes('campus-page-stale-launch-media'), 'the stale-media check is classified to its row\'s class')

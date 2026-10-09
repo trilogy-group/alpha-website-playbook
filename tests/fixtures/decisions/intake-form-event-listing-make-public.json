@@ -1,0 +1,29 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "event-request",
+    "ownerRole": "hubspot-owner",
+    "why": "an event-listing request naming the event and asking to make it public goes to the HubSpot owner, never back to the requester (Denver event listing, 2026-10-09)"
+  },
+  "task": {
+    "id": "intake-form-event-listing-make-public",
+    "title": "Website — Event listing — https://events.alpha.school/register/00000000-0000-4000-8000-000000000000/ — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Event missing or incorrect on the website</p><p><strong>ISSUE</strong><br>It needs to be made public on the website</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "event_listing",
+      "websiteRequestTypeLabel": "Event missing or incorrect on the website",
+      "webEventIssue": "make_public",
+      "webEventNameOrUrl": "https://events.alpha.school/register/00000000-0000-4000-8000-000000000000/",
+      "webNotes": "For middle and high school parents."
+    }
+  }
+}

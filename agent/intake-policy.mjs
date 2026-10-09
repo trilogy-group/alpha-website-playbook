@@ -650,6 +650,10 @@ const FORM_DETAIL_FIELDS = {
     fields: [['Section', 'webMediaSection'], ['Description', 'webMediaDescription'], ['Video', 'webMediaVideoUrl'], ['Attachment', '$attachments']],
     substance: ['webMediaDescription', 'webMediaVideoUrl', '$attachments'],
   },
+  'event-listing': {
+    fields: [['Event', 'webEventNameOrUrl'], ['Issue', 'webEventIssue'], ['Notes', 'webNotes']],
+    substance: ['webEventNameOrUrl'],
+  },
   'press-news': {
     fields: [['Action', 'webPressAction'], ['Headline', 'webPressHeadline'], ['Outlet', 'webPressOutlet'], ['URL', 'webPressUrl'], ['Page', 'webPressPage'], ['Current wording', 'webPressCurrentWording'], ['New wording', 'webPressNewWording']],
     substance: ['webPressUrl', 'webPressHeadline', 'webPressNewWording'],
@@ -663,11 +667,24 @@ function formAttachments(ticket) {
     .join('; ')
 }
 
+// Form bookkeeping that says nothing about the change itself.
+const FORM_BOOKKEEPING_FIELDS = new Set(['websiteRequestType', 'websiteRequestTypeLabel', 'webPublishTiming', 'webPublishDate', 'webCopyApproved', 'webMultiCampusConfirmed', 'webAttachmentIds', 'webAttachmentMimeTypes', 'webAttachments', 'webDeadline'])
+
 export function formWebsiteDetail(ticket) {
   if (!isWebsiteRequestForm(ticket)) return null
   const fields = ticket.customFields || {}
   const spec = FORM_DETAIL_FIELDS[normalizeRequestType(fields.websiteRequestType)]
-  if (!spec) return null
+  // A form type intake has no entry for yet (event_listing first appeared 2026-10-09) is read from every filled
+  // web* field rather than bounced for a DETAIL line the form never writes.
+  if (!spec) {
+    if (!hasValue(fields.websiteRequestType)) return null
+    const lines = Object.entries(fields)
+      .filter(([key, value]) => key.startsWith('web') && !FORM_BOOKKEEPING_FIELDS.has(key) && typeof value === 'string' && hasValue(value))
+      .map(([key, value]) => `${key.replace(/^web/, '')}: ${value.trim()}`)
+    const attachments = formAttachments(ticket)
+    if (attachments) lines.push(`Attachment: ${attachments}`)
+    return lines.length ? lines.join('\n') : null
+  }
   const value = (key) => (key === '$attachments' ? formAttachments(ticket) : fields[key])
   if (!spec.substance.some((key) => hasValue(value(key)))) return null
   return spec.fields

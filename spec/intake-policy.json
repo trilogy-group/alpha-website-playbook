@@ -209,7 +209,7 @@
       "queue": "owner",
       "ownerRules": [
         {
-          "pattern": "public (?:flag|state)|program interest|HubSpot Marketing Event|make (?:this |the )?event public",
+          "pattern": "public (?:flag|state)|program interest|HubSpot Marketing Event|make (?:this |the )?event public|\\bmade? (?:it |this |the event )?public|make_public",
           "ownerRole": "hubspot-owner",
           "reason": "The HubSpot event record is the failing source."
         },
