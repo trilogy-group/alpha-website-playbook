@@ -1,0 +1,42 @@
+{
+  "expected": {
+    "outcome": "routed",
+    "class": "packet",
+    "ownerRole": "packet-owner",
+    "why": "an info-packet link request with the packet attached goes to the packet owner; the form title's word calendar never makes it an observer finding (Denver packet, 2026-10-09)"
+  },
+  "task": {
+    "id": "intake-form-info-packet-attachment",
+    "title": "Website (Link, button, calendar, or info packet) — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Link, button, calendar, or info packet</p><p><strong>LINK TYPE</strong><br>Info packet</p><p><strong>ACTION</strong><br>Add</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "link_resource",
+      "websiteRequestTypeLabel": "Link, button, calendar, or info packet",
+      "webLinkType": "info_packet",
+      "webLinkAction": "add",
+      "webInfoPacketIntent": "link",
+      "webAttachments": [
+        {
+          "id": "asset-austin-packet",
+          "url": "https://example.supabase.co/storage/v1/object/public/request-assets/website-attachments/austin-packet.pdf",
+          "status": "VERIFIED",
+          "mimeType": "application/pdf",
+          "sizeBytes": 1000,
+          "originalName": "Alpha Austin 26-27 Info Packet.pdf"
+        }
+      ],
+      "webAttachmentIds": [
+        "asset-austin-packet"
+      ]
+    }
+  }
+}

@@ -25,6 +25,8 @@ import {
   resolveDecisionOwner,
   normalizePersonName,
   ticketInputSha256,
+  clarificationAlreadyPending,
+  formWebsiteDetail,
   observerCheckMatches,
   observerFilerOwned,
   OBSERVER_FILER_FILED_BY,
@@ -202,6 +204,39 @@ test('intake-owned fields do not create an intake loop', () => {
     },
   }
   assert.equal(ticketInputSha256(base), ticketInputSha256(administered))
+})
+
+test('the reviewer URL intake writes, and the targetUrl APEX derives from it, never re-trigger intake', () => {
+  // 2026-10-09: intake filled the empty URL, APEX derived targetUrl from it, and the next run saw a "new" ticket and
+  // posted the same clarification again (Chicago, Bethesda/Chantilly/McLean, and three Denver tickets).
+  const before = { id: 'hash-review-url', title: 'Website (Text, FAQ, or copy) — Alpha Austin', url: null, targetUrl: null, customFields: { requestFamily: 'website' } }
+  const after = {
+    ...before,
+    url: 'https://alpha.school/austin/',
+    targetUrl: 'https://alpha.school/austin',
+    customFields: { ...before.customFields, intakeReviewUrl: 'https://alpha.school/austin/', intakeHash: 'done', ownerRole: 'requester' },
+  }
+  assert.equal(ticketInputSha256(before), ticketInputSha256(after))
+  // A URL a person sets afterwards is still new input.
+  assert.notEqual(ticketInputSha256(before), ticketInputSha256({ ...after, url: 'https://alpha.school/austin-high/' }))
+})
+
+test('an identical, unanswered information request is never posted twice', () => {
+  const note = 'APEX intake found requester-owned information that is still needed:\n- Exact requested change: ...'
+  const ticket = { status: 'MISSING_INFO', clarifications: [{ kind: 'INFORMATION_REQUEST', status: 'PENDING_SEND', message: note }] }
+  assert.equal(clarificationAlreadyPending(ticket, note), true)
+  assert.equal(clarificationAlreadyPending({ ...ticket, status: 'NOT_STARTED' }, note), false)
+  assert.equal(clarificationAlreadyPending(ticket, `${note} and more`), false)
+  assert.equal(clarificationAlreadyPending({ ...ticket, clarifications: [{ ...ticket.clarifications[0], respondedAt: '2026-10-09T15:00:00Z' }] }, note), false)
+})
+
+test('website form requests are read from their typed fields, and only when the substance is there', () => {
+  const form = (customFields) => ({ id: 'form', customFields: { formSource: 'request-form', requestFamily: 'website', ...customFields } })
+  assert.match(formWebsiteDetail(form({ websiteRequestType: 'copy_faq', webCopySection: 'Add FAQ section', webCopyReplacement: '1. Is there a deadline?' })), /Replacement copy: 1\. Is there a deadline\?/)
+  assert.equal(formWebsiteDetail(form({ websiteRequestType: 'copy_faq', webCopySection: 'Hero', webCopyReplacement: '' })), null)
+  assert.match(formWebsiteDetail(form({ websiteRequestType: 'link_resource', webLinkType: 'info_packet', webAttachments: [{ url: 'https://x.test/p.pdf', originalName: 'p.pdf', status: 'VERIFIED' }] })), /Attachment: p\.pdf \(https:\/\/x\.test\/p\.pdf\)/)
+  assert.equal(formWebsiteDetail(form({ websiteRequestType: 'link_resource', webLinkType: 'calendar' })), null)
+  assert.equal(formWebsiteDetail({ id: 'not-form', customFields: { websiteRequestType: 'copy_faq', webCopyReplacement: 'x' } }), null)
 })
 
 test('human comments trigger re-evaluation while intake-authored comments do not', () => {
@@ -2792,7 +2827,7 @@ test('check bundle 1.3: entity sources, comparators, missing-expectation rows, c
 
 test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before titles, one class per id, and the East Bay launch-card ticket goes to website operations', () => {
   const classesSpec = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'ticket-classes.json'), 'utf8'))
-  assert.equal(classesSpec.version, "0.16")
+  assert.equal(classesSpec.version, "0.17")
   assert.deepEqual(bundle.classes['observer-media-identity'].matchRequirementIds, ['campus.intro.media.current', 'site.identity.other-campus.images', 'site.layout.images.crop', 'site.coverage.open-campus-registries'])
   assert.deepEqual(bundle.classes['observer-media-identity'].matchCheckIds, ['open-intro-media-approved', 'no-other-campus-in-image-names'])
   assert.ok(bundle.classes['observer-media-identity'].observerChecks.includes('campus-page-stale-launch-media'), 'the stale-media check is classified to its row\'s class')

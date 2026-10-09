@@ -1,0 +1,28 @@
+{
+  "expected": {
+    "outcome": "needs-rule",
+    "class": null,
+    "ownerRole": "internal-triage",
+    "why": "a layout or new-section request is a design decision for internal review; its text never picks a class (Chicago Meet the Team layout read as a staff roster, 2026-10-09)"
+  },
+  "task": {
+    "id": "intake-form-layout-internal-review",
+    "title": "Website (Layout, new section, or something else) — Alpha Austin",
+    "status": "NOT_STARTED",
+    "requestType": "Website",
+    "program": [
+      "Alpha Austin"
+    ],
+    "requesterEmail": "requester@alpha.school",
+    "description": "<p><strong>REQUEST</strong><br>Layout, new section, or something else</p><p><strong>DESIRED OUTCOME</strong><br>Show the Meet the Team section as a carousel.</p><p><strong>PUBLISH TIMING</strong><br>Publish as soon as it's ready</p>",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "webPublishTiming": "now",
+      "websiteRequestType": "layout_other",
+      "websiteRequestTypeLabel": "Layout, new section, or something else",
+      "webOutcome": "Show the Meet the Team section as a carousel like the Miami page, with the Head of Schools listed after the campus team.",
+      "webAffectedSection": "Meet our Team"
+    }
+  }
+}
