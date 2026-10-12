@@ -30,7 +30,8 @@
         "videography",
         "website-agent-operator",
         "website-operations",
-        "design-authority"
+        "design-authority",
+        "gbp-access-owner"
       ]
     },
     "hubspot": {
@@ -759,6 +760,23 @@
       "resolution": {
         "mode": "registry",
         "source": "registry/people.json",
+        "staleAfterDays": 90
+      }
+    },
+    "gbp-access-owner": {
+      "department": "marketing",
+      "owns": [
+        "access to the two central Google Business Profile location groups that hold every Alpha School and specialty school GBP: who is added, removed, or set as manager, admin, or primary owner"
+      ],
+      "approves": [
+        "any GBP access grant",
+        "connecting a third-party listing tool (Locl, Chamber, Apple Maps) to a GBP"
+      ],
+      "supplies": [],
+      "assignableTicketClasses": [],
+      "resolution": {
+        "mode": "registry",
+        "source": "registry/people.json (Cristi Constantin 2026-10-12; Yash Chitneni 2026-10-09); see playbook/integrations/google-business-profile.md",
         "staleAfterDays": 90
       }
     }

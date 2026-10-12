@@ -40,6 +40,7 @@ Joe city-OS / local growth is a sibling product. It may *cite* this playbook for
 | Community program records and router | `community-app-owner`, not yet named |
 | City-OS growth checklist product | Not built. Work Ops holds the brief only. |
 | Niche admin submit | Yash |
+| Google Business Profiles (two central location groups; access, manager, owner changes) | Yash. Facts flow HubSpot to RioSEO and n8n to Google. See `playbook/integrations/google-business-profile.md` |
 
 ## How agents should use related systems
 
