@@ -380,7 +380,7 @@
       },
       "campus.intro.media": {
         "required": "when page is published",
-        "content": "Approved launch-stage media for this campus and date; no other campus, expired season or open-state claim.",
+        "content": "Launch-stage media for this campus and verified HubSpot date; no other campus, expired season or open-state claim. Website operations may source a city skyline, aerial view or recognizable landmark with verified location and commercial reuse rights, recording source, creator, license, attribution and asset hash before placement. An existing finished Canva card is not required; use the established design with editable Elementor text or an optional reusable Canva template.",
         "source": "approved media registry",
         "ownerWhenMissing": "website-operations",
         "checks": [
