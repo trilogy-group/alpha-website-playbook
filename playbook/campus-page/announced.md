@@ -12,7 +12,7 @@ HubSpot determines whether the campus is Announced. A public page may exist, but
 | Claims | Does not say open, now enrolling, or otherwise describe an operating campus unless the lifecycle has changed in HubSpot | HubSpot lifecycle precedence | HubSpot Program owner | State-copy and source checks |
 | Hero CTAs | Only approved destinations appear. Apply, events, packet, and Community controls are conditional on verified routes | Source authority registry | Field-specific owner | Logged-out destination and campus identity |
 | Book a Call | Visible on desktop, tablet and mobile, linking to this campus's own HubSpot Program `call_scheduling_link` (Rachel Goodlad, Slack 2026-10-06; supersedes the 2026-09-24 Lexington hidden exception) | HubSpot Program `call_scheduling_link` | Website agent (widget); HubSpot Program owner when the link is empty | `campus.resources.booking.present`, `campus.resources.booking.source-sync`, reachable and campus-specific destination |
-| Intro media | Uses approved launch-stage media for this campus and date; never another campus, expired season, or open-state claim | Approved media registry | Website operations | Media identity, seasonal, crop and screenshot |
+| Intro media | Uses launch-stage media for this campus and verified HubSpot date; website operations may source a location-verified, commercially reusable skyline, aerial view or recognizable landmark and record provenance before placement. An existing Canva card is not required. Never another campus, expired season, or open-state claim | Approved media registry | Website operations | Media identity, seasonal, crop and screenshot |
 | Events | If present, the strip is scoped to the exact HubSpot program-interest label | HubSpot event-import contract | Events plugin owner | Event filter and source sync |
 | Contact and resources | Shows only verified public facts and destinations. Missing facts are omitted or handled by an approved pattern, never invented | HubSpot and owner registries | Field-specific owner | Source, link, schema and map checks |
 | Team | Optional. Any visible person has approved name, public title, bio, photo, and effective date | APEX request and campus owner | Expansion or campus role owner | Same-card and placeholder checks |
@@ -80,3 +80,13 @@ Everything in this section ends when the Lexington School Committee acts and the
 ## Transition to Open
 
 Changing HubSpot to Open does not complete the website transition. The same APEX launch ticket or linked tickets must verify removal of launch wording and launch media, open-state CTA destinations, campus facts, staff, events, SEO, schema, maps, Locations, and the next normal n8n run.
+
+## City-image sourcing
+
+Decision: Yash Chitneni, 2026-10-13, Codex conversation about the San Juan card. City images may be sourced by the executing agent rather than requiring a pre-existing approved export.
+
+1. Confirm city identity and current opening date from HubSpot.
+2. Prefer an existing correct-city asset; otherwise search a licensed stock source or Wikimedia Commons. Search engines discover sources but do not grant reuse rights. Verify the source identifies the location and permits commercial reuse and adaptations.
+3. Record source URL, creator, license URL, required attribution, photo date, SHA-256 and intended campus. A city view illustrates the city, not the actual school building. Add visible credit when required and describe crop/overlay changes.
+4. Preserve the established card design. Prefer separate editable Elementor text over a clean photo; Canva is optional for a reusable asset, not a prerequisite. Derive date text from HubSpot, never an old template.
+5. Save rollback settings, inspect desktop/mobile crop and contrast, publish through the authorized path, and verify the canonical public page. Ticket, execution and evidence requirements still apply.
