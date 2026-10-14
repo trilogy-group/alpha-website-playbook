@@ -2727,6 +2727,13 @@
           "campus": "all",
           "source": "Matt Barge 2026-10-07 (\"info packets are all yash\"), superseding Slack #support-websites thread 2026-08-27 10:48 (Matt: \"I will take the info packets\")",
           "asOf": "2026-10-07"
+        },
+        {
+          "role": "website-agent-operator",
+          "title": "Shared website agent operator; either Yash or Matt may claim and execute an eligible request",
+          "campus": "all",
+          "source": "Yash Chitneni, 2026-10-13: either operator claims and executes; no primary or backup",
+          "asOf": "2026-10-13"
         }
       ],
       "sources": [

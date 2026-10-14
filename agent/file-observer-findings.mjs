@@ -91,6 +91,7 @@
  * (APEX_API_BASE, APEX_AGENT_API_BASE optional).
  */
 import fs from 'node:fs'
+import { operatorPool } from './operator-pool.mjs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
@@ -740,13 +741,18 @@ export function slotObservation(finding, row = null) {
 /** Owner for a role through the policy bundle; unnamed roles escalate to the website agent operator (protocol 1d). */
 export function ownerFor(policy, role) {
   const named = (r) => (policy.roleOwners?.[r] || []).find((o) => o.apexUserId)
+  const pool = operatorPool(policy)
+  const shared = (via, escalated) => ({ id: pool.apexUserId, ...(pool.members.length > 1 ? { ids: pool.apexUserIds } : {}), name: pool.name, role: OPERATOR_ROLE, via, escalated })
+  if (role === OPERATOR_ROLE && pool) return shared(role, false)
   const direct = role ? named(role) : null
   if (direct) return { id: direct.apexUserId, name: direct.name, role, via: role, escalated: false }
   const fallbackRole = role ? policy.roleFallback?.[role] : null
+  if (fallbackRole === OPERATOR_ROLE && pool) return shared(`${role} -> ${fallbackRole}`, false)
   const fallback = fallbackRole ? named(fallbackRole) : null
   if (fallback) return { id: fallback.apexUserId, name: fallback.name, role: fallbackRole, via: `${role} -> ${fallbackRole}`, escalated: false }
+  if (pool) return shared(`${role || 'no role'} -> ${OPERATOR_ROLE}`, true)
   const operator = named(OPERATOR_ROLE)
-  return { id: operator?.apexUserId || null, name: operator?.name || 'Matt Barge', role: OPERATOR_ROLE, via: `${role || 'no role'} -> ${OPERATOR_ROLE}`, escalated: true }
+  return { id: operator?.apexUserId || null, name: operator?.name || 'no registered website agent operator', role: OPERATOR_ROLE, via: `${role || 'no role'} -> ${OPERATOR_ROLE}`, escalated: true }
 }
 
 export function defectClassFor(ticketClass) {
@@ -1489,8 +1495,9 @@ export async function applyPlan(plan, { apex, env = process.env, fetchImpl = glo
       delete body.assignees
       const created = await apex.create(body)
       record({ write: 'create', ticket: created.id, key: item.key, title: item.title, status: body.status, owner: item.owner.name })
-      if (item.owner.id) {
-        await apex.patch(created.id, { assignees: { set: [{ id: item.owner.id }] } })
+      const ownerIds = item.owner.ids || (item.owner.id ? [item.owner.id] : [])
+      if (ownerIds.length) {
+        await apex.patch(created.id, { assignees: { connect: ownerIds.map(id => ({ id })) } })
         record({ write: 'assign', ticket: created.id, owner: item.owner.name, via: item.owner.via })
       }
       results.filed.push({ id: created.id, key: item.key, title: item.title })
