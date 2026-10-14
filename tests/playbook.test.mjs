@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { operatorPool } from '../agent/operator-pool.mjs'
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
@@ -581,7 +582,7 @@ test('intake adds the resolved owner to assignees without removing existing assi
 })
 
 test('an empty owner role routes to the unresolved-owner queue, never to an empty string, and protocol 1d names the operator', () => {
-  const operator = bundle.roleOwners['website-agent-operator'][0]
+  const operator = operatorPool(bundle)
   for (const emptyRole of ['', '   ', null, undefined]) {
     const result = { id: 'boston-empty-owner', outcome: 'routed', ownerRole: emptyRole, policySha256: bundle.policySha256, inputSha256: 'x' }
     resolveDecisionOwner(bundle, result, { id: 'boston-empty-owner', title: 'Website — Alpha Boston', requesterEmail: 'someone@alpha.school' })
@@ -589,7 +590,8 @@ test('an empty owner role routes to the unresolved-owner queue, never to an empt
     assert.equal(result.outcome, 'owner-unresolved')
     assert.equal(result.ownerResolution, 'unresolved-owner-role')
     // Protocol 1d (2026-09-24, inside intake): the ticket is never left without a person; the queue stays internal-triage.
-    assert.deepEqual(result.ownerUser, { id: operator.apexUserId, name: operator.name })
+    assert.equal(result.ownerUser, null)
+    assert.deepEqual(result.ownerUsers.map(user => user.id), operator.apexUserIds)
     assert.equal(result.escalation.rule, 'protocol-1d')
     assert.match(result.reason, /unresolved-owner queue/)
     assert.equal(administrativeAction(result).kind, 'blocked-review')
@@ -706,7 +708,7 @@ test('the website family accepts observer tickets whatever URL they carry, and -
   assert.equal(byId.ev1.class, 'observer-event')
   assert.equal(byId.ev1.ownerRole, 'events-plugin-owner')
   assert.equal(byId.sh1.class, 'observer-map-community', 'an "Edit:" title leak does not hide the check name')
-  assert.equal(byId.sh1.owner, 'Matt Barge', 'protocol 1d: the unnamed sheet owner does not leave the ticket without a person')
+  assert.equal(byId.sh1.owner, 'Matt Barge or Yash Chitneni', 'protocol 1d: the unnamed sheet owner does not leave the ticket without a person')
   assert.equal(byId.ss1.class, 'observer-page-transient')
   assert.equal(byId.pg1.class, 'observer-page-transient')
   assert.equal(byId.pg1.ownerRole, 'website-agent-operator')
@@ -757,7 +759,7 @@ test('timeouts and image renders are transient page findings; loop health stays 
 })
 
 test('protocol 1d inside intake: an unowned role is Blocked on the website agent operator with the role, system, and change in the note', async () => {
-  const operator = bundle.roleOwners['website-agent-operator'][0]
+  const operator = operatorPool(bundle)
   const layout = await runMockApply({ failStatus: false, mode: 'operator-route', taskOverride: observerLayoutTask('mock-apply-1d') })
   assert.equal(layout.run.code, 0, layout.run.stderr)
   const result = layout.report.results[0]
@@ -771,7 +773,7 @@ test('protocol 1d inside intake: an unowned role is Blocked on the website agent
   assert.equal(result.applied.disposition, 'blocked')
   assert.equal(layout.task.status, 'BLOCKED')
   assert.equal(layout.task.agentEligible, false)
-  assert.ok(layout.task.assignees.some((item) => item.id === operator.apexUserId), 'assigned to the operator')
+  assert.ok(operator.apexUserIds.every(id => layout.task.assignees.some(item => item.id === id)), 'assigned to either operator')
   assert.equal(layout.reconciles.length, 1)
   // The note is the `blocked` template (spec/ticket-templates.json): DECISION NEEDED, role, system, change, person, decision.
   const note = layout.reconciles[0].note
@@ -1030,7 +1032,7 @@ test('the renderers produce the same text as before through the templates: triag
   const note1d = escalationNote(bundle, unresolved, { title: 'Alpha Austin: header overlaps the hero on mobile' }, { actor: 'intake 0.2', date: '2026-09-24' })
   assert.equal(note1d, [
     'BLOCKED (intake 0.2, 2026-09-24)', 'DECISION NEEDED: elementor-owner has no registered APEX user; intake will not fall back to Matt or Yash.', 'Role: elementor-owner',
-    'System: elementor-owner', 'Change: Alpha Austin: header overlaps the hero on mobile', `Assigned to: ${bundle.roleOwners['website-agent-operator'][0].name}`,
+    'System: elementor-owner', 'Change: Alpha Austin: header overlaps the hero on mobile', `Assigned to: ${operatorPool(bundle).name}`,
     'Intake decision: owner-unresolved for class observer-layout',
   ].join('\n'))
   assert.equal(bundle.classes['observer-layout'].executes, 'elementor-owner', 'the System line is the class\'s executing system from the bundle (its adapter, the observer, only finds the defect)')
@@ -2897,4 +2899,30 @@ test('ticket classes 0.13: matchRequirementIds and matchCheckIds classify before
   const unknown = spawnSync(process.execPath, [path.join(dir, 'tests', 'build-policy.mjs'), '--check'], { encoding: 'utf8' })
   assert.match(unknown.stderr, /ticket class observer-brand-leak: matchRequirementIds names campus\.no\.such\.row, which is not a row id in spec\/check-rows\.json/)
   fs.rmSync(dir, { recursive: true, force: true })
+})
+
+
+test('shared website operators preserve executable routing and assign both without dropping coassignees', () => {
+  const result = { outcome: 'ready-for-execution', ownerRole: 'website-agent-operator', class: 'staff-add', policySha256: 'p', inputSha256: 'i' }
+  resolveDecisionOwner(bundle, result, { title: 'Approved staff addition' })
+  assert.equal(result.outcome, 'ready-for-execution')
+  assert.equal(result.ownerResolution, 'shared-role-owners')
+  assert.equal(result.ownerUser, null, 'the pool must not select an arbitrary primary')
+  assert.deepEqual(result.ownerUsers.map(user => user.name).sort(), ['Matt Barge', 'Yash Chitneni'])
+  const ids = result.ownerUsers.map(user => user.id)
+  assert.deepEqual(assigneePatch([{ id: 'campus-owner' }, { id: ids[0] }], ids).assignees.set,
+    [{ id: 'campus-owner' }, ...ids.map(id => ({ id }))])
+  assert.deepEqual(assigneePatch(ids.map(id => ({ id })), ids), {}, 'already assigned pool is idempotent')
+})
+
+test('multiple domain owners remain blocked and escalate to both operators without choosing a technical owner', () => {
+  const policy = { ...bundle, roleOwners: { ...bundle.roleOwners,
+    'hubspot-program-admin': [{ name: 'Technical A', apexUserId: 'tech-a' }, { name: 'Technical B', apexUserId: 'tech-b' }] } }
+  const result = { outcome: 'routed', ownerRole: 'hubspot-program-admin', policySha256: 'p', inputSha256: 'i' }
+  resolveDecisionOwner(policy, result, { title: 'Source-system change' })
+  assert.equal(result.outcome, 'owner-unresolved')
+  assert.equal(result.ownerRole, 'hubspot-program-admin')
+  assert.equal(result.ownerResolution, 'ambiguous-role-owner')
+  assert.deepEqual(result.ownerUsers.map(user => user.name).sort(), ['Matt Barge', 'Yash Chitneni'])
+  assert.equal(administrativeAction(result).kind, 'blocked-review')
 })

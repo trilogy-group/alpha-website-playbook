@@ -1,4 +1,5 @@
 import crypto from 'node:crypto'
+import { operatorPool, assignOperatorPool, OPERATOR_ROLE } from './operator-pool.mjs'
 import { renderTemplate } from './ticket-templates.mjs'
 
 const INTAKE_OWNED_FIELDS = new Set(['intakeHash', 'intakePendingHash', 'intakeVersion', 'intakeDecision', 'ownerRole', 'intakeReviewUrl'])
@@ -22,10 +23,11 @@ export function intakeCustomFieldsPatch(existing, fields) {
  * list on Houston cmu4g7ozk00000agmwlkwsdsf and dropped Farhan Raja and Yash Chitneni.
  */
 export function assigneePatch(existingAssignees, ownerUserId) {
-  if (!ownerUserId) return {}
+  const owners = [].concat(ownerUserId || []).filter(Boolean)
+  if (!owners.length) return {}
   const existing = (existingAssignees || []).map((item) => (typeof item === 'string' ? item : item?.id)).filter(Boolean)
-  if (existing.includes(ownerUserId)) return {}
-  return { assignees: { set: [...existing, ownerUserId].map((id) => ({ id })) } }
+  if (owners.every(id => existing.includes(id))) return {}
+  return { assignees: { set: [...new Set([...existing, ...owners])].map((id) => ({ id })) } }
 }
 
 export function evaluateTicket(bundle, ticket, context = {}) {
@@ -190,6 +192,15 @@ export function resolveDecisionOwner(bundle, result, ticket, usersByEmail = new 
     return refreshDecisionHash(result)
   }
 
+  if (result.ownerRole === OPERATOR_ROLE) {
+    const pool = operatorPool(bundle)
+    if (pool) {
+      assignOperatorPool(result, pool)
+      result.ownerResolution = pool.members.length === 1 ? 'exact-role-owner' : 'shared-role-owners'
+      return refreshDecisionHash(result)
+    }
+  }
+
   const candidates = (bundle.roleOwners[result.ownerRole] || []).filter((person) => person.apexUserId)
   if (candidates.length === 1) {
     result.owner = candidates[0].name
@@ -220,8 +231,7 @@ function escalateUnownedTicket(bundle, result, ticket) {
   result.ownerUser = null
   const operator = escalationOperator(bundle)
   if (operator) {
-    result.owner = operator.name
-    result.ownerUser = { id: operator.apexUserId, name: operator.name }
+    assignOperatorPool(result, operator)
     result.escalation = {
       rule: 'protocol-1d',
       role: result.ownerRole,
@@ -230,14 +240,13 @@ function escalateUnownedTicket(bundle, result, ticket) {
       note: escalationNote(bundle, result, ticket, { assignedTo: operator.name }),
     }
   } else {
-    result.escalation = { rule: 'protocol-1d', role: result.ownerRole, ownerResolution: result.ownerResolution, assignedTo: null, note: null, error: 'no single website-agent-operator is registered with an APEX user in registry/people.json' }
+    result.escalation = { rule: 'protocol-1d', role: result.ownerRole, ownerResolution: result.ownerResolution, assignedTo: null, note: null, error: 'no website-agent-operator is registered with an APEX user in registry/people.json' }
   }
   return refreshDecisionHash(result)
 }
 
 export function escalationOperator(bundle) {
-  const candidates = (bundle.roleOwners?.['website-agent-operator'] || []).filter((person) => person.apexUserId)
-  return candidates.length === 1 ? candidates[0] : null
+  return operatorPool(bundle)
 }
 
 /**

@@ -37,6 +37,7 @@
  * Env: APEX_API_TOKEN (APEX_API_BASE, APEX_AGENT_API_BASE optional, derived as agent/intake.mjs derives them).
  */
 import fs from 'node:fs'
+import { operatorPool } from './operator-pool.mjs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { apexBases } from './attach-evidence.mjs'
@@ -84,11 +85,9 @@ export function loadPeople() { return readJson('registry/people.json') }
 
 /** The website agent operator (protocol 1d) from the policy bundle's role owners; the people registry is the fallback. */
 export function operatorFor(bundle, people) {
-  const fromBundle = (bundle?.roleOwners?.[OPERATOR_ROLE] || [])[0]
-  if (fromBundle?.name) return { name: fromBundle.name, apexUserId: fromBundle.apexUserId || null }
-  const entry = Object.values(people?.people || {}).find((p) => (p.roles || []).some((r) => r.role === OPERATOR_ROLE))
-  if (!entry) throw new QueueAgingError('NO_OPERATOR', `no person holds ${OPERATOR_ROLE} in the policy bundle or registry/people.json`)
-  return { name: entry.name, apexUserId: entry.apexUserId || null }
+  const pool = operatorPool(bundle, people)
+  if (!pool) throw new QueueAgingError('NO_OPERATOR', `no registered person holds ${OPERATOR_ROLE}`)
+  return pool
 }
 
 /** People lookups by APEX user id and by email (primary and alternates), from registry/people.json. */

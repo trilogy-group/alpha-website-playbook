@@ -300,7 +300,7 @@ async function applyDecision(ticket, result) {
   })
   await v1(`/tasks/${ticket.id}`, 'PATCH', {
     customFields: pendingCustomFields,
-    ...assigneePatch(preflight.assignees, result.ownerUser?.id),
+    ...assigneePatch(preflight.assignees, result.ownerUsers?.map(user => user.id) || result.ownerUser?.id),
     ...reviewUrl,
     agentStatus: alreadyAsked ? 'MISSING_INFO' : 'BLOCKED',
     agentEligible: false,
@@ -359,8 +359,8 @@ async function applyDecision(ticket, result) {
         status: preflight.status,
         agentStatus: 'BLOCKED',
         owner: result.owner || null,
-        note: result.ownerUser?.id
-          ? 'The named human is also an APEX agent operator; agent eligibility remains disabled to prevent unintended execution.'
+        note: result.ownerUsers?.length || result.ownerUser?.id
+          ? 'The resolved owner is in the APEX operator pool; agent eligibility remains disabled to prevent unintended execution.'
           : 'No exact APEX user is registered for this role; existing assignment is preserved and agent eligibility remains disabled.',
       }
     }

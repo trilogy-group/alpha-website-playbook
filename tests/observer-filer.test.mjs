@@ -346,7 +346,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.ok(isFilerOwnedTask({ customFields: lexington.payload.customFields }), 'what the filer files, the filer may later close')
   assert.deepEqual(lexington.evidence, [], 'the static calendar finding has no browser screenshot claim')
   assert.equal(contractCheck({ ...lexington.payload, id: 'x', assignees: [{ name: 'Matt Barge' }] }).valid, true)
-  assert.match(lexington.payload.description, /^Matt Barge: /)
+  assert.match(lexington.payload.description, /^Matt Barge or Yash Chitneni: /)
   assert.match(lexington.payload.description, /\nSource: [^\n]*\(read 2026-09-24T/)
   assert.match(lexington.payload.description, /\nObserved: href https:\/\/drive\.google\.com\/file\/d\/[^,]+, status 404, finalUrl /)
   assert.match(lexington.payload.description, /\nExpected: HTTP 2xx calendar destination \(campus\.resources\.calendar; http-2xx 2 status-class; severity medium\)\n/)
@@ -387,11 +387,11 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.equal(ticket.title, 'Shared campus template (12 pages): fails "Header does not overlap the H1 or hero copy on desktop" (24 findings)')
   // elementor-owner has no registered APEX user: Blocked on the website agent operator, role named in the body (protocol 1d).
   assert.equal(ticket.owner.escalated, true)
-  assert.equal(ticket.owner.name, 'Matt Barge')
+  assert.equal(ticket.owner.name, 'Matt Barge or Yash Chitneni')
   assert.equal(ticket.owner.via, 'elementor-owner -> website-agent-operator')
   assert.equal(ticket.payload.status, 'BLOCKED')
   assert.equal(ticket.payload.priority, 'HIGH')
-  assert.match(ticket.payload.description, /\nOwner: elementor-owner \(Matt Barge\); role elementor-owner has no registered APEX user; escalated to Matt Barge \(website-agent-operator\) per protocol 1d/)
+  assert.match(ticket.payload.description, /\nOwner: elementor-owner \(Matt Barge or Yash Chitneni\); role elementor-owner has no registered APEX user; escalated to Matt Barge or Yash Chitneni \(website-agent-operator\) per protocol 1d/)
   assert.match(ticket.payload.description, /\nPages \(12\): https:\/\/alpha\.school\/campus-0\/, https:\/\/alpha\.school\/campus-1\/, /)
   assert.match(ticket.payload.description, /\nObserved: campus-0 \(desktop\): heading Alpha Campus 0 K-8 Private School, [^|]+ \| campus-0 \(mobile\): /)
   assert.match(ticket.payload.description, /\(\+14 more; every observer id is listed under Evidence\)/)
@@ -460,7 +460,7 @@ test('observer filer: 24 header-overlap findings across 12 pages and two viewpor
   assert.deepEqual(digested.unresolved.map((u) => [u.id, u.reason.split(':')[0]]), [['cmaddr1', 'source-digest row']], 'the ticket already open on that row is neither deduped against nor closed')
   const digestMd = renderSourceDigest({ ...digested, runId: RUN_ID, runCompletedAt: '2026-09-24T14:39:45.674Z', bundleVersion: '1.4', bundleSha256: 'a'.repeat(64) }, bundle())
   assert.match(digestMd, /^# Source digest: observer run site-full-2026-09-24T14-28-40-974Z\n\nRun completed 2026-09-24T14:39:45\.674Z; check bundle 1\.4 \(a{64}\); 2 findings on source-digest rows\./)
-  assert.deepEqual(digestMd.split('\n').filter((l) => l.startsWith('## ')), ['## growth-map-owner: 0 findings', '## hubspot-program-admin (Farhan Raja): 1 finding', '## operations-sheet-owner (no registered person; Matt Barge as operator): 1 finding', '## community-app-owner: 0 findings'])
+  assert.deepEqual(digestMd.split('\n').filter((l) => l.startsWith('## ')), ['## growth-map-owner: 0 findings', '## hubspot-program-admin (Farhan Raja): 1 finding', '## operations-sheet-owner (no registered person; Matt Barge or Yash Chitneni as operator): 1 finding', '## community-app-owner: 0 findings'])
 
   // A loop-health finding that still arrives in findings.json is counted for the observer owner and files nothing; it suppresses
   // nothing here because the observer applies `suppresses` itself and reports the count in health.json suppressedByLoopHealth.
@@ -762,7 +762,7 @@ test('observer filer: --apply creates, assigns, attaches the evidence pair, comp
   assert.ok(!('assignees' in created), 'assignment is a second write, like file-found-ticket.mjs')
   assert.equal(created.customFields.checkId, oid('00D0000000'))
   assert.equal(created.customFields.filerRunId, RUN_ID)
-  assert.deepEqual(calls[1].slice(1), ['cmnew1', { assignees: { set: [{ id: 'cmq61oe6i000004lduh172vf3' }] } }])
+  assert.deepEqual(calls[1].slice(1), ['cmnew1', { assignees: { connect: [{ id: 'cmq61oe6i000004lduh172vf3' }, { id: 'cmq5pjifs000004ldan0da45a' }] } }])
   assert.deepEqual(calls[2].slice(1), ['http://127.0.0.1:4010/api/agent/tasks/cmnew1/evidence/screenshots', 'desktop', 'header', RUN_ID, 'https://alpha.school/campus-0/'])
   assert.deepEqual(calls[3].slice(1, 3), ['http://127.0.0.1:4010/api/agent/tasks/cmnew1/evidence/screenshots', 'mobile'])
   const [, resolvedId, resolvePatch] = calls[7]
@@ -860,7 +860,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   assert.match(digest, /^# Source digest: observer run site-full-2026-09-24T14-28-40-974Z\n/)
   assert.match(digest, /\n## growth-map-owner: 0 findings\n\n- none this run\n/)
   assert.match(digest, /\n## hubspot-program-admin \(Farhan Raja\): 7 findings\n\n- Every Operations sheet campus has one map record \| operations-greenwich \| observed: /)
-  assert.match(digest, /\n## operations-sheet-owner \(no registered person; Matt Barge as operator\): 21 findings\n/)
+  assert.match(digest, /\n## operations-sheet-owner \(no registered person; Matt Barge or Yash Chitneni as operator\): 21 findings\n/)
   assert.match(digest, /\n## community-app-owner \(.+\): 11 findings\n/)
   assert.ok(!digest.includes('\u2014'))
   assert.ok(summary.existing.some((line) => /^campus-calendar-link-reachable page:tulsa: open ticket cmubrlbui00060agmr24zjcx9 \[NOT_STARTED\] via alias:checkId campus\.resources\.calendar-reachable$/.test(line)), summary.existing.join('\n'))
@@ -869,7 +869,7 @@ test('observer filer: the CLI is a dry run by default, writes the report, never 
   assert.match(summary.holds, /^filer/)
   assert.deepEqual(summary.unhealthySources, ['browser'])
   assert.equal(summary.files.length, 4)
-  assert.ok(summary.files.some((line) => /^Alpha Lexington: fails "Visible calendar destination answers 2xx logged out" -> Matt Barge \(website-agent-operator\); 1 finding\(s\), 0 evidence pair\(s\)$/.test(line)), summary.files.join('\n'))
+  assert.ok(summary.files.some((line) => /^Alpha Lexington: fails "Visible calendar destination answers 2xx logged out" -> Matt Barge or Yash Chitneni \(website-agent-operator\); 1 finding\(s\), 0 evidence pair\(s\)$/.test(line)), summary.files.join('\n'))
   assert.ok(!fs.existsSync(path.join(fixtures, 'run-2026-09-24', 'source-digest.md')), 'the digest goes next to the report, never into the fixture folder')
   assert.equal(summary.decisionPending.some((line) => /^campus-layout-header-overlap /.test(line)), false, 'suppressed by the degraded browser before any decision applies')
   assert.deepEqual(summary.resolves, [])
@@ -1000,7 +1000,7 @@ test('observer filer: CTA exceptions, the sister-site guard, shared leadership, 
   const titled = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [address('program-51223157555'), address('program-99999999999', { id: oid('ADD0000010') })] }).dir), bundle: checks, queue: [], now: NOW })
   // Since bundle 1.2 the address row is source-digest: nothing files, and the digest names the campus the same way (registry display name, never a bare id).
   assert.deepEqual(titled.files, [])
-  assert.deepEqual(titled.sourceDigest.map((d) => [d.record, d.ownerRole, d.owner, d.ownerRegistered]).sort(), [['Alpha Lexington', 'operations-sheet-owner', 'Matt Barge', false], ['unregistered program program-99999999999', 'operations-sheet-owner', 'Matt Barge', false]])
+  assert.deepEqual(titled.sourceDigest.map((d) => [d.record, d.ownerRole, d.owner, d.ownerRegistered]).sort(), [['Alpha Lexington', 'operations-sheet-owner', 'Matt Barge or Yash Chitneni', false], ['unregistered program program-99999999999', 'operations-sheet-owner', 'Matt Barge or Yash Chitneni', false]])
   assert.match(titled.sourceDigest[0].audit, /^Operations address and map address agree \| Alpha Lexington \| observed: operations 1 Main St, map 2 Side St \| expected: derived from operations-sheet address \(normalize-address; city-only before opening is intentional\) \(equals 0 difference\) \| source: the finding names no source system \(read 2026-09-24T14:39:45\.674Z\) \| observer SITE-ADD0000009, row site\.map\.integrity\.address-agreement, severity medium, run site-full-2026-09-24T14-28-40-974Z$/)
 
   // Shared leadership: a shared leader naming a sibling campus is exempt; another person, or a non-sibling campus, is not.
