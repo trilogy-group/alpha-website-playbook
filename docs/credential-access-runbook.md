@@ -13,6 +13,26 @@ Status: operator runbook and proposed migration plan, October 14, 2026. Owner fo
 
 Do not put passwords, tokens, recovery codes, cookies, or signed login links in the playbook, tickets, screenshots, command arguments, logs, or tool output. Do not commit generated connection `.env` files. A secret reference is not permission to execute a change.
 
+## Existing hosted setup
+
+Observed October 14, 2026: the APEX execution worker already runs in GitHub Actions in `trilogy-group/alpha-event-task-management`, using `.github/workflows/hosted-agent.yml`. Its nominal schedule is every five minutes; GitHub scheduling and concurrency can delay a run. Production jobs use the GitHub environment `apex-agent-production`. This is separate from the playbook repository's intake workflow, which classifies and routes Requests and does not edit delivery systems.
+
+GitHub injects `APEX_AGENT_API_KEY`, `OPENAI_API_KEY`, and configured site bundles into the worker's process environment. `workers/hosted-agent/src/config.ts` reads and validates those bundles. The hosted worker does not read this Mac's Keychain, this Codex chat's browser session, or the access spreadsheet to authenticate.
+
+| Secret | Connection purpose |
+| --- | --- |
+| `HOSTED_AGENT_BROWSER_SITES_JSON` | Site origins with browser usernames and passwords |
+| `HOSTED_AGENT_ELEMENTOR_SITES_JSON` | Site origins with WordPress application credentials |
+| `HOSTED_AGENT_MCP_SITES_JSON` | Site-specific MCP endpoints and application credentials |
+| `HOSTED_AGENT_ALPHA_MCP_SITES_JSON` | Alpha-specific reader, executor, and cache credentials |
+| `HOSTED_AGENT_SITES_JSON` | Optional connections for mapped page-content operations |
+
+These are existing runtime formats, not examples to copy into the playbook. Some values contain multiple sites; do not replace a bundle with a single new entry and discard existing connections. GitHub lists secret names but does not return saved values. A missing site-specific secret name does not prove that the site's connection is absent.
+
+The main-only, manual [hosted connection inventory](https://github.com/trilogy-group/alpha-event-task-management/blob/main/.github/workflows/hosted-connection-inventory.yml) reports fixed labels, counts, and credential-presence booleans without printing values. [Production inventory run 38636795490](https://github.com/trilogy-group/alpha-event-task-management/actions/runs/38636795490) confirmed exactly one Waypoint connection with populated username/password fields in the browser bundle. It found no Waypoint entry in the other hosted site bundles. This proves configuration presence only; authentication and operation support require separate verification. No Waypoint credential upload was needed or performed.
+
+For a new site, extend the existing hosted configuration through a reviewed enrollment procedure that preserves the other entries. The local Keychain steps below are for local execution only. A supported API connection is preferable where available; stored browser credentials do not expand the production browser policy or enable every type of edit.
+
 ## Existing local setup
 
 On Yash's Mac, `~/.config/yash-ops/README.md` describes the non-secret pack registry and Keychain enrollment utility. The `alpha-web` pack defines separate credential purposes for APEX, Alpha WordPress, HubSpot, Slack, and n8n. Check availability without displaying values:
