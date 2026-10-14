@@ -33,6 +33,8 @@ The main-only, manual [hosted connection inventory](https://github.com/trilogy-g
 
 For a new site, extend the existing hosted configuration through a reviewed enrollment procedure that preserves the other entries. The local Keychain steps below are for local execution only. A supported API connection is preferable where available; stored browser credentials do not expand the production browser policy or enable every type of edit.
 
+The subsequent [hosted login test, run 38641553572](https://github.com/trilogy-group/alpha-event-task-management/actions/runs/38641553572), reached the standard login form but returned `login_not_completed` with `authenticated: false`. It made one attempt and no website edits. The diagnostic did not identify a clear credential rejection or MFA requirement; the cause is unconfirmed. Treat Waypoint hosted browser authentication as unverified until that response is diagnosed and a test establishes dashboard access.
+
 ## Existing local setup
 
 On Yash's Mac, `~/.config/yash-ops/README.md` describes the non-secret pack registry and Keychain enrollment utility. The `alpha-web` pack defines separate credential purposes for APEX, Alpha WordPress, HubSpot, Slack, and n8n. Check availability without displaying values:
