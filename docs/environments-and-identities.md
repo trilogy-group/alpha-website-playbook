@@ -32,6 +32,8 @@ Matt, Yash, the scheduled agent, and any Marketing Ops execution host use separa
 
 ## Credential rules
 
+For local enrollment, separate Codex browser sessions, and a proposed migration from spreadsheet passwords to secret references, see [Credential access for Codex website work](credential-access-runbook.md). This runbook does not change site scope or production-write authorization.
+
 - Store credentials only in the approved local keychain, GitHub environment secrets, WordPress configuration, or designated secret manager.
 - Never place a secret in this repository, an APEX ticket, a screenshot, an MCP response, a Slack message, or a shell command committed to history.
 - WordPress stores APEX public verification keys only. The APEX signing private key remains in the APEX server environment.
