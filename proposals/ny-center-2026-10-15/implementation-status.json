@@ -1,0 +1,79 @@
+{
+  "asOf": "2026-10-15",
+  "wholeRequest": "incomplete",
+  "ownerConfirmation": "Yash Chitneni confirmed in the current Codex chat that he is one of the n8n owners and requested actual implementation. This is not a claim that he is the sole owner.",
+  "sourceChanges": [
+    {
+      "finding": "NYC-007",
+      "programId": "26463204876",
+      "ticketId": "cmv9p8dxp000506lbroul0zp7",
+      "field": "website_campus_intro",
+      "result": "applied-and-independently-read-back",
+      "hubspotUpdatedAt": "2026-10-15T15:35:11.679Z",
+      "publicDelivery": "unverified; pending normal campus publisher run",
+      "ticketStatus": "TESTING",
+      "rollback": "exact before value retained in hubspot-proposed-changes.json; compare current value with applied after before restoring"
+    },
+    {
+      "finding": "ARM-08",
+      "programId": "60804396611",
+      "ticketId": "cmv9paf0q000h06lbpi94reit",
+      "field": "website_campus_intro",
+      "result": "applied-and-independently-read-back",
+      "hubspotUpdatedAt": "2026-10-15T15:35:41.043Z",
+      "publicDelivery": "unverified; pending normal campus publisher run",
+      "ticketStatus": "TESTING",
+      "rollback": "exact before value retained in hubspot-proposed-changes.json; compare current value with applied after before restoring"
+    }
+  ],
+  "n8nVerification": {
+    "workflowId": "YJjMTYm1kcNBv7IX",
+    "executionId": "268858",
+    "result": "success; ten assertions passed in the actual n8n Set-node expression engine",
+    "inputs": "synthetic NYC, Armonk, Raleigh, Lexington and unaffected control Programs",
+    "writers": "none; no HubSpot, WordPress, event, email or other external writer",
+    "finalActiveState": false,
+    "repairFound": "Compact nested JSON literals prematurely closed n8n expression interpolation; changed generator to pretty literals and added a regression test. Local VM tests alone had missed it.",
+    "limits": "Campus transformation proof only; not WordPress staging delivery, production publishing or desktop/mobile verification. Synthetic geographic fields are not authoritative campus facts."
+  },
+  "productionPublishers": "unchanged; no manual run dispatched",
+  "remainingTechnicalGates": [
+    {
+      "system": "WordPress staging",
+      "observation": "Confirmed registered staging host in signed-in WP Engine portal; password protection On. Built-in browser shows unavailable; separate CLI request returned HTTP 403 with body error code: 1010. Support John L can access it; root cause not established.",
+      "next": "WP Engine support chat 8679709 is investigating legitimate browser/API access; exact diagnostic supplied. Keep staging protection and production unchanged pending an exact remediation."
+    },
+    {
+      "system": "Alpha MCP bridge",
+      "observation": "Both production price-label prepare calls returned production_writes_disabled: Production writes are disabled in this bridge configuration",
+      "next": "Enable the authorized bridge production execution path through its operator configuration; do not substitute an unguarded WordPress endpoint",
+      "resolution": "Fresh configured bridge reaches the plugin; old in-chat connection retains stale settings. Blanket production-write switch is no longer a blocker on the fresh connection."
+    }
+  ],
+  "remainingScope": "Production n8n mapping and Locations rollout, page-owned text/schema/widgets, applications/booking, events, packets/calendars/legacy assets, media, map/Community, derived outputs, and final public verification remain open. Verify rows still require their named facts.",
+  "accessRecovery": {
+    "observedOn": "2026-10-15",
+    "productionConnection": {
+      "configuredFlag": "ALPHA_WP_ALLOW_PRODUCTION_WRITES=true already present in the configured connection.env",
+      "freshBridgeTest": "Verified through a newly started instance of the exact configured Alpha MCP stdio bridge. No production_writes_disabled response; request reached the plugin and returned alpha_mcp_synced_target as expected for the tuition widget. No page write applied.",
+      "existingChatConnection": "Still has stale startup configuration; shared MCP processes were not terminated. A fresh bridge can be used for the supervised approved route."
+    },
+    "staging": "User signed in to WP Engine portal. Support chat 8679709 opened with John L. No protection, password or identity changed. WP Engine Basic Authentication conflicts with WordPress application-password validation; supported protected API path still needs confirmation."
+  },
+  "locationsN8nVerification": {
+    "workflowId": "XHdZ8lVnPQQ4VFVp",
+    "executionId": "268966",
+    "result": "success; 26 assertions passed in the actual n8n Code-node runtime",
+    "inputs": "synthetic NYC, Armonk, Raleigh, Lexington and unaffected control Programs",
+    "writers": "none; synthetic inputs and transformation nodes only",
+    "finalActiveState": false,
+    "coverage": "NY descriptor and fee-label scope; amounts, view/apply destinations, waitlist behavior and Lexington inquiry behavior",
+    "limits": "No WordPress delivery or visual verification"
+  },
+  "releaseRecheck": {
+    "date": "2026-10-15",
+    "campusVersion": "8919a3f7-e061-410a-aac4-aaa37a74b0c4",
+    "locationsVersion": "61df84bf-06a1-4929-b224-7e00156545e1",
+    "result": "Fresh production exports still match reviewed active/saved versions; preparer passed. Active definitions not changed; staging delivery requirement remains outstanding."
+  }
+}
