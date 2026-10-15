@@ -824,6 +824,26 @@
       "observerChecks": [],
       "routingLabel": "brand_copy_voice_ux",
       "doneWhen": "the target and representative pages pass shared-surface, accessibility, form, consent, desktop and mobile verification"
+    },
+    "page-presentation": {
+      "match": {
+        "detailPattern": "\\b(?:center[- ]align(?:ed)?|centre[- ]align(?:ed)?|text alignment|(?:center|centre|align) (?:the |this |existing )?(?:waitlist |notice |heading |paragraph |campus )?(?:text|heading|paragraph|links|notice))\\b"
+      },
+      "required": [
+        "pageUrl",
+        "changeDetail",
+        "requester"
+      ],
+      "recipe": "page-presentation",
+      "scope": "human-reviewed-website",
+      "note": "Page-local presentation of existing content, such as centering the waitlist notice. Route directly to website operations for bounded execution; no new wording or brand approval is required for alignment alone. This class does not promote an unsupported tool operation.",
+      "observerChecks": [],
+      "routingLabel": "brand_copy_voice_ux",
+      "doneWhen": "Requested presentation is verified on the canonical public page at desktop and mobile sizes; text, destinations, embedded behavior and unrelated components remain unchanged; snapshot and exact diff are attached.",
+      "evidence": [
+        "before-after-presentation-diff",
+        "content-and-destination-invariance-check"
+      ]
     }
   },
   "fields": {
