@@ -41,17 +41,17 @@ test('the module wordings are byte-identical to the check bundle literal', () =>
 test('the bundle literal mirrors the registry membership list, and the registry mirrors MacKenzie Price list', () => {
   const fromRegistry = Object.entries(registry.campuses).filter(([, v]) => v.enrollmentState === 'waitlist').map(([k]) => k).sort()
   assert.deepEqual(statusRow.literals.openEnrollmentStates.campuses.waitlist.slice().sort(), fromRegistry)
-  assert.equal(fromRegistry.length, 12, '12 alpha.school campus pages; Alpha High School is offSite')
+  assert.equal(fromRegistry.length, 13, '13 alpha.school campus pages; Alpha High School is offSite')
   assert.equal(registry.wordings.waitlist.statusSentence, APPROVED_WAITLIST_WORDING)
   assert.equal(registry.decision.decidedBy, 'MacKenzie Price')
   assert.equal(registry.default, 'enrolling')
   assert.equal(registry.derivedFrom, null, 'null until the HubSpot Program property exists')
   // every name in her instruction is accounted for, on the page list or offSite
   const listed = [...Object.values(registry.campuses).map((v) => v.listedAs), ...Object.values(registry.offSite).filter((v) => v && v.listedAs).map((v) => v.listedAs)]
-  for (const n of ['Austin High School', 'Boca Raton', 'Boston', 'Dorado', 'New York', 'Palo Alto', 'Park City', 'Plano', 'Raleigh', 'San Francisco', 'Scottsdale', 'The Woodlands', 'Tulsa']) {
+  for (const n of ['Austin High School', 'Boca Raton', 'Boston', 'Chantilly', 'Dorado', 'New York', 'Palo Alto', 'Park City', 'Plano', 'Raleigh', 'San Francisco', 'Scottsdale', 'The Woodlands', 'Tulsa']) {
     assert.ok(listed.includes(n), `${n} is on MacKenzie Price's list and must be recorded`)
   }
-  assert.equal(listed.length, 13)
+  assert.equal(listed.length, 14)
 })
 
 test('the rule still bounds itself: the row says the state is not derivable from HubSpot', () => {

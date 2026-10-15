@@ -1,7 +1,7 @@
 {
   "$comment": "Which Open campuses are on the waitlist and which are enrolling, and the wording each state uses. A stopgap, and deliberately so: no HubSpot Program property records enrollment state, so the only signal today that a campus is full is the hand-typed copy on its own page, and a check that trusted the copy could not catch a campus whose copy is wrong in either direction (a full campus still advertising enrolment, or a reopened campus still saying waitlist). This file is the versioned membership list that breaks that circularity: campuses[slug].enrollmentState is the recorded state, and the checks measure the page against it, not against itself. Membership comes from MacKenzie Price's named list, not from reading the site. Retire this file and read derivedFrom instead once the Program property exists (registry/sources.json hubspotPrograms.enrollmentStateField, null with the ask). Lifecycle `type` stays Open for both states: waitlist is an enrollment state of an Open campus, never a lifecycle type (spec/campus-lifecycle.json states.Open.enrollmentStates).",
-  "version": "1.0",
-  "asOf": "2026-10-05",
+  "version": "1.1",
+  "asOf": "2026-10-14",
   "schoolYear": "2026–27",
   "default": "enrolling",
   "defaultNote": "An Open campus with no entry here is enrolling. Every Open campus not named below must carry the enrolling sentence and must carry no waitlist wording on any apply control and no waitlist card; drift in that direction is a finding too (check row campus.enrollment-state.controls).",
@@ -187,6 +187,17 @@
       "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
       "introMedia": "waitlist-card",
       "introMediaAttachmentId": 12511
+    },
+    "chantilly": {
+      "enrollmentState": "waitlist",
+      "program": "Alpha Chantilly",
+      "hubspotProgramId": "29737764378",
+      "url": "https://alpha.school/chantilly/",
+      "listedAs": "Chantilly",
+      "since": "2026-10-14",
+      "sinceNote": "Recorded October 14, 2026, after Matt Barge relayed MacKenzie Price's message, 'Chantilly needs to go on waitlist', and authorized 'proceed handle this'. The original Slack date was not supplied. HubSpot website_campus_intro already reflected the 2026–27 waitlist at 2026-10-15T01:22Z.",
+      "introMedia": "video",
+      "introMediaNote": "Retain the existing Chantilly campus video. No replacement enrollment image is needed."
     }
   },
   "offSite": {
