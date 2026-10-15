@@ -17,7 +17,7 @@ October 15 public text checks:
 
 ## Reconcile before execution
 
-1. Robbie's homeschool-center identity and the earlier tutoring-center proposal must be reconciled by the relevant content approvers. Record the accepted wording; do not treat either the screenshot or the workbook as a completed approval chain. Provider allocation, credentials, staff roles, venue facts, and commercial terms marked Verify remain conditional.
+1. The audit already resolves the tutoring-center wording: ARM-08 explicitly says to replace only tutoring center with homeschool center. No repeat terminology question is needed. Record the exact publication approval through the applicable surface process; the workbook is proposed copy, not a completed approval chain. Provider allocation, credentials, staff roles, venue facts, and commercial terms marked Verify remain conditional.
 2. The current generic School-schema requirement and uniform campus template need an approved, NY-scoped exception before this work executes. Update machine-readable rules and matching prose together through a code-owner-approved PR. The request is a proposed change to current policy, not evidence that current prose and spec disagree. Do not silently weaken requirements for other campuses.
 3. Resolve the current n8n-sync-owner. The runbook records the replacement as unconfirmed; do not assign the work to former owners. Preserve the sync route and block execution on the website agent operator, Matt Barge, to identify the role holder per protocol 1d.
 4. Do not rename the protected HubSpot Program as an incidental copy edit. The screenshot identifies two event-mapping rows that may depend on it; verify the current dependency and coordinate any separately approved rename with mapping changes and event-filter testing.
@@ -36,7 +36,7 @@ October 15 public text checks:
 
 ## APEX execution and release
 
-Search APEX for both campus URLs, relevant fields, exact replacements and existing Greenwich work before creating or splitting tickets. This session has not performed that queue search; no duplicate-free intake is claimed. Link Matt's work to the parent request, with owner-specific child tickets where needed. Keep workbook finding IDs and exact locators on the tickets; retain Keep rows as regression checks and Verify rows as named dependencies. Do not send requester notices without the existing review process.
+Search APEX for both campus URLs, relevant fields, exact replacements and existing Greenwich work before creating or splitting tickets. Follow-up read-only search scanned 709 returned active/review tasks and found existing mapping task cmubr971i00060agmwsyff79e and parent cmt0llf4c000004jxc7btyfcs; their wider Boston scope remains open. See the preparation package for search limits and the separate address conflict. Link Matt's work to the parent request, with owner-specific child tickets where needed. Keep workbook finding IDs and exact locators on the tickets; retain Keep rows as regression checks and Verify rows as named dependencies. Do not send requester notices without the existing review process.
 
 Follow protocol steps 0, 1 and 1b for the contract, class, source and owner. Only scheduled-allowlisted classes may enter unattended execution. Workflow and template work follows staging requirements. Each change needs exact approved copy/diff, current source readback, canonical object, rollback artifact, lease and evidence before applying.
 
@@ -45,3 +45,7 @@ Release in dependencies: approved NY policy and wording → source/derivation/te
 Closure requires ticketed outcomes, whole-page desktop/mobile checks, two untouched pages after shared-template work, working conversions, and survival of the next normal scheduled sync. A green n8n run alone is insufficient. Estimate delivery after the field-by-field mapping, APEX deduplication, owner resolution and Verify dependencies are known; the current evidence does not support a delivery date.
 
 References: `playbook/00-how-to-use.md`; `playbook/foundation/website-charter.md` §8; `playbook/integrations/hubspot-and-n8n.md`; `spec/campus-page-field-map.json`; `spec/site-rules.json`; `protocols/apex-website-ticket-protocol.md`.
+
+## Prepared source repair
+
+The [offline source repair package](../proposals/ny-center-2026-10-15/README.md) now includes all 191 audit decisions, two exact live HubSpot field proposals, a preparer based on the current campus and Locations workflow versions, selected source fixtures, regression tests and a pending policy exception. No workflow was activated or run and no source or page was mutated. The full external-system audit remains a separate multi-owner execution scope.

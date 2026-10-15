@@ -1,0 +1,361 @@
+{
+  "id": "ORgdHC71YJ5RawBy",
+  "versionId": "8919a3f7-e061-410a-aac4-aaa37a74b0c4",
+  "activeVersionId": "8919a3f7-e061-410a-aac4-aaa37a74b0c4",
+  "nodes": [
+    {
+      "id": "9a71558b-d677-46a9-92fe-418337b64f3e",
+      "name": "Complete website data",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b54fece4-ad18-4ecb-a3c6-519286216f16",
+              "name": "og_title",
+              "value": "={{ $json.seo_title }}",
+              "type": "string"
+            },
+            {
+              "id": "12e7a660-3ffe-4a07-8873-0db41a51f4de",
+              "name": "x_title",
+              "value": "={{ $json.seo_title }}",
+              "type": "string"
+            },
+            {
+              "id": "cf194620-6dbb-424a-895c-3590b423d11a",
+              "name": "og_description",
+              "value": "={{ $json.seo_description }}",
+              "type": "string"
+            },
+            {
+              "id": "c5898333-6b63-4b34-a922-52ccc1d05c9e",
+              "name": "x_description",
+              "value": "={{ $json.seo_description }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "1b995ecd-aa57-4c95-b1b1-7843bb8bab9f",
+      "name": "Prepare website data JSON-LD",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "541c7be3-090c-4922-a70f-96722faaaa21",
+              "name": "json_ld",
+              "value": "{\n  \"@context\": \"https://schema.org\",\n  \"@graph\": [\n    {\n      \"@type\": [\"Organization\", \"Place\", \"School\"],\n      \"parentOrganization\": { \"@id\": \"https://alpha.school/#Organization\" },\n      \"name\": null,\n      \"@id\": null,\n      \"mainEntityOfPage\": { \"@id\": null },\n      \"url\": null,\n      \"email\": null,\n      \"telephone\": null,\n      \"address\": {\n        \"@type\": \"PostalAddress\",\n        \"streetAddress\": null,\n        \"addressLocality\": null,\n        \"addressRegion\": null,\n        \"postalCode\": null,\n        \"addressCountry\": null\n      },\n      \"geo\": {\n        \"@type\": \"GeoCoordinates\",\n        \"latitude\": null,\n        \"longitude\": null\n      }\n    }\n  ]\n}",
+              "type": "object"
+            },
+            {
+              "id": "45404767-8a51-4836-a9c7-e37b66dc154e",
+              "name": "program",
+              "value": "={{ $('Augmented Program').item.json.program }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "502ffe8f-4089-40f4-89e1-38af8f1a8898",
+      "name": "Prepare website data - various attributes",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3d548ca3-7f45-4c66-ad77-90d34c32e0f3",
+              "name": "post_id",
+              "value": "={{ $json.program.wordpress_post_id }}",
+              "type": "string"
+            },
+            {
+              "id": "9800209b-6f91-4bcf-8b71-de54858c989d",
+              "name": "post_title",
+              "value": "=SEO - {{ $json.program.school_without_school_keyword }}",
+              "type": "string"
+            },
+            {
+              "id": "5f726d0c-67b9-41c4-a541-02805f176a00",
+              "name": "seo_title",
+              "value": "={{ // Raleigh current service is K-8; K-10 applications are for Fall 2027. Matt Barge approval 2026-10-09, APEX cmv11wrf9000306jmrcsuxxxx. Keep HubSpot shared range unchanged pending cmu4g13kc00000agmdogkxihp.\n // Alpha Lexington (proposed campus): counsel 2026-10-02, no grade/city subtitle in SEO, OG or X titles\nString($json.program.id) === \"51223157555\" ? \"Alpha Lexington | Proposed Campus\" :\n(\n$json.program.school_without_school_keyword + ' | ' + \n(\n  // custom code for Alpha New York City\n  $json.program.id == 26463204876 ?\n  'Serving ' + (String($json.program.id) === \"29735717555\" ? \"K - 8th\" : $json.program.grade_levels_suffixed)  + ' Grade in ' :\n  (String($json.program.id) === \"29735717555\" ? \"K-8\" : $json.program.grade_levels) + ' Private School in '\n) +\n$json.program.city + ', ' + $json.program.state\n) }}",
+              "type": "string"
+            },
+            {
+              "id": "999d7cc1-cdf3-4e0d-a879-17b6b20e837f",
+              "name": "seo_description",
+              "value": "={{ // Raleigh current service is K-8; K-10 applications are for Fall 2027. Matt Barge approval 2026-10-09, APEX cmv11wrf9000306jmrcsuxxxx. Keep HubSpot shared range unchanged pending cmu4g13kc00000agmdogkxihp.\n String($json.program.id) === \"51223157555\" ? \"Alpha has proposed a campus in Lexington, MA. The proposal is under Lexington School Committee review. No Lexington campus is open, and Alpha is not enrolling students there.\" : \"Experience Alpha School’s AI-powered, personalized learning at the \" + $json.program.city + \" campus for \" + (String($json.program.id) === \"29735717555\" ? \"K - 8th\" : $json.program.grade_levels_suffixed) + \" grades. Build real-world skills for your child’s future.\" }}",
+              "type": "string"
+            },
+            {
+              "id": "03a6c67d-78c7-4a0c-917f-d5a81c6abb88",
+              "name": "title",
+              "value": "={{ // Raleigh current service is K-8; K-10 applications are for Fall 2027. Matt Barge approval 2026-10-09, APEX cmv11wrf9000306jmrcsuxxxx. Keep HubSpot shared range unchanged pending cmu4g13kc00000agmdogkxihp.\n // Alpha Lexington (proposed campus): counsel 2026-10-02, header is the name only, no \"K-8 Private School in Boston, MA\" line\nString($json.program.id) === \"51223157555\" ? $json.program.school_without_school_keyword :\n(\n$json.program.school_without_school_keyword + '<br>\\n' +\n'<span style=\"font-size:0.8em\">\\n\\t' +\n\n(\n  // custom code for Alpha New York City\n  $json.program.id == 26463204876 ?\n  'Serving ' + (String($json.program.id) === \"29735717555\" ? \"K - 8th\" : $json.program.grade_levels_suffixed)  + ' Grade in New York City' :\n  (String($json.program.id) === \"29735717555\" ? \"K-8\" : $json.program.grade_levels) + ' Private School in ' +\n  $json.program.city + ', ' + $json.program.state\n) +\n\n'\\n</span>'\n) }}",
+              "type": "string"
+            },
+            {
+              "id": "76312f7c-29dc-45e8-8189-bf47d22773f5",
+              "name": "content_title_html",
+              "value": "={{ // Alpha Lexington (proposed campus): counsel-approved intro, locked 2026-10-08 because the Website Copy Fixed template overwrote it on 2026-10-07\nString($json.program.id) === \"51223157555\" ? \"Alpha in Greater Boston\" :\n(\n$json.program.website_copy.content_title.replaceAll('[CITY]', $json.program.city).replaceAll('[DISPLAY_REGION]', $json.program.display_region ?? $json.program.city).replaceAll('[DISPLAY_NAME_WITHOUT_SCHOOL_KEYWORD]', $json.program.school_without_school_keyword).replaceAll('[DISPLAY_NAME_WITH_SCHOOL_KEYWORD]', $json.program.school_with_school_keyword).replaceAll('[DISPLAY_NAME]', $json.program.school)\n) }}",
+              "type": "string"
+            },
+            {
+              "id": "c5f8bd20-f0e4-4d6a-8570-852e99891ecf",
+              "name": "content_body_1_html",
+              "value": "={{ // Alpha Lexington (proposed campus): counsel-approved intro, locked 2026-10-08 because the Website Copy Fixed template overwrote it on 2026-10-07\nString($json.program.id) === \"51223157555\" ? \"Looking for a private school your child can’t wait to go to each morning? Alpha’s mastery-based, AI-driven approach lets students complete their academics in two hours. Alpha classes rank in <a href=\\\"/the-program/#learn\\\">the top 1% nationally</a>.\" :\n(\n$json.program.website_copy.content_body_1.replaceAll('[CITY]', $json.program.city).replaceAll('[DISPLAY_REGION]', $json.program.display_region).replaceAll('[DISPLAY_NAME_WITHOUT_SCHOOL_KEYWORD]', $json.program.school_without_school_keyword).replaceAll('[DISPLAY_NAME_WITH_SCHOOL_KEYWORD]', $json.program.school_with_school_keyword).replaceAll('[DISPLAY_NAME]', $json.program.school)\n) }}",
+              "type": "string"
+            },
+            {
+              "id": "cba37942-4bc8-4dec-a6ee-d3769808b7f7",
+              "name": "content_body_2_html",
+              "value": "={{ // Alpha Lexington (proposed campus): counsel-approved intro, locked 2026-10-08 because the Website Copy Fixed template overwrote it on 2026-10-07\nString($json.program.id) === \"51223157555\" ? \"The rest of the day is spent on <a href=\\\"/lifeskills-workshops/\\\">life skills and team-based workshops</a> that build motivation and teach leadership, grit, financial literacy, and entrepreneurship.\" :\n(\n$json.program.website_copy.content_body_2.replaceAll('[CITY]', $json.program.city).replaceAll('[DISPLAY_REGION]', $json.program.display_region).replaceAll('[DISPLAY_NAME_WITHOUT_SCHOOL_KEYWORD]', $json.program.school_without_school_keyword).replaceAll('[DISPLAY_NAME_WITH_SCHOOL_KEYWORD]', $json.program.school_with_school_keyword).replaceAll('[DISPLAY_NAME]', $json.program.school)\n) }}",
+              "type": "string"
+            },
+            {
+              "id": "a28ed8bb-d3e2-4eda-b80e-d31fdda1a55c",
+              "name": "content_body_3_html",
+              "value": "={{ // Alpha Lexington (proposed campus): counsel-approved intro, locked 2026-10-08 because the Website Copy Fixed template overwrote it on 2026-10-07\nString($json.program.id) === \"51223157555\" ? \"At Alpha, <b><i>kids love school.</i></b> We’re not just preparing students for tests; we’re preparing them for limitless futures.\" :\n(\n$json.program.website_copy.content_body_3.replaceAll('[CITY]', $json.program.city).replaceAll('[DISPLAY_REGION]', $json.program.display_region).replaceAll('[DISPLAY_NAME_WITHOUT_SCHOOL_KEYWORD]', $json.program.school_without_school_keyword).replaceAll('[DISPLAY_NAME_WITH_SCHOOL_KEYWORD]', $json.program.school_with_school_keyword).replaceAll('[DISPLAY_NAME]', $json.program.school)\n) }}",
+              "type": "string"
+            },
+            {
+              "id": "83696958-3198-4770-9187-03390f5bbb83",
+              "name": "attend_cta_button_text",
+              "value": "={{$json.program.website_copy.attend_cta_button.replaceAll('[CITY]', $json.program.city).replaceAll('[DISPLAY_REGION]', $json.program.display_region).replaceAll('[DISPLAY_NAME_WITHOUT_SCHOOL_KEYWORD]', $json.program.school_without_school_keyword).replaceAll('[DISPLAY_NAME_WITH_SCHOOL_KEYWORD]', $json.program.school_with_school_keyword).replaceAll('[DISPLAY_NAME]', $json.program.school) }}",
+              "type": "string"
+            },
+            {
+              "id": "5e8bfbdf-b24d-495f-8658-d9e6b0322ad2",
+              "name": "content_body_4_html",
+              "value": "={{ $json.program.website_campus_intro.replaceAll('[CITY]', $json.program.city).replaceAll('[DISPLAY_REGION]', $json.program.display_region).replaceAll('[DISPLAY_NAME_WITHOUT_SCHOOL_KEYWORD]', $json.program.school_without_school_keyword).replaceAll('[DISPLAY_NAME_WITH_SCHOOL_KEYWORD]', $json.program.school_with_school_keyword).replaceAll('[DISPLAY_NAME]', $json.program.school) }}",
+              "type": "string"
+            },
+            {
+              "id": "b24817ca-aa77-4944-a777-02340bd9081a",
+              "name": "gallery_title",
+              "value": "={{ $json.program.school_without_school_keyword }} Gallery",
+              "type": "string"
+            },
+            {
+              "id": "75507513-6e2e-4a35-b0d9-8913c4197d96",
+              "name": "faq_title",
+              "value": "={{ $json.program.school_without_school_keyword }} FAQs",
+              "type": "string"
+            },
+            {
+              "id": "3773c4ff-60fa-4b61-b7e7-65bc5bf266ba",
+              "name": "team_top_title",
+              "value": "={{ $json.program.school_without_school_keyword }}",
+              "type": "string"
+            },
+            {
+              "id": "b89f0276-4533-4160-8840-9864335a042f",
+              "name": "team_title",
+              "value": "Meet our Team",
+              "type": "string"
+            },
+            {
+              "id": "81f14443-c0f5-49ef-a4fe-a7d79a41c5e0",
+              "name": "grade_levels_formatted",
+              "value": "={{ $json.program.grade_levels_suffixed }} Grade",
+              "type": "string"
+            },
+            {
+              "id": "397607c8-8b89-4a63-82cc-ac58937f20d6",
+              "name": "address",
+              "value": "={{ $json.program.school_address }}",
+              "type": "string"
+            },
+            {
+              "id": "79ba8597-27e4-4c88-bd68-ddc9d7ee2137",
+              "name": "email_link",
+              "value": "=<a href=\"mailto:{{ $json.program.email }}\">\n{{ $json.program.email }}\n</a>",
+              "type": "string"
+            },
+            {
+              "id": "80dbc54a-f512-4dfb-99dc-c3d4732902c0",
+              "name": "phone_link",
+              "value": "=<a href=\"tel:{{ $json.program.contact_number }}\">\n{{ $json.program.contact_number.replace(/[^\\d+]/g, '').replace(/^(\\+?1)?(\\d{3})(\\d{3})(\\d{4})$/, '($2) $3-$4') }}\n</a>",
+              "type": "string"
+            },
+            {
+              "id": "90d02e32-1cf0-4ca9-81f8-90a92364f67e",
+              "name": "phone_raw",
+              "value": "={{ $json.program.contact_number }}",
+              "type": "string"
+            },
+            {
+              "id": "e3c62391-41a8-4e52-bc37-3e74bcdc5e23",
+              "name": "map.address",
+              "value": "={{ ($json.program.google_business_profile?.is_verified ? $json.program.map_location_name + ', ' : '') + $json.program.school_address }}",
+              "type": "string"
+            },
+            {
+              "id": "8f1c37f3-b816-4c1d-b310-878d3208f95a",
+              "name": "hubspot_events",
+              "value": "=[hubspot_events school=\"{{ $json.program.form_program_interest_label }}\" show_filters=\"false\" limit=\"3\"]",
+              "type": "string"
+            },
+            {
+              "id": "d7b26eb9-8388-4804-a919-ce7fcb25e000",
+              "name": "apply_today_link",
+              "value": "={{ $json.program.admission_link }}",
+              "type": "string"
+            },
+            {
+              "id": "7e501af5-c5cf-4095-8956-a44d34488b17",
+              "name": "json_ld['@graph'][0].name",
+              "value": "={{ $json.program.school_without_school_keyword }}",
+              "type": "string"
+            },
+            {
+              "id": "55d76f25-9ece-4649-844c-cb7c82913c0e",
+              "name": "json_ld['@graph'][0]['@id']",
+              "value": "={{ $('Get a page').item.json.link }}#local-branch-organization",
+              "type": "string"
+            },
+            {
+              "id": "9d2daae2-b29c-4e04-ac53-9eda925c215b",
+              "name": "json_ld['@graph'][0].mainEntityOfPage['@id']",
+              "value": "={{ $('Get a page').item.json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "d6890365-0b7c-4147-b063-c6fdd4fb140a",
+              "name": "json_ld['@graph'][0].url",
+              "value": "={{ $('Get a page').item.json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "ffdf07ab-9f73-4286-90e1-941cf189e651",
+              "name": "json_ld['@graph'][0].email",
+              "value": "={{ $json.program.email }}",
+              "type": "string"
+            },
+            {
+              "id": "5facb216-ff5d-46f4-8f50-09bc44265289",
+              "name": "json_ld['@graph'][0].telephone",
+              "value": "={{ $json.program.contact_number }}",
+              "type": "string"
+            },
+            {
+              "id": "8a4a47cd-9237-4e24-b08c-8ea8d6e052f8",
+              "name": "json_ld['@graph'][0].address.streetAddress",
+              "value": "={{ $('Prepare website data JSON-LD').item.json.program.street_address }}",
+              "type": "string"
+            },
+            {
+              "id": "ce271174-a46e-4838-9441-9d4013ac12bc",
+              "name": "json_ld['@graph'][0].address.addressLocality",
+              "value": "={{ $json.program.city }}",
+              "type": "string"
+            },
+            {
+              "id": "2e62d97b-60a3-4ea0-a880-6cd3ba7145ac",
+              "name": "json_ld['@graph'][0].address.addressRegion",
+              "value": "={{ $json.program.state }}",
+              "type": "string"
+            },
+            {
+              "id": "cb34a82c-93dd-491d-8b5f-1ad8e90b8a89",
+              "name": "json_ld['@graph'][0].address.postalCode",
+              "value": "={{ $('Prepare website data JSON-LD').item.json.program.zip_code }}",
+              "type": "string"
+            },
+            {
+              "id": "231d093d-677f-445f-9fac-516cb10527aa",
+              "name": "json_ld['@graph'][0].address.addressCountry",
+              "value": "=US",
+              "type": "string"
+            },
+            {
+              "id": "e5352cc3-7ef8-4362-8739-3514f671c807",
+              "name": "json_ld['@graph'][0].geo.latitude",
+              "value": "={{ $json.program.school_latitude }}",
+              "type": "string"
+            },
+            {
+              "id": "4c696710-e783-49de-8e2a-216c6d060dc5",
+              "name": "json_ld['@graph'][0].geo.longitude",
+              "value": "={{ $json.program.school_longitude }}",
+              "type": "string"
+            },
+            {
+              "id": "1125df8e-ad98-4934-b650-55d2ce77a7a2",
+              "name": "json_ld['@graph'][0].sameAs",
+              "value": "={{ [$json.program.google_maps_profile, $json.program.yelp_profile, $json.program.nichecom_profile, $json.program.great_schools_profile, $json.program.winnie_profile].filter(url => url && url.trim() !== '') }}",
+              "type": "array"
+            },
+            {
+              "id": "ed292f8f-1e06-420b-9fcc-236790da4355",
+              "name": "cognia_accredited",
+              "value": "={{ $json.program.cognia_accredited }}",
+              "type": "string"
+            },
+            {
+              "id": "b7dedd7a-a7b4-4f0b-9075-672deba8bcdb",
+              "name": "cognia_yes_html",
+              "value": "={{ $json.program.school_without_school_keyword }} is accredited by Cognia",
+              "type": "string"
+            },
+            {
+              "id": "39838372-fcb3-465c-b088-199d0c7ac936",
+              "name": "cognia_candidate_html",
+              "value": "={{ $json.program.school_without_school_keyword }} is a candidate for accreditation with Cognia",
+              "type": "string"
+            },
+            {
+              "id": "75dc8860-a0b5-4807-90eb-3c77ab107813",
+              "name": "tuition_formatted",
+              "value": "={{ ($json.program.tuition_usd_yearly ? '$' + Number($json.program.tuition_usd_yearly).toLocaleString('en-US') : null) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "json_ld, program.school",
+        "options": {}
+      }
+    },
+    {
+      "id": "f7f905ee-9ac9-4a96-abbc-c898c7415477",
+      "name": "Prepare website data - custom aspects",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81f14443-c0f5-49ef-a4fe-a7d79a41c5e0",
+              "name": "grade_levels_formatted",
+              "value": "={{ $json.school.endsWith('Austin') ? 'PreK - 5th Grade' : $json.grade_levels_formatted }}",
+              "type": "string"
+            },
+            {
+              "id": "e453da06-f9be-4774-9a69-4ed532a6d45f",
+              "name": "content_body_1_html",
+              "value": "={{ $('Prepare website data JSON-LD').item.json.program.id == 26463204876 ?\n`Looking for a learning experience your child can't wait to go to in the morning? At Alpha New York, our mastery-based, AI driven approach allows students to crush their academics in 2 hours. Our classes rank in <a href=\"/the-program/#learn\"> the top 1% nationally</a>.`\n:\n$json.content_body_1_html }}",
+              "type": "string"
+            },
+            {
+              "id": "d1d5352c-071e-49ca-a353-8cc3ea4d86bf",
+              "name": "content_body_3_html",
+              "value": "={{ $('Prepare website data JSON-LD').item.json.program.id == 26463204876 ?\n`At Alpha New York, <b><i>kids love the experience.</i></b> We’re not just preparing students for tests; we’re preparing them for limitless futures.`\n:\n$json.content_body_3_html }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    }
+  ],
+  "connections": {}
+}
