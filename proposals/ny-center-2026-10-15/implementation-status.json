@@ -34,14 +34,14 @@
     "writers": "none; no HubSpot, WordPress, event, email or other external writer",
     "finalActiveState": false,
     "repairFound": "Compact nested JSON literals prematurely closed n8n expression interpolation; changed generator to pretty literals and added a regression test. Local VM tests alone had missed it.",
-    "limits": "Campus transformation proof only; not WordPress staging delivery, production publishing, Locations runtime verification or desktop/mobile verification. Synthetic geographic fields are not authoritative campus facts."
+    "limits": "Campus transformation proof only; not WordPress staging delivery, production publishing or desktop/mobile verification. Synthetic geographic fields are not authoritative campus facts."
   },
   "productionPublishers": "unchanged; no manual run dispatched",
   "remainingTechnicalGates": [
     {
       "system": "WordPress staging",
-      "observation": "Registered alpha20245stg.wpenginepowered.com REST returns 403; no staging credential found in the four configured Keychain paths checked; built-in Codex browser also reports ERR_INVALID_AUTH_CREDENTIALS",
-      "next": "Yash to identify the usable staging site/access setup; question sent in this chat"
+      "observation": "Confirmed registered staging host in signed-in WP Engine portal; password protection On. Built-in browser shows unavailable; separate CLI request returned HTTP 403 with body error code: 1010. Support John L can access it; root cause not established.",
+      "next": "WP Engine support chat 8679709 is investigating legitimate browser/API access; exact diagnostic supplied. Keep staging protection and production unchanged pending an exact remediation."
     },
     {
       "system": "Alpha MCP bridge",
@@ -58,6 +58,22 @@
       "freshBridgeTest": "Verified through a newly started instance of the exact configured Alpha MCP stdio bridge. No production_writes_disabled response; request reached the plugin and returned alpha_mcp_synced_target as expected for the tuition widget. No page write applied.",
       "existingChatConnection": "Still has stale startup configuration; shared MCP processes were not terminated. A fresh bridge can be used for the supervised approved route."
     },
-    "staging": "WP Engine portal opened in the built-in Codex browser and requires user sign-in. No protection, password or identity was changed. Installation notes document that WP Engine Basic Authentication conflicts with WordPress application-password validation; do not promise both can be used unchanged for the same request."
+    "staging": "User signed in to WP Engine portal. Support chat 8679709 opened with John L. No protection, password or identity changed. WP Engine Basic Authentication conflicts with WordPress application-password validation; supported protected API path still needs confirmation."
+  },
+  "locationsN8nVerification": {
+    "workflowId": "XHdZ8lVnPQQ4VFVp",
+    "executionId": "268966",
+    "result": "success; 26 assertions passed in the actual n8n Code-node runtime",
+    "inputs": "synthetic NYC, Armonk, Raleigh, Lexington and unaffected control Programs",
+    "writers": "none; synthetic inputs and transformation nodes only",
+    "finalActiveState": false,
+    "coverage": "NY descriptor and fee-label scope; amounts, view/apply destinations, waitlist behavior and Lexington inquiry behavior",
+    "limits": "No WordPress delivery or visual verification"
+  },
+  "releaseRecheck": {
+    "date": "2026-10-15",
+    "campusVersion": "8919a3f7-e061-410a-aac4-aaa37a74b0c4",
+    "locationsVersion": "61df84bf-06a1-4929-b224-7e00156545e1",
+    "result": "Fresh production exports still match reviewed active/saved versions; preparer passed. Active definitions not changed; staging delivery requirement remains outstanding."
   }
 }
