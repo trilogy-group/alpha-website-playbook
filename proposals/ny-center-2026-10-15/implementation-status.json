@@ -46,8 +46,18 @@
     {
       "system": "Alpha MCP bridge",
       "observation": "Both production price-label prepare calls returned production_writes_disabled: Production writes are disabled in this bridge configuration",
-      "next": "Enable the authorized bridge production execution path through its operator configuration; do not substitute an unguarded WordPress endpoint"
+      "next": "Enable the authorized bridge production execution path through its operator configuration; do not substitute an unguarded WordPress endpoint",
+      "resolution": "Fresh configured bridge reaches the plugin; old in-chat connection retains stale settings. Blanket production-write switch is no longer a blocker on the fresh connection."
     }
   ],
-  "remainingScope": "Production n8n mapping and Locations rollout, page-owned text/schema/widgets, applications/booking, events, packets/calendars/legacy assets, media, map/Community, derived outputs, and final public verification remain open. Verify rows still require their named facts."
+  "remainingScope": "Production n8n mapping and Locations rollout, page-owned text/schema/widgets, applications/booking, events, packets/calendars/legacy assets, media, map/Community, derived outputs, and final public verification remain open. Verify rows still require their named facts.",
+  "accessRecovery": {
+    "observedOn": "2026-10-15",
+    "productionConnection": {
+      "configuredFlag": "ALPHA_WP_ALLOW_PRODUCTION_WRITES=true already present in the configured connection.env",
+      "freshBridgeTest": "Verified through a newly started instance of the exact configured Alpha MCP stdio bridge. No production_writes_disabled response; request reached the plugin and returned alpha_mcp_synced_target as expected for the tuition widget. No page write applied.",
+      "existingChatConnection": "Still has stale startup configuration; shared MCP processes were not terminated. A fresh bridge can be used for the supervised approved route."
+    },
+    "staging": "WP Engine portal opened in the built-in Codex browser and requires user sign-in. No protection, password or identity was changed. Installation notes document that WP Engine Basic Authentication conflicts with WordPress application-password validation; do not promise both can be used unchanged for the same request."
+  }
 }
