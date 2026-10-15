@@ -1,14 +1,25 @@
 {
   "status": "proposed-not-enforced",
   "source": "Robbie Forrest email and linked Tasks/Line edits audit, 2026-10-15",
-  "authorityNote": "Yash authorized preparation in this chat. Exact policy/diff approval and applicable surface authority remain to be recorded before production execution.",
+  "authorityNote": "Yash authorized implementation and confirmed he is one of the n8n owners in the current chat. The two source-only field corrections are applied; exact staged workflow/policy promotion and applicable surface approval remain to be recorded before production workflow execution.",
   "scope": [
-    {"programId": "26463204876", "wordpressPostId": 6542, "url": "https://alpha.school/new-york-city/"},
-    {"programId": "60804396611", "wordpressPostId": 9213, "url": "https://alpha.school/greenwich/"}
+    {
+      "programId": "26463204876",
+      "wordpressPostId": 6542,
+      "url": "https://alpha.school/new-york-city/"
+    },
+    {
+      "programId": "60804396611",
+      "wordpressPostId": 9213,
+      "url": "https://alpha.school/greenwich/"
+    }
   ],
   "requestedModel": "Alpha Anywhere homeschool center",
   "proposedException": {
-    "localEntityTypes": ["Organization", "Place"],
+    "localEntityTypes": [
+      "Organization",
+      "Place"
+    ],
     "excludeLocalEntityType": "School",
     "sharedCommitmentOnNyJourneys": "Love Learning",
     "preserveOtherCommitments": true,
@@ -24,6 +35,9 @@
     "playbook/campus-page/field-map.md: matching scoped derivations",
     "docs/decisions.md: exact approval and source evidence"
   ],
-  "approvalGaps": ["applicable brand/template exception approver", "current n8n-sync-owner", "exact staged diff and APEX execution contract"],
+  "approvalGaps": [
+    "applicable brand/template exception approver",
+    "exact staged diff and APEX execution contract"
+  ],
   "verifyRows": "line-edits.json: decision=Verify; only the dependent rows remain conditional"
 }

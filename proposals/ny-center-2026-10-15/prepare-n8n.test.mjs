@@ -11,6 +11,14 @@ const prepared = prepareCampus(campus)
 const assignment = (workflow, node, field) => workflow.nodes.find(n => n.name === node).parameters.assignments.assignments.find(a => a.name === field).value
 const various = 'Prepare website data - various attributes'
 const custom = 'Prepare website data - custom aspects'
+
+test('generated n8n expressions contain no premature interpolation delimiter', () => {
+  // Confirmed against the real n8n engine: compact nested JSON prematurely
+  // terminates its expression, even though the same JavaScript passes node:vm.
+  for (const change of prepared.changes) {
+    assert.equal(change.after.slice(3, -2).includes('}}'), false, change.field)
+  }
+})
 const example = (id = '60804396611') => ({
   id, wordpress_post_id: profiles[id]?.postId ?? '999', state: 'NY',
   website: 'https://alpha.school/' + (profiles[id]?.slug ?? 'unaffected') + '/',

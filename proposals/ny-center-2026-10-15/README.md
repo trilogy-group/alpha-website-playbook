@@ -1,6 +1,6 @@
 # NY center source repair package
 
-Prepared October 15, 2026. **Offline proposal only**: not deployed to n8n, not a running staging workflow, not an approved exception, and not publication verification. This directory is outside the compiled policy inputs. It is the reviewable first source-level batch, not completion of Robbie's full audit.
+Initially prepared October 15, 2026. **The production workflow patch remains an offline proposal**: not deployed to n8n, not a running staging workflow, not an approved exception, and not publication verification. See [implementation-status.json](implementation-status.json) for the two HubSpot changes now applied and the real n8n test execution. This directory is outside the compiled policy inputs. It is the reviewable first source-level batch, not completion of Robbie's full audit.
 
 ## What is ready
 
@@ -56,7 +56,7 @@ Read-only deduplication scanned 709 returned tasks across all workflows with sev
 - [Its parent request](https://apex.2hourlearning.com/intake?taskId=cmt0llf4c000004jxc7btyfcs): BLOCKED; older instruction to remove the word school everywhere. Robbie's scoped audit preserves valid national/historical school language. Do not silently replace the older request or mark it complete with a NY-only batch.
 - [Greenwich identity/address task](https://apex.2hourlearning.com/intake?taskId=cmtxide9a000104l6sw9ja81y): BLOCKED; includes 355 Main Street versus the current source's 20 Old Post Road. This wording batch does not change the address or settle that separate conflict.
 
-These records were read with comments/activity; no claims, comments, status changes or requester notices were sent. Reference the overlapping work when an eligible NY execution contract is established. Resolve the current n8n-sync-owner through Matt Barge under protocol 1d; keep the technical route as sync-mapping. Historical Cristi assignments are not current ownership evidence.
+These older records were read with comments/activity and left unchanged. Subsequent implementation created and claimed NY-only source cases cmv9p8dxp000506lbroul0zp7 and cmv9paf0q000h06lbpi94reit, applied their exact HubSpot field changes, attached evidence, and left them in TESTING pending public delivery. No requester notices were sent. Yash confirmed he is one of the n8n owners in this chat; historical Cristi assignments are not current ownership evidence. The broader workflow route stays sync-mapping.
 
 ## Run and review
 
@@ -70,6 +70,6 @@ node proposals/ny-center-2026-10-15/prepare-n8n.mjs \
 
 Preparation rejects an active/saved mismatch, missing or duplicated target assignments and changed Locations code anchors. It preserves other nodes and connections in the private export. The selected fixtures are not used to deploy. Re-export and review the current full definition before staging; never upload a full GET response with stale activeVersion or other server-managed properties.
 
-Next execution steps: approve the exact proposed diff and NY policy exception; obtain the current workflow owner and an eligible APEX contract; test in an isolated workflow/test copy with an explicit bounded Program selection and no production writers; verify both NY outputs and two untouched campus controls; then apply the approved source changes and reviewed live definitions under their authorized paths. The live campus publisher has no verified bounded run selection, so do not dispatch its full batch as a canary.
+Next execution steps: approve the exact proposed diff and NY policy exception; use Yash’s confirmed workflow ownership and establish the remaining eligible APEX execution contracts; test in an isolated workflow/test copy with an explicit bounded Program selection and no production writers; verify both NY outputs and two untouched campus controls; then apply the approved source changes and reviewed live definitions under their authorized paths. The live campus publisher has no verified bounded run selection, so do not dispatch its full batch as a canary.
 
 After production release, capture stored/public readback, desktop/mobile pages, source/schema/aliases and conversion checks, then the next normal scheduled sync. Offline test success cannot close APEX tickets. No delivery date is established by this package.

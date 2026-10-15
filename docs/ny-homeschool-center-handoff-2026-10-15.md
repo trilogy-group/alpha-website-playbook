@@ -1,6 +1,6 @@
 # New York homeschool-center request: implementation handoff
 
-Status: proposed execution plan; no policy approval, APEX claim, or production change recorded in this session.
+Status: implementation started. Two exact HubSpot intro changes are applied and read back; public delivery remains unverified. The production n8n patch and broader audit remain open. See proposals/ny-center-2026-10-15/implementation-status.json.
 
 ## Request and evidence
 
@@ -19,7 +19,7 @@ October 15 public text checks:
 
 1. The audit already resolves the tutoring-center wording: ARM-08 explicitly says to replace only tutoring center with homeschool center. No repeat terminology question is needed. Record the exact publication approval through the applicable surface process; the workbook is proposed copy, not a completed approval chain. Provider allocation, credentials, staff roles, venue facts, and commercial terms marked Verify remain conditional.
 2. The current generic School-schema requirement and uniform campus template need an approved, NY-scoped exception before this work executes. Update machine-readable rules and matching prose together through a code-owner-approved PR. The request is a proposed change to current policy, not evidence that current prose and spec disagree. Do not silently weaken requirements for other campuses.
-3. Resolve the current n8n-sync-owner. The runbook records the replacement as unconfirmed; do not assign the work to former owners. Preserve the sync route and block execution on the website agent operator, Matt Barge, to identify the role holder per protocol 1d.
+3. Ownership clarification: Yash confirmed in this chat on October 15 that he is one of the n8n owners and requested implementation. Do not continue treating ownership as missing for this supervised work or infer ownership from former staff. WordPress staging access and the bridge production configuration are the current technical gates; see the implementation record.
 4. Do not rename the protected HubSpot Program as an incidental copy edit. The screenshot identifies two event-mapping rows that may depend on it; verify the current dependency and coordinate any separately approved rename with mapping changes and event-filter testing.
 
 ## Work breakdown
@@ -48,4 +48,4 @@ References: `playbook/00-how-to-use.md`; `playbook/foundation/website-charter.md
 
 ## Prepared source repair
 
-The [offline source repair package](../proposals/ny-center-2026-10-15/README.md) now includes all 191 audit decisions, two exact live HubSpot field proposals, a preparer based on the current campus and Locations workflow versions, selected source fixtures, regression tests and a pending policy exception. No workflow was activated or run and no source or page was mutated. The full external-system audit remains a separate multi-owner execution scope.
+The [offline source repair package](../proposals/ny-center-2026-10-15/README.md) now includes all 191 audit decisions, two exact live HubSpot field proposals, a preparer based on the current campus and Locations workflow versions, selected source fixtures, regression tests and a pending policy exception. Subsequent implementation applied the two HubSpot field changes and ran a synthetic-only isolated n8n test workflow, which is now deactivated. Production publisher definitions and WordPress pages remain unchanged. The full external-system audit remains a separate multi-owner execution scope.

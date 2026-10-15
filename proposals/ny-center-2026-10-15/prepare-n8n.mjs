@@ -19,7 +19,9 @@ export const profiles = {
 }
 
 const hash = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex')
-const serialize = value => JSON.stringify(value)
+// n8n expression interpolation treats adjacent closing braces as its delimiter.
+// Pretty literals keep nested objects from closing the expression prematurely.
+const serialize = value => JSON.stringify(value, null, 2)
 const VARIOUS = 'Prepare website data - various attributes'
 const CUSTOM = 'Prepare website data - custom aspects'
 

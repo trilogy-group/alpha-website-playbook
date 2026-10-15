@@ -1,0 +1,53 @@
+{
+  "asOf": "2026-10-15",
+  "wholeRequest": "incomplete",
+  "ownerConfirmation": "Yash Chitneni confirmed in the current Codex chat that he is one of the n8n owners and requested actual implementation. This is not a claim that he is the sole owner.",
+  "sourceChanges": [
+    {
+      "finding": "NYC-007",
+      "programId": "26463204876",
+      "ticketId": "cmv9p8dxp000506lbroul0zp7",
+      "field": "website_campus_intro",
+      "result": "applied-and-independently-read-back",
+      "hubspotUpdatedAt": "2026-10-15T15:35:11.679Z",
+      "publicDelivery": "unverified; pending normal campus publisher run",
+      "ticketStatus": "TESTING",
+      "rollback": "exact before value retained in hubspot-proposed-changes.json; compare current value with applied after before restoring"
+    },
+    {
+      "finding": "ARM-08",
+      "programId": "60804396611",
+      "ticketId": "cmv9paf0q000h06lbpi94reit",
+      "field": "website_campus_intro",
+      "result": "applied-and-independently-read-back",
+      "hubspotUpdatedAt": "2026-10-15T15:35:41.043Z",
+      "publicDelivery": "unverified; pending normal campus publisher run",
+      "ticketStatus": "TESTING",
+      "rollback": "exact before value retained in hubspot-proposed-changes.json; compare current value with applied after before restoring"
+    }
+  ],
+  "n8nVerification": {
+    "workflowId": "YJjMTYm1kcNBv7IX",
+    "executionId": "268858",
+    "result": "success; ten assertions passed in the actual n8n Set-node expression engine",
+    "inputs": "synthetic NYC, Armonk, Raleigh, Lexington and unaffected control Programs",
+    "writers": "none; no HubSpot, WordPress, event, email or other external writer",
+    "finalActiveState": false,
+    "repairFound": "Compact nested JSON literals prematurely closed n8n expression interpolation; changed generator to pretty literals and added a regression test. Local VM tests alone had missed it.",
+    "limits": "Campus transformation proof only; not WordPress staging delivery, production publishing, Locations runtime verification or desktop/mobile verification. Synthetic geographic fields are not authoritative campus facts."
+  },
+  "productionPublishers": "unchanged; no manual run dispatched",
+  "remainingTechnicalGates": [
+    {
+      "system": "WordPress staging",
+      "observation": "Registered alpha20245stg.wpenginepowered.com REST returns 403; no staging credential found in the four configured Keychain paths checked; built-in Codex browser also reports ERR_INVALID_AUTH_CREDENTIALS",
+      "next": "Yash to identify the usable staging site/access setup; question sent in this chat"
+    },
+    {
+      "system": "Alpha MCP bridge",
+      "observation": "Both production price-label prepare calls returned production_writes_disabled: Production writes are disabled in this bridge configuration",
+      "next": "Enable the authorized bridge production execution path through its operator configuration; do not substitute an unguarded WordPress endpoint"
+    }
+  ],
+  "remainingScope": "Production n8n mapping and Locations rollout, page-owned text/schema/widgets, applications/booking, events, packets/calendars/legacy assets, media, map/Community, derived outputs, and final public verification remain open. Verify rows still require their named facts."
+}
