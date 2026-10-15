@@ -2926,3 +2926,11 @@ test('multiple domain owners remain blocked and escalate to both operators witho
   assert.deepEqual(result.ownerUsers.map(user => user.name).sort(), ['Matt Barge', 'Yash Chitneni'])
   assert.equal(administrativeAction(result).kind, 'blocked-review')
 })
+
+
+test('presentation classification does not promote scheduled execution', () => {
+  const policy = JSON.parse(fs.readFileSync(path.join(root, 'spec/policy-bundle.generated.json')))
+  assert.equal(policy.classes['page-presentation'].intake.queue, 'owner')
+  const release = JSON.parse(fs.readFileSync(path.join(root, 'spec/release-manifest.json')))
+  assert.ok(!release.supportedOperations['scheduled-apex-alpha-mcp'].includes('page-presentation'))
+})

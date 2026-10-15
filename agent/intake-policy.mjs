@@ -84,7 +84,11 @@ export function evaluateTicket(bundle, ticket, context = {}) {
   const requesterMissing = missing.filter((field) => spec.intake.requesterRequired.includes(field))
   const derivableMissing = missing.filter((field) => spec.intake.derivable.includes(field))
   const systemMissing = missing.filter((field) => spec.intake.systemRequired.includes(field))
-  const guard = (spec.intake.guards || []).find((item) => trustedPolicyRegex(item.pattern).test(text))
+  // The layout form's label includes "new section" even for alignment-only requests.
+  // Presentation guards inspect the actual request, not that form boilerplate.
+  const guardText = classId === 'page-presentation'
+    ? ((isWebsiteRequestForm(ticket) && formWebsiteDetail(ticket)) || requestDetail(ticket)) : text
+  const guard = (spec.intake.guards || []).find((item) => trustedPolicyRegex(item.pattern).test(guardText))
   const ownerRule = (spec.intake.ownerRules || []).find((item) => ownerRuleMatches(item, ticket, text))
   const policy = guard?.policy || spec.intake.policy
   const configuredOwnerRole = guard?.ownerRole || ownerRule?.ownerRole || spec.intake.ownerRole
@@ -366,8 +370,14 @@ export function classifyTicket(bundle, ticket) {
   //    qualified by the link type ("link-resource/info-packet") so a packet link reaches the packet owner.
   if (form && Object.hasOwn(FORM_DETAIL_FIELDS, requestType)) {
     // "Layout, new section, or something else": the form itself routes it as a design decision for internal review.
-    // Never let its text pick a class (the Chicago Meet the Team layout request was read as a staff roster, 2026-10-09).
-    if (requestType === 'layout-other') return null
+    // Only the bounded presentation class may refine it; other text must not select a staff or content class.
+    if (requestType === 'layout-other') {
+      const presentation = bundle.classes?.['page-presentation']
+      if (presentation && urlGateOpen(presentation, ticket)
+        && presentation.match?.detailPattern
+        && trustedPolicyRegex(presentation.match.detailPattern).test(detail)) return 'page-presentation'
+      return null
+    }
     const linkType = normalizeRequestType(ticket.customFields?.webLinkType || ticket.originalSubmission?.webLinkType || '')
     for (const candidate of [linkType ? `${requestType}/${linkType}` : null, requestType].filter(Boolean)) {
       for (const [id, spec] of classes) {

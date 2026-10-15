@@ -939,6 +939,11 @@
       "supplies": "requester with affected surfaces and desired outcome",
       "approves": "elementor-owner or platform owner; website-operations until named",
       "executes": "named human owner through staged project work"
+    },
+    "page-presentation": {
+      "supplies": "requester (desired display outcome); website-operations (target and current presentation)",
+      "approves": "website-operations; no new brand or copy sign-off for alignment alone",
+      "executes": "website-operations using a supported actor and operation"
     }
   },
   "gaps": [
@@ -1247,6 +1252,13 @@
         "owner and rollback": "elementor-owner or platform owner"
       },
       "missingInfoGoesTo": "elementor-owner, else website-operations"
+    },
+    "page-presentation": {
+      "needs": {
+        "source ownership": "spec/source-authority.json",
+        "execution support": "spec/actor-capabilities.json; protocols/recipes/page-presentation.md"
+      },
+      "missingInfoGoesTo": "requester for the desired outcome only; website-operations for target and execution support"
     }
   }
 }

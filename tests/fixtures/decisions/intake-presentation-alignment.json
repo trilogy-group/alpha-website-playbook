@@ -1,0 +1,20 @@
+{
+  "task": {
+    "id": "presentation-alignment",
+    "title": "Alpha Locations: center the 2026\u201327 waitlist notice beneath the map",
+    "requestType": "Website",
+    "status": "NOT_STARTED",
+    "url": "https://alpha.school/locations/",
+    "requesterEmail": "yash.chitneni@superbuilders.school",
+    "description": "Center-align the existing waitlist notice text beneath the map.",
+    "customFields": {
+      "requestFamily": "website",
+      "requestDetail": "Center-align the existing waitlist notice text beneath the map."
+    }
+  },
+  "expected": {
+    "class": "page-presentation",
+    "outcome": "routed",
+    "ownerRole": "website-operations"
+  }
+}

@@ -331,7 +331,8 @@
       },
       "ticketClasses": [
         "other-workflow",
-        "platform-request"
+        "platform-request",
+        "page-presentation"
       ],
       "status": "handoff"
     },

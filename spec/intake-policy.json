@@ -454,6 +454,19 @@
       "policy": "internal-review",
       "ownerRole": "elementor-owner",
       "queue": "owner"
+    },
+    "page-presentation": {
+      "policy": "allowed",
+      "ownerRole": "website-operations",
+      "queue": "owner",
+      "guards": [
+        {
+          "pattern": "\\b(?:global|site[- ]wide|every page|new section|add (?:a |an )?(?:section|widget|component)|carousel|reorder|template|script|javascript|plugin|form|pricing|tuition|legal)\\b",
+          "policy": "internal-review",
+          "ownerRole": "website-operations",
+          "reason": "The request also names a structural, shared, functional, or sensitive change; website operations separates that scope before execution."
+        }
+      ]
     }
   },
   "duplicates": {

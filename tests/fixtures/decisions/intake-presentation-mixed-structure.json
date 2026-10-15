@@ -1,0 +1,23 @@
+{
+  "task": {
+    "id": "presentation-mixed-structure",
+    "title": "Website (Layout, new section, or something else) \u2014 Alpha Locations",
+    "requestType": "Website",
+    "status": "NOT_STARTED",
+    "url": "https://alpha.school/locations/",
+    "requesterEmail": "yash.chitneni@superbuilders.school",
+    "description": "Center-align the existing waitlist notice text beneath the map.",
+    "customFields": {
+      "requestFamily": "website",
+      "formSource": "request-form",
+      "websiteRequestType": "layout_other",
+      "webOutcome": "Center-align the text and add a new section.",
+      "webAffectedSection": "Waitlist notice"
+    }
+  },
+  "expected": {
+    "class": "page-presentation",
+    "outcome": "policy-review",
+    "ownerRole": "website-operations"
+  }
+}
