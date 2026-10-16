@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-16T00:17:09.827Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code session, 2026-10-15",
+  "date": "2026-10-15",
+  "specRefs": [
+    "spec/filing-policy.json"
+  ],
+  "summary": "Precision standard for observer checks: a check that fires on spike.minPages page scopes in one run files one site ticket; a check under the precision bar is listed as a pause candidate; campus.resources.packet.reachable and site.events.sync.public are paused (measured, never filed); images-render and campus.intro.media.current stay enforced",
+  "decisionRow": "| 2026-10-15 | Decided (Matt Barge, Claude Code session, 2026-10-15): Precision standard for observer checks: a check that fires on spike.minPages page scopes in one run files one site ticket; a check under the precision bar is listed as a pause candidate; campus.resources.packet.reachable and site.events.sync.public are paused (measured, never filed); images-render and campus.intro.media.current stay enforced | Matt Barge | spec/filing-policy.json; tests/fixtures/decisions/recorded/2026-10-15-filing-policy-92fc4ac9.json |",
+  "appliedIn": "spec/filing-policy.json; tests/fixtures/decisions/recorded/2026-10-15-filing-policy-92fc4ac9.json",
+  "textSha256": "92fc4ac9e5c21d4c1e768802f7f2b0da464a7d0b24999b25990e45312f3b9ae0",
+  "text": "Matt Barge, Claude Code session, 2026-10-15:\n\"Go ahead on 1\", accepting the recommendation: \"Hold our checks to a precision standard: every agent-filed ticket closes with a resolution kind, precision is reported weekly per check, a check below a bar is paused, and a check that fires across many pages in one run becomes one ticket.\"\n\nApplied with the first precision report (tests/telemetry-report.mjs, tickets filed 2026-09-17 to 2026-10-15, the 28-day window):\n- campus-info-packet-link-reachable (row campus.resources.packet.reachable): 18 filed, 0 ended in a change or decision, 18 false positive. Paused.\n- public-event-sync (row site.events.sync.public): 12 filed, 0 ended in a change or decision, 5 false positive. Paused. Events are owned by Hailey McSpadden, not the website operators.\n- images-render (row site.layout.images.render): 49 filed, 0% precision, but caused by the observer's runner (aeo PR 85) and now covered by the spike rule. Not paused, so a real broken image (404) still files.\n- campus-page-stale-launch-media (row campus.intro.media.current): 15 filed, 0% in the window, but its 10 open tickets are real asks waiting on approved open-campus media. Not paused.\n"
+}

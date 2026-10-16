@@ -129,3 +129,35 @@ test('telemetry: the filer\'s tickets (agent-found with a filerRunId) are observ
   assert.ok(report.byRun.some((r) => r.key === 'site-full-2026-09-24T14-28-40-974Z'))
   assert.equal(classifyOutcome({ ...filerTicket, customFields: { ...filerTicket.customFields, check: 'explicit-check' } }, receiptsByTicket(receipts), now).check, 'explicit-check', 'check wins when both are present')
 })
+
+test('precision reads APEX first-class upper-case resolutionKind; EXECUTED counts as a change; closes with no kind are counted', async () => {
+  const { classifyOutcome, precisionReport, resolutionKindOf } = await import('./telemetry-report.mjs')
+  const t = (id, extra) => ({ id, status: 'COMPLETED', createdAt: '2026-10-01T00:00:00Z', completedAt: '2026-10-03T00:00:00Z', customFields: { source: 'agent-found', filerRunId: 'run-1', observerCheck: 'images-render' }, ...extra })
+  assert.equal(resolutionKindOf(t('a', { resolutionKind: 'CHECK_CLEARED' })), 'check-cleared')
+  assert.equal(resolutionKindOf(t('b', { customFields: { resolutionKind: 'false-positive' } })), 'false-positive')
+  const byTicket = new Map()
+  assert.equal(classifyOutcome(t('c', { resolutionKind: 'EXECUTED' }), byTicket).ended, 'site-change')
+  assert.equal(classifyOutcome(t('d', { resolutionKind: 'FALSE_POSITIVE' }), byTicket).kind, 'false-positive')
+  assert.equal(classifyOutcome(t('e', { resolutionKind: 'BLOCKED_DECISION' }), byTicket).ended, 'decision')
+  const report = precisionReport([t('f', { resolutionKind: 'EXECUTED' }), t('g', {}), t('h', { resolutionKind: 'FALSE_POSITIVE' })], [], { since: new Date('2026-09-01'), now: new Date('2026-10-15') })
+  assert.equal(report.period.ended, 1)
+  assert.equal(report.period.falsePositive, 1)
+  assert.equal(report.period.closedWithoutKind, 1)
+})
+
+test('precision gate lists checks over minFiled and under minPrecision in the trailing window, from spec/filing-policy.json', async () => {
+  const { pauseCandidates, renderPauseSection, readFilingPolicy } = await import('./telemetry-report.mjs')
+  const policy = readFilingPolicy()
+  assert.deepEqual([policy.precision.windowDays, policy.precision.minFiled, policy.precision.minPrecision], [28, 10, 0.5])
+  const now = new Date('2026-10-15T00:00:00Z')
+  const mk = (check, i, kind) => ({ id: `${check}-${i}`, status: kind ? 'COMPLETED' : 'BLOCKED', createdAt: '2026-10-10T00:00:00Z', resolutionKind: kind, customFields: { source: 'agent-found', filerRunId: 'run-1', observerCheck: check } })
+  const tickets = [
+    ...Array.from({ length: 12 }, (_, i) => mk('images-render', i, i < 2 ? 'EXECUTED' : null)),
+    ...Array.from({ length: 12 }, (_, i) => mk('campus-source-status-sentence', i, 'EXECUTED')),
+    ...Array.from({ length: 4 }, (_, i) => mk('rare-check', i, null)),
+    { ...mk('images-render', 99, null), createdAt: '2026-08-01T00:00:00Z' },
+  ]
+  const gate = pauseCandidates(tickets, [], policy, now)
+  assert.deepEqual(gate.candidates.map((c) => [c.key, c.filed]), [['images-render', 12]], 'precise checks, small samples and tickets outside the window are not candidates')
+  assert.match(renderPauseSection(gate), /\| images-render \| 12 \| 16\.7% \|/)
+})

@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-16T18:47:20.872Z",
+  "decidedBy": "Matt Barge",
+  "source": "APEX cmv9u5gjf000406jp9s7bz6vl operator instruction, 2026-10-15",
+  "date": "2026-10-15",
+  "specRefs": [
+    "spec/campus-lifecycle.json"
+  ],
+  "summary": "The New York homeschool support centers (alpha.school/new-york-city/ and /greenwich/) carry no local School JSON-LD; row site.search.schema.present does not apply to them (checkHolds ny-homeschool-support-center), so the observer filer exempts the finding instead of filing it",
+  "decisionRow": "| 2026-10-15 | Decided (Matt Barge, APEX cmv9u5gjf000406jp9s7bz6vl operator instruction, 2026-10-15): The New York homeschool support centers (alpha.school/new-york-city/ and /greenwich/) carry no local School JSON-LD; row site.search.schema.present does not apply to them (checkHolds ny-homeschool-support-center), so the observer filer exempts the finding instead of filing it | Matt Barge | spec/campus-lifecycle.json; tests/fixtures/decisions/recorded/2026-10-15-campus-lifecycle-bc4fac2c.json |",
+  "appliedIn": "spec/campus-lifecycle.json; tests/fixtures/decisions/recorded/2026-10-15-campus-lifecycle-bc4fac2c.json",
+  "textSha256": "bc4fac2cffc4635a2f14823e9ee18d8a9ace32bd5b0d501bcf62a029e1932f90",
+  "text": "APEX cmv9u5gjf000406jp9s7bz6vl, OPERATOR INSTRUCTION, Matt Barge, 2026-10-15:\n\"Expected: identify the NY locations as homeschool support centers; preserve marketing benefits, existing amounts and links; remove local School schema and unsupported local accreditation\"\n"
+}
