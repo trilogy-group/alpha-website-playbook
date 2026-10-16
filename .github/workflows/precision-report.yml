@@ -36,7 +36,7 @@ jobs:
         env:
           APEX_API_TOKEN: ${{ secrets.APEX_API_TOKEN }}
           APEX_API_BASE: ${{ vars.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1' }}
-          ALPHA_WP_BASE_URL: ${{ vars.ALPHA_WP_BASE_URL }}
+          ALPHA_WP_BASE_URL: ${{ vars.ALPHA_WP_BASE_URL || 'https://alpha.school' }}
           ALPHA_WP_USERNAME: ${{ secrets.ALPHA_WP_USERNAME }}
           ALPHA_WP_APPLICATION_PASSWORD: ${{ secrets.ALPHA_WP_APPLICATION_PASSWORD }}
           INPUT_SINCE: ${{ inputs.since }}
