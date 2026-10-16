@@ -595,5 +595,12 @@
     "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates. Production GTM version 7 carries the governed destination_key on CTA starts, and the event-scoped GA4 custom dimension is registered. The first post-registration read returned zero processed keys because registration is non-retroactive and may need 24 to 48 hours; aggregate population and controlled authority reconciliation remain incomplete. destination_key is live as a diagnostic parameter and is not approved as a completion join key.",
     "Matt Barge is the interim analytics owner; the consent owner and primary prospective-parent outcome remain undecided.",
     "The raw-plus-screened reporting policy is approved, but the first versioned internal, bot, and anomaly screening rule is not yet approved."
-  ]
+  ],
+  "trackingExpansion": {
+    "contract": "registry/website-tracking-expansion.json",
+    "status": "built-not-released",
+    "asOf": "2026-10-16",
+    "scope": "Exact control and exposure pilot; provider and sitewide component integration pending verification",
+    "doesNotChangeApprovedKeyEvents": true
+  }
 }
