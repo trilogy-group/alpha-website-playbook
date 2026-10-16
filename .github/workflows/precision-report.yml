@@ -1,0 +1,66 @@
+name: Observer precision report
+
+# Precision standard (Matt Barge, 2026-10-15; spec/filing-policy.json): once a week tests/telemetry-report.mjs reads
+# the APEX website queue (and WordPress receipts when the ALPHA_WP_* secrets exist) and reports observer precision per
+# check over the trailing window, with the checks below the bar listed as pause candidates. Read only: it never
+# changes a row, a ticket or the policy. Pausing a check is a recorded decision (agent/record-decision.mjs).
+on:
+  schedule:
+    # Mondays 13:30 UTC (08:30 Central), before the week's queue work.
+    - cron: '30 13 * * 1'
+  workflow_dispatch:
+    inputs:
+      since:
+        description: 'Start of the reporting window (ISO date; default: 28 days ago)'
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: observer-precision-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    name: Report observer precision
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+
+      - name: Run the precision report
+        env:
+          APEX_API_TOKEN: ${{ secrets.APEX_API_TOKEN }}
+          APEX_API_BASE: ${{ vars.APEX_API_BASE || 'https://apex.2hourlearning.com/api/v1' }}
+          ALPHA_WP_BASE_URL: ${{ vars.ALPHA_WP_BASE_URL }}
+          ALPHA_WP_USERNAME: ${{ secrets.ALPHA_WP_USERNAME }}
+          ALPHA_WP_APPLICATION_PASSWORD: ${{ secrets.ALPHA_WP_APPLICATION_PASSWORD }}
+          INPUT_SINCE: ${{ inputs.since }}
+        run: |
+          set -euo pipefail
+          test -n "$APEX_API_TOKEN" || { echo 'APEX_API_TOKEN is required to read the queue.' >&2; exit 2; }
+          since="${INPUT_SINCE:-$(date -u -d '28 days ago' +%Y-%m-%d)}"
+          mkdir -p out/precision
+          node tests/telemetry-report.mjs --since "$since" --label weekly --out out/precision/report.md | tee out/precision/summary.txt
+
+      - name: Summarize
+        if: always() && hashFiles('out/precision/report.md') != ''
+        run: |
+          {
+            echo '## Observer precision (weekly)'
+            echo
+            sed -n '/^| Observer tickets filed/,/^| Median days open/p' out/precision/report.md
+            echo
+            sed -n '/^## Checks below the precision bar/,/^## What is not measured yet/p' out/precision/report.md | sed '$d'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && hashFiles('out/precision/**') != ''
+        with:
+          name: precision-report-${{ github.run_id }}
+          path: out/precision/
+          retention-days: 90
