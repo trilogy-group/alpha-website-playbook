@@ -39,6 +39,8 @@
  *      registry/campus-cta-exceptions.json (rule hidden, present or destination; expires an ISO date, lifecycle:Open or
  *      null) is reported as exempted; so is an other-campus or sister-brand finding whose card names a person listed as
  *      shared leadership for the page's campus group (registry/campus-leadership.json groups) and a sibling campus.
+ *      So is a finding on a row that the campus's `checkHolds` in spec/campus-lifecycle.json names: a recorded decision
+ *      (a proposed-campus hold, the NY homeschool centers) under which the row's expectation does not apply to that page.
  *   2. A finding is suppressed and counted when its row depends on a source that `health.json` (else the manifest's
  *      providers) reports degraded, failed or stale (or `suppressFindings: true`; not-collected, optional and disabled
  *      never suppress), or when the finding carries a `suppressWhen` condition. Loop-health suppression is the
@@ -631,6 +633,27 @@ export function sharedLeadershipExemption({ row, finding, registry = loadRegistr
   return null
 }
 
+/**
+ * Campus check hold (spec/campus-lifecycle.json campuses.<slug>.checkHolds[]): a recorded decision under which named
+ * rows do not apply to that campus's page. Each hold names its rows (row ids, or a row-key prefix ending in `.*`), the
+ * decision (decidedBy, decidedOn, source, ref) and when it ends (an ISO date, lifecycle:Open, or null standing). Without a
+ * hold a campus under a decided exception refiles a ticket after every close (Lexington, 2026-10-16: three tickets).
+ */
+export function campusHoldFor({ row, finding, now = new Date(), lifecycle = loadRegistry(LIFECYCLE_FILE) }) {
+  const slug = campusSlugFor(finding)
+  const holds = slug ? lifecycle.campuses?.[slug]?.checkHolds : null
+  if (!Array.isArray(holds)) return null
+  const key = rowKeyFor(row)
+  for (const hold of holds) {
+    const covers = (hold.rows || []).some((r) => r === row.id || r === key || (r.endsWith('.*') && (row.id.startsWith(r.slice(0, -1)) || key.startsWith(r.slice(0, -1)))))
+    if (!covers) continue
+    if (typeof hold.expires === 'string' && /^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(hold.expires) && now.getTime() >= new Date(`${hold.expires}T00:00:00Z`).getTime()) continue
+    if (hold.expires === 'lifecycle:Open' && lifecycleFor(finding, slug).state === 'Open') continue
+    return { slug, campus: campusPages()[slug]?.names?.[0] || slug, hold: hold.id, reason: hold.reason, decidedBy: hold.decidedBy, decidedOn: hold.decidedOn, source: hold.source, ref: hold.ref || null, expires: hold.expires ?? null, row: row.id }
+  }
+  return null
+}
+
 /** Campus name for a growth-map program id through registry/campus-pages.json mapProgramIds. */
 export function campusNameForProgram(programId) {
   if (!programId) return null
@@ -1171,6 +1194,8 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     const ctaException = ctaExceptionFor({ row, finding, now })
     if (ctaException?.exempt) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'cta-exception', ...ctaException }); continue }
     if (ctaException) plan.exceptionsNotApplied.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'cta-exception', ...ctaException })
+    const campusHold = campusHoldFor({ row, finding, now })
+    if (campusHold) { plan.exempted.push({ id: finding.id, check: finding.check, page: normalizePageUrl(finding.url), kind: 'campus-hold', ...campusHold }); continue }
     const leadership = sharedLeadershipExemption({ row, finding })
     if (leadership) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'shared-leadership', ...leadership }); continue }
     const unhealthy = unhealthyDependencies(row, bundle, run.health, now)

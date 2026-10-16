@@ -36,6 +36,7 @@ import {
   buildResolvePatch,
   campusSlugFor,
   cleanText,
+  campusHoldFor,
   ctaExceptionFor,
   ctaForRow,
   exemptionsRefsFor,
@@ -1437,4 +1438,26 @@ test('observer filer 0.7: one Missing Info per campus and registry when the medi
   const reversed = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [coverage, media], manifestExtra: verified }).dir), bundle: checks, queue: [], now, registries: { 'registry/campus-open-media.json': { campuses: {} } } })
   assert.deepEqual([reversed.counts.files, reversed.counts.missingInfo, reversed.counts.existing], [1, 1, 1])
   assert.equal(reversed.files[0].check, 'campus-registry-coverage')
+})
+
+test('campus check holds (spec/campus-lifecycle.json checkHolds): a decided exception to a row is exempted, not filed', () => {
+  const finding = (url, check, extra = {}) => ({ loop: 'campus-truth', check, entity: 'page', severity: 'high', title: 't', actionable: true, url, expected: 'e', actual: {}, id: oid('C0DE000001'), ...extra })
+  const row = (id) => ({ id })
+  const lex = 'https://alpha.school/boston-suburbs/'
+  // Lexington: the proposed-campus hold covers the status source, every Apply row and the map row, until the campus is Open.
+  for (const id of ['campus.intro.status-source', 'campus.resources.apply.path', 'campus.resources.apply.source', 'site.map.integrity.wordpress-page-has-program']) {
+    const hold = campusHoldFor({ row: row(id), finding: finding(lex, 'c'), now: NOW })
+    assert.equal(hold?.hold, 'lexington-proposed-campus', id)
+    assert.equal(hold.slug, 'boston-suburbs')
+  }
+  assert.equal(campusHoldFor({ row: row('campus.resources.calendar.reachable'), finding: finding(lex, 'c'), now: NOW }), null, 'a dead calendar link is still a defect on a held campus')
+  assert.equal(campusHoldFor({ row: row('campus.resources.apply.path'), finding: finding(lex, 'c', { actual: { programType: 'Open' } }), now: NOW }), null, 'the hold ends when the campus is Open')
+  // NY homeschool support centers: no local School schema, by decision; other campuses still need it.
+  assert.equal(campusHoldFor({ row: row('site.search.schema.present'), finding: finding('https://alpha.school/new-york-city/', 'campus-school-schema'), now: NOW })?.hold, 'ny-homeschool-support-center')
+  assert.equal(campusHoldFor({ row: row('site.search.schema.present'), finding: finding('https://alpha.school/greenwich/', 'campus-school-schema'), now: NOW })?.hold, 'ny-homeschool-support-center')
+  assert.equal(campusHoldFor({ row: row('site.search.schema.present'), finding: finding('https://alpha.school/miami/', 'campus-school-schema'), now: NOW }), null)
+  // An ISO expiry ends the hold at the start of that day.
+  const lifecycle = { campuses: { miami: { checkHolds: [{ id: 'x', rows: ['site.search.*'], expires: '2026-10-01' }] } } }
+  assert.equal(campusHoldFor({ row: row('site.search.schema.present'), finding: finding('https://alpha.school/miami/', 'c'), now: new Date('2026-09-30T12:00:00Z'), lifecycle })?.hold, 'x')
+  assert.equal(campusHoldFor({ row: row('site.search.schema.present'), finding: finding('https://alpha.school/miami/', 'c'), now: new Date('2026-10-01T00:00:00Z'), lifecycle }), null)
 })
