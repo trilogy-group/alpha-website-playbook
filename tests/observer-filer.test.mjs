@@ -163,6 +163,8 @@ function syntheticRun({ pages = 12, viewports = ['desktop', 'mobile'], occurrenc
 }
 
 const countBy = (items, key) => items.reduce((a, item) => ({ ...a, [key(item)]: (a[key(item)] || 0) + 1 }), {})
+/** The filing policy without the 2026-10-15 pauses: replays of older packets test the other rules, not the pauses. */
+const UNPAUSED = { ...JSON.parse(fs.readFileSync(path.join(root, 'spec', 'filing-policy.json'), 'utf8')), paused: [] }
 /** The same ticket as if this filer had created it (PR 26: provenance, not a SITE id, grants close authority). */
 const asFilerOwned = (task) => ({ ...task, customFields: { ...task.customFields, source: 'agent-found', filedBy: FILED_BY, filerRunId: 'site-full-2026-09-18T06-39-38-196Z' } })
 
@@ -174,10 +176,10 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   assert.equal(checks.version, '1.13')
   assert.match(checks.sha256, /^[0-9a-f]{64}$/)
   assert.equal(checks.sha256, loadCheckBundle(path.join(root, 'spec', 'check-bundle.generated.json')).sha256, 'the fixture bundle is a copy of the committed one; rebuild and copy after a row change')
-  const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW })
+  const plan = planObserverFindings({ run, bundle: checks, queue, now: NOW, filingPolicy: UNPAUSED })
 
   // Bundle 1.2 (2026-09-25): 39 findings on source-digest rows leave the queue for source-digest.md. Grounding restore (bundle 2c8a5aeb): the image-identity and seasonal rows are enforced again on their complaints, so their 19 findings leave advisory: two Maddox cards are exempted, two match the open San Juan and Lexington tickets, and Raleigh, La Jolla and Scottsdale file beside Lexington's calendar; no group waits on a decision.
-  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, sourceDigest: 39, suppressedByObserver: 0, advisory: 9, outOfScope: 3, exempted: 2, suppressed: 35, held: 0, groups: 19, decisionPending: 0, files: 4, existing: 15, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0, missingInfo: 0, recordedSince: 0, informational: 0 })
+  assert.deepEqual(plan.counts, { findings: 224, dropped: 49, loopHealth: 56, sourceDigest: 39, suppressedByObserver: 0, advisory: 9, outOfScope: 3, exempted: 2, suppressed: 35, held: 0, groups: 19, decisionPending: 0, files: 4, existing: 15, invalid: 0, resolves: 0, needsPerson: 0, unresolved: 180, evidencePairs: 0, missingInfo: 0, recordedSince: 0, informational: 0, spikes: 0, paused: 0 })
   assert.deepEqual(countBy(plan.sourceDigest, (x) => x.ownerRole), { 'hubspot-program-admin': 7, 'operations-sheet-owner': 21, 'community-app-owner': 11 })
   assert.deepEqual(countBy(plan.sourceDigest, (x) => x.row), { 'site.map.integrity.address-agreement': 4, 'site.community.routing.host': 11, 'site.map.integrity.operations-row': 12, 'site.map.integrity.operations-on-map': 7, 'site.map.integrity.operations-address': 5 })
   assert.ok(plan.sourceDigest.every((x) => /^.+ \| .+ \| observed: .+ \| expected: .+ \| source: .+ \(read 20[0-9-]+T.+\) \| observer SITE-[0-9A-F]{10}, row site\..+, severity .+, run site-full-2026-09-24T14-28-40-974Z/.test(x.audit)), 'every digest item carries the audit line')
@@ -212,7 +214,7 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
   const preRedesign = (t) => t.customFields?.source === 'agent-found' && t.id !== 'cmu4g13kc00000agmdogkxihp'
   assert.equal(queue.filter(preRedesign).length, 18)
   const owned = queue.map((t) => (preRedesign(t) ? t : asFilerOwned(t)))
-  const ownedPlan = planObserverFindings({ run, bundle: checks, queue: owned, now: NOW })
+  const ownedPlan = planObserverFindings({ run, bundle: checks, queue: owned, now: NOW, filingPolicy: UNPAUSED })
   // Bundle 1.2: the 16 cleared map-row tickets and the 12 cleared Community URL tickets sit on source-digest rows now; the filer leaves them to their owners (unresolved, never closed).
   assert.deepEqual({ resolves: ownedPlan.counts.resolves, needsPerson: ownedPlan.counts.needsPerson, unresolved: ownedPlan.counts.unresolved }, { resolves: 50, needsPerson: 16, unresolved: 115 })
   const resolved = new Set(ownedPlan.resolves.map((r) => r.id))
@@ -363,9 +365,57 @@ test('observer filer: replay of the 2026-09-24 packet never auto-resolves legacy
 
   // A browser row with no complete desktop and mobile evidence pair is suppressed even when the browser reports healthy (PR 26).
   const missingScreenshots = syntheticRun({ pages: 2, screenshots: false, browser: 'healthy' })
-  const withoutEvidence = planObserverFindings({ run: loadRunFolder(missingScreenshots.dir), bundle: checks, queue: [], now: NOW })
+  const withoutEvidence = planObserverFindings({ run: loadRunFolder(missingScreenshots.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.equal(withoutEvidence.counts.files, 0)
   assert.equal(withoutEvidence.suppressed.filter((item) => item.reason === 'required browser evidence missing').length, 4)
+})
+
+function brokenImagesFinding(p, viewport) {
+  const route = `campus-program-${2000 + p}`
+  const url = `https://alpha.school/spike-campus-${p}/`
+  const id = oid(`${String(p).padStart(2, '0')}${viewport === 'desktop' ? 'B' : 'C'}1000000`)
+  return { loop: 'functional', check: 'images-render', entity: `${route}-${viewport}`, field: 'images', severity: 'high', title: `${route} has broken images on ${viewport}`, summary: '2 visible images rendered with zero natural width.', actionable: true, url, expected: 'all visible images render', actual: [`${url}a.png`, `${url}b.png`], observed: 2, businessImpact: 'visual', routing: { owners: ['Matt Barge'], channel: '#support-websites' }, evidenceVersion: 2, id, evidenceImages: [{ kind: 'screenshot', path: `screenshots/${route}-${viewport}.png`, route, viewport, url }] }
+}
+const brokenImagesRun = (pages) => {
+  const extraFindings = []
+  for (let p = 0; p < pages; p++) for (const viewport of ['desktop', 'mobile']) extraFindings.push(brokenImagesFinding(p, viewport))
+  const extraIncidents = extraFindings.map((f) => ({ ...f, status: 'active', firstSeenAt: '2026-09-02T00:00:00.000Z', lastSeenAt: '2026-09-24T14:39:47.125Z', lastRunId: RUN_ID, occurrences: 3, cleanRuns: 0, reopenedCount: 0 }))
+  return loadRunFolder(syntheticRun({ pages: 0, extraFindings, extraIncidents }).dir)
+}
+
+test('observer filer: a row paused in spec/filing-policy.json is measured and counted but never filed; the desktop and mobile rows pause together (2026-10-15)', () => {
+  const policy = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'filing-policy.json'), 'utf8'))
+  assert.deepEqual(policy.paused.map((p) => p.row).sort(), ['campus.resources.packet.reachable', 'site.events.sync.public'])
+  for (const entry of policy.paused) assert.ok(fs.existsSync(path.join(root, entry.decision)), `${entry.row} cites a recorded decision fixture`)
+  const pausedImages = { ...policy, paused: [{ row: 'site.layout.images.render', decision: 'test' }] }
+  const plan = planObserverFindings({ run: brokenImagesRun(3), bundle: bundle(), queue: [], now: NOW, filingPolicy: pausedImages })
+  assert.equal(plan.files.filter((f) => f.check === 'images-render').length, 0)
+  assert.equal(plan.counts.paused, 6, 'three pages, both viewports, all counted')
+  assert.ok(plan.paused.every((x) => x.row.startsWith('site.layout.images.render')))
+})
+
+test('observer filer: one check failing on spike.minPages page scopes in one run files one site ticket listing every page; below the bar each page files (spec/filing-policy.json, 2026-10-15)', () => {
+  const policy = JSON.parse(fs.readFileSync(path.join(root, 'spec', 'filing-policy.json'), 'utf8'))
+  assert.equal(policy.spike.minPages, 8)
+
+  const spike = planObserverFindings({ run: brokenImagesRun(12), bundle: bundle(), queue: [], now: NOW })
+  assert.equal(spike.counts.spikes, 1)
+  assert.deepEqual(spike.spikes.map((x) => [x.check, x.pages, x.findings]), [['images-render', 12, 24]])
+  const images = spike.files.filter((f) => f.check === 'images-render')
+  assert.equal(images.length, 1, 'twelve pages, one ticket')
+  assert.equal(images[0].key, 'observer:site.layout.images.render:site')
+  assert.equal(images[0].scope, 'site')
+  assert.equal(images[0].title, '12 pages in one run: fails "Visible images render" (24 findings)')
+  assert.equal(images[0].pages.length, 12)
+  assert.equal(images[0].observerIds.length, 24, 'every observer id stays on the merged ticket, so auto-resolve still sees them')
+  assert.deepEqual(contractCheck({ ...images[0].payload, id: 'x', assignees: [{ name: 'Matt Barge' }] }).missing, [], 'the merged ticket meets the ticket contract')
+
+  const below = planObserverFindings({ run: brokenImagesRun(3), bundle: bundle(), queue: [], now: NOW })
+  assert.equal(below.counts.spikes, 0)
+  assert.deepEqual(below.files.filter((f) => f.check === 'images-render').map((f) => f.scope), ['page', 'page', 'page'])
+
+  const off = planObserverFindings({ run: brokenImagesRun(12), bundle: bundle(), queue: [], now: NOW, filingPolicy: { spike: { minPages: 0 } } })
+  assert.equal(off.files.filter((f) => f.check === 'images-render').length, 12, 'a policy without a valid minPages leaves page scope alone')
 })
 
 test('observer filer: 24 header-overlap findings across 12 pages and two viewports collapse to one template-scoped ticket; rows of different classes on one scope never merge', () => {
@@ -486,21 +536,21 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   assert.equal(imagesRow.status, 'enforced')
   assert.equal(imagesRow.advisoryReason, undefined, 'a grounded row carries no promotion-rule reason')
   assert.deepEqual(imagesRow.grounding, { kind: 'complaint', ref: 'APEX cmty8wn6a00000bgmvl2vv97t 2026-09-13 (Boston: a visible image failed to render) and cmty8wknh00000agmiv9t4g2g (Jamaica Plain)' })
-  const imagesPlan = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [imagesFinding] }).dir), bundle: checks, queue: [], now: NOW })
+  const imagesPlan = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [imagesFinding] }).dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.deepEqual(imagesPlan.advisory, [], 'an enforced row files instead of counting as advisory')
   assert.equal(imagesPlan.counts.files, 1)
   assert.equal(imagesPlan.files[0].check, 'images-render')
   const degraded = syntheticRun({ pages: 0, browser: 'degraded', extraFindings: [cropFinding] })
-  const byHealth = planObserverFindings({ run: loadRunFolder(degraded.dir), bundle: checks, queue: [], now: NOW })
+  const byHealth = planObserverFindings({ run: loadRunFolder(degraded.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.equal(byHealth.counts.files, 0)
   assert.deepEqual(byHealth.suppressed, [{ id: oid('1A6E000002'), check: 'campus-image-crop-risk', row: 'site.layout.images.crop', reason: 'source health', sources: [{ source: 'browser', reportedAs: 'browser', status: 'degraded', reason: 'screenshot budget exhausted' }] }])
   // not-collected, optional and disabled measured nothing and suppress nothing; suppressFindings true does even when the status is unfamiliar.
   for (const status of ['not-collected', 'optional', 'disabled']) {
-    const lenient = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, browser: status, extraFindings: [cropFinding] }).dir), bundle: checks, queue: [], now: NOW })
+    const lenient = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, browser: status, extraFindings: [cropFinding] }).dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
     assert.equal(lenient.counts.suppressed, 0, `${status} does not suppress`)
     assert.equal(lenient.counts.files, 1)
   }
-  const flagged = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [cropFinding], healthSources: { browser: { status: 'partial', suppressFindings: true, reason: 'observer says so' } } }).dir), bundle: checks, queue: [], now: NOW })
+  const flagged = planObserverFindings({ run: loadRunFolder(syntheticRun({ pages: 0, extraFindings: [cropFinding], healthSources: { browser: { status: 'partial', suppressFindings: true, reason: 'observer says so' } } }).dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.deepEqual(flagged.suppressed.map((s) => [s.id, s.sources[0].status]), [[oid('1A6E000002'), 'partial']])
   assert.equal(suppressingStatus('failed'), 'failed')
   assert.equal(suppressingStatus({ status: 'stale' }), 'stale')
@@ -509,12 +559,12 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   assert.equal(suppressingStatus({ suppressFindings: true }), 'suppressed')
   assert.deepEqual(Object.keys(normalizeHealth(null, { providers: { a: { status: 'failed' }, b: { status: 'disabled' }, c: { status: 'not-collected' }, d: { status: 'stale' } } }).unhealthy), ['a', 'd'])
   const allFailed = syntheticRun({ pages: 0, extraFindings: [{ ...imagesFinding, conditions: ['every-image-failed-in-run'] }] })
-  const asLoopHealth = planObserverFindings({ run: loadRunFolder(allFailed.dir), bundle: checks, queue: [], now: NOW })
+  const asLoopHealth = planObserverFindings({ run: loadRunFolder(allFailed.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.deepEqual(asLoopHealth.loopHealth.map((l) => l.row), ['site.loop.health.images-all-failed'], 'every image failing in a run is loop health, not a page defect')
   // A provider-health loop-health finding in the packet no longer suppresses anything in the filer (the observer's job); it is counted.
   const providerDown = { loop: 'loop-health', check: 'provider-health', entity: 'browser', field: 'status', severity: 'high', title: 'browser source collection degraded', actionable: true, expected: 'healthy', actual: 'degraded', id: oid('0BAD000002') }
   const withProvider = syntheticRun({ pages: 0, extraFindings: [providerDown, cropFinding] })
-  const byProvider = planObserverFindings({ run: loadRunFolder(withProvider.dir), bundle: checks, queue: [], now: NOW })
+  const byProvider = planObserverFindings({ run: loadRunFolder(withProvider.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.deepEqual(byProvider.loopHealth.map((l) => l.check), ['provider-health'])
   assert.equal(byProvider.counts.suppressed, 0)
   assert.equal(byProvider.counts.files, 1)
@@ -540,7 +590,7 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
     { ...timeoutHistory, status: 'active', firstSeenAt: '2026-09-24T02:00:00.000Z', lastRunId: RUN_ID, occurrences: 2, cleanRuns: 0, runIds: [PREVIOUS_RUN_ID, RUN_ID] },
   ]
   const mixed = syntheticRun({ pages: 0, extraFindings: [eventFinding, ended, advisoryFinding, capture, unknown, retiredFinding, timeout, timeoutTwice, timeoutOld, timeoutHistory], extraIncidents: mixedIncidents, manifestExtra: { previousRunId: PREVIOUS_RUN_ID } })
-  const plan = planObserverFindings({ run: loadRunFolder(mixed.dir), bundle: checks, queue: [], now: NOW })
+  const plan = planObserverFindings({ run: loadRunFolder(mixed.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.equal(plan.counts.files, 2, 'the timeout seen in two consecutive runs and the one whose history names the previous run file')
   assert.deepEqual(plan.files.map((f) => f.observerIds).sort(), [[oid('0770000002')], [oid('0770000004')]])
   assert.deepEqual(plan.held.map((h) => [h.id, h.reason, h.gracePeriodHours ?? h.requireConsecutiveRuns, h.ageHours ?? h.observations, h.basis]), [
@@ -552,7 +602,7 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   assert.deepEqual(plan.advisory.map((a) => a.id), [oid('AD00000001')])
   assert.deepEqual(plan.loopHealth.map((l) => [l.id, l.row]), [[oid('7E10000001'), 'site.loop.health.route-screenshot-capture']], 'a screenshot capture failure is loop health, not telemetry to drop')
   assert.deepEqual(plan.dropped.map((d) => [d.id, d.reason.split(':')[0]]), [[oid('7E10000002'), 'no row in the check bundle (telemetry)'], [oid('0E70000001'), 'retired']])
-  const later = planObserverFindings({ run: loadRunFolder(mixed.dir), bundle: checks, queue: [], now: new Date('2026-09-24T18:00:00Z') })
+  const later = planObserverFindings({ run: loadRunFolder(mixed.dir), bundle: checks, queue: [], now: new Date('2026-09-24T18:00:00Z'), filingPolicy: UNPAUSED })
   assert.equal(later.counts.files, 3)
   const event = later.files.find((f) => f.key === 'observer:site.events.sync.public:events')
   assert.equal(event.owner.name, 'Garbhit Sharma')
@@ -562,14 +612,14 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
 
   // Coordinator (c): a packet from an observer that ran a verified copy of this bundle already applied the holds; the filer does not re-apply them.
   const verified = syntheticRun({ pages: 0, extraFindings: [eventFinding, timeout], extraIncidents: mixedIncidents.slice(0, 3), manifestExtra: { checkBundle: { status: 'verified', version: checks.version, sha256: checks.sha256 } } })
-  const trusted = planObserverFindings({ run: loadRunFolder(verified.dir), bundle: checks, queue: [], now: NOW })
+  const trusted = planObserverFindings({ run: loadRunFolder(verified.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED })
   assert.match(trusted.holds, /^observer \(manifest\.checkBundle verified/)
   assert.equal(trusted.counts.held, 0)
   assert.equal(trusted.counts.files, 2, 'the observer already held what its bundle says to hold; what it emits files')
   const otherBundle = syntheticRun({ pages: 0, extraFindings: [eventFinding, timeout], extraIncidents: mixedIncidents.slice(0, 3), manifestExtra: { checkBundle: { status: 'verified', version: checks.version, sha256: 'a'.repeat(64) } } })
-  assert.equal(planObserverFindings({ run: loadRunFolder(otherBundle.dir), bundle: checks, queue: [], now: NOW }).counts.held, 2, 'a verified but different bundle does not stand in for this one')
+  assert.equal(planObserverFindings({ run: loadRunFolder(otherBundle.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED }).counts.held, 2, 'a verified but different bundle does not stand in for this one')
   const unverified = syntheticRun({ pages: 0, extraFindings: [eventFinding, timeout], extraIncidents: mixedIncidents.slice(0, 3), manifestExtra: { checkBundle: { status: 'unverified', sha256: checks.sha256 } } })
-  assert.equal(planObserverFindings({ run: loadRunFolder(unverified.dir), bundle: checks, queue: [], now: NOW }).counts.held, 2)
+  assert.equal(planObserverFindings({ run: loadRunFolder(unverified.dir), bundle: checks, queue: [], now: NOW, filingPolicy: UNPAUSED }).counts.held, 2)
   assert.equal(observerHoldsApply({ checkBundle: { status: 'verified' } }, checks), true, 'a verified record without a sha is trusted')
   assert.equal(observerHoldsApply({}, checks), false)
   assert.deepEqual(consecutiveFailingRuns(null, {}), { runs: 1, basis: 'first seen in this run' })
@@ -625,7 +675,7 @@ test('observer filer: advisory rows count, only degraded, failed, stale or suppr
   assert.equal(formatFact({ a: [{ b: { c: 1, d: 'x' }, e: 'kept' }] }), 'a b, e kept', 'a record nested a level deeper still shows only its key')
   const greenwich = loadRunFolder(path.join(fixtures, 'run-2026-09-24')).findings.find((f) => f.check === 'campus-application-source-missing' && /greenwich/.test(f.url))
   const applyRow = rowForCheck(bundle(), 'campus-application-source-missing')
-  const applyContract = buildContract({ row: applyRow, group: { key: 'k', row: applyRow, rows: [applyRow], findings: [greenwich], pages: ['https://alpha.school/greenwich/'] }, run: loadRunFolder(path.join(fixtures, 'run-2026-09-24')), bundle: bundle(), owner: ownerFor(loadPolicyBundle(), applyRow.ownerRole), policy: loadPolicyBundle(), now: NOW })
+  const applyContract = buildContract({ row: applyRow, group: { key: 'k', row: applyRow, rows: [applyRow], findings: [greenwich], pages: ['https://alpha.school/greenwich/'] }, run: loadRunFolder(path.join(fixtures, 'run-2026-09-24')), bundle: bundle(), owner: ownerFor(loadPolicyBundle(), applyRow.ownerRole), policy: loadPolicyBundle(), now: NOW, filingPolicy: UNPAUSED })
   assert.equal(applyContract.observed, 'applyLinks text APPLY NOW, href https://alpha.school/application/?submission_campus=greenwich, placeholderLinks none, finalsiteBaseUrl https://armonk-greenwich-alpha.fsenrollment.com/, admissionsHandledInFinalsite true')
   assert.equal(formatFact({}), 'empty')
   assert.equal(formatFact('Alpha Austin — the header overlaps…'), 'Alpha Austin; the header overlaps...', 'an em dash or ellipsis in an observer value never reaches a body')
