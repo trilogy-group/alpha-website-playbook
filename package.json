@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "validate": "node tests/validate-playbook.mjs",
-    "test": "node --test tests/playbook.test.mjs tests/section-shot.browser.test.mjs tests/telemetry.test.mjs tests/observer-filer.test.mjs tests/filer-run-selection.test.mjs tests/announced-status.test.mjs tests/open-status.test.mjs tests/record-decision.test.mjs tests/site-truth-report.test.mjs tests/open-card.test.mjs tests/queue-aging.test.mjs tests/observer-conformance.test.mjs",
+    "test": "node --test tests/playbook.test.mjs tests/section-shot.browser.test.mjs tests/telemetry.test.mjs tests/observer-filer.test.mjs tests/filer-run-selection.test.mjs tests/announced-status.test.mjs tests/open-status.test.mjs tests/record-decision.test.mjs tests/site-truth-report.test.mjs tests/open-card.test.mjs tests/queue-aging.test.mjs tests/observer-conformance.test.mjs tests/campus-listing-monitor.test.mjs",
     "site-truth": "node tests/site-truth-report.mjs",
     "open-card": "node agent/generate-open-card.mjs",
     "build:policy": "node tests/build-policy.mjs",
