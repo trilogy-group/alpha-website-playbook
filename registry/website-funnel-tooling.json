@@ -28,22 +28,22 @@
         "scheduledWriteAccess": false,
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "verifiedAt": "2026-10-01",
+        "verifiedAt": "2026-10-17",
         "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
-        "productionVersion": 7,
-        "productionVersionName": "Add destination key parameter to funnel CTA listener and GA4 tag",
-        "verification": "Supervised human admin/read-write access is verified. Production version 7 was published on 2026-10-01 after controlled preview passed for Homepage Info Session, Austin Book a Call, Austin Apply, and legacy Goldcast registration. Post-publish Tag Assistant observed one info_session_cta_click, one governed GA4 tag firing, and the expected public Goldcast destination key. AEO run 36899672472 then read live version 7 and all five governed start-event names through the GTM API. The dedicated identity remains documented as read-only; the release was supervised through the UI.",
+        "productionVersion": 8,
+        "productionVersionName": "Alpha exact-control pilot: homepage, events, Chicago",
+        "verification": "Version 8 published October 17 at 22:05:39 UTC. GTM UI confirms live; Live-environment Tag Assistant observed exact cta_view identity and the intended GA4 tag succeeded. Processed exact-control reporting remains pending. Version 7 is rollback.",
         "destinationIdentityPlanEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
         "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
         "destinationIdentityReleaseEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
         "latestInspection": {
           "verifiedAt": "2026-10-17",
-          "liveVersion": 7,
-          "liveTags": 9,
-          "liveTriggers": 12,
-          "customVariables": 16,
+          "liveVersion": 8,
+          "liveTags": 11,
+          "liveTriggers": 14,
+          "customVariables": 40,
           "candidateWorkspaceId": "9",
-          "candidateStatus": "imported-not-published",
+          "candidateStatus": "published-pilot",
           "candidateChanges": {
             "modified": 2,
             "added": 28,
@@ -57,7 +57,7 @@
         "registry/global-runtime.json",
         "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-      "note": "On every page through Site Kit; noscript iframe emitted twice per page. Version 7 emits five named diagnostic CTA-start events with seven governed parameters, including the privacy-safe destination_key. GA4 DebugView verified Book a Call, Info Session, Info Packet, and Apply ingestion; controlled preview and a post-publish canary verified destination_key on representative routes. The parameter is registered as an event-scoped GA4 custom dimension, but the first post-registration Data API read returned no processed keys; allow 24 to 48 hours before grading population. It is not an approved completion join. No release event is a GA4 key event. Primary Community controls remain outside coverage in the cross-origin map.app.alpha.school iframe."
+      "note": "Version 8 adds consent-gated exact-control collection on homepage, Upcoming Events and Chicago while retaining five legacy CTA start signals elsewhere. No GA4 key event or provider completion join is enabled. First full exact-control day: October 18, America/Chicago. Cross-origin map and newsletter field integration remain incomplete."
     },
     {
       "id": "google-tag",
@@ -145,7 +145,7 @@
             "selection_key",
             "component_id"
           ],
-          "status": "definitions-created-collection-unreleased",
+          "status": "definitions-verified-pilot-published-processed-data-pending",
           "keyEventsChanged": false
         },
         "existingBigQueryLink": {
@@ -159,7 +159,7 @@
           "verifiedAt": "2026-10-17",
           "verification": "GA4 Admin UI",
           "tablesReadable": null,
-          "note": "Existing export created May 18, 2026. Separate Google Cloud reauthentication is pending; local operational service identity returns 403. No duplicate export created."
+          "note": "Existing daily export. Matt is authenticated but project access is denied; scheduled dataset metadata returns HTTP 403. No duplicate export, project or key created."
         }
       },
       "owner": null,
@@ -906,5 +906,21 @@
       "bot-or-test"
     ],
     "signals": null
+  },
+  "trackingRelease": {
+    "asOf": "2026-10-17",
+    "containerId": "GTM-5W56ZLQJ",
+    "liveVersion": "8",
+    "publishedAt": "2026-10-17T22:05:39Z",
+    "status": "pilot-published-processed-data-pending",
+    "pages": [
+      "/",
+      "/upcoming-events/",
+      "/chicago/"
+    ],
+    "measurementStartDate": "2026-10-18",
+    "processedVerified": false,
+    "contract": "registry/website-tracking-expansion.json",
+    "dailyReportEvidence": "https://github.com/superbuilders/aeo/actions/runs/39073522506"
   }
 }

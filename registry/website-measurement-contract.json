@@ -65,9 +65,9 @@
   "productionStartInstrumentation": {
     "status": "live-diagnostic-destination-identity",
     "containerId": "GTM-5W56ZLQJ",
-    "containerVersion": 7,
-    "publishedAt": "2026-10-01",
-    "versionName": "Add destination key parameter to funnel CTA listener and GA4 tag",
+    "containerVersion": 8,
+    "publishedAt": "2026-10-17",
+    "versionName": "Alpha exact-control pilot: homepage, events, Chicago",
     "events": [
       "book_call_cta_click",
       "info_session_cta_click",
@@ -156,7 +156,7 @@
     "searchConsoleSiteUrl": "sc-domain:alpha.school",
     "expectedPublicMarkers": {
       "gtmContainer": "GTM-5W56ZLQJ",
-      "gtmContainerVersion": 7,
+      "gtmContainerVersion": 8,
       "ga4MeasurementId": "G-G7M04CYHH0",
       "hubspotPortal": "40051392",
       "metaPixel": "5961380957279503"
@@ -267,27 +267,98 @@
       "integrationIdProperty": "hs_analytics_source_data_2"
     },
     "fields": [
-      { "id": "firstPageSeen", "property": "hs_analytics_first_url", "category": "acquisition", "writable": false },
-      { "id": "firstReferrer", "property": "hs_analytics_first_referrer", "category": "acquisition", "writable": false },
-      { "id": "utmSource", "property": "utm_source", "category": "acquisition", "writable": true },
-      { "id": "utmMedium", "property": "utm_medium", "category": "acquisition", "writable": true },
-      { "id": "utmCampaign", "property": "utm_campaign", "category": "acquisition", "writable": true },
-      { "id": "normalizedLeadSource", "property": "normalized_lead_source", "category": "acquisition", "writable": true },
-      { "id": "program", "property": "program", "category": "program-context", "writable": true }
+      {
+        "id": "firstPageSeen",
+        "property": "hs_analytics_first_url",
+        "category": "acquisition",
+        "writable": false
+      },
+      {
+        "id": "firstReferrer",
+        "property": "hs_analytics_first_referrer",
+        "category": "acquisition",
+        "writable": false
+      },
+      {
+        "id": "utmSource",
+        "property": "utm_source",
+        "category": "acquisition",
+        "writable": true
+      },
+      {
+        "id": "utmMedium",
+        "property": "utm_medium",
+        "category": "acquisition",
+        "writable": true
+      },
+      {
+        "id": "utmCampaign",
+        "property": "utm_campaign",
+        "category": "acquisition",
+        "writable": true
+      },
+      {
+        "id": "normalizedLeadSource",
+        "property": "normalized_lead_source",
+        "category": "acquisition",
+        "writable": true
+      },
+      {
+        "id": "program",
+        "property": "program",
+        "category": "program-context",
+        "writable": true
+      }
     ],
     "integrations": [
-      { "id": "480915", "name": "Goldcast" },
-      { "id": "38820312", "name": "Alpha Community HubSpot" },
-      { "id": "3393360", "name": "Read AI" },
-      { "id": "26519280", "name": "Finalsite-Sync" },
-      { "id": "35340085", "name": "Alpha Summer" },
-      { "id": "9567168", "name": "GT / Alpha Founders / External Apps Integrations" },
-      { "id": "16228553", "name": "HubSpot connector for Claude" },
-      { "id": "21392224", "name": "EduCRM Data Layer" },
-      { "id": "10342661", "name": "HubSpot - SIS Automation" },
-      { "id": "199720", "name": "Calendly" },
-      { "id": "30516292", "name": "Perplexity" },
-      { "id": "60822", "name": "Livestorm Webinars" }
+      {
+        "id": "480915",
+        "name": "Goldcast"
+      },
+      {
+        "id": "38820312",
+        "name": "Alpha Community HubSpot"
+      },
+      {
+        "id": "3393360",
+        "name": "Read AI"
+      },
+      {
+        "id": "26519280",
+        "name": "Finalsite-Sync"
+      },
+      {
+        "id": "35340085",
+        "name": "Alpha Summer"
+      },
+      {
+        "id": "9567168",
+        "name": "GT / Alpha Founders / External Apps Integrations"
+      },
+      {
+        "id": "16228553",
+        "name": "HubSpot connector for Claude"
+      },
+      {
+        "id": "21392224",
+        "name": "EduCRM Data Layer"
+      },
+      {
+        "id": "10342661",
+        "name": "HubSpot - SIS Automation"
+      },
+      {
+        "id": "199720",
+        "name": "Calendly"
+      },
+      {
+        "id": "30516292",
+        "name": "Perplexity"
+      },
+      {
+        "id": "60822",
+        "name": "Livestorm Webinars"
+      }
     ],
     "writeOriginAudit": {
       "enabled": true,
@@ -606,13 +677,13 @@
     "In production run 36602327793, named integrations had Program currently populated on 94.65 percent of created contacts and utm_source currently populated on 0.10 percent. Property-history review found only one proven creating-integration UTM write in the 13 populated contacts; the other values came from HubSpot forms, merges, or later writes. Repair is governed by superbuilders/aeo issue 51.",
     "The 30-day first-touch and latest-meaningful-touch views are approved, but no downstream completion has an approved site-to-system join key.",
     "HubSpot bookings expose hs_meeting_created_from_link_id and Marketing Events expose externalEventId or eventUrl as non-personal authority identity candidates. Production GTM version 7 carries the governed destination_key on CTA starts, and the event-scoped GA4 custom dimension is registered. The first post-registration read returned zero processed keys because registration is non-retroactive and may need 24 to 48 hours; aggregate population and controlled authority reconciliation remain incomplete. destination_key is live as a diagnostic parameter and is not approved as a completion join key.",
-    "Matt Barge is the interim analytics owner; the consent owner and primary prospective-parent outcome remain undecided.",
+    "Matt Barge is interim analytics and visitor-data/consent owner. The primary prospective-parent outcome and specific website-to-provider join remain undecided.",
     "The raw-plus-screened reporting policy is approved, but the first versioned internal, bot, and anomaly screening rule is not yet approved."
   ],
   "trackingExpansion": {
     "contract": "registry/website-tracking-expansion.json",
-    "status": "built-not-released",
-    "asOf": "2026-10-16",
+    "status": "released-pilot-processed-data-pending",
+    "asOf": "2026-10-17",
     "scope": "Exact control and exposure pilot; provider and sitewide component integration pending verification",
     "doesNotChangeApprovedKeyEvents": true
   }
