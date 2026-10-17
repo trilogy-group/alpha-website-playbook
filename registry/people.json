@@ -771,7 +771,7 @@
       "roles": [
         {
           "role": "lead-guide",
-          "title": "LEAD GUIDE · MIDDLE SCHOOL",
+          "title": "LEAD GUIDE \u00b7 MIDDLE SCHOOL",
           "campus": "miami",
           "source": "website staff card",
           "asOf": "2026-09-15"
@@ -1561,6 +1561,13 @@
           "campus": "all",
           "source": "spec/responsibilities.json departments.qc; Matt Barge 2026-09-15",
           "asOf": "2026-09-15"
+        },
+        {
+          "role": "analytics-and-consent-owner",
+          "title": "Interim analytics and visitor-data decision owner",
+          "campus": "all",
+          "source": "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17",
+          "asOf": "2026-10-17"
         }
       ],
       "sources": [
@@ -1568,7 +1575,8 @@
         "APEX REQUEST_TYPE_AUTO_ASSIGNEES",
         "HubSpot owner 93557124",
         "Slack U0B4W7Z23EX",
-        "APEX users API (2026-09-16)"
+        "APEX users API (2026-09-16)",
+        "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17"
       ],
       "hubspotOwnerId": "93557124",
       "slackId": "U0B4W7Z23EX",
@@ -2109,7 +2117,7 @@
       "roles": [
         {
           "role": "dean-of-parents",
-          "title": "Dean of Parents of Alpha School in Orange County​",
+          "title": "Dean of Parents of Alpha School in Orange County\u200b",
           "campus": "orange-county",
           "source": "website staff card",
           "asOf": "2026-09-15"

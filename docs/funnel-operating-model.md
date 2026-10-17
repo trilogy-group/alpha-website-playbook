@@ -2,6 +2,10 @@
 
 Status: **Working operating model with adopted measurement governance.** Written 2026-09-25 from Matt Barge's request to treat alpha.school as a funnel and the MacKenzie Price website strategy meeting that day. On 2026-09-30 Matt approved the interim analytics owner, five completion definitions, a 30-day dual-view attribution policy, and raw-plus-screened reporting. The website charter defines the stages and purpose; this document defines the order of operations. It does not choose Alpha's primary conversion, approve copy, authorize an experiment, or promote a GA4 key event.
 
+## October 17 ownership decision
+
+Matt Barge accepted interim visitor-data/consent ownership in the Website as a Funnel chat. He already holds interim analytics ownership. This resolves the named-owner gap; it does not by itself approve identity joins, permission grants, retention changes, field collection or key events. The dated September baseline below remains historical. Current governance is in `registry/website-measurement-contract.json`.
+
 ## 1. Run three loops, in this order
 
 Treating the site as a funnel does not replace website quality control. It adds two loops after it.
