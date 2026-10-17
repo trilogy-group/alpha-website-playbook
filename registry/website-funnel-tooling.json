@@ -4,8 +4,10 @@
   "asOf": "2026-10-17",
   "owner": {
     "role": "analytics-and-consent-owner",
-    "person": null,
-    "note": "role exists in registry/owners.json as a gap; Matt Barge proposed as interim owner of definitions and access, Yash Chitneni for HubSpot reporting"
+    "person": "Matt Barge",
+    "status": "interim-approved",
+    "decidedOn": "2026-10-17",
+    "note": "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17. Tool evidence retains the dates shown per entry; ownership is not access verification."
   },
   "tools": [
     {

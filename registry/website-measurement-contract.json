@@ -1,8 +1,8 @@
 {
-  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 1.0 records the live privacy-safe destination_key on production GTM version 7 and its event-scoped GA4 reporting registration without approving it as a completion join. Processed population, controlled reconciliation, destination instrumentation, verified joins, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements.",
-  "version": "1.0",
+  "$comment": "Website as a Funnel layer 3: the machine-readable tracking-state contract. Matt Barge approved the interim analytics owner, five completion definitions, 30-day dual-view attribution policy, and raw-plus-screened reporting policy on 2026-09-30. Version 1.0 records the live privacy-safe destination_key on production GTM version 7 and its event-scoped GA4 reporting registration without approving it as a completion join. Processed population, controlled reconciliation, destination instrumentation, verified joins, consent ownership, and key-event promotion remain separate gaps. A null event or join key is an explicit gap, never permission for an agent to invent one. Metrics are evidence snapshots, not permanent requirements. October 17 update: Matt accepted interim visitor-data ownership; historical instrumentation evidence below retains its original dates.",
+  "version": "1.1",
   "status": "approved-governance-with-instrumentation-gaps",
-  "asOf": "2026-10-01",
+  "asOf": "2026-10-17",
   "evidenceWindow": {
     "start": "2026-06-30",
     "end": "2026-09-27",
@@ -16,13 +16,26 @@
       "decidedOn": "2026-09-30",
       "source": "Matt Barge approval in the Website as a Funnel agent session"
     },
-    "consentOwner": null,
-    "analyticsAndConsentOwner": null,
+    "consentOwner": {
+      "name": "Matt Barge",
+      "status": "interim-approved",
+      "scope": "visitor-data collection decisions, access, retention and review of proposed identity joins",
+      "decidedOn": "2026-10-17",
+      "source": "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17",
+      "boundary": "Naming the owner does not approve an identity join, new permissions, retention changes, field collection or a GA4 key event."
+    },
+    "analyticsAndConsentOwner": {
+      "name": "Matt Barge",
+      "status": "interim-approved",
+      "analyticsDecisionDate": "2026-09-30",
+      "consentDecisionDate": "2026-10-17",
+      "source": "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17"
+    },
     "primaryProspectiveParentOutcome": null,
     "primaryOutcomeDecision": "docs/questions-for-staff-2026-09-17.md Q-01",
     "outcomeDefinitionsStatus": "approved-2026-09-30",
     "approvedKeyEvents": [],
-    "meaning": "The five completion meanings, attribution views, and raw-plus-screened reporting policy are approved. Observed events and downstream records remain separate until their join keys and instrumentation are verified. No event may be promoted to a GA4 key event without a separate approval after reconciliation."
+    "meaning": "The five completion meanings, attribution views, and raw-plus-screened reporting policy are approved. Observed events and downstream records remain separate until their join keys and instrumentation are verified. No event may be promoted to a GA4 key event without a separate approval after reconciliation. Matt is also the interim visitor-data/consent owner as of October 17; specific joins and data-policy changes still need a recorded decision."
   },
   "attributionPolicy": {
     "status": "approved-2026-09-30",

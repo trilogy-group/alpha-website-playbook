@@ -1,7 +1,7 @@
 {
   "$comment": "Owner-registry index. Person records remain in people.json; campus assignments are resolved live. This file records completeness and review paths without duplicating personal data.",
-  "version": "1.1",
-  "asOf": "2026-10-07",
+  "version": "1.2",
+  "asOf": "2026-10-17",
   "sources": {
     "departmentRoles": "registry/people.json",
     "responsibilities": "spec/responsibilities.json",
@@ -24,7 +24,8 @@
     "marketing-collateral",
     "expansion-new-programs",
     "expansion-founding",
-    "observer-owner"
+    "observer-owner",
+    "analytics-and-consent-owner"
   ],
   "gaps": [
     "elementor-owner",
@@ -33,7 +34,6 @@
     "community-app-owner",
     "Admissions Hub editor",
     "legal-content-owner",
-    "analytics-and-consent-owner",
     "n8n-sync-owner"
   ],
   "reviewCadence": {
@@ -47,5 +47,12 @@
     "confirmedPerson": null,
     "evidence": "docs/findings-2026-10-07-program-reader-duplicates.md",
     "resolution": "Protocol 1d: preserve the source/workflow route and ask the website agent operator to resolve the missing owner. This is coordination, not an assignment of n8n technical ownership."
+  },
+  "analyticsAndConsentDecision": {
+    "personRef": "mattbarge",
+    "status": "interim-approved",
+    "asOf": "2026-10-17",
+    "source": "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17",
+    "scope": "visitor-data collection decisions, access, retention and review of proposed identity joins"
   }
 }

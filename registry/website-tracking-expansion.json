@@ -4,7 +4,7 @@
   "asOf": "2026-10-17",
   "productionAuthorized": true,
   "release": {
-    "consentOwner": null,
+    "consentOwner": "Matt Barge",
     "consentAdapterVerified": false,
     "controlledBrowserQa": false,
     "processedReportingVerified": false,
@@ -14,7 +14,19 @@
     "gtmStagingWorkspace": "9",
     "liveVersionVerified": "7",
     "verifiedAt": "2026-10-17",
-    "authorizationNote": "Matt authorized implementation and testing in the project chat on 2026-10-17. Release QA and provider join review remain separate prerequisites."
+    "authorizationNote": "Matt authorized implementation and testing in the project chat on 2026-10-17. Release QA and provider join review remain separate prerequisites.",
+    "consentOwnerDecision": {
+      "decidedOn": "2026-10-17",
+      "source": "Matt Barge confirmed interim visitor-data ownership in the Website as a Funnel chat on 2026-10-17",
+      "scope": "visitor-data collection decisions, access, retention and review of proposed identity joins",
+      "boundary": "Naming the owner does not approve an identity join, new permissions, retention changes, field collection or a GA4 key event."
+    },
+    "responsiveViewportQa": {
+      "width": 390,
+      "height": 844,
+      "verifiedAt": "2026-10-17",
+      "physicalMobileDeviceVerified": false
+    }
   },
   "exposureMs": 1000,
   "fields": {
@@ -1268,7 +1280,8 @@
       "fieldTrackingApproved": false,
       "allowedFields": [],
       "sourceCallbackVerifiedAt": "2026-10-17",
-      "readyCallbackPreviewVerifiedAt": "2026-10-17"
+      "readyCallbackPreviewVerifiedAt": "2026-10-17",
+      "configurationReadVerifiedAt": "2026-10-17"
     }
   },
   "destinations": {},
@@ -1413,10 +1426,11 @@
   },
   "components": {
     "navigation": {
-      "status": "adapter-built-binding-unverified"
+      "status": "responsive-open-close-preview-verified",
+      "previewVerifiedAt": "2026-10-17"
     },
     "events": {
-      "status": "desktop-location-type-search-preview-verified-mobile-pending",
+      "status": "desktop-and-phone-width-picker-search-preview-verified",
       "selector": ".ahse-events-container",
       "previewVerifiedAt": "2026-10-17"
     },
@@ -1430,7 +1444,8 @@
       "limitations": [
         "The active embed is /_hcms/forms/embed/v3.js; v2-legacy.js is an Internet Explorer conditional fallback.",
         "HubSpotCallsToActions exposes onCallToActionReady and onCallToActionFormSubmitted in the parent. The adapter uses exact CTA/form IDs and discards submitted fields.",
-        "Field starts, field diagnostics and accepted-response end-to-end QA are not verified. The iframe GTM-KNSZSMLS container is not available in the current operator account."
+        "Field starts, field diagnostics and accepted-response end-to-end QA are not verified. The iframe GTM-KNSZSMLS container is not available in the current operator account.",
+        "Read-only Forms v3 API returned the exact form configuration on October 17. Configuration access does not provide a supported script-injection field in the managed CTA frame."
       ]
     },
     "map": {
@@ -1455,7 +1470,17 @@
     "availableStreams": 3,
     "eventExclusions": false,
     "rawTablesAccessible": null,
-    "scheduledIdentityAccess": "unverified",
-    "note": "Existing GA4 BigQuery link verified in Admin UI. Current local service identity receives HTTP 403 on dataset metadata; this does not mean the export is absent. No duplicate export created."
+    "scheduledIdentityAccess": "metadata-http-403",
+    "note": "GA4 export configuration is verified. Local service identity returns HTTP 403; authenticated operator cannot select the project or run metadata SQL. Dataset contents remain unverified, not absent. No duplicate export or access grant created.",
+    "userAccess": {
+      "account": "matthew.barge@superbuilders.school",
+      "authentication": "verified",
+      "projectSelectable": false,
+      "tableReadVerified": false,
+      "verifiedAt": "2026-10-17",
+      "evidence": "Authenticated Cloud UI shows No project selected; exact project search returns no resources and metadata query Run is disabled."
+    },
+    "scheduledIdentity": "alpha-website-measurement@alpha-website-measurement.iam.gserviceaccount.com",
+    "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/39069994381"
   }
 }
