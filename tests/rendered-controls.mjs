@@ -18,6 +18,9 @@ const urls = [].concat(args.url || [])
 if (!urls.length) { console.error('Usage: rendered-controls.mjs --url <url> [--url ...] [--json out.json] [--playwright <dir>]'); process.exit(2) }
 const here = path.dirname(new URL(import.meta.url).pathname)
 const controls = JSON.parse(fs.readFileSync(path.join(here, '..', 'spec', 'campus-page-controls.json'), 'utf8')).controls
+// A waitlist campus labels its apply controls "Apply for waitlist" (or a segment: "Apply for K–8 waitlist"); the pattern
+// is owned by the enrollment-state registry, and campus.enrollment-state.controls checks which label each campus needs.
+const waitlistApplyLabel = new RegExp(JSON.parse(fs.readFileSync(path.join(here, '..', 'registry', 'campus-enrollment-state.json'), 'utf8')).wordings.waitlist.applyControlLabelPattern, 'i')
 
 // Playwright is not a dependency of the playbook; borrow it from a sibling project or an explicit dir.
 const candidates = [args.playwright, process.env.PLAYWRIGHT_ROOT, path.join(here, '..'), path.join(process.env.HOME || '', 'DevProjects', 'aeo')].filter(Boolean)
@@ -28,7 +31,7 @@ if (!chromium) { console.error('playwright not found; pass --playwright <dir> or
 
 // Labels a parent must be able to see. Book a Call is conditional on the link existing (HubSpot call_scheduling_link).
 const LABELS = [
-  { key: 'hero.apply', re: /^apply( now| today!?)?$/i, required: true },
+  { key: 'hero.apply', re: { test: (label) => /^apply( now| today!?)?$/i.test(label) || waitlistApplyLabel.test(label) }, required: true },
   { key: 'hero.info-session', re: /attend an info session/i, required: true },
   { key: 'hero.stay-in-the-know', re: /stay in-the-know/i, required: false },
   { key: 'hero.book-a-call', re: /^book a call$/i, required: 'when-linked' },
