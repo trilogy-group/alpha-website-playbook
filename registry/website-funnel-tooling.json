@@ -906,5 +906,21 @@
       "bot-or-test"
     ],
     "signals": null
+  },
+  "trackingRelease": {
+    "asOf": "2026-10-17",
+    "containerId": "GTM-5W56ZLQJ",
+    "liveVersion": "8",
+    "publishedAt": "2026-10-17T22:05:39Z",
+    "status": "pilot-published-processed-data-pending",
+    "pages": [
+      "/",
+      "/upcoming-events/",
+      "/chicago/"
+    ],
+    "measurementStartDate": "2026-10-18",
+    "processedVerified": false,
+    "contract": "registry/website-tracking-expansion.json",
+    "dailyReportEvidence": "https://github.com/superbuilders/aeo/actions/runs/39073522506"
   }
 }
