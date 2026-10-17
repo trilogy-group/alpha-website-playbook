@@ -1086,7 +1086,13 @@
       "navigation": {
         "selector": ".elementor-menu-toggle[aria-expanded]",
         "elementId": "navigation.toggle"
-      }
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ]
     },
     "/": {
       "key": "home",
@@ -1128,7 +1134,13 @@
       "navigation": {
         "selector": ".elementor-menu-toggle[aria-expanded]",
         "elementId": "navigation.toggle"
-      }
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ]
     },
     "/upcoming-events": {
       "key": "events",
@@ -1248,13 +1260,15 @@
   },
   "forms": {
     "1a12e7bb-59fa-4140-9773-93f11da668f8": {
-      "provider": "hubspot-legacy",
+      "provider": "hubspot-cta-v3",
       "purpose": "newsletter-interest",
       "identityObservedAt": "2026-10-16",
       "callbackVerified": false,
       "acceptedMeans": "Form submission accepted, not active subscription",
       "fieldTrackingApproved": false,
-      "allowedFields": []
+      "allowedFields": [],
+      "sourceCallbackVerifiedAt": "2026-10-17",
+      "readyCallbackPreviewVerifiedAt": "2026-10-17"
     }
   },
   "destinations": {},
@@ -1402,19 +1416,21 @@
       "status": "adapter-built-binding-unverified"
     },
     "events": {
-      "status": "passive-results-adapter-built-needs-preview",
-      "selector": ".ahse-events-container"
+      "status": "desktop-location-type-search-preview-verified-mobile-pending",
+      "selector": ".ahse-events-container",
+      "previewVerifiedAt": "2026-10-17"
     },
     "signup": {
-      "status": "overlay-observer-built-form-callback-unverified",
-      "observedAt": "2026-10-16",
-      "provider": "hubspot-legacy",
+      "status": "parent-cta-ready-preview-verified-accepted-test-pending",
+      "observedAt": "2026-10-17",
+      "provider": "hubspot-cta-v3",
       "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8",
       "frameOrigin": "https://40051392.hs-sites.com",
       "framePath": "/hs-web-interactive-40051392-198135985568",
       "limitations": [
-        "Public embed loads forms/v2-legacy.js; no verified v4 callback.",
-        "Overlay observer measures open/close only. Legacy form adapter requires actual frame/origin QA before binding."
+        "The active embed is /_hcms/forms/embed/v3.js; v2-legacy.js is an Internet Explorer conditional fallback.",
+        "HubSpotCallsToActions exposes onCallToActionReady and onCallToActionFormSubmitted in the parent. The adapter uses exact CTA/form IDs and discards submitted fields.",
+        "Field starts, field diagnostics and accepted-response end-to-end QA are not verified. The iframe GTM-KNSZSMLS container is not available in the current operator account."
       ]
     },
     "map": {
