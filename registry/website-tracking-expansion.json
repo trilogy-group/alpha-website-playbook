@@ -1,15 +1,20 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "status": "built-not-released",
-  "asOf": "2026-10-16",
-  "productionAuthorized": false,
+  "asOf": "2026-10-17",
+  "productionAuthorized": true,
   "release": {
     "consentOwner": null,
     "consentAdapterVerified": false,
     "controlledBrowserQa": false,
     "processedReportingVerified": false,
     "providerReconciliation": false,
-    "measurementStartDate": null
+    "measurementStartDate": null,
+    "reportingDefinitionsVerified": true,
+    "gtmStagingWorkspace": "9",
+    "liveVersionVerified": "7",
+    "verifiedAt": "2026-10-17",
+    "authorizationNote": "Matt authorized implementation and testing in the project chat on 2026-10-17. Release QA and provider join review remain separate prerequisites."
   },
   "exposureMs": 1000,
   "fields": {
@@ -194,6 +199,27 @@
         "INP",
         "CLS"
       ]
+    },
+    "field_id": {
+      "values": [
+        "first_name",
+        "last_name",
+        "email",
+        "postal_code",
+        "phone",
+        "campus_interest"
+      ]
+    },
+    "field_state": {
+      "values": [
+        "interacted",
+        "left",
+        "invalid",
+        "valid"
+      ]
+    },
+    "form_instance_id": {
+      "format": "ephemeral_form_instance"
     }
   },
   "events": {
@@ -514,7 +540,8 @@
     },
     "funnel_form_ready": {
       "fields": [
-        "form_id"
+        "form_id",
+        "form_instance_id"
       ],
       "required": [
         "form_id"
@@ -523,7 +550,8 @@
     },
     "funnel_form_start": {
       "fields": [
-        "form_id"
+        "form_id",
+        "form_instance_id"
       ],
       "required": [
         "form_id"
@@ -532,7 +560,8 @@
     },
     "funnel_form_submit_attempt": {
       "fields": [
-        "form_id"
+        "form_id",
+        "form_instance_id"
       ],
       "required": [
         "form_id"
@@ -541,7 +570,8 @@
     },
     "funnel_form_accepted": {
       "fields": [
-        "form_id"
+        "form_id",
+        "form_instance_id"
       ],
       "required": [
         "form_id"
@@ -551,7 +581,8 @@
     "funnel_form_step": {
       "fields": [
         "form_id",
-        "step_id"
+        "step_id",
+        "form_instance_id"
       ],
       "required": [
         "form_id",
@@ -562,7 +593,8 @@
     "funnel_form_error": {
       "fields": [
         "form_id",
-        "error_category"
+        "error_category",
+        "form_instance_id"
       ],
       "required": [
         "form_id",
@@ -753,6 +785,49 @@
       "fields": [],
       "required": [],
       "authority": "server"
+    },
+    "event_filter_open": {
+      "fields": [
+        "component_id",
+        "filter_type"
+      ],
+      "required": [
+        "component_id",
+        "filter_type"
+      ],
+      "authority": "browser"
+    },
+    "resource_click": {
+      "fields": [
+        "element_id",
+        "section_id",
+        "cta_position",
+        "destination_key",
+        "destination_host",
+        "interaction_role",
+        "outcome_type",
+        "cta_type"
+      ],
+      "required": [
+        "element_id",
+        "section_id"
+      ],
+      "authority": "browser"
+    },
+    "funnel_field_state": {
+      "fields": [
+        "form_id",
+        "form_instance_id",
+        "field_id",
+        "field_state"
+      ],
+      "required": [
+        "form_id",
+        "form_instance_id",
+        "field_id",
+        "field_state"
+      ],
+      "authority": "browser"
     }
   },
   "controls": {
@@ -919,6 +994,33 @@
       "outcome": "navigation",
       "role": "navigation",
       "selection": "contact"
+    },
+    "campus.resources.guide": {
+      "selector": "[data-id=\"f9fb56d\"] a",
+      "event": "resource_click",
+      "section": "resources",
+      "position": "resources",
+      "outcome": "content",
+      "role": "navigation",
+      "destinationFromLink": true
+    },
+    "campus.resources.calendar": {
+      "selector": "[data-id=\"d4280cd\"] a",
+      "event": "resource_click",
+      "section": "resources",
+      "position": "resources",
+      "outcome": "content",
+      "role": "handoff",
+      "destinationFromLink": true
+    },
+    "navigation.toggle": {
+      "selector": ".elementor-menu-toggle[aria-expanded]",
+      "event": "navigation_open",
+      "section": "header",
+      "position": "header",
+      "outcome": "navigation",
+      "role": "navigation",
+      "stateful": true
     }
   },
   "sections": {
@@ -954,7 +1056,10 @@
         "navigation.locations",
         "navigation.program",
         "navigation.admission",
-        "navigation.contact"
+        "navigation.contact",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "navigation.toggle"
       ],
       "sections": [
         "header",
@@ -968,7 +1073,20 @@
         "faq",
         "footer"
       ],
-      "forms": []
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      }
     },
     "/": {
       "key": "home",
@@ -982,7 +1100,8 @@
         "navigation.locations",
         "navigation.program",
         "navigation.admission",
-        "navigation.contact"
+        "navigation.contact",
+        "navigation.toggle"
       ],
       "sections": [
         "header",
@@ -1005,7 +1124,11 @@
           "elementId": "home.hero.signup",
           "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
         }
-      ]
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      }
     },
     "/upcoming-events": {
       "key": "events",
@@ -1019,7 +1142,8 @@
         "navigation.locations",
         "navigation.program",
         "navigation.admission",
-        "navigation.contact"
+        "navigation.contact",
+        "navigation.toggle"
       ],
       "sections": [
         "header",
@@ -1033,7 +1157,93 @@
         "faq",
         "footer"
       ],
-      "forms": []
+      "forms": [],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "eventDiscovery": {
+        "selector": ".ahse-events-container",
+        "selectionMap": {
+          "alpha-atlanta": "alpha-atlanta",
+          "alpha-austin": "alpha-austin",
+          "alpha-bethesda": "alpha-bethesda",
+          "alpha-beverly-hills": "alpha-beverly-hills",
+          "alpha-boca-raton": "alpha-boca-raton",
+          "alpha-boise": "alpha-boise",
+          "alpha-boston": "alpha-boston",
+          "alpha-boston-suburbs": "alpha-boston-suburbs",
+          "alpha-boulder": "alpha-boulder",
+          "alpha-brownsville": "alpha-brownsville",
+          "alpha-bryn-mawr": "alpha-bryn-mawr",
+          "alpha-carrollton": "alpha-carrollton",
+          "alpha-chantilly": "alpha-chantilly",
+          "alpha-charlotte": "alpha-charlotte",
+          "alpha-chicago": "alpha-chicago",
+          "alpha-columbus": "alpha-columbus",
+          "alpha-denver": "alpha-denver",
+          "alpha-dorado": "alpha-dorado",
+          "alpha-east-bay": "alpha-east-bay",
+          "alpha-fort-worth": "alpha-fort-worth",
+          "alpha-franklin": "alpha-franklin",
+          "alpha-greenwich-armonk": "alpha-greenwich-armonk",
+          "alpha-greenwich-port-chester": "alpha-greenwich-port-chester",
+          "alpha-high-santa-barbara": "alpha-high-santa-barbara",
+          "alpha-high-school": "alpha-high-school",
+          "alpha-highland-park": "alpha-highland-park",
+          "alpha-houston-heights": "alpha-houston-heights",
+          "alpha-indianapolis": "alpha-indianapolis",
+          "alpha-jackson-hole": "alpha-jackson-hole",
+          "alpha-jamaica-plain": "alpha-jamaica-plain",
+          "alpha-kirkland": "alpha-kirkland",
+          "alpha-la-jolla": "alpha-la-jolla",
+          "alpha-lake-travis": "alpha-lake-travis",
+          "alpha-lexington": "alpha-lexington",
+          "alpha-london": "alpha-london",
+          "alpha-malibu": "alpha-malibu",
+          "alpha-mclean": "alpha-mclean",
+          "alpha-miami": "alpha-miami",
+          "alpha-miami-beach": "alpha-miami-beach",
+          "alpha-milwaukee": "alpha-milwaukee",
+          "alpha-minneapolis": "alpha-minneapolis",
+          "alpha-monaco": "alpha-monaco",
+          "alpha-nashville": "alpha-nashville",
+          "alpha-new-york": "alpha-new-york",
+          "alpha-oklahoma-city": "alpha-oklahoma-city",
+          "alpha-orange-county": "alpha-orange-county",
+          "alpha-palm-beach": "alpha-palm-beach",
+          "alpha-palo-alto": "alpha-palo-alto",
+          "alpha-park-city": "alpha-park-city",
+          "alpha-philadelphia": "alpha-philadelphia",
+          "alpha-plano": "alpha-plano",
+          "alpha-raleigh": "alpha-raleigh",
+          "alpha-salt-lake-city": "alpha-salt-lake-city",
+          "alpha-san-francisco": "alpha-san-francisco",
+          "alpha-san-juan": "alpha-san-juan",
+          "alpha-santa-barbara": "alpha-santa-barbara",
+          "alpha-santa-monica": "alpha-santa-monica",
+          "scottsdale": "scottsdale",
+          "alpha-seattle": "alpha-seattle",
+          "alpha-south-bay-la": "alpha-south-bay-la",
+          "alpha-southlake": "alpha-southlake",
+          "alpha-the_woodlands": "alpha-the_woodlands",
+          "alpha-toronto": "alpha-toronto",
+          "alpha-tulsa": "alpha-tulsa",
+          "alpha-world-school": "alpha-world-school",
+          "alpha-anywhere-center-founders": "alpha-anywhere-center-founders",
+          "info-session": "info-session",
+          "cocktails-conversations": "cocktails-conversations",
+          "coffee-conversations": "coffee-conversations",
+          "family-community-event": "family-community-event",
+          "open-house": "open-house",
+          "parent-social": "parent-social",
+          "student-experience": "student-experience",
+          "thought-leadership": "thought-leadership",
+          "workshop": "workshop"
+        },
+        "settleMs": 450,
+        "observedAt": "2026-10-17"
+      }
     }
   },
   "forms": {
@@ -1042,7 +1252,9 @@
       "purpose": "newsletter-interest",
       "identityObservedAt": "2026-10-16",
       "callbackVerified": false,
-      "acceptedMeans": "Form submission accepted, not active subscription"
+      "acceptedMeans": "Form submission accepted, not active subscription",
+      "fieldTrackingApproved": false,
+      "allowedFields": []
     }
   },
   "destinations": {},
@@ -1051,7 +1263,85 @@
     "locations": {},
     "program": {},
     "admission": {},
-    "contact": {}
+    "contact": {},
+    "alpha-atlanta": {},
+    "alpha-austin": {},
+    "alpha-bethesda": {},
+    "alpha-beverly-hills": {},
+    "alpha-boca-raton": {},
+    "alpha-boise": {},
+    "alpha-boston": {},
+    "alpha-boston-suburbs": {},
+    "alpha-boulder": {},
+    "alpha-brownsville": {},
+    "alpha-bryn-mawr": {},
+    "alpha-carrollton": {},
+    "alpha-chantilly": {},
+    "alpha-charlotte": {},
+    "alpha-chicago": {},
+    "alpha-columbus": {},
+    "alpha-denver": {},
+    "alpha-dorado": {},
+    "alpha-east-bay": {},
+    "alpha-fort-worth": {},
+    "alpha-franklin": {},
+    "alpha-greenwich-armonk": {},
+    "alpha-greenwich-port-chester": {},
+    "alpha-high-santa-barbara": {},
+    "alpha-high-school": {},
+    "alpha-highland-park": {},
+    "alpha-houston-heights": {},
+    "alpha-indianapolis": {},
+    "alpha-jackson-hole": {},
+    "alpha-jamaica-plain": {},
+    "alpha-kirkland": {},
+    "alpha-la-jolla": {},
+    "alpha-lake-travis": {},
+    "alpha-lexington": {},
+    "alpha-london": {},
+    "alpha-malibu": {},
+    "alpha-mclean": {},
+    "alpha-miami": {},
+    "alpha-miami-beach": {},
+    "alpha-milwaukee": {},
+    "alpha-minneapolis": {},
+    "alpha-monaco": {},
+    "alpha-nashville": {},
+    "alpha-new-york": {},
+    "alpha-oklahoma-city": {},
+    "alpha-orange-county": {},
+    "alpha-palm-beach": {},
+    "alpha-palo-alto": {},
+    "alpha-park-city": {},
+    "alpha-philadelphia": {},
+    "alpha-plano": {},
+    "alpha-raleigh": {},
+    "alpha-salt-lake-city": {},
+    "alpha-san-francisco": {},
+    "alpha-san-juan": {},
+    "alpha-santa-barbara": {},
+    "alpha-santa-monica": {},
+    "scottsdale": {},
+    "alpha-seattle": {},
+    "alpha-south-bay-la": {},
+    "alpha-southlake": {},
+    "alpha-the_woodlands": {},
+    "alpha-toronto": {},
+    "alpha-tulsa": {},
+    "alpha-world-school": {},
+    "alpha-anywhere-center-founders": {},
+    "info-session": {},
+    "cocktails-conversations": {},
+    "coffee-conversations": {},
+    "family-community-event": {},
+    "open-house": {},
+    "parent-social": {},
+    "student-experience": {},
+    "thought-leadership": {},
+    "workshop": {},
+    "all": {},
+    "unknown-option": {},
+    "search-used": {}
   },
   "content": {},
   "frameOrigins": [
@@ -1060,7 +1350,8 @@
   "notes": [
     "Current selectors are Chicago-specific observed DOM mappings. Do not apply them to unverified campus templates.",
     "Existing five CTA starts retain legacy fallback outside mapped controls. New events require explicit analytics consent.",
-    "Server events describe contracts only; no outcome collection is activated."
+    "Server events describe contracts only; no outcome collection is activated.",
+    "2.1 candidate: passive event results/navigation adapters, distinct guide/calendar resources, field adapter gated off until owning-form integration and consent review. No release claimed."
   ],
   "providers": {
     "hubspot-meetings": {
@@ -1111,8 +1402,8 @@
       "status": "adapter-built-binding-unverified"
     },
     "events": {
-      "status": "adapter-built-hook-required",
-      "selector": ".ahse-events"
+      "status": "passive-results-adapter-built-needs-preview",
+      "selector": ".ahse-events-container"
     },
     "signup": {
       "status": "overlay-observer-built-form-callback-unverified",
@@ -1133,7 +1424,22 @@
       "status": "existing-GA4-events-preserved"
     },
     "forms": {
-      "status": "supported-provider-callback-required"
+      "status": "supported-provider-callback-required",
+      "fieldTrackingStatus": "adapter-built-owner-integration-and-review-required"
     }
+  },
+  "warehouse": {
+    "project": "alpha-videos-search-hub-manus",
+    "dataset": "analytics_452530593",
+    "location": "US",
+    "configurationVerifiedAt": "2026-10-17",
+    "dailyEventExport": true,
+    "streamingEventExport": false,
+    "includedStreams": 3,
+    "availableStreams": 3,
+    "eventExclusions": false,
+    "rawTablesAccessible": null,
+    "scheduledIdentityAccess": "unverified",
+    "note": "Existing GA4 BigQuery link verified in Admin UI. Current local service identity receives HTTP 403 on dataset metadata; this does not mean the export is absent. No duplicate export created."
   }
 }

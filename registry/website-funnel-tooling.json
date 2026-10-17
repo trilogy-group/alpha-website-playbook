@@ -1,7 +1,7 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "1.2",
-  "asOf": "2026-10-01",
+  "version": "1.3",
+  "asOf": "2026-10-17",
   "owner": {
     "role": "analytics-and-consent-owner",
     "person": null,
@@ -33,7 +33,21 @@
         "verification": "Supervised human admin/read-write access is verified. Production version 7 was published on 2026-10-01 after controlled preview passed for Homepage Info Session, Austin Book a Call, Austin Apply, and legacy Goldcast registration. Post-publish Tag Assistant observed one info_session_cta_click, one governed GA4 tag firing, and the expected public Goldcast destination key. AEO run 36899672472 then read live version 7 and all five governed start-event names through the GTM API. The dedicated identity remains documented as read-only; the release was supervised through the UI.",
         "destinationIdentityPlanEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
         "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
-        "destinationIdentityReleaseEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472"
+        "destinationIdentityReleaseEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
+        "latestInspection": {
+          "verifiedAt": "2026-10-17",
+          "liveVersion": 7,
+          "liveTags": 9,
+          "liveTriggers": 12,
+          "customVariables": 16,
+          "candidateWorkspaceId": "9",
+          "candidateStatus": "imported-not-published",
+          "candidateChanges": {
+            "modified": 2,
+            "added": 28,
+            "deleted": 0
+          }
+        }
       },
       "owner": null,
       "status": "held",
@@ -103,11 +117,48 @@
           "Site Kit REST proxy (modules/analytics-4/data/report) once a WordPress admin user has granted Site Kit the analytics.readonly scope with a Google account that can view the property",
           "GA4 Data API with a service account granted Viewer on property 452530593"
         ],
-      "uiVerifiedAt": "2026-09-28",
-      "scheduledReadAccess": true,
-      "scheduledReadVerifiedAt": "2026-09-29",
+        "uiVerifiedAt": "2026-09-28",
+        "scheduledReadAccess": true,
+        "scheduledReadVerifiedAt": "2026-09-29",
         "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36777936249",
-      "scheduledRole": "Viewer"
+        "scheduledRole": "Viewer",
+        "trackingExpansionDimensions": {
+          "verifiedAt": "2026-10-17",
+          "scope": "EVENT",
+          "parameters": [
+            "element_id",
+            "section_id",
+            "cta_position",
+            "page_key",
+            "interaction_role",
+            "form_id",
+            "step_id",
+            "error_category",
+            "result_bucket",
+            "tracking_schema",
+            "template_revision",
+            "field_id",
+            "field_state",
+            "filter_type",
+            "selection_key",
+            "component_id"
+          ],
+          "status": "definitions-created-collection-unreleased",
+          "keyEventsChanged": false
+        },
+        "existingBigQueryLink": {
+          "projectId": "alpha-videos-search-hub-manus",
+          "projectNumber": "237927174975",
+          "location": "US",
+          "dailyEventExport": true,
+          "streamingEventExport": false,
+          "includedStreams": 3,
+          "eventExclusions": false,
+          "verifiedAt": "2026-10-17",
+          "verification": "GA4 Admin UI",
+          "tablesReadable": null,
+          "note": "Existing export created May 18, 2026. Separate Google Cloud reauthentication is pending; local operational service identity returns 403. No duplicate export created."
+        }
       },
       "owner": null,
       "status": "held",
