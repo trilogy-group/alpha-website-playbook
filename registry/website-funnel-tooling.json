@@ -259,10 +259,25 @@
             "appointments",
             "meeting links",
             "aggregate governed public/embedded meeting bookings",
-            "aggregate public-website marketing-event totals"
+            "aggregate public-website marketing-event totals",
+            "subscription definitions (2026-10-17; no individual statuses)"
           ],
           "narrowCredentialBlockedProbe": "legacy traffic analytics returns HTTP 403 despite reporting.full.read",
-          "safeTrafficFallback": "AEO retries read-only legacy traffic analytics with HUBSPOT_PRIVATE_APP_TOKEN only after the purpose-scoped key returns 401 or 403; no write endpoint is called"
+          "safeTrafficFallback": "AEO retries read-only legacy traffic analytics with HUBSPOT_PRIVATE_APP_TOKEN only after the purpose-scoped key returns 401 or 403; no write endpoint is called",
+          "subscriptionAccess": {
+            "scope": "communication_preferences.read",
+            "approvedBy": "Matt Barge",
+            "verifiedAt": "2026-10-17T21:44:37.601Z",
+            "status": "definitions-readable",
+            "definitionCount": 16,
+            "httpStatus": 200,
+            "evidence": "https://github.com/superbuilders/aeo/actions/runs/39072109647",
+            "contactStatusReadVerified": false,
+            "formMappingVerified": false,
+            "conversionMeasured": false,
+            "keysPreserved": true,
+            "note": "Scope added to existing key after explicit approval; no key deleted, rotated, replaced or created. Existing scopes retained."
+          }
         },
         "readsWith": {
           "analytics (/analytics/v2/reports/{breakdown}/{period}: totals, sessions, sources, geolocation, utm-campaigns, standard-pages)": [
