@@ -12,8 +12,8 @@
     "measurementStartDate": "2026-10-18",
     "reportingDefinitionsVerified": true,
     "gtmStagingWorkspace": "9",
-    "liveVersionVerified": "8",
-    "verifiedAt": "2026-10-17",
+    "liveVersionVerified": "9",
+    "verifiedAt": "2026-10-18",
     "authorizationNote": "Matt authorized implementation and testing in the project chat on 2026-10-17. Release QA and provider join review remain separate prerequisites.",
     "consentOwnerDecision": {
       "decidedOn": "2026-10-17",
@@ -28,13 +28,39 @@
       "physicalMobileDeviceVerified": false
     },
     "publishedAt": "2026-10-17T22:05:39Z",
-    "rollbackVersion": "7",
-    "publishedArtifactSha256": "747084cdbc90a2ecdd6d50464bc4a8ec40d932b6994e6cb6695556f4124dac39",
+    "rollbackVersion": "8",
+    "publishedArtifactSha256": "4783577d906255696b0fbe02d60d1c58aa2648945acd2b226e48f3e71cc164d3",
     "scope": "pilot: homepage, Upcoming Events and Chicago; legacy action-type fallback retained elsewhere",
     "consentEvidence": "Real HubSpot analytics grant and revoke callback verified in actual alpha.school Safari preview; menu event count 2, revoked then menu close and signup open remained 2. Existing vendor policy re-grants analytics on reload; no privacy policy setting changed.",
     "consentPersistence": "Existing HubSpot policy grants again on reload in this browser; persistent opt-out was not established.",
     "qaEvidence": "marketingsupport/projects/alpha-website-heatmap/evidence/tracking-preview-2026-10-17.json",
-    "temporaryQaCodePublished": false
+    "temporaryQaCodePublished": false,
+    "sectionReach": {
+      "status": "released",
+      "observedAt": "2026-10-18",
+      "definition": "The named heading or video widget is fully visible for one continuous second with analytics consent. One signal per section per page lifetime/consent epoch. This is section reach, not evidence that all section content was read.",
+      "firstFullDay": "2026-10-19",
+      "liveVersion": "9",
+      "publishedAt": "2026-10-18T19:20:00Z",
+      "timestampPrecision": "minute",
+      "rollbackVersion": "8",
+      "firstEligibleReportDate": "2026-10-21",
+      "processedReportingVerified": false,
+      "publicContainerVerifiedAt": "2026-10-18T19:20:30Z",
+      "previewEvidence": {
+        "home": "section_view: home / hero; GA4 expanded-1 succeeded",
+        "chicago": "section_view: chicago / team; GA4 expanded-1 succeeded",
+        "events": "section_view: events / events; GA4 expanded-1 succeeded"
+      },
+      "evidence": "marketingsupport/projects/alpha-website-heatmap/evidence/heatmap-section-release-2026-10-18.json"
+    },
+    "initialPilot": {
+      "version": "8",
+      "publishedAt": "2026-10-17T22:05:39Z",
+      "artifactSha256": "747084cdbc90a2ecdd6d50464bc4a8ec40d932b6994e6cb6695556f4124dac39",
+      "firstFullDay": "2026-10-18"
+    },
+    "lastPublishedAt": "2026-10-18T19:20:00Z"
   },
   "exposureMs": 1000,
   "fields": {
@@ -1053,7 +1079,9 @@
     "resources": {},
     "team": {},
     "faq": {},
-    "footer": {}
+    "footer": {},
+    "students": {},
+    "map": {}
   },
   "pages": {
     "/chicago": {
@@ -1112,7 +1140,42 @@
           "ctaId": "198135985568",
           "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
         }
-      ]
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "[data-id=\"5f9d55c4\"] h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources [data-id=\"d85d0f2\"] h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ],
+      "sectionMeasurementStartDate": "2026-10-19"
     },
     "/": {
       "key": "home",
@@ -1139,7 +1202,9 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "students",
+        "map"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -1160,7 +1225,34 @@
           "ctaId": "198135985568",
           "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
         }
-      ]
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "[data-id=\"d6b37d1\"] h1"
+        },
+        {
+          "section": "video",
+          "selector": "[data-id=\"c68d09e\"] h2"
+        },
+        {
+          "section": "proof",
+          "selector": "[data-id=\"3e64f7a\"] h2"
+        },
+        {
+          "section": "students",
+          "selector": "#student-title"
+        },
+        {
+          "section": "map",
+          "selector": "[data-id=\"739339c\"] h2"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ],
+      "sectionMeasurementStartDate": "2026-10-19"
     },
     "/upcoming-events": {
       "key": "events",
@@ -1275,7 +1367,22 @@
         },
         "settleMs": 450,
         "observedAt": "2026-10-17"
-      }
+      },
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "[data-id=\"9de665d\"] h1"
+        },
+        {
+          "section": "events",
+          "selector": "[data-id=\"64c10d4\"] h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ],
+      "sectionMeasurementStartDate": "2026-10-19"
     }
   },
   "forms": {
