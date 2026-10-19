@@ -11,6 +11,12 @@ Classes `staff-add`, `staff-update`, `staff-remove`, `staff-photo`. The Team sec
 - For photo: the headshot asset and the explicit name-to-photo mapping confirmed by the requester.
 - For remove: the name and the effective date.
 
+## Copy-only updates and preservation
+
+For an update, the requested field changes and their exact replacement values define the operation. A form can repeat the current title or use a quote placeholder such as “remain the same”; those are not instructions to overwrite unchanged fields. “Update the bio; quote stays the same” changes only the biography. Preserve the current public title, quote, photo, card identity and position. Keep all paragraphs in the approved biography. Conflicting change/preserve directions or an absent replacement value require resolution; never publish the words “remain the same” as a new quote.
+
+The APEX scheduled copy planner must recognize the same rule before claiming, at mutation authorization and at completion. A prose addition here alone does not add support to the hosted runtime. Its implementation and verification status are recorded in [the cloud execution learning loop](../../docs/cloud-execution-learning-loop.md).
+
 ## Steps
 
 1. `resolve_page` on the campus URL; refuse if the live object is ambiguous.
