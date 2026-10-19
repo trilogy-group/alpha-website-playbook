@@ -14,7 +14,7 @@ SVG for the site; PNG (2398x875, transparent) for decks, documents, and print. T
 
 Every value in `spec/brand-visual.json` (palette, gradients, contrast verdicts, Montserrat type scale, logo rules, approved claims) is canon from the **Alpha School Brand Guidelines** (47 pages, the official deck), as the `alpha-brand-guide` skill in the marketing workspace states them (`marketingsupport/.claude/skills/alpha-brand-guide/`, version 2026-09-22). The skill's kid-facing house rules (a warm accent, sentence-case headlines for pre-readers) are extensions, not canon, and are not adopted for the website.
 
-Word-level copy rules are MacKenzie's (`marketingsupport docs/rules/alpha-brand-copy-rules.md`, `playbook/site/site-rules.md` Brand copy) and win over this folder and over the guide on any overlap.
+Word-level copy rules are MacKenzie's (`playbook/site/mackenzie-style-choices.md`, `marketingsupport docs/rules/alpha-brand-copy-rules.md`, `playbook/site/site-rules.md` Brand copy) and win over this folder and over the guide on any overlap.
 
 ## Two honest notes
 

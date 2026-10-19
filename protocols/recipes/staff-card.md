@@ -8,6 +8,7 @@ Classes `staff-add`, `staff-update`, `staff-remove`, `staff-photo`. The Team sec
 - Full name exactly as it should appear.
 - For add: public title, bio, headshot asset, placement (leadership row or existing scrolling row or carousel) and order, both following the team section order below.
 - For update: each field that changes and its new value.
+- Titles and bios use MacKenzie's terms as written in `playbook/site/mackenzie-style-choices.md` (for example "WonderLab" and "LearningLab" as one word, "AlphaTest", "life skills workshops"). A bio is the requester's approved text; flag a term that conflicts instead of rewriting it silently.
 - For photo: the headshot asset and the explicit name-to-photo mapping confirmed by the requester.
 - For remove: the name and the effective date.
 

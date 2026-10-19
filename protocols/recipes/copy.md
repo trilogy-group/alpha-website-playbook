@@ -18,7 +18,7 @@ FAQ items: the campus FAQ is an Elementor `nested-accordion` (verified on Plano 
 
 Look up the field in `spec/source-authority.json` and, for campus pages, `spec/campus-page-field-map.json`. If HubSpot, n8n, Airtable, an importer, or a template owns it, stop this recipe and use the source-system recipe.
 
-Run the brand checks. Do not change held copy, legal language, pricing, admissions promises, launch dates, or evidence claims without the named owner.
+Run the brand checks. Replacement wording follows MacKenzie's style choices (`playbook/site/mackenzie-style-choices.md`): for example AlphaTest (never Test2Pass), WonderLab, Shadow Day, twice as much, classes (never students) rank in the top 1%. Do not change held copy, legal language, pricing, admissions promises, launch dates, or evidence claims without the named owner.
 
 ## Prepare
 
