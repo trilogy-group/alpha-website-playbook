@@ -11,8 +11,8 @@
     "providerReconciliation": false,
     "measurementStartDate": "2026-10-18",
     "reportingDefinitionsVerified": true,
-    "gtmStagingWorkspace": "7",
-    "liveVersionVerified": "11",
+    "gtmStagingWorkspace": "13",
+    "liveVersionVerified": "12",
     "verifiedAt": "2026-10-19",
     "authorizationNote": "Matt authorized implementation and testing in the project chat on 2026-10-17. Release QA and provider join review remain separate prerequisites.",
     "consentOwnerDecision": {
@@ -28,8 +28,8 @@
       "physicalMobileDeviceVerified": false
     },
     "publishedAt": "2026-10-17T22:05:39Z",
-    "rollbackVersion": "10",
-    "publishedArtifactSha256": "6f0297638946e57fdba32376b06c3f3ab43a10cbe01782356d43472a4391ff1b",
+    "rollbackVersion": "11",
+    "publishedArtifactSha256": "d5c310cd0db997ab2e8b0756f43d94bfdc549a50eec61697e4ddc707b833a269",
     "scope": "homepage, Upcoming Events and all 44 canonical public Alpha campus pages; legacy action-type fallback retained on unmapped pages",
     "consentEvidence": "Real HubSpot analytics grant and revoke callback verified in actual alpha.school Safari preview; menu event count 2, revoked then menu close and signup open remained 2. Existing vendor policy re-grants analytics on reload; no privacy policy setting changed.",
     "consentPersistence": "Existing HubSpot policy grants again on reload in this browser; persistent opt-out was not established.",
@@ -60,7 +60,7 @@
       "artifactSha256": "747084cdbc90a2ecdd6d50464bc4a8ec40d932b6994e6cb6695556f4124dac39",
       "firstFullDay": "2026-10-18"
     },
-    "lastPublishedAt": "2026-10-19T19:22:31Z",
+    "lastPublishedAt": "2026-10-19T20:18:06Z",
     "campusRollout": {
       "status": "released",
       "requestedAt": "2026-10-19",
@@ -114,6 +114,36 @@
       "browserReceiptVerified": false,
       "browserQa": "Mobile footer inspected; GTM compilation and publication succeeded. Preview popup could not be controlled through the available browser surface, so no individual footer GA4 receipt is claimed. Public compiled listener passed the 46-page controlled DOM harness.",
       "evidence": "marketingsupport/projects/alpha-website-heatmap/evidence/footer-2026-10-19/public-verification.json"
+    },
+    "comprehensiveControls": {
+      "status": "released",
+      "liveVersion": "12",
+      "publishedAt": "2026-10-19T20:18:06Z",
+      "rollbackVersion": "11",
+      "firstFullDay": "2026-10-20",
+      "firstEligibleReportDate": "2026-10-22",
+      "authorization": "Matt approved implementation of the comprehensive four-experience scope in this chat on October 19.",
+      "publicContainerVerifiedAt": "2026-10-19T20:18:24.352Z",
+      "artifactSha256": "d5c310cd0db997ab2e8b0756f43d94bfdc549a50eec61697e4ddc707b833a269",
+      "publicArtifactSha256": "58cbeeb28fff707fc38742deae265700ebba6192ce16820eb11f6cec162e1af7",
+      "sourceBindingsVerified": true,
+      "sourcePageCount": 46,
+      "sourceInteractiveElements": 15332,
+      "controlDefinitions": 94,
+      "compiledClickCases": 10604,
+      "consentDenialCases": 10604,
+      "consentRevocationCases": 10604,
+      "browserPreviewVerified": true,
+      "browserReceiptVerified": true,
+      "processedReportingVerified": false,
+      "previewEvidence": "New events.body.337aa159 exposure observed in Tag Assistant with GA4 expanded-1 firing. No personal form values or live submissions used.",
+      "limitations": [
+        "Individual production GA4 receipts and dated conversion rates remain pending processing.",
+        "Newsletter start/field signals require the owning HubSpot CTA source or GTM-KNSZSMLS access.",
+        "Map pins and internal map controls require changes in the owning map/community app.",
+        "Play/share/FAQ controls are clicks, not verified playback, sharing, reading or provider completion."
+      ],
+      "evidence": "marketingsupport/projects/alpha-website-heatmap/evidence/comprehensive-2026-10-19/"
     }
   },
   "exposureMs": 1000,
@@ -188,7 +218,12 @@
         "apply.alpha.school",
         "founders.headcount.events",
         "flipsnack.com",
-        "drive.google.com"
+        "drive.google.com",
+        "google.com",
+        "match.app.alpha.school",
+        "alphahigh.school",
+        "maps.app.goo.gl",
+        "headcount.2hourlearning.com"
       ]
     },
     "interaction_role": {
@@ -1041,7 +1076,10 @@
       "position": "events",
       "outcome": "info_session",
       "role": "handoff",
-      "destinationFromLink": true
+      "destinationFromLink": true,
+      "itemIdentity": "link",
+      "itemMeasurementStartDate": "2026-10-20",
+      "itemReleaseFeature": "comprehensiveControls"
     },
     "events.card.title": {
       "selector": ".ahse-event-card h5 a",
@@ -1050,7 +1088,10 @@
       "position": "events",
       "outcome": "info_session",
       "role": "handoff",
-      "destinationFromLink": true
+      "destinationFromLink": true,
+      "itemIdentity": "link",
+      "itemMeasurementStartDate": "2026-10-20",
+      "itemReleaseFeature": "comprehensiveControls"
     },
     "navigation.events": {
       "selector": "header a[href=\"https://alpha.school/upcoming-events/\"], .elementor-location-header a[href=\"https://alpha.school/upcoming-events/\"]",
@@ -1410,6 +1451,589 @@
       "role": "navigation",
       "measurementStartDate": "2026-10-20",
       "releaseFeature": "footerLinks"
+    },
+    "navigation.other-link": {
+      "selector": ".elementor-location-header a[href]:not([href=\"#\"])",
+      "label": "Header and submenu links",
+      "section": "header",
+      "position": "header",
+      "event": "navigation_select",
+      "outcome": "navigation",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "navigation.submenu": {
+      "selector": ".elementor-location-header li.menu-item-has-children > a[href=\"#\"]",
+      "label": "Menu categories",
+      "section": "header",
+      "position": "header",
+      "event": "navigation_select",
+      "outcome": "navigation",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "menu",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.body.link": {
+      "selector": "#content_body_1 a[href],#content_body_2 a[href],#content_body_3 a[href],#content_body_4 a[href]",
+      "label": "Campus introduction links",
+      "section": "body",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.content.link": {
+      "selector": "[data-elementor-type=\"wp-page\"] a[href]",
+      "label": "Other page content links",
+      "section": "body",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 100,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.video.share": {
+      "selector": ".alpha-share-btn[data-share]",
+      "label": "Video share buttons",
+      "section": "video",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "share",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "events.card.image": {
+      "selector": ".ahse-event-card .ahse-event-image a",
+      "event": "info_session_cta_click",
+      "section": "events",
+      "position": "events",
+      "outcome": "info_session",
+      "role": "handoff",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Event image",
+      "destinationFromLink": true,
+      "itemIdentity": "link"
+    },
+    "campus.contact.email": {
+      "selector": "[data-id=\"21a06cf\"] a[href^=\"mailto:\"]",
+      "event": "resource_click",
+      "section": "contact",
+      "position": "body",
+      "outcome": "contact",
+      "role": "handoff",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Email admissions"
+    },
+    "campus.contact.phone": {
+      "selector": "[data-id=\"d5a4df1\"] a[href^=\"tel:\"]",
+      "event": "resource_click",
+      "section": "contact",
+      "position": "body",
+      "outcome": "contact",
+      "role": "handoff",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Call admissions"
+    },
+    "campus.contact.directions": {
+      "selector": "a[data-id=\"7f6981a\"]",
+      "event": "resource_click",
+      "section": "contact",
+      "position": "body",
+      "outcome": "content",
+      "role": "handoff",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Campus directions",
+      "host": "maps.app.goo.gl"
+    },
+    "campus.gallery.filter": {
+      "selector": ".atvg-filter-btn[data-filter]",
+      "label": "Video categories",
+      "section": "gallery",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "filter",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.gallery.play": {
+      "selector": ".atvg-card__play",
+      "label": "Video play buttons",
+      "section": "gallery",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "video",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.gallery.close": {
+      "selector": ".atvg-modal__close",
+      "label": "Close video",
+      "section": "gallery",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.gallery.share": {
+      "selector": ".atvg-share-btn",
+      "label": "Gallery share buttons",
+      "section": "gallery",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "share",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.blog.title": {
+      "selector": ".elementor-post__title a[href]",
+      "label": "Blog titles",
+      "section": "blog",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.blog.read-more": {
+      "selector": ".elementor-post__read-more",
+      "label": "Blog Read More links",
+      "section": "blog",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.blog.page": {
+      "selector": ".elementor-pagination a[href]",
+      "label": "Blog pagination",
+      "section": "blog",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.body.06e1bcd0": {
+      "selector": "[data-id=\"36faae2\"] a[href=\"https://match.app.alpha.school/\"]",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Is Alpha a Fit?",
+      "host": "match.app.alpha.school"
+    },
+    "home.press": {
+      "selector": "[data-id=\"d1d8687\"] a[href]",
+      "label": "Featured-in links",
+      "section": "press",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.video.play": {
+      "selector": ".elementor-custom-embed-play",
+      "label": "Embedded video play buttons",
+      "section": "video",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "widget",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.body.9259946c": {
+      "selector": "[data-id=\"e5c5229\"] a[href=\"https://alpha.school/locations/\"]",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Check out the new Alpha Schools launching this Fall!",
+      "host": "alpha.school"
+    },
+    "home.body.409cbbb3": {
+      "selector": "[data-id=\"e5c5229\"] a[href=\"https://alpha.school/alpha-school-austin-prek4/\"]",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Find out about our PreK 4 Program at Alpha School Austin!",
+      "host": "alpha.school"
+    },
+    "home.video.dbf4928d": {
+      "selector": "[data-id=\"e5c5229\"] a[href=\"https://alpha.school/video-library/?\"]",
+      "event": "resource_click",
+      "section": "video",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "View our latest video library!",
+      "host": "alpha.school"
+    },
+    "home.ticker.previous": {
+      "selector": ".bn-controls button:has(.bn-prev)",
+      "label": "Previous headline",
+      "section": "press",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.ticker.next": {
+      "selector": ".bn-controls button:has(.bn-next)",
+      "label": "Next headline",
+      "section": "press",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.commitments.love": {
+      "selector": "[data-id=\"777d551\"] a",
+      "event": "resource_click",
+      "section": "proof",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Love School \u2192 Learn More",
+      "host": "alpha.school"
+    },
+    "home.commitments.learn": {
+      "selector": "[data-id=\"bc642a4\"] a",
+      "event": "resource_click",
+      "section": "proof",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Learn 2x in 2hrs \u2192 Learn More",
+      "host": "alpha.school"
+    },
+    "home.commitments.skills": {
+      "selector": "[data-id=\"dfdc60e\"] a",
+      "event": "resource_click",
+      "section": "proof",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Learn Life Skills \u2192 Learn More",
+      "host": "alpha.school"
+    },
+    "home.body.8f95212c": {
+      "selector": "[data-id=\"1447191\"] a[href=\"https://alpha.school/the-program/\"]",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Learn More",
+      "host": "alpha.school"
+    },
+    "home.students.previous": {
+      "selector": "#alpha-student-carousel [data-previous]",
+      "label": "Previous student",
+      "section": "students",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.students.next": {
+      "selector": "#alpha-student-carousel [data-next]",
+      "label": "Next student",
+      "section": "students",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.guides.program": {
+      "selector": "[data-id=\"44c8935\"] a",
+      "event": "resource_click",
+      "section": "guides",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Alpha Guides \u2192 Explore Our Program",
+      "host": "alpha.school"
+    },
+    "home.body.a3038013": {
+      "selector": "[data-id=\"f9c4fa0\"] a[href=\"https://alphahigh.school/about/\"]",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Explore Alpha High",
+      "host": "alphahigh.school"
+    },
+    "home.map.activate": {
+      "selector": "#alpha-map-activate",
+      "event": "resource_click",
+      "section": "map",
+      "position": "body",
+      "outcome": "content",
+      "role": "content",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Use interactive map",
+      "host": "alpha.school"
+    },
+    "home.map.exit": {
+      "selector": "#alpha-map-exit",
+      "label": "Exit interactive map",
+      "section": "map",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "home.waitlist": {
+      "selector": "[data-id=\"8e6fd16\"] a[href]",
+      "label": "Waitlist campus links",
+      "section": "waitlist",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "events.body.337aa159": {
+      "selector": "[data-id=\"d7904b7\"] a[href=\"https://alpha.school/bring-alpha-to-your-city/\"]",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Tell us where you\u2019d love to see one.",
+      "host": "alpha.school"
+    },
+    "campus.video.play": {
+      "selector": ".elementor-custom-embed-play",
+      "label": "Embedded video play buttons",
+      "section": "video",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "widget",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.faq": {
+      "selector": "summary.e-n-accordion-item-title",
+      "label": "FAQ controls",
+      "section": "faq",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "faq",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.body.388b4c46": {
+      "selector": "[data-id=\"d4280cd\"] a",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "26/27 calendar - update link",
+      "host": "alpha.school"
+    },
+    "campus.carousel.previous": {
+      "selector": ".elementor-swiper-button-prev",
+      "label": "Previous carousel item",
+      "section": "body",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "widget",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.carousel.next": {
+      "selector": ".elementor-swiper-button-next",
+      "label": "Next carousel item",
+      "section": "body",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "widget",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.contact.email.c1f0db9": {
+      "selector": "[data-id=\"c1f0db9\"] a[href^=\"mailto:\"]",
+      "event": "resource_click",
+      "section": "contact",
+      "position": "body",
+      "outcome": "contact",
+      "role": "handoff",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "Email admissions"
+    },
+    "campus.gallery.grade-menu": {
+      "selector": ".atvg-filter-toggle[data-toggle=\"grade\"]",
+      "label": "Open video grade menu",
+      "section": "gallery",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.news.link": {
+      "selector": "#news a[href],#content_news a[href]",
+      "label": "Press mentions",
+      "section": "news",
+      "position": "body",
+      "event": "resource_click",
+      "outcome": "content",
+      "role": "content",
+      "fallback": true,
+      "priority": 50,
+      "itemIdentity": "link",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls"
+    },
+    "campus.body.0af45ef8": {
+      "selector": "[data-id=\"bcdf1ac\"] a",
+      "event": "resource_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "content",
+      "role": "navigation",
+      "measurementStartDate": "2026-10-20",
+      "releaseFeature": "comprehensiveControls",
+      "label": "INFO PACKET",
+      "host": "alpha.school"
     }
   },
   "sections": {
@@ -1424,7 +2048,14 @@
     "faq": {},
     "footer": {},
     "students": {},
-    "map": {}
+    "map": {},
+    "guides": {},
+    "press": {},
+    "waitlist": {},
+    "contact": {},
+    "gallery": {},
+    "blog": {},
+    "news": {}
   },
   "pages": {
     "/chicago": {
@@ -1473,7 +2104,23 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "sections": [
         "header",
@@ -1485,7 +2132,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -1579,7 +2229,28 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "home.body.06e1bcd0",
+        "home.press",
+        "home.video.play",
+        "home.body.9259946c",
+        "home.body.409cbbb3",
+        "home.video.dbf4928d",
+        "home.ticker.previous",
+        "home.ticker.next",
+        "home.commitments.love",
+        "home.commitments.learn",
+        "home.commitments.skills",
+        "home.body.8f95212c",
+        "home.students.previous",
+        "home.students.next",
+        "home.guides.program",
+        "home.body.a3038013",
+        "home.map.activate",
+        "home.map.exit",
+        "home.waitlist"
       ],
       "sections": [
         "header",
@@ -1593,7 +2264,10 @@
         "faq",
         "footer",
         "students",
-        "map"
+        "map",
+        "press",
+        "guides",
+        "waitlist"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -1679,7 +2353,11 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "events.body.337aa159",
+        "events.card.image"
       ],
       "sections": [
         "header",
@@ -1843,7 +2521,23 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"114d658\"] a.elementor-button",
@@ -1866,7 +2560,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -1967,7 +2664,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.play",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"ab64d05\"] a.elementor-button",
@@ -1991,7 +2706,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2094,7 +2812,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.388b4c46",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -2116,7 +2852,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2216,7 +2955,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -2239,7 +2995,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2339,7 +3098,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -2362,7 +3138,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2459,7 +3238,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -2479,7 +3275,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2579,7 +3378,26 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"a85bc45\"] a.elementor-button",
@@ -2602,7 +3420,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2705,7 +3526,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.388b4c46",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -2727,7 +3566,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2828,7 +3670,27 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.contact.email.c1f0db9",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"776ada8\"] a.elementor-button",
@@ -2852,7 +3714,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -2957,7 +3822,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"0c740f2\"] a.elementor-button",
@@ -2981,7 +3864,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3086,7 +3972,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -3110,7 +4013,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3211,7 +4117,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -3235,7 +4158,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3339,7 +4265,23 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"0d95949\"] a.elementor-button",
@@ -3362,7 +4304,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3463,7 +4408,27 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.grade-menu",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"eea8066\"] a.elementor-button",
@@ -3487,7 +4452,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3587,7 +4555,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.388b4c46",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -3610,7 +4596,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3709,7 +4698,22 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -3732,7 +4736,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3833,7 +4840,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -3857,7 +4881,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -3957,7 +4984,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.388b4c46",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -3980,7 +5025,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4080,7 +5128,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.388b4c46",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4103,7 +5169,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4204,7 +5273,26 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4228,7 +5316,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4328,7 +5419,26 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4351,7 +5461,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4451,7 +5564,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4474,7 +5604,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4574,7 +5707,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4597,7 +5747,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4699,7 +5852,27 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page",
+        "campus.news.link"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"a8b2c4a\"] a.elementor-button",
@@ -4724,7 +5897,11 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog",
+        "news"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4829,7 +6006,26 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4853,7 +6049,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -4952,7 +6151,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -4974,7 +6190,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5074,7 +6293,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.grade-menu",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"dbf1cd3\"] a.elementor-button",
@@ -5098,7 +6334,9 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5203,7 +6441,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -5227,7 +6482,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5328,7 +6586,26 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"04c1df9\"] a.elementor-button",
@@ -5352,7 +6629,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5452,7 +6732,26 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"9b1ea75\"] a.elementor-button",
@@ -5475,7 +6774,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5579,7 +6881,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"de5b90a\"] a.elementor-button",
@@ -5602,7 +6921,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5703,7 +7025,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -5727,7 +7066,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5828,7 +7170,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.grade-menu",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"0767a26\"] a.elementor-button",
@@ -5852,7 +7212,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -5953,7 +7316,28 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.play",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.0af45ef8",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"47415dc\"] a.elementor-button",
@@ -5977,7 +7361,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6082,7 +7469,27 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.grade-menu",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"58892131\"] a.elementor-button",
@@ -6106,7 +7513,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6206,7 +7616,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.body.388b4c46",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -6229,7 +7657,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6331,7 +7762,27 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.grade-menu",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"4e20fec\"] a.elementor-button",
@@ -6356,7 +7807,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6456,7 +7910,23 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"4dfc71f\"] a.elementor-button",
@@ -6479,7 +7949,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6579,7 +8052,27 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.grade-menu",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"83184eb\"] a.elementor-button",
@@ -6590,7 +8083,10 @@
         "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"7e003a3\"] a.elementor-button",
         "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d5a549d\"] a.elementor-button",
         "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"dfcaf47\"] a.elementor-button",
-        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]",
+        "campus.contact.email": "[data-id=\"3b2ad91a\"] a[href^=\"mailto:\"]",
+        "campus.contact.phone": "[data-id=\"3e189f93\"] a[href^=\"tel:\"]",
+        "campus.contact.directions": "a[data-id=\"5850c059\"]"
       },
       "sections": [
         "header",
@@ -6602,7 +8098,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6703,7 +8202,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -6727,7 +8243,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6828,7 +8347,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"b352616\"] a.elementor-button",
@@ -6852,7 +8389,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -6953,7 +8493,25 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.carousel.previous",
+        "campus.carousel.next",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -6977,7 +8535,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -7078,7 +8639,24 @@
         "footer.nova",
         "footer.privacy",
         "footer.terms",
-        "footer.editorial"
+        "footer.editorial",
+        "navigation.other-link",
+        "navigation.submenu",
+        "campus.body.link",
+        "campus.content.link",
+        "campus.video.share",
+        "events.card.image",
+        "campus.contact.email",
+        "campus.contact.phone",
+        "campus.contact.directions",
+        "campus.gallery.filter",
+        "campus.gallery.play",
+        "campus.gallery.close",
+        "campus.gallery.share",
+        "campus.faq",
+        "campus.blog.title",
+        "campus.blog.read-more",
+        "campus.blog.page"
       ],
       "controlSelectors": {
         "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
@@ -7102,7 +8680,10 @@
         "resources",
         "team",
         "faq",
-        "footer"
+        "footer",
+        "contact",
+        "gallery",
+        "blog"
       ],
       "forms": [
         "1a12e7bb-59fa-4140-9773-93f11da668f8"
@@ -7382,5 +8963,65 @@
       "chicago"
     ],
     "campusCoverage": "Collection and receipt monitoring cover all mapped campus pages. Scheduled illustrated exact-control reports retain the three existing pilot pages; on-demand exact campus reports use their own full-day release boundaries."
+  },
+  "coverage": {
+    "asOf": "2026-10-19",
+    "status": "released-source-coverage",
+    "requiredPageFamilies": [
+      "home",
+      "events",
+      "campus"
+    ],
+    "adapters": [
+      {
+        "id": "event-filters",
+        "selector": ".ahse-events-container select.ahse-filter, .ahse-events-container input.ahse-search-filter",
+        "meaning": "Approved event discovery adapter; selection/search signals, no typed search text."
+      }
+    ],
+    "exceptions": [
+      {
+        "id": "hidden-other-articles",
+        "selector": "a#local-blog",
+        "reason": "Hidden legacy footer duplicate; rendered check required if exposed."
+      }
+    ],
+    "frames": [
+      {
+        "id": "community-map",
+        "origin": "https://map.app.alpha.school",
+        "status": "owner-integration-required"
+      },
+      {
+        "id": "legacy-map",
+        "origin": "https://maphub.net",
+        "status": "hidden-template-integration-unverified"
+      },
+      {
+        "id": "youtube",
+        "origin": "https://www.youtube.com",
+        "status": "player-api-integration-required"
+      },
+      {
+        "id": "youtube-private",
+        "origin": "https://www.youtube-nocookie.com",
+        "status": "player-api-integration-required"
+      },
+      {
+        "id": "google-directions",
+        "origin": "https://www.google.com",
+        "status": "external-widget-controls-unavailable"
+      },
+      {
+        "id": "newsletter",
+        "origin": "https://40051392.hs-sites.com",
+        "status": "owning-form-field-integration-required"
+      },
+      {
+        "id": "community-directory",
+        "origin": "https://communities.app.alpha.school",
+        "status": "owner-integration-required"
+      }
+    ]
   }
 }

@@ -30,20 +30,20 @@
         "testedAccount": "matthew.barge@superbuilders.school",
         "verifiedAt": "2026-10-19",
         "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
-        "productionVersion": 11,
-        "productionVersionName": "Alpha footer links: individual exposure and click tracking",
-        "verification": "Version 11 published October 19 at 19:22:31 UTC. GTM UI and public container verify 23 distinct footer identities on 46 mapped pages. Compiled listener passed 1,056 click, denied-consent and revoked-consent cases. Individual footer GA4 receipts and processed rates remain pending. Rollback version 10.",
+        "productionVersion": 12,
+        "productionVersionName": "Alpha comprehensive control tracking: home, events and campuses",
+        "verification": "Version 12 published October 19 at 20:18:06 UTC. One listener covers 94 control definitions across 46 pages; 15,332 public-source interactive elements accounted for. Public compiled listener passed 10,604 click, denied-consent and revoked-consent cases each. Browser preview confirmed a new control event and its GA4 tag. Processed individual receipts and rates pending. Rollback version 11.",
         "destinationIdentityPlanEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
         "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
         "destinationIdentityReleaseEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
         "latestInspection": {
           "verifiedAt": "2026-10-19",
-          "liveVersion": 11,
+          "liveVersion": 12,
           "liveTags": 11,
           "liveTriggers": 14,
           "customVariables": 40,
-          "candidateWorkspaceId": "7",
-          "candidateStatus": "published-footer-tracking",
+          "candidateWorkspaceId": "13",
+          "candidateStatus": "published-comprehensive-controls",
           "candidateChanges": {
             "modified": 1,
             "added": 0,
@@ -57,7 +57,7 @@
         "registry/global-runtime.json",
         "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-      "note": "Version 10 expands consent-gated exact-control and section collection from Chicago to all 44 working canonical Alpha campus pages, alongside homepage and Upcoming Events. First full day for the 43 new campuses: October 20, America/Chicago. Scheduled collection receipts cover every mapped page; illustrated exact-control reports remain scoped to home, events and Chicago, with other campuses available on demand. No personal form values, identity joins, provider outcomes or new GA4 key events are enabled. Two linked founder routes return 404 and are excluded. Version 11 published October 19 at 19:22:31 UTC adds distinct footer exposure and navigation IDs on the same 46 mapped pages. First full day October 20; earliest scheduled rates October 22. Individual footer GA4 receipt remains pending; no historical footer rate is inferred.",
+      "note": "Version 10 expands consent-gated exact-control and section collection from Chicago to all 44 working canonical Alpha campus pages, alongside homepage and Upcoming Events. First full day for the 43 new campuses: October 20, America/Chicago. Scheduled collection receipts cover every mapped page; illustrated exact-control reports remain scoped to home, events and Chicago, with other campuses available on demand. No personal form values, identity joins, provider outcomes or new GA4 key events are enabled. Two linked founder routes return 404 and are excluded. Version 11 published October 19 at 19:22:31 UTC adds distinct footer exposure and navigation IDs on the same 46 mapped pages. First full day October 20; earliest scheduled rates October 22. Individual footer GA4 receipt remains pending; no historical footer rate is inferred. Version 12 adds individually identified content, navigation, event and campus controls. New content collection begins October 19; full-day boundary October 20. Hosted form fields and map internals remain explicit integration gaps.",
       "footerTrackingRelease": {
         "version": 11,
         "publishedAt": "2026-10-19T19:22:31Z",
@@ -66,6 +66,36 @@
         "footerLinks": 23,
         "processedRates": "pending",
         "evidence": "registry/website-tracking-expansion.json#release.footerLinks"
+      },
+      "comprehensiveTrackingRelease": {
+        "status": "released",
+        "liveVersion": "12",
+        "publishedAt": "2026-10-19T20:18:06Z",
+        "rollbackVersion": "11",
+        "firstFullDay": "2026-10-20",
+        "firstEligibleReportDate": "2026-10-22",
+        "authorization": "Matt approved implementation of the comprehensive four-experience scope in this chat on October 19.",
+        "publicContainerVerifiedAt": "2026-10-19T20:18:24.352Z",
+        "artifactSha256": "d5c310cd0db997ab2e8b0756f43d94bfdc549a50eec61697e4ddc707b833a269",
+        "publicArtifactSha256": "58cbeeb28fff707fc38742deae265700ebba6192ce16820eb11f6cec162e1af7",
+        "sourceBindingsVerified": true,
+        "sourcePageCount": 46,
+        "sourceInteractiveElements": 15332,
+        "controlDefinitions": 94,
+        "compiledClickCases": 10604,
+        "consentDenialCases": 10604,
+        "consentRevocationCases": 10604,
+        "browserPreviewVerified": true,
+        "browserReceiptVerified": true,
+        "processedReportingVerified": false,
+        "previewEvidence": "New events.body.337aa159 exposure observed in Tag Assistant with GA4 expanded-1 firing. No personal form values or live submissions used.",
+        "limitations": [
+          "Individual production GA4 receipts and dated conversion rates remain pending processing.",
+          "Newsletter start/field signals require the owning HubSpot CTA source or GTM-KNSZSMLS access.",
+          "Map pins and internal map controls require changes in the owning map/community app.",
+          "Play/share/FAQ controls are clicks, not verified playback, sharing, reading or provider completion."
+        ],
+        "evidence": "marketingsupport/projects/alpha-website-heatmap/evidence/comprehensive-2026-10-19/"
       }
     },
     {
