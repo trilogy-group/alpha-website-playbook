@@ -1,5 +1,18 @@
 # Sitewide tracking expansion
 
+## Current release: October 19, 2026
+
+**GTM version 12 is live**, published at 20:18:06 UTC in GTM-5W56ZLQJ. Only listener tag 40 changed. Rollback: version 11. Canonical release state is in `registry/website-tracking-expansion.json` under `release.comprehensiveControls`; the tooling registry records the same version. Earlier dated notes below are historical.
+
+Coverage includes the four homepage commitment/Guides buttons, individual public content and event-card links, campus contact/resources/gallery/video/FAQ/blog controls and navigation/footer links. The 46-page source audit accounts for 15,332 interactive elements with 94 definitions, adapters and explicit exceptions. Hidden markup is included; source coverage is not rendered or delivery proof. The public compiled listener passed 10,604 click cases plus matching deny/revoke cases. Browser preview verified a new control exposure and GA4 tag firing; processed per-control receipts remain pending.
+
+First full new-control day: October 20. Earliest scheduled complete-day rates after the existing processing buffer: October 22. Existing older controls retain their own earlier measurement dates. Combined groups and exact item rates are distinct. A click is not provider completion, and non-clickers are not site exits.
+
+Remaining dependencies: owning newsletter form/GTM-KNSZSMLS access for field/start signals; source integration for internal map/Community controls; BigQuery export read access; verified provider reconciliation/joins. Do not enable the field flag without verified selectors and consent forwarding. No real form submission was performed. No keys or consent settings changed, and no external messages were sent.
+
+Release evidence: `superbuilders/marketingsupport/projects/alpha-website-heatmap/evidence/comprehensive-2026-10-19/`. Full status: `projects/alpha-website-heatmap/COMPREHENSIVE-TRACKING-2026-10-19.md` in that repository.
+
+
 October 16, 2026: implementation requested by Matt Barge. The source contract is [website-tracking-expansion.json](../registry/website-tracking-expansion.json); it is **built-not-released**. It extends the existing measurement contract without replacing approved outcome definitions, enabling key events, authorizing identity joins or inventing a consent owner.
 
 Runtime and tests live in `superbuilders/aeo/scripts/website-tracking/`. Deployment procedures live in `superbuilders/aeo/docs/operations/alpha-sitewide-tracking.md`. Marketing Support holds the full design specification and the interactive heat-map consumer.
