@@ -1,7 +1,7 @@
 {
   "$comment": "Website as a Funnel layer 1 (docs/website-as-a-funnel-framework-2026-09-28.md): every tool, plugin, credential and data source used to understand alpha.school as a funnel. status: held (we can use it), present (exists, no access or unverified), absent (not installed), unknown. null = unconfirmed; verify, fill, commit; never guess. Health of each tool is layer 2 (measurement-integrity lane).",
-  "version": "1.3",
-  "asOf": "2026-10-17",
+  "version": "1.4",
+  "asOf": "2026-10-19",
   "owner": {
     "role": "analytics-and-consent-owner",
     "person": "Matt Barge",
@@ -28,25 +28,25 @@
         "scheduledWriteAccess": false,
         "apiProbe": "AEO measurement-integrity performs real accounts and containers reads with tagmanager.readonly",
         "testedAccount": "matthew.barge@superbuilders.school",
-        "verifiedAt": "2026-10-17",
+        "verifiedAt": "2026-10-19",
         "scheduledReadEvidence": "https://github.com/superbuilders/aeo/actions/runs/36724689420",
-        "productionVersion": 8,
-        "productionVersionName": "Alpha exact-control pilot: homepage, events, Chicago",
-        "verification": "Version 8 published October 17 at 22:05:39 UTC. GTM UI confirms live; Live-environment Tag Assistant observed exact cta_view identity and the intended GA4 tag succeeded. Processed exact-control reporting remains pending. Version 7 is rollback.",
+        "productionVersion": 10,
+        "productionVersionName": "Update HTML - Alpha funnel CTA listener v2 tag for all-campus tracking",
+        "verification": "Version 10 published October 19 at 12:55:02 UTC. GTM UI confirms live; public container includes all 44 canonical campus routes and page-specific selector overrides. Austin and Bethesda preview exact clicks reached the intended GA4 tag. New campus processed reports are pending; version 9 is rollback.",
         "destinationIdentityPlanEvidence": "https://github.com/superbuilders/aeo/actions/runs/36883782420",
         "destinationIdentityBlockedStageEvidence": "https://github.com/superbuilders/aeo/actions/runs/36885237486",
         "destinationIdentityReleaseEvidence": "https://github.com/superbuilders/aeo/actions/runs/36899672472",
         "latestInspection": {
-          "verifiedAt": "2026-10-17",
-          "liveVersion": 8,
+          "verifiedAt": "2026-10-19",
+          "liveVersion": 10,
           "liveTags": 11,
           "liveTriggers": 14,
           "customVariables": 40,
-          "candidateWorkspaceId": "9",
-          "candidateStatus": "published-pilot",
+          "candidateWorkspaceId": "11",
+          "candidateStatus": "published-all-campus",
           "candidateChanges": {
-            "modified": 2,
-            "added": 28,
+            "modified": 1,
+            "added": 0,
             "deleted": 0
           }
         }
@@ -57,7 +57,7 @@
         "registry/global-runtime.json",
         "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-      "note": "Version 8 adds consent-gated exact-control collection on homepage, Upcoming Events and Chicago while retaining five legacy CTA start signals elsewhere. No GA4 key event or provider completion join is enabled. First full exact-control day: October 18, America/Chicago. Cross-origin map and newsletter field integration remain incomplete."
+      "note": "Version 10 expands consent-gated exact-control and section collection from Chicago to all 44 working canonical Alpha campus pages, alongside homepage and Upcoming Events. First full day for the 43 new campuses: October 20, America/Chicago. Scheduled collection receipts cover every mapped page; illustrated exact-control reports remain scoped to home, events and Chicago, with other campuses available on demand. No personal form values, identity joins, provider outcomes or new GA4 key events are enabled. Two linked founder routes return 404 and are excluded."
     },
     {
       "id": "google-tag",
