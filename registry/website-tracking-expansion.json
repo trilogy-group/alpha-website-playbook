@@ -1,7 +1,7 @@
 {
   "version": "2.1.0",
   "status": "released",
-  "asOf": "2026-10-17",
+  "asOf": "2026-10-19",
   "productionAuthorized": true,
   "release": {
     "consentOwner": "Matt Barge",
@@ -11,9 +11,9 @@
     "providerReconciliation": false,
     "measurementStartDate": "2026-10-18",
     "reportingDefinitionsVerified": true,
-    "gtmStagingWorkspace": "9",
-    "liveVersionVerified": "9",
-    "verifiedAt": "2026-10-18",
+    "gtmStagingWorkspace": "11",
+    "liveVersionVerified": "10",
+    "verifiedAt": "2026-10-19",
     "authorizationNote": "Matt authorized implementation and testing in the project chat on 2026-10-17. Release QA and provider join review remain separate prerequisites.",
     "consentOwnerDecision": {
       "decidedOn": "2026-10-17",
@@ -28,9 +28,9 @@
       "physicalMobileDeviceVerified": false
     },
     "publishedAt": "2026-10-17T22:05:39Z",
-    "rollbackVersion": "8",
-    "publishedArtifactSha256": "4783577d906255696b0fbe02d60d1c58aa2648945acd2b226e48f3e71cc164d3",
-    "scope": "pilot: homepage, Upcoming Events and Chicago; legacy action-type fallback retained elsewhere",
+    "rollbackVersion": "9",
+    "publishedArtifactSha256": "0b6063fcd22873cdc5a47668d5ed36e7bec6ed441036f6a54dd356bf9874561f",
+    "scope": "homepage, Upcoming Events and all 44 canonical public Alpha campus pages; legacy action-type fallback retained on unmapped pages",
     "consentEvidence": "Real HubSpot analytics grant and revoke callback verified in actual alpha.school Safari preview; menu event count 2, revoked then menu close and signup open remained 2. Existing vendor policy re-grants analytics on reload; no privacy policy setting changed.",
     "consentPersistence": "Existing HubSpot policy grants again on reload in this browser; persistent opt-out was not established.",
     "qaEvidence": "marketingsupport/projects/alpha-website-heatmap/evidence/tracking-preview-2026-10-17.json",
@@ -60,7 +60,42 @@
       "artifactSha256": "747084cdbc90a2ecdd6d50464bc4a8ec40d932b6994e6cb6695556f4124dac39",
       "firstFullDay": "2026-10-18"
     },
-    "lastPublishedAt": "2026-10-18T19:20:00Z"
+    "lastPublishedAt": "2026-10-19T12:55:02Z",
+    "campusRollout": {
+      "status": "released",
+      "requestedAt": "2026-10-19",
+      "requestedBy": "Matt Barge",
+      "campusCount": 44,
+      "firstFullDay": "2026-10-20",
+      "rollbackVersion": "9",
+      "apexTaskId": "cmvf8fhqo000008l2g7g5x2sm",
+      "excludedRoutes": [
+        {
+          "route": "/austin-founders",
+          "reason": "HTTP 404; no public campus page"
+        },
+        {
+          "route": "/alpha-anywhere-center-founders",
+          "reason": "HTTP 404; no public campus page"
+        }
+      ],
+      "publishedAt": "2026-10-19T12:55:02Z",
+      "liveVersion": "10",
+      "artifactSha256": "0b6063fcd22873cdc5a47668d5ed36e7bec6ed441036f6a54dd356bf9874561f",
+      "publicContainerVerifiedAt": "2026-10-19T12:55:44Z",
+      "firstEligibleScheduledReport": "2026-10-22",
+      "processedReportingVerified": false,
+      "sourceBindingsVerified": true,
+      "compiledClickCases": 415,
+      "consentDenialCases": 415,
+      "consentRevocationCases": 415,
+      "browserPreview": [
+        "Austin desktop: campus.hero.events; GA4 CTA starts succeeded; section_view events; expanded-1 succeeded",
+        "Bethesda desktop and narrow 436 px browser viewport: application clicks and section views; resources.apply-secondary correctly classified as application; GA4 CTA starts succeeded"
+      ],
+      "physicalMobileDeviceVerified": false,
+      "evidence": "marketingsupport/projects/alpha-website-heatmap/evidence/campus-tracking-release-2026-10-19.json"
+    }
   },
   "exposureMs": 1000,
   "fields": {
@@ -132,7 +167,9 @@
         "map.app.alpha.school",
         "community.alpha.school",
         "apply.alpha.school",
-        "founders.headcount.events"
+        "founders.headcount.events",
+        "flipsnack.com",
+        "drive.google.com"
       ]
     },
     "interaction_role": {
@@ -1067,6 +1104,63 @@
       "outcome": "navigation",
       "role": "navigation",
       "stateful": true
+    },
+    "campus.hero.apply-direct": {
+      "event": "application_cta_click",
+      "section": "hero",
+      "position": "hero",
+      "outcome": "application",
+      "role": "handoff",
+      "destination": "",
+      "host": "alpha.school",
+      "destinationFromLink": true
+    },
+    "campus.resources.apply-secondary": {
+      "event": "application_cta_click",
+      "section": "resources",
+      "position": "resources",
+      "outcome": "application",
+      "role": "handoff",
+      "destination": "",
+      "host": "alpha.school",
+      "destinationFromLink": true
+    },
+    "campus.resources.community": {
+      "event": "community_cta_click",
+      "section": "resources",
+      "position": "resources",
+      "outcome": "community",
+      "role": "handoff",
+      "destination": "",
+      "host": "alpha.school",
+      "destinationFromLink": true
+    },
+    "campus.resources.events": {
+      "event": "info_session_cta_click",
+      "section": "resources",
+      "position": "resources",
+      "outcome": "info_session",
+      "role": "handoff",
+      "destination": "",
+      "host": "go.alpha.school",
+      "destinationFromLink": true
+    },
+    "campus.resources.contact": {
+      "event": "resource_click",
+      "section": "resources",
+      "position": "resources",
+      "outcome": "content",
+      "role": "navigation",
+      "destinationFromLink": true
+    },
+    "campus.body.events-button": {
+      "event": "info_session_cta_click",
+      "section": "body",
+      "position": "body",
+      "outcome": "info_session",
+      "role": "anchor",
+      "destination": "",
+      "host": "alpha.school"
     }
   },
   "sections": {
@@ -1383,6 +1477,4378 @@
         }
       ],
       "sectionMeasurementStartDate": "2026-10-19"
+    },
+    "/atlanta": {
+      "key": "atlanta",
+      "family": "campus",
+      "campus": "atlanta",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"114d658\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"e931ac6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"6e2c8cb\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"743b27d\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"ebcdf43\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/austin": {
+      "key": "austin",
+      "family": "campus",
+      "campus": "austin",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"ab64d05\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"1566465\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"5f2193f\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"24d6e3c\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"dd6277b\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"a830de2\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"3b32781\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/bethesda": {
+      "key": "bethesda",
+      "family": "campus",
+      "campus": "bethesda",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.apply",
+        "campus.resources.apply-secondary",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply-secondary": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/boca-raton": {
+      "key": "boca-raton",
+      "family": "campus",
+      "campus": "boca-raton",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/boston": {
+      "key": "boston",
+      "family": "campus",
+      "campus": "boston",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/boston-suburbs": {
+      "key": "boston-suburbs",
+      "family": "campus",
+      "campus": "boston-suburbs",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/brownsville": {
+      "key": "brownsville",
+      "family": "campus",
+      "campus": "brownsville",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.apply",
+        "campus.resources.apply-secondary",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"a85bc45\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"c347174\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"aa63a3e\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d0101ae\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"060287b\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply-secondary": "[data-elementor-type=\"wp-page\"] [data-id=\"ba0691f\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/carrollton": {
+      "key": "carrollton",
+      "family": "campus",
+      "campus": "carrollton",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/chantilly": {
+      "key": "chantilly",
+      "family": "campus",
+      "campus": "chantilly",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"776ada8\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"0fdc58b\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"a6a31a2\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"548e4d6\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"f9bc96a\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"3d5aee5\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/charlotte": {
+      "key": "charlotte",
+      "family": "campus",
+      "campus": "charlotte",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"0c740f2\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"ad2f98b\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"c0b2a8b\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"4745609\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"1935390\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"f14d3e8\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"0633878\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"39002c5\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/denver": {
+      "key": "denver",
+      "family": "campus",
+      "campus": "denver",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/dorado": {
+      "key": "dorado",
+      "family": "campus",
+      "campus": "dorado",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.events",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"972e301\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"4250a62\"] a.elementor-button",
+        "campus.resources.events": "[data-elementor-type=\"wp-page\"] [data-id=\"0f5822a\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/east-bay": {
+      "key": "east-bay",
+      "family": "campus",
+      "campus": "east-bay",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"0d95949\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"67a5f69\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"f8af2f4\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b18699b\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"649e654\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/fort-worth": {
+      "key": "fort-worth",
+      "family": "campus",
+      "campus": "fort-worth",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"eea8066\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"7e75e2d\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"5582de8\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"7519eed\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"a0f4241\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"6292f8a\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"f2cd490\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/franklin": {
+      "key": "franklin",
+      "family": "campus",
+      "campus": "franklin",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.call",
+        "campus.resources.contact",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.contact": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5c31b61\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/greenwich": {
+      "key": "greenwich",
+      "family": "campus",
+      "campus": "greenwich",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/highland-park": {
+      "key": "highland-park",
+      "family": "campus",
+      "campus": "highland-park",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/houston": {
+      "key": "houston",
+      "family": "campus",
+      "campus": "houston",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.call",
+        "campus.resources.community",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.community": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"be7aaa4\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/jamaica-plain": {
+      "key": "jamaica-plain",
+      "family": "campus",
+      "campus": "jamaica-plain",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/kirkland": {
+      "key": "kirkland",
+      "family": "campus",
+      "campus": "kirkland",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/la-jolla": {
+      "key": "la-jolla",
+      "family": "campus",
+      "campus": "la-jolla",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/lake-travis": {
+      "key": "lake-travis",
+      "family": "campus",
+      "campus": "lake-travis",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/malibu": {
+      "key": "malibu",
+      "family": "campus",
+      "campus": "malibu",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/miami": {
+      "key": "miami",
+      "family": "campus",
+      "campus": "miami",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.resources.apply-secondary",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"a8b2c4a\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"73cd7d2\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"ea978dc\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"26f3565\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"a3e0bd2\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"9a59c7b\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"f588811\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply-secondary": "[data-elementor-type=\"wp-page\"] [data-id=\"a099f98\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/miami-beach": {
+      "key": "miami-beach",
+      "family": "campus",
+      "campus": "miami-beach",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/nashville": {
+      "key": "nashville",
+      "family": "campus",
+      "campus": "nashville",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/new-york-city": {
+      "key": "new-york-city",
+      "family": "campus",
+      "campus": "new-york-city",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"dbf1cd3\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"ea24bef\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"76b9af4\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"4f2fca8\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"b54c215\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"86e6a1b\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"4a22862\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/oklahoma-city": {
+      "key": "oklahoma-city",
+      "family": "campus",
+      "campus": "oklahoma-city",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.resources.apply-secondary",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.resources.apply-secondary": "[data-elementor-type=\"wp-page\"] [data-id=\"a7c22026\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/orange-county": {
+      "key": "orange-county",
+      "family": "campus",
+      "campus": "orange-county",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"04c1df9\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"cf3f434\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"032bc68\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"f393227\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"a4b2a0c\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"08607ba\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"43db685\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/palm-beach": {
+      "key": "palm-beach",
+      "family": "campus",
+      "campus": "palm-beach",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"9b1ea75\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"a390297\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d4a3cf9\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"2b4623f\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"79429e7\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"c0946ab\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/palo-alto": {
+      "key": "palo-alto",
+      "family": "campus",
+      "campus": "palo-alto",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"de5b90a\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"2629d72\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"54b5cc5\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5d335f5\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"67995c8\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/park-city": {
+      "key": "park-city",
+      "family": "campus",
+      "campus": "park-city",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/plano": {
+      "key": "plano",
+      "family": "campus",
+      "campus": "plano",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"0767a26\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"05ac7cb\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"7e8140f\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"770c7e0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"c4db6af\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"8b8c8e8\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"016b22c\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"fa4f481\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/raleigh": {
+      "key": "raleigh",
+      "family": "campus",
+      "campus": "raleigh",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"47415dc\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"ec5286c\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"92e0c19\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5a623a6\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"fe2b796\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"baa55e2\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"ac1f61a\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "video",
+          "selector": "#content_video"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/san-francisco": {
+      "key": "san-francisco",
+      "family": "campus",
+      "campus": "san-francisco",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.resources.apply-secondary",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"58892131\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"752c72ea\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"8e6ac4e\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"307b0fd\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"4ed6688\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"0c0a0c9\"] a.elementor-button",
+        "campus.resources.apply-secondary": "[data-elementor-type=\"wp-page\"] [data-id=\"5d9ee25\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/san-juan": {
+      "key": "san-juan",
+      "family": "campus",
+      "campus": "san-juan",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.call",
+        "campus.resources.community",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.community": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"f2f525e\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/santa-barbara": {
+      "key": "santa-barbara",
+      "family": "campus",
+      "campus": "santa-barbara",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply-direct",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.resources.apply-secondary",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"4e20fec\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"0d8bfc1\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"29f6157\"] a.elementor-button",
+        "campus.hero.apply-direct": "[data-elementor-type=\"wp-page\"] [data-id=\"fe6155c\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"b97226d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"7d1a031\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"398e8e4\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply-secondary": "[data-elementor-type=\"wp-page\"] [data-id=\"62e2426\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/santa-monica": {
+      "key": "santa-monica",
+      "family": "campus",
+      "campus": "santa-monica",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"4dfc71f\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"bff140c\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29371\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"dc17046\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"5ab16a0\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/scottsdale": {
+      "key": "scottsdale",
+      "family": "campus",
+      "campus": "scottsdale",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"83184eb\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"6da02e8\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"3965f89\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"a398116\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"5aca5016\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"7e003a3\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d5a549d\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"dfcaf47\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/south-bay-la": {
+      "key": "south-bay-la",
+      "family": "campus",
+      "campus": "south-bay-la",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/southlake": {
+      "key": "southlake",
+      "family": "campus",
+      "campus": "southlake",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"b352616\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"667e187\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"7146348\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"119aae3\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"d511a87\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"5d19485\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#campus h2"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/the-woodlands": {
+      "key": "the-woodlands",
+      "family": "campus",
+      "campus": "the-woodlands",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.calendar",
+        "campus.resources.packet",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"3df5c4e\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
+    },
+    "/tulsa": {
+      "key": "tulsa",
+      "family": "campus",
+      "campus": "tulsa",
+      "revision": "observed-2026-10-19",
+      "measurementStartDate": "2026-10-20",
+      "sectionMeasurementStartDate": "2026-10-20",
+      "controls": [
+        "campus.hero.signup",
+        "campus.hero.events",
+        "campus.hero.call",
+        "campus.hero.apply",
+        "campus.resources.guide",
+        "campus.resources.packet",
+        "campus.resources.calendar",
+        "campus.resources.call",
+        "campus.resources.apply",
+        "campus.body.events",
+        "events.card.register",
+        "events.card.title",
+        "navigation.events",
+        "navigation.locations",
+        "navigation.program",
+        "navigation.admission",
+        "navigation.contact",
+        "navigation.toggle"
+      ],
+      "controlSelectors": {
+        "campus.hero.signup": "[data-elementor-type=\"wp-page\"] [data-id=\"6a29a126\"] a.elementor-button",
+        "campus.hero.events": "[data-elementor-type=\"wp-page\"] [data-id=\"4184a4c6\"] a.elementor-button",
+        "campus.hero.call": "[data-elementor-type=\"wp-page\"] [data-id=\"d59a233\"] a.elementor-button",
+        "campus.hero.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"5305c9c0\"] a.elementor-button",
+        "campus.resources.guide": "[data-elementor-type=\"wp-page\"] [data-id=\"f9fb56d\"] a.elementor-button",
+        "campus.resources.packet": "[data-elementor-type=\"wp-page\"] [data-id=\"bcdf1ac\"] a.elementor-button",
+        "campus.resources.calendar": "[data-elementor-type=\"wp-page\"] [data-id=\"d4280cd\"] a.elementor-button",
+        "campus.resources.call": "[data-elementor-type=\"wp-page\"] [data-id=\"b8101ec\"] a.elementor-button",
+        "campus.resources.apply": "[data-elementor-type=\"wp-page\"] [data-id=\"8d762c7\"] a.elementor-button",
+        "campus.body.events": "#content_body_4 a[href=\"#events\"]"
+      },
+      "sections": [
+        "header",
+        "hero",
+        "body",
+        "proof",
+        "video",
+        "events",
+        "resources",
+        "team",
+        "faq",
+        "footer"
+      ],
+      "forms": [
+        "1a12e7bb-59fa-4140-9773-93f11da668f8"
+      ],
+      "overlays": [
+        {
+          "selector": "#hs-overlay-cta-198135985568",
+          "elementId": "campus.hero.signup",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "navigation": {
+        "selector": ".elementor-menu-toggle[aria-expanded]",
+        "elementId": "navigation.toggle"
+      },
+      "ctaForms": [
+        {
+          "ctaId": "198135985568",
+          "formId": "1a12e7bb-59fa-4140-9773-93f11da668f8"
+        }
+      ],
+      "sectionMarkers": [
+        {
+          "section": "hero",
+          "selector": "#title h1"
+        },
+        {
+          "section": "body",
+          "selector": "#content_title h2"
+        },
+        {
+          "section": "events",
+          "selector": "#events [data-id=\"79aa232\"] h2"
+        },
+        {
+          "section": "resources",
+          "selector": "#resources #address h3"
+        },
+        {
+          "section": "team",
+          "selector": "#team_title h2"
+        },
+        {
+          "section": "faq",
+          "selector": "#faq_title h3"
+        },
+        {
+          "section": "footer",
+          "selector": "[data-id=\"34c2986c\"] h2"
+        }
+      ]
     }
   },
   "forms": {
@@ -1490,10 +5956,10 @@
     "https://map.app.alpha.school"
   ],
   "notes": [
-    "Current selectors are Chicago-specific observed DOM mappings. Do not apply them to unverified campus templates.",
+    "Campus selectors are individually observed and verified against all 44 canonical public campus pages on 2026-10-19. Page-specific selectors override the Chicago pilot defaults. Newly published campuses require a reviewed map; no wildcard campus attribution.",
     "Existing five CTA starts retain legacy fallback outside mapped controls. New events require explicit analytics consent.",
     "Server events describe contracts only; no outcome collection is activated.",
-    "2.1 candidate: passive event results/navigation adapters, distinct guide/calendar resources, field adapter gated off until owning-form integration and consent review. Pilot published in GTM version 8 on October 17; provider outcomes and wider site coverage remain incomplete."
+    "Schema 2.1.0 is retained for compatible event history. Campus page/control mappings expand without enabling provider outcomes, form fields or new key events."
   ],
   "providers": {
     "hubspot-meetings": {
@@ -1604,6 +6070,12 @@
     "status": "daily-artifact-generation-verified",
     "workflow": "https://github.com/superbuilders/aeo/actions/workflows/measurement-integrity.yml",
     "verifiedRun": "https://github.com/superbuilders/aeo/actions/runs/39073522506",
-    "behavior": "Validated post-release aggregates refresh the heat map. Unavailable data retains a previous validated report or clearly dated historical baseline. No public hosting."
+    "behavior": "Validated post-release aggregates refresh the heat map. Unavailable data retains a previous validated report or clearly dated historical baseline. No public hosting.",
+    "exactReportPages": [
+      "home",
+      "events",
+      "chicago"
+    ],
+    "campusCoverage": "Collection and receipt monitoring cover all mapped campus pages. Scheduled illustrated exact-control reports retain the three existing pilot pages; on-demand exact campus reports use their own full-day release boundaries."
   }
 }
