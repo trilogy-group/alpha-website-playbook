@@ -129,7 +129,7 @@
       "url": "https://alpha.school/plano/",
       "listedAs": "Plano",
       "since": "2026-10-19",
-      "sinceNote": "Andy Gibson requested removal of the campus waitlist in a screenshot supplied by Yash Chitneni. Yash approved direct application in Codex on 2026-10-19. HubSpot Program 29737764355 website_campus_intro first paragraph changed to <p>[DISPLAY_NAME] is open and enrolling.</p> and read back; public delivery remains pending n8n sync and verification.",
+      "sinceNote": "Andy Gibson requested removal of the campus waitlist in a screenshot supplied by Yash Chitneni. Yash approved application in Codex on 2026-10-19. HubSpot Program 29737764355 website_campus_intro first paragraph changed to <p>[DISPLAY_NAME] is open and enrolling.</p> and read back. Campus intro and both apply labels published through scoped Alpha MCP patches under APEX cmvfcpn9x000708jh91slucfw; the standalone map and map-adjacent waitlist summaries remain separate delivery work.",
       "introMedia": "none",
       "introMediaNote": "No approved open-campus intro asset recorded; registry/campus-open-media.json retains the existing missing-asset state. Enrollment approval does not supply a new asset.",
       "previousEnrollmentState": {
