@@ -2,9 +2,11 @@
 
 ## Current release: October 19, 2026
 
-**GTM version 12 is live**, published at 20:18:06 UTC in GTM-5W56ZLQJ. Only listener tag 40 changed. Rollback: version 11. Canonical release state is in `registry/website-tracking-expansion.json` under `release.comprehensiveControls`; the tooling registry records the same version. Earlier dated notes below are historical.
+**GTM version 12 is live**, published at 20:18:06 UTC in GTM-5W56ZLQJ. Only listener tag 40 changed. Rollback: version 11. The measurement health contract now requires version 12 or newer, so reverting to an older container flags the missing release. An intentional rollback must be recorded as degraded coverage until the affected controls are restored. Canonical release state is in `registry/website-tracking-expansion.json` under `release.comprehensiveControls`; the tooling registry records the same version. Earlier dated notes below are historical.
 
 Coverage includes the four homepage commitment/Guides buttons, individual public content and event-card links, campus contact/resources/gallery/video/FAQ/blog controls and navigation/footer links. The 46-page source audit accounts for 15,332 interactive elements with 94 definitions, adapters and explicit exceptions. Hidden markup is included; source coverage is not rendered or delivery proof. The public compiled listener passed 10,604 click cases plus matching deny/revoke cases. Browser preview verified a new control exposure and GA4 tag firing; processed per-control receipts remain pending.
+
+[Production verification run 39319504962](https://github.com/superbuilders/aeo/actions/runs/39319504962) confirmed version 12, GA4 report access, required dimensions, all 44 mapped campuses and zero unmapped source controls across 46 pages. Processed recent signals are delivery evidence, not new-control rates. The overall status remains degraded for the named integrations.
 
 First full new-control day: October 20. Earliest scheduled complete-day rates after the existing processing buffer: October 22. Existing older controls retain their own earlier measurement dates. Combined groups and exact item rates are distinct. A click is not provider completion, and non-clickers are not site exits.
 
