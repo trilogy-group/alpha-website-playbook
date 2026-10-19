@@ -108,7 +108,9 @@
   },
   "brandRules": {
     "file": "marketingsupport docs/rules/alpha-brand-copy-rules.md and scripts/lib/alpha-brand-rules.mjs; skill repo trilogy-group/alpha-branding-skill",
-    "precedence": "MacKenzie's recorded choices over all other guidance"
+    "precedence": "MacKenzie's recorded choices over all other guidance",
+    "sheet": "https://docs.google.com/spreadsheets/d/1GzWpYpD8Au84i39GkdIhWQkwsgFMBfih/edit",
+    "sheetNote": "MacKenzie Price's brand copy quiz (chosen vs. not chosen, her notes), shared by Haven Mass; recorded in playbook/site/mackenzie-style-choices.md on 2026-10-19. The sheet still says Test2Pass; the current name is AlphaTest."
   },
   "hubspotEvents": {
     "api": "https://api.hubapi.com/marketing/marketing-events (portal 40051392)",

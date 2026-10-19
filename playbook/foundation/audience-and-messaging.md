@@ -77,7 +77,7 @@ Preferred and avoided public language is governed by `playbook/site/site-rules.m
 
 Terminology that must be verified with MacKenzie before it appears in new copy (Q-07):
 
-- Official spelling and capitalization of Alpha Test, Test2Pass, TimeBack, Queue Breaks, Shadow Day, Alpha Experience.
+- Official spelling and capitalization of TimeBack and Alpha Experience. Answered in `playbook/site/mackenzie-style-choices.md`: AlphaTest (formerly Test2Pass), Q Breaks (not Queue Breaks), Shadow Day.
 - Whether Shadow Day, Shadow Week, or event-first language is the approved public next step.
 - Current approved statistics and exact wording for the 2x and top 1% claims.
 - Whether "programs" or "campuses" is the public noun for the network count.
