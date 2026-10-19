@@ -57,7 +57,16 @@
         "registry/global-runtime.json",
         "marketingsupport/work-assets/website-as-a-funnel/gtm-cta-start-release-evidence-2026-09-29.md"
       ],
-      "note": "Version 10 expands consent-gated exact-control and section collection from Chicago to all 44 working canonical Alpha campus pages, alongside homepage and Upcoming Events. First full day for the 43 new campuses: October 20, America/Chicago. Scheduled collection receipts cover every mapped page; illustrated exact-control reports remain scoped to home, events and Chicago, with other campuses available on demand. No personal form values, identity joins, provider outcomes or new GA4 key events are enabled. Two linked founder routes return 404 and are excluded."
+      "note": "Version 10 expands consent-gated exact-control and section collection from Chicago to all 44 working canonical Alpha campus pages, alongside homepage and Upcoming Events. First full day for the 43 new campuses: October 20, America/Chicago. Scheduled collection receipts cover every mapped page; illustrated exact-control reports remain scoped to home, events and Chicago, with other campuses available on demand. No personal form values, identity joins, provider outcomes or new GA4 key events are enabled. Two linked founder routes return 404 and are excluded. Version 11 published October 19 at 19:22:31 UTC adds distinct footer exposure and navigation IDs on the same 46 mapped pages. First full day October 20; earliest scheduled rates October 22. Individual footer GA4 receipt remains pending; no historical footer rate is inferred.",
+      "footerTrackingRelease": {
+        "version": 11,
+        "publishedAt": "2026-10-19T19:22:31Z",
+        "publicContainerVerifiedAt": "2026-10-19T19:23:33.406Z",
+        "rollbackVersion": 10,
+        "footerLinks": 23,
+        "processedRates": "pending",
+        "evidence": "registry/website-tracking-expansion.json#release.footerLinks"
+      }
     },
     {
       "id": "google-tag",
