@@ -18,6 +18,28 @@ For an update, the requested field changes and their exact replacement values de
 
 The APEX scheduled copy planner must recognize the same rule before claiming, at mutation authorization and at completion. A prose addition here alone does not add support to the hosted runtime. Its implementation and verification status are recorded in [the cloud execution learning loop](../../docs/cloud-execution-learning-loop.md).
 
+## Removal preparation and public identity
+
+Accept the standard EFFECTIVE DATE form section only when it agrees with the
+structured field and is due in the campus timezone. An explicit self-removal such
+as “I should be removed from <campus> meet the team” can include relocation
+background; it authorizes no change to the other campus. Separate future Requests
+named in notes are outside this removal. Conditional instructions and holds are
+not background and must remain enforced.
+
+The public card may use a reviewed short name. Resolve it only from an exact
+requested-name/email/canonical-page mapping with recorded evidence. Match that
+public heading exactly once; never use fuzzy names or infer identity from a photo.
+Record the requested and public names and the source on the Request. A mapping
+for one campus does not authorize changing another campus.
+
+For removal evidence, the removed card cannot be photographed after deletion:
+capture the remaining Team section and adjacent cards on desktop/mobile, prove
+name/photo absence and sibling preservation, and perform whole-page and shared
+cache QA. Never report a skipped rendered check as a pass. See
+[the reusable execution learning loop](../../docs/removal-execution-learning.md)
+for the APEX implementation, regression coverage and release requirements.
+
 ## Steps
 
 1. `resolve_page` on the campus URL; refuse if the live object is ambiguous.

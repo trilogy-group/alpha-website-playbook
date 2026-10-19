@@ -35,3 +35,7 @@ Updating one row does not automatically update the others. Open PR prose is revi
 5. Update recipes or approved expected facts when the work changes them. Routine execution evidence remains on the APEX request. Never mark the full request complete while another requested page, system or required verification remains unfinished.
 
 Outstanding families include reorder-only intake admission, approved-asset headshot fallback, and independent review/closure of externally completed work. They need their own verified execution paths rather than a blanket bulk-staff release.
+
+## Apply the loop to every new execution gap
+
+Use [removal execution learning](removal-execution-learning.md) as the worked example: original failure, reusable rule and stop conditions, accepted/refused regressions, APEX implementation PR, production release, and actual hosted verification run. These fields apply to every new capability family; a playbook-only edit must never declare execution support.
