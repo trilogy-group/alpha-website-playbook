@@ -1,7 +1,7 @@
 {
   "$comment": "Which Open campuses are on the waitlist and which are enrolling, and the wording each state uses. A stopgap, and deliberately so: no HubSpot Program property records enrollment state, so the only signal today that a campus is full is the hand-typed copy on its own page, and a check that trusted the copy could not catch a campus whose copy is wrong in either direction (a full campus still advertising enrolment, or a reopened campus still saying waitlist). This file is the versioned membership list that breaks that circularity: campuses[slug].enrollmentState is the recorded state, and the checks measure the page against it, not against itself. Membership comes from MacKenzie Price's named list, not from reading the site. Retire this file and read derivedFrom instead once the Program property exists (registry/sources.json hubspotPrograms.enrollmentStateField, null with the ask). Lifecycle `type` stays Open for both states: waitlist is an enrollment state of an Open campus, never a lifecycle type (spec/campus-lifecycle.json states.Open.enrollmentStates).",
-  "version": "1.0",
-  "asOf": "2026-10-05",
+  "version": "1.1",
+  "asOf": "2026-10-19",
   "schoolYear": "2026–27",
   "default": "enrolling",
   "defaultNote": "An Open campus with no entry here is enrolling. Every Open campus not named below must carry the enrolling sentence and must carry no waitlist wording on any apply control and no waitlist card; drift in that direction is a finding too (check row campus.enrollment-state.controls).",
@@ -123,15 +123,20 @@
       "introMediaAttachmentId": 12509
     },
     "plano": {
-      "enrollmentState": "waitlist",
+      "enrollmentState": "enrolling",
       "program": "Alpha Plano",
       "hubspotProgramId": "29737764355",
       "url": "https://alpha.school/plano/",
       "listedAs": "Plano",
-      "since": "2026-10-02",
-      "sinceNote": "HubSpot integration 46546260 rewrote website_campus_intro in two passes on 2026-10-02 (18:16Z, 19:25Z); the page controls and card were changed by Yash Chitneni the same week.",
+      "since": "2026-10-19",
+      "sinceNote": "Andy Gibson requested removal of the campus waitlist in a screenshot supplied by Yash Chitneni. Yash approved direct application in Codex on 2026-10-19. HubSpot Program 29737764355 website_campus_intro first paragraph changed to <p>[DISPLAY_NAME] is open and enrolling.</p> and read back; public delivery remains pending n8n sync and verification.",
       "introMedia": "none",
-      "introMediaNote": "No card in the intro slot on 2026-10-05; registry/campus-open-media.json already records plano openMedia null, status missing (sweep 2026-09-21). The waitlist card is the same open ask."
+      "introMediaNote": "No approved open-campus intro asset recorded; registry/campus-open-media.json retains the existing missing-asset state. Enrollment approval does not supply a new asset.",
+      "previousEnrollmentState": {
+        "state": "waitlist",
+        "since": "2026-10-02",
+        "source": "MacKenzie Price list confirmed by Matt Barge on 2026-10-05"
+      }
     },
     "raleigh": {
       "enrollmentState": "waitlist",
