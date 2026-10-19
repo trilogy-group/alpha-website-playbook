@@ -65,9 +65,9 @@
   "productionStartInstrumentation": {
     "status": "live-diagnostic-destination-identity",
     "containerId": "GTM-5W56ZLQJ",
-    "containerVersion": 8,
-    "publishedAt": "2026-10-17",
-    "versionName": "Alpha exact-control pilot: homepage, events, Chicago",
+    "containerVersion": 12,
+    "publishedAt": "2026-10-19T20:18:06Z",
+    "versionName": "Alpha comprehensive control tracking: home, events and campuses",
     "events": [
       "book_call_cta_click",
       "info_session_cta_click",
@@ -156,7 +156,7 @@
     "searchConsoleSiteUrl": "sc-domain:alpha.school",
     "expectedPublicMarkers": {
       "gtmContainer": "GTM-5W56ZLQJ",
-      "gtmContainerVersion": 8,
+      "gtmContainerVersion": 12,
       "ga4MeasurementId": "G-G7M04CYHH0",
       "hubspotPortal": "40051392",
       "metaPixel": "5961380957279503"
