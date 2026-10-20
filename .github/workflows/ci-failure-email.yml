@@ -1,10 +1,10 @@
-name: Workflow failure alerts to Slack
+name: Workflow failure alerts by email
 
-# GitHub emails scheduled-run failures to whoever last edited each workflow. This listener posts the same signal to
-# Slack #support-websites instead, once when a workflow starts failing and once when it recovers (Matt Barge,
-# 2026-10-20). Turning off Actions email in personal GitHub notification settings then removes the email copy.
-# Needs the SLACK_BOT_TOKEN repository secret (the Marketing Support bot token used by superbuilders/aeo). Without it
-# the job logs the message and a warning instead of posting.
+# Emails Matt Barge and Yash Chitneni (only) once when a monitored workflow starts failing and once when it recovers,
+# never on every failed run and never to Slack (Matt Barge, 2026-10-20). Sent over SMTP from repository secrets
+# (ALERT_SMTP_HOST, ALERT_SMTP_USER, ALERT_SMTP_PASSWORD, optional ALERT_SMTP_PORT and ALERT_EMAIL_FROM), so it never
+# sends from a personal Gmail account. Without the secrets the job logs the message and a warning instead of sending.
+# See scripts/ci/alert-email.mjs.
 on:
   workflow_run:
     workflows:
@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   notify:
-    # Pull request validation failures belong to the PR author, not the channel.
+    # Pull request validation failures belong to the PR author, not the owner alert.
     if: github.event.workflow_run.event != 'pull_request' && contains(fromJSON('["failure","timed_out","startup_failure","success"]'), github.event.workflow_run.conclusion)
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -33,10 +33,13 @@ jobs:
         with:
           node-version: 22
           package-manager-cache: false
-      - name: Post failure or recovery transition
+      - name: Email failure or recovery transition
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL: ${{ vars.SUPPORT_WEBSITES_SLACK_CHANNEL || 'C09GRQ8L533' }}
+          ALERT_SMTP_HOST: ${{ secrets.ALERT_SMTP_HOST }}
+          ALERT_SMTP_PORT: ${{ secrets.ALERT_SMTP_PORT }}
+          ALERT_SMTP_USER: ${{ secrets.ALERT_SMTP_USER }}
+          ALERT_SMTP_PASSWORD: ${{ secrets.ALERT_SMTP_PASSWORD }}
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.event.workflow_run.id }}
           WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
