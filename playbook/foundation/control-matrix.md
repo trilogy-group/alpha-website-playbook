@@ -134,3 +134,9 @@ Collected in `docs/questions-for-staff-2026-09-17.md`: Q-12 (visual authority), 
 - Slack: John Stuart and Matt Barge, `#support-websites`, 2026-08-27 (location label and staff add for South Bay); Brittany Goodman, Crystle Dorsey, Dmitry Bakaev, Yash Chitneni, Matt Barge group DM, 2026-08-27 (info packet ownership, campus roles and purview, Canva team transfer, HubSpot as data source).
 - Marketing meeting records June through August 2026 (marketing workspace `docs/`).
 - Requester history: marketing workspace `tasks/*website*.json`, 28 tasks June 30 to September 17, 2026 (section 7).
+
+## Campus waitlist release authority (2026-10-20)
+
+For removal of an already-waitlisted campus, defer to Rachel Goodlad for admissions coordination. Rachel relayed that only MacKenzie Price may decide a campus is off the waitlist at the Thursday sales call; campus staff cannot decide independently. Record the MacKenzie decision before changing membership or publishing enrolling wording. A campus request or website-operator approval alone is insufficient. This does not alter campus lifecycle type or the existing application process.
+
+Source: Slack screenshots supplied by Yash Chitneni in Codex on October 20, 2026: Rachel corrected Plano back to waitlist and explained the authority rule. Machine-readable record: `registry/campus-enrollment-state.json` `waitlistReleaseAuthority`. The October 19 Plano enrolling instruction is superseded.

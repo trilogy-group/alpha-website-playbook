@@ -1,7 +1,7 @@
 {
   "$comment": "Which Open campuses are on the waitlist and which are enrolling, and the wording each state uses. A stopgap, and deliberately so: no HubSpot Program property records enrollment state, so the only signal today that a campus is full is the hand-typed copy on its own page, and a check that trusted the copy could not catch a campus whose copy is wrong in either direction (a full campus still advertising enrolment, or a reopened campus still saying waitlist). This file is the versioned membership list that breaks that circularity: campuses[slug].enrollmentState is the recorded state, and the checks measure the page against it, not against itself. Membership comes from MacKenzie Price's named list, not from reading the site. Retire this file and read derivedFrom instead once the Program property exists (registry/sources.json hubspotPrograms.enrollmentStateField, null with the ask). Lifecycle `type` stays Open for both states: waitlist is an enrollment state of an Open campus, never a lifecycle type (spec/campus-lifecycle.json states.Open.enrollmentStates).",
-  "version": "1.1",
-  "asOf": "2026-10-19",
+  "version": "1.2",
+  "asOf": "2026-10-20",
   "schoolYear": "2026–27",
   "default": "enrolling",
   "defaultNote": "An Open campus with no entry here is enrolling. Every Open campus not named below must carry the enrolling sentence and must carry no waitlist wording on any apply control and no waitlist card; drift in that direction is a finding too (check row campus.enrollment-state.controls).",
@@ -123,20 +123,15 @@
       "introMediaAttachmentId": 12509
     },
     "plano": {
-      "enrollmentState": "enrolling",
+      "enrollmentState": "waitlist",
       "program": "Alpha Plano",
       "hubspotProgramId": "29737764355",
       "url": "https://alpha.school/plano/",
       "listedAs": "Plano",
-      "since": "2026-10-19",
-      "sinceNote": "Andy Gibson requested removal of the campus waitlist in a screenshot supplied by Yash Chitneni. Yash approved application in Codex on 2026-10-19. HubSpot Program 29737764355 website_campus_intro first paragraph changed to <p>[DISPLAY_NAME] is open and enrolling.</p> and read back. Campus intro and both apply labels published through scoped Alpha MCP patches under APEX cmvfcpn9x000708jh91slucfw; the standalone map and map-adjacent waitlist summaries remain separate delivery work.",
+      "since": "2026-10-02",
+      "sinceNote": "Original waitlist state reaffirmed by Rachel Goodlad on 2026-10-20, relayed by Yash Chitneni in Codex with screenshots. The October 19 campus-requested removal was reversed because it lacked MacKenzie Price release authority.",
       "introMedia": "none",
-      "introMediaNote": "No approved open-campus intro asset recorded; registry/campus-open-media.json retains the existing missing-asset state. Enrollment approval does not supply a new asset.",
-      "previousEnrollmentState": {
-        "state": "waitlist",
-        "since": "2026-10-02",
-        "source": "MacKenzie Price list confirmed by Matt Barge on 2026-10-05"
-      }
+      "introMediaNote": "No approved open-campus intro asset recorded; registry/campus-open-media.json retains the existing missing-asset state. Enrollment approval does not supply a new asset."
     },
     "raleigh": {
       "enrollmentState": "waitlist",
@@ -205,5 +200,13 @@
       "wordpressPostId": null,
       "finding": "HubSpot website_campus_intro on Program 26445615147 carries the approved waitlist sentence, but https://alphahigh.school read 2026-10-05 contains no waitlist wording at all (0 occurrences) and no \"is open\" sentence: the intro the Program publishes is not on that site. It is a separate domain with no campus-page row and no n8n campus-page delivery, so neither the old rule nor the new one observed it, and no observer ticket was ever filed for it. Report to Matt and Yash; the fix is not a rule change."
     }
+  },
+  "waitlistReleaseAuthority": {
+    "decisionOwner": "MacKenzie Price",
+    "admissionsCoordinator": "Rachel Goodlad",
+    "rule": "Once a campus is on the waitlist, campus staff cannot independently remove it. Defer requests to Rachel Goodlad; removal requires MacKenzie Price decision in the Thursday sales call, as relayed by Rachel.",
+    "recordedOn": "2026-10-20",
+    "evidence": "Yash Chitneni supplied Slack screenshots in Codex: Rachel says Plano is not off the waitlist and asks to put it back; her follow-up says to defer to her and only MP can decide a school is off at the Thursday sales call.",
+    "scope": "Removing an already-waitlisted campus; does not change lifecycle type Open or the admissions application route."
   }
 }

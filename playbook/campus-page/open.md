@@ -29,6 +29,8 @@ Rows sourced from a named decision or system rule are active. Rows sourced only 
 
 ## Enrollment state: enrolling or waitlist
 
+Removing a campus from the waitlist requires a recorded MacKenzie Price decision at the Thursday sales call, as relayed by Rachel Goodlad on 2026-10-20. Defer to Rachel for admissions coordination. A campus requester or website operator cannot independently authorize that release. See `registry/campus-enrollment-state.json` `waitlistReleaseAuthority` and the control matrix.
+
 An Open campus is in one of two named enrollment states. `type` stays **Open** for both; waitlist is not a lifecycle
 type, nothing about the page family changes, and every requirement above still applies. Decided by MacKenzie Price on
 2026-10-05 ("Please update the website with the following locations now on Waitlist: Austin High School, Boca Raton,

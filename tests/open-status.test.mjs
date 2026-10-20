@@ -41,9 +41,10 @@ test('the module wordings are byte-identical to the check bundle literal', () =>
 test('the bundle literal mirrors the registry membership list, and the registry mirrors MacKenzie Price list', () => {
   const fromRegistry = Object.entries(registry.campuses).filter(([, v]) => v.enrollmentState === 'waitlist').map(([k]) => k).sort()
   assert.deepEqual(statusRow.literals.openEnrollmentStates.campuses.waitlist.slice().sort(), fromRegistry)
-  assert.equal(fromRegistry.length, 11, 'Plano returned to enrolling on 2026-10-19; Alpha High School is offSite')
-  assert.equal(registry.campuses.plano.enrollmentState, 'enrolling')
-  assert.equal(registry.campuses.plano.previousEnrollmentState.state, 'waitlist')
+  assert.equal(fromRegistry.length, 12, 'Plano remains waitlisted per Rachel correction on 2026-10-20; Alpha High School is offSite')
+  assert.equal(registry.campuses.plano.enrollmentState, 'waitlist')
+  assert.equal(registry.waitlistReleaseAuthority.decisionOwner, 'MacKenzie Price')
+  assert.equal(registry.waitlistReleaseAuthority.admissionsCoordinator, 'Rachel Goodlad')
   assert.equal(registry.wordings.waitlist.statusSentence, APPROVED_WAITLIST_WORDING)
   assert.equal(registry.decision.decidedBy, 'MacKenzie Price')
   assert.equal(registry.default, 'enrolling')

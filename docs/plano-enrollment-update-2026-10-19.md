@@ -1,4 +1,16 @@
-# Plano enrollment update, October 19, 2026
+# Plano enrollment correction, October 19–20, 2026
+
+## Current state — restored October 20
+
+The October 19 removal below is superseded. Yash supplied Rachel Goodlad’s correction: Plano remains waitlisted, and only MacKenzie Price can decide that an already-waitlisted campus comes off at the Thursday sales call. Campus staff cannot make that decision independently; coordinate through Rachel. The earlier request and operator approval did not establish the necessary enrollment authority.
+
+Restored HubSpot Program 29737764355 `website_campus_intro`, the campus intro and both application labels, the Locations Plano card and its application label, and the Plano link in both homepage and Locations waitlist notices. Campus prepare/apply receipts: 13865/13866. Locations card: 13867/13868. Both HTML notice edits were published through signed-in Codex browser Elementor UI and read back. Batched cache receipt: 13870. The map API was re-read on October 20 and still returns `waitlist` for `program-29737764355`; no map source change or deployment was needed.
+
+Canonical public source checks pass for Plano, homepage and Locations, including Plano inside each waitlist notice. HubSpot readback confirms the approved waitlist paragraph. Desktop browser checks show the restored campus intro, both application controls, and Plano in both visible notices. Existing hidden Locations List/card presentation and incomplete mobile verification remain QA limitations; these are not represented as complete whole-page verification. Raleigh and Boca Raton public source checks also pass after cache clear. No shared template or n8n workflow was changed.
+
+The registry again lists Plano as waitlisted. The playbook and registry now record the release authority; PR 106 remains subject to code-owner approval. This rule is documented for future agents, not deployed as a new automated intake authorization check in this change.
+
+## Historical October 19 change (reversed)
 
 Andy Gibson requested removal of Plano's campus waitlist in the screenshot supplied by Yash Chitneni. Yash approved direct application and then requested coverage of all surfaces, including the map. The approved enrolling sentence and existing application route come from the enrollment registry and HubSpot Program 29737764355.
 
