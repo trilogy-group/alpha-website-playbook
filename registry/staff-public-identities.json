@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "identities": [
+    {
+      "requestedName": "Jessica Bauer",
+      "email": "jessica.bauer@alpha.school",
+      "publicName": "Jess Bauer",
+      "targetUrl": "https://alpha.school/chantilly/",
+      "source": "https://github.com/trilogy-group/alpha-website-playbook/blob/9d61faa/registry/campus-roles-overrides.json"
+    },
+    {
+      "requestedName": "Willem Robbins",
+      "email": "willem.robbins@alpha.school",
+      "publicName": "Will Robbins",
+      "targetUrl": "https://alpha.school/santa-monica/",
+      "source": "https://apex.2hourlearning.com/intake?taskId=cmvfgvheh000a08l8d2ueaohq"
+    }
+  ]
+}
