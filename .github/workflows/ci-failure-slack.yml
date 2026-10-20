@@ -1,0 +1,48 @@
+name: Workflow failure alerts to Slack
+
+# GitHub emails scheduled-run failures to whoever last edited each workflow. This listener posts the same signal to
+# Slack #support-websites instead, once when a workflow starts failing and once when it recovers (Matt Barge,
+# 2026-10-20). Turning off Actions email in personal GitHub notification settings then removes the email copy.
+# Needs the SLACK_BOT_TOKEN repository secret (the Marketing Support bot token used by superbuilders/aeo). Without it
+# the job logs the message and a warning instead of posting.
+on:
+  workflow_run:
+    workflows:
+      - APEX intake agent
+      - APEX observer filer
+      - APEX website queue aging
+      - Validate playbook
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  notify:
+    # Pull request validation failures belong to the PR author, not the channel.
+    if: github.event.workflow_run.event != 'pull_request' && contains(fromJSON('["failure","timed_out","startup_failure","success"]'), github.event.workflow_run.conclusion)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: scripts/ci
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Post failure or recovery transition
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL: ${{ vars.SUPPORT_WEBSITES_SLACK_CHANNEL || 'C09GRQ8L533' }}
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          EVENT: ${{ github.event.workflow_run.event }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: node scripts/ci/notify-workflow-failure.mjs
