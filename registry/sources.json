@@ -325,5 +325,37 @@
     "publicFactRestriction": "Student names and grades are personal data: a quote names a student only with the existing approval that put it on the page; the SIS is read to confirm currency (enrolled now, grade now), never to publish new facts.",
     "since": "2026-09-25",
     "decision": "tests/fixtures/decisions/recorded/2026-09-25-page-family-requirements-3bfb966c.json"
+  },
+  "brandVisual": {
+    "title": "Alpha School - Brand Guide",
+    "url": "https://www.canva.com/design/DAHX7WPt28s/2vyx2huxhzwAKU88hy7WKA/edit",
+    "shortUrl": "https://canva.link/m6vitf5v97yxi84",
+    "designId": "DAHX7WPt28s",
+    "pageCount": 47,
+    "confirmedOn": "2026-10-21",
+    "confirmedBy": "Yash Chitneni, explicit instruction in Codex conversation",
+    "scope": "Visual branding. MacKenzie recorded choices and later corrections retain word-level precedence. Sample copy and statistics are not independently current approved claims.",
+    "retiredSources": [
+      {
+        "title": "Alpha Brand Guidelines",
+        "url": "https://docs.google.com/document/d/19XOkGBA29TMarh7z4G-0NFp7J7g2fVmahEaryIZb0Ig/edit",
+        "status": "retired-do-not-use",
+        "reason": "Yash explicitly identified this document as outdated on 2026-10-21; historical discovery only, never fallback guidance."
+      },
+      {
+        "title": "Alpha School Style Guide",
+        "url": "https://docs.google.com/document/d/1liKpCs6eAQSySXVx35vbp0-cY-qkKfxerg4PwtSh_Dg/edit",
+        "status": "retired-do-not-use",
+        "reason": "Yash explicitly identified this document as outdated on 2026-10-21; historical discovery only, never fallback guidance."
+      },
+      {
+        "title": "Alpha Style Guide with visuals",
+        "url": "https://docs.google.com/document/d/1Phx8Qmg0H2RXl_I_vsmvO3RfukGWozxIqjvvSspb7Zs/edit",
+        "status": "retired-do-not-use",
+        "reason": "Yash explicitly identified this document as outdated on 2026-10-21; historical discovery only, never fallback guidance."
+      }
+    ],
+    "accessRule": "Open the exact design ID; do not substitute similarly titled Google Docs. If inaccessible, record the access gap and use only already-adopted playbook rules; do not infer new guidance.",
+    "verification": "Connected Canva metadata and extracted text read 2026-10-21; Montserrat and the four palette blues appear in text. Full visual/spec reconciliation remains pending; text contains inconsistent sky-blue labels. Existing adopted values are unchanged by this provenance correction."
   }
 }

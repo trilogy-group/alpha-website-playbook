@@ -1,5 +1,16 @@
 # Visual brand (`site.brand.visual`)
 
+## Current source and retired documents (2026-10-21)
+
+Yash confirmed [Alpha School - Brand Guide](https://canva.link/m6vitf5v97yxi84), Canva design **DAHX7WPt28s** (47 pages), as the visual reference. Exact source identity, scope, access behavior, and retired URLs are registered in `registry/sources.json` → `brandVisual` and referenced by `spec/brand-visual.json` → `provenance`.
+
+Do **not** use the older Google Docs titled **Alpha Brand Guidelines**, **Alpha School Style Guide**, or **Alpha Style Guide with visuals**. Yash explicitly retired all three as outdated. A matching title in Slack, Drive, an old skill, or a previous chat does not make a document authoritative. If Canva access fails, record the gap; do not fall back to these documents.
+
+MacKenzie's recorded choices and later corrections retain word-level precedence. Sample copy/statistics in the deck are not automatically current approved claims. Superdesign is a layout tool, not a brand authority.
+
+This change corrects source identity and retirement status; it does not change adopted visual values. Connected Canva metadata/text confirm Montserrat and the four palette blues, but full visual/spec reconciliation remains pending. The extracted text contains inconsistent sky-blue labels; do not silently interpret these as a new palette rule. See `docs/brand-source-verification-2026-10-21.md`.
+
+
 The official Alpha School Brand Guidelines (47 pages) are the visual source for alpha.school, adopted 2026-09-22 (`docs/decisions.md`). Machine form: `spec/brand-visual.json`; canonical logo files: `playbook/brand/assets/` (`playbook/brand/README.md`); the values were carried over from the `alpha-brand-guide` skill in the marketing workspace (`marketingsupport/.claude/skills/alpha-brand-guide/`, 2026-09-22), which cites the guide's pages. Word-level copy is MacKenzie's (`site-rules.md` Brand copy, `marketingsupport docs/rules/alpha-brand-copy-rules.md`) and wins on any overlap; nothing here restates a word rule.
 
 ## The four things that do not change

@@ -1,5 +1,16 @@
 # Brand assets
 
+## Current source and retired documents (2026-10-21)
+
+Yash confirmed [Alpha School - Brand Guide](https://canva.link/m6vitf5v97yxi84), Canva design **DAHX7WPt28s** (47 pages), as the visual reference. Exact source identity, scope, access behavior, and retired URLs are registered in `registry/sources.json` → `brandVisual` and referenced by `spec/brand-visual.json` → `provenance`.
+
+Do **not** use the older Google Docs titled **Alpha Brand Guidelines**, **Alpha School Style Guide**, or **Alpha Style Guide with visuals**. Yash explicitly retired all three as outdated. A matching title in Slack, Drive, an old skill, or a previous chat does not make a document authoritative. If Canva access fails, record the gap; do not fall back to these documents.
+
+MacKenzie's recorded choices and later corrections retain word-level precedence. Sample copy/statistics in the deck are not automatically current approved claims. Superdesign is a layout tool, not a brand authority.
+
+This change corrects source identity and retirement status; it does not change adopted visual values. Connected Canva metadata/text confirm Montserrat and the four palette blues, but full visual/spec reconciliation remains pending. The extracted text contains inconsistent sky-blue labels; do not silently interpret these as a new palette rule. See `docs/brand-source-verification-2026-10-21.md`.
+
+
 `assets/` holds the canonical website logo files: the Alpha School mark in its three colourways, outlined and font-independent. These are the only logo files a page edit may bind. Never redraw, recolour, stretch, rotate, outline, shadow, or split them; never shrink the mark below 72 px wide; keep clear space on all sides at least the cap height of the A in ALPHA.
 
 | File | Colourway | Use on |
