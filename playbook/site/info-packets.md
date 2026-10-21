@@ -22,6 +22,7 @@ Machine forms: `registry/campus-packets.json` (per-campus links with logged-out 
 4. **Approval is a person in APEX**, recorded on the profile. Brand review before that is the marketing meeting (MacKenzie Price and Joe), per Brittany Goodman on 2026-08-27.
 5. **A packet ticket is packet work, not a page edit.** The website part is the link swap after approval, verified logged out (200, right campus, right year).
 6. **Calendars** are per campus, variant A or B, published as alpha.school PDFs under `wp-content/uploads/calendars/2026_27/`. Google Drive calendars must be public; four return 401 today. Announced campuses without a calendar hide the button.
+7. **Flipsnack billing is a single point of failure.** Every packet on Flipsnack account BADA559BDC9 depends on one payment card. On 2026-09-01 every Flipsnack info packet returned 404 because the card on the account had expired; it was recharged with a different card (Slack [C09GRQ8L533/1788274201.135169](https://go-alpha.slack.com/archives/C09GRQ8L533/p1788274201135169)). The billing owner is not recorded (Q-18). Check to run: request every Flipsnack link in `registry/campus-packets.json` logged out and confirm each returns 200. If all Flipsnack links fail at once, treat it as an account or billing failure, not a per-campus link problem, and contact the account holder before swapping any link. Ask the account holder to confirm the card expiry date ahead of time.
 
 ## Per-campus links (read 2026-09-16, logged out)
 
