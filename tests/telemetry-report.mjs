@@ -25,7 +25,15 @@ import { pathToFileURL } from 'node:url'
 
 export const OBSERVER_SOURCE = 'alpha-site-qc'
 export const FILER_SOURCE = 'agent-found'
-export const RESOLUTION_KINDS = ['fixed-elsewhere', 'false-positive', 'aged-out', 'blocked-decision', 'check-retired', 'check-cleared']
+export const RESOLUTION_KINDS = ['executed', 'fixed-elsewhere', 'false-positive', 'aged-out', 'blocked-decision', 'check-retired', 'check-cleared']
+/**
+ * APEX stores resolutionKind first class and upper case (EXECUTED, CHECK_CLEARED, BLOCKED_DECISION, FIXED_ELSEWHERE,
+ * FALSE_POSITIVE; APEX PR 409); older tickets carry it lower case in customFields. Both normalise to the kebab form.
+ */
+export function resolutionKindOf(ticket) {
+  const raw = ticket.resolutionKind || (ticket.customFields || {}).resolutionKind || null
+  return raw ? String(raw).trim().toLowerCase().replace(/_/g, '-') : null
+}
 export const CLOSED_STATUSES = new Set(['COMPLETED', 'CANCELLED'])
 /** Mutation receipts: a write to the site. Prepare, regenerate, flush and purge are not changes on their own. */
 export const SITE_CHANGE_OPERATION = /^(apply-|upload-|replace-|set-|create-|delete-|restore-|update-)/
@@ -61,13 +69,15 @@ export function receiptsByTicket(receipts) {
  */
 export function classifyOutcome(ticket, byTicket, now = new Date()) {
   const cf = ticket.customFields || {}
-  const kind = RESOLUTION_KINDS.includes(cf.resolutionKind) ? cf.resolutionKind : (cf.resolutionKind ? `other:${cf.resolutionKind}` : null)
+  const recorded = resolutionKindOf(ticket)
+  const kind = RESOLUTION_KINDS.includes(recorded) ? recorded : (recorded ? `other:${recorded}` : null)
   const text = stripHtml(ticket.description)
-  const siteChange = (byTicket.get(ticket.id) || []).some((r) => r.result === 'applied' && SITE_CHANGE_OPERATION.test(r.operation || ''))
+  // EXECUTED is the operator's record that the ticket's change was made (APEX PR 409); a receipt is the stronger evidence, either counts.
+  const siteChange = kind === 'executed' || (byTicket.get(ticket.id) || []).some((r) => r.result === 'applied' && SITE_CHANGE_OPERATION.test(r.operation || ''))
   // A recorded false-positive or aged-out says no change happened; it wins over a text match on the description
   // (an unrelated SOURCE FIX note, say) but never over an applied receipt.
   const kindDeniesTextMatch = kind === 'false-positive' || kind === 'aged-out'
-  const sourceChange = !kindDeniesTextMatch && (AUDIT_LINE.test(text) || cf.resolutionKind === 'source-changed')
+  const sourceChange = !kindDeniesTextMatch && (AUDIT_LINE.test(text) || recorded === 'source-changed')
   const decision = kind === 'blocked-decision' || (!kindDeniesTextMatch && ticket.status === 'BLOCKED' && DECISION_LINE.test(text))
   const ended = siteChange ? 'site-change' : sourceChange ? 'source-change' : decision ? 'decision' : null
   const created = new Date(ticket.originalCreatedAt || ticket.createdAt)
@@ -99,6 +109,7 @@ export function summarize(outcomes) {
     agedOut: count((o) => o.kind === 'aged-out'),
     checkRetired: count((o) => o.kind === 'check-retired' || o.kind === 'check-cleared'),
     unclassified: count((o) => !o.kind && !o.ended),
+    closedWithoutKind: count((o) => o.closed && !o.kind),
     open: count((o) => !o.closed),
     medianDaysOpen: median(outcomes.map((o) => o.daysOpen)),
   }
@@ -124,6 +135,35 @@ export function precisionReport(tickets, receipts, { since, until, now = new Dat
   return { period: summarize(outcomes), byRun: groupSummaries(outcomes, (o) => o.runId), byCheck: groupSummaries(outcomes, (o) => o.check), outcomes }
 }
 
+/**
+ * Precision gate (spec/filing-policy.json precision, 2026-10-15): checks that filed at least minFiled observer tickets
+ * in the trailing windowDays with precision below minPrecision. A candidate is a proposal for a recorded decision to
+ * set the row advisory; nothing here changes a row.
+ */
+export function pauseCandidates(tickets, receipts, policy, now = new Date()) {
+  const p = policy?.precision
+  if (!p) return { policy: null, candidates: [] }
+  const since = new Date(now.getTime() - p.windowDays * 86400e3)
+  const report = precisionReport(tickets, receipts, { since, until: now, now })
+  const candidates = report.byCheck.filter((r) => r.key !== 'unknown' && r.filed >= p.minFiled && (r.precision ?? 0) < p.minPrecision)
+  return { policy: p, since, candidates, checks: report.byCheck }
+}
+
+export function renderPauseSection(gate) {
+  if (!gate.policy) return ''
+  const p = gate.policy
+  const rows = gate.candidates.length
+    ? ['| Check | Filed | Precision | Ended in a change or decision | False positive | Still open | Closed with no resolution kind |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: |',
+      ...gate.candidates.map((r) => `| ${r.key} | ${r.filed} | ${pct(r.precision)} | ${r.ended} | ${r.falsePositive} | ${r.open} | ${r.closedWithoutKind} |`)].join('\n')
+    : '_No check is below the bar._'
+  return `## Checks below the precision bar (pause candidates)
+
+Bar from spec/filing-policy.json: at least ${p.minFiled} tickets filed in the last ${p.windowDays} days and precision under ${pct(p.minPrecision)}. Open tickets count against precision on purpose. Pausing a check (row status advisory) is a recorded decision through agent/record-decision.mjs; this report never changes a row.
+
+${rows}
+`
+}
+
 const pct = (x) => (x === null || x === undefined ? 'n/a' : `${(x * 100).toFixed(1)}%`)
 const days = (x) => (x === null || x === undefined ? 'n/a' : x.toFixed(1))
 
@@ -143,7 +183,7 @@ export function renderPrecisionSection(report, { since, until, label, receiptsFr
     : '_none_'
   return `## Observer precision (${label ? `${label}, ` : ''}tickets filed ${window})
 
-Precision is the share of observer tickets that ended in a site change (an applied mutation receipt carrying the ticket id), a source change (an audit line on the ticket), or a recorded decision (Blocked with DECISION NEEDED, or \`customFields.resolutionKind\` blocked-decision). False-positive and fixed-elsewhere rates read \`customFields.resolutionKind\`. Median days open counts closed tickets to completion and open tickets to the report time.${receiptNote}
+Precision is the share of observer tickets that ended in a site change (an applied mutation receipt carrying the ticket id, or resolutionKind EXECUTED), a source change (an audit line on the ticket), or a recorded decision (Blocked with DECISION NEEDED, or \`customFields.resolutionKind\` blocked-decision). False-positive and fixed-elsewhere rates read \`customFields.resolutionKind\`. Median days open counts closed tickets to completion and open tickets to the report time.${receiptNote}
 
 | Measure | Value |
 | --- | ---: |
@@ -157,6 +197,7 @@ Precision is the share of observer tickets that ended in a site change (an appli
 | Aged out | ${p.agedOut} |
 | Check retired or cleared | ${p.checkRetired} |
 | Unclassified (no resolutionKind, no evidence-backed end) | ${p.unclassified} |
+| Closed with no resolution kind (every close should record one) | ${p.closedWithoutKind} |
 | Still open | ${p.open} |
 | Median days open | ${days(p.medianDaysOpen)} |
 
@@ -201,6 +242,10 @@ export async function loadTickets(args, env = process.env) {
     }
   }
   return [...new Map(tickets.map((t) => [t.id, t])).values()]
+}
+
+export function readFilingPolicy(file = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'spec', 'filing-policy.json')) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')) } catch { return null }
 }
 
 export async function main(argv = process.argv.slice(2), env = process.env) {
@@ -268,6 +313,7 @@ Touched in the window by status:
 ${table(recentByStatus)}
 
 ${renderPrecisionSection(precision, { since, until, label: args.label, receiptsFrom: receiptsFrom(receipts) })}
+${renderPauseSection(pauseCandidates(website, receipts, readFilingPolicy(), now))}
 ## What is not measured yet
 
 Refusal reasons per decision (needs the intake agent to attach its outcome as a structured field), complete-evidence rate (needs the APEX evidence gate to record evidence profiles), and recovery time from transient failures (needs the retry taxonomy). Each is an APEX-side item in the improvement plan. Precision per shadow run (redesign workstream 8) needs the filer to write \`resolutionKind: check-cleared\` and the run id on auto-resolved tickets.

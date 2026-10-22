@@ -1,5 +1,5 @@
 {
-  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`. Counts and the jamaica-plain entry refreshed by hand from the growth map API and HubSpot on 2026-09-25 (no generator script exists in the playbook; generatedAt is the original 2026-09-15 capture). 2026-10-05 (MacKenzie Price, relayed and confirmed by Matt Barge; tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): an Open campus has a named enrollment state, enrolling or waitlist, and `type` stays Open for both. states.Open.enrollmentStates carries the two wordings; registry/campus-enrollment-state.json carries which campus is in which state and is the versioned membership list until a HubSpot Program property exists. The 12 alpha.school waitlist campuses' introStatement below was re-read from the live pages on 2026-10-05.",
+  "$comment": "Campus lifecycle states as the sources define them (M2). Precedence decided 2026-09-15: HubSpot is the source of truth; see `precedence`. Counts and the jamaica-plain entry refreshed by hand from the growth map API and HubSpot on 2026-09-25 (no generator script exists in the playbook; generatedAt is the original 2026-09-15 capture). 2026-10-05 (MacKenzie Price, relayed and confirmed by Matt Barge; tests/fixtures/decisions/recorded/2026-10-05-campus-enrollment-state-48a1221b.json): an Open campus has a named enrollment state, enrolling or waitlist, and `type` stays Open for both. states.Open.enrollmentStates carries the two wordings; registry/campus-enrollment-state.json carries which campus is in which state and is the versioned membership list until a HubSpot Program property exists. The 12 alpha.school waitlist campuses' introStatement below was re-read from the live pages on 2026-10-05. 2026-10-16: an entry may carry checkHolds[] (id, rows, reason, decidedBy, decidedOn, source, ref, expires ISO date | lifecycle:Open | null): a recorded decision under which the named check rows (row ids, or a prefix ending in .*) do not apply to that campus's page. agent/file-observer-findings.mjs campusHoldFor reports such findings as exempted (kind campus-hold) and never files them.",
   "generatedAt": "2026-09-15T19:30:26.872237+00:00",
   "states": {
     "Open": {
@@ -291,7 +291,25 @@
         ],
         "decidedBy": "J.C. Fischer (counsel wording); Robbie Forrest (search and share, Locations, admission_link, map hold request); Fernando Pina dos Santos (map hold approval)",
         "decidedOn": "2026-10-02"
-      }
+      },
+      "checkHolds": [
+        {
+          "id": "lexington-proposed-campus",
+          "rows": [
+            "campus.intro.status-source",
+            "campus.resources.apply.*",
+            "site.map.integrity.wordpress-page-has-program"
+          ],
+          "reason": "Alpha Lexington is a proposed campus under the proposedCampusHold: counsel's wording replaces the lifecycle status sentence, the page carries no Apply link and HubSpot admission_link is empty on purpose, and the map pin is held. These rows measure an Open or Announced campus and do not apply until the hold's exitCondition is met.",
+          "decidedBy": "J.C. Fischer (counsel wording); Robbie Forrest (admission_link, map hold request); Fernando Pina dos Santos (map hold approval)",
+          "decidedOn": "2026-10-02",
+          "source": "spec/campus-lifecycle.json campuses.boston-suburbs.proposedCampusHold (email thread 'Alpha Lexington' 2026-10-01 and 2026-10-02; educrm-city-communities PR 236)",
+          "ref": "campuses.boston-suburbs.proposedCampusHold",
+          "expires": "lifecycle:Open",
+          "recordedOn": "2026-10-16",
+          "why": "Without it the three rows refile after every close (APEX cmuq2jds7, cmuon470a, cmuyn74nt, 2026-10-16 triage)."
+        }
+      ]
     },
     "brownsville": {
       "url": "https://alpha.school/brownsville/",
@@ -521,7 +539,23 @@
       "conflicts": [
         "more than one map program points at this page: Alpha Greenwich Armonk, Alpha Greenwich Port Chester"
       ],
-      "introStatement": "Alpha Greenwich Port Chester is open and enrolling."
+      "introStatement": "Alpha Greenwich Port Chester is open and enrolling.",
+      "checkHolds": [
+        {
+          "id": "ny-homeschool-support-center",
+          "rows": [
+            "site.search.schema.present"
+          ],
+          "reason": "The New York locations are homeschool support centers, not schools: the page carries Organization/EducationalOrganization JSON-LD and the local School schema was removed on purpose.",
+          "decidedBy": "Matt Barge",
+          "decidedOn": "2026-10-15",
+          "source": "APEX cmv9u5gjf000406jp9s7bz6vl OPERATOR INSTRUCTION, 2026-10-15 ('identify the NY locations as homeschool support centers ... remove local School schema')",
+          "ref": null,
+          "expires": null,
+          "recordedOn": "2026-10-16",
+          "why": "APEX cmva2qf6m and cmva2q48u filed the decided state as a defect on 2026-10-16."
+        }
+      ]
     },
     "highland-park": {
       "url": "https://alpha.school/highland-park/",
@@ -744,7 +778,23 @@
       "introStatement": "Alpha New York is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.",
       "enrollmentState": "waitlist",
       "enrollmentStateSince": "2026-10-02",
-      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.new-york-city"
+      "enrollmentStateRef": "registry/campus-enrollment-state.json campuses.new-york-city",
+      "checkHolds": [
+        {
+          "id": "ny-homeschool-support-center",
+          "rows": [
+            "site.search.schema.present"
+          ],
+          "reason": "The New York locations are homeschool support centers, not schools: the page carries Organization/EducationalOrganization JSON-LD and the local School schema was removed on purpose.",
+          "decidedBy": "Matt Barge",
+          "decidedOn": "2026-10-15",
+          "source": "APEX cmv9u5gjf000406jp9s7bz6vl OPERATOR INSTRUCTION, 2026-10-15 ('identify the NY locations as homeschool support centers ... remove local School schema')",
+          "ref": null,
+          "expires": null,
+          "recordedOn": "2026-10-16",
+          "why": "APEX cmva2qf6m and cmva2q48u filed the decided state as a defect on 2026-10-16."
+        }
+      ]
     },
     "oklahoma-city": {
       "url": "https://alpha.school/oklahoma-city/",

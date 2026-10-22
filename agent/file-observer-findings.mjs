@@ -39,6 +39,8 @@
  *      registry/campus-cta-exceptions.json (rule hidden, present or destination; expires an ISO date, lifecycle:Open or
  *      null) is reported as exempted; so is an other-campus or sister-brand finding whose card names a person listed as
  *      shared leadership for the page's campus group (registry/campus-leadership.json groups) and a sibling campus.
+ *      So is a finding on a row that the campus's `checkHolds` in spec/campus-lifecycle.json names: a recorded decision
+ *      (a proposed-campus hold, the NY homeschool centers) under which the row's expectation does not apply to that page.
  *   2. A finding is suppressed and counted when its row depends on a source that `health.json` (else the manifest's
  *      providers) reports degraded, failed or stale (or `suppressFindings: true`; not-collected, optional and disabled
  *      never suppress), or when the finding carries a `suppressWhen` condition. Loop-health suppression is the
@@ -157,6 +159,52 @@ export function loadPolicyBundle(file = path.join(root, 'spec', 'policy-bundle.g
   if (!policyCache) policyCache = readJson(file)
   return policyCache
 }
+export const FILING_POLICY_FILE = 'spec/filing-policy.json'
+let filingPolicyCache = null
+/** spec/filing-policy.json: the spike and precision thresholds (2026-10-15). */
+export function loadFilingPolicy(file = path.join(root, FILING_POLICY_FILE)) {
+  if (!filingPolicyCache) filingPolicyCache = readJson(file)
+  return filingPolicyCache
+}
+
+/**
+ * Run-level spike (spec/filing-policy.json spike.minPages, 2026-10-15): when one check's page-scoped groups in a single
+ * run reach minPages, they merge into one site-scoped group (one ticket that lists every page). The merged group keeps
+ * the row's id, class and owner; only the dedupe scope changes, so the ticket contract, evidence and auto-resolve paths
+ * are the ordinary ones. Missing-expectation groups are per-campus asks and never merge.
+ */
+/** The paused entry for a row (row key, so the desktop and mobile rows pause together), or null. */
+export function pausedEntryFor(filingPolicy, row) {
+  const rowKey = rowKeyFor(row)
+  return (filingPolicy?.paused || []).find((entry) => entry && entry.row === rowKey) || null
+}
+
+export function collapseSpikes(groups, filingPolicy, plan) {
+  const minPages = filingPolicy?.spike?.minPages
+  if (!Number.isInteger(minPages) || minPages < 2) return
+  const byRow = new Map()
+  for (const group of groups.values()) {
+    if (group.missing || group.row.dedupeScope !== 'page') continue
+    const rowKey = rowKeyFor(group.row)
+    if (!byRow.has(rowKey)) byRow.set(rowKey, [])
+    byRow.get(rowKey).push(group)
+  }
+  for (const [rowKey, members] of byRow) {
+    if (members.length < minPages) continue
+    const row = { ...members[0].row, dedupeScope: 'site' }
+    const key = `${IDEMPOTENCY_PREFIX}${rowKey}:site`
+    const merged = { key, row, rows: [], scopeKey: 'site', findings: [], pages: [], missing: null, spike: { pages: members.length, minPages } }
+    for (const group of members) {
+      groups.delete(group.key)
+      for (const r of group.rows) if (!merged.rows.includes(r)) merged.rows.push(r)
+      for (const f of group.findings) if (!merged.findings.some((current) => current.id === f.id)) merged.findings.push(f)
+      for (const page of group.pages) if (!merged.pages.includes(page)) merged.pages.push(page)
+    }
+    groups.set(key, merged)
+    plan.spikes.push({ check: row.observerCheck, row: rowKey, pages: members.length, findings: merged.findings.length, minPages, key })
+  }
+}
+
 let campusCache = null
 function campusPages() {
   if (!campusCache) campusCache = readJson(path.join(root, 'registry', 'campus-pages.json')).campuses
@@ -585,6 +633,27 @@ export function sharedLeadershipExemption({ row, finding, registry = loadRegistr
   return null
 }
 
+/**
+ * Campus check hold (spec/campus-lifecycle.json campuses.<slug>.checkHolds[]): a recorded decision under which named
+ * rows do not apply to that campus's page. Each hold names its rows (row ids, or a row-key prefix ending in `.*`), the
+ * decision (decidedBy, decidedOn, source, ref) and when it ends (an ISO date, lifecycle:Open, or null standing). Without a
+ * hold a campus under a decided exception refiles a ticket after every close (Lexington, 2026-10-16: three tickets).
+ */
+export function campusHoldFor({ row, finding, now = new Date(), lifecycle = loadRegistry(LIFECYCLE_FILE) }) {
+  const slug = campusSlugFor(finding)
+  const holds = slug ? lifecycle.campuses?.[slug]?.checkHolds : null
+  if (!Array.isArray(holds)) return null
+  const key = rowKeyFor(row)
+  for (const hold of holds) {
+    const covers = (hold.rows || []).some((r) => r === row.id || r === key || (r.endsWith('.*') && (row.id.startsWith(r.slice(0, -1)) || key.startsWith(r.slice(0, -1)))))
+    if (!covers) continue
+    if (typeof hold.expires === 'string' && /^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(hold.expires) && now.getTime() >= new Date(`${hold.expires}T00:00:00Z`).getTime()) continue
+    if (hold.expires === 'lifecycle:Open' && lifecycleFor(finding, slug).state === 'Open') continue
+    return { slug, campus: campusPages()[slug]?.names?.[0] || slug, hold: hold.id, reason: hold.reason, decidedBy: hold.decidedBy, decidedOn: hold.decidedOn, source: hold.source, ref: hold.ref || null, expires: hold.expires ?? null, row: row.id }
+  }
+  return null
+}
+
 /** Campus name for a growth-map program id through registry/campus-pages.json mapProgramIds. */
 export function campusNameForProgram(programId) {
   if (!programId) return null
@@ -866,7 +935,7 @@ function scopeLabel(row, group) {
     case 'template': return `Shared ${row.pageFamily || 'site'} template (${pages.length} page${pages.length === 1 ? '' : 's'})`
     case 'program': return campusDisplayName(first, pages) || first.actual?.name || (programIdFor(first) ? `unregistered program ${programIdFor(first)}` : first.entity)
     case 'event': return `${group.findings.length} event${group.findings.length === 1 ? '' : 's'}`
-    case 'site': return `Site (${group.findings.length} finding${group.findings.length === 1 ? '' : 's'})`
+    case 'site': return group.spike ? `${pages.length} pages in one run` : `Site (${group.findings.length} finding${group.findings.length === 1 ? '' : 's'})`
     default: return group.findings[0].entity
   }
 }
@@ -1075,13 +1144,13 @@ function evidencePairs(run, group) {
  * runs), suppressed, loopHealth, dropped, advisory, resolves (open tickets to close), and unresolved (open observer
  * tickets that cannot close yet, with the reason).
  */
-export function planObserverFindings({ run, bundle, queue = [], policy = loadPolicyBundle(), now = new Date(), registries = {} }) {
+export function planObserverFindings({ run, bundle, queue = [], policy = loadPolicyBundle(), filingPolicy = loadFilingPolicy(), now = new Date(), registries = {} }) {
   const holdsByObserver = observerHoldsApply(run.manifest, bundle)
   const plan = { filerVersion: FILER_VERSION, runId: run.manifest.runId, runCompletedAt: run.manifest.completedAt, evidenceSha256: run.manifest.evidence?.sha256 || null, bundleVersion: bundle.version, bundleSha256: bundle.sha256, health: run.health, now: now.toISOString(),
     holds: holdsByObserver ? 'observer (manifest.checkBundle verified; grace and consecutive-run holds not re-applied)' : 'filer (no verified check bundle in the manifest)',
     suppressedByObserver: run.health.suppressedByLoopHealth || { count: 0, items: null, reported: false },
     decisionTickets: [...new Set(bundle.rows.map((r) => r.decisionPending).filter(Boolean))],
-    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], sourceDigest: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [], missingInfo: [], recordedSince: [], informational: [] }
+    counts: {}, files: [], existing: [], decisionPending: [], held: [], suppressed: [], exempted: [], exceptionsNotApplied: [], outOfScope: [], loopHealth: [], sourceDigest: [], dropped: [], advisory: [], invalid: [], resolves: [], needsPerson: [], unresolved: [], missingInfo: [], recordedSince: [], informational: [], spikes: [], paused: [] }
 
   // Pass 1: rows. A loop-health finding that still arrives is counted for the observer owner and never files; the
   // observer applies its own `suppresses` before the packet is written (health.json suppressedByLoopHealth).
@@ -1117,11 +1186,16 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
   const groups = new Map()
   for (const { finding, row } of assessed) {
     if (row.status === 'advisory') { plan.advisory.push({ id: finding.id, check: finding.check, row: row.id }); continue }
+    // Paused for precision (spec/filing-policy.json paused, a recorded decision): still measured, never filed.
+    const pause = pausedEntryFor(filingPolicy, row)
+    if (pause) { plan.paused.push({ id: finding.id, check: finding.check, row: row.id, decision: pause.decision || null }); continue }
     const offSite = outOfScopeSite(row, finding, bundle)
     if (offSite) { plan.outOfScope.push({ id: finding.id, check: finding.check, row: row.id, ...offSite }); continue }
     const ctaException = ctaExceptionFor({ row, finding, now })
     if (ctaException?.exempt) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'cta-exception', ...ctaException }); continue }
     if (ctaException) plan.exceptionsNotApplied.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'cta-exception', ...ctaException })
+    const campusHold = campusHoldFor({ row, finding, now })
+    if (campusHold) { plan.exempted.push({ id: finding.id, check: finding.check, page: normalizePageUrl(finding.url), kind: 'campus-hold', ...campusHold }); continue }
     const leadership = sharedLeadershipExemption({ row, finding })
     if (leadership) { plan.exempted.push({ id: finding.id, check: finding.check, row: row.id, page: normalizePageUrl(finding.url), kind: 'shared-leadership', ...leadership }); continue }
     const unhealthy = unhealthyDependencies(row, bundle, run.health, now)
@@ -1168,6 +1242,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
   // One Missing Info per campus and registry (repair plan 2026-09-25, repair 1): when two rows derive from the same
   // registry (campus.intro.media.current and the open-media entry of site.coverage.open-campus-registries, say) and both
   // find the same campus unrecorded, the first group planned files and the second is reported against it as existing.
+  collapseSpikes(groups, filingPolicy, plan)
   const plannedMissing = new Map()
   const observedThisRun = new Set(run.findings.map((f) => f.id))
   planResolves(plan, { run, bundle, queue, now, observedThisRun, decisionTickets: new Set(plan.decisionTickets) })
@@ -1239,7 +1314,7 @@ export function planObserverFindings({ run, bundle, queue = [], policy = loadPol
     if (missing) plan.missingInfo.push({ key: group.key, title: payload.title, campus: missing.campus, slug: missing.slug, state: missing.state, file: missing.file, thing: missing.thing, ownerRole: row.ownerRole, owner: owner.name, ticketClass: row.ticketClass, ask: missing.ask, ...(missing.slot ? { slot: { level: missing.slot.level, what: missing.slot.what } } : {}) })
   }
 
-  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, sourceDigest: plan.sourceDigest.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0), missingInfo: plan.missingInfo.length, recordedSince: plan.recordedSince.length, informational: plan.informational.length }
+  plan.counts = { findings: run.findings.length, dropped: plan.dropped.length, loopHealth: plan.loopHealth.length, sourceDigest: plan.sourceDigest.length, suppressedByObserver: plan.suppressedByObserver.count, advisory: plan.advisory.length, outOfScope: plan.outOfScope.length, exempted: plan.exempted.length, suppressed: plan.suppressed.length, held: plan.held.length, groups: groups.size, decisionPending: plan.decisionPending.length, files: plan.files.length, existing: plan.existing.length, invalid: plan.invalid.length, resolves: plan.resolves.length, needsPerson: plan.needsPerson.length, unresolved: plan.unresolved.length, evidencePairs: plan.files.reduce((n, f) => n + f.evidence.filter((e) => e.complete).length, 0), missingInfo: plan.missingInfo.length, recordedSince: plan.recordedSince.length, informational: plan.informational.length, spikes: plan.spikes.length, paused: plan.paused.length }
   return plan
 }
 
@@ -1645,6 +1720,8 @@ export async function main(argv = process.argv.slice(2), env = process.env, io =
     exempted: plan.exempted.map((e) => `${e.check} ${e.page || e.id}: ${e.kind === 'cta-exception' ? `${e.cta} ${e.rule} (${e.decidedBy}, ${e.source}; ${e.expiryBasis})` : e.reason}`),
     outOfScope: plan.outOfScope.map((o) => `${o.check} ${o.url}: ${o.reason} (${o.host})`),
     decisionPending: plan.decisionPending.map((d) => `${d.check} ${d.scopeKey}: ${d.findings} finding(s) wait on ${d.decisionTicket}`),
+    paused: [...new Set(plan.paused.map((x) => `${x.check} (${x.row}): paused for precision, ${x.decision || 'no decision cited'}`))],
+    spikes: plan.spikes.map((x) => `${x.check}: ${x.pages} page scopes merged into one site ticket (spike.minPages ${x.minPages})`),
     resolves: plan.resolves.map((r) => `${r.id} ${r.title.slice(0, 70)} (cleared on ${r.cleared.clearingRunIds.join(', ')})`),
     needsPerson: plan.needsPerson.map((n) => `${n.id} [${n.status}] ${n.title.slice(0, 60)}: ${n.reason}`),
     ...(applied ? { applied: plan.applied } : {}) }

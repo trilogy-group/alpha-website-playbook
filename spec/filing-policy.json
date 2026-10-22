@@ -1,0 +1,33 @@
+{
+  "$comment": "Queue-level filing policy for agent/file-observer-findings.mjs and the precision gate in tests/telemetry-report.mjs (Matt Barge, 2026-10-15: our own checks file three times the work marketing requests; hold them to a precision standard). Thresholds live here, never in the observer's config (QC loop redesign 2026-09-24). Change a value only with a recorded decision.",
+  "version": "1.0",
+  "spike": {
+    "minPages": 8,
+    "note": "When one check's page-scoped groups in a single observer run reach minPages, they merge into one site-scoped ticket that lists every page. A real site-wide defect still files once; a run-wide measurement failure (2026-10-14/15: images-render on 57 pages from the observer's runner) files one ticket instead of one per page."
+  },
+  "precision": {
+    "windowDays": 28,
+    "minFiled": 10,
+    "minPrecision": 0.5,
+    "note": "A check that filed at least minFiled tickets in the trailing windowDays with precision below minPrecision is listed as a pause candidate in the telemetry report. Pausing (row status advisory) is a recorded decision via agent/record-decision.mjs, never automatic. Precision counts tickets that ended in a site change, a source change or a recorded decision; open tickets count against it, which is deliberate: a ticket nobody can act on is not precise."
+  },
+  "paused": [
+    {
+      "row": "campus.resources.packet.reachable",
+      "check": "campus-info-packet-link-reachable",
+      "since": "2026-10-15",
+      "decision": "tests/fixtures/decisions/recorded/2026-10-15-filing-policy-92fc4ac9.json",
+      "why": "28-day window to 2026-10-15: 18 filed, 0 ended in a change or decision, 18 false positive.",
+      "revisit": "Re-enable after the check distinguishes a sign-in or rate-limited response from a broken packet link, then watch two weeks of findings in the report."
+    },
+    {
+      "row": "site.events.sync.public",
+      "check": "public-event-sync",
+      "since": "2026-10-15",
+      "decision": "tests/fixtures/decisions/recorded/2026-10-15-filing-policy-92fc4ac9.json",
+      "why": "28-day window to 2026-10-15: 12 filed, 0 ended in a change or decision, 5 false positive. Events belong to Hailey McSpadden; the website team cannot act on most findings.",
+      "revisit": "Re-enable as a report to the events owner rather than website tickets, if Hailey wants it."
+    }
+  ],
+  "pausedNote": "A paused row is still measured by the observer and still appears in the telemetry report, so its precision can be re-read; the filer counts its findings and files nothing (like an advisory row). Adding or removing an entry is a recorded decision (agent/record-decision.mjs --spec-ref spec/filing-policy.json)."
+}
