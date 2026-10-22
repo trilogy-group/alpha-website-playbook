@@ -1,0 +1,15 @@
+{
+  "kind": "spec-ref",
+  "recordedAt": "2026-10-22T20:13:37.613Z",
+  "decidedBy": "Matt Barge",
+  "source": "Claude Code session with Matt Barge, 2026-10-22",
+  "date": "2026-10-22",
+  "specRefs": [
+    "registry/campus-open-media.json"
+  ],
+  "summary": "Alpha Palm Beach open-state intro media: the campus YouTube video https://youtu.be/58TToab2FA4 (The Future of Education is Now in Palm Beach), already in video widget ac30a6c, is approved; recorded as campuses.palm-beach openMedia video (ticket cmulj77tm00040agm3h3z2uij).",
+  "decisionRow": "| 2026-10-22 | Decided (Matt Barge, Claude Code session with Matt Barge, 2026-10-22): Alpha Palm Beach open-state intro media: the campus YouTube video https://youtu.be/58TToab2FA4 (The Future of Education is Now in Palm Beach), already in video widget ac30a6c, is approved; recorded as campuses.palm-beach openMedia video (ticket cmulj77tm00040agm3h3z2uij). | Matt Barge | registry/campus-open-media.json; tests/fixtures/decisions/recorded/2026-10-22-campus-open-media-a2ae399d.json |",
+  "appliedIn": "registry/campus-open-media.json; tests/fixtures/decisions/recorded/2026-10-22-campus-open-media-a2ae399d.json",
+  "textSha256": "a2ae399da10eae853290e86abba9d8f51470663a1674b38593e70c1069d76045",
+  "text": "The Palm Beach intro video, that sounds right. That's a nice video.\n"
+}

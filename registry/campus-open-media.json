@@ -161,6 +161,17 @@
       "attachmentId": 9825,
       "status": "placed"
     },
+    "palm-beach": {
+      "openMedia": "video",
+      "attachmentId": null,
+      "status": "placed",
+      "owner": "Yash Chitneni produces the cards; Matt and Yash approve campus video",
+      "state": "Open",
+      "approvedBy": "Matt Barge, 2026-10-22",
+      "ticket": "cmulj77tm00040agm3h3z2uij",
+      "evidence": "YouTube video https://youtu.be/58TToab2FA4 \"The Future of Education is Now in Palm Beach\" in video widget ac30a6c on https://alpha.school/palm-beach/ (object 6545), read 2026-10-22; Matt Barge approved it as the intro media on 2026-10-22",
+      "addedBy": "website agent (Claude Code) for Matt Barge, 2026-10-22"
+    },
     "palo-alto": {
       "openMedia": "card",
       "attachmentId": 12508,
