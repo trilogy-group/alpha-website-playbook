@@ -153,6 +153,8 @@ Stop before writing when any of these is true:
 
 Write the exact blocker and owner on the APEX ticket. Do not substitute a browser edit or another endpoint.
 
+For brand/design work, first resolve `registry/sources.json` → `brandVisual` and read `playbook/site/visual-brand.md`. Do not promote historical Slack/Drive documents into current guidance or use sources explicitly marked retired.
+
 ## Where to look next
 
 | Need | File |

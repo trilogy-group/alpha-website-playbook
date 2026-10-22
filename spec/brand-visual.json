@@ -3,6 +3,12 @@
   "version": "0.1",
   "asOf": "2026-09-22",
   "provenance": {
+    "sourceRegistry": "registry/sources.json#brandVisual",
+    "sourceUrl": "https://www.canva.com/design/DAHX7WPt28s/2vyx2huxhzwAKU88hy7WKA/edit",
+    "sourceDesignId": "DAHX7WPt28s",
+    "sourceConfirmedOn": "2026-10-21",
+    "sourceStatus": "Current visual source confirmed by Yash; three retired Google Docs listed in registry/sources.json#brandVisual must not be used.",
+    "reconciliationStatus": "Connected Canva metadata and extracted text read 2026-10-21; Montserrat and the four palette blues appear in text. Full visual/spec reconciliation remains pending; text contains inconsistent sky-blue labels. Existing adopted values are unchanged by this provenance correction.",
     "sourceDocument": "Alpha School Brand Guidelines, 47-page official deck (palette p14, type p8-9, logo p5-6, graphic elements p22-25, sample layouts p11, p15, p29)",
     "derivedFrom": "marketingsupport/.claude/skills/alpha-brand-guide (SKILL.md, references/brand-core.md, references/parent-facing.md, references/kid-facing.md, assets/alpha-brand.css, assets/alpha-school-logo-*.svg|png)",
     "skillVersion": "2026-09-22",
