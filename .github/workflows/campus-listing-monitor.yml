@@ -1,0 +1,185 @@
+name: Campus listing monitor
+
+# Morning check: 14:00 UTC is 9:00 AM CDT (UTC-5) and 8:00 AM CST (UTC-6).
+# GitHub cron is UTC and does not follow US daylight saving, so the Central
+# clock time shifts by one hour when CDT and CST change. The run is before the
+# n8n Rio SEO Locations Data Push (trigger hour 10, inherited timezone, about
+# 10 AM CT). See docs/campus-listing-sop.md.
+#
+# Afternoon Rio SEO rejection check: 20:00 UTC is 3:00 PM CDT and 2:00 PM CST.
+# Weekly GBP compare: Monday 14:30 UTC is 9:30 AM CDT and 8:30 AM CST.
+#
+# State is the campus-listing-monitor-state artifact (30 days), not a git branch.
+# Logs and the job summary carry counts only. Record details go to the alert
+# destination. actions: write is required to upload that artifact; contents stays read.
+
+on:
+  schedule:
+    - cron: '0 14 * * *'
+    - cron: '0 20 * * *'
+    - cron: '30 14 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run. Counts only. No Slack post and no state artifact.'
+        type: boolean
+        default: false
+      check:
+        description: 'Which check to run'
+        type: choice
+        default: daily
+        options:
+          - daily
+          - rioseo
+          - gbp
+          - all
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  daily:
+    name: HubSpot listing check
+    if: "(github.event_name == 'schedule' && github.event.schedule == '0 14 * * *') || (github.event_name == 'workflow_dispatch' && (inputs.check == 'daily' || inputs.check == 'all'))"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: campus-listing-monitor-daily
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Download previous state artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          mkdir -p out/campus-listing-monitor
+          if [ -z "${DEFAULT_BRANCH}" ]; then
+            echo "Default branch is not set. Refusing to choose a baseline." >&2
+            exit 1
+          fi
+          gh api --header "Accept: application/vnd.github+json" "/repos/${GITHUB_REPOSITORY}/actions/artifacts?name=campus-listing-monitor-state&per_page=100" > "${RUNNER_TEMP}/artifacts.json"
+          python3 tools/campus-listing-monitor/campus_monitor.py --select-artifact "${RUNNER_TEMP}/artifacts.json" --branch="${DEFAULT_BRANCH}" > "${RUNNER_TEMP}/artifact-id.txt"
+          art_id=$(tr -d '[:space:]' < "${RUNNER_TEMP}/artifact-id.txt")
+          if [ -z "${art_id}" ]; then
+            echo "No previous state artifact on the default branch. Day-over-day diff waits for a baseline."
+            exit 0
+          fi
+          if [[ ! "${art_id}" =~ ^[0-9]+$ ]]; then
+            echo "State artifact id was not numeric. Refusing to download it." >&2
+            exit 1
+          fi
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -o "${RUNNER_TEMP}/state.zip" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${art_id}/zip"
+          python3 tools/campus-listing-monitor/campus_monitor.py --extract-snapshot "${RUNNER_TEMP}/state.zip" --extract-to out/campus-listing-monitor/previous.json
+
+      - name: Check HubSpot Programs
+        env:
+          HUBSPOT_TOKEN: ${{ secrets.HUBSPOT_TOKEN }}
+          HUBSPOT_PORTAL_ID: ${{ vars.HUBSPOT_PORTAL_ID }}
+          HUBSPOT_PORTAL_ID_SECRET: ${{ secrets.HUBSPOT_PORTAL_ID }}
+          HUBSPOT_PROGRAMS_OBJECT: ${{ vars.HUBSPOT_PROGRAMS_OBJECT }}
+          HUBSPOT_PROGRAMS_OBJECT_SECRET: ${{ secrets.HUBSPOT_PROGRAMS_OBJECT }}
+          ALERT_SLACK_WEBHOOK_URL: ${{ secrets.ALERT_SLACK_WEBHOOK_URL }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          args=(
+            --check daily
+            --snapshot-in out/campus-listing-monitor/previous.json
+            --snapshot-out out/campus-listing-monitor/snapshot.json
+            --counts out/campus-listing-monitor/counts.json
+          )
+          if [ "${DRY_RUN}" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          python3 tools/campus-listing-monitor/campus_monitor.py "${args[@]}"
+
+      - name: Record counts in the job summary
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 tools/campus-listing-monitor/campus_monitor.py --summarize out/campus-listing-monitor/counts.json >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload state artifact
+        if: hashFiles('out/campus-listing-monitor/snapshot.json') != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: campus-listing-monitor-state
+          path: out/campus-listing-monitor/snapshot.json
+          if-no-files-found: error
+          retention-days: 30
+
+  rioseo:
+    name: Rio SEO rejection check
+    if: "(github.event_name == 'schedule' && github.event.schedule == '0 20 * * *') || (github.event_name == 'workflow_dispatch' && (inputs.check == 'rioseo' || inputs.check == 'all'))"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: campus-listing-monitor-rioseo
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Check the Rio SEO import report
+        env:
+          RIOSEO_API_KEY: ${{ secrets.RIOSEO_API_KEY }}
+          RIOSEO_REPORT_URL: ${{ secrets.RIOSEO_REPORT_URL }}
+        run: |
+          set -euo pipefail
+          python3 tools/campus-listing-monitor/campus_monitor.py --check rioseo --counts out/campus-listing-monitor/counts.json
+
+      - name: Record counts in the job summary
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 tools/campus-listing-monitor/campus_monitor.py --summarize out/campus-listing-monitor/counts.json >> "$GITHUB_STEP_SUMMARY"
+
+  gbp:
+    name: GBP compare
+    if: "(github.event_name == 'schedule' && github.event.schedule == '30 14 * * 1') || (github.event_name == 'workflow_dispatch' && (inputs.check == 'gbp' || inputs.check == 'all'))"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: campus-listing-monitor-gbp
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Compare GBP with HubSpot
+        env:
+          GBP_ACCESS_TOKEN: ${{ secrets.GBP_ACCESS_TOKEN }}
+          GBP_ACCOUNT_ID: ${{ secrets.GBP_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          python3 tools/campus-listing-monitor/campus_monitor.py --check gbp --counts out/campus-listing-monitor/counts.json
+
+      - name: Record counts in the job summary
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 tools/campus-listing-monitor/campus_monitor.py --summarize out/campus-listing-monitor/counts.json >> "$GITHUB_STEP_SUMMARY"

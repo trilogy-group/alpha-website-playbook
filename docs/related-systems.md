@@ -15,6 +15,7 @@ This repo is the source of truth for **website page correctness** and the **APEX
 | `trilogy-group/alpha-branding-skill` | Brand rules (MacKenzie) |
 | Deployed Alpha Community app | Separate program registry and router for Community IDs, slugs, visibility, and `campus=<slug>` destinations. See `playbook/site/community-routing.md`. |
 | Live site + Joe AEO board | Campus Elementor pages on alpha.school; board at https://alpha-aeo.pages.dev (WP Agent owns the production loop) |
+| Campus listing monitor | Read-only HubSpot Programs check before the Rio SEO push. Workflow `.github/workflows/campus-listing-monitor.yml`, SOP `docs/campus-listing-sop.md`. State is a 30-day workflow artifact. |
 
 ## Related but out of scope for v1 of this playbook
 

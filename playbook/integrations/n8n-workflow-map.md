@@ -35,7 +35,7 @@ Inventory entries retain raw schedule rules, saved `versionId`, `activeVersionId
 
 - Campus pages: schedule rule has `triggerAtMinute: 15`; no workflow timezone. Previously documented as daily 00:15 Central. Confirm the inherited instance timezone and next execution in n8n before promising a wall-clock ETA.
 - Locations: `triggerAtMinute: 2`; no workflow timezone. This refines the old “midnight Central” shorthand, but does not independently prove the timezone.
-- Rio Locations: `triggerAtHour: 10`; Rio events: hour `2`, minute `25`; KB Campus Info: hour `5`. Each inherits timezone in the inspected record.
+- Rio Locations: `triggerAtHour: 10`; Rio events: hour `2`, minute `25`; KB Campus Info: hour `5`. Each inherits timezone in the inspected record. A read-only listing monitor runs before this push; see `docs/campus-listing-sop.md`. It does not change the workflow.
 - Voiceflow: **active schedule every six hours**, while the saved schedule says 02:15. The workflow record sets `America/Chicago`. Do not activate the saved version as part of documentation or diagnosis.
 - Redirect V2: saved and active version IDs differ, but inspected nodes and connections match. A version mismatch alone does not prove a functional difference.
 - A subworkflow or webhook can be active without a time schedule. Active does not prove successful recent executions.
