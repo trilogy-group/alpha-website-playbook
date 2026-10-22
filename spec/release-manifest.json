@@ -1,24 +1,25 @@
 {
   "$comment": "Signed release manifest (improvement plan workstream 3). What production must report for the website agent to claim or write. tests/check-release.mjs compares this with the Alpha MCP health route and the committed policy bundle; agent/intake.mjs refuses to release execution-ready tickets on a mismatch while unrelated intake administration continues. Update deliberately with each plugin upload or policy change; the policySha256 comes from spec/policy-bundle.generated.json. checkBundleSha256 and checkBundleVersion come from spec/check-bundle.generated.json (tests/build-checks.mjs); the observer cites them on every finding and a run is reproducible only against the manifest's hash.",
-  "version": "2026-10-13.1",
+  "version": "2026-10-22.1",
   "policySha256": "4997e865494d2aeb07f799bd97ff64431791c96c2e9edce0f157e5f4aec66321",
   "checkBundleSha256": "7e01b1a22fd4d970802a6a61057dd2510cb4013a49ba3d9ab265293adeedb096",
   "checkBundleVersion": "1.13",
   "playbookCommit": "039249d2e989f3144f3d1dbb8ed32753dc9b7279",
   "bridge": {
     "package": "@alpha/wordpress-mcp",
-    "version": "0.5.8",
+    "version": "0.5.9",
     "toolCount": 43
   },
   "production": {
     "site": "https://alpha.school",
-    "pluginVersion": "0.5.8",
+    "pluginVersion": "0.5.9",
     "abilityCount": 43,
-    "abilitySchemaSha256": "ce09991878f012b598b5e864ea5c80cec95e230a8fdfd8fe7ff9208e7eaf717e",
+    "abilitySchemaSha256": "df6a03bd8588f6050c5ee25017aff9c322674c700dc2e0354b830402dd6b6a16",
     "operatorMode": true,
     "productionWritesEnabled": true,
     "campusTemplateId": 6140,
-    "note": "0.5.8 uploaded 2026-09-22 by Matt (display settings in the content patch: carousel arrows/infinite/autoplay/slides_to_show, image object-fit/object-position/image_size; verify_public_page pattern checks incl. post stylesheets). 0.5.7 (PR 23, URL resolution) not yet merged."
+    "note": "0.5.9 (AlphawordpressMCP PR 27, merged as 4885da2) is on production; Matt approved it 2026-10-22, it was installed on 2026-10-20 between 03:42Z and 12:41Z (first writes: image-box titles on 4220 and 3657). Attested 2026-10-22: PR head e50d8d1 rebuilds with scripts/package-plugin.mjs to the staging-tested ZIP 9b63857c..., and the schema fingerprint computed from that source equals production health abilitySchemaSha256 df6a03bd.... Adds existing string title_text on Elementor image-box widgets to the guarded content path and refreshes the edited document's rendered HTML cache. 0.5.7 (PR 23, URL resolution) not yet merged.",
+    "artifactSha256": "9b63857c8a07cdd22e8e9af34eff515fa0f757ce3797e7db3624cca49849a99c"
   },
   "supportedOperations": {
     "scheduled-apex-alpha-mcp": [
