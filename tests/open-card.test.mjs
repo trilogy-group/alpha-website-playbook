@@ -51,7 +51,7 @@ test('registry: the template block names the placeholder, the owner and the ask,
   assert.equal(openMedia.template.fixture, 'tests/fixtures/open-card/template-placeholder.svg')
   assert.equal(openMedia.template.recipe, 'protocols/recipes/open-card.md')
   assert.ok(fs.existsSync(path.join(root, openMedia.template.recipe)))
-  assert.equal(Object.keys(openMedia.campuses).length, 31, 'every campus row kept (27 on 2026-09-25, the-woodlands added 2026-09-29 by run open-cards-2026-09-29, new-york-city, san-francisco and scottsdale added 2026-10-05 by run waitlist-rule-2026-10-05 as waitlist campuses with no approved card)')
+  assert.equal(Object.keys(openMedia.campuses).length, 32, 'every campus row kept (27 on 2026-09-25, the-woodlands added 2026-09-29 by run open-cards-2026-09-29, new-york-city, san-francisco and scottsdale added 2026-10-05 by run waitlist-rule-2026-10-05 as waitlist campuses with no approved card, palm-beach added 2026-10-22 on Matt Barge\'s approval of the campus video)')
   // Boca Raton moved from the Open and Enrolling card to the waitlist card on 2026-10-05 (MacKenzie Price's waitlist decision):
   // cardVariant keeps the two kinds of card apart and previousAttachmentId keeps the trail.
   assert.equal(openMedia.campuses['boca-raton'].openMedia, 'card')
