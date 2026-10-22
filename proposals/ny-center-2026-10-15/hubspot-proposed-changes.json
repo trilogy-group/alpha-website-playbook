@@ -1,0 +1,29 @@
+{
+  "observedOn": "2026-10-15",
+  "changes": [
+    {
+      "programId": "26463204876",
+      "wordpressPostId": "6542",
+      "canonicalUrl": "https://alpha.school/new-york-city/",
+      "field": "website_campus_intro",
+      "sourceUpdatedAt": "2026-10-05T17:49:04.047Z",
+      "finding": "NYC-007",
+      "before": "<p>[DISPLAY_NAME] is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.</p>\n<p><a rel=\"noopener\">Join us for an info session</a> at our 180 Maiden Lane location, in Lower Manhattan’s Financial District, just steps from the East River waterfront and the iconic South Street Seaport. It’s one block from the Imagination Playground, with Battery Park and the Brooklyn Bridge a short walk away. See firsthand why Alpha is ranked among the best private institutions thanks to its groundbreaking learning model.</p>",
+      "after": "<p>[DISPLAY_NAME] is open, and we’re accepting applications for our 2026–27 waitlist. Apply for future enrollment, and our admissions team will guide you through the next steps.</p>\n<p><a rel=\"noopener\">Join us for an info session</a> at our 180 Maiden Lane location, in Lower Manhattan’s Financial District, just steps from the East River waterfront and the iconic South Street Seaport. It’s one block from the Imagination Playground, with Battery Park and the Brooklyn Bridge a short walk away. See firsthand how Alpha’s groundbreaking learning model helps kids unlock their potential.</p>",
+      "beforeSha256": "eaaa88b12d3a01a3a8f3fee775a07eaddfb2bee4ce4b536db8937f4dc7a1461c",
+      "status": "prepared-only; fresh read and exact approval required before apply"
+    },
+    {
+      "programId": "60804396611",
+      "wordpressPostId": "9213",
+      "canonicalUrl": "https://alpha.school/greenwich/",
+      "field": "website_campus_intro",
+      "sourceUpdatedAt": "2026-10-14T21:49:15.373Z",
+      "finding": "ARM-08",
+      "before": "<p>[DISPLAY_NAME] is open and enrolling.</p>\n<p><a>Join us for an info session</a>, and see firsthand how our tutoring center for grades K-8 puts Alpha's learning model to work.</p>",
+      "after": "<p>[DISPLAY_NAME] is open and enrolling.</p>\n<p><a>Join us for an info session</a>, and see firsthand how our homeschool center for grades K-8 puts Alpha's learning model to work.</p>",
+      "beforeSha256": "675b3de78cfdc3755ca8723b8a1dafe34c90bf22d3f60e6db46f97315fab5643",
+      "status": "prepared-only; fresh read and exact approval required before apply"
+    }
+  ]
+}
