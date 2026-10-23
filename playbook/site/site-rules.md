@@ -25,6 +25,7 @@ Rules that apply to every alpha.school page regardless of campus or state. Machi
 
 ## Identity and cross-brand (`site.identity.*`)
 
+- Campus naming: a campus is "Alpha [Site Name]" everywhere (for example Alpha Austin), never "Alpha School [Site Name]". Only the physical building sign says "Alpha School". SEO is not a reason to deviate. Source: Rachel Goodlad, Slack [C09GRQ8L533/1772461047.265989](https://go-alpha.slack.com/archives/C09GRQ8L533/p1772461047265989), [C09GRQ8L533/1772470439.659199](https://go-alpha.slack.com/archives/C09GRQ8L533/p1772470439659199). Check: manual at intake until an observer check exists.
 - No Alpha page carries sister-brand names (Nova, NextGen Academy, Waypoint Academy, Texas Sports Academy) in page-owned content, except the named Brownsville and Nova exception. Navigation listing the specialty schools is allowed. Check: `campus-sister-brand-leak`; `page-check no-sister-brand-words`.
 - No page references another campus in image file names, alt text, links, packets, calendars, or schema. Checks: `campus-image-identity-conflict`, `page-check no-other-campus-in-image-names`.
 

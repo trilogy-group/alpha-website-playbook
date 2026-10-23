@@ -52,6 +52,8 @@ The state is **four coordinated elements**, not one sentence (Yash Chitneni's li
 A page carrying some of the four and not the others is a finding, and so is the inverse: an Open campus that is **not**
 on the list must carry no waitlist button label, no waitlist copy and no waitlist card.
 
+**Leaving the waitlist.** A campus comes off the waitlist only with MacKenzie Price's approval on the Thursday sales call. Until that approval is recorded, its page keeps all four waitlist elements, whoever asks for the change. Source: Slack [C09CJCDD1L0/1792510867.689729](https://go-alpha.slack.com/archives/C09CJCDD1L0/p1792510867689729).
+
 ### Why membership is in a registry and not read off the page
 
 **No HubSpot Program property records enrollment state.** `campuspipelinestatus` and `student_capacity` both cut

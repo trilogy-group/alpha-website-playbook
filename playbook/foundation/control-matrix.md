@@ -26,7 +26,7 @@ Plus who approves and who executes. "Supplies" is not "decides": a campus suppli
 | Admissions, forms, application routes | HubSpot program admin (Farhan Raja): forms, Finalsite routing, `submission_campus` | Admissions leadership (Q-16: who) | Form templates; Elementor owner (Gap) | HubSpot program admin; Finalsite | Q-16 | HubSpot program admin |
 | Header, footer, navigation, global scripts | Marketing | Website operations | Elementor owner (Gap) | WordPress admin (Gap), analytics-and-consent owner (Gap) | Staging first, human only | WordPress admin |
 | Legal pages | Legal content owner (Gap) | Legal content owner (Gap) | n/a | n/a | Legal content owner (Gap) | Website operations, verbatim |
-| Hosting, DNS, CDN, plugins, WordPress users | n/a | n/a | n/a | WordPress admin (person not recorded), WP Engine account holder (Q-17), Cloudflare account holder (Q-17) | Q-17 | Q-17 |
+| Hosting, DNS, CDN, plugins, WordPress users | n/a | n/a | n/a | WordPress admin (person not recorded), WP Engine account holder (Q-17), Cloudflare account holder (Q-17), alpha.school DNS: Central SaaS team via their Kayako portal | Q-17 | Q-17 |
 | Design system and visual brand | Brand documents (Alpha Event Design Guidelines, brand skill draft) | MacKenzie Price for brand; Q-12 for site-level visual decisions | Elementor owner (Gap); refresh candidate design team (see `origin-and-ownership.md`) | Elementor kit (global colors and fonts) | MacKenzie | Elementor owner (Gap) |
 
 ## 2. Campus and admissions staff: what they control
@@ -89,6 +89,7 @@ Not decided: whether MacKenzie's authority covers site-level visual design (layo
 | Community app program routing | Community app owner | Gap | `playbook/site/community-routing.md` |
 | GTM, Site Kit, ad pixels, consent | Analytics-and-consent owner | Gap | `registry/global-runtime.json` |
 | Voiceflow chatbot, founder chat | Platform owner | Gap | `registry/global-runtime.json` |
+| alpha.school DNS | Central SaaS team, requests through the Central SaaS Kayako portal | Yes; Q-17 DNS part resolved 2026-10-21 | Slack [D0B5Y9Z2600/1792401579.635079](https://go-alpha.slack.com/archives/D0B5Y9Z2600/p1792401579635079), [C099GQ9F15X/1768213303.703969](https://go-alpha.slack.com/archives/C099GQ9F15X/p1768213303703969) |
 | WP Engine account, Cloudflare account, DNS registrar | Not recorded | Gap; Q-17 | |
 | Alpha WordPress MCP plugin (agent write path) | Matt Barge (author), production install by the WordPress admin | Yes | `docs/actor-capability-matrix.md` |
 | GitHub organization (trilogy-group) | GitHub admin | Fernando | `registry/people.json` |

@@ -36,7 +36,8 @@ Why this matters for the playbook: the refresh was designed and built by the sam
 | WordPress administrators | wordpress-admin | 11 administrators, 1 editor, 3 authors on 2026-08-06; names deliberately not recorded in the sanitized inventory | Q-17. Plugin 0.5.0's access report will list them once deployed |
 | WordPress user used by the agent | Alpha MCP executor | Matt Barge's user (id 34) in operator mode | `docs/environments-and-identities.md` |
 | WP Engine account (production and staging `alpha20245stg`) | wordpress-admin | Not recorded | Q-17 |
-| Cloudflare account, DNS, registrar | platform | "Engineering" in the integration register; no person | Q-17 |
+| alpha.school DNS | platform | Central SaaS team; requests go through the Central SaaS Kayako portal (the earlier route was a ticket at support.alpha.school) | Q-17 DNS part resolved 2026-10-21 (Slack [D0B5Y9Z2600/1792401579.635079](https://go-alpha.slack.com/archives/D0B5Y9Z2600/p1792401579635079), [C099GQ9F15X/1768213303.703969](https://go-alpha.slack.com/archives/C099GQ9F15X/p1768213303703969)) |
+| Cloudflare account, registrar | platform | "Engineering" in the integration register; no person | Q-17 |
 | HubSpot portal 40051392 | hubspot-owner | Hailey McSpadden | Confirmed |
 | HubSpot Programs object, forms, Finalsite routing | hubspot-program-admin | Farhan Raja | Confirmed |
 | n8n campus sync workflow | n8n-sync-owner | Cristi Constantin, Dmitry Bakaev | Confirmed |
@@ -74,7 +75,7 @@ Nobody is named as product owner of the website as a whole (Q-04). Joe Liemandt 
 
 - Q-19: Who designed and built the WordPress site, when did it launch, what preceded it, and is anyone from that build still reachable? Ask Yash, Garbhit, Hailey, and the longest-tenured WordPress administrator.
 - Q-20: Is the Next.js refresh sanctioned to replace production, who sponsors it, and on what timeline? Ask Yash and Joe.
-- Q-17: Names of the WordPress administrators, the WP Engine account holder, the Cloudflare account holder, and the DNS registrar contact. Ask Yash and Garbhit; confirm with the plugin access report.
+- Q-17: Names of the WordPress administrators, the WP Engine account holder, the Cloudflare account holder, and the DNS registrar contact. Ask Yash and Garbhit; confirm with the plugin access report. DNS part resolved 2026-10-21: alpha.school DNS is owned by the Central SaaS team, and DNS requests go through their Kayako portal (Slack [D0B5Y9Z2600/1792401579.635079](https://go-alpha.slack.com/archives/D0B5Y9Z2600/p1792401579635079), [C099GQ9F15X/1768213303.703969](https://go-alpha.slack.com/archives/C099GQ9F15X/p1768213303703969)). See the 2026-01-12 DNS outage in `protocols/rollback-and-incidents.md`.
 - Q-18: Account owners for Airtable, Flipsnack, Goldcast, and Vercel. Ask Yash, Brittany, Dmitry.
 - Q-21: Where the brand source documents live and whether they can be committed to `alpha-branding-skill`. Ask Yash and Haven.
 

@@ -134,3 +134,7 @@ Record:
 - Follow-up requirement, recipe, fixture, or automated check
 
 After resolution, update the playbook or spec before re-enabling the failed class if the incident exposed a missing rule.
+
+## Past incidents
+
+- **2026-01-12, DNS outage (about 02:39 to 08:06 CST).** alpha.school DNS stopped pointing at WP Engine. The website team does not control DNS, so a ticket went to support.alpha.school; DNS requests now go to the Central SaaS team through their Kayako portal (`playbook/foundation/origin-and-ownership.md`, Q-17). An expired certificate was suspected but not confirmed, and the site was reported resolved the same morning. The root cause was never documented. Sources: Slack [C099GQ9F15X/1768207849.594549](https://go-alpha.slack.com/archives/C099GQ9F15X/p1768207849594549), [C099GQ9F15X/1768213303.703969](https://go-alpha.slack.com/archives/C099GQ9F15X/p1768213303703969), [C099GQ9F15X/1768226761.776499](https://go-alpha.slack.com/archives/C099GQ9F15X/p1768226761776499).
