@@ -1,0 +1,51 @@
+name: Workflow failure alerts by email
+
+# Emails Matt Barge and Yash Chitneni (only) once when a monitored workflow starts failing and once when it recovers,
+# never on every failed run and never to Slack (Matt Barge, 2026-10-20). Sent over SMTP from repository secrets
+# (ALERT_SMTP_HOST, ALERT_SMTP_USER, ALERT_SMTP_PASSWORD, optional ALERT_SMTP_PORT and ALERT_EMAIL_FROM), so it never
+# sends from a personal Gmail account. Without the secrets the job logs the message and a warning instead of sending.
+# See scripts/ci/alert-email.mjs.
+on:
+  workflow_run:
+    workflows:
+      - APEX intake agent
+      - APEX observer filer
+      - APEX website queue aging
+      - Validate playbook
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  notify:
+    # Pull request validation failures belong to the PR author, not the owner alert.
+    if: github.event.workflow_run.event != 'pull_request' && contains(fromJSON('["failure","timed_out","startup_failure","success"]'), github.event.workflow_run.conclusion)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: scripts/ci
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Email failure or recovery transition
+        env:
+          ALERT_SMTP_HOST: ${{ secrets.ALERT_SMTP_HOST }}
+          ALERT_SMTP_PORT: ${{ secrets.ALERT_SMTP_PORT }}
+          ALERT_SMTP_USER: ${{ secrets.ALERT_SMTP_USER }}
+          ALERT_SMTP_PASSWORD: ${{ secrets.ALERT_SMTP_PASSWORD }}
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          EVENT: ${{ github.event.workflow_run.event }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: node scripts/ci/notify-workflow-failure.mjs
